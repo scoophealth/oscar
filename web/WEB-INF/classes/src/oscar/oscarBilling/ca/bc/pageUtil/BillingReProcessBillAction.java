@@ -51,6 +51,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 import oscar.*;
+import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.oscarDemographic.data.*;
 
 public class BillingReProcessBillAction extends Action {
@@ -239,12 +240,20 @@ public class BillingReProcessBillAction extends Action {
                     System.out.println(secondSQL);
                     db.RunSQL(secondSQL);
                }
+               
+               if (correspondenceCode.equals("N") || correspondenceCode.equals("B")){                          
+                 MSPBillingNote n = new MSPBillingNote();
+                 n.addNote(billingmasterNo,(String) request.getSession().getAttribute("user"),frm.getNotes());              
+               }   
+               
                System.out.println("sql "+sql);
                db.CloseConn();
             } catch (SQLException e3) {
                System.out.println(e3.getMessage());
             }
          
+            
+            
         request.setAttribute("billing_no", billingmasterNo);
         return (mapping.findForward("success"));
     }
