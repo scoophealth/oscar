@@ -156,7 +156,7 @@
 <script type="text/javascript" language="Javascript">
     
     var choiceFormat  = new Array(6,7,8,9,12,13);        
-    var allNumericField = new Array(10,11);
+    var allNumericField = new Array(14,15);
     var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";        
 
@@ -242,6 +242,39 @@
                         No
                     </td>                                  
                 </tr>                
+                
+                <tr>
+                    <td width="5%" valign="top" align="right">2.</td>
+                    <td valign="top">                        
+                        Where do you have access to the Internet?
+                    </td>
+                </tr>
+                <tr>                                                
+                <tr bgcolor="white">                                    
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td width="95%">
+                        <input type="checkbox"  class="checkbox" name="internetHome" <%= props.getProperty("internetHome", "") %>/>
+                        Home
+                    </td>                                  
+                </tr>
+                <tr bgcolor="white">                                    
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td width="95%">
+                        <input type="checkbox"  class="checkbox" name="internetWork" <%= props.getProperty("internetWork", "") %>/>
+                        Work
+                    </td>                                  
+                </tr>                                
+                <tr bgcolor="white">                                    
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td width="95%">
+                        <input type="checkbox"  class="checkbox" name="internetOther" <%= props.getProperty("internetOther", "") %>/>
+                        Other; Specify where: <input type="text" size="20" name="internetOtherTx" value='<%= props.getProperty("internetOtherTx", "") %>'/>
+                    </td>                                  
+                </tr>                
+                                
                 <tr>
                     <td width="5%" valign="top" align="right">3.</td>
                     <td valign="top">                        
