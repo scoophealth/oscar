@@ -232,7 +232,7 @@
                 </tr>                
                 <tr>
                     <td colspan="7">
-                        Have you seen a doctor in the last 6 months?
+                        Have you seen a doctor in the last 9 months?
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -255,7 +255,7 @@
                 </tr>
                 <tr>
                     <td colspan="7">
-                        Have you seen any other Health and Social Service providers in the last 6 months?
+                        Have you seen any other Health and Social Service providers in the last  months?
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -317,7 +317,7 @@
                 </tr>
                 <tr>
                     <td colspan="7">
-                        Have you used any paid services in the last <font style="font-weight:bold">6 months</font>? (e.g. cleaning, transportation)
+                        Have you used any paid services in the last <font style="font-weight:bold"> months</font>? (e.g. cleaning, transportation)
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -390,7 +390,7 @@
                 </tr>
                 <tr>
                     <td colspan="6">
-                        In the last <font style="font-weight:bold">6 months</font>, did you ever spend one or more nights in the 
+                        In the last <font style="font-weight:bold">9 months</font>, did you ever spend one or more nights in the 
                         hospital due to a <font style="font-weight:bold">planned hospitalization</font> (e.g. hernia operation, knee surgery)
                     </td>
                 </tr>
@@ -419,7 +419,7 @@
                 </tr>
                 <tr>
                     <td colspan="6">
-                        In the last <font style="font-weight:bold">6 months</font>, did you ever spend 1 or more nights in a nursing home?
+                        In the last <font style="font-weight:bold">9 months</font>, did you ever spend 1 or more nights in a nursing home?
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -442,7 +442,7 @@
                 </tr>
                 <tr>
                     <td colspan="6">
-                        In the last <font style="font-weight:bold">6 months</font>, did you ever have to go to a hospital emergency room for treatment?
+                        In the last <font style="font-weight:bold">9 months</font>, did you ever have to go to a hospital emergency room for treatment?
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -475,7 +475,7 @@
                 </tr>
                 <tr>
                     <td colspan="6">
-                        In the last <font style="font-weight:bold">6 months</font>, did you ever have to go to a walk-in clinic for treatment?
+                        In the last <font style="font-weight:bold">9 months</font>, did you ever have to go to a walk-in clinic for treatment?
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -499,7 +499,7 @@
                 <tr>
                     <td colspan="6">
                         Have you purchased any supplies, aides or special devices to help you with your daily activities in the 
-                        <font style="font-weight:bold">last 6 months</font>? (e.g. wheelchair, walker)
+                        <font style="font-weight:bold">last 9 months</font>? (e.g. wheelchair, walker)
                     </td>
                 </tr>
                 <tr bgcolor="white">
