@@ -151,7 +151,7 @@ ArrayList proList = fluData.providerList();
                            <input type=submit value="<bean:message key="oscarReport.oscarReportFluBilling.btnUpdate"/>"/>
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.btnHelp"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.btnAbout"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.btnLicense"/></a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                   </form>
