@@ -299,33 +299,33 @@ function controlFTExam(){
         }
     }
     
-    if(document.forms[0].elements[ftNoId].checked == false){
+    if(document.forms[0].elements[ftNoId-1].checked == false){
         //enable all foot exam checkbox        
         //alert("enable all foot exam checkboxes");
-        document.forms[0].elements[ftNeId].disabled= false;
-        document.forms[0].elements[ftIsId].disabled= false;
-        document.forms[0].elements[ftUlId].disabled= false;
-        document.forms[0].elements[ftInId].disabled= false;
-        document.forms[0].elements[ftOtId].disabled= false;
-        document.forms[0].elements[ftReId].disabled= false;
+        document.forms[0].elements[ftNeId-1].disabled= false;
+        document.forms[0].elements[ftIsId-1].disabled= false;
+        document.forms[0].elements[ftUlId-1].disabled= false;
+        document.forms[0].elements[ftInId-1].disabled= false;
+        document.forms[0].elements[ftOtId-1].disabled= false;
+        document.forms[0].elements[ftReId-1].disabled= false;
     }
     else{
         //uncheck and disable all foot exam checkbox        
         //alert("uncheck all foot exam checkboxes");
-        document.forms[0].elements[ftNeId].checked= false;
-        document.forms[0].elements[ftIsId].checked= false;
-        document.forms[0].elements[ftUlId].checked= false;
-        document.forms[0].elements[ftInId].checked= false;
-        document.forms[0].elements[ftOtId].checked= false;
-        document.forms[0].elements[ftReId].checked= false;
+        document.forms[0].elements[ftNeId-1].checked= false;
+        document.forms[0].elements[ftIsId-1].checked= false;
+        document.forms[0].elements[ftUlId-1].checked= false;
+        document.forms[0].elements[ftInId-1].checked= false;
+        document.forms[0].elements[ftOtId-1].checked= false;
+        document.forms[0].elements[ftReId-1].checked= false;
         
         //alert("disable all foot exam checkboxes");
-        document.forms[0].elements[ftNeId].disabled= true;
-        document.forms[0].elements[ftIsId].disabled= true;
-        document.forms[0].elements[ftUlId].disabled= true;
-        document.forms[0].elements[ftInId].disabled= true;
-        document.forms[0].elements[ftOtId].disabled= true;
-        document.forms[0].elements[ftReId].disabled= true;
+        document.forms[0].elements[ftNeId-1].disabled= true;
+        document.forms[0].elements[ftIsId-1].disabled= true;
+        document.forms[0].elements[ftUlId-1].disabled= true;
+        document.forms[0].elements[ftInId-1].disabled= true;
+        document.forms[0].elements[ftOtId-1].disabled= true;
+        document.forms[0].elements[ftReId-1].disabled= true;
     }
 }
 
@@ -371,9 +371,10 @@ function controlEyeExam(){
     //here is the work around
     var e = document.forms[0].elements;
     var eyeNoId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
-    for(i=50; i< e.length; i++){
+    
+    for(i=50; i< e.length; i++){       
         switch(e[i].name){
-            case 'value(iNoValue)': eyeNoId = i;  break;
+            case 'value(iNoValue)': eyeNoId = i ; break;
             case 'value(iHypValue)': eyeHypId = i;  break;
             case 'value(iDiaValue)': eyeDiaId = i;  break;
             case 'value(iOthValue)': eyeOthId = i;  break;
@@ -381,35 +382,35 @@ function controlEyeExam(){
         }
     }
     
-    if(document.forms[0].elements[eyeNoId][0].checked == false){
+    if(document.forms[0].elements[eyeNoId-1].checked == false){
         //enable all foot exam checkbox        
         //alert("enable all foot exam checkboxes");
-        document.forms[0].elements[eyeHypId][0].disabled= false;
-        document.forms[0].elements[eyeDiaId][0].disabled= false;
-        document.forms[0].elements[eyeOthId][0].disabled= false;
-        document.forms[0].elements[eyeRefId][0].disabled= false;
-        document.forms[0].elements[eyeHypId][1].disabled= false;
-        document.forms[0].elements[eyeDiaId][1].disabled= false;
-        document.forms[0].elements[eyeOthId][1].disabled= false;
-        document.forms[0].elements[eyeRefId][1].disabled= false;
+        document.forms[0].elements[eyeHypId-1].disabled= false;
+        document.forms[0].elements[eyeDiaId-1].disabled= false;
+        document.forms[0].elements[eyeOthId-1].disabled= false;
+        document.forms[0].elements[eyeRefId-1].disabled= false;
+        //document.forms[0].elements[eyeHypId].disabled= false;
+        //document.forms[0].elements[eyeDiaId].disabled= false;
+        //document.forms[0].elements[eyeOthId].disabled= false;
+        //document.forms[0].elements[eyeRefId].disabled= false;
     }
-    else if(document.forms[0].elements[eyeNoId][0].checked == true){
+    else if(document.forms[0].elements[eyeNoId-1].checked == true){
         //uncheck and disable all foot exam checkbox        
         //alert("uncheck all foot exam checkboxes");
-        document.forms[0].elements[eyeHypId][0].checked= false;
-        document.forms[0].elements[eyeDiaId][0].checked= false;
-        document.forms[0].elements[eyeOthId][0].checked= false;
-        document.forms[0].elements[eyeRefId][0].checked= false;
-        document.forms[0].elements[eyeHypId][1].checked= true;
-        document.forms[0].elements[eyeDiaId][1].checked= true;
-        document.forms[0].elements[eyeOthId][1].checked= true;
-        document.forms[0].elements[eyeRefId][1].checked= true;
+        document.forms[0].elements[eyeHypId-1].checked= false;
+        document.forms[0].elements[eyeDiaId-1].checked= false;
+        document.forms[0].elements[eyeOthId-1].checked= false;
+        document.forms[0].elements[eyeRefId-1].checked= false;
+        //document.forms[0].elements[eyeHypId].checked= true;
+        //document.forms[0].elements[eyeDiaId].checked= true;
+        //document.forms[0].elements[eyeOthId].checked= true;
+        //document.forms[0].elements[eyeRefId].checked= true;
         
         //alert("disable all foot exam checkboxes");
-        document.forms[0].elements[eyeHypId][0].disabled= true;
-        document.forms[0].elements[eyeDiaId][0].disabled= true;
-        document.forms[0].elements[eyeOthId][0].disabled= true;
-        document.forms[0].elements[eyeRefId][0].disabled= true;
+        document.forms[0].elements[eyeHypId-1].disabled= true;
+        document.forms[0].elements[eyeDiaId-1].disabled= true;
+        document.forms[0].elements[eyeOthId-1].disabled= true;
+        document.forms[0].elements[eyeRefId-1].disabled= true;
     }
 }
 </script>
@@ -467,9 +468,9 @@ function controlEyeExam(){
                                             <tr><td>
                                             <table cellpadding='1' cellspacing='0'width="100%">   
                                                 <tr>
-                                                    <th class="subTitle" style="text-align:left">
+                                                    <td class="subTitle" style="text-align:left">
                                                         On Going Concern
-                                                    </th>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td><bean:write name="ongoingConcerns"/></td>
@@ -918,8 +919,8 @@ function controlEyeExam(){
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(FTNoValue)" value="yes" />Yes
-                                                        <html:radio property="value(FTNoValue)" value="no"/>No
+                                                        <html:radio property="value(FTNoValue)" onclick="javascript:controlFTExam();" value="yes" />Yes
+                                                        <html:radio property="value(FTNoValue)" onclick="javascript:controlFTExam();" value="no"/>No
                                                     </td>
                                                     <td class="dataEntryTable" rowspan="7" valign="top" align="center">&nbsp;</td>
                                                     <html:hidden property="value(FTNoDate)"/>
@@ -1038,8 +1039,8 @@ function controlEyeExam(){
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(iNoValue)" value="yes"/>Yes
-                                                        <html:radio property="value(iNoValue)" value="no"/>No
+                                                        <html:radio property="value(iNoValue)" onclick="javascript:controlEyeExam();" value="yes"/>Yes
+                                                        <html:radio property="value(iNoValue)" onclick="javascript:controlEyeExam();" value="no"/>No
                                                     </td>
                                                     <td class="dataEntryTable" rowspan="7" valign="top" align="center">&nbsp;</td>
                                                     <html:hidden property="value(iNoDate)" />
@@ -1258,7 +1259,7 @@ function controlEyeExam(){
                                                 <table style="display:none" cellpadding='1' cellspacing='0' id="diagnosis">
                                                 <tr>
                                                     <td>
-                                                        <html:textarea property="value(diagnosisVT)" cols="80" style="height:80"></html:textarea>
+                                                        <html:textarea property="value(diagnosisVT)" cols="78" style="height:80"></html:textarea>
                                                     </td>
                                                 </tr>
                                                 </table>
