@@ -1,0 +1,158 @@
+<?xml version='1.0' ?>
+<checklist>
+  <recommendations>
+    <item>Visits every 4 weeks until 32 weeks - weight, blood pressure, urine for protein/glucose,<BR/>
+symphysis fundal height, fetal heart beyond 12 weeks. <FONT COLOR="blue">BLUE</FONT> items are for residents</item>
+  </recommendations>
+
+  <week number="0">
+    <item><B>History</B></item>
+    <item name="cl0h1" checkbox="yes"><I>Complete antenatal one, first line of antenatal two, risk score and SIGN</I></item>
+    <item><B>Physical Examination</B></item>
+    <item name="cl0p1" checkbox="yes"><I>Complete physical exam including breast exam</I></item>
+    <item name="cl0p2" checkbox="yes">Pap - may defer if patients low risk and recent PAP &lt; 12 months</item>
+    <item name="cl0p3" checkbox="yes">Record uterine size in wks under uterus on antenatal 1 - physical exam</item>
+    <item><B>Laboratory Tests/Investigations</B></item>
+    <item name="cl0l1" checkbox="yes">GC/Chlamydia Cultures; if already had speculum exam do urine chlamydia</item>
+    <item name="cl0l2" checkbox="yes"><B>Rh, rubella, VDRL, hepatitis B screen, CBC</B></item>
+    <item name="cl0l3" checkbox="yes"><B>Urinalysis and culture</B></item>
+    <item><B>Other</B></item>
+    <item name="cl0o1" checkbox="yes">Consider varicella titre</item>
+    <item name="cl0o2" checkbox="yes"><FONT COLOR="blue">Review the chart with the OB supervisor</FONT></item>
+    <item name="cl0o3" checkbox="yes"><FONT COLOR="blue">Will you be available to provide intrapartum care? If not discuss transfer to a resident who will</FONT></item>
+    <item name="cl0o4" checkbox="yes">Recommend .4 mg of folic acid to prevent neural tube defects</item>
+    <item name="cl0o5" checkbox="yes">Book dating ultrasound</item>
+    <item name="cl0o6" checkbox="yes">HIV testing discussed</item>
+    <item name="cl0r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+    <item name="cl0r6" checkbox="yes" risk="6"><B>(RISK: Occup. &amp; Environ.)</B>:Assess Occupational/Environmental Risk</item>
+    <item name="cl0r128_1" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
+    <item name="cl0r128_2" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>A higher daily dose of folic acid <B>5 mg</B> is recommended until 12 weeks</item>
+    <item name="cl0r41" checkbox="yes" risk="41"><B>(RISK: Age &gt; 35)</B>:Refer for genetic counseling and possible testing</item>
+    <item name="cl0r42" checkbox="yes" risk="42"><B>(RISK: At risk-Tay-Sach..)</B>:Refer for genetic counseling and possible testing</item>
+    <item name="cl0r43" checkbox="yes" risk="43"><B>(RISK: chromosome abn.)</B>:Refer for genetic counseling and possible testing</item>
+    <item name="cl0r44_1" checkbox="yes" risk="44"><B>(RISK: NTD)</B>:Refer for genetic counseling and possible testing</item>
+    <item name="cl0r44_2" checkbox="yes" risk="44"><B>(RISK: NTD)</B>:A higher daily dose of folic acid <B>4 mg</B> is recommended until 12 weeks</item>
+    <item name="cl0r45" checkbox="yes" risk="45"><B>(RISK: Dev. delay)</B>:Refer for genetic counseling and possible testing</item>
+    <item name="cl0r46" checkbox="yes" risk="46"><B>(RISK: Congen.anomalies)</B>:Refer for genetic counseling and possible testing</item>
+    <item name="cl0r47" checkbox="yes" risk="47"><B>(RISK: Chromo defect)</B>:Refer for genetic counseling and possible testing</item>
+    <item name="cl0r48" checkbox="yes" risk="48"><B>(RISK: CF, MD..)</B>:Refer for genetic counseling and possible testing</item>
+  </week>
+
+  <week number="12">
+    <item name="cl12n1" checkbox="yes">Record lab at the top of antenal 1</item>
+    <item name="cl12n2" checkbox="yes">Review need for iron, <B> rh immune globulin</B></item>
+    <item name="cl12n3" checkbox="yes">Give MSS brochure</item>
+    <item name="cl12n4" checkbox="yes"><B>Review and encourage breast feeding</B> if undecided at first visit</item>
+    <item name="cl12n7" checkbox="yes">[Double book the 16 week visit with OB supervisor]</item>
+    <item name="cl12r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+    <item name="cl12r7" checkbox="yes" risk="107"><B>(RISK: Prev. Stillbirth)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r8" checkbox="yes" risk="108"><B>(RISK: Prev. SGA)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r9" checkbox="yes" risk="109"><B>(RISK: Prev. PTL/PROM)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r10" checkbox="yes" risk="110"><B>(RISK: Prev. GBS)</B>Counsel re recommendations for GBS prophylaxis in labour</item>
+    <item name="cl12r13_1" checkbox="yes" risk="107"><B>(Risk: Prev. C/S)</B>Request copy of previous operative note</item>
+    <item name="cl12r13_2" checkbox="yes" risk="107"><B>(RISK: Prev. C/S)</B>Verify a lower transverse incision on an operative report</item>
+    <item name="cl12r13_3" checkbox="yes" risk="107"><B>(RISK: Prev. C/S)</B>Counsel regarding VBAC</item>
+    <item name="cl12r21_1" checkbox="yes" risk="21"><B>(RISK: Hypertension)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r21_2" checkbox="yes" risk="21"><B>(RISK: Hypertension)</B>Obtain baseline renal function</item>
+    <item name="cl12r22" checkbox="yes" risk="22"><B>(RISK: Diabetes)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r23" checkbox="yes" risk="23"><B>(RISK: Heart Disease)</B>if significant heart disease consider referral to an obstetrician/perinatologist for full ca</item>
+    <item name="cl12r24" checkbox="yes" risk="24"><B>(RISK: Renal Diasese)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r26" checkbox="yes" risk="26"><B>(RISK: GI problem)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r27" checkbox="yes" risk="27"><B>(RISK: Neurological Disease)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r28_1" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Consider consultation with an obstetrician and/or neurologist</item>
+    <item name="cl12r28_2" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
+    <item name="cl12r30" checkbox="yes" risk="30"><B>(RISK: Herpes)</B>Discuss the current recommendations regarding C/S and herpes infection</item>
+    <item name="cl12r31" checkbox="yes" risk="31"><B>(RISK: Surgical/anesthesia problem)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r32" checkbox="yes" risk="32"><B>(RISK: Hospitalization)</B>Consider consultation with an obstetrician</item>
+    <item name="cl12r97" checkbox="yes" risk="97"><B>(RISK: BMI &lt; 20)</B>Counsel re recommended weight gain of 12-18 kg</item>
+    <item name="cl12r98" checkbox="yes" risk="98"><B>(RISK: BMI=20-25)</B>Counsel re recommended weight gain of 11-16 kg</item>
+    <item name="cl12r99" checkbox="yes" risk="99"><B>(RISK: BMI &gt; 25)</B>Counsel re recommended weight gain of 7-11 kg</item>
+  </week>
+
+  <week number="16">
+    <item name="cl16n1" checkbox="yes">Give MSS req n if patient has consented and have patient sign form</item>
+    <item name="cl16n2" checkbox="yes">Give patient the hospital prenatal clinic package</item>
+    <item name="cl16n3" checkbox="yes">If shared care, institute system of giving antenatal record to patient to take back to referring physician for shared care visits</item>
+    <item name="cl16n4" checkbox="yes">Ask patient to complete Healthy Eating Checklist and ALPHA self-report</item>
+    <item name="cl16r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+    <item name="cl16r128" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
+  </week>
+
+  <week number="20">
+    <item name="cl20n1" checkbox="yes">Record date of quickening</item>
+    <item name="cl20n2" checkbox="yes">Continue antenatal 2 discussion topics - physical and emotional changes, signs and symptoms of preterm labor, labor and pregnancy support</item>
+    <item name="cl20n3" checkbox="yes">Give patient education pamphlet on preterm labour</item>
+    <item name="cl20n4" checkbox="yes"><B>Reinforce or discuss breast feeding plans</B></item>
+    <item name="cl20n5" checkbox="yes">Has patient booked prenatal clinic visit?</item>
+    <item name="cl20n6" checkbox="yes">Ask patient to complete Infant Feeding Plan</item>
+    <item name="cl20n7" checkbox="yes"><FONT COLOR="blue">Double book the 28 week visit with OB supervisor</FONT></item>
+    <item name="cl20r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+  </week>
+
+  <week number="24">
+    <item name="cl24n1" checkbox="yes">Counsel regarding signs and symptoms of preterm labour</item>
+    <item name="cl24n2" checkbox="yes">Copy of antenatal 1 &amp; 2 plus copy of U/S, labs, blood work sent to Labor and Delivery</item>
+    <item name="cl24r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+    <item name="cl24r3" checkbox="yes" risk="109"><B>(RISK: Prev. PTL/PROM)</B><a href="http://oscar1.mcmaster.ca:8888/oscarResource/ob/riskinfo/preterm">Screen for bacterial vaginosis at the 24 week visit</a></item>
+    <item name="cl24r4" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
+  </week>
+
+  <week number="28">
+    <item name="cl28n1" checkbox="yes"><B>WhinRo given if necessary</B></item>
+    <item name="cl28n2" checkbox="yes">Give yellow copy of antenatal 2 for patient to carry with her</item>
+    <item name="cl28n3" checkbox="yes"><B>Review social risks from page 1 - consider a Healthy Babies referral</B></item>
+    <item name="cl28n4" checkbox="yes">Counsel regarding signs and symptoms of preterm labour</item>
+    <item name="cl28r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+    <item name="cl28r102" checkbox="yes" risk="108"><B>(RISK: Prev. SGA)</B>Consdider ultrasound to verify fetal growth and fluid volume</item>
+    <item name="cl28r107" checkbox="yes" risk="107"><B>(Risk: Prev. C/S)</B>Make sure operative note is on the chart #</item>
+    <item name="cl28r21" checkbox="yes" risk="21"><B>(RISK: Hypertension)</B>Consider ultrasound for fetal growth and fluid volume</item>
+  </week>
+
+  <week number="32">
+    <item><B>Visit every 2 weeks</B></item>
+    <item name="cl32n1" checkbox="yes">Discussion topics - birth plan, pain relief? Anaesthetic consult? Circumcision?</item>
+    <item name="cl32n2" checkbox="yes">Signs of labour onset, SROM, how to get in touch with the doctor</item>
+    <item name="cl32n3" checkbox="yes">Either group B strep screening at 36 weeks (lower vagina, peineum and perianal) <B>OR</B> intrapartum prophylaxis for women with risks</item>
+    <item name="cl32n4" checkbox="yes"><B>Review breast feeding</B></item>
+    <item name="cl32n5" checkbox="yes">Counsel regarding signs and symptoms of preterm labour</item>
+    <item name="cl32n6" checkbox="yes"><FONT COLOR="blue">Double book 36 week, and all remaining visits with OB supervisor</FONT></item>
+    <item name="cl32r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+    <item name="cl32r102" checkbox="yes" risk="108"><B>(RISK: Prev. SGA)</B>Consdider ultrasound to verify fetal growth and fluid volume</item>
+    <item name="cl32r21" checkbox="yes" risk="21"><B>(RISK: Hypertension)</B>Consider ultrasound for fetal growth and fluid volume</item>
+    <item name="cl32r128" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
+  </week>
+
+  <week number="36">
+    <item><B>Visit every week</B></item>
+    <item name="cl36n1" checkbox="yes">Counsel regarding signs and symptoms of preterm labour</item>
+    <item name="cl36n2" checkbox="yes">Review birth plan - who will be there for support?</item>
+    <item name="cl36n3" checkbox="yes">Early discharge plans (may stay up to 60 hrs.), postpartum plans</item>
+    <item name="cl36n4" checkbox="yes">Check fetal lie - if Breech consider referral for version @ 36 weeks</item>
+    <item name="cl36r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+    <item name="cl36r102" checkbox="yes" risk="108"><B>(RISK: Prev. SGA)</B>Consdider ultrasound to verify fetal growth and fluid volume</item>
+    <item name="cl36r104" checkbox="yes" risk="110"><B>(RISK: Prev. GBS)</B>Counsel re recommendations for GBS prophylaxis in labour</item>
+    <item name="cl36r21" checkbox="yes" risk="21"><B>(RISK: Hypertension)</B>Consider ultrasound for fetal growth and fluid volume</item>
+    <item name="cl36r128_1" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
+    <item name="cl36r128_2" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Consider vitamin K supplementation</item>
+    <item name="cl36r30" checkbox="yes" risk="30"><B>(RISK: Herpes)</B>Discuss the option of acyclovir prophylaxis, particularly if the patient has had a recurrence during this pregnancy</item>
+  </week>
+
+  <week number="38">
+    <item><B>Visit every week</B></item>
+    <item name="cl38v1" checkbox="yes"><FONT COLOR="blue">Carry OB pager as of 38 weeks, give pager # and home # to paging</FONT></item>
+    <item name="cl38v2" checkbox="yes"><FONT COLOR="blue">If working with a buddy, introduce your buddy to the patient</FONT></item>
+    <item name="cl38r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+  </week>
+
+  <week number="40">
+    <item name="cl40r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
+  </week>
+</checklist>
+
+
+
+
+
+
+
+
