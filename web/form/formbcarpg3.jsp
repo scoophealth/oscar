@@ -549,6 +549,10 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 	    }
         return temp;
     }
+function calToday(field) {
+	var calDate=new Date();
+	field.value = calDate.getDate() + '/' + (calDate.getMonth()+1) + '/' + calDate.getFullYear();
+}
 </script>
 
 
@@ -881,7 +885,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
           </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date1", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date1" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date1", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt1", "") %>" @oscar.formDB />
@@ -912,7 +916,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date2", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date2" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date2", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt2", "") %>" @oscar.formDB />
@@ -943,7 +947,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date3", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date3" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date3", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt3", "") %>" @oscar.formDB />
@@ -974,7 +978,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date4", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date4" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date4", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt4", "") %>" @oscar.formDB />
@@ -1010,7 +1014,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date5", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date5" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date5", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt5", "") %>" @oscar.formDB />
@@ -1041,7 +1045,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date6" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date6", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date6" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date6", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt6" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt6", "") %>" @oscar.formDB />
@@ -1072,7 +1076,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date7" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date7", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date7" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date7", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt7" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt7", "") %>" @oscar.formDB />
@@ -1103,7 +1107,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date8" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date8", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date8" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date8", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt8" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt8", "") %>" @oscar.formDB />
@@ -1134,7 +1138,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date9" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date9", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date9" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date9", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt9" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt9", "") %>" @oscar.formDB />
@@ -1165,7 +1169,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date10" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date10", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date10" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date10", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt10", "") %>" @oscar.formDB />
@@ -1196,7 +1200,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date11" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date11", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date11" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date11", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt11" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt11", "") %>" @oscar.formDB />
@@ -1227,7 +1231,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date12" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date12", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date12" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date12", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt12" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt12", "") %>" @oscar.formDB />
@@ -1258,7 +1262,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date13" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date13", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date13" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date13", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt13" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt13", "") %>" @oscar.formDB />
@@ -1289,7 +1293,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date14" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date14", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date14" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date14", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt14" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt14", "") %>" @oscar.formDB />
@@ -1320,7 +1324,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date15" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date15", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date15" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date15", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt15" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt15", "") %>" @oscar.formDB />
@@ -1351,7 +1355,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date16" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date16", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date16" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date16", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt16" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt16", "") %>" @oscar.formDB />
@@ -1382,7 +1386,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date17" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg3_date17", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date17" style="width:100%" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date17", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt17" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt17", "") %>" @oscar.formDB />

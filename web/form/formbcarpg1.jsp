@@ -352,7 +352,7 @@ function calByLMP() {
       </td>
     </tr><tr>
       <td colspan='2'>MOTHER'S NAME
-      <input type="text" name="pg1_moName" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("pg1_moName", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_moName" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("pg1_moName", (props.getProperty("c_surname", "")+", "+props.getProperty("c_givenName", "")) ) %>" @oscar.formDB />
       </td>
       <td width="20%">DATE OF BIRTH<br>dd/mm/yyyy
       <input type="text" name="pg1_dateOfBirth" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dateOfBirth", "") %>" @oscar.formDB dbType="date" />
