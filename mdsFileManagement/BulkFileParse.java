@@ -807,6 +807,7 @@ public class BulkFileParse {
                     retval = true;
                 }
             }
+            fReader.closeFile();
         }catch (Exception e){
             System.out.println("System caught on "+thisSegment);
             System.out.println(e);
