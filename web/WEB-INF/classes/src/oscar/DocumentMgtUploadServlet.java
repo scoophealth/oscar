@@ -64,18 +64,24 @@ public class DocumentMgtUploadServlet extends HttpServlet{
     String temp = request.getContentType().substring(count+1);
     String filename = "test.txt", fileoldname="", foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="", doctype="", docxml="";
   String home_dir="", doc_forward="";
+java.util.Enumeration enum = request.getParameterNames();
+while (enum.hasMoreElements()){
+   String Daparam = ((String) enum.nextElement());
+   System.out.println("parametro: " + Daparam + "\tvalor: "+ request.getParameter(Daparam));
+}
  String userHomePath = System.getProperty("user.home", "user.dir");
   //    System.out.println(userHomePath);
       //File pFile = new File(userHomePath, backupfilepath+".properties");
       //FileInputStream pStream = new FileInputStream(pFile.getPath());
 
-      Properties ap = new Properties();
+      // Get properties from oscar_mcmaster.properties
+       Properties ap = OscarProperties.getInstance();
       //ap.load(pStream);
       //Main configuration file. This file must be saved on WEB-INF at the webapp diretory.
       //The file name is defined on the page an its read as a parameter (propName).
-      String pathSeparator = System.getProperty("file.separator");
-      String mainConfigFileName = getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+"oscar_mcmaster.properties";
-      ap.load(new FileInputStream(new File(mainConfigFileName)));
+      // String pathSeparator = System.getProperty("file.separator");
+      //String mainConfigFileName = getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+"oscar_mcmaster.properties";
+      //ap.load(new FileInputStream(new File(mainConfigFileName)));
       
       forwardTo  = ap.getProperty("DOC_FORWARD");
       foldername = ap.getProperty("DOCUMENT_DIR");
