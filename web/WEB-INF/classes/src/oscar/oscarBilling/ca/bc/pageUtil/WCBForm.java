@@ -32,7 +32,7 @@ import oscar.Misc;
  */
 public final class WCBForm extends ActionForm {
     private static String sql =
-    "INSERT INTO wcb (billing_no, demographic_no, provider_no, formCreated, formEdited, w_reporttype, w_fname, w_lname, w_mname, w_gender, w_dob, w_address, w_city, w_area, w_phone, w_phn, w_empname, w_wcbno, w_opaddress, w_opcity, w_rphysician, w_duration, w_ftreatment, w_problem, w_servicedate, w_diagnosis, w_icd9, w_bp, w_side, w_noi, w_work, w_workdate, w_clinicinfo, w_capability, w_capreason, w_estimate, w_rehab, w_rehabtype, w_estimatedate, w_tofollow, w_payeeno, w_pracno, w_empphone, w_emparea, w_postal, w_wcbadvisor, w_doi, w_feeitem, w_extrafeeitem, bill_amount, w_servicelocation) VALUES (";
+    "INSERT INTO wcb (billing_no, demographic_no, provider_no, formCreated, formEdited, w_reporttype, w_fname, w_lname, w_mname, w_gender, w_dob, w_address, w_city, w_area, w_phone, w_phn, w_empname, w_wcbno, w_opaddress, w_opcity, w_rphysician, w_duration, w_ftreatment, w_problem, w_servicedate, w_diagnosis, w_icd9, w_bp, w_side, w_noi, w_work, w_workdate, w_clinicinfo, w_capability, w_capreason, w_estimate, w_rehab, w_rehabtype, w_estimatedate, w_tofollow, w_payeeno, w_pracno, w_empphone, w_emparea, w_postal, w_wcbadvisor, w_doi, w_feeitem, w_extrafeeitem, bill_amount, w_servicelocation,formNeeded) VALUES (";
     private String demographic_no,
     provider_no,
     formCreated,
@@ -82,7 +82,8 @@ public final class WCBForm extends ActionForm {
     w_wcbadvisor,
     w_feeitem,
     w_extrafeeitem,
-    w_servicelocation;
+    w_servicelocation,
+    formNeeded;
     public WCBForm() {
     }
     
@@ -91,7 +92,7 @@ public final class WCBForm extends ActionForm {
         boolean isValid = true;
         return isValid;
     }
-    public String SQL(String billingno, String amount) {       
+    public String SQL(String billingno, String amount) {              
         return sql
         + "'"
         + oscar.Misc.mysqlEscape(billingno)
@@ -191,9 +192,119 @@ public final class WCBForm extends ActionForm {
         + oscar.Misc.mysqlEscape(amount)
         + "', '"
         + oscar.Misc.mysqlEscape(this.w_servicelocation)
+        + "', '"
+        + oscar.Misc.mysqlEscape(formNeeded)
         + "')";
         
     }
+    
+    
+    public String secondSQLItem(String billingno, String amount) {       
+        return sql
+        + "'"
+        + oscar.Misc.mysqlEscape(billingno)
+        + "', '"
+        + oscar.Misc.mysqlEscape(demographic_no)
+        + "', '"
+        + oscar.Misc.mysqlEscape(provider_no)
+        + "', NOW(), NOW(), '"
+        + oscar.Misc.mysqlEscape(w_reportype)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_fname)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_lname)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_mname)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_gender)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_dob)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_address)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_city)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_area)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_phone)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_phn)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_empname)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_wcbno)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_opaddress)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_opcity)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_rphysician)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_duration)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_ftreatment)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_problem)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_servicedate)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_diagnosis)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_icd9)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_bp)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_side)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_noi)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_work)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_workdate)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_clinicinfo)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_capability)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_capreason)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_estimate)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_rehab)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_rehabtype)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_estimatedate)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_tofollow)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_payeeno)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_pracno)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_empphone)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_emparea)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_postal)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_wcbadvisor)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_doi)
+        + "', '"
+        + oscar.Misc.mysqlEscape(w_extrafeeitem)
+        + "', '"
+        + oscar.Misc.mysqlEscape("")
+        + "', '"
+        + oscar.Misc.mysqlEscape(amount)
+        + "', '"
+        + oscar.Misc.mysqlEscape(this.w_servicelocation)
+        + "', '"
+        + oscar.Misc.mysqlEscape("0")
+        + "')";
+        
+    }
+    
     public void Set(oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean) {
         oscar.oscarBilling.ca.bc.data.BillingFormData billform =
         new oscar.oscarBilling.ca.bc.data.BillingFormData();
@@ -576,4 +687,21 @@ public final class WCBForm extends ActionForm {
     public void setW_pracname(String w_pracname) {
         this.w_pracname = w_pracname;
     }
+    
+    /**
+     * Getter for property formNeeded.
+     * @return Value of property formNeeded.
+     */
+    public java.lang.String getFormNeeded() {       
+       return formNeeded;
+    }
+    
+    /**
+     * Setter for property formNeeded.
+     * @param formNeeded New value of property formNeeded.
+     */
+    public void setFormNeeded(java.lang.String formNeeded) {       
+       this.formNeeded = formNeeded;
+    }
+    
 }
