@@ -403,6 +403,7 @@ CREATE TABLE formBCAR (
   ar2_labSTS varchar(10) default NULL,
   ar2_labHivTestN tinyint(1) default NULL,
   ar2_labHivTestY tinyint(1) default NULL,
+  ar2_labHIV varchar(10) default NULL,
   ar2_labOtherTest varchar(50) default NULL,
   pg2_formDate date default NULL,
   ar2_labGWeek varchar(5) default NULL,
