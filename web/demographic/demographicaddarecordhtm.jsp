@@ -226,7 +226,8 @@ function checkTypeIn() {
         <input type="text" name="province" value="<%=props.getProperty("billregion", "ON")%>">
         <% } else { %>
         <select name="province">
-        <% String billregion = props.getProperty("billregion", ""); %>          
+        <% String billregion = props.getProperty("billregion", ""); %> 
+          <option value="" >None Selected</option>
           <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
           <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
           <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
@@ -240,6 +241,7 @@ function checkTypeIn() {
           <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
+          <option value=""<%=province.equals("")?" selected":""%>>Other</option>
         </select>
         <% } %>
       </td>

@@ -347,7 +347,8 @@ function refresh() {
           <option value="PE"<%=province.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
           <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-          <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option>                             
+          <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option> 
+          <option value=""<%=province.equals("")?" selected":""%>>Other</option>
         </select>
         <% } %>
       </td>
@@ -428,6 +429,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
       <td align="left" > 
 		<% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
         <select name="hc_type">
+          <option value="" >None Selected</option>
           <option value="AB"<%=hctype.equals("AB")?" selected":""%>>AB-Alberta</option>
           <option value="BC"<%=hctype.equals("BC")?" selected":""%>>BC-British Columbia</option>
           <option value="MB"<%=hctype.equals("MB")?" selected":""%>>MB-Manitoba</option>          
