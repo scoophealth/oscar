@@ -92,7 +92,7 @@ function changeList(){
     var quickList = document.forms[0].quickList.options[document.forms[0].quickList.selectedIndex].value;
     var demographicNo = document.forms[0].demographicNo.value;    
     var providerNo = document.forms[0].providerNo.value;    
-    openNewPage(600,600,'/oscar/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo='+demographicNo+'&quickList='+quickList+'&providerNo='+providerNo);    
+    openNewPage(600,600,'setupDxResearch.do?demographicNo='+demographicNo+'&quickList='+quickList+'&providerNo='+providerNo);    
 }
 
 function openNewPage(vheight,vwidth,varpage) { 
