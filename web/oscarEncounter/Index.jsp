@@ -826,7 +826,7 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
     <!--social history row-->
                 <tr>
                     <td>
-                        <table bgcolor="#CCCCFF" name="rowTwo">
+                        <table bgcolor="#CCCCFF" id="rowTwo">
                             <tr>
                                 <td>
                                     <div class="RowTop" ><bean:message key="oscarEncounter.Index.msgConcerns"/>:</div><input type="hidden" name="ocInput"/>
@@ -927,7 +927,7 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
     <!--encounter row-->
                 <tr>
                     <td>
-                        <table bgcolor="#CCCCFF" name="rowThree">
+                        <table bgcolor="#CCCCFF" id="rowThree">
                            <tr>
                                 <td nowrap width='80%' >
                                     <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
