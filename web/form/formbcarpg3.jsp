@@ -864,7 +864,7 @@ function calToday(field) {
           <td><span class="small9">A.F.P./ TRIPLE SCREEN</span><br>
           <select name="ar2_labAfpTS">
           <%
-          String[] optAfp = {"", "Neg", "Pos", "+ve", "-ve", "declined"}; 
+          String[] optAfp = {"", "Neg", "Pos","declined"}; 
           for (int i=0; i<optAfp.length; i++) {
           %>
             <option value="<%=optAfp[i]%>" <%=props.getProperty("ar2_labBlood", "").equals(optAfp[i])?"selected":""%> ><%=optAfp[i]%></option>
