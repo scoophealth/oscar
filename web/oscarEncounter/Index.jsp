@@ -380,18 +380,18 @@ if (!document.all) document.captureEvents(Event.MOUSEUP);
 document.onmouseup = getActiveText;
 function getActiveText(e) {
   //text = (document.all) ? document.selection.createRange().text : document.getSelection();
-  //document.ksearch.key.value = text;
+  //document.ksearch.term.value = text;
  if(document.all) {
     text = document.selection.createRange().text;
-    if(text != "" && document.ksearch.key.value=="") {
-      document.ksearch.key.value += text;
+    if(text != "" && document.ksearch.term.value=="") {
+      document.ksearch.term.value += text;
     }
-    if(text != "" && document.ksearch.key.value!="") {
-      document.ksearch.key.value = text;
+    if(text != "" && document.ksearch.term.value!="") {
+      document.ksearch.term.value = text;
     }
   } else {
     text = window.getSelection();
-    document.ksearch.key.value = text;
+    document.ksearch.term.value = text;
   }
   return true;
 }
