@@ -221,7 +221,7 @@
         //check page 3
         var checkboxes = new Array(62,63,66,67,70,71,72,73,74,77,78,81,82,85);
         numericFields = new Array(64,68);        
-        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(61,61,0,1)==true && isFormCompleted(62,85,8,0)==true){
+        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(61,61,0,1)==true && isFormCompleted(62,85,7,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -250,16 +250,22 @@
     }
 
     function checkBeforeSave(){        
-        if(confirmRange(0, allInputs2,msg2)==true&&confirmRange(0, allInputs3,msg3)==true){
-            if(document.getElementById('page5').style.display=='block'){
-                if(isFormCompleted(122,153,8,0)==true)
-                    return true;
-            }    
-            else{
-                if(isFormCompleted(11,36,5,1)==true && isFormCompleted(37,60,3,4)==true && isFormCompleted(61,61,0,1)==true && isFormCompleted(62,85,8,0)==true && isFormCompleted(86,121,9,0)==true && isFormCompleted(122,153,8,0)==true)
-                    return true;
-            }            
+        if(document.getElementById('page1').style.display=='block'){
+            if(confirmRange(0, allInputs2,msg2)==true)
+                return true;
         }
+        else if(document.getElementById('page2').style.display=='block'){
+            if(confirmRange(0, allInputs3,msg3)==true)
+                return true;
+        }
+        else if(document.getElementById('page5').style.display=='block'){
+            if(isFormCompleted(122,155,8,2)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(11,36,5,1)==true && isFormCompleted(37,60,3,4)==true && isFormCompleted(61,61,0,1)==true && isFormCompleted(62,85,8,0)==true && isFormCompleted(86,121,9,0)==true && isFormCompleted(122,155,8,2)==true)
+                return true;
+        }                    
         return false;
     }
 </script>
