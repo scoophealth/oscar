@@ -199,7 +199,7 @@ public class MsgMessageData {
 
 	  /* Choose the right command to recover the messageid inserted above */
 	  OscarProperties prop = OscarProperties.getInstance();
-	  String db_type = prop.getProperty("db_type").trim();
+	  String db_type = prop.getProperty("db_type", "mysql").trim();
 	  if (db_type.equalsIgnoreCase("mysql")) {
           	rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
 	  } else if (db_type.equalsIgnoreCase("postgresql")) {
@@ -254,7 +254,7 @@ public class MsgMessageData {
 
          /* Choose the right command to recover the messageid inserted above */
 	 OscarProperties prop = OscarProperties.getInstance();
-	 String db_type = prop.getProperty("db_type").trim();
+	 String db_type = prop.getProperty("db_type", "mysql").trim();
 	 if (db_type.equalsIgnoreCase("mysql")) {
                rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
          } else if (db_type.equalsIgnoreCase("postgresql")) {
