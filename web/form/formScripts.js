@@ -19,8 +19,8 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
-        var ret = is1CheckboxChecked(0, choiceFormat);
-        if(ret==true) {
+        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(allNumericField);                
+        if(ret==true) {            
             reset();
             ret = confirm("Are you sure you want to save this form?");
         }
@@ -34,7 +34,7 @@
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
-        var ret = is1CheckboxChecked(0, choiceFormat);
+        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(allNumericField);
         if(ret == true) {
             reset();
             ret = confirm("Are you sure you wish to save and close this window?");
@@ -93,4 +93,47 @@
             }
         }                
         return numCheck;
+    }
+
+    function isNumeric(s){
+        if(s!=null){
+            for(var i=0; i<s.length; ++i){
+                if("0123456789".indexOf(s.charAt(i))<0){
+                    return false;
+                }
+            }
+        }
+
+    }
+
+    function allAreNumeric(allNumericField){
+        var isValid = true;
+        var needAlert = false;
+        if(allNumericField!=null){
+            for(var i=0; i<allNumericField.length; i++){
+                document.forms[0].elements[allNumericField[i]].style.backgroundColor = 'white';  
+                isValid = isNumeric(document.forms[0].elements[allNumericField[i]].value);
+                if(isValid == false){
+                    document.forms[0].elements[allNumericField[i]].style.backgroundColor = 'red';                    
+                    needAlert = true;
+                }                    
+            }
+            if(needAlert == true){
+                alert("Only numeric value is valid in the highlighted field(s)");    
+                return false;
+            }
+        }
+        return true; 
+    }
+
+    function oneFieldIsNumeric(id){
+        var isValid = true;
+        isValid = isNumeric(document.forms[0].elements[id].value);
+        document.forms[0].elements[id].style.backgroundColor = 'white'; 
+        if(isValid == false){
+            document.forms[0].elements[id].style.backgroundColor = 'red'; 
+            alert("Only numeric value is valid in the highlighted field(s)");  
+            return false;
+        }
+        return true;
     }
