@@ -144,6 +144,8 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
             ShowElementById('CORRESPONDENCENOTE');
          }
       }
+      
+    
  		
 		function rs(n,u,w,h,x) {
 		  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
@@ -208,6 +210,13 @@ function checkDebitRequest(){
 	}	
 }
 
+function showRecord(){
+   if (document.getElementById('SENDRECORD').style.display == 'none'){
+      ShowElementById('SENDRECORD');      
+   }else{
+      HideElementById('SENDRECORD');          
+   }
+}
 
     </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -819,14 +828,14 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
   </table>
   </html:form>
-
-  <div style="visibility: hidden;">
+  <a href="javascript: function myFunction() {return false; }" onclick="javascript: showRecord();" >View Full Record</a>                    
+  <div style="display: none;" id="SENDRECORD">
     <table border=1 >
         <tr>
             <td>Name</td>
-            <td>VAlue</td>
-            <td>size</td>   
-            <td>shown</td>            
+            <td>Value</td>
+            <td>Size</td>   
+            <td>Shown</td>            
         </tr>
         <tr>
             <!--REC-CODE-IN-->
@@ -1171,7 +1180,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             <td>6</td>
             <td>Y</td>
         </tr>
-xml_vdate
+
     </table>
     </div>
     <script language='javascript'>
