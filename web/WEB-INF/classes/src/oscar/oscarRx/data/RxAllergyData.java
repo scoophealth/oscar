@@ -89,6 +89,30 @@ public class RxAllergyData {
             return this.DESCRIPTION;
         }
         
+        
+        /**
+         * use to create shorten descriptions of alergy.
+         *
+         * ie BENZOIC ACID/ AGRIMONY/ GOLDENROD/ PAREIRA BRAVA/
+         *
+         * with maxlength 13 and shorted 8 and added "..."
+         *
+         * would equal
+         *
+         * BENZOIC ...
+         * @param maxlength The maximum string length before truncating the string
+         * @param shortend length string will be truncated if maxlength is met
+         * @param added string added to original string if maxlength is met.  ie ...
+         * @return either full description if its less than maxlength or shortened string if its not
+         */         
+        public String getShortDesc(int maxlength, int shorted, String added){
+           String desc = this.getDESCRIPTION();                      
+           if( (maxlength > shorted) && (desc.length() > maxlength) ){
+              desc = desc.substring(0, 8) + "..." ;
+           }           
+           return desc;
+        }
+        
         public void setDESCRIPTION(String desc) {
             this.DESCRIPTION = desc;
         }
