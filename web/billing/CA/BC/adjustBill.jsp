@@ -284,7 +284,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 <input type="hidden" name="billNumber" value="<%=allFields.getProperty("billing_no")%>"/>
 <table width="600" border="0">
   <tr bgcolor="#CCCCFF"> 
-     <td height="21" colspan="2" class="bCellData">Patient Information<input type="hidden" name ="billingmasterNo" "value="<%=billNo%>" /></td>
+     <td height="21" colspan="2" class="bCellData">Patient Information<input type="hidden" name ="billingmasterNo" value="<%=billNo%>" /></td>
     
   </tr>
   <tr> 
