@@ -36,8 +36,8 @@
 	if (request.getParameter("submit") != null && (request.getParameter("submit").equals("Search")
 		|| request.getParameter("submit").equals("Next Page") || request.getParameter("submit").equals("Last Page")) ) {
 	  BillingONDataHelp dbObj = new BillingONDataHelp();
-	  String search_mode = request.getParameter("search_mode");
-	  String orderBy = request.getParameter("orderby");
+	  String search_mode = request.getParameter("search_mode")==null?"search_name":request.getParameter("search_mode");
+	  String orderBy = request.getParameter("orderby")==null?"last_name,first_name":request.getParameter("orderby");
 	  String where = "";
 	  if("search_name".equals(search_mode)) {
 	    String[] temp = keyword.split("\\,\\p{Space}*");
@@ -64,9 +64,10 @@
 	}
 %>
   <%@ page errorPage="../appointment/errorpage.jsp"import="java.util.*,
-                                                           java.sql.*" %>
+                                                           java.sql.*, java.net.*" %>
   <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
   <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+  <%@ page import="org.apache.commons.lang.WordUtils" %>
   <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
   <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
   <html:html locale="true">
@@ -134,6 +135,10 @@
 		  document.forms[0].keyword.focus();
 		  document.forms[0].keyword.select();
 		}
+		function check() {
+		  document.forms[0].submit.value="Search";
+		  return true;
+		}
 		<%if(param.length()>0) {%>
 		function typeInData1(data) {
 		  self.close();
@@ -152,7 +157,7 @@
     </head>
     <body bgcolor="white" bgproperties="fixed" onload="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
       <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#CCCCFF">
-        <form method="post" name="titlesearch" action="searchRefDoc.jsp" onsubmit="return checkTypeIn()">
+        <form method="post" name="titlesearch" action="searchRefDoc.jsp" onSubmit="return check();">
           <tr>
             <td class="searchTitle" colspan="4">
               Search Referral Doctor
@@ -170,40 +175,25 @@
             <td valign="middle" rowspan="2" align="left">
               <input type="text" name="keyword" value="" size="17" maxlength="100">
               <input type="hidden" name="orderby" value="last_name, first_name">
-              <input type="hidden" name="limit1" value="<%=strLimit1%>">
-              <input type="hidden" name="limit2" value="<%=strLimit2%>">
-              <input type="submit" class="mbttn" name="submit" value='Search' size="17">
+              <input type="hidden" name="limit1" value="0">
+              <input type="hidden" name="limit2" value="10">
+              <input type="submit" name="submit" value='Search'>
             </td>
           </tr>
           <input type='hidden' name='param' value="<%=StringEscapeUtils.escapeHtml(param)%>">
           <input type='hidden' name='param2' value="<%=StringEscapeUtils.escapeHtml(param2)%>">
-        </form>
       </table>
 		<table width="95%" border="0">
 		<tr>
 		<td align="left">Results based on keyword(s): <%=keyword==null?"":keyword%></td>
 		</tr>
+		</form>
 		</table>
-      <script language="JavaScript">
-        var fullname = "";
-
-        function addName(demographic_no, lastname, firstname, chartno, messageID) {
-          fullname = lastname + "," + firstname;
-          document.addform.action = "../appointment/addappointment.jsp?demographic_no=" + demographic_no + "&name=" +
-                  fullname + "&chart_no=" + chartno + "&bFirstDisp=false" + "&messageID=" + messageID;
-
-          //+"\"" ;
-          document.addform.submit();
-          //
-  //return;
-
-        }
-      </script>
       <center>
       <table width="100%" border="0" cellpadding="0" cellspacing="2" bgcolor="#C0C0C0">
-        <tr class="title"><th width="20%"><b>Ref. No.</b>
+        <tr class="title"><th width="10%"><b>Ref. No.</b>
           </th>
-          <th width="20%">
+          <th width="25%">
             Last Name</b>
           </th>
           <th width="20%">
@@ -219,15 +209,15 @@
         <%for(int i=0; i<vec.size(); i++) {
         	prop = (Properties) vec.get(i);
 			String bgColor = i%2==0?"#EEEEFF":"ivory";
-			String strOnClick = param2.length()>0? "typeInData2('" + prop.getProperty("referral_no", "") + "','"+prop.getProperty("last_name", "")+ "," + prop.getProperty("first_name", "") + "')"
+			String strOnClick = param2.length()>0? "typeInData2('" + prop.getProperty("referral_no", "") + "','"+StringEscapeUtils.escapeJavaScript(prop.getProperty("last_name", "")+ "," + prop.getProperty("first_name", "")) + "')"
 				: "typeInData1('" + prop.getProperty("referral_no", "") + "')";
         %>
 		<tr align="center"  bgcolor="<%=bgColor%>" align="center"
 onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 onClick="<%=strOnClick%>" >
 		  <td><%=prop.getProperty("referral_no", "")%></td>
-		  <td><%=prop.getProperty("last_name", "")%></td>
-		  <td><%=prop.getProperty("first_name", "")%></td>
+		  <td><%=WordUtils.capitalize(prop.getProperty("last_name", "").toLowerCase())%></td>
+		  <td><%=WordUtils.capitalize(prop.getProperty("first_name", "").toLowerCase())%></td>
 		  <td><%=prop.getProperty("specialty", "")%></td>
 		  <td><%=prop.getProperty("phone", "")%></td>
 		</tr>
@@ -252,12 +242,12 @@ onClick="<%=strOnClick%>" >
 <script language="JavaScript">
 <!--
 function last() {
-  document.nextform.action="searchRefDoc.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
-  //document.nextform.submit();
+  document.nextform.action="searchRefDoc.jsp?param=<%=URLEncoder.encode(param,"UTF-8")%>&param2=<%=URLEncoder.encode(param2,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
+  document.nextform.submit();
 }
 function next() {
-  document.nextform.action="searchRefDoc.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
-  //document.nextform.submit();
+  document.nextform.action="searchRefDoc.jsp?param=<%=URLEncoder.encode(param,"UTF-8")%>&param2=<%=URLEncoder.encode(param2,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
+  document.nextform.submit();
 }
 //-->
 </SCRIPT>
