@@ -144,7 +144,9 @@
             </table>
             <table>
                 <tr>
-                    <td><input type="button" name="Button" value="<bean:message key="global.btnBack"/>" onClick="window.back()"></td>
+                    <logic:present name="back">
+                    <td><input type="button" name="Button" value="<bean:message key="global.btnBack"/>" onClick="window.history.go(-1)"></td>
+                    </logic:present>
                     <td><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"></td>
                     <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
                     <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>" onclick="submit();"/></td>
