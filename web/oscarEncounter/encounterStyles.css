@@ -158,55 +158,38 @@ TH {
 }
 .MainTableTopRowLeftColumn
 {
-    background-color:#003399;
-    border-left: 2px solid #A9A9A9;
+    background-color:#003399;   
     border-right: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
     height:34px;
     max-width:130px;
-
     font-size: 110%;
     font-weight: bold;
     color: #FFFFFF;
 }
 .MainTableBottomRowLeftColumn
-{
-
-    border-left: 2px solid #A9A9A9;
+{    
     border-right: 2px solid #A9A9A9;
-    border-bottom: 2px solid #A9A9A9;
     height:4px;
     max-width:130px;
 
 }
 .MainTableLeftColumn
-{
-    border-left: 2px solid #A9A9A9;
+{   
     border-right: 2px solid #A9A9A9;
     max-width:130px;
-
 }
 
 .MainTableTopRowRightColumn
 {
-    background-color:#003399;
-    border-left: 2px solid #A9A9A9;
-    border-right: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
+    background-color:#003399;   
     height:34px;
 }
 .MainTableBottomRowRightColumn
 {
-    border-left: 2px solid #A9A9A9;
-    border-right: 2px solid #A9A9A9;
-    border-bottom: 2px solid #A9A9A9;
     height:4px;
 }
 .MainTableRightColumn
-{
-
-    border-left: 2px solid #A9A9A9;
-    border-right: 2px solid #A9A9A9;
+{    
     height:34px;
 }
 .TopStatusBar
@@ -230,5 +213,4 @@ TH {
     font-weight:bold;
     font-size:110%;
     color:white;
-
 }
