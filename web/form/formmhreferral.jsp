@@ -83,11 +83,19 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
-        return(confirm("Are you sure you want to save this form?"));
+        var ret = confirm("Are you sure you want to save this form?");
+        if(ret == true){
+                window.opener.location.reload();            
+            } 
+        return ret;
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
-        return(confirm("Are you sure you wish to save and close this window?"));
+        var ret = confirm("Are you sure you wish to save and close this window?");
+        if(ret == true){
+            window.opener.location.reload();            
+        } 
+        return ret;
     }
     function onExit() {
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)

@@ -85,7 +85,14 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
-        return(confirm("Are you sure you want to save this form?"));
+        var ret = confirm("Are you sure you want to save this form?");
+        if(ret == true){
+            window.opener.location.reload();            
+        } 
+        if(ret == true){
+                window.opener.location.reload();            
+            } 
+        return ret;
     }
     function onExit() {
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)

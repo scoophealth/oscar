@@ -54,6 +54,9 @@
         {
             ret = confirm("<bean:message key="oscarEncounter.formFemaleAnnual.msgWannaSave"/>");
         }
+        if(ret == true){
+                window.opener.location.reload();            
+            } 
         return ret;
     }
     function onExit() {
@@ -70,6 +73,9 @@
         {
             ret = confirm("<bean:message key="oscarEncounter.formFemaleAnnual.msgSaveExit"/>");
         }
+        if(ret == true){
+            window.opener.location.reload();            
+        } 
         return ret;
     }
 /**

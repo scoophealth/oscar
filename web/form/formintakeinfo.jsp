@@ -256,7 +256,8 @@
         }
         else if(document.getElementById('page2').style.display=='block' && confirmRange(0, allInputs3,msg3)==true && isFormCompleted(37,60,3,4)==true){            
             return true;
-        }        
+        }
+        
         else if(document.getElementById('page5').style.display=='block' && isFormCompleted(122,155,8,2)==true){
             return true;
         }    
