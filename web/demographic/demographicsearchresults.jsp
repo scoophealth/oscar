@@ -90,19 +90,19 @@ function checkTypeIn() {
 	//keyword.replace('*', '%').trim();
 
 	if(request.getParameter("search_mode").equals("search_name")) {
-		keyword=request.getParameter("keyword");//+"%";
+		keyword=request.getParameter("keyword")+".";
 		if(keyword.indexOf(",")==-1)  rs = apptMainBean.queryResults(keyword, dboperation) ; //lastname
 		else if(keyword.indexOf(",")==(keyword.length()-1))  rs = apptMainBean.queryResults(keyword.substring(0,(keyword.length()-1)), dboperation);//lastname
 		else { //lastname,firstname
     		String[] param =new String[2];
     		int index = keyword.indexOf(",");
-	  		param[0]=keyword.substring(0,index).trim();//+"%";//(",");
-	  		param[1]=keyword.substring(index+1).trim();//+"%";
+	  		param[0]=keyword.substring(0,index).trim()+".";//(",");
+	  		param[1]=keyword.substring(index+1).trim()+".";
     		rs = apptMainBean.queryResults(param, dboperation);
    		}
 	} else if(request.getParameter("search_mode").equals("search_dob")) {
 		String[] param =new String[3];
-		param[0] = keyword.substring(0,4) + "%";//(",");
+		param[0] = keyword.substring(0,4);//+"%";//(",");
 		param[1] = keyword.substring(keyword.indexOf("-")+1, keyword.lastIndexOf("-"));
 		//param[1] = param[1].startsWith("0") ? param[1].substring(1) : param[1];
 		param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
@@ -110,7 +110,10 @@ function checkTypeIn() {
 		System.out.println(param[1] + " "+ param[2] );
 		rs = apptMainBean.queryResults(param, dboperation);
 	} else {
-		keyword=request.getParameter("keyword");//+"%";
+		keyword=request.getParameter("keyword");
+		if (keyword.trim().equals("")) {
+		  keyword += ".";
+		}
 		rs = apptMainBean.queryResults(keyword, dboperation);
 	}
  
