@@ -330,7 +330,7 @@ public class ExtractBean extends Object implements Serializable {
                             htmlContent = htmlContent + "<tr><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
                         }
                         
-                        errorMsg = checkData.checkC02(invNo, rs2); 
+                        errorMsg = checkData.checkC02(rs2.getString("billingmaster_no"), rs2); 
                         htmlContent += errorMsg;
                             
                         invCount = invCount + 1;    
