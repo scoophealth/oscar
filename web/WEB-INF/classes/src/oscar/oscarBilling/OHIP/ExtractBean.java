@@ -26,8 +26,6 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarBilling.OHIP;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -36,7 +34,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Properties;
+
+import oscar.OscarProperties;
 import oscar.oscarBilling.data.BillingONDataHelp;
 import oscar.util.UtilDateUtilities;
 public class ExtractBean extends Object implements Serializable {
@@ -132,6 +131,7 @@ public class ExtractBean extends Object implements Serializable {
 	private String ver;
 	private java.sql.Date visitDate;
 	private String visitType;
+	private OscarProperties ap;
 	public ExtractBean() {
 		formatter = new SimpleDateFormat("yyyyMMdd"); //yyyyMMddHmm");
 		today = new java.util.Date();
@@ -273,7 +273,7 @@ public class ExtractBean extends Object implements Serializable {
 		//  writeFile(value);
 		String checkSummary = errorMsg.equals("")
 				? "\n<table border='0' width='100%' bgcolor='green'><tr><td>Pass</td></tr></table>"
-				: "\n<table border='0' width='100%' bgcolor='orange'><tr><td>Please correct the errors and run this again!</td></tr></table>";
+				: "\n<table border='0' width='100%' bgcolor='orange'><tr><td>Please correct the errors and run this simulation again!</td></tr></table>";
 		htmlValue += htmlContent + checkSummary;
 		htmlHeader = "<html><body><style type='text/css'><!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
 		htmlFooter = "</body></html>";
@@ -334,13 +334,13 @@ public class ExtractBean extends Object implements Serializable {
 		if (invCount == 0)
 			errorPartMsg = "The billing no:" + invNo
 					+ " should be marked as 'Delete'.<br>";
-
 		errorMsg += errorPartMsg;
 	}
 	private String printErrorPartMsg() {
 		String ret = "";
-		ret = errorPartMsg.length()>0 ? ("\n<tr><td colspan='8'><font color='red'>"
-				+ errorPartMsg + "</font></td></tr>"):"";
+		ret = errorPartMsg.length() > 0
+				? ("\n<tr bgcolor='yellow'><td colspan='8'><font color='red'>" + errorPartMsg + "</font></td></tr>")
+				: "";
 		errorPartMsg = "";
 		return ret;
 	}
@@ -519,14 +519,14 @@ public class ExtractBean extends Object implements Serializable {
 	public void writeFile(String value1) {
 		try {
 			String home_dir;
-			String userHomePath = System.getProperty("user.home", "user.dir");
-			//System.out.println(userHomePath);
-			File pFile = new File(userHomePath, oscar_home);
-			FileInputStream pStream = new FileInputStream(pFile.getPath());
-			Properties ap = new Properties();
-			ap.load(pStream);
-			home_dir = ap.getProperty("HOME_DIR");
-			pStream.close();
+			/*
+			 * String userHomePath = System.getProperty("user.home",
+			 * "user.dir"); //System.out.println(userHomePath); File pFile =
+			 * new File(userHomePath, oscar_home); FileInputStream pStream =
+			 * new FileInputStream(pFile.getPath()); Properties ap = new
+			 * Properties(); ap.load(pStream); pStream.close();
+			 */
+			home_dir = ap.getInstance().getProperty("HOME_DIR");
 			FileOutputStream out = new FileOutputStream(home_dir + ohipFilename);
 			PrintStream p = new PrintStream(out);
 			p.println(value1);
@@ -542,14 +542,17 @@ public class ExtractBean extends Object implements Serializable {
 	public void writeHtml(String htmlvalue1) {
 		try {
 			String home_dir1;
+			/*
 			String userHomePath1 = System.getProperty("user.home", "user.dir");
 			// System.out.println(userHomePath);
 			File pFile1 = new File(userHomePath1, oscar_home);
 			FileInputStream pStream1 = new FileInputStream(pFile1.getPath());
 			Properties ap1 = new Properties();
 			ap1.load(pStream1);
-			home_dir1 = ap1.getProperty("HOME_DIR");
 			pStream1.close();
+			*/
+			home_dir1 = ap.getInstance().getProperty("HOME_DIR");
+			//System.out.println("!!!" + home_dir1);
 			FileOutputStream out1 = new FileOutputStream(home_dir1
 					+ htmlFilename);
 			PrintStream p1 = new PrintStream(out1);

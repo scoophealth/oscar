@@ -39,7 +39,7 @@
     {"search_provider_dt", "select * from provider where status='1' and ohip_no || null and provider_no like ? order by last_name"},
  {"search_provider_dt_checkstatus", "select * from provider where provider_type='doctor' and status='1' and ohip_no || null and provider_no like ? order by last_name"},
 
-    {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no || null order by last_name"},
+    {"search_provider_ohip_dt", "select * from provider where ohip_no like ? and ohip_no || null order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
     {"search_provider_name", "select * from provider where provider_no=?"},
     {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
@@ -106,6 +106,7 @@
     {"save_billactivity", "insert into billactivity values(?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"search_billactivity", "select * from billactivity where updatedatetime >= ? and updatedatetime <=? and status <> 'D' order by updatedatetime desc"},
     {"search_billactivity_monthCode", "select * from billactivity where monthCode=? and providerohipno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
+    {"search_billactivity_monthCodeshort", "select batchcount from billactivity where monthCode=? and providerohipno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
     {"search_billactivity_group_monthCode", "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
     {"updatebillservice", "update billingservice set description=? where service_code=?"},
     {"update_billhd","update billing set status='S' where billing_no=? and status<>'D'"},

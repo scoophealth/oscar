@@ -50,7 +50,7 @@ String billinggroup_no;
    
 String dateRange = "";
 String htmlValue="";
-String oscar_home= oscarVariables.getProperty("project_home")+".properties";
+//String oscar_home= oscarVariables.getProperty("project_home")+".properties";
 
 String dateBegin = request.getParameter("xml_vdate");
 String dateEnd = request.getParameter("xml_appointment_date");
@@ -81,7 +81,7 @@ while(rslocal.next()){
 	} 
 
 	oscar.oscarBilling.OHIP.ExtractBean extract = new oscar.oscarBilling.OHIP.ExtractBean();
-	extract.setOscarHome(oscar_home);
+	//extract.setOscarHome(oscar_home);
 	extract.seteFlag("0");
 	extract.setDateRange(dateRange);
 	extract.setOhipVer(request.getParameter("verCode"));
