@@ -1268,7 +1268,7 @@
                 name="EctVTFormForm"
                 input="/form/formVT.jsp"
                 scope="request">                
-                <forward name="success" path="/form/formVT2OSDEF.jsp"/>
+                <forward name="success" path="/form/formVT2OSDSF.jsp"/>
         </action> 
     <!-- end oscarmeasurements/oscarForm actions -->
 <!-- end measurements actions-->    
