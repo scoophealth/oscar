@@ -36,7 +36,10 @@ import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 import org.apache.commons.validator.*;
 import org.apache.struts.util.MessageResources;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
 import oscar.oscarDB.DBHandler;
+import oscar.form.util.*;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
@@ -88,11 +91,16 @@ public final class FrmSetupFormAction extends Action {
         Properties currentRec = getFormRecord(formName, formId, demo);
         
         try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             System.out.println("formId=" + formId + "opening " + formName + ".xml");
             InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");
             Vector measurementTypes = EctFindMeasurementTypeUtil.checkMeasurmentTypes(is, formName);
             EctMeasurementTypesBean mt;
-
+            Properties props = new Properties();
+            Properties nameProps = new Properties();
+            String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
+            String decisionSupportURL = connect2OSDSF(xmlData);
+            request.setAttribute("decisionSupportURL", decisionSupportURL);
             
             for(int i=0; i<measurementTypes.size(); i++){
                 mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
@@ -112,9 +120,8 @@ public final class FrmSetupFormAction extends Action {
                     frm.setValue(mt.getType() + "Date", today);
                 }
 
-                /*
-                //get last value and its observation date
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                
+                //get last value and its observation date                
                 String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
                                  + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC LIMIT 1";
                 ResultSet rs = db.GetSQL(sqlData);
@@ -126,11 +133,10 @@ public final class FrmSetupFormAction extends Action {
                     frm.setValue(mt.getType()+"LastData",rs.getString("dateEntered"));
                     frm.setValue(mt.getType()+"LastDataEnteredDate",rs.getString("dateEntered"));
                 }
-                rs.close();
-                db.CloseConn();
-                */                
+                rs.close();                                                
             }    
             is.close();
+            db.CloseConn();
         }
         /*
         catch (SQLException e) {
@@ -195,5 +201,27 @@ public final class FrmSetupFormAction extends Action {
             e.printStackTrace();
         }
         return props;
+    }
+    
+    private String connect2OSDSF(String xmlResult){
+        Vector data2OSDSF = new Vector();
+        data2OSDSF.add(xmlResult);
+        data2OSDSF.add("dummy");
+        //send to osdsf thru XMLRPC
+        try{
+            XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
+            String result = (String) xmlrpc.execute("vt.vtXMLRtn", data2OSDSF);
+            System.out.println("Reverse result: " + result);
+            return result;
+        }
+        catch(XmlRpcException e){
+            e.printStackTrace();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        
+        return null;
+        
     }
 }

@@ -39,6 +39,7 @@ import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 import oscar.form.*;
 import oscar.form.data.*;
+import oscar.form.util.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.data.EctFormData;
@@ -82,6 +83,7 @@ public class FrmFormAction extends Action {
         String formName = (String) frm.getValue("formName");                        
         String formId = (String) frm.getValue("formId");
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
+        String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
                         
         Properties props = new Properties();
         EctFormProp formProp = EctFormProp.getInstance();
@@ -110,9 +112,7 @@ public class FrmFormAction extends Action {
             inputValue = parseCheckBoxValue(inputValue, validation.getName());
             
             //validate
-            valid = validate( inputValue, observationDate, mt, validation, request);
-            //if(!valid)
-                System.out.println("validate each input: " + valid + " " + mt.getType() + " value:" + inputValue);
+            valid = validate( inputValue, observationDate, mt, validation, request);                
         } 
         
         long endTime = System.currentTimeMillis();
@@ -124,7 +124,7 @@ public class FrmFormAction extends Action {
             //Store form information as properties for saving to form table
             props.setProperty("demographic_no", demographicNo);
             props.setProperty("provider_no", providerNo);
-            props.setProperty("formCreated", dateEntered);
+            props.setProperty("visitCod", visitCod);
             
             startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
@@ -153,6 +153,19 @@ public class FrmFormAction extends Action {
                 props.setProperty(type+"Value", inputValue);
                 props.setProperty(type+"Date", observationDate);
                 props.setProperty(type+"Comments", comments);                
+                if(type.equalsIgnoreCase("BP")){
+                    //extract SBP and DBP for blood pressure
+                    String bp = inputValue;
+                    if(bp!=null){
+                        int sbpIndex = bp.indexOf("/");                    
+                        if(sbpIndex>=0){
+                            String sbp = bp.substring(0,sbpIndex);
+                            String dbp = bp.substring(sbpIndex+1);
+                            props.setProperty("SBPValue", sbp);
+                            props.setProperty("DBPValue", dbp);
+                        }
+                    }
+                }
             }
             endTime = System.currentTimeMillis();
             delTime = endTime - startTime;
@@ -168,9 +181,11 @@ public class FrmFormAction extends Action {
                 System.out.println(e.getMessage());
             }
             
-            //Send to Mils thru xml-rpc
-            //props.setProperty("VisitDate", dateEntered);
-            //connect2OSDSF(props, formName);
+            //Send to Mils thru xml-rpc            
+            Properties nameProps = convertName(formName);
+            String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
+            String decisionSupportURL = connect2OSDSF(xmlData);
+            request.setAttribute("decisionSupportURL", decisionSupportURL);
             
         }
         else{                             
@@ -300,70 +315,16 @@ public class FrmFormAction extends Action {
         return newDataAdded;
     }
     
-    private void connect2OSDSF(Properties props, String formName){
-        
-        //update the props key name with formName.properties file
-        Properties osdsf = loadOSDSF(formName);
+    private String connect2OSDSF(String xmlResult){
         Vector data2OSDSF = new Vector();
-        String osdsfKey;        
-        
-        for (Enumeration enum = props.propertyNames(); enum.hasMoreElements();) {
-            String name = (String) enum.nextElement();
-            String value = props.getProperty(name);   
-            //System.out.println("name: " + name + " value: " + value);
-            if(value!=null && value.equalsIgnoreCase("")){
-                if(name.equalsIgnoreCase("BPValue")){
-                    //extract SBP and DBP for blood pressure
-                    String bp = value;
-                    if(bp!=null){
-                        int sbpIndex = bp.indexOf("/");                    
-                        if(sbpIndex>=0){
-                            String sbp = bp.substring(0,sbpIndex);
-                            String dbp = bp.substring(sbpIndex+1);
-                            osdsfKey = osdsf.getProperty("SBPValue");
-                            if(osdsfKey!=null){
-                                data2OSDSF.add(osdsfKey);
-                                data2OSDSF.add(sbp);
-                                System.out.println("SBP Key: " + osdsfKey + " Value: " + sbp);
-                            }                        
-                            osdsfKey = osdsf.getProperty("DBPValue");
-                            if(osdsfKey!=null){
-                                data2OSDSF.add(osdsfKey);
-                                data2OSDSF.add(dbp);
-                                System.out.println("DBP Key: " + osdsfKey + " Value: " + dbp);
-                            }
-                        }
-                    }
-                }
-                else if(name.equalsIgnoreCase("BPDate")){
-                    osdsfKey = osdsf.getProperty("SBPDate");
-                    if(osdsfKey!=null){
-                        data2OSDSF.add(osdsfKey);
-                        data2OSDSF.add(value);
-                        System.out.println("Key: " + osdsfKey + " Value: " + value);
-                    }
-                    osdsfKey = osdsf.getProperty("DBPDate");
-                    if(osdsfKey!=null){
-                        data2OSDSF.add(osdsfKey);
-                        data2OSDSF.add(value);
-                        System.out.println("Key: " + osdsfKey + " Value: " + value);
-                    }
-                }
-                else{                    
-                    osdsfKey = osdsf.getProperty(name);
-                    if(osdsfKey!=null){
-                        data2OSDSF.add(osdsfKey);
-                        data2OSDSF.add(value);
-                        System.out.println("Key: " + osdsfKey + " Value: " + value);
-                    }
-                }
-            }
-        }
+        data2OSDSF.add(xmlResult);
+        data2OSDSF.add("dummy");
         //send to osdsf thru XMLRPC
         try{
             XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
             String result = (String) xmlrpc.execute("vt.vtXMLRtn", data2OSDSF);
             System.out.println("Reverse result: " + result);
+            return result;
         }
         catch(XmlRpcException e){
             e.printStackTrace();
@@ -374,9 +335,10 @@ public class FrmFormAction extends Action {
         /*catch(MalformedURLException e){
             e.printStackTrace();
         }*/
+        return null;
     }
     
-    private Properties loadOSDSF(String formName){
+    private Properties convertName(String formName){
         Properties osdsf = new Properties();
         InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".properties");
         try {
@@ -393,7 +355,8 @@ public class FrmFormAction extends Action {
         }
         return osdsf;
     }
-    
+   
+        
     private String parseCheckBoxValue(String inputValue, String validationName){        
         //System.out.println("validationName: " + validationName);
         if(validationName.equalsIgnoreCase("Yes/No")){
