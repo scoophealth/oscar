@@ -120,7 +120,7 @@ function setfocus() {
 <TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=p_first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>
 <TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=chart_no"><bean:message key="report.reportdaysheet.msgChartNo"/></a></b></TH>
 <TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=roster_status"><bean:message key="report.reportdaysheet.msgRosterStatus"/></a></b></TH>
-<TH width="20%"><b><bean:message key="report.reportdaysheet.msgComments"/></b></TH>yy
+<TH width="20%"><b><bean:message key="report.reportdaysheet.msgComments"/></b></TH>
 </tr>
 <%
     }
@@ -131,7 +131,11 @@ function setfocus() {
       <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("p_last_name"))%></td>
       <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("p_first_name"))%></td>
       <td align="center"><%=rsdemo.getString("chart_no")%></td>
-      <td align="center"><%=rsdemo.getString("roster_status")%></td>
+      <td align="center"><% String rosterStatus = rsdemo.getString("roster_status");
+                            if (rosterStatus != null) {%>
+                                <%= rosterStatus %>
+                         <% } %>
+                           </td>
       <td><%=rsdemo.getString("reason")%>&nbsp;</td>
 </tr>
 <%
