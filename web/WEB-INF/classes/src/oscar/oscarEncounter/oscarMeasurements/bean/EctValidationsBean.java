@@ -32,8 +32,15 @@ import oscar.oscarDB.DBHandler;
 
 public class EctValidationsBean{
 
-       String name;
        int id;
+       String name;
+       String regularExp = null;
+       String maxValue = null;
+       String minValue = null;
+       String maxLength = null;
+       String minLength = null;
+       String isNumeric = null;       
+       String isDate = null;
        
        public EctValidationsBean(){
        }
@@ -42,20 +49,61 @@ public class EctValidationsBean{
             this.name = name;
             this.id = id;
        }
-      
-       public String getName(){
-           return name;
-       }
+
        public int getId(){
            return id;
        }
-       
-       public void setName(String name){
-           this.name = name;
+       public String getName(){
+           return name;
        }
+       public String getRegularExp(){
+           return regularExp;
+       }
+       public String getMaxValue(){
+           return maxValue;
+       }
+       public String getMinValue(){
+           return minValue;
+       }
+       public String getMaxLength(){
+           return maxLength;
+       }
+       public String getMinLength(){
+           return minLength;
+       }
+       public String getIsNumeric(){
+           return isNumeric;
+       }
+       public String getIsDate(){
+           return isDate;
+       }
+       
        
        public void setId(int id){
            this.id = id;
        }
-       
+       public void setName(String name){
+           this.name = name;
+       }
+       public void setRegularExp(String regularExp){
+           this.regularExp = regularExp;
+       }
+       public void setMaxValue(String maxValue){           
+           this.maxValue = maxValue;
+       }
+       public void setMinValue(String minValue){           
+           this.minValue = minValue;           
+       }       
+       public void setMaxLength(String maxLength){           
+           this.maxLength = maxLength;
+       }
+       public void setMinLength(String minLength){           
+           this.minLength = minLength;           
+       }
+       public void setIsNumeric(String isNumeric){           
+           this.isNumeric = isNumeric;
+       }
+       public void setIsDate(String isDate){           
+           this.isDate = isDate;
+       }
 }

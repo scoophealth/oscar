@@ -65,5 +65,124 @@ public class EctValidationsBeanHandler {
     public Collection getValidationsVector(){
         return validationsVector;
     }
+    
+    public int findValidation(EctValidationsBean validation){
+        int validationId = -1;
+        String regularExp = " IS NULL";
+        String minValue = " IS NULL";
+        String maxValue = " IS NULL";
+        String minLength = " IS NULL";
+        String maxLength = " IS NULL";
+        String isNumeric = " IS NULL";
+        String isDate = " IS NULL";
+        
+        if(validation.getRegularExp()!=null)
+            regularExp = "='" + validation.getRegularExp() + "'";
+
+        if(validation.getMinValue()!=null)
+            minValue = "='" + validation.getMinValue() + "'";
+
+        if(validation.getMaxValue()!=null)
+            maxValue = "='" + validation.getMaxValue() + "'";
+
+        if(validation.getMinLength()!=null)
+            minLength = "='" + validation.getMinLength() + "'";
+
+        if(validation.getMaxLength()!=null)
+            maxLength = "='" + validation.getMaxLength() + "'";
+
+        if(validation.getIsNumeric()!=null)
+            isNumeric = "='" + validation.getIsNumeric() + "'";
+        
+        if(validation.getIsDate()!=null)
+            isDate = "='" + validation.getIsDate() + "'";
+        
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            String sql ="SELECT * FROM validations WHERE regularExp" + regularExp
+                        + " AND minValue" + minValue 
+                        + " AND maxValue" + maxValue
+                        + " AND minLength" + minLength
+                        + " AND maxLength" + maxLength
+                        + " AND isNumeric" + isNumeric
+                        + " AND isDate" + isDate;
+            //System.out.println("findValidation: " + sql);
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.next()){
+                validationId = rs.getInt("id");
+                //System.out.println(validationId + ": " + sql);
+            }
+            rs.close();
+            db.CloseConn();
+        }
+        
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            validationId = -1;
+        }
+        
+        return validationId;
+    }
+    
+    public int addValidation(EctValidationsBean validation){
+        int validationId = -1;
+        
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            String regularExp = null;
+            String minValue = null;
+            String maxValue = null;
+            String minLength = null;
+            String maxLength = null;
+            String isNumeric = null;
+            String isDate = null;
+            
+            if(validation.getRegularExp()!=null)
+                regularExp = "'" + validation.getRegularExp() + "'";
+            
+            if(validation.getMinValue()!=null)
+                minValue = "'" + validation.getMinValue() + "'";
+
+            if(validation.getMaxValue()!=null)
+                maxValue = "'" + validation.getMaxValue() + "'";
+            
+            if(validation.getMinLength()!=null)
+                minLength = "'" + validation.getMinLength() + "'";
+            
+            if(validation.getMaxLength()!=null)
+                maxLength = "'" + validation.getMaxLength() + "'";
+            
+            if(validation.getIsNumeric()!=null)
+                isNumeric = "'" + validation.getIsNumeric() + "'";
+            
+            if(validation.getIsDate()!=null)
+                isDate = "'" + validation.getIsDate() + "'";
+            
+            String sql ="INSERT INTO validations(name, regularExp, minValue, maxValue, minLength, maxLength, isNumeric, isDate) VALUES('"            
+                        + validation.getName() + "', "
+                        + regularExp + "," 
+                        + minValue + "," 
+                        + maxValue + "," 
+                        + minLength + "," 
+                        + maxLength + "," 
+                        + isNumeric + ","
+                        + isDate + ")";
+            //System.out.println("sql: " + sql);
+            db.RunSQL(sql);
+            sql = "SELECT id FROM validations ORDER BY id DESC LIMIT 1";
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.next()){
+                validationId = rs.getInt("id");
+            }
+            db.CloseConn();
+        }
+        
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            validationId = -1;
+        }
+        
+        return validationId;
+    }
 }
 
