@@ -183,7 +183,7 @@ function isNumeric(strString){
          return retval;
    }
 
-function checkUnits(){
+function checkUnits(){   
 	if  (!isNumeric(document.BillingCreateBillingForm.xml_other1_unit.value)){
 		alert("Units have be of numeric value");
 	        document.BillingCreateBillingForm.xml_other1_unit.focus();
@@ -196,6 +196,10 @@ function checkUnits(){
 		alert("Units have be of numeric value");
                 document.BillingCreateBillingForm.xml_other3_unit.focus();
                 return false;
+	}else if (document.BillingCreateBillingForm.xml_provider.value == "000000"){		
+	   alert("Please select a Billing Physician");
+	   document.BillingCreateBillingForm.xml_provider.focus();
+	   return false;
 	}
 	return true;
 
