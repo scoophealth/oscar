@@ -116,7 +116,11 @@ public class EctAddMeasuringInstructionAction extends Action {
         {
             System.out.println(e.getMessage());
         }            
-                        
+        
+        MessageResources mr = getResources(request);
+        String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasurementType.successful");
+        messages.add(msg);
+        request.setAttribute("messages", messages);                
         return mapping.findForward("success");
 
     }

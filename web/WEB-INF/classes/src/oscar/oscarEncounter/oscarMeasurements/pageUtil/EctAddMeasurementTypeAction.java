@@ -53,8 +53,7 @@ public class EctAddMeasurementTypeAction extends Action {
         HttpSession session = request.getSession();
         request.getSession().setAttribute("EctAddMeasurementTypeForm", frm);
         
-        MsgStringQuote str = new MsgStringQuote();
-        String requestId = "";
+        MsgStringQuote str = new MsgStringQuote();     
         List messages = new LinkedList();
         
         try{
@@ -88,23 +87,6 @@ public class EctAddMeasurementTypeAction extends Action {
             System.out.println(" sql statement "+sql);
             db.RunSQL(sql);
 
-
-            /* select the correct db specific command */
-            String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-            String dbSpecificCommand;
-            if (db_type.equalsIgnoreCase("mysql")) {
-                dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-            } 
-            else if (db_type.equalsIgnoreCase("postgresql")){
-                dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-            }
-            else
-                throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-
-            rs.close();
-            rs = db.GetSQL(dbSpecificCommand);
-            if(rs.next())
-                requestId = Integer.toString(rs.getInt(1));
             db.CloseConn();
                 
         }
@@ -112,7 +94,11 @@ public class EctAddMeasurementTypeAction extends Action {
         {
             System.out.println(e.getMessage());
         }            
-                        
+        
+        MessageResources mr = getResources(request);
+        String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasurementType.successful");
+        messages.add(msg);
+        request.setAttribute("messages", messages);
         return mapping.findForward("success");
 
     }
