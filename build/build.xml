@@ -23,7 +23,7 @@
   <property name="version" value="1.2" />
   <property name="now" value="${DSTAMP}-${TSTAMP}" />
 
-  <property name="build" location="." />
+  <property name="build" location="tmp" />
   <property name="root_web" location="${build}/web" /> 
   <property name="classes_web" location="${root_web}/classes" /> 
   <property name="doc" location="${build}/doc" /> 
