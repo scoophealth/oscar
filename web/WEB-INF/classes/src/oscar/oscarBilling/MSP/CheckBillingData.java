@@ -78,7 +78,7 @@ public class CheckBillingData {
     public String printErrorMsg(String billingNo, String m) {
         String ret = "<tr bgcolor='red'><td>"
                 + "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no="
-                + billingNo + "','','top=0,left=0,width=600,height=600')\">"
+                + billingNo + "','','top=0,left=0,width=600,height=600'); return false;\">"
                 + m + "</a>" + "</td></tr>";
         return ret;
     }
