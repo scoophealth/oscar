@@ -327,19 +327,26 @@ function showHideLayers() { //v3.0
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
               </tr>
+              <tr bgcolor="#EAEAFF"> 
+                <td height="14" colspan="4">Messages</td>                
+              </tr>
+              <tr > 
+                <td height="14" colspan="4"><%=bean.getMessageNotes()%></td>                
+              </tr>
             </table>
             <table width="100%" border="0">
               <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
                 <td align="right">
-<html:form action="/billing/CA/BC/SaveBilling" >  
-                    <input type="button" name="Submit" value="Print Bill" onClick="javascript:window.print()">
-                    <input type="button" name="Submit2" value="Cancel" onClick="javascript:window.close()">
-                  </html:form></td>
-  </tr>
-</table>
+                   <html:form action="/billing/CA/BC/SaveBilling" >  
+                      <input type="button" name="Submit" value="Print Bill" onClick="javascript:window.print()">
+                      <input type="button" name="Submit2" value="Cancel" onClick="javascript:window.close()">
+                   </html:form>
+                </td>
+              </tr>
+            </table>
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr> 
