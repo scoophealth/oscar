@@ -3,6 +3,7 @@
 		response.sendRedirect("../logout.jsp");
 	}
 %>
+System.out.println("d");
 <!--  
 /* Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
@@ -81,8 +82,8 @@ function popup( height, width, url, windowName){
 <table border="0" cellspacing="0" cellpading="0" width="100%" class="SmallerText">
 	<tr>
 		<td colspan="2" align="center" valign="top" height="25" class="SmallerText">
-			Physician's First Report <input name="w_reporttype" type="radio" id="w_reporttype" value="F" checked> or The worker's
-				condition or treatment has changed: <input name="w_reporttype" type="radio" id="w_reporttype" value="C">
+			Physician's First Report <input name="w_reporttype" type="radio" id="w_reporttype" value="F" <%=checked("F",form.getW_reporttype(),true)%>> or The worker's
+				condition or treatment has changed: <input name="w_reporttype" type="radio" id="w_reporttype" value="C" <%=checked("C",form.getW_reporttype(),false)%> >
 		</td>
 	</tr>
 	<tr>
@@ -163,14 +164,14 @@ function popup( height, width, url, windowName){
 	</tr>
 	<tr>
 		<td>Are you the worker's regular physician? </td><td>
-              <input type="radio" name="w_rphysician" value="Y" checked>
-              Yes <input type="radio" name="w_rphysician" value="N"> No
+              <input type="radio" name="w_rphysician" value="Y" <%=checked("Y",form.getW_rphysician(),true)%>>
+              Yes <input type="radio" name="w_rphysician" value="N" <%=checked("N",form.getW_rphysician(),false)%>> No
 		</td>
 	</tr>
 	<tr>
-		<td>If yes, how long has the worker been your patient?</td><td><input type="radio" name="w_duration" value="1" checked>
-              0-6 months <input type="radio" name="w_duration" value="2">
-              7-12 months <input type="radio" name="w_duration" value="9">&gt; 12 months
+		<td>If yes, how long has the worker been your patient?</td><td><input type="radio" name="w_duration" value="1" <%=checked("1",form.getW_duration(),true)%>>
+              0-6 months <input type="radio" name="w_duration" value="2" <%=checked("2",form.getW_duration(),false)%>>
+              7-12 months <input type="radio" name="w_duration" value="9" <%=checked("9",form.getW_duration(),false)%>>&gt; 12 months
 		</td>
 	</tr>
 	<tr>
@@ -258,8 +259,8 @@ function popup( height, width, url, windowName){
 	<tr>
 		<td>
 			From injury or since last report, has the worker been disabled from work? </td><td>
-              <input type="radio" name="w_work" value="Y" checked>Yes 
-              <input type="radio" name="w_work" value="N">No</p>
+              <input type="radio" name="w_work" value="Y" <%=checked("Y",form.getW_work(),true)%>>Yes 
+              <input type="radio" name="w_work" value="N" <%=checked("N",form.getW_work(),false)%>>No</p>
 		</td>
 	</tr>
 	<tr>
@@ -286,7 +287,7 @@ function popup( height, width, url, windowName){
 			Is the worker now medically capable of working full duties, full time?
 		</td>
 		<td>
-		<input type="radio" name="w_capability" value="Y" checked> Yes <input type="radio" name="w_capability" value="N"> No
+		<input type="radio" name="w_capability" value="Y" <%=checked("Y",form.getW_capability(),true)%>> Yes <input type="radio" name="w_capability" value="N" <%=checked("N",form.getW_capability(),false)%>> No
 		</td>
 	</tr>
 	<tr>
@@ -301,29 +302,29 @@ function popup( height, width, url, windowName){
 		<td valign="top">
 		Estimated time before the worker will be able to return to the workplace. </td>
                 <td>
-					<input type="radio" name="w_estimate" value="0" checked>At Work<br> 
-					<input type="radio" name="w_estimate" value="1">1-6 days 
-					<input type="radio" name="w_estimate" value="2">7-13 days<br> 
-					<input type="radio" name="w_estimate" value="3">14-20 days 
-					<input type="radio" name="w_estimate" value="9">&gt;20 days
+					<input type="radio" name="w_estimate" value="0" <%=checked("0",form.getW_estimate(),true)%>>At Work<br> 
+					<input type="radio" name="w_estimate" value="1" <%=checked("1",form.getW_estimate(),false)%>>1-6 days 
+					<input type="radio" name="w_estimate" value="2" <%=checked("2",form.getW_estimate(),false)%>>7-13 days<br> 
+					<input type="radio" name="w_estimate" value="3" <%=checked("3",form.getW_estimate(),false)%>>14-20 days 
+					<input type="radio" name="w_estimate" value="9" <%=checked("9",form.getW_estimate(),false)%>>&gt;20 days
 				</td>
 	</tr>
 	<tr>
 		<td>
 		If appropriate, is the worker now ready for a rehabilitation program?</td>
-                <td><input type="radio" name="w_rehab" value="Y" > Yes <input type="radio" name="w_rehab" value="N" checked> No
+                <td><input type="radio" name="w_rehab" value="Y" <%=checked("Y",form.getW_rehab(),false)%> > Yes <input type="radio" name="w_rehab" value="N" <%=checked("N",form.getW_rehab(),true)%>> No
 		</td>
 	</tr>
 	<tr>
 		<td>
-		If Yes, Select &quot;WCP&quot; or Other</td><td><input type="radio" name="w_rehabtype" value="C">WCP
-                  <input type="radio" name="w_rehabtype" value="O">Other
+		If Yes, Select &quot;WCP&quot; or Other</td><td><input type="radio" name="w_rehabtype" value="C" <%=checked("C",form.getW_rehabtype(),false)%>>WCP
+                  <input type="radio" name="w_rehabtype" value="O" <%=checked("O",form.getW_rehabtype(),false)%>>Other
 		</td>
 	</tr>
 	<tr>
 		<td>
 		Do you wish to consult with WCB physician or nurse advisor?</td>
-                <td><input type="radio" name="w_wcbadvisor" value="Y" checked> Yes <input checked type="radio" name="w_wcbadvisor" value="N"> No
+                <td><input type="radio" name="w_wcbadvisor" value="Y" <%=checked("Y",form.getW_wcbadvisor(),true)%>> Yes <input type="radio" name="w_wcbadvisor" value="N" <%=checked("N",form.getW_wcbadvisor(),false)%>> No
 		</td>
 	</tr>
 	<tr>
@@ -336,7 +337,7 @@ function popup( height, width, url, windowName){
 	<tr>
 		<td>
 		Further Correspondence to Follow: (2nd electronic form or paper) </td>
-                <td><input type="radio" name="w_tofollow" value="Y"> Yes <input checked type="radio" name="w_tofollow" value="N">  No
+                <td><input type="radio" name="w_tofollow" value="Y" <%=checked("Y",form.getW_tofollow(),true)%> > Yes <input type="radio" name="w_tofollow" value="N" <%=checked("N",form.getW_tofollow(),false)%>>  No
 		</td>
 	</tr>
     <tr> 
@@ -369,3 +370,20 @@ function popup( height, width, url, windowName){
 </html:form>
 </body>
 </html:html>
+
+
+<%!
+
+String checked(String val,String str,boolean dfault){
+    String retval = "";
+    if(str == null || str.equals("null")){
+        str = "";
+    }
+    if (str.equals("")  && dfault){
+        retval = "CHECKED";
+    }else if (str != null && str.equalsIgnoreCase(val) ){
+        retval = "CHECKED";
+    }
+    return retval;
+}
+%>
