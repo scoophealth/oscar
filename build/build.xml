@@ -2,7 +2,9 @@
 <project name="oscar" 
          default="dist">
   <property name="catalina" location="/home/users/wagner/jakarta-tomcat-4.1.21" />
-
+  <property file="tomcat.properties" />
+  <property name="webapp.name" value="oscar"/>
+  
   <property environment="env"/>
   <path id="classpath.path">
    <fileset dir="${catalina}/common/lib">
@@ -175,11 +177,6 @@
   </war>
  </target>
 
- <target name="deploy" depends="dist">
- </target>
-
- <target name="restart" depends="init" >
- </target>
  
  <target name="mdsfile" depends="init">
   <javac 
@@ -194,5 +191,69 @@
   </javac>  
  </target>
 
+ <taskdef file="tomcatTasks.properties">
+    <classpath>
+       <pathelement path="${catalina}/server/lib/catalina-ant.jar"/>
+    </classpath>
+ </taskdef>
+                                                                                               
+ <target description="Remove application in Tomcat" name="undeploy">
+    <undeploy password="${tomcat.password}" path="/${webapp.name}" url="${tomcat.manager.url}" username="${tomcat.username}"/>
+ </target>
+                                                                                           
+ <target description="Remove application in Tomcat" name="remove">
+    <remove password="${tomcat.password}" path="/${webapp.name}" url="${tomcat.manager.url}" username="${tomcat.username}"/>
+ </target>
+                                                                                           
+ <target depends="stop,dist,remove,deploy" name="redeploy"/>
+                                                                                                                                                                
+ <target depends="dist" name="deploy">
+    <deploy password="${tomcat.password}" path="/${webapp.name}" url="${tomcat.manager.url}" username="${tomcat.username}" war="file:${build}/oscar.war"/>
+ </target>
+ 
+ <target description="Reload application in Tomcat" name="reload">
+    <reload password="${tomcat.password}" path="/${webapp.name}" url="${tomcat.manager.url}" username="${tomcat.username}"/>
+ </target>
+                                                                                           
+ <target description="Start Tomcat application" name="start">
+    <start password="${tomcat.password}" path="/${webapp.name}" url="${tomcat.manager.url}" username="${tomcat.username}"/>
+ </target>
+                                                                                           
+ <target description="Stop Tomcat application" name="stop">
+    <stop password="${tomcat.password}" path="/${webapp.name}" url="${tomcat.manager.url}" username="${tomcat.username}"/>
+ </target>
+                                                                                           
+ <target description="List Tomcat applications" name="list">
+    <list password="${tomcat.password}" url="${tomcat.manager.url}" username="${tomcat.username}"/>
+ </target>
+
+ <target name="tomcatProperptiesTest">
+    <echo message="The username tomcat is using: ${tomcat.username}" />
+    <echo message="The password tomcat is using: ${tomcat.password}" />
+    <echo message="tomcat url : ${tomcat.manager.url}" />
+ </target>
+ 
+ <!--
+ tomcatTasks.properties contains the following
+    deploy=org.apache.catalina.ant.DeployTask
+    install=org.apache.catalina.ant.InstallTask
+    list=org.apache.catalina.ant.ListTask
+    reload=org.apache.catalina.ant.ReloadTask
+    remove=org.apache.catalina.ant.RemoveTask
+    resources=org.apache.catalina.ant.ResourcesTask
+    roles=org.apache.catalina.ant.RolesTask
+    start=org.apache.catalina.ant.StartTask
+    stop=org.apache.catalina.ant.StopTask
+    undeploy=org.apache.catalina.ant.UndeployTask
+    
+ tomcat.properties contains the following
+    tomcat.server=localhost
+    tomcat.manager.url=http://${tomcat.server}:8080/manager
+    tomcat.username=tomcatUserName
+    tomcat.password=tomcatPassword
+    
+ -->
+
+ 
 </project>
 
