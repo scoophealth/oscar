@@ -37,7 +37,7 @@
      var page = varpage;
      windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
      var popup=window.open(varpage, pageName, windowprops);
-     popup.opener = self;
+     popup.pastewin = opener;     
      popup.focus();
      close();
    }
