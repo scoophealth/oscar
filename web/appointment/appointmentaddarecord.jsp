@@ -27,7 +27,7 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
+<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList"  errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -65,7 +65,28 @@
 	  if(!(request.getParameter("demographic_no").equals(""))) intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
 	  else intparam[0]=0;
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,intparam,request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
+    if (rowsAffected ==1) {
+
+        WaitingList wL = WaitingList.getInstance();
+        if(wL.getFound()){
+
+          String param1 = request.getParameter("demographic_no");
+          ResultSet rs = apptMainBean.queryResults(param1, "search_waitinglist");
+          if(rs.next()){                    
+          %>        
+            <form name="updateWLFrm" action="../oscarWaitingList/RemoveFromWaitingList.jsp">
+                <input type="hidden" name="listId" value="<%=rs.getString("listID")%>"/>
+                <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographic_no")%>"/>        
+                <script LANGUAGE="JavaScript">
+                var removeList = confirm("Click OK to remove patient from the waiting list: <%=rs.getString("name")%>");                
+                if(removeList){                       
+                    document.forms[0].action = "../oscarWaitingList/RemoveFromWaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listID=<%=rs.getString("listID")%>";
+                    document.forms[0].submit();                      
+                }
+                </script>
+            </form>
+          <%}
+        }
 %>
   <p><h1><bean:message key="appointment.addappointment.msgAddSuccess"/></h1></p>
 <script LANGUAGE="JavaScript">
