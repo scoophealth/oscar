@@ -2,6 +2,7 @@ package oscar.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -14,15 +15,27 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.struts.upload.FormFile;
+import org.apache.xerces.parsers.DOMParser;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import org.xml.sax.InputSource;
+
+import oscar.oscarDB.DBHandler;
 
 public class JDBCUtil
 {
@@ -68,9 +81,93 @@ public class JDBCUtil
             StreamResult result = new StreamResult(os);
             
             transformer.transform(source, result); 
+            System.out.println("Next is to call zip function!");
+            zip z = new zip(newXML);
         }
         catch(Exception e){            
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage() + "cannot saveAsXML");
+            File newXML = new File(fileName);
+            newXML.delete();
         }     
     }
+    
+    public static void toDataBase(InputStream inputStream, String fileName)
+    {
+        boolean validation = true;
+        DOMParser parser = new DOMParser();
+        Document doc;        
+        
+        try
+        {  
+            //InputStream inputStream = file.getInputStream();
+            InputSource source = new InputSource(inputStream);
+            //String fileName = file.getFileName();
+            int indexForm = fileName.indexOf("_");        
+            int indexDemo = fileName.indexOf("_", indexForm+1);       
+            int indexTimeStamp = fileName.indexOf(".",indexDemo);
+            String formName = fileName.substring(0,indexForm);
+            String demographicNo = fileName.substring(indexForm+1, indexDemo);
+            String timeStamp = fileName.substring(indexDemo+1,indexTimeStamp);
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            
+            //check if the data existed in the database already...
+            String sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
+                         + demographicNo + "' AND formEdited='" + timeStamp + "'";
+            System.out.println(sql);
+            ResultSet rs = db.GetSQL(sql);
+            if(!rs.first()){
+                rs.close();
+                sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
+                        + demographicNo + "' AND ID='0'";
+                System.out.println("sql: " + sql);
+                rs = db.GetSQL(sql, true);  
+                rs.moveToInsertRow();        
+                //To validate or not
+                parser.setFeature( "http://xml.org/sax/features/validation",validation ); 
+                parser.parse(source);
+                doc = parser.getDocument();
+                rs = toResultSet(doc, rs);
+                rs.insertRow();
+            }
+        }   
+        catch(Exception e)
+        {
+            System.out.println("Errors " + e);
+            
+        }
+
+    }
+        
+    private static ResultSet toResultSet(Node node, ResultSet rs) throws SQLException
+    {                                        
+        int type = node.getNodeType();
+       
+        if ( type == Node.ELEMENT_NODE ){
+            NamedNodeMap nnm = node.getAttributes();
+            String name = node.getNodeName();
+            String value = "";
+            
+            Node next = node.getFirstChild();
+            if (next!=null){
+                type = next.getNodeType();
+                if (type == next.TEXT_NODE){
+                    //System.out.println(next.getNodeValue());             
+                    value = next.getNodeValue();
+                }
+            }
+
+            //System.out.println(name + ": " + value);
+            if(!name.equalsIgnoreCase("Results")&&!name.equalsIgnoreCase("Row")&&!name.equalsIgnoreCase("ID"))
+                rs.updateString(name, value);
+        }
+        
+        //recurse
+        for(Node child = node.getFirstChild(); child != null; child = child.getNextSibling()){
+            toResultSet(child,rs);
+        }
+                        
+        return rs;
+        
+    }
+    
 }
