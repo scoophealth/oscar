@@ -271,6 +271,7 @@ CREATE TABLE consultationRequests (
   requestId int(10) NOT NULL auto_increment,
   concurrentProblems text,
   urgency char(2) default NULL,
+  patientWillBook tinyint(1),
   PRIMARY KEY  (requestId)
 ) TYPE=MyISAM;
 
