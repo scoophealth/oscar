@@ -65,7 +65,9 @@ public class EctAddMeasurementTypeAction extends Action {
             String typeDisplayName = (String) frm.get("typeDisplayName");
             String measuringInstrc = (String) frm.get("measuringInstrc");
             String validation = (String) frm.get("validation");
-
+            if (!allInputIsValid(request, type, typeDesc, typeDisplayName, measuringInstrc)){
+                return (new ActionForward(mapping.getInput()));
+            }
             String sql = "SELECT type FROM measurementType WHERE type='" + str.q(type) +"'";
             ResultSet rs = db.GetSQL(sql);
             rs.next();
@@ -101,6 +103,47 @@ public class EctAddMeasurementTypeAction extends Action {
         request.setAttribute("messages", messages);
         return mapping.findForward("success");
 
+    }
+    
+    private boolean allInputIsValid(HttpServletRequest request, String type, String typeDesc, String typeDisplayName, String measuringInstrc){
+        
+        ActionErrors errors = new ActionErrors();  
+        EctValidation validate = new EctValidation();
+        String regExp = validate.getRegCharacterExp();
+        boolean isValid = true;
+                
+        String errorField = "The type " + type;
+        if(!validate.matchRegExp(regExp, type)){
+            errors.add(type,
+            new ActionError("errors.invalid", errorField));
+            saveErrors(request, errors);
+            isValid = false;
+        }
+
+        errorField = "The type description " + typeDesc;
+        if(!validate.matchRegExp(regExp, typeDesc)){
+            errors.add(typeDesc,
+            new ActionError("errors.invalid", errorField));
+            saveErrors(request, errors);
+            isValid = false;
+        }
+        
+        errorField = "The type description " + typeDisplayName;
+        if(!validate.matchRegExp(regExp, typeDisplayName)){
+            errors.add(typeDisplayName,
+            new ActionError("errors.invalid", errorField));
+            saveErrors(request, errors);
+            isValid = false;
+        }
+        
+        errorField = "The measuring instruction " + measuringInstrc;
+        if(!validate.matchRegExp(regExp, measuringInstrc)){
+            errors.add(measuringInstrc,
+            new ActionError("errors.invalid", errorField));
+            saveErrors(request, errors);
+            isValid = false;
+        }
+        return isValid;
     }
 }
     

@@ -54,6 +54,18 @@ public class EctDefineNewMeasurementGroupAction extends Action {
         request.getSession().setAttribute("EctDefineNewMeasurementGroupForm", frm);
         
         String groupName = (String) frm.get("groupName");
+        
+        ActionErrors errors = new ActionErrors();  
+        EctValidation validate = new EctValidation();
+        String regExp = validate.getRegCharacterExp();
+        String errorField = "The Group Name " + groupName;
+        if(!validate.matchRegExp(regExp, groupName)){
+            errors.add(groupName,
+            new ActionError("errors.invalid", errorField));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+        
         System.out.println("The selected group is: " + groupName);                        
         HttpSession session = request.getSession();
         session.setAttribute( "groupName", groupName);

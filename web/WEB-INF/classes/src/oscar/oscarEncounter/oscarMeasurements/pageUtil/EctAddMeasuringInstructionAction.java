@@ -63,6 +63,18 @@ public class EctAddMeasuringInstructionAction extends Action {
             String typeDisplayName = (String) frm.get("typeDisplayName");
             String measuringInstrc = (String) frm.get("measuringInstrc");
             String validation = (String) frm.get("validation");
+                        
+            ActionErrors errors = new ActionErrors();  
+            EctValidation validate = new EctValidation();
+            String regExp = validate.getRegCharacterExp();
+            String errorField = "The measuring instruction " + measuringInstrc;
+            if(!validate.matchRegExp(regExp, measuringInstrc)){
+                errors.add(measuringInstrc,
+                new ActionError("errors.invalid", errorField));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+                        
             
             String sql = "SELECT measuringInstruction FROM measurementType WHERE measuringInstruction='" + str.q(measuringInstrc) +"' AND typeDisplayName='" + str.q(typeDisplayName) + "'";
             ResultSet rs = db.GetSQL(sql);
@@ -124,5 +136,8 @@ public class EctAddMeasuringInstructionAction extends Action {
         return mapping.findForward("success");
 
     }
+    
+    
+
 }
     

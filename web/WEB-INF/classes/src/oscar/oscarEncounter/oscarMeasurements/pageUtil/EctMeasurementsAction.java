@@ -113,17 +113,24 @@ public class EctMeasurementsAction extends Action {
                     EctValidationParameter matchRegExp = matchRegExp(regExp, inputValue, inputType, request);
                     EctValidationParameter isValidBloodPressure = isValidBloodPressure(regExp, inputValue, inputType, request);
 
-                    if(!isInRange.getValid()){
-                        messages.add(isInRange.getMsg());
-                        valid = false;
+                    ActionErrors errors = new ActionErrors();                                                            
+	
+                    if(!isInRange.getValid()){                       
+                        errors.add(inputValueName, new ActionError("errors.range", inputType, Double.toString(dMin), Double.toString(dMax)));
+                        saveErrors(request, errors);
+                        return (new ActionForward(mapping.getInput()));
                     }
-                    else if(!matchRegExp.getValid()){
-                        messages.add(matchRegExp.getMsg());
-                        valid = false;
+                    else if(!matchRegExp.getValid()){                        
+                        errors.add(inputValueName,
+                        new ActionError("errors.invalid", inputType));
+                        saveErrors(request, errors);
+                        return (new ActionForward(mapping.getInput()));
                     }
-                    else if(!isValidBloodPressure.getValid()){
-                        messages.add(isValidBloodPressure.getMsg());
-                        valid = false;
+                    else if(!isValidBloodPressure.getValid()){                        
+                        errors.add(inputValueName,
+                        new ActionError("error.bloodPressure"));
+                        saveErrors(request, errors);
+                        return (new ActionForward(mapping.getInput()));
                     }
                 }
 
