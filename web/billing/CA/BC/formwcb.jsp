@@ -3,7 +3,7 @@
 		response.sendRedirect("../logout.jsp");
 	}
 %>
-System.out.println("d");
+
 <!--  
 /* Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
