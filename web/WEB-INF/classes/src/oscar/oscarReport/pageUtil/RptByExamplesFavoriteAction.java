@@ -60,8 +60,9 @@ public class RptByExamplesFavoriteAction extends Action {
                 else{
                     try {
                         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                            
-
-                        String sql = "SELECT * from reportByExamplesFavorite WHERE query LIKE '" + frm.getNewQuery() + "'";
+                        
+                        String sql = "SELECT * from reportByExamplesFavorite WHERE query LIKE '" + StringEscapeUtils.escapeSql(frm.getNewQuery()) + "'";
+                        System.out.println("HERE "+sql);
                         ResultSet rs = db.GetSQL(sql);
                         if(rs.next())
                             frm.setFavoriteName(rs.getString("name"));                                       
@@ -80,13 +81,14 @@ public class RptByExamplesFavoriteAction extends Action {
             }
         }
         else{
+            System.out.println("STEP:1 "+frm.getQuery());
             String favoriteName = frm.getFavoriteName();
             String query = frm.getQuery();   
             oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();       
-            String queryWithEscapeChar = exampleData.replaceSQLString ("\"","\'",query);
+            //String queryWithEscapeChar = exampleData.replaceSQLString ("\"","\'",query);
            
             StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-            queryWithEscapeChar = strEscUtils.escapeSql(queryWithEscapeChar);
+            String queryWithEscapeChar = strEscUtils.escapeSql(query   );///queryWithEscapeChar);
             System.out.println("escapeSql: " + queryWithEscapeChar);
             write2Database(providerNo, favoriteName, queryWithEscapeChar);            
         }
@@ -103,6 +105,8 @@ public class RptByExamplesFavoriteAction extends Action {
                 //StringEscapeUtils strEscUtils = new StringEscapeUtils();
                                 
                 //query = strEscUtils.escapeSql(query);
+                System.out.println("Fav "+favoriteName+" query "+query);
+                
                 
                 String sql = "SELECT * from reportByExamplesFavorite WHERE name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
                 ResultSet rs = db.GetSQL(sql);
