@@ -1,4 +1,3 @@
-<%@ taglib uri="../WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
@@ -68,16 +67,12 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   <table cellspacing="0" cellpadding="2" width="100%" border="0">
     <tr><th align="CENTER" bgcolor="#CCCCFF"><bean:message key="admin.admin.description"/></th></tr>
   </table>
-  <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr>
-      <td></td>
+  <table border="0" cellspacing="0" cellpadding="2" width="90%">
+  <tr>      
       <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a></td>
   </tr>
-  </table>
-  
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
+      <td> 
         <p><bean:message key="admin.admin.provider"/></p>
       </td>
     </tr>
@@ -88,7 +83,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"><bean:message key="admin.admin.groupNo"/></td>
+      <td><bean:message key="admin.admin.groupNo"/></td>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -106,7 +101,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"><bean:message key="admin.admin.security"/></td>
+      <td><bean:message key="admin.admin.security"/></td>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -116,11 +111,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     </tr>
       
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
+      <td> 
         <p><bean:message key="admin.admin.schedule"/></p>
       </td>
     </tr>
-    <tr> 
+    <tr bgcolor="#EEEEFF"> 
       <td> 
 	      <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting.jsp');return false;" title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message key="admin.admin.scheduleSetting"/></a> 
          
@@ -128,47 +123,46 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     </tr>
       
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
+      <td> 
         <p><bean:message key="admin.admin.billing"/></p>
       </td>
     </tr>
-    <tr> 
+    <tr bgcolor="#EEEEFF"> 
       <td> 
         <p>
-                         <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
-                 <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
-             <a href=# onClick ="popupPage(800,700,'../billing/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a><br>
+          <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
+          <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
+          <a href=# onClick ="popupPage(800,700,'../billing/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a><br>
         	
 	  <a href=# onClick ="popupPage(800,720,'../billing/billingOHIPreport.jsp');return false;"><bean:message key="admin.admin.btnGenerateOHIPDiskette"/></a><br>
-           <a href=# onClick ="popupPage(800,640,'../billing/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a><br>
-         <a href=# onClick ="popupPage(800,640,'../billing/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
-         	         <a href=# onClick ="popupPage(600,800,'../billing/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
-         	         <a href=# onClick ="popupPage(600,1000,'../billing/billingEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>
-         	         
+          <a href=# onClick ="popupPage(800,640,'../billing/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a><br>
+          <a href=# onClick ="popupPage(800,640,'../billing/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
+          <a href=# onClick ="popupPage(600,800,'../billing/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
+          <a href=# onClick ="popupPage(600,1000,'../billing/billingEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>         	         
         </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
       <td colspan="2"><bean:message key="admin.admin.demographic"/></td>
     </tr>
-    <tr>
+    <tr bgcolor="#EEEEFF">
       <td> <a href="demographicaddarecordhtm.jsp"><bean:message key="admin.admin.btnAddDemographicRecord"/></a><br>
         <!--a href="demographicsearch.htm"><bean:message key="admin.admin.btnSearchDemographicRecord"/></a--> </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
+      <td> 
         <p><bean:message key="admin.admin.resource"/></p>
       </td>
     </tr>
-    <tr> 
+    <tr bgcolor="#EEEEFF"> 
       <td> <a href="#" ONCLICK ="popupPage(200,300,'resourcebaseurl.jsp');return false;" title="<bean:message key="admin.admin.baseURLSettingTitle"/>"><bean:message key="admin.admin.btnBaseURLSetting"/></a> </td>
     </tr>
-  </table>
+
   <!--oscarReport Code block -->
-    <table cellspacing="0" cellpadding="2" width="90%" border="0">
-      <tr>
+
+      <tr bgcolor="#EEEEFF">
         <td bgcolor="#CCCCFF" colspan="2"><bean:message key="admin.admin.oscarReport"/></td>
       </tr>
-      <tr>
+      <tr bgcolor="#EEEEFF">
           <td colspan="2" nowrap>
           <%      session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/"); 
           %>
@@ -186,81 +180,82 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
            <% } %>
           </td>
       </tr>
-    </table>
+
            <%-- This links doesnt make sense on Brazil. Hide then --%>
            <% if (!country.equals("BR")) { %>
 <!--/oscarReport Code block -->
   <!--backup download Code block -->
-    <table cellspacing="0" cellpadding="2" width="90%" border="0">
-      <tr>
-        <td bgcolor="#CCCCFF" colspan="2"><bean:message key="admin.admin.oscarBackup"/></td>
+  
+      <tr  bgcolor="#CCCCFF">
+        <td><bean:message key="admin.admin.oscarBackup"/></td>
       </tr>
-      <tr>
-          <td colspan="2" nowrap>
+      <tr bgcolor="#EEEEFF">
+          <td nowrap>
               <a HREF="#" ONCLICK ="popupPage(500,600,'adminbackupdownload.jsp'); return false;"><bean:message key="admin.admin.btnAdminBackupDownload"/></a>
           </td>
       </tr>
-    </table>
+  
 <!--/backup download Code block -->
     <% } %>
 <!--oscarMessenger Code block -->
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
+  
     <tr>
-      <td bgcolor="#CCCCFF" colspan="2"><bean:message key="admin.admin.oscarMessenger"/></td>
+      <td bgcolor="#CCCCFF"><bean:message key="admin.admin.oscarMessenger"/></td>
     </tr>
-    <tr>
-        <td colspan="2" nowrap>
+    <tr  bgcolor="#EEEEFF">
+        <td nowrap>
              <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&userName=<%=userfirstname%>%20<%=userlastname%>');return false;">
-             <oscarmessage:newMessage providerNo="<%=curProvider_no%>"/></a>
+             <bean:message key="admin.admin.messages"/></a>
         </td>
     </tr>
        <% /*ADDED THIS FOR THE NEW OSCAR MESSENGER AUG 27 O2*/%>
-    <tr>
+    <tr  bgcolor="#EEEEFF">
        <td>
             <a href="#" onclick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a>
        </td>
     </tr>
-  </table>
+  
 <!--/oscarMessenger Code block -->
 
 <!--e forms block -->
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
+  
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"><bean:message key="admin.admin.eForms"/></td>
+      <td><bean:message key="admin.admin.eForms"/></td>
     </tr>
-    <tr> 
+    <tr bgcolor="#EEEEFF"> 
       <td> <a href="../eform/uploadhtml.jsp"><bean:message key="admin.admin.btnUploadForm"/></a><br>
         </td>
     </tr>
-    <tr> 
+    <tr  bgcolor="#EEEEFF"> 
       <td> <a href="../eform/uploadimages.jsp"><bean:message key="admin.admin.btnUploadImage"/></a><br>
         </td>
     </tr>
-  </table>
+  
 <!--// end e forms block -->
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr>
-      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></td>
+  
+    <tr bgcolor="#CCCCFF"> 
+      <td><bean:message key="admin.admin.misc"/></td>
     </tr>
-  </table>
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr>
-      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></td>
+    <tr bgcolor="#EEEEFF">
+      <td><a href="#" ONCLICK ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></td>
+    </tr>  
+    <tr bgcolor="#EEEEFF">
+      <td><a href="#" ONCLICK ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></td>
     </tr>
-  </table>
 
   <% if (!country.equals("BR")) { %>
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr>
-      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></td>
+    <tr  bgcolor="#EEEEFF">
+      <td><a href="#" ONCLICK ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></td>
     </tr>
-  </table>
   <% } %>
+
+  </table>
+
   <hr color='orange'>
   <table border="0" cellspacing="0" cellpadding="0" width="90%">
   <tr>
       <td></td>
-      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/><img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
   </tr>
   </table>
 </center>
