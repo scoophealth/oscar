@@ -1,6 +1,6 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
+<%@ page import="oscar.form.*, oscar.form.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -872,6 +872,7 @@ var maxYear=9900;
 	  </td>
 	</tr><tr>
 	  <td colspan="2">
+		<input type="text" name="delPlaAbnormal" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("delPlaAbnormal", "") %>" @oscar.formDB />
 	  </td><td align="right">
 	    PLACENTA SENT TO PATHOLOGY
 	  </td><td>
@@ -1238,7 +1239,9 @@ var maxYear=9900;
 <hr>
 <table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
 <tr>
-  <td colspan="2"><B>CONSULT TO:</B></td>
+  <td colspan="2" nowrap><B>CONSULT TO:</B>
+  <input type="text" name="consultTo" size="50" maxlength="120" value="<%= props.getProperty("consultTo", "") %>" @oscar.formDB />
+  </td>
   <td width="25%">SIGNATURE</td>
   <td width="25%">SIGNATURE</td>
 </tr><tr>

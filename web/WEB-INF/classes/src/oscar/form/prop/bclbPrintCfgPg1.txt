@@ -119,6 +119,7 @@ c_newBornID     : left, 41, 88, 0, BaseFont.HELVETICA, 8
  delPla3         : left, 558, 356, 0, BaseFont.HELVETICA, 8 , X
  delPlaCGSN      : left, 528, 371, 0, BaseFont.HELVETICA, 8 , X
  delPlaCGSY      : left, 558, 371, 0, BaseFont.HELVETICA, 8 , X
+ delPlaAbnormal  : left, 295, 379, 0, BaseFont.HELVETICA, 7 
  delPlaPSPN      : left, 528, 384, 0, BaseFont.HELVETICA, 8 , X
  delPlaPSPY      : left, 558, 384, 0, BaseFont.HELVETICA, 8 , X
  delPerIntact    : left, 292, 406, 0, BaseFont.HELVETICA, 8 , X
@@ -190,6 +191,7 @@ c_newBornID     : left, 41, 88, 0, BaseFont.HELVETICA, 8
  comLabPlaHome   : left, 441, 702, 0, BaseFont.HELVETICA, 8 , X
  comLabPlaTran   : left, 497, 702, 0, BaseFont.HELVETICA, 8 , X
  comLabBirth     : left, 45, 700, 0, BaseFont.HELVETICA, 8 , _, 459, 744, 9
+ consultTo       : left, 95, 744, 0, BaseFont.HELVETICA, 7 
  conObste        : left, 44, 754, 0, BaseFont.HELVETICA, 8 , X
  conPedia        : left, 116, 754, 0, BaseFont.HELVETICA, 8 , X
  conRmSignat     : left, 322, 761, 0, BaseFont.HELVETICA, 8
