@@ -47,6 +47,49 @@
 <title> <bean:message key="demographic.demographicsearch2apptresults.title"/> (demographicsearch2apptresults)</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
+<style type="text/css">
+    BODY{
+        FONT-SIZE: Normal;
+        FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+    }
+    TABLE{
+        font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+    }
+    TD{
+        font-size:11pt;
+    }
+
+    TH{
+        font-size:11pt;            
+    }
+    .blueText{
+        font-size:9pt;
+        color: #0000FF;
+         vertical-align: top;
+    }
+    .subject {
+        background-color: #000000;
+        color: #FFFFFF;  
+        font-size: 14pt;
+        font-weight: bold;
+        text-align: centre;        
+    }
+    .searchTitle {
+        background-color: #486ebd;
+        color: #000000;            
+        font-weight: bold;
+        text-align: left;
+        height="20px"
+    }
+    .title {
+        background-color: #486ebd;
+        color: #000000;            
+        font-weight: bold;
+        text-align: center;
+        height="20px"
+    }
+    
+</style>
 <script language="JavaScript">
 function setfocus() {
   this.focus();
@@ -83,26 +126,27 @@ function searchAll() {
 
 </SCRIPT>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
+<body  bgcolor="#C0C0C0" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-	  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="demographic.demographicsearch2apptresults.patientsRecord"/></font></th></tr>
+	  <tr class="subject"><th><bean:message key="demographic.demographicsearch2apptresults.patientsRecord"/></th></tr>
 </table>
 
   <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
 	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
 	<%--@ include file="zdemographictitlesearch.htm"--%>
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.demographicsearch2apptresults.btnSearch"/> 
-        </i></b></font></td>
-			
-      <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
+        <tr>
+            <td class="searchTitle" colspan="4"><bean:message key="demographic.demographicsearch2apptresults.btnSearch"/></td>
+	</tr>
+        <tr>
+      <td class="blueText" width="10%" nowrap>
         <input type="radio" name="search_mode" value="search_name" <%=request.getParameter("search_mode").equals("search_name")?"checked":""%>>
-        <bean:message key="demographic.demographicsearch2apptresults.optName"/> </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
+        <bean:message key="demographic.demographicsearch2apptresults.optName"/> </td>
+        <td class="blueText" nowrap>
           <input type="radio"  name="search_mode" value="search_phone" <%=request.getParameter("search_mode").equals("search_phone")?"checked":""%>>
-          <bean:message key="demographic.demographicsearch2apptresults.optPhone"/></font></td> 
-        <td nowrap><font size="1" face="Verdana" color="#0000FF">
+          <bean:message key="demographic.demographicsearch2apptresults.optPhone"/></td> 
+        <td class="blueText" nowrap>
           <input type="radio"  name="search_mode" value="search_dob" <%=request.getParameter("search_mode").equals("search_dob")?"checked":""%>>
-          <bean:message key="demographic.demographicsearch2apptresults.optDOB"/></font></td> 
+          <bean:message key="demographic.demographicsearch2apptresults.optDOB"/></td> 
       <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17"  MAXLENGTH="100">
         <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" >
         <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
@@ -114,14 +158,14 @@ function searchAll() {
         &nbsp;&nbsp;
         <INPUT TYPE="button" onclick="searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>" VALUE="<bean:message key="demographic.search.Inactive"/>">
         <INPUT TYPE="button" onclick="searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>" VALUE="<bean:message key="demographic.search.All"/>">        
-      </td></tr><tr>
-			
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
+      </td></tr>
+    <tr>
+       <td class="blueText" nowrap>
         <input type="radio" name="search_mode" value="search_address" <%=request.getParameter("search_mode").equals("search_address")?"checked":""%>>
-        <bean:message key="demographic.demographicsearch2apptresults.optAddress"/> </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
+        <bean:message key="demographic.demographicsearch2apptresults.optAddress"/></td>
+        <td class="blueText" nowrap>
           <input type="radio" name="search_mode" value="search_hin" <%=request.getParameter("search_mode").equals("search_hin")?"checked":""%>>
-          <bean:message key="demographic.demographicsearch2apptresults.optHIN"/> </font></td>
+          <bean:message key="demographic.demographicsearch2apptresults.optHIN"/></td>
         <td></td>
 		</tr>
 	<%
@@ -137,40 +181,40 @@ function searchAll() {
 
 <table width="95%" border="0">
 <tr>
-<td align="left"><font size="-1"><i><bean:message key="demographic.demographicsearch2apptresults.msgKeywords"/></i> : <%=request.getParameter("keyword")%></font></td>
+<td align="left"><bean:message key="demographic.demographicsearch2apptresults.msgKeywords"/> <%=request.getParameter("keyword")%></td>
 </tr>
 </table>
 
 
 <script language="JavaScript">
-<!--
+
 var fullname="";
-function addName(lastname, firstname, chartno) {
+function addName(demographic_no, lastname, firstname, chartno, provider_no, messageID) {  
   fullname=lastname+","+firstname;
-  document.addform.action="<%=request.getParameter("originalpage")%>?name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false";  //+"\"" ;
+  document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&provider_no="+provider_no+"&bFirstDisp=false"+"&messageID="+messageID;  //+"\"" ;
   document.addform.submit(); // 
   //return;
 }
-//-->
+
 </SCRIPT>
  
-<CENTER><table width="100%" border="1"  cellpadding="0" cellspacing="1" bgcolor="#ffffff"> 
+<CENTER><table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0"> 
 	<form method="post" name="addform" action="../appointment/addappointment.jsp" >
-<tr bgcolor="#339999">
-<TH align="center" width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.demographicId"/></b></TH>
-<TH align="center" width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.lastName"/></b></TH>
-<TH align="center" width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.firstName"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="demographic.demographicsearch2apptresults.age"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.rosterStatus"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="demographic.demographicsearch2apptresults.sex"/></B></TH>
-<TH align="center" width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.DOB"/></B></TH>
-<TH align="center" width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.doctor"/></B></TH>
+<tr class="title">
+<TH width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.demographicId"/></b></TH>
+<TH width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.lastName"/></b></TH>
+<TH width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.firstName"/></b></TH>
+<TH width="5%"><b><bean:message key="demographic.demographicsearch2apptresults.age"/></b></TH>
+<TH width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.rosterStatus"/></b></TH>
+<TH width="5%"><b><bean:message key="demographic.demographicsearch2apptresults.sex"/></B></TH>
+<TH width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.DOB"/></B></TH>
+<TH width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.doctor"/></B></TH>
 </tr>
 
 <%@ include file="../demographic/zdemographicsearchresult.jsp" %>
  
 <tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
-      <td><input type="submit" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="addName('<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no") )%>')"></td>
+      <td><input type="submit" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="addName('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=URLEncoder.encode(curProvider_no)%>','<%=request.getParameter("messageId")%>')"></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
       <td><%=age%></td>
@@ -211,7 +255,7 @@ function addName(lastname, firstname, chartno) {
 %> 
 <script language="JavaScript">
 <!--
-  document.addform.action="<%=request.getParameter("originalpage")%>?name=<%=URLEncoder.encode(bufName.toString())%>&chart_no=<%=URLEncoder.encode(bufChart.toString())%>&bFirstDisp=false&demographic_no=<%=bufNo.toString()%>"; 
+  document.addform.action="<%=request.getParameter("originalpage")%>?name=<%=URLEncoder.encode(bufName.toString())%>&chart_no=<%=URLEncoder.encode(bufChart.toString())%>&bFirstDisp=false&demographic_no=<%=bufNo.toString()%>&messageID=<%=request.getParameter("messageId")%>"; 
   document.addform.submit();  
 //-->
 </SCRIPT>
