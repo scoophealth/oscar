@@ -361,7 +361,7 @@ function isformNeeded(){
 	<tr id="secondSection4">
 		<td>
 		Prior/Other Problems Affecting Injury, Recovery and Disability</td><td>
-              <textarea name="w_problem" cols="50" id="w_problem" style="height:50px;width:100%;" ><%=form.getW_problem()%></textarea>
+              <textarea name="w_problem" cols="50" id="w_problem" style="height:50px;width:100%;" onkeyup="checkTextLimit(this.form.w_problem,160);"><%=form.getW_problem()%></textarea>
 		</td>
 	</tr>
 	
@@ -464,7 +464,7 @@ function isformNeeded(){
 		<td td align="left" valign="top">
 		Clinical Information:<br><small>What happened?<br>Subjective Symptoms<br>Examination<br>Investigations<br>Treatment, Meds</small>
 		</td><td td align="left" valign="top">
-		<textarea name="w_clinicinfo" class="mhAssTextarea" id="w_clinicinfo" style="height:80px;width:100%;"  onkeyup="checkTextLimit(this.form.w_clinicinfo,400);" ><%=form.getW_clinicinfo()%></textarea> 
+		<textarea name="w_clinicinfo" class="mhAssTextarea" id="w_clinicinfo" style="height:80px;width:100%;"  onkeyup="checkTextLimit(this.form.w_clinicinfo,800);" ><%=form.getW_clinicinfo()%></textarea> 
 		</td>
 	</tr>
 	<tr id="forthSectionTitle">
@@ -481,11 +481,11 @@ function isformNeeded(){
 		</td>
 	</tr>
 	<tr id="forthSection2">
-		<td>
+		<td valign="top">
 			If No: What are the current physical and/or psychological restrictions?
 		</td>
 		<td>
-			<input name="w_capreason" type="text" id="w_capreason" size="50" value="<%=form.getW_capreason()%>">
+		   <textarea name="w_capreason"  class="mhAssTextarea" id="w_capreason" style="height:80px;width:100%;"  onkeyup="checkTextLimit(this.form.w_capreason,240);" ><%=form.getW_capreason()%></textarea> 			
 		</td>
 	</tr>
 	<tr id="forthSection3">
