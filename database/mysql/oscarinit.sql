@@ -4801,7 +4801,10 @@ CREATE TABLE formVTForm(
   DMValue varchar(10),
   HTNValue varchar(10),
   HchlValue varchar(10),
-  CADValue varchar(10),
+  MIValue varchar(10),
+  AngValue varchar(10),
+  ACSValue varchar(10),
+  RVTNValue varchar(10),
   CVDValue varchar(10),
   PVDValue varchar(10),
   Diagnosis Text,
@@ -4814,6 +4817,8 @@ CREATE TABLE formVTForm(
   INDEX (demographic_no)
 
 ) TYPE=MyISAM;
+
+
 
 --
 -- Table structure for table `groupMembers_tbl`
