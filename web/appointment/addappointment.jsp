@@ -105,6 +105,11 @@ function calculateEndTime() {
     document.ADDAPPT.status.value = 'N' ;
   }
 }
+
+function onButRepeat() {
+	document.forms[0].action = "appointmentrepeatbooking.jsp" ;
+	document.forms[0].submit();
+}
 // stop javascript -->
 </script>
 
@@ -291,7 +296,9 @@ function calculateEndTime() {
         <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'" tabindex="6" VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>">
       </TD>
     <TD></TD>
-    <TD align="right"><INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();"></TD>
+    <TD align="right"><INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();">
+	<input type="button" value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()">
+    </TD>
   </tr>
 </TABLE>
 
