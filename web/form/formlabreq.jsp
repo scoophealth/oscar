@@ -25,7 +25,7 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*" %>
+<%@ page import="oscar.form.*, oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -53,6 +53,7 @@
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
 
 	props = ((FrmLabReqRecord) rec).getFormCustRecord(props, provNo);
+        OscarProperties oscarProps = OscarProperties.getInstance();
 
     if (request.getParameter("labType") != null){
         if (formId == 0 ){
@@ -283,7 +284,9 @@ var maxYear=3100;
                          <input type="hidden" style="width:100%" name="provName" value="<%=props.getProperty("provName", "")%>"  />
                      
                         <%=props.getProperty("apptProvName", "").compareTo("")==0?props.getProperty("provName", ""):props.getProperty("apptProvName", "")%>&nbsp;<br>
-                        <br>Family Physician:<br> <%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>
+<%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
+     should really be rewritten more elegantly at some later point in time. --%>    
+                        <br><%=oscarProps.getProperty("clinic_no", "").startsWith("1022")?"Physician:":"Family Physician:"%><br> <%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>
                         <input type="hidden" style="width:100%" name="clinicAddress" value="<%=props.getProperty("clinicAddress", "")%>"  />
                         <%=props.getProperty("clinicAddress", "")%>&nbsp;<br>
                         <input type="hidden" style="width:100%" name="clinicCity" value="<%=props.getProperty("clinicCity", "")%>"  />
