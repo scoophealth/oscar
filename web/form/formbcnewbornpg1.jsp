@@ -973,7 +973,7 @@ function onCheckSlave(a, masterName) {
 	wks.</td>
     <td>GESTATIONAL AGE FROM<br>
 	BY EXAM <i>(see reverse)</i>
-	<input type="text" name="pg1_phyHistWk" size="6" maxlength="6" value="<%= props.getProperty("pg1_phyHistWk", "") %>" @oscar.formDB /> 
+	<input type="text" name="pg1_phyAgeWk" size="6" maxlength="6" value="<%= props.getProperty("pg1_phyAgeWk", "") %>" @oscar.formDB /> 
 	wks.</td>
   </tr>
   </table>
@@ -1020,19 +1020,19 @@ function onCheckSlave(a, masterName) {
 		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 		</td>
 		<td width="20%">
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
+		<input type="checkbox" name="pg1_phy2Pallor" <%= props.getProperty("pg1_phy2Pallor", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 		Pallor<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
+		<input type="checkbox" name="pg1_phy2Bruis" <%= props.getProperty("pg1_phy2Bruis", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 		Bruising<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
+		<input type="checkbox" name="pg1_phy2Petec" <%= props.getProperty("pg1_phy2Petec", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 		Petechiae
 		</td>
 		<td>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
+		<input type="checkbox" name="pg1_phy2Mec" <%= props.getProperty("pg1_phy2Mec", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 		Mec. Stain<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
+		<input type="checkbox" name="pg1_phy2Peel" <%= props.getProperty("pg1_phy2Peel", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 		Peeling<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
+		<input type="checkbox" name="pg1_phy2Jaun" <%= props.getProperty("pg1_phy2Jaun", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 		Jaundice
 		</td>
 	</tr>

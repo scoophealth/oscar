@@ -54,7 +54,7 @@
         {
             //ret = confirm("Do you wish to save this form and view the print preview?");
             popupFixedPage(650,850,'../provider/notice.htm');
-            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+Part+1&__cfgfile=bcar1PrintCfgPg1&__cfgfile=bcar1PrintCfgPg2&__template=bcar1";
+            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Newborn+Record+Part+2&__cfgfile=bcnb2PrintCfgPg1&__template=bcnewborn2";
             document.forms[0].target="planner";
             document.forms[0].submit();
             document.forms[0].target="apptProviderSearch";
@@ -253,13 +253,61 @@ var maxYear=9900;
 
     function checkAllDates() {
         var b = true;
-        if(valDate(document.forms[0].pg1_eddByDate)==false){
+        if(valDate(document.forms[0].ar2_9Date1)==false){
             b = false;
-        } else if(valDate(document.forms[0].pg1_formDate)==false){
+        } else if(valDate(document.forms[0].ar2_9Date2)==false){
             b = false;
-        } else if(valDate(document.forms[0].pg1_delRomBirthDay)==false){
+        } else if(valDate(document.forms[0].ar2_9Date3)==false){
             b = false;
-        } else if(valDate(document.forms[0].pg1_Date)==false){
+        } else if(valDate(document.forms[0].ar2_9Date4)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_9Date5)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_9Date6)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_formDate)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_10Date1)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_10Date2)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_10Date3)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_10DateRes1)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_10DateRes2)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_10DateRes3)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date1)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date2)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date3)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date4)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date5)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date6)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date7)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date8)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date9)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date10)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date11)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date12)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_11Date13)==false){
+            b = false;
+        } else if(valDate(document.forms[0].pg2_12Date)==false){
+            b = false;
+        } else if(valDate(document.forms[0].ar2_13ExamDate)==false){
             b = false;
         }
 
@@ -268,13 +316,7 @@ var maxYear=9900;
 
 	function checkAllTimes() {
         var b = true;
-        if(valTime(document.forms[0].pg1_delRomBirthTime)==false){
-            b = false;
-        } else if(valTime(document.forms[0].pg1_routProEyeTime)==false){
-            b = false;
-        } else if(valTime(document.forms[0].pg1_routProVitTime)==false){
-            b = false;
-        } else if(valTime(document.forms[0].pg1_Time)==false){
+        if(valTime(document.forms[0].ar2_9Test1Time)==false){
             b = false;
         } 
 
@@ -394,23 +436,51 @@ function onCheckSlave(a, masterName) {
 
   <table width="100%" border="1"  cellspacing="0" cellpadding="0">
     <tr>
-      <td width="15%" nowrap><b>9.</b> DATE DONE<br>dd/mm/yyyy</td>
+      <td width="15%" nowrap><b>9.</b> DATE DONE<br>&nbsp;&nbsp;&nbsp;dd/mm/yyyy</td>
 	  <td rowspan="2" valign="bottom">
-	  <input type="checkbox" name="ar2_9Pku" <%= props.getProperty("ar2_9Pku", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	  PKU. TSH. GALACTOSEMIA
-
-
-
-
-
-      <input type="text" name="c_motherName" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("c_motherName", "") %>" @oscar.formDB />
-      </td>
-	  <td width="8%">AGE<br>
-      <input type="text" name="c_motherAge" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_motherAge", "") %>" @oscar.formDB />
-      </td><td nowrap>MOTHER'S HOSPITAL #<br>
-      <input type="text" name="c_hospitalNo" style="width:100%" size="20" maxlength="30" value="<%= props.getProperty("c_hospitalNo", "") %>" @oscar.formDB />
-      </td>
-    </tr>
+	  <input type="checkbox" name="ar2_9Test1" <%= props.getProperty("ar2_9Test1", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  PKU. TSH. GALACTOSEMIA &nbsp;&nbsp;&nbsp;TIME:
+      <input type="text" name="ar2_9Test1Time" size="5" maxlength="5" value="<%= props.getProperty("ar2_9Test1Time", "") %>" @oscar.formDB  dbType="time"/>
+	  </td>
+	</tr><tr>
+      <td>
+      <input type="text" name="ar2_9Date1" size="10" maxlength="10" value="<%= props.getProperty("ar2_9Date1", "") %>" @oscar.formDB dbType="date" />
+	  </td>
+	</tr><tr>
+      <td>
+      <input type="text" name="ar2_9Date2" size="10" maxlength="10" value="<%= props.getProperty("ar2_9Date2", "") %>" @oscar.formDB dbType="date" />
+	  </td><td>
+	  <input type="checkbox" name="ar2_9Test2" <%= props.getProperty("ar2_9Test2", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  POSITIVE MATERNAL HBsAg STATUS
+	  </td>
+	</tr><tr>
+      <td>
+      <input type="text" name="ar2_9Date3" size="10" maxlength="10" value="<%= props.getProperty("ar2_9Date3", "") %>" @oscar.formDB dbType="date" />
+	  </td><td>
+	  &nbsp;&nbsp;&nbsp;<input type="checkbox" name="ar2_9Test3" <%= props.getProperty("ar2_9Test3", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  HBIG GIVEN
+	  </td>
+	</tr><tr>
+      <td>
+      <input type="text" name="ar2_9Date4" size="10" maxlength="10" value="<%= props.getProperty("ar2_9Date4", "") %>" @oscar.formDB dbType="date" />
+	  </td><td>
+	  &nbsp;&nbsp;&nbsp;<input type="checkbox" name="ar2_9Test4" <%= props.getProperty("ar2_9Test4", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  HEPATITIS B VACCINE GIVEN
+	  </td>
+	</tr><tr>
+      <td>
+      <input type="text" name="ar2_9Date5" size="10" maxlength="10" value="<%= props.getProperty("ar2_9Date5", "") %>" @oscar.formDB dbType="date" />
+	  </td><td>
+	  <input type="checkbox" name="ar2_9Test5" <%= props.getProperty("ar2_9Test5", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  POSITIVE MATERNAL HIV STATUS
+	  </td>
+	</tr><tr>
+      <td>
+      <input type="text" name="ar2_9Date6" size="10" maxlength="10" value="<%= props.getProperty("ar2_9Date6", "") %>" @oscar.formDB dbType="date" />
+	  </td><td>
+	  <input type="checkbox" name="ar2_9Test6" <%= props.getProperty("ar2_9Test6", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  OTHER
+	</tr>
   </table>
   
 
@@ -420,31 +490,31 @@ function onCheckSlave(a, masterName) {
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
     <tr>
       <td width="55%">HOSPITAL NAME<br>
-      <input type="text" name="c_hospitalName" style="width:100%" size="30" maxlength="80" value="<%= props.getProperty("c_hospitalName", "") %>" @oscar.formDB />
+      <input type="text" name="c_hospitalName" style="width:100%" size="30" maxlength="80" value="<%= props.getProperty("c_hospitalName", "") %>"/>
       </td>
       <td>DATE<br>
-      <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg2_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
     </tr><tr>
       <td width="55%">SURNAME<br>
-      <input type="text" name="c_surname" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_surname", "") %>" @oscar.formDB />
+      <input type="text" name="c_surname" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_surname", "") %>" />
 	  </td>
 	  <td>GIVEN NAME<br>
-      <input type="text" name="c_givenName" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_givenName", "") %>" @oscar.formDB />
+      <input type="text" name="c_givenName" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_givenName", "") %>" />
 	  </td>
     </tr><tr>
       <td>ADDRESS<br>
-      <input type="text" name="c_address" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("c_address", "") %>" @oscar.formDB />
-      <input type="text" name="c_city" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("c_city", "") %>" @oscar.formDB />
-      <input type="text" name="c_province" size="18" maxlength="50" value="<%= props.getProperty("c_province", "") %>" @oscar.formDB />
-      <input type="text" name="c_postal" size="7" maxlength="8" value="<%= props.getProperty("c_postal", "") %>" @oscar.formDB />
+      <input type="text" name="c_address" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("c_address", "") %>" />
+      <input type="text" name="c_city" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("c_city", "") %>" />
+      <input type="text" name="c_province" size="18" maxlength="50" value="<%= props.getProperty("c_province", "") %>" />
+      <input type="text" name="c_postal" size="7" maxlength="8" value="<%= props.getProperty("c_postal", "") %>" />
 	  </td>
 	  <td valign="top">PHONE NUMBER<br>
-      <input type="text" name="c_phone" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("c_phone", "") %>" @oscar.formDB />
+      <input type="text" name="c_phone" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("c_phone", "") %>" />
 	  </td>
     </tr><tr>
 	  <td colspan="2"><span class="small9">PHYSICIAN / MIDWIFE NAME</span><br>
-      <input type="text" name="c_phyMid" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_phyMid", "") %>" @oscar.formDB />
+      <input type="text" name="c_phyMid" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_phyMid", "") %>" />
 	  </td>
     </tr>
   </table>
@@ -456,801 +526,410 @@ function onCheckSlave(a, masterName) {
 
 
 <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-<tr><td width="40%" valign="top">
-
-  <table  class="small9" width="100%" border="1"  cellspacing="0" cellpadding="0">
-  <tr>
-    <th colspan="7" align="left">2. APGAR SCORE</th>
-  </tr><tr align="center">
-	<td width="14%"></td>
-	<td width="14%">0</td>
-	<td width="14%">1</td>
-	<td width="14%">2</td>
-	<td width="14%"><font color="red">1 MIN.</font></td>
-	<td width="14%"><font color="red">5 MIN.</font></td>
-	<td width="14%"><font color="red">10 MIN.</font></td>
-  </tr><tr align="center">
-	<td><B>HEART RATE</B></td>
-	<td>ABSENT</td>
-	<td>BELOW 100</td>
-	<td>ABOVE 100</td>
-	<td>
-	<input type="text" name="pg1_apgarHeart1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarHeart1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarHeart5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarHeart5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarHeart10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarHeart10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-  </tr><tr align="center">
-	<td><B>RESP. EFFORT</B></td>
-	<td>ABSENT</td>
-	<td>SLOW IRREG.</td>
-	<td>GOOD CRYING</td>
-	<td>
-	<input type="text" name="pg1_apgarResp1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarResp1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarResp5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarResp5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarResp10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarResp10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-  </tr><tr align="center">
-	<td><B>MUSCLE TONE</B></td>
-	<td>LIMP</td>
-	<td>SOME FLEXION</td>
-	<td>ACTIVE MOTION</td>
-	<td>
-	<input type="text" name="pg1_apgarMuscle1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarMuscle1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarMuscle5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarMuscle5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarMuscle10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarMuscle10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-  </tr><tr align="center">
-	<td><B>RESPONSE TO STIM.</B></td>
-	<td>NONE</td>
-	<td>GRIMACE</td>
-	<td>COUGH OR SNEEZE</td>
-	<td>
-	<input type="text" name="pg1_apgarStim1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarStim1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarStim5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarStim5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarStim10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarStim10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-  </tr><tr align="center">
-	<td><B>COLOUR</B></td>
-	<td>BLUE PALE</td>
-	<td>BODY PINK BLUE EXTREM.</td>
-	<td>ALL PINK</td>
-	<td>
-	<input type="text" name="pg1_apgarColor1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarColor1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarColor5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarColor5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-	<td>
-	<input type="text" name="pg1_apgarColor10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarColor10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-  </tr><tr align="center">
-    <td align="right" colspan="4"><b>APGAR TOTAL SCORE</b></td>
-    <td>
-	<input type="text" name="pg1_apgarTotal1" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_apgarTotal1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-    <td>
-	<input type="text" name="pg1_apgarTotal5" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_apgarTotal5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-    <td>
-	<input type="text" name="pg1_apgarTotal10" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_apgarTotal10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
-	</td>
-  </tr>
-  </table>
-
-
-
-  <table class="small9" width="100%" border="1"  cellspacing="0" cellpadding="0">
-  <tr>
-    <th colspan="2"  align="left">4. DELIVERY ROOM</th>
-  </tr><tr>
-	<td colspan="2">BIRTHDATE
-	<input type="text" name="pg1_delRomBirthDay" size="10" maxlength="10" value="<%= props.getProperty("pg1_delRomBirthDay", "") %>" @oscar.formDB  dbType="date"/>
-	TIME
-	<input type="text" name="pg1_delRomBirthTime" size="5" maxlength="5" value="<%= props.getProperty("pg1_delRomBirthTime", "") %>" @oscar.formDB  dbType="time"/>
-	</td>
-  </tr><tr>
-	<td width="50%">DELIVERY TYPE<br>
-	<input type="text" name="pg1_delRomDelType" style="width:100%" size="10" maxlength="30" value="<%= props.getProperty("pg1_delRomDelType", "") %>" @oscar.formDB/>
-	</td><td>NEWBORN HOSPITAL #<br>
-	<input type="text" name="pg1_delRomHospNo" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_delRomHospNo", "") %>" @oscar.formDB/>
-	</td>
-  </tr><tr>
-	<td colspan="2">IDENTIFIED AT BIRTH BY:
-	<input type="text" name="pg1_delRomBirthBy" size="25" maxlength="60" value="<%= props.getProperty("pg1_delRomBirthBy", "") %>" @oscar.formDB/>
-	<br>
-	Signature:
-	<input type="text" name="pg1_delRomBirthBySig" size="30" maxlength="60" value="<%= props.getProperty("pg1_delRomBirthBySig", "") %>" @oscar.formDB/>
-	RN/RM
-	<br>
-	IDENTIFIED AT TRANSFER BY: (if appropriate)
-	<input type="text" name="pg1_delRomTranBy" size="15" maxlength="60" value="<%= props.getProperty("pg1_delRomTranBy", "") %>" @oscar.formDB/>
-	<br>
-	Signature:
-	<input type="text" name="pg1_delRomTranBySig" size="30" maxlength="60" value="<%= props.getProperty("pg1_delRomTranBySig", "") %>" @oscar.formDB/>
-	RN/RM
-	</td>
-  </tr><tr>
-	<td>VOIDED<br>
-	<input type="checkbox" name="pg1_delRomVoidN" <%= props.getProperty("pg1_delRomVoidN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	No &nbsp;&nbsp;&nbsp;
-	<input type="checkbox" name="pg1_delRomVoidY" <%= props.getProperty("pg1_delRomVoidY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Yes
-	</td><td>PASSED MECONIUM<br>
-	<input type="checkbox" name="pg1_delRomPassN" <%= props.getProperty("pg1_delRomPassN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	No &nbsp;&nbsp;&nbsp;
-	<input type="checkbox" name="pg1_delRomPassY" <%= props.getProperty("pg1_delRomPassY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Yes
-	</td>
-  </tr><tr>
-	<td colspan="2">FEEDING PLAN
-	<input type="checkbox" name="pg1_delRomBreast" <%= props.getProperty("pg1_delRomBreast", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Breast &nbsp;&nbsp;&nbsp;
-	<input type="checkbox" name="pg1_delRomFormula" <%= props.getProperty("pg1_delRomFormula", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Formula
-	</td>
-  </tr>
-  </table>
-
-
-  <table class="small9" width="100%" border="1"  cellspacing="0" cellpadding="0">
-  <tr>
-    <td colspan="2"  align="left"><B>5. ROUTINE PROCEDURES</B><br>
-	CORD BLOOD &nbsp;&nbsp;&nbsp;
-	<input type="checkbox" name="pg1_routProBldRh" <%= props.getProperty("pg1_routProBldRh", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Rh &nbsp;&nbsp;&nbsp;
-	<input type="checkbox" name="pg1_routProBldOther" <%= props.getProperty("pg1_routProBldOther", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Other</td>
-  </tr><tr>
-	<td>EYE PROPHYLAXIS<BR>
-	<input type="checkbox" name="pg1_routProEyeEryth" <%= props.getProperty("pg1_routProEyeEryth", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Erythromycin &nbsp;&nbsp;&nbsp;
-	<input type="checkbox" name="pg1_routProEyeOther" <%= props.getProperty("pg1_routProEyeOther", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	Other:
-	<input type="text" name="pg1_routProEyeOtherSpec" size="15" maxlength="20" value="<%= props.getProperty("pg1_routProEyeOtherSpec", "") %>" @oscar.formDB /> 
-	Time:
-	<input type="text" name="pg1_routProEyeTime" size="5" maxlength="5" value="<%= props.getProperty("pg1_routProEyeTime", "") %>" @oscar.formDB  dbType="time"/> 
-	<BR>
-	Signature
-	<input type="text" name="pg1_routProEyeSig" size="30" maxlength="50" value="<%= props.getProperty("pg1_routProEyeSig", "") %>" @oscar.formDB /> 
-	RN/RM
-	</td>
-  </tr><tr>
-	<td>VITAMIN K<BR>
-	<input type="checkbox" name="pg1_routProVitIM" <%= props.getProperty("pg1_routProVitIM", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	IM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<input type="checkbox" name="pg1_routProVitPO" <%= props.getProperty("pg1_routProVitPO", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	PO &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	Time:
-	<input type="text" name="pg1_routProVitTime" size="5" maxlength="5" value="<%= props.getProperty("pg1_routProVitTime", "") %>" @oscar.formDB  dbType="time"/> 
-	<BR>
-	Signature
-	<input type="text" name="pg1_routProVitSig" size="30" maxlength="50" value="<%= props.getProperty("pg1_routProVitSig", "") %>" @oscar.formDB /> 
-	RN/RM
-	</td>
-  </tr>
-  </table>
-
-
-  <table class="small9" width="100%" border="1"  cellspacing="0" cellpadding="1">
-  <tr>
-    <td colspan="3"><b>6. EVALUATION OF DEVELOPMENT</b><br>
-	<I>(growth chart and curve on reverse)</I>
-	</td>
-  </tr><tr>
-	<td width="30%">BIRTHWEIGHT</td>
-	<td width="35%" align="right">
-	<input type="text" name="pg1_evaBirG" size="6" maxlength="10" value="<%= props.getProperty("pg1_evaBirG", "") %>" @oscar.formDB /> 
-	&nbsp;&nbsp;g
-	</td><td align="right">
-	<input type="text" name="pg1_evaBirP" size="6" maxlength="10" value="<%= props.getProperty("pg1_evaBirP", "") %>" @oscar.formDB /> 
-	%
-	</td>
-  </tr><tr>
-	<td>LENGTH</td>
-	<td align="right">
-	<input type="text" name="pg1_evaLenCm" size="6" maxlength="10" value="<%= props.getProperty("pg1_evaLenCm", "") %>" @oscar.formDB /> 
-	cm
-	</td><td align="right">
-	<input type="text" name="pg1_evaLenP" size="6" maxlength="10" value="<%= props.getProperty("pg1_evaLenP", "") %>" @oscar.formDB /> 
-	%
-	</td>
-  </tr><tr>
-	<td>HEAD CIRCUMFERENCE</td>
-	<td align="right">
-	<input type="text" name="pg1_evaHeadCm" size="6" maxlength="10" value="<%= props.getProperty("pg1_evaHeadCm", "") %>" @oscar.formDB /> 
-	cm
-	</td><td align="right">
-	<input type="text" name="pg1_evaHeadP" size="6" maxlength="10" value="<%= props.getProperty("pg1_evaHeadP", "") %>" @oscar.formDB /> 
-	%
-	</td>
-  </tr><tr>
-	<td colspan="3">
-
-	<table class="small9" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="33%">
-		<input type="checkbox" name="pg1_evaPret" <%= props.getProperty("pg1_evaPret", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-		PRETERM
-		</td><td width="30%">
-		<input type="checkbox" name="pg1_evaTerm" <%= props.getProperty("pg1_evaTerm", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-		TERM
-		</td><td>
-		<input type="checkbox" name="pg1_evaPostTerm" <%= props.getProperty("pg1_evaPostTerm", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-		POSTTERM
-		</td>
-	</tr><tr>
-		<td>
-		<input type="checkbox" name="pg1_evaSga" <%= props.getProperty("pg1_evaSga", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-		SGA
-		</td><td>
-		<input type="checkbox" name="pg1_evaAga" <%= props.getProperty("pg1_evaAga", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-		AGA
-		</td><td>
-		<input type="checkbox" name="pg1_evaLga" <%= props.getProperty("pg1_evaLga", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-		LGA
-		</td>
-	</tr>
-	</table>
-
-	</td>
-  </tr>
-  </table>
-
-
-  <table class="small9" width="100%" border="0"  cellspacing="0" cellpadding="0">
-  <tr>
-	<td width="60%" colspan="2"><b>7. STILL BIRTH</b></td>
-	<td width="10%">NO</td>
-	<td>YES</td>
-  </tr><tr>
-    <td width="3%"></td>
-    <td>MACERATED</td>
-	<td>
-	<input type="checkbox" name="pg1_stillMaceN" <%= props.getProperty("pg1_stillMaceN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td><td>
-	<input type="checkbox" name="pg1_stillMaceY" <%= props.getProperty("pg1_stillMaceY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td>
-  </tr><tr>
-    <td></td>
-    <td>IUGR</td>
-	<td>
-	<input type="checkbox" name="pg1_stillIugrN" <%= props.getProperty("pg1_stillIugrN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td><td>
-	<input type="checkbox" name="pg1_stillIugrY" <%= props.getProperty("pg1_stillIugrY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td>
-  </tr><tr>
-    <td></td>
-    <td>RETROPLACENTAL CLOT</td>
-	<td>
-	<input type="checkbox" name="pg1_stillRetroN" <%= props.getProperty("pg1_stillRetroN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td><td>
-	<input type="checkbox" name="pg1_stillRetroY" <%= props.getProperty("pg1_stillRetroY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td>
-  </tr><tr>
-    <td></td>
-    <td>EVIDENCE OF ANEMIA</td>
-	<td>
-	<input type="checkbox" name="pg1_stillEvidN" <%= props.getProperty("pg1_stillEvidN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td><td>
-	<input type="checkbox" name="pg1_stillEvidY" <%= props.getProperty("pg1_stillEvidY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td>
-  </tr><tr>
-    <td></td>
-    <td>AUTOPSY CONSENT</td>
-	<td>
-	<input type="checkbox" name="pg1_stillAutoN" <%= props.getProperty("pg1_stillAutoN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td><td>
-	<input type="checkbox" name="pg1_stillAutoY" <%= props.getProperty("pg1_stillAutoY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td>
-  </tr><tr>
-    <td></td>
-    <td>OBVIOUS ANOMALY(descibe below):</td>
-	<td>
-	<input type="checkbox" name="pg1_stillObviN" <%= props.getProperty("pg1_stillObviN", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td><td>
-	<input type="checkbox" name="pg1_stillObviY" <%= props.getProperty("pg1_stillObviY", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	</td>
-  </tr><tr>
-    <td></td>
-    <td colspan="4" align="right">umblical cord length
-	<input type="text" name="pg1_stillUmbCordLen" size="6" maxlength="10" value="<%= props.getProperty("pg1_stillUmbCordLen", "") %>" @oscar.formDB /> 
-	cm
-	</td>
-  </tr>
-  </table>
-
-
-  </td>
-  <td valign="top">
-
-
-  <table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-  <tr>
-	<td colspan="4"><b><span class="small9">3. RESUSCITATION SUMMARY</span></b> (Use Hospital Progress Notes if insufficient space for narrative)</td>
-  </tr><tr>
-	<td width="20%">AMNIOTIC FLUID: </td>
-	<td width="30%">
-	<input type="checkbox" name="pg1_ResAmnClear" <%= props.getProperty("pg1_ResAmnClear", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	CLEAR</td>
-	<td width="30%">
-	<input type="checkbox" name="pg1_ResAmnMeco" <%= props.getProperty("pg1_ResAmnMeco", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	MECONIUM STAINED</td>
-	<td></td>
-  </tr><tr>
-	<td>SUCTION: </td>
-	<td>
-	<input type="checkbox" name="pg1_ResSucPeri" <%= props.getProperty("pg1_ResSucPeri", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	AT PERINEUM</td>
-	<td>
-	<input type="checkbox" name="pg1_ResSucOrop" <%= props.getProperty("pg1_ResSucOrop", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	OROPHARYNGEAL</td>
-	<td>
-	<input type="checkbox" name="pg1_ResSucTrac" <%= props.getProperty("pg1_ResSucTrac", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	TRACHEA</td>
-  </tr><tr>
-	<td></td>
-	<td>
-	<input type="checkbox" name="pg1_ResMegCord" <%= props.getProperty("pg1_ResMegCord", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	MEG. BELOW CORDS</td>
-	<td>
-	<input type="checkbox" name="pg1_ResStoSuct" <%= props.getProperty("pg1_ResStoSuct", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	STOMACH SUCTIONED</td>
-	<td></td>
-  </tr>
-  </table>
-  
-  <table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-  <tr>
-	<td colspan="2">
-	<input type="checkbox" name="pg1_ResDriedPosAsse" <%= props.getProperty("pg1_ResDriedPosAsse", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	DRIED, POSITIONED, ASSESSED</td>
-  </tr><tr>
-	<td width="20%">
-	<input type="checkbox" name="pg1_ResO2Free" <%= props.getProperty("pg1_ResO2Free", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	O2 FREE FLOW: 
-	</td><td>START
-	<input type="text" name="pg1_ResO2Start" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResO2Start", "") %>" @oscar.formDB /> 
-	STOP
-	<input type="text" name="pg1_ResO2Stop" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResO2Stop", "") %>" @oscar.formDB /> 
-	</td>
-  </tr><tr>
-	<td>
-	<input type="checkbox" name="pg1_ResIPPV" <%= props.getProperty("pg1_ResIPPV", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	IPPV: 
-	</td><td>START
-	<input type="text" name="pg1_ResIPPVStart" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResIPPVStart", "") %>" @oscar.formDB /> 
-	STOP
-	<input type="text" name="pg1_ResIPPVStop" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResIPPVStop", "") %>" @oscar.formDB /> 
-	TIME TO SPONTANEOUS BREATHING
-	<input type="text" name="pg1_ResIPPVTimeSpBrea" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResIPPVTimeSpBrea", "") %>" @oscar.formDB /> 
-	</td>
-  </tr><tr>
-	<td colspan="2" align="right">
-	TIME TO HR &gt; 100
-	<input type="text" name="pg1_ResIPPVTimeHR" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResIPPVTimeHR", "") %>" @oscar.formDB /> 
-	</td>
-  </tr><tr>
-	<td colspan="2">
-	<input type="checkbox" name="pg1_ResFormComp" <%= props.getProperty("pg1_ResFormComp", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	RESUSCITATION FORM COMPLETED<br>
-	(document resuscitation requiring IPPV on separate Neonatal Resuscitation Record)
-	</td>
-  </tr>
-  </table>
-  
-  <table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-  <tr>
-	<td width="30%" nowrap>CORD GASES:
-	<input type="checkbox" name="pg1_ResCordNotDone" <%= props.getProperty("pg1_ResCordNotDone", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	NOT DONE</td>
-	<td>
-	<input type="checkbox" name="pg1_ResCordUA" <%= props.getProperty("pg1_ResCordUA", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	UA &nbsp;&nbsp;&nbsp;
-	pH
-	<input type="text" name="pg1_ResCordPh" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordPh", "") %>" @oscar.formDB /> 
-	pCO2
-	<input type="text" name="pg1_ResCordPco2" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordPco2", "") %>" @oscar.formDB /> 
-	pO2
-	<input type="text" name="pg1_ResCordPo2" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordPo2", "") %>" @oscar.formDB /> 
-	B.E.
-	<input type="text" name="pg1_ResCordBe" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordBe", "") %>" @oscar.formDB /> 
-	</td>
-  </tr><tr>
-	<td></td>
-	<td>
-	<input type="checkbox" name="pg1_ResCordUV" <%= props.getProperty("pg1_ResCordUV", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	UV &nbsp;&nbsp;&nbsp;
-	pH
-	<input type="text" name="pg1_ResCordUVPh" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordUVPh", "") %>" @oscar.formDB /> 
-	pCO2
-	<input type="text" name="pg1_ResCordUVPco2" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordUVPco2", "") %>" @oscar.formDB /> 
-	pO2
-	<input type="text" name="pg1_ResCordUVPo2" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordUVPo2", "") %>" @oscar.formDB /> 
-	B.E.
-	<input type="text" name="pg1_ResCordUVBe" size="6" maxlength="10" value="<%= props.getProperty("pg1_ResCordUVBe", "") %>" @oscar.formDB /> 
-	</td>
-  </tr><tr>
-	<td colspan="2">Comments:
-	<textarea name="pg1_ResComment" style="width:100%" cols="60" rows="2" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("pg1_ResComment", "") %> </textarea>
-	</td>
-	
-  </tr>
-  </table>
-
-  <table class="small8" width="100%" border="1"  cellspacing="0" cellpadding="0">
-  <tr>
-	<td>SIGNATURE
-	<input type="text" name="pg1_ResSig1" size="20" maxlength="60" value="<%= props.getProperty("pg1_ResSig1", "") %>" @oscar.formDB /> 
-	RM/RN</td>
-	<td>SIGNATURE
-	<input type="text" name="pg1_ResSig2" size="20" maxlength="60" value="<%= props.getProperty("pg1_ResSig2", "") %>" @oscar.formDB /> 
-	RM/RN</td>
-	<td>SIGNATURE
-	<input type="text" name="pg1_ResSig3" size="20" maxlength="60" value="<%= props.getProperty("pg1_ResSig3", "") %>" @oscar.formDB /> 
-	RM/RN</td>
-  </tr>
-  </table>
-
-  <table class="small8" width="100%" border="1"  cellspacing="0" cellpadding="0">
-  <tr>
-	<td colspan="2"><b><span class="small9">8. PHYSICAL EXAMINATION AT BIRTH </span>(INCLUDING STILLBIRTHS)
-	</td><td rowspan="2">
-	<input type="checkbox" name="pg1_phyMale" <%= props.getProperty("pg1_phyMale", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	MALE
-	<input type="checkbox" name="pg1_phyFemale" <%= props.getProperty("pg1_phyFemale", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	FEMALE<br>
-	<input type="checkbox" name="pg1_phyAmbiguous" <%= props.getProperty("pg1_phyAmbiguous", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	AMBIGUOUS
-	</td>
-  </tr><tr>
-    <td>GESTATIONAL AGE FROM<br>
-	ANTENATAL HISTORY
-	<input type="text" name="pg1_phyHistWk" size="6" maxlength="6" value="<%= props.getProperty("pg1_phyHistWk", "") %>" @oscar.formDB /> 
-	wks.</td>
-    <td>GESTATIONAL AGE FROM<br>
-	BY EXAM <i>(see reverse)</i>
-	<input type="text" name="pg1_phyHistWk" size="6" maxlength="6" value="<%= props.getProperty("pg1_phyHistWk", "") %>" @oscar.formDB /> 
-	wks.</td>
-  </tr>
-  </table>
-
-  <table class="small8" width="100%" border="1"  cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="80%">
-	
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="19%">1. GENERAL APPEARANCE</td>
-		<td width="12%">NORMAL<br>
-		<input type="checkbox" name="pg1_phy1Normal" <%= props.getProperty("pg1_phy1Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-		</td>
-		<td width="20%">ABNORMAL<br>
-		<input type="checkbox" name="pg1_phy1Abnormal" <%= props.getProperty("pg1_phy1Abnormal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td align="center" align="center">COMMENTS<br>
-		<textarea name="pg1_phy1Comm" style="width:100%" cols="30" rows="2" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("pg1_phy1Comm", "") %> </textarea>
-		</td>
-	</tr>
-	</table>
-	
-	</td><td>
-	TEMP.
-	<input type="text" name="pg1_phy1Temp" size="5" maxlength="6" value="<%= props.getProperty("pg1_phy1Temp", "") %>" @oscar.formDB /> 
-	<br>
-	RR.&nbsp;&nbsp;
-	<input type="text" name="pg1_phy1RR" size="5" maxlength="6" value="<%= props.getProperty("pg1_phy1RR", "") %>" @oscar.formDB /> 
-	<br>
-	HR.&nbsp;&nbsp;
-	<input type="text" name="pg1_phy1HR" size="5" maxlength="6" value="<%= props.getProperty("pg1_phy1HR", "") %>" @oscar.formDB /> 
-  </tr>
-  </table>
-  
-  <table width="100%" border="1"  cellspacing="0" cellpadding="2">
-  <tr>
-    <td>
-	
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">2. SKIN</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Pallor<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Bruising<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Petechiae
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Mec. Stain<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Peeling<br>
-		<input type="checkbox" name="pg1_phy2Normal" <%= props.getProperty("pg1_phy2Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Jaundice
-		</td>
-	</tr>
-	</table>
-	
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">3. HEAD</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy3Normal" <%= props.getProperty("pg1_phy3Head", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy3Abnormal" <%= props.getProperty("pg1_phy3Abnormal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td>&nbsp;
-		</td>
-	</tr>
-	</table>
-	
-	</td>
-  </tr><tr>
-    <td>
-	
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">4. EENT</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy4Eent" <%= props.getProperty("pg1_phy4Eent", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy4Cleft" <%= props.getProperty("pg1_phy4Cleft", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Cleft Lip/Palate<br>
-		<input type="checkbox" name="pg1_phy4Micro" <%= props.getProperty("pg1_phy4Micro", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Micrognathia
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy4Susp" <%= props.getProperty("pg1_phy4Susp", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Suspected Choanal atresia
-		</td>
-	</tr>
-	</table>
-	
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">5. RESP.</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy5Normal" <%= props.getProperty("pg1_phy5Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy5Grunt" <%= props.getProperty("pg1_phy5Grunt", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Grunting<br>
-		<input type="checkbox" name="pg1_phy5Nasal" <%= props.getProperty("pg1_phy5Nasal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Nasal Flaring<br>
-		<input type="checkbox" name="pg1_phy5Retract" <%= props.getProperty("pg1_phy5Retract", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Retracting
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy5Shallow" <%= props.getProperty("pg1_phy5Shallow", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Shallow breathing<br>
-		<input type="checkbox" name="pg1_phy5Tachy" <%= props.getProperty("pg1_phy5Tachy", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Tachypnea
-		</td>
-	</tr>
-	</table>
-	
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">6. CVS</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy6Normal" <%= props.getProperty("pg1_phy6Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy6Murmur" <%= props.getProperty("pg1_phy6Murmur", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Murmur<br>
-		<input type="checkbox" name="pg1_phy6Central" <%= props.getProperty("pg1_phy6Central", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Central Cyanosis
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy6Abn" <%= props.getProperty("pg1_phy6Abn", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Abn./ Delayed femoral pulses<br>
-		<input type="checkbox" name="pg1_phy6AbnRate" <%= props.getProperty("pg1_phy6AbnRate", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Abnormal rate/rhythm
-		</td>
-	</tr>
-	</table>
-
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">7. ABDOMEN</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy7Normal" <%= props.getProperty("pg1_phy7Normal", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy7Scaph" <%= props.getProperty("pg1_phy7Scaph", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Scaphoid<br>
-		<input type="checkbox" name="pg1_phy7Distention" <%= props.getProperty("pg1_phy7Distention", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Distention<br>
-		<input type="checkbox" name="pg1_phy7Hepato" <%= props.getProperty("pg1_phy7Hepato", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Hepatomegaly
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy7Spleno" <%= props.getProperty("pg1_phy7Spleno", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Splenomegaly<br>
-		<input type="checkbox" name="pg1_phy7Abn" <%= props.getProperty("pg1_phy7Abn", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Abnormal mass
-		</td>
-	</tr>
-	</table>
-
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">8. UMBILICAL CORD</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy8Umbilical" <%= props.getProperty("pg1_phy8Umbilical", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy8Mec" <%= props.getProperty("pg1_phy8Mec", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Mec. Stain<br>
-		<input type="checkbox" name="pg1_phy8Vess" <%= props.getProperty("pg1_phy8Vess", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		2 Vessels
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy8Thin" <%= props.getProperty("pg1_phy8Thin", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Thin
-		</td>
-	</tr>
-	</table>
-
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">9. GENITO-<br>RECTAL</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy9Genito" <%= props.getProperty("pg1_phy9Genito", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy9Hypos" <%= props.getProperty("pg1_phy9Hypos", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Hypospadias<br>
-		<input type="checkbox" name="pg1_phy9Imper" <%= props.getProperty("pg1_phy9Imper", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Imperforate anus
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy9UndesTest" <%= props.getProperty("pg1_phy9UndesTest", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Undescended testes
-		</td>
-	</tr>
-	</table>
-
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">10. MUSCULO-<br>SKELETAL</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy10Muscu" <%= props.getProperty("pg1_phy10Muscu", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy10Spine" <%= props.getProperty("pg1_phy10Spine", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Spine<br>
-		<input type="checkbox" name="pg1_phy10Hip" <%= props.getProperty("pg1_phy10Hip", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Hip abnormality
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy10Extre" <%= props.getProperty("pg1_phy10Extre", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Extremity abnormality
-		</td>
-	</tr>
-	</table>
-
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">11. NEURO-<br>LOGICAL</td>
-		<td width="10%">
-		<input type="checkbox" name="pg1_phy11Neuro" <%= props.getProperty("pg1_phy11Neuro", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		</td>
-		<td width="20%">
-		<input type="checkbox" name="pg1_phy11Hypo" <%= props.getProperty("pg1_phy11Hypo", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Hypotonia<br>
-		<input type="checkbox" name="pg1_phy11Cry" <%= props.getProperty("pg1_phy11Cry", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Cry
-		</td>
-		<td>
-		<input type="checkbox" name="pg1_phy11Jittery" <%= props.getProperty("pg1_phy11Jittery", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Jittery<br>
-		<input type="checkbox" name="pg1_phy11Reflexes" <%= props.getProperty("pg1_phy11Reflexes", "") %> @oscar.formDB  dbType="tinyint(1)"/>
-		Reflexes
-		</td>
-	</tr>
-	</table>
-
-	</td>
-  </tr><tr>
-    <td>
-
-	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="15%">12. OTHER</td>
-		<td colspan="4">
-		<textarea name="pg1_phy12Other" style="width:100%" cols="30" rows="2" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("pg1_phy12Other", "") %> </textarea>
-		</td>
-	</tr>
-	</table>
-	
-	</td>
-	
-  </tr>
-  </table>
-  
-  
-  </td>
-</tr>
-</table>
-
-
-
-<table class="small8" width="100%" border="1"  cellspacing="0" cellpadding="0">
-<tr><td width="40%">HLTH 1583A Rev. 02/03</td>
+<tr>
+  <td width="10%"><B>10.</B> Date</td>
+  <td width="80%"><B>PROBLEM LIST</B></td>
+  <td><span class="small8">DATE RESOLVED</span></td>
+</tr><tr>
   <td>
-  
-	<table class="small9" width="100%" border="0"  cellspacing="0" cellpadding="0">
-	<tr>
-	  <td width="20%">DATE<br>
-	  <input type="text" name="pg1_Date" size="10" maxlength="10" value="<%= props.getProperty("pg1_Date", "") %>" @oscar.formDB  dbType="date"/> 
-	  </td>
-	  <td width="10%">TIME<br>
-	  <input type="text" name="pg1_Time" size="5" maxlength="5" value="<%= props.getProperty("pg1_Time", "") %>" @oscar.formDB  dbType="time"/> 
-	  </td>
-	  <td >SIGNATURE<br>
-	  <input type="text" name="pg1_Signature" size="50" maxlength="80" value="<%= props.getProperty("pg1_Signature", "") %>" @oscar.formDB/> 
-	  MD/RM</td>
-	</tr>
-	</table>
-  
+  <input type="text" name="ar2_10Date1" size="10" maxlength="10" value="<%= props.getProperty("ar2_10Date1", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="ar2_10List1" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("ar2_10List1", "") %>" @oscar.formDB />
+  </td><td>
+  <input type="text" name="ar2_10DateRes1" size="10" maxlength="10" value="<%= props.getProperty("ar2_10DateRes1", "") %>" @oscar.formDB dbType="date" />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="ar2_10Date2" size="10" maxlength="10" value="<%= props.getProperty("ar2_10Date2", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="ar2_10List2" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("ar2_10List2", "") %>" @oscar.formDB />
+  </td><td>
+  <input type="text" name="ar2_10DateRes2" size="10" maxlength="10" value="<%= props.getProperty("ar2_10DateRes2", "") %>" @oscar.formDB dbType="date" />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="ar2_10Date3" size="10" maxlength="10" value="<%= props.getProperty("ar2_10Date3", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="ar2_10List3" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("ar2_10List3", "") %>" @oscar.formDB />
+  </td><td>
+  <input type="text" name="ar2_10DateRes3" size="10" maxlength="10" value="<%= props.getProperty("ar2_10DateRes3", "") %>" @oscar.formDB dbType="date" />
   </td>
 </tr>
 </table>
 
+<table width="100%" border="1"  cellspacing="0" cellpadding="0">
+<tr>
+  <td width="10%"><B>11.</B> Date</td>
+  <td><B>PROGRESS NOTES</B></td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date1" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date1", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List1" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List1", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date2" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date2", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List2" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List2", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date3" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date3", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List3" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List3", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date4" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date4", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List4" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List4", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date5" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date5", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List5" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List5", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date6" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date6", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List6" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List6", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date7" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date7", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List7" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List7", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date8" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date8", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List8" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List8", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date9" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date9", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List9" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List9", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date10" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date10", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List10" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List10", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date11" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date11", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List11" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List11", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date12" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date12", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List12" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List12", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td>
+  <input type="text" name="pg2_11Date13" size="10" maxlength="10" value="<%= props.getProperty("pg2_11Date13", "") %>" @oscar.formDB dbType="date" />
+  </td><td>
+  <input type="text" name="pg2_11List13" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg2_11List13", "") %>" @oscar.formDB />
+  </td>
+</tr>
+</table>
+
+<table width="100%" border="0"  cellspacing="0" cellpadding="0">
+<tr>
+  <td width="10%"><B>12.</B> Date</td>
+  <td width="12%" nowrap><B>CIRCUMCISION</B>
+  <input type="checkbox" name="ar2_12Done" <%= props.getProperty("ar2_12Done", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  </td>
+  <td colspan="3%">DONE</td>
+</tr><tr>
+  <td colspan="2%">
+  <input type="text" name="pg2_12Date" size="10" maxlength="10" value="<%= props.getProperty("pg2_12Date", "") %>" @oscar.formDB dbType="date" />
+  </td>
+  <td width="22%" nowrap><span class="small8">METHOD</span>
+  <input type="text" name="ar2_12Method" size="20" maxlength="30" value="<%= props.getProperty("ar2_12Method", "") %>" @oscar.formDB />
+  </td><td width="28%" nowrap><span class="small8">ANALGESIA USED</span>
+  <input type="text" name="ar2_12Analg" size="20" maxlength="30" value="<%= props.getProperty("ar2_12Analg", "") %>" @oscar.formDB />
+  </td><td nowrap><span class="small8">SIGNATURE
+  <input type="text" name="ar2_12Signature" size="20" maxlength="60" value="<%= props.getProperty("ar2_12Signature", "") %>" @oscar.formDB />
+  MD</span>
+  </td>
+</tr>
+</table>
+
+
+<table class="small9" width="100%" border="1"  cellspacing="0" cellpadding="0">
+<tr>
+  <td width="60%" rowspan="3" valign="top">
+
+	<table class="small8" width="100%" border="1"  cellspacing="0" cellpadding="0">
+	<tr>
+	  <td colspan="4">
+
+		<table class="small9" width="100%" border="0"  cellspacing="0" cellpadding="0">
+		<tr>
+		  <td width="40%"><B>13. DISCHARGE EXAMINATION</B><br>
+		  Date
+		  <input type="text" name="ar2_13ExamDate" size="10" maxlength="10" value="<%= props.getProperty("ar2_13ExamDate", "") %>" @oscar.formDB dbType="date" />
+		  </td><td width="18%" nowrap>WEIGHT<br>
+		  <input type="text" name="ar2_13Weight" size="6" maxlength="6" value="<%= props.getProperty("ar2_13Weight", "") %>" @oscar.formDB />g
+		  </td><td >HEAD CIRCUMFERENCE<br>
+		  <input type="text" name="ar2_13HeadLen" size="6" maxlength="6" value="<%= props.getProperty("ar2_13HeadLen", "") %>" @oscar.formDB />cm
+		  </td>
+		</tr>
+		</table>
+
+
+	  </td>
+	</tr><tr>
+	  <td width="20%">1. GENERAL</td>
+	  <td width="8%">NORMAL<br>
+	  <input type="checkbox" name="ar2_13Normal1" <%= props.getProperty("ar2_13Normal1", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td width="10%">ABNORMAL<br>
+	  <input type="checkbox" name="ar2_13Abnormal1" <%= props.getProperty("ar2_13Abnormal1", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>COMMENT<br>
+	  <input type="text" name="ar2_13Comment1" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment1", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>2. SKIN</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal2" <%= props.getProperty("ar2_13Normal2", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal2" <%= props.getProperty("ar2_13Abnormal2", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment2" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment2", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>3. HEAD</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal3" <%= props.getProperty("ar2_13Normal3", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal3" <%= props.getProperty("ar2_13Abnormal3", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment3" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment3", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>4. EENT</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal4" <%= props.getProperty("ar2_13Normal4", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal4" <%= props.getProperty("ar2_13Abnormal4", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment4" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment4", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>5. RESPIRATORY</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal5" <%= props.getProperty("ar2_13Normal5", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal5" <%= props.getProperty("ar2_13Abnormal5", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment5" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment5", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>6. CVS</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal6" <%= props.getProperty("ar2_13Normal6", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal6" <%= props.getProperty("ar2_13Abnormal6", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment6" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment6", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>7. ABDOMEN</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal7" <%= props.getProperty("ar2_13Normal7", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal7" <%= props.getProperty("ar2_13Abnormal7", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment7" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment7", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>8. UMBILICAL CORD</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal8" <%= props.getProperty("ar2_13Normal8", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal8" <%= props.getProperty("ar2_13Abnormal8", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment8" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment8", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>9. GENITORECTAL</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal9" <%= props.getProperty("ar2_13Normal9", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal9" <%= props.getProperty("ar2_13Abnormal9", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment9" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment9", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>10. MUSCULOSKELETAL</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal10" <%= props.getProperty("ar2_13Normal10", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal10" <%= props.getProperty("ar2_13Abnormal10", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment10" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment10", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>11. NEUROLOGICAL</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal11" <%= props.getProperty("ar2_13Normal11", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal11" <%= props.getProperty("ar2_13Abnormal11", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment11" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment11", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>12. OTHER</td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Normal12" <%= props.getProperty("ar2_13Normal12", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="checkbox" name="ar2_13Abnormal12" <%= props.getProperty("ar2_13Abnormal12", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>
+	  <input type="text" name="ar2_13Comment12" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_13Comment12", "") %>" @oscar.formDB />
+	  </td>
+	</tr>
+	</table>
+
+  </td>
+  <td colspan="2"><B>14. STATUS AT DISCHARGE</B>
+  <textarea name="ar2_14" style="width:100%" cols="30" rows="3" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("ar2_14", "") %> </textarea>
+  </td>
+</tr><tr>
+  <td colspan="2">PROBLEMS REQUIRING FOLLOWUP<br>
+  <textarea name="ar2_14Problem" style="width:100%" cols="30" rows="3" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("ar2_14Problem", "") %> </textarea>
+  FEEDING:
+  <input type="checkbox" name="ar2_14Breast" <%= props.getProperty("ar2_14Breast", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  BREAST&nbsp;&nbsp;&nbsp;
+  <input type="checkbox" name="ar2_14VitD" <%= props.getProperty("ar2_14VitD", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  VIT. D<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <input type="checkbox" name="ar2_14Formula" <%= props.getProperty("ar2_14Formula", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  FORMULA
+  </td>
+</tr><tr>
+  <td width="12%"><B>15. DISCHARGED</B><br>
+  <input type="checkbox" name="ar2_15Home" <%= props.getProperty("ar2_15Home", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  HOME<br>
+  <input type="checkbox" name="ar2_15Adoption" <%= props.getProperty("ar2_15Adoption", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  ADOPTION<br>
+  <input type="checkbox" name="ar2_15Foster" <%= props.getProperty("ar2_15Foster", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  FOSTER HOME<br>
+  <input type="checkbox" name="ar2_15OtherHosp" <%= props.getProperty("ar2_15OtherHosp", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  <span class="small8">OTHER HOSPITAL</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<I>(specify)</I><br>
+  <textarea name="ar2_15OtherHospSpec" style="width:100%" cols="15" rows="2" @oscar.formDB dbType="varchar(200)" > <%= props.getProperty("ar2_15OtherHospSpec", "") %> </textarea>
+  </td><td>
+
+	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
+	<tr>
+	  <td colspan="2"><B>16. FOLLOW UP BY</B></td>
+	  <td><I>(when?)</I></td>
+	</tr><tr>
+	  <td width="2%">
+	  <input type="checkbox" name="ar2_16FamPhy" <%= props.getProperty("ar2_16FamPhy", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td width="60%">FAMILY PHYSICIAN</td>
+	  <td>
+	  <input type="text" name="ar2_16FamPhyWhen" size="10" maxlength="20" value="<%= props.getProperty("ar2_16FamPhyWhen", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>
+	  <input type="checkbox" name="ar2_16Midwife" <%= props.getProperty("ar2_16Midwife", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>MIDWIFE</td>
+	  <td>
+	  <input type="text" name="ar2_16MidwifeWhen" size="10" maxlength="20" value="<%= props.getProperty("ar2_16MidwifeWhen", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>
+	  <input type="checkbox" name="ar2_16Pediat" <%= props.getProperty("ar2_16Pediat", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>PEDIATRICIAN</td>
+	  <td>
+	  <input type="text" name="ar2_16PediatWhen" size="10" maxlength="20" value="<%= props.getProperty("ar2_16PediatWhen", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>
+	  <input type="checkbox" name="ar2_16OtherConsul" <%= props.getProperty("ar2_16OtherConsul", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>OTHER CONSULTANT</td>
+	  <td>
+	  <input type="text" name="ar2_16OtherConsulWhen" size="10" maxlength="20" value="<%= props.getProperty("ar2_16OtherConsulWhen", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>
+	  <input type="checkbox" name="ar2_16ComNurse" <%= props.getProperty("ar2_16ComNurse", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>COMMUNITY HEALTH NURSE</td>
+	  <td>
+	  <input type="text" name="ar2_16ComNurseWhen" size="10" maxlength="20" value="<%= props.getProperty("ar2_16ComNurseWhen", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>
+	  <input type="checkbox" name="ar2_16Ministry" <%= props.getProperty("ar2_16Ministry", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  </td>
+	  <td>MINISTRY FOR</td>
+	  <td>
+	  <input type="text" name="ar2_16MinistryWhen" size="10" maxlength="20" value="<%= props.getProperty("ar2_16MinistryWhen", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td></td>
+	  <td colspan="2">CHILDREN AND FAMILY DEVELOPMENT</td>
+	</tr>
+	</table>
+
+
+  </td>
+</tr>
+</table>
+
+
+<table class="small9" width="100%" border="1"  cellspacing="0" cellpadding="0">
+<tr>
+  <td width="20%">HLTH 1583A Rev. 02/03</td>
+  <td width="40%">SIGNATURE<br>
+  <input type="text" name="pg2_Signature" size="30" maxlength="80" value="<%= props.getProperty("pg2_Signature", "") %>" @oscar.formDB />
+  MD/RM
+  </td><td>
+  <input type="checkbox" name="ar2_NeoDeath" <%= props.getProperty("ar2_NeoDeath", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  NEONATAL DEATH &nbsp;&nbsp;&nbsp;
+  <input type="checkbox" name="ar2_Autopsy" <%= props.getProperty("ar2_Autopsy", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+  AUTOPSY PERFORMED
+  </td>
+</tr>
+</table>
 
 
 <table class="Head" class="hidePrint">
@@ -1286,8 +965,6 @@ function onCheckSlave(a, masterName) {
 %>
     </tr>
 </table>
-
-
 
 
 
