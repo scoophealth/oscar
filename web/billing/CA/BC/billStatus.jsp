@@ -266,8 +266,9 @@ if (billTypes == null){
         MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records                           
-      String rejected = isRejected(b.billMasterNo,p);            
-      rejected  = isRejected(b.billMasterNo,p2);      
+      String rejected = isRejected(b.billMasterNo,p); 
+      String rejected2  = isRejected(b.billMasterNo,p2);      
+      
    %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <TD align="center" class="bCellData" ><%=b.apptDate%></TD>
@@ -279,7 +280,11 @@ if (billTypes == null){
             <%=b.billing_no%>
         </a>
     </TD>                                 
-    <td><%=rejected%></td>
+    <td>
+        <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>')" >Edit</a>
+        <%=rejected%>
+        <%=rejected2%>
+    </td>
   </tr>
   <%  //}
     rowCount = rowCount + 1;    
@@ -308,8 +313,8 @@ String getReasonEx(String reason){
 String isRejected(String billingNo,Properties p){
     String s = "&nbsp;";
     if (p.containsKey(billingNo)){
-        s = "<a href=\"javascript: popupPage(700,700,'adjustBill.jsp?billing_no="+billingNo+"')\" >Edit "+p.getProperty(billingNo)+"</a>";
-    }    
+        s = "<a href=\"javascript: popupPage(700,700,'adjustBill.jsp?billing_no="+billingNo+"')\" > "+p.getProperty(billingNo)+"</a>";
+    }
     return s;
 }
 %>
