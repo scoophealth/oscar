@@ -12,18 +12,28 @@ import org.apache.struts.action.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 
-public class EctConAddSpecialistAction extends Action
-{
-
+public class EctConAddSpecialistAction extends Action {
+    
     public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
+    throws ServletException, IOException {
         System.err.println("Addspecialist Action Jackson");
         EctConAddSpecialistForm addSpecailistForm = (EctConAddSpecialistForm)form;
         String fName = addSpecailistForm.getFirstName();
         String lName = addSpecailistForm.getLastName();
         String proLetters = addSpecailistForm.getProLetters();
         String address = addSpecailistForm.getAddress();
+        
+        StringBuffer stringBuffer = new java.lang.StringBuffer();              
+        for (int i =0 ; i < address.length(); i++){
+            int a = address.charAt(i);           
+            if ( a == 13 || a == 10 ){
+                stringBuffer.append(" ");                                
+            }else{
+                stringBuffer.append((char)a);                
+            }            
+        }
+        address = stringBuffer.toString();
+        
         String phone = addSpecailistForm.getPhone();
         String fax = addSpecailistForm.getFax();
         String website = addSpecailistForm.getWebsite();
@@ -32,34 +42,29 @@ public class EctConAddSpecialistAction extends Action
         String specId = addSpecailistForm.getSpecId();
         int whichType = addSpecailistForm.getwhichType();
         MsgStringQuote str = new MsgStringQuote();
-
+        
         if(whichType == 1)
-            try
-            {
+            try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                String sql = String.valueOf(String.valueOf((new StringBuffer("insert into professionalSpecialists (fName,lName,proLetters,address,phone,fax,website,email,specType) values ('")).append(str.q(fName)).append("','").append(str.q(lName)).append("','").append(str.q(proLetters)).append("','").append(str.q(address)).append("','").append(str.q(phone)).append("','").append(str.q(fax)).append("','").append(str.q(website)).append("','").append(str.q(email)).append("','").append(str.q(specType)).append("')")));
+                String sql = "insert into professionalSpecialists (fName,lName,proLetters,address,phone,fax,website,email,specType) values ('"+str.q(fName)+"','"+str.q(lName)+"','"+str.q(proLetters)+"','"+str.q(address)+"','"+str.q(phone)+"','"+str.q(fax)+"','"+str.q(website)+"','"+str.q(email)+"','"+str.q(specType)+"')";
                 db.RunSQL(sql);
                 db.CloseConn();
             }
-            catch(SQLException e)
-            {
+            catch(SQLException e) {
                 System.out.println(e.getMessage());
             }
         else
-        if(whichType == 2)
-        {
-            try
-            {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                String sql = String.valueOf(String.valueOf((new StringBuffer("update professionalSpecialists set fName = '")).append(str.q(fName)).append("',lName = '").append(str.q(lName)).append("', ").append(" proLetters = '").append(str.q(proLetters)).append("', address = '").append(str.q(address)).append("', phone = '").append(str.q(phone)).append("',").append(" fax = '").append(str.q(fax)).append("', website = '").append(str.q(website)).append("', email = '").append(str.q(email)).append("', specType = '").append(str.q(specType)).append("' ").append(" where specId = '").append(specId).append("'")));
-                db.RunSQL(sql);
-                db.CloseConn();
+            if(whichType == 2) {
+                try {
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                String sql = String.valueOf(String.valueOf((new StringBuffer("update professionalSpecialists set fName = '")).append(str.q(fName)).append("',lName = '").append(str.q(lName)).append("', ").append(" proLetters = '").append(str.q(proLetters)).append("', address = '").append(str.q(address)).append("', phone = '").append(str.q(phone)).append("',").append(" fax = '").append(str.q(fax)).append("', website = '").append(str.q(website)).append("', email = '").append(str.q(email)).append("', specType = '").append(str.q(specType)).append("' ").append(" where specId = '").append(specId).append("'")));
+                    db.RunSQL(sql);
+                    db.CloseConn();
+                }
+                catch(SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                return mapping.findForward("edited");
             }
-            catch(SQLException e)
-            {
-                System.out.println(e.getMessage());
-            }
-            return mapping.findForward("edited");
-        }
         addSpecailistForm.setFirstName("");
         addSpecailistForm.setLastName("");
         addSpecailistForm.setProLetters("");
