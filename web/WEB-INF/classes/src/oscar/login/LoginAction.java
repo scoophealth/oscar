@@ -27,9 +27,10 @@ public final class LoginAction extends Action {
 
     String pathSeparator = System.getProperty("file.separator");
 
-    //Main configuration file. This file must be saved on WEB-INF at the webapp diretory.
+    //Main configuration file. This file must be saved on WEB-INF/classes at the webapp diretory.
     //The file name is defined on the page an its read as a parameter (propName).
-    String mainConfigFileName = servlet.getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+propName;
+    String mainConfigFileName = servlet.getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+
+	    "classes"+pathSeparator+propName;
 
     LoginCheckLogin cl = new LoginCheckLogin(mainConfigFileName);
     if(cl.isBlock(ip)) return mapping.findForward(where);  //go to block page
