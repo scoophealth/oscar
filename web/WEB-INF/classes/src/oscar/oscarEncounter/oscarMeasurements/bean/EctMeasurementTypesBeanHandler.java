@@ -88,13 +88,11 @@ public class EctMeasurementTypesBeanHandler {
  
             for(rsMGr = db.GetSQL(sqlMGr); rsMGr.next();){
                 String typeDisplayName  = rsMGr.getString("typeDisplayName");
-                String sqlMT = "SELECT * FROM measurementType WHERE typeDisplayName = '" + typeDisplayName + "'";
-                System.out.println("SQLMT: " + sqlMT);
+                String sqlMT = "SELECT * FROM measurementType WHERE typeDisplayName = '" + typeDisplayName + "'";                
                 ResultSet rsMT;        
                 for(rsMT = db.GetSQL(sqlMT); rsMT.next(); )
                 {                
-                    EctMeasuringInstructionBean mInstrc = new EctMeasuringInstructionBean(rsMT.getString("measuringInstruction"));
-                    System.out.println("MeasuringInstruction: " + rsMT.getString("measuringInstruction"));
+                    EctMeasuringInstructionBean mInstrc = new EctMeasuringInstructionBean(rsMT.getString("measuringInstruction"));                    
                     measuringInstrcVector.add(mInstrc);
                 }
                 rsMT.previous();
@@ -122,10 +120,8 @@ public class EctMeasurementTypesBeanHandler {
                                                                                         rsData.getString("comments"), 
                                                                                         rsData.getString("dateObserved"), 
                                                                                         rsData.getString("dateEntered"));                        
-                        System.out.println("last data added to measurementsDataVector");
-                        System.out.println(rsMT.getString("type"));
-                        measurementTypeVector.add(measurementTypes);
-                        System.out.println("Add the instructions vector to the big Vector");
+                        
+                        measurementTypeVector.add(measurementTypes);                        
                         measuringInstrcVectorVector.add(measuringInstrcVector);
                         measuringInstrcVector = new Vector();
                         hasPreviousData = true;
@@ -138,10 +134,8 @@ public class EctMeasurementTypesBeanHandler {
                                                                                         rsMT.getString("typeDescription"), 
                                                                                         rsMT.getString("measuringInstruction"), 
                                                                                         rsMT.getString("validation")); 
-                    System.out.println("blank data added");
-                    System.out.println(rsMT.getString("type"));
-                    measurementTypeVector.add(measurementTypes);
-                    System.out.println("Add the instructions vector to the big Vector");
+                    
+                    measurementTypeVector.add(measurementTypes);                    
                     measuringInstrcVectorVector.add(measuringInstrcVector);
                     measuringInstrcVector = new Vector();
                 }
