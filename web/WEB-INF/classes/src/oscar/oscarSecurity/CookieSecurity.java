@@ -32,6 +32,7 @@ public class CookieSecurity
 {
     public static String providerCookie = "oscprvid";
     public static String receptionistCookie = "oscrcpid";    
+    public static String adminCookie = "oscadmid";    
     
     public Cookie GiveMeACookie(String cookieName) {
         Random rndGenerator = new Random();
@@ -56,8 +57,7 @@ public class CookieSecurity
             for (int i=0; i<cookies.length; i++)
             {         
                 if (cookieName.equals(cookies[i].getName()))
-                {
-                    System.out.println("In FindThisCookie: found cookie with name " + cookies[i].getName());
+                {                    
                     return CheckCookieValue(cookies[i].getValue());
                 }
             }
@@ -65,16 +65,19 @@ public class CookieSecurity
         return false;
     }
     
-    private boolean CheckCookieValue(String cookieValue) {        
-        Adler32 adler32 = new Adler32();        
-        //adler32.update(cookieValue.substring(0, 32).getBytes());
-        for (int i=0; i < 32; i++) {
-            adler32.update(Integer.parseInt(cookieValue.substring(i, i+1)));
-            System.out.print(adler32.getValue()+" ");
-        }        
-        if (Long.parseLong(cookieValue.substring(32, cookieValue.length())) == adler32.getValue()) {            
-            return true;
-        } else {            
+    private boolean CheckCookieValue(String cookieValue) {
+        try {
+            Adler32 adler32 = new Adler32();        
+            //adler32.update(cookieValue.substring(0, 32).getBytes());
+            for (int i=0; i < 32; i++) {
+                adler32.update(Integer.parseInt(cookieValue.substring(i, i+1)));                
+            }        
+            if (Long.parseLong(cookieValue.substring(32, cookieValue.length())) == adler32.getValue()) {            
+                return true;
+            } else {            
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
     }        
