@@ -30,9 +30,55 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>History of Falls Questionnaire</title>
-    <link rel="stylesheet" type="text/css" href="arStyle.css">
+    <title>History of Falls Questionnaire</title>    
     <html:base/>
+    <style type="text/css">
+	.Head {
+            background-color:#BBBBBB;
+            padding-top:3px;
+            padding-bottom:3px;
+            width:940px;
+            font-size:12pt;
+        }
+
+        .Head INPUT {
+            width: 100px;
+        }
+
+        .Head A {
+            font-size:12pt;
+        }
+
+        BODY {
+            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
+            background-color: #c4e9f6;            
+        }
+
+        TABLE {
+            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+        }
+        
+        TD{
+            font-size:20pt;
+        }
+
+        TH{
+            font-size:20pt;
+        }
+
+        INPUT.checkbox{
+            height: 30px;
+            width: 30px;            
+        }
+        .title {
+            background-color: #486ebd;
+            color: #FFFFFF;            
+            font-weight: bold;
+            text-align: centre;
+        }
+        
+
+    </style>
 </head>
 
 
@@ -276,7 +322,7 @@ var maxYear=9900;
 
 <table border="0" cellspacing="1" cellpadding="0" width="100%" >
  <tr bgcolor="#486ebd">
-      <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">History of Falls Questionaire</font></th>
+      <th align='Left'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">History of Falls Questionaire</font></th>
  </tr>
 </table>
 
@@ -287,19 +333,19 @@ var maxYear=9900;
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="fallenLast12MY" <%= props.getProperty("fallenLast12MY", "") %>/>
+            <input type="checkbox" name="fallenLast12MY" class="checkbox" <%= props.getProperty("fallenLast12MY", "") %>/>
         </td>
         <td>Yes</td>
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="fallenLast12MN" <%= props.getProperty("fallenLast12MN", "") %>/>
+            <input type="checkbox" name="fallenLast12MN" class="checkbox" <%= props.getProperty("fallenLast12MN", "") %>/>
         </td>
         <td>No - go to #5</td>
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="fallenLast12MNotRemember" <%= props.getProperty("fallenLast12MNotRemember", "") %>/>
+            <input type="checkbox" class="checkbox" name="fallenLast12MNotRemember" <%= props.getProperty("fallenLast12MNotRemember", "") %>/>
         </td>
         <td>Cannot Remember</td>
     </tr>
@@ -311,13 +357,13 @@ var maxYear=9900;
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="injuredY" <%= props.getProperty("injuredY", "") %>/>
+            <input type="checkbox" class="checkbox" name="injuredY"  <%= props.getProperty("injuredY", "") %>/>
         </td>
         <td>Yes</td>
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="injuredN" <%= props.getProperty("injuredN", "") %>/>
+            <input type="checkbox" class="checkbox" name="injuredN" <%= props.getProperty("injuredN", "") %>/>
         </td>
         <td>No</td>
     </tr>
@@ -326,13 +372,13 @@ var maxYear=9900;
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="medAttnY" <%= props.getProperty("medAttnY", "") %>/>
+            <input type="checkbox" class="checkbox" name="medAttnY" <%= props.getProperty("medAttnY", "") %>/>
         </td>
         <td>Yes</td>
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="medAttnN" <%= props.getProperty("medAttnN", "") %>/>
+            <input type="checkbox" class="checkbox" name="medAttnN" <%= props.getProperty("medAttnN", "") %>/>
         </td>
         <td>No</td>
     </tr>
@@ -341,13 +387,13 @@ var maxYear=9900;
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="hospitalizedY" <%= props.getProperty("hospitalizedY", "") %>/>
+            <input type="checkbox" class="checkbox" name="hospitalizedY" <%= props.getProperty("hospitalizedY", "") %>/>
         </td>
         <td>Yes</td>
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="hospitalizedN" <%= props.getProperty("hospitalizedN", "") %>/>
+            <input type="checkbox" class="checkbox" name="hospitalizedN" <%= props.getProperty("hospitalizedN", "") %>/>
         </td>
         <td>No</td>
     </tr>
@@ -356,13 +402,13 @@ var maxYear=9900;
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="limitActY" <%= props.getProperty("limitActY", "") %>/>
+            <input type="checkbox" class="checkbox" name="limitActY" <%= props.getProperty("limitActY", "") %>/>
         </td>
         <td>Yes</td>
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
-            <input type="checkbox" name="limitActN" <%= props.getProperty("limitActN", "") %>/>
+            <input type="checkbox" class="checkbox" name="limitActN" <%= props.getProperty("limitActN", "") %>/>
         </td>
         <td>No</td>
     </tr>

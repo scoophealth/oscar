@@ -31,8 +31,54 @@
 
 <head>
     <title>History of Falls Questionnaire</title>
-    <link rel="stylesheet" type="text/css" href="arStyle.css">
     <html:base/>
+        <style type="text/css">
+	.Head {
+            background-color:#BBBBBB;
+            padding-top:3px;
+            padding-bottom:3px;
+            width:940px;
+            font-size:12pt;
+        }
+
+        .Head INPUT {
+            width: 100px;
+        }
+
+        .Head A {
+            font-size:12pt;
+        }
+
+        BODY {
+            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
+            background-color: #c4e9f6;            
+        }
+
+        TABLE {
+            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+        }
+        
+        TD{
+            font-size:14.5pt;
+        }
+
+        TH{
+            font-size:14.5pt;
+        }
+
+        INPUT.checkbox{
+            height: 25px;
+            width: 25px;            
+        }
+        .title {
+            background-color: #486ebd;
+            color: #FFFFFF;            
+            font-weight: bold;
+            text-align: centre;
+        }
+        
+
+    </style>
 </head>
 
 
@@ -227,7 +273,7 @@ var maxYear=9900;
     }
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -246,239 +292,188 @@ var maxYear=9900;
 <input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
 <input type="hidden" name="submit" value="exit"/>
 
-
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
-  if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
-  }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-<%
-  if (!bView) {
-%>
-        <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
-        </td>
-<%
-  }
-%>
-    </tr>
-</table>
-
-
-<table border="0" cellspacing="1" cellpadding="0" width="100%" >
+<table border="0" cellspacing="0" cellpadding="0" width="100%" >
  <tr bgcolor="#486ebd">
-      <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Self Administered Questions Used in Self-Report Risk Index</font></th>
+      <th align='LEFT'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Self Administered Questions Used in Self-Report Risk Index</font></th>
  </tr>
 </table>
 
-
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-    <tr>
-        <td colspan="2">1. Would you say, in general your health is</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="healthEx" <%= props.getProperty("healthEx", "") %>/>
-        </td>
-        <td>Excellent</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="healthVG" <%= props.getProperty("healthVG", "") %>/>
-        </td>
-        <td>Very Good</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="healthG" <%= props.getProperty("healthG", "") %>/>
-        </td>
-        <td>Good</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="healthF" <%= props.getProperty("healthF", "") %>/>
-        </td>
-        <td>Fair</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="healthP" <%= props.getProperty("healthP", "") %>/>
-        </td>
-        <td>Poor</td>
-    </tr>    
-    <tr>
-        <td colspan="2">2. In the previous 12 months have you stayed overnight as a patient in a hospital?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="stayInHospNo" <%= props.getProperty("stayInHospNo", "") %>/>
-        </td>
-        <td>Not at all</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="stayInHosp1" <%= props.getProperty("stayInHosp1", "") %>/>
-        </td>
-        <td>One time</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="stayInHosp2Or3" <%= props.getProperty("stayInHosp2Or3", "") %>/>
-        </td>
-        <td>Two or three times</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="stayInHospMore3" <%= props.getProperty("stayInHospMore3", "") %>/>
-        </td>
-        <td>More than three times</td>
-    </tr>
-    <tr>
-        <td colspan="2">3. In the previous 12 months, how many times did you visit a physician or clinic?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="visitPhyNo" <%= props.getProperty("visitPhyNo", "") %>/>
-        </td>
-        <td>Not at all</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="visitPhy1" <%= props.getProperty("visitPhy1", "") %>/>
-        </td>
-        <td>One time</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="visitPhy2Or3" <%= props.getProperty("visitPhy2Or3", "") %>/>
-        </td>
-        <td>Two or three times</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="visitPhyMore3" <%= props.getProperty("visitPhyMore3", "") %>/>
-        </td>
-        <td>More than three times</td>
-    </tr>
-    <tr>
-        <td colspan="2">4. In the previous 12 months, did you have diabetes?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="diabetesY" <%= props.getProperty("diabetesY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="diabetesN" <%= props.getProperty("diabetesN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">5. Have you ever had coronary heart disease?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="heartDiseaseY" <%= props.getProperty("heartDiseaseY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="heartDiseaseN" <%= props.getProperty("heartDiseaseN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">6. Have you ever had angina pectoris?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="anginaPectorisY" <%= props.getProperty("anginaPectorisY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="anginaPectorisN" <%= props.getProperty("anginaPectorisN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">7. Have you ever had myocardial infarction?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="myocardialInfarctionY" <%= props.getProperty("myocardialInfarctionY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="myocardialInfarctionN" <%= props.getProperty("myocardialInfarctionN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">8. Have you ever had any other heart attack?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="anyHeartAttackY" <%= props.getProperty("anyHeartAttackY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="anyHeartAttackN" <%= props.getProperty("anyHeartAttackN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">9. Your sex is?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right"></td>
+<table>
+    <tr>        
         <td>
-            <input type="text" size="1" name="sex" readonly="true" value="<%= props.getProperty("sex", "") %>"/>
-        </td>        
-    </tr>    
-    <tr>
-        <td colspan="2">10. Is there a friend, relative neighbour who would take care of you for a few days if necessary?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="relativeTakeCareY" <%= props.getProperty("relativeTakeCareY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="relativeTakeCareN" <%= props.getProperty("relativeTakeCareN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">9. Your date of birth is?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right"></td>
-        <td>
-            <input type="text" size="10" name="dob" readonly="true" value="<%= props.getProperty("dob", "") %>"/>
-        </td>        
-    </tr>    
+            <table width="100%" border="0"  cellspacing="0" cellpadding="0" >
+                <tr>
+                    <td colspan="2">1. Would you say, in general your health is</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="healthEx" <%= props.getProperty("healthEx", "") %>/>
+                    </td>
+                    <td>Excellent</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="healthVG" <%= props.getProperty("healthVG", "") %>/>
+                    </td>
+                    <td>Very Good</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="healthG" <%= props.getProperty("healthG", "") %>/>
+                    </td>
+                    <td>Good</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="healthF" <%= props.getProperty("healthF", "") %>/>
+                    </td>
+                    <td>Fair</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="healthP" <%= props.getProperty("healthP", "") %>/>
+                    </td>
+                    <td>Poor</td>
+                </tr>    
+                <tr>
+                    <td colspan="2">2. In the previous 12 months have you stayed overnight as a patient in a hospital?</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="stayInHospNo" <%= props.getProperty("stayInHospNo", "") %>/>
+                    </td>
+                    <td>Not at all</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="stayInHosp1" <%= props.getProperty("stayInHosp1", "") %>/>
+                    </td>
+                    <td>One time</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="stayInHosp2Or3" <%= props.getProperty("stayInHosp2Or3", "") %>/>
+                    </td>
+                    <td>Two or three times</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="stayInHospMore3" <%= props.getProperty("stayInHospMore3", "") %>/>
+                    </td>
+                    <td>More than three times</td>
+                </tr>
+                <tr>
+                    <td colspan="2">3. In the previous 12 months, how many times did you visit a physician or clinic?</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="visitPhyNo" <%= props.getProperty("visitPhyNo", "") %>/>
+                    </td>
+                    <td>Not at all</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="visitPhy1" <%= props.getProperty("visitPhy1", "") %>/>
+                    </td>
+                    <td>One time</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="visitPhy2Or3" <%= props.getProperty("visitPhy2Or3", "") %>/>
+                    </td>
+                    <td>Two or three times</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="visitPhyMore3" <%= props.getProperty("visitPhyMore3", "") %>/>
+                    </td>
+                    <td>More than three times</td>
+                </tr>
+                <tr>
+                    <td colspan="2">4. In the previous 12 months, did you have diabetes?</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="diabetesY" <%= props.getProperty("diabetesY", "") %>/>
+                    </td>
+                    <td>Yes</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="diabetesN" <%= props.getProperty("diabetesN", "") %>/>
+                    </td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td colspan="2">5. Have you ever had ...</td>
+                </tr>
+                <tr bgcolor="white">                    
+                    <td colspan="2">
+                        <table bgcolor="white">
+                            <tr>
+                                <td colspan="2">Coronary Heart Disease</td>
+                                <td colspan="2">Angina Pectoris</td>
+                                <td colspan="2">Myocardial infarction</td>
+                                <td colspan="2">Any other heart attack</td>
+                            </tr>
+                            <tr>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="heartDiseaseY" <%= props.getProperty("heartDiseaseY", "") %>/>                    
+                                </td> 
+                                <td>Yes</td>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="anginaPectorisY" <%= props.getProperty("anginaPectorisY", "") %>/>                   
+                                </td> 
+                                <td>Yes</td>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="myocardialInfarctionY" <%= props.getProperty("myocardialInfarctionY", "") %>/>          
+                                </td> 
+                                <td>Yes</td>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="anyHeartAttackY" <%= props.getProperty("anyHeartAttackY", "") %>/>     
+                                </td> 
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="heartDiseaseN" <%= props.getProperty("heartDiseaseN", "") %>/> 
+                                </td>
+                                <td>No</td>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="anginaPectorisN" <%= props.getProperty("anginaPectorisN", "") %>/>
+                                </td>
+                                <td>No</td>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="myocardialInfarctionN" <%= props.getProperty("myocardialInfarctionN", "") %>/>
+                                </td>
+                                <td>No</td>
+                                <td width="3%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="anyHeartAttackN" <%= props.getProperty("anyHeartAttackN", "") %>/>
+                                </td>
+                                <td>No</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>                
+                <tr>
+                    <td colspan="2">6. Is there a friend, relative neighbour who would take care of you for a few days if needed?</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="relativeTakeCareY" <%= props.getProperty("relativeTakeCareY", "") %>/>
+                    </td>
+                    <td>Yes</td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="relativeTakeCareN" <%= props.getProperty("relativeTakeCareN", "") %>/>
+                    </td>
+                    <td>No</td>
+                </tr>                   
+            </table>
+    </td>
+</tr>
 </table>
-
 
 <table class="Head" class="hidePrint">
     <tr>
