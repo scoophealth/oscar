@@ -43,7 +43,11 @@ public class dxQuickListBean{
                                String createdBy){
             this.quickListName = quickListName;
             this.createdBy = createdBy;
-       }              
+       }       
+       
+       public dxQuickListBean( String quickListName){
+            this.quickListName = quickListName;
+       }     
        
        public String getQuickListName(){
            return quickListName;
