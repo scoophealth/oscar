@@ -105,13 +105,15 @@
                             <td width="150"><bean:write name="data" property="dateEntered" /></td>
                             <td width="10"><input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />"</td>                            
                         </tr>                        
-                        </logic:iterate>
-                        <tr>
-                            <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                            <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>" onclick="submit();"/></td>
-                        </tr>
-                        
+                        </logic:iterate>                                                
                     </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"></td>
+                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
+                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>" onclick="submit();"/></td>
                 </tr>
             </table>
         </td>   

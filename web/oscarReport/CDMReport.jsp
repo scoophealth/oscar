@@ -51,7 +51,7 @@
 <head>
 <title>
 <logic:present name="title">
-<bean:write name="title"/></td>  
+<bean:write name="title"/>  
 </logic:present> 
 </title>
 <html:base/>
@@ -131,7 +131,12 @@
 
         </td>
         <td class="MainTableBottomRowRightColumn">
-
+        <table>
+            <tr>
+                <td><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"></td>
+                <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
+            </tr>
+        </table>
         </td>
     </tr>
 </table>
