@@ -262,8 +262,16 @@ public class FrmPDFServlet extends HttpServlet {
                         continue;
                     }
 
+                    // draw line directly
+                    if (tempName.toString().startsWith("__$line")) {
+                        cb.setRGBColorStrokeF(0f, 0f, 0f);
+                        cb.setLineWidth(Float.parseFloat(cfgVal[4].trim()));
+                        cb.moveTo(Float.parseFloat(cfgVal[0].trim()), Float.parseFloat(cfgVal[1].trim()));
+                        cb.lineTo(Float.parseFloat(cfgVal[2].trim()), Float.parseFloat(cfgVal[3].trim()));
+                        // stroke the lines
+                        cb.stroke();
                     // write text directly
-                    if (tempName.toString().startsWith("__")) {
+                    } else if (tempName.toString().startsWith("__")) {
                         cb.beginText();
                         cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
                         cb

@@ -269,3 +269,5 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   
   pg3_consultName 	: left, 220, 758, 0, BaseFont.HELVETICA, 8
   pg3_signature	: left, 450, 758, 0, BaseFont.HELVETICA, 8
+  
+  __$line		: 177, 628, 177, 609, 0.2
