@@ -796,17 +796,17 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                 </td>
                                 <td>
                                     <div style="font-size:8pt;text-align:right;vertical-align:bottom">
-                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();">
+                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                                         <bean:message key="oscarEncounter.Index.x"/></a> |
-                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();">
+                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
                                         <bean:message key="oscarEncounter.Index.s"/></a> |
-                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowOneNormal();" >
+                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowOneNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
                                         <bean:message key="oscarEncounter.Index.n"/></a> |
-                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowOneLarge();" >
+                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowOneLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
                                         <bean:message key="oscarEncounter.Index.l"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowOneFull();">
+                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowOneFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
                                         <bean:message key="oscarEncounter.Index.f"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();">
+                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                                         <bean:message key="oscarEncounter.Index.r"/></a>
                                     </div>
                                 </td>
@@ -843,17 +843,17 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                 </td>
                                 <td>
                                     <div style="font-size:8pt;text-align:right;vertical-align:bottom">
-                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();">
+                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                                         <bean:message key="oscarEncounter.Index.x"/></a> |
-                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();">
+                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
                                         <bean:message key="oscarEncounter.Index.s"/></a> |
-                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowTwoNormal();" >
+                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowTwoNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
                                         <bean:message key="oscarEncounter.Index.n"/></a> |
-                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowTwoLarge();" >
+                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowTwoLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
                                         <bean:message key="oscarEncounter.Index.l"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowTwoFull();">
+                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowTwoFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
                                         <bean:message key="oscarEncounter.Index.f"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();">
+                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                                         <bean:message key="oscarEncounter.Index.r"/></a>
                                     </div>
                                </td>
@@ -886,17 +886,17 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                             </td>
                                             <td align=right>
                                                 <div style="font-size:8pt;text-align:right;vertical-align:bottom">             
-                                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:presBoxX();">
+                                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:presBoxX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                                                         <bean:message key="oscarEncounter.Index.x"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:presBoxSmall();">
+                                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:presBoxSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
                                                         <bean:message key="oscarEncounter.Index.s"/></a> |       		    
-                                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:presBoxNormal();" > 
+                                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:presBoxNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>"> 
                                                         <bean:message key="oscarEncounter.Index.n"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:presBoxLarge();" >
+                                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:presBoxLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
                                                         <bean:message key="oscarEncounter.Index.l"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:presBoxFull();">
+                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:presBoxFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
                                                         <bean:message key="oscarEncounter.Index.f"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();"> 
+                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>"> 
                                                         <bean:message key="oscarEncounter.Index.r"/></a>	                 
                                                 </div>
                                             </td>
@@ -959,17 +959,17 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                 </td>
                                 <td nowrap>
                                     <div style="font-size:8pt;text-align:right;vertical-align:bottom">
-                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowThreeX();">
+                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowThreeX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                                         <bean:message key="oscarEncounter.Index.x"/></a> |
-                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowThreeSmall();">
+                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowThreeSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
                                         <bean:message key="oscarEncounter.Index.s"/></a> |
-                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowThreeNormal();" >
+                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowThreeNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
                                         <bean:message key="oscarEncounter.Index.n"/></a> |
-                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowThreeLarge();" >
+                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowThreeLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
                                         <bean:message key="oscarEncounter.Index.l"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowThreeFull();">
+                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowThreeFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
                                         <bean:message key="oscarEncounter.Index.f"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();">
+                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                                         <bean:message key="oscarEncounter.Index.r"/></a>
                                    </div>
                                 </td>
