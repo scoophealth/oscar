@@ -12,10 +12,10 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
     String [][] dbQueries=new String[][] { 
-{"search_daysheetall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date>=? and a.appointment_date<=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby }, 
-{"search_daysheetsingleall", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date>=? and a.appointment_date<=? and a.provider_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
+{"search_daysheetall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name as p_last_name,d.first_name as p_first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date>=? and a.appointment_date<=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby }, 
+{"search_daysheetsingleall", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name as p_last_name, d.first_name as p_first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date>=? and a.appointment_date<=? and a.provider_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
 {"search_daysheetnew", "select a.appointment_date as appointment_date, a.provider_no as provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status = 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby }, 
-{"search_daysheetsinglenew", "select a.appointment_date as appointment_date, a.provider_no as provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status = 't' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
+{"search_daysheetsinglenew", "select a.appointment_date as appointment_date, a.provider_no as provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name as p_last_name, d.first_name as p_first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status = 't' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
 {"searchmygroupall", "select * from mygroup where mygroup_no= ?"}, 
 {"update_apptstatus", "update appointment set status='T' where appointment_date=? and status='t' " }, 
 {"update_apptstatussingle", "update appointment set status='T' where appointment_date=? and provider_no=? and status='t' " }, 
@@ -116,8 +116,8 @@ function setfocus() {
 <tr bgcolor="#CCCCFF" align="center">
 <TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=appointment_date"><bean:message key="report.reportdaysheet.msgAppointmentDate"/></a></b></TH>
 <TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=start_time"><bean:message key="report.reportdaysheet.msgAppointmentTime"/></a></b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=last_name"><bean:message key="report.reportdaysheet.msgPatientLastName"/></a> </b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=p_last_name"><bean:message key="report.reportdaysheet.msgPatientLastName"/></a> </b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=p_first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>
 <TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=chart_no"><bean:message key="report.reportdaysheet.msgChartNo"/></a></b></TH>
 <TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=roster_status"><bean:message key="report.reportdaysheet.msgRosterStatus"/></a></b></TH>
 <TH width="20%"><b><bean:message key="report.reportdaysheet.msgComments"/></b></TH>yy
@@ -128,8 +128,8 @@ function setfocus() {
 <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
       <td align="center" nowrap><%=rsdemo.getString("appointment_date")%></td>
       <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("end_time")%>"><%=rsdemo.getString("start_time")%></td>
-      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("last_name"))%></td>
-      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("first_name"))%></td>
+      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("p_last_name"))%></td>
+      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("p_first_name"))%></td>
       <td align="center"><%=rsdemo.getString("chart_no")%></td>
       <td align="center"><%=rsdemo.getString("roster_status")%></td>
       <td><%=rsdemo.getString("reason")%>&nbsp;</td>
