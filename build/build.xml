@@ -280,7 +280,7 @@
                 <exclude name="oscar/oscarRx/**"/>
                 <exclude name="oscar/oscarSecurity/**"/>                
                 <exclude name="oscar/decision/**"/>
-                <exclude name="oscar/*.class"/>
+                <!--<exclude name="oscar/*.class"/>-->
                 <exclude name="*"/>
                 <exclude name="bean/**"/>
              </fileset>
