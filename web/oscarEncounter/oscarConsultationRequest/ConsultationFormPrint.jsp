@@ -26,7 +26,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData" %>
+<%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*" %>
 
 <html:html locale="true">
 
@@ -49,6 +49,20 @@
     OscarProperties props = OscarProperties.getInstance();
 
     ClinicData clinic = new ClinicData();
+    
+    String strPhones = clinic.getClinicDelimPhone();
+    String strFaxes  = clinic.getClinicDelimFax();
+    Vector vecPhones = new Vector();
+    Vector vecFaxes  = new Vector();
+    StringTokenizer st = new StringTokenizer(strPhones,"|");
+    while (st.hasMoreTokens()) {
+         vecPhones.add(st.nextToken());
+    }
+ 
+    st = new StringTokenizer(strFaxes,"|");
+    while (st.hasMoreTokens()) {
+         vecFaxes.add(st.nextToken());
+    }
 %>
 <head>
 <html:base/>
@@ -149,6 +163,14 @@ function flipFaxFooter(){
       }
 }
 
+function phoneNumSelect() {
+    document.getElementById("clinicPhone").innerHTML="Tel: "+document.getElementById("sendersPhone").value;
+}
+
+function faxNumSelect() {
+    document.getElementById("clinicFax").innerHTML="Fax: "+document.getElementById("sendersFax").value;
+}
+
 </script>
 <title>
 <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.title"/>
@@ -157,16 +179,36 @@ function flipFaxFooter(){
 <body>
 <table class="header" >
     <tr>
-	<td>
+	<td align="center">
             <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFaxFooter"/>" onclick="javascript :flipFaxFooter();"/>
         </td>
         
-	<td>
+	<td align="center">
             <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
         </td>
 
-        <td>
+        <td align="center">
             <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
+        </td>
+        <td align="center">
+            P
+            <select name="sendersPhone" id="sendersPhone" onChange="phoneNumSelect()">
+            <%  for (int i =0; i < vecPhones.size();i++){
+                 String te = (String) vecPhones.elementAt(i);
+            %>
+            <option value="<%=te%>"><%=te%></option>
+            <%  }%>
+            </select>
+        </td>
+        <td align="center">
+            F
+            <select name="sendersFax" id="sendersFax" onChange="faxNumSelect()">
+            <%  for (int i =0; i < vecFaxes.size();i++){
+                 String te = (String) vecFaxes.elementAt(i);
+            %>
+            <option value="<%=te%>"><%=te%></option>
+            <%  }%>
+            </select>
         </td>
     </tr>
 </table>
@@ -196,11 +238,11 @@ function flipFaxFooter(){
                 </td>
             </tr>
             <tr>
-                <td class="address">
-                    Tel: <%=clinic.getClinicPhone()%>
+                <td class="address" id="clinicPhone">
+                    Tel: <%=vecPhones.elementAt(0)%>
                 </td>
-                <td class="address">
-                    Fax: <%=clinic.getClinicFax()%>
+                <td class="address" id="clinicFax">
+                    Fax: <%=vecFaxes.elementAt(0)%>
                 </td>
             </tr>
         </table>      
