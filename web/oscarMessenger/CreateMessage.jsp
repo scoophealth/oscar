@@ -168,7 +168,26 @@ border-right: 2px solid #cfcfcf;
 </style>
 
 <script language="javascript">
-    function checkGroup(tblName)
+
+    var browserName=navigator.appName; 
+    if (browserName=="Netscape"){ 
+
+        if( document.implementation ){
+            //this detects W3C DOM browsers (IE is not a W3C DOM Browser)
+            if( Event.prototype && Event.prototype.__defineGetter__ ){
+                //this detects Mozilla Based Browsers
+                Event.prototype.__defineGetter__( "srcElement", function(){
+                    var src = this.target;
+                    if( src && src.nodeType == Node.TEXT_NODE )
+                        src = src.parentNode;
+                        return src;
+                    }
+                );
+            }
+        }
+    }
+
+    function checkGroup(tblName,event)
     {
         var chk = event.srcElement;
 
@@ -192,7 +211,7 @@ border-right: 2px solid #cfcfcf;
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
-    function showTbl(tblName)
+    function showTbl(tblName,event)
     {
         var i;
 
@@ -581,7 +600,7 @@ function BackToOscar()
          out.print("      <td> \n");
 
          if ((element.getTagName()).equals("group")){
-            out.print("<span class=\"treeNode\" onclick=\"javascript:showTbl('tblDFR"+(depth+1)+"');\">");
+            out.print("<span class=\"treeNode\" onclick=\"javascript:showTbl('tblDFR"+(depth+1)+"',event);\">");
 
             if (depth < 2){
                out.print("<img class=\"treeNode\" src=\"img/minusblue.gif\" border=\"0\" />");
@@ -590,9 +609,9 @@ function BackToOscar()
             }
             out.print("</span>");
             if (depth == 1){
-               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"');\"><font color=#0c7bd6><b>"+CurrentLocationName+"</b></font><br>");
+               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"',event);\"><font color=#0c7bd6><b>"+CurrentLocationName+"</b></font><br>");
             }else{
-               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"');\"><font color=#0c7bd6><b>"+element.getAttribute("desc")+"</b></font><br>");
+               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"',event);\"><font color=#0c7bd6><b>"+element.getAttribute("desc")+"</b></font><br>");
             }
 
          }else{
@@ -617,16 +636,16 @@ function BackToOscar()
             if (node.getNextSibling() == null){
                out.print("</table id="+depth+">\n");
                if (depth == 2)
-                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"   onclick=\"javascript:showTbl('tblDFR"+(depth)+"');\" src=\"img/collapse.gif\" border=\"0\" />");
+                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"   onclick=\"javascript:showTbl('tblDFR"+(depth)+"',event);\" src=\"img/collapse.gif\" border=\"0\" />");
                else
-                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"  style=\"display:none\" onclick=\"javascript:showTbl('tblDFR"+(depth)+"');\" src=\"img/collapse.gif\" border=\"0\" />");
+                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"  style=\"display:none\" onclick=\"javascript:showTbl('tblDFR"+(depth)+"',event);\" src=\"img/collapse.gif\" border=\"0\" />");
 
             }
          }
 
-       }catch(Exception e){System.out.println("didn't work moron");}
+       }catch(Exception e){System.out.println("didn't work");}
    }//display nodes
-
+    
 %>
 
 <%!
