@@ -88,6 +88,36 @@ public static String htmlJsEscape(String S){
     }
   return sb.toString();
 }
+public static String phoneNumber(String num){
+         String retval = num;
+         try{
+            retval = cleanNumber(num).substring(3);
+         }catch(Exception e){e.printStackTrace();}
+	return retval;
+}
+
+public static String areaCode(String num){
+        String retval = num;
+        try{
+            retval = cleanNumber(num).substring(0, 3);
+        }catch(Exception e){e.printStackTrace();}
+        return retval;
+}
+
+public static String cleanNumber(String Num){
+	Num = safeString(Num);
+	java.util.regex.Pattern p = java.util.regex.Pattern.compile("\\D");
+	java.util.regex.Matcher m = p.matcher(Num);
+	StringBuffer sb = new StringBuffer();
+	while (m.find()){
+         m.appendReplacement(sb, "");
+	}
+	m.appendTail(sb);
+	return (0 == sb.toString().compareTo("")) ? "0" : sb.toString();
+}
+public static String safeString(String str){
+	return (null != str) ? str : "";
+}
 
 public static String mysqlEscape(String S){
   if(null==S) return S;
@@ -275,6 +305,22 @@ public static Hashtable attribStringHash(String S){
   return H;
 }
   
+public static String insertDecimalPoint(String input){
+   String moneyStr = "0.00";
+        try{             
+            moneyStr = new java.math.BigDecimal(input).movePointLeft(2).toString();
+        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+    return moneyStr;
+}
+
+public static String check(String check,String checkAgainst,String defaultValue){
+   return ((check == checkAgainst) ? defaultValue : check);
+}
+
+public static String check(String check, String defaultValue){
+   return check(check, null, defaultValue);
+}
+
  public static String[] vectorToStringArray(Vector V){
   String [] S = new String[V.size()];
   for(int i=0;i<S.length;i++)S[i]=(String)V.elementAt(i);
@@ -290,5 +336,59 @@ public static String[] column(int N,String[][]matrix){
     }
   return col;
 }
+
+///
+
+public String space(int i) {
+        String returnValue = new String();
+        for(int j=0; j < i; j++) {
+            returnValue += " ";
+        }
+        return returnValue;
+    }
+    
+    public String backwardSpace(String y,int i) {
+        String returnValue = new String();
+        for(int j=y.length(); j < i; j++) {
+            returnValue += " ";
+        }
+        return cutBackString(y+returnValue,i);
+    }    
+    
+    public String zero(int x) {
+        String returnZeroValue = new String();
+        for(int y=0; y < x; y++) {
+            returnZeroValue += "0";
+        }
+        return returnZeroValue;
+    }
+    public String forwardZero(String y, int x) {
+        String returnZeroValue = new String();
+        for(int i=y.length(); i < x; i++) {
+            returnZeroValue += "0";
+        }        
+        return cutFrontString(returnZeroValue+y,x);
+    }
+    public String cutFrontString(String str,int len){
+        return str.substring(str.length() - len, str.length());
+    }
+    public String cutBackString(String str,int len){
+        return str.substring(0,len);
+    }
+    
+    public String forwardSpace(String y, int x) {
+        String returnZeroValue = new String();
+        for(int i=y.length(); i < x; i++) {
+            returnZeroValue += " ";
+        }        
+        return cutFrontString(returnZeroValue+y,x);
+    }
+    
+    public String moneyFormatPaddedZeroNoDecimal(String y, int x) {
+        String returnZeroValue = forwardZero(y.replaceAll("\\.",""),x);
+        return cutFrontString(returnZeroValue,x);                
+    }
+    ///
+
 
 }
