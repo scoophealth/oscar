@@ -25,10 +25,10 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="formHistBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>  
 <%
@@ -38,8 +38,7 @@
     {"delete_form1", "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(?,?,'form',?,?)"},
     {"delete_form2", "delete from form where form_no = ?"},
    };
-   String[][] responseTargets=new String[][] {   };
-   formHistBean.doConfigure(dbParams,dbQueries,responseTargets);
+   formHistBean.doConfigure(dbParams,dbQueries);
 %>
 
 <% //delete the selected records
