@@ -140,7 +140,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           <a href=# onClick ="popupPage(700,640,'../billing/CA/ON/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a><br>
           <a href=# onClick ="popupPage(700,640,'../billing/CA/ON/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
           <a href=# onClick ="popupPage(600,800,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
-          <a href=# onClick ="popupPage(600,1000,'../billing/CA/ON/billingEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>         	         
+          <a href=# onClick ="popupPage(600,1000,'../billing/CA/ON/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>         	         
        <%}%>
                    	         
         </td>
@@ -180,8 +180,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
            <% if (!country.equals("BR")) { %>
               <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportCatchment.jsp');return false;"><bean:message key="admin.admin.btnPCNCatchmentReport"/></a><br>
               <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/FluBilling.do?orderby=');return false;"><bean:message key="admin.admin.btnFluBillingReport"/></a><br>
-              <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.do');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a><br>
-              <a href=# onClick ="popupPage(600,1000,'../billing/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnOBECGenerator"/></a><br>
+              <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.do');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a><br>              
            <% } %>
           </td>
       </tr>
