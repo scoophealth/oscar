@@ -209,7 +209,7 @@ function onButRepeat() {
             <td width="5%"></td>
             <td width="20%"> 
               <div align="right"><font face="arial">
-				      <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
+				      <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" >
 				      <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name" >
 				      <INPUT TYPE="hidden" NAME="originalpage" VALUE="../appointment/addappointment.jsp" >
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
