@@ -189,15 +189,17 @@ Vascular Tracker
         return ret;
     }
 
-function popupDecisiontSupport(){
-    var varpage = "<bean:write name="decisionSupportURL"/>";
+function popupDecisionSupport(){
+    var varpage = "<%=request.getAttribute("decisionSupportURL")%>";
     var vheight = 500;
     var vwidth = 400;
     var posX = 400;
     var posY = 0;
-    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=600";
-    var popup=window.open(varpage, "Decision Support", windowprops);  
-    popup.focus();
+    if(varpage!="null"){
+        windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=600";
+        var popup=window.open(varpage, "Decision Support", windowprops);  
+        popup.focus();
+    }
     
  }
   
@@ -411,7 +413,7 @@ function controlEyeExam(){
     }
 }
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(670,710); popupDecisiontSupport();">
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(670,710); popupDecisionSupport();">
 <!--  -->
     
     <html:form action="/form/SubmitForm" enctype="multipart/form-data">    
@@ -422,7 +424,7 @@ function controlEyeExam(){
     <table class="Head" class="hidePrint" width="640px" cellpadding="0" cellspacing="0">
         <tr>
             <td align="left">                
-                <input type="submit" value="Save" onclick="javascript:return onSave();" />
+                <input type="submit" value="Update VT" onclick="javascript:return onSave();" />
                 <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
                 <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
                 <input type="button" value="Print" onclick="javascript:return onPrint();"/>
@@ -1382,7 +1384,8 @@ function controlEyeExam(){
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("OthCLDDate")%></td></tr>
                                                             <tr><td class="eightyPercent" align="right"><%=request.getAttribute("OthCLastData")%></td></tr>                                                           
-                                                                                                       
+                                                            <html:hidden property="value(OthCLDDate)"/>
+                                                            <html:hidden property="value(OthCLastData)"/>                                                            
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:checkbox property="value(OthCValue)" /></td>
@@ -1412,7 +1415,7 @@ function controlEyeExam(){
         <tr>
             <td align="left">
                 <input type="hidden" name="submit" value=""/>
-                <input type="submit" value="Save" onclick="javascript:return onSave();" />
+                <input type="submit" value="Update VT" onclick="javascript:return onSave();" />
                 <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
                 <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
                 <input type="button" value="Print" onclick="javascript:return onPrint();"/>
