@@ -43,6 +43,18 @@
            <isNumeric>1</isNumeric>
         </validationRule>
      </measurement>
+     
+     <measurement>
+        <type>WHRB</type>
+        <typeDesc>Waist Hip Ratio</typeDesc>
+        <typeDisplayName>Waist:hip</typeDisplayName>
+        <measuringInstrc>Waist/Hip ratio > 0.95 (if male) or > 0.90 (if female)?</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     
      <measurement>
         <type>WHR</type>
         <typeDesc>Waist Hip Ratio</typeDesc>
