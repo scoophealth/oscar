@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<maintenances>
+
+
+<maintenance>
+<servicedate>2003-02-21</servicedate>
+<servicedby>OscarDoc</servicedby>
+<wbackup>Y</wbackup>
+<remotebackup>Y</remotebackup>
+<disaster>Y</disaster>
+<backupnotes>Backup Messages</backupnotes>
+<access>Y</access>
+<login>Y</login>
+<securitynotes>Security Messages</securitynotes>
+<password>Y</password>
+<port>Y</port>
+<space>Y</space>
+<memory>Y</memory>
+<servernotes>Server Messages</servernotes>
+
+</maintenance>
+</maintenances>
