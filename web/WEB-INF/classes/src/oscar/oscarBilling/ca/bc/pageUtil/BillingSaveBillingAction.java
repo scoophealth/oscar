@@ -109,7 +109,7 @@ public class BillingSaveBillingAction extends Action {
         }
         
         //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
-        sql = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)"
+        String billingSQL = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)"
         + " values('\\N'," +
         "'" + bean.getPatientNo() + "'," +
         "'" + bean.getBillingProvider() + "', " +
@@ -130,7 +130,7 @@ public class BillingSaveBillingAction extends Action {
 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            db.RunSQL(sql);
+            db.RunSQL(billingSQL);
             rs = db.GetSQL("SELECT LAST_INSERT_ID()");
             
             if (rs.next()){
@@ -397,12 +397,38 @@ public class BillingSaveBillingAction extends Action {
                 if (rs.next()) {
                     amnt = rs.getDouble("value");
                 }
-                rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
-                if (rs.next()) {
-                    amnt += rs.getDouble("value");
-                }
+                //rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
+                //if (rs.next()) {
+                //    amnt += rs.getDouble("value");
+                //}
                 billamt = String.valueOf(amnt);
                 db.RunSQL(wcb.SQL(billingid, billamt));
+                                             
+                
+                if ( wcb.getW_extrafeeitem() != null && wcb.getW_extrafeeitem().trim().length() != 0 ){
+                   System.out.println("Adding Second billing item");
+                   String secondWCBBillingId = null;
+                   double secondBillingAmt = 0d ;
+                   db.RunSQL(billingSQL);
+                   rs = db.GetSQL("SELECT LAST_INSERT_ID()");            
+                   if (rs.next()){
+                      secondWCBBillingId = rs.getString(1);
+                   }
+                   rs.close();
+                   
+                   String secondBillingMaster = " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no) " +
+                    " VALUES ('"+secondWCBBillingId+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "')";
+                   
+                   db.RunSQL(insertBillingMaster);
+                   rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
+                   if (rs.next()) {
+                      secondBillingAmt = rs.getDouble("value");
+                   }
+                   db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, String.valueOf(secondBillingAmt)));
+        
+                   
+                }
+                
                 db.CloseConn();
             }
             catch (SQLException e) {
