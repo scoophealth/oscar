@@ -85,52 +85,38 @@ public class EctMeasurementsAction extends Action {
                     String inputValue = (String) frm.getValue(inputValueName);
                     String inputType = (String) frm.getValue(inputTypeName);
                     String mInstrc = (String) frm.getValue(mInstrcName);
-                    String validation = null;
-                    //int iValidation = Integer.parseInt(validation);
+                    
                     String msg = null;
                     String regExp = null;
                     double dMax = 0;
                     double dMin = 0;
                     
-                    String sql = "SELECT validation FROM measurementType WHERE type = '"+ inputType + "'AND measuringInstruction='" + mInstrc + "'"; 
-                    ResultSet rs = db.GetSQL(sql);
-                    if (rs.next()){
-                        validation = rs.getString("validation");
-                    }
-                    rs.close();
-                    
-                    sql = "SELECT * FROM validations where id=" + validation;
-                    rs = db.GetSQL(sql);
-                        
+                    EctValidation ectValidation = new EctValidation();                    
+                    ActionErrors errors = new ActionErrors();                    
+                    ResultSet rs = ectValidation.getValidationType(inputType, mInstrc);
+
                     if (rs.next()){
                         dMax = rs.getDouble("maxValue");
                         dMin = rs.getDouble("minValue");
                         regExp = rs.getString("regularExp");
-                    }
-                    
-                    System.out.println("the regularExp obtained from the datbase is" + regExp);
-                    EctValidationParameter isInRange = isInRange(dMax, dMin, inputValue, inputType, request);
-                    EctValidationParameter matchRegExp = matchRegExp(regExp, inputValue, inputType, request);
-                    EctValidationParameter isValidBloodPressure = isValidBloodPressure(regExp, inputValue, inputType, request);
-
-                    ActionErrors errors = new ActionErrors();                                                            
+                    }                                                                                                                        
 	
-                    if(!isInRange.getValid()){                       
+                    if(!ectValidation.isInRange(dMax, dMin, inputValue)){                       
                         errors.add(inputValueName, new ActionError("errors.range", inputType, Double.toString(dMin), Double.toString(dMax)));
                         saveErrors(request, errors);
-                        return (new ActionForward(mapping.getInput()));
+                        valid = false;
                     }
-                    else if(!matchRegExp.getValid()){                        
+                    else if(!ectValidation.matchRegExp(regExp, inputValue)){                        
                         errors.add(inputValueName,
                         new ActionError("errors.invalid", inputType));
                         saveErrors(request, errors);
-                        return (new ActionForward(mapping.getInput()));
+                        valid = false;
                     }
-                    else if(!isValidBloodPressure.getValid()){                        
+                    else if(!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
                         errors.add(inputValueName,
                         new ActionError("error.bloodPressure"));
                         saveErrors(request, errors);
-                        return (new ActionForward(mapping.getInput()));
+                        valid = false;
                     }
                 }
 
@@ -178,8 +164,7 @@ public class EctMeasurementsAction extends Action {
                     System.out.println(textOnEncounter);
                 }
                 else{
-                    request.setAttribute("messages", messages);
-                    return mapping.findForward("failure");
+                    return (new ActionForward(mapping.getInput()));
                 }
                 /* select the correct db specific command */
                 String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
@@ -210,89 +195,6 @@ public class EctMeasurementsAction extends Action {
         session.setAttribute( "textOnEncounter", textOnEncounter );    
         return mapping.findForward("success");
     }
-    
-    private EctValidationParameter isInRange(double dMax, double dMin, String inputValue, String inputType, HttpServletRequest request){
 
-        EctValidationParameter validation = new EctValidationParameter("", true);    
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-        
-        if ((dMax!=0) || (dMin!=0)){
-            if(gValidator.isDouble(inputValue)){
-                double dValue = Double.parseDouble(inputValue);
-                String min = Double.toString(dMin);
-                String max = Double.toString(dMax);
-                if (!gValidator.isInRange(dValue, dMin, dMax)){
-                    MessageResources mr = getResources(request);
-                    String mustBe = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.mustBe");
-                    String between = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.between");
-                    String and = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.and");
-                    String msg = inputType + " " + mustBe + " " + between + " " + min + " " + and + " " + max;
-                    validation.setMsg(msg);
-                    validation.setValid(false);
-                }
-            }
-            else if(!gValidator.isBlankOrNull(inputValue)){ 
-                MessageResources mr = getResources(request);
-                String mustBe = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.mustBe");
-                String numericValue = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.numericValue");
-                String msg = inputType + " " + mustBe + " " + numericValue;
-                validation.setMsg(msg);
-                validation.setValid(false);
-            }
-        }
-        return validation;
-    }
-
-    private EctValidationParameter matchRegExp(String regExp, String inputValue, String inputType, HttpServletRequest request){
-
-        EctValidationParameter validation = new EctValidationParameter("", true);    
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-        
-        System.out.println("matchRegExp function is called.");
-        
-        if (!gValidator.isBlankOrNull(regExp) && !gValidator.isBlankOrNull(inputValue)){
-            System.out.println("both the regExp and inputValue is not blank nor null.");
-            if(!inputValue.matches(regExp)){
-                System.out.println("Regexp not matched");
-                MessageResources mr = getResources(request);
-                String mustBe = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.mustBe");
-                String inThisFormat = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.inThisFormat");                  
-                String msg = inputType + " " + mustBe + " " + inThisFormat + " " + regExp;
-                validation.setMsg(msg);
-                validation.setValid(false);
-                
-            }
-
-        }
-        return validation;
-     }
-
-     private EctValidationParameter isValidBloodPressure(String regExp, String inputValue, String inputType, HttpServletRequest request){
-         EctValidationParameter matchRegExp = matchRegExp(regExp, inputValue, inputType, request);
-         EctValidationParameter validation = new EctValidationParameter("", true);    
-         
-         if(matchRegExp.getValid()){
-            System.out.println("/");
-            int slashIndex = inputValue.indexOf("/");
-            System.out.println(slashIndex);
-            if (slashIndex >= 0){
-                String systolic = inputValue.substring(0, slashIndex);
-                String diastolic = inputValue.substring(slashIndex+1);
-                System.out.println("The systolic value is " + systolic);
-                System.out.println("The diastolic value is " + diastolic);
-                int iSystolic = Integer.parseInt(systolic);
-                int iDiastolic = Integer.parseInt(diastolic);
-                if( iDiastolic > iSystolic){
-                    MessageResources mr = getResources(request);
-                    String msg = mr.getMessage("oscarEncounter.oscarMeasurements.MeasurementsAction.bloodPressure");
-                    validation.setMsg(msg);
-                    validation.setValid(false);
-                }
-            }
-        }
-        return validation;
-     }
-     
-     
      
 }
