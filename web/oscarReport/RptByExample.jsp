@@ -172,10 +172,13 @@ function showHideLayers() { //v6.0
             <td class="MainTableLeftColumn" valign="top"> 
                 <table>
                   <tr> 
-                    <td><a href="#" onMouseOver="showHideLayers('Layer1','','show')"><bean:message key="oscarReport.RptByExample.MsgShowTextVersion"/></a></td>
+                    <td><a href="#" onClick="showHideLayers('Layer1','','show')"><bean:message key="oscarReport.RptByExample.MsgShowTextVersion"/></a></td>
                   </tr>
                   <tr>
-                    <td><a href="#" onMouseOver="showHideLayers('Layer1','','hide')"><bean:message key="oscarReport.RptByExample.MsgHideTextVersion"/></a></td>                    
+                    <td><a href="#" onClick="showHideLayers('Layer1','','hide')"><bean:message key="oscarReport.RptByExample.MsgHideTextVersion"/></a></td>                    
+                  </tr>
+                  <tr>
+                    <td><a href="#" onClick="popupPage(600, 1000, 'RptViewAllQueryByExamples.do')">View Query History</a></td>
                   </tr>
                   <tr>
                     <td><a href="#" onClick="popupPage(600, 1000, 'RptByExamplesAllFavorites.do')">Edit My Favorite</a></td>
@@ -210,10 +213,7 @@ function showHideLayers() { //v6.0
                                 <html:option value="My favorites" disabled="true"/> 
                                 <html:options collection="favorites" property="query" labelProperty="queryName"/>
                             </html:select>
-                        </td>
-                        <td>
-                            <input type="button" value="View All" onclick="popupPage(600,1000,'RptViewAllQueryByExamples.do')"/>
-                        </td>
+                        </td>                        
                    </tr>
                    <tr>
                         <td>
