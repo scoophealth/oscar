@@ -183,7 +183,11 @@ CREATE TABLE billingservice (
   value varchar(8) default NULL,
   percentage varchar(8) default NULL,
   billingservice_date date default NULL,
-  PRIMARY KEY  (billingservice_no)
+  specialty varchar(15) default NULL,
+  region varchar(5) default NULL,
+  anaesthesia char(2) default NULL,
+  PRIMARY KEY  (billingservice_no),
+  KEY billingservice_service_code_index (service_code)
 ) TYPE=MyISAM;
 
 --
@@ -473,7 +477,9 @@ CREATE TABLE diagnosticcode (
   diagnostic_code varchar(5) NOT NULL default '',
   description text,
   status char(1) default NULL,
-  PRIMARY KEY  (diagnosticcode_no)
+  region varchar(5) default NULL,
+  PRIMARY KEY  (diagnosticcode_no),
+  KEY diagnosticcode_diagnostic_code_index (diagnostic_code)
 ) TYPE=MyISAM;
 
 --
