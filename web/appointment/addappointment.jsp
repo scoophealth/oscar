@@ -4,10 +4,14 @@
   String curUser_no = (String) session.getAttribute("user");
   String userfirstname = (String) session.getAttribute("userfirstname");
   String userlastname = (String) session.getAttribute("userlastname");
+  //String curDemoNo = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"";
+  //String curDemoName = request.getParameter("demographic_name")!=null?request.getParameter("demographic_name"):"";  
   int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
 
   boolean bFirstDisp=true; //this is the first time to display the window
+  boolean bFromWL=false; //this is from waiting list page
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
+  if (request.getParameter("demographic_no")!=null) bFromWL=true;
   String duration = request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin) ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
@@ -229,7 +233,7 @@ function onButRepeat() {
               <div align="right"><font face="arial"><bean:message key="appointment.addappointment.formSurName"/>:</font></div>
             </td>
             <td width="20%"> 
-              <INPUT TYPE="TEXT" NAME="keyword" VALUE="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">
+              <INPUT TYPE="TEXT" NAME="keyword" VALUE="<%=(bFirstDisp && !bFromWL)?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">
             </td>
             <td width="5%"></td>
             <td width="20%"> 
@@ -244,7 +248,7 @@ function onButRepeat() {
               <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Search '" VALUE="<bean:message key="appointment.addappointment.btnSearch"/>"></font></div>
             </td>
             <td width="20%" > 
-              <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>" width="25" height="20" border="0" hspace="2">
+              <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value="<%=(bFirstDisp && !bFromWL)?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>" width="25" height="20" border="0" hspace="2">
             </td>
           </tr>
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
