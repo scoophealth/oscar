@@ -99,9 +99,8 @@ function onCheckSlave(a, masterName) {
         var ret = checkAllDates();
         if(ret==true)
         {
-            //ret = confirm("Do you wish to save this form and view the print preview?");
             popupFixedPage(650,850,'../provider/notice.htm');
-            document.forms[0].action = "../form/formbcbirthsummoprint.jsp";
+            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Labour+and+Birth+Summary+Record&__cfgfile=bclbPrintCfgPg1&__template=bcbirthsummary";
             document.forms[0].target="planner";
             document.forms[0].submit();
             document.forms[0].target="apptProviderSearch";
