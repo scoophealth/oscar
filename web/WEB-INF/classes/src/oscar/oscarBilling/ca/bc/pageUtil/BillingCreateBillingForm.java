@@ -24,6 +24,7 @@ public final class BillingCreateBillingForm extends ActionForm {
     private String timeCall = null;
     private String submissionCode = null;
     private String service_to_date = null;
+    private String shortClaimNote = null;
     
     /**
      * The get method for the message String
@@ -564,6 +565,22 @@ public final class BillingCreateBillingForm extends ActionForm {
      */
     public void setService_to_date(java.lang.String service_to_date) {
        this.service_to_date = service_to_date;
+    }
+    
+    /**
+     * Getter for property shortClaimNote.
+     * @return Value of property shortClaimNote.
+     */
+    public java.lang.String getShortClaimNote() {
+       return shortClaimNote;
+    }
+    
+    /**
+     * Setter for property shortClaimNote.
+     * @param shortClaimNote New value of property shortClaimNote.
+     */
+    public void setShortClaimNote(java.lang.String shortClaimNote) {
+       this.shortClaimNote = shortClaimNote;
     }
     
     /**

@@ -54,6 +54,7 @@ public class BillingSessionBean {
     private String timeCall = "";
     private String submissionCode = "";
     private String service_to_date = "";
+    private String shortClaimNote = "";
     
     public String getIcbc_claim_no(){
         this.icbc_claim_no = (null != this.icbc_claim_no) ? this.icbc_claim_no : "";
@@ -271,6 +272,22 @@ public class BillingSessionBean {
      */
     public void setService_to_date(java.lang.String service_to_date) {
        this.service_to_date = service_to_date;
+    }
+    
+    /**
+     * Getter for property shortClaimNote.
+     * @return Value of property shortClaimNote.
+     */
+    public java.lang.String getShortClaimNote() {
+       return shortClaimNote;
+    }
+    
+    /**
+     * Setter for property shortClaimNote.
+     * @param shortClaimNote New value of property shortClaimNote.
+     */
+    public void setShortClaimNote(java.lang.String shortClaimNote) {
+       this.shortClaimNote = shortClaimNote;
     }
     
     // public void estUserName(){
