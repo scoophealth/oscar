@@ -28,16 +28,16 @@
 */ 
 --%>
 <% 
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String curUser_no = (String) session.getAttribute("user");
-  String mygroupno = (String) session.getAttribute("groupno");  
+if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+String curUser_no = (String) session.getAttribute("user");
+String mygroupno = (String) session.getAttribute("groupno");  
+String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billregion");
 %>
 <%@ page import="java.util.*, oscar.*, java.sql.*, java.text.*, java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
 <%@ include file="reportMainBeanConn.jsp" %>  
-<% } %>
-<%--@ include file="reportMainBeanConn.jsp" --%>  
+<% } %>  
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -68,11 +68,14 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 function ogo() {
+  var region = '<%=billingRegion%>';
   var s = document.report.startDate.value.replace('/', '-');
   s = s.replace('/', '-');
   var e = document.report.endDate.value.replace('/', '-');
   e = e.replace('/', '-');
-  var u = 'reportnewedblist.jsp?startDate=' + s + '&endDate=' + e;
+  var u = '';
+  if (region == "BC") u = 'reportbcedblist.jsp?startDate=' + s + '&endDate=' + e;
+  else  u = 'reportnewedblist.jsp?startDate=' + s + '&endDate=' + e;
 	popupPage(600,750,u);
 }
 function go(r) {
@@ -121,9 +124,9 @@ function nsgo() {
 </head>
 <body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
-  GregorianCalendar now = new GregorianCalendar();
-  GregorianCalendar cal = (GregorianCalendar) now.clone();
-  String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
+GregorianCalendar now = new GregorianCalendar();
+GregorianCalendar cal = (GregorianCalendar) now.clone();
+String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
 %>
 <form name='report' >
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
