@@ -58,7 +58,9 @@ docfilename =request.getParameter("docfilename");
 
 <html:html locale="true">
 <%
-if ( docdesc.compareTo("") == 0 || docfilename.compareTo("") == 0 || doctype.compareTo("") == 0 || doccreator.compareTo("") == 0 ) {
+
+
+if ( docdesc.trim().equals("") || docfilename.trim().compareTo("") || doctype.trim().compareTo("") || doccreator.trim().compareTo("") ) {
 %>
     <jsp:forward page='errorpage.jsp' >
         <jsp:param name="msg" value='' />
