@@ -56,8 +56,8 @@
 
      int flag = 0, rowCount=0;
      //String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
-     String xml_vdate = ""; //=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
-     String xml_appointment_date = "" ; // = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
+     String xml_vdate            = request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
+     String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
 
 <html>
@@ -140,7 +140,7 @@ function refresh() {
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr bgcolor="#FFFFFF"> 
-        <div align="right"><a href=# onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')"><font face="Arial, Helvetica, sans-serif" size="1">Manage Provider List </font></a></div>
+        <div align="right"><a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')"><font face="Arial, Helvetica, sans-serif" size="1">Manage Provider List </font></a></div>
       </tr>
    </table>
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -191,12 +191,14 @@ function refresh() {
           <font color="#333333">Service Date-Range</font>            
           &nbsp;&nbsp;
           <font size="1" face="Arial, Helvetica, sans-serif">
-          <a href="#" onClick="openBrWindow('billingCalendarPopup.jsp?type=&returnItem=xml_vdate&returnForm=serviceform&year=<%=curYear%>&month=<%=curMonth%>','','width=300,height=300')">Begin:</a>
+          <a href="javascript: function myFunction() {return false; }" onClick="openBrWindow('billingCalendarPopup.jsp?type=&returnItem=xml_vdate&returnForm=serviceform&year=<%=curYear%>&month=<%=curMonth%>','','width=300,height=300')">Begin:</a>
           </font> 
           <input type="text" name="xml_vdate" value="<%=xml_vdate%>">          
         
        
-          <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('billingCalendarPopup.jsp?type=&returnItem=xml_appointment_date&returnForm=serviceform&year=<%=curYear%>&month=<%=curMonth%>','','width=300,height=300')">End:</a></font> 
+          <font size="1" face="Arial, Helvetica, sans-serif">
+          <a href="javascript: function myFunction() {return false; }" onClick="openBrWindow('billingCalendarPopup.jsp?type=&returnItem=xml_appointment_date&returnForm=serviceform&year=<%=curYear%>&month=<%=curMonth%>','','width=300,height=300')">End:</a>
+          </font> 
           <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">        
         </div>
       </td>
@@ -237,15 +239,9 @@ if (billTypes == null){
     </tr>
 </table>
     </form>
-		
-
+	
 <table width="100%" border="2"  valign="top">
-  <% 
- String dateBegin = request.getParameter("xml_vdate");
-   String dateEnd = request.getParameter("xml_appointment_date");
-   //if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-   //if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
-   %>
+ 
   <tr bgcolor="#CCCCFF"> 
     <TH align="center" class="bHeaderData" >SERVICE DATE</TH>
     <TH align="center" class="bHeaderData" >TIME</TH>
@@ -256,10 +252,11 @@ if (billTypes == null){
   </tr>
   <%
 
-
+    String dateBegin = request.getParameter("xml_vdate");
+    String dateEnd = request.getParameter("xml_appointment_date");
     
     ArrayList list = msp.getBillsMaster(billTypes);
-    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, "", "" ,"");
+    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd);
     list = bSearch.list;
     Properties p2 = bSearch.getCurrentErrorMessages();
     Properties p = msp.currentC12Records();    
@@ -281,7 +278,7 @@ if (billTypes == null){
     <TD align="center" class="bCellData" ><%=b.demoName%></TD>
     <TD align="center" class="bCellData" ><%=b.reason%></TD>
     <TD align="center" class="bCellData" >
-        <a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=b.billing_no%>&dboperation=search_bill&hotclick=0")' title="<%=b.reason%>">
+        <a href="javascript: function myFunction() {return false; }" onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=b.billing_no%>&dboperation=search_bill&hotclick=0")' title="<%=b.reason%>">
             <%=b.billing_no%>
         </a>
     </TD>                                 
