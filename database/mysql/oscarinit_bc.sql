@@ -1768,7 +1768,7 @@ CREATE TABLE wcb (
 
 create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
 create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
-
+create index  billingmaster_billing_no on billingmaster (billing_no);
 
 
 
