@@ -70,7 +70,7 @@
 
 <style type="text/css">
 	div.presBox {
-		height: 20;
+		height: 30;
 		overflow: auto;
 	}
 </style>
@@ -207,6 +207,7 @@ function reset() {
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=large;
     document.getElementById("presBox").style.height=20;
+    setBoxesFullWidth();
 }
 function rowOneX(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -215,6 +216,7 @@ function rowOneX(){
     document.encForm.shTextarea.style.height=X;
     document.encForm.fhTextarea.style.height=X;
     document.encForm.mhTextarea.style.height=X;
+    setBoxesFullWidth();
 }
 function rowOneSmall(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -223,6 +225,7 @@ function rowOneSmall(){
     document.encForm.shTextarea.style.height=small;
     document.encForm.fhTextarea.style.height=small;
     document.encForm.mhTextarea.style.height=small;
+    setBoxesFullWidth();
 }
 function rowOneNormal(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -231,6 +234,7 @@ function rowOneNormal(){
     document.encForm.shTextarea.style.height=normal;
     document.encForm.fhTextarea.style.height=normal;
     document.encForm.mhTextarea.style.height=normal;
+setBoxesFullWidth();
 }
 function rowOneLarge(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -239,6 +243,7 @@ function rowOneLarge(){
     document.encForm.shTextarea.style.height=large;
     document.encForm.fhTextarea.style.height=large;
     document.encForm.mhTextarea.style.height=large;
+    setBoxesFullWidth();
 }
 function rowOneFull(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -248,30 +253,35 @@ function rowOneFull(){
     document.encForm.fhTextarea.style.height=full;
     document.encForm.mhTextarea.style.height=full;
     document.encForm.shInput.scrollIntoView(top);
+    setBoxesFullWidth();
 }
 function rowTwoX(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=X;
     document.encForm.reTextarea.style.height=X;
+    setBoxesFullWidth();
 }
 function rowTwoSmall(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=small;
     document.encForm.reTextarea.style.height=small;
+    setBoxesFullWidth();
 }
 function rowTwoNormal(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=normal;
     document.encForm.reTextarea.style.height=normal;
+setBoxesFullWidth();
 }
 function rowTwoLarge(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=large;
     document.encForm.reTextarea.style.height=large;
+    setBoxesFullWidth();
 }
 function rowTwoFull(){
     document.encForm.ocTextarea.style.overflow="auto";
@@ -279,56 +289,69 @@ function rowTwoFull(){
     document.encForm.ocTextarea.style.height=full;
     document.encForm.reTextarea.style.height=full;
     document.encForm.ocInput.scrollIntoView(top);
+setBoxesFullWidth();
 }
 
 function rowThreeX(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=X;
+    setBoxesFullWidth();
 }
 function rowThreeSmall(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=small;
+    setBoxesFullWidth();
 }
 function rowThreeNormal(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=normal;
+setBoxesFullWidth();
 }
 function rowThreeLarge(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=large;
+    setBoxesFullWidth();
 }
 function rowThreeFull(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=full;
     document.encForm.enInput.scrollIntoView(top);
+    setBoxesFullWidth();
 }
 
 <!--new function from Jay Nov 17 2002-->
-function presBoxX(){
-    document.getElementById("presBox").style.height=X;
-    //document.encForm.enTextarea.style.overflow="auto";
-    //document.encForm.enTextarea.style.height=X;
+//Function resets the widths of the text boxes and tables 
+function setBoxesFullWidth(){
+    document.encForm.enTextarea.style.width="100%";   
+    document.encForm.shTextarea.style.width="100%";
+    document.encForm.fhTextarea.style.width="100%";
+    document.encForm.mhTextarea.style.width="100%";   
+    document.encForm.ocTextarea.style.width="100%";
+    document.encForm.reTextarea.style.width="100%";
+    document.getElementById("rowOne").style.width="100%";
+    document.getElementById("rowTwo").style.width="100%";
+    document.getElementById("rowThree").style.width="100%";
 }
-function presBoxSmall(){
-    //document.encForm.enTextarea.style.overflow="auto";
-    //document.encForm.enTextarea.style.height=small;
+function presBoxX(){
+    document.getElementById("presBox").style.height=X;    
+    setBoxesFullWidth();    
+}
+function presBoxSmall(){   
     document.getElementById("presBox").style.height=small;
+    setBoxesFullWidth();
 }
 function presBoxNormal(){
-    //document.encForm.enTextarea.style.overflow="auto";
-    //document.encForm.enTextarea.style.height=normal;
     document.getElementById("presBox").style.height=normal;
+    setBoxesFullWidth();
 }
 function presBoxLarge(){
-    //document.encForm.enTextarea.style.overflow="auto";
-    //document.encForm.enTextarea.style.height=large;
     document.getElementById("presBox").style.height=large;
+    setBoxesFullWidth();
 }
 function presBoxFull(){
-    //document.encForm.enTextarea.style.overflow="auto";
-    //document.encForm.enTextarea.style.height=full;
     document.getElementById("presBox").style.height=full;
     document.getElementById("presTopTable").scrollIntoView(top);
+    setBoxesFullWidth();
 }
 <!--new functions end from jay--> 
 
@@ -760,7 +783,7 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
     <!--social history row-->
                 <tr>
                     <td>
-                        <table bgcolor="#CCCCFF" name="rowTwo">
+                        <table bgcolor="#CCCCFF" id="rowTwo">
                             <tr>
                                 <td>
                                     <div class="RowTop" ><bean:message key="oscarEncounter.Index.msgConcerns"/>:</div><input type="hidden" name="ocInput"/>
@@ -798,10 +821,76 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                         </table>
                     </td>
                 </tr>
+
+<!--jay start on NOV 17 2002-->
+		<tr>
+		   <td >
+		      <table bgcolor="#ccccff" id="presTopTable">
+                        <tr>
+                            <td valign="top">
+                                    <div class="RowTop" >Drug Info:</div>
+                            </td>
+                            <td width="100%" style="font-size: 10px;">
+                                    <table width="100%" cellpadding=0 cellspacing=0>
+                                        <tr>
+                                            <td width=75><div class="RowTop" >Rx Date</td>
+                                            <td>
+                                                 <div class="RowTop" >Prescription</div>
+                                            </td>
+                                            <td align=right>
+                                                <div style="font-size:8pt;text-align:right;vertical-align:bottom">             
+                                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:presBoxX();">
+                                                        <bean:message key="oscarEncounter.Index.x"/></a> |
+                                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:presBoxSmall();">
+                                                        <bean:message key="oscarEncounter.Index.s"/></a> |       		    
+                                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:presBoxNormal();" > 
+                                                        <bean:message key="oscarEncounter.Index.n"/></a> |
+                                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:presBoxLarge();" >
+                                                        <bean:message key="oscarEncounter.Index.l"/></a> |
+                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:presBoxFull();">
+                                                        <bean:message key="oscarEncounter.Index.f"/></a> |
+                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();"> 
+                                                        <bean:message key="oscarEncounter.Index.r"/></a>	                 
+                                                </div>
+                                            </td>
+                                        </tr>	
+                                    </table>
+                                    <div class="presBox" id="presBox">
+
+                                    <%		
+                                    oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+                                    oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
+                                    arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
+                                    if (arr.length > 0){%>
+                                        <table>
+                                            <%for (int i = 0; i < arr.length; i++){
+                                                String rxD = arr[i].getRxDate().toString();
+                                                String rxP = arr[i].getRxDisplay();
+                                                rxP = rxP + "   " + arr[i].getEndDate();
+                                                String styleColor = "";
+                                                if(arr[i].isCurrent() == true){  styleColor="style='color:red;'";  }
+                                            %>
+                                                <tr>
+                                                    <td <%=styleColor%> valign=top style="border-bottom: 1pt solid #888888; font-size:10px;"><%=rxD%></td>
+                                                    <td width=600 <%=styleColor%> style="border-bottom: 1pt solid #888888; font-size:10px;"><%=rxP%></td>
+                                                </tr>
+                                            <%}%>
+                                        </table>
+                                    <%}else{out.write("&nbsp;");}%>
+                                    </div>
+                            </td>
+			</tr>
+                      </table>	
+		   </td>
+		</tr>
+		<!--jay stop-->
+
+
+
     <!--encounter row-->
                 <tr>
                     <td>
-                        <table bgcolor="#CCCCFF" name="rowThree">
+                        <table bgcolor="#CCCCFF" id="rowThree">
                            <tr>
                                 <td nowrap width='80%' >
                                     <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
