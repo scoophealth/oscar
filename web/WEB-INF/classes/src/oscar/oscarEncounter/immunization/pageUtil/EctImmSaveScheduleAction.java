@@ -98,6 +98,7 @@ public final class EctImmSaveScheduleAction extends Action {
          imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
       }
       catch(Exception ex) {
+         ex.printStackTrace();
          throw new ServletException("Exception occurred in SaveScheduleAction", ex);
       }
       
