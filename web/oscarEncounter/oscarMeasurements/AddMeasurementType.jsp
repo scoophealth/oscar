@@ -144,8 +144,8 @@
                                             </table>
                                         </td>
                                     </tr>
-                                    <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.AddMeasurementType.duplicateType"/>    
-                                    <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.AddMeasurementType.successful"/>    
+                                    <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.AddMeasurementType.duplicateType"/>"/>    
+                                    <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.AddMeasurementType.successful"/>"/>    
                                 </td>
                             </tr>
                         </table>
