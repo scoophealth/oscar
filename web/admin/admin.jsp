@@ -242,7 +242,16 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     </tr>
   
 <!--// end e forms block -->
-  
+
+<!--// start oscar measurement block-->  
+    <tr bgcolor="#CCCCFF"> 
+      <td><bean:message key="admin.admin.oscarMeasurement"/></td>
+    </tr>
+    <tr bgcolor="#EEEEFF">
+      <td><a href="#" ONCLICK ="popupPage(350,350,'../oscarEncounter/oscarMeasurements/EditMeasurementTypes.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/></a></td>
+    </tr>
+<!--// end of oscar measuremnt block-->
+
     <tr bgcolor="#CCCCFF"> 
       <td><bean:message key="admin.admin.misc"/></td>
     </tr>
