@@ -199,8 +199,15 @@ function addName(lastname, firstname, chartno) {
 	</form>
  
 </table>
+<%
+  int nLastPage=0,nNextPage=0;
+  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
+  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
+%>
+
+
 <%	
-  if(nItems==1) { //if there is only one search result, it should be added to the appoint page directly.
+  if(nItems==1 && nLastPage<=0 ) { //if there is only one search result, it should be added to the appoint page directly.
 %> 
 <script language="JavaScript">
 <!--
@@ -212,11 +219,6 @@ function addName(lastname, firstname, chartno) {
   }
 %>
 
-<%
-  int nLastPage=0,nNextPage=0;
-  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
-  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
-%>
 <script language="JavaScript">
 <!--
 function last() {
