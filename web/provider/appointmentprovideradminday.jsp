@@ -308,8 +308,12 @@ function goZoomView(s, n) {
              <% } %>
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a></font></td>
-
+         <!--MARK-->
+         <% if (prov.equals("BC")){%>
+         <a HREF="#" ONCLICK ="popupPage2('../lab/CA/BC/index.jsp');return false;" TITLE='View lab reports'><%=(new oscar.oscarLab.ca.bc.PathNet.PathNetInfo()).getLabTab(curUser_no)%></a>   
+         <%}else{%>
+         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a>         
+         <%}%>
 <!-- oscarMessenger code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
