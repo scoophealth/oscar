@@ -50,7 +50,7 @@
 <script language="javascript">
 
 function write2Parent(text){
-        
+    self.window.close();    
     opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + "\n" + text;
     opener.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
     opener.document.encForm.enTextarea.focus();
