@@ -24,6 +24,11 @@
  */
 --%>
 
+<%
+if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
+String curUser_no = (String) session.getAttribute("user");
+%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
@@ -46,7 +51,7 @@ module = request.getParameter("function");
 module_id = request.getParameter("functionid");
 doctype = request.getParameter("doctype");
 docdesc = request.getParameter("docdesc");
-doccreator = request.getParameter("doccreator");
+doccreator = curUser_no; //request.getParameter("doccreator");
 docdate = request.getParameter("docdate");
 docfilename =request.getParameter("docfilename");
 %>

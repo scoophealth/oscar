@@ -23,6 +23,9 @@
  * Ontario, Canada 
  */
 -->
+<%
+if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
+%>
 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 
@@ -32,14 +35,11 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
- <%   
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
-           String docdownload = oscarVariables.getProperty("project_home") ;;
-           session.setAttribute("homepath", docdownload);      
-
+<%   
+if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+String user_no = (String) session.getAttribute("user");
+String docdownload = oscarVariables.getProperty("project_home") ;;
+session.setAttribute("homepath", docdownload);      
 %>
 <%
 GregorianCalendar now=new GregorianCalendar();
