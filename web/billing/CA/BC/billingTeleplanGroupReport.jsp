@@ -232,7 +232,8 @@ function showHideLayers() { //v3.0
 
 	String[] paramYear = new String[2];
 	paramYear[0] = thisyear+"/01/01";
-	paramYear[1] = thisyear+"/12/31";
+	paramYear[1] = thisyear+"/12/31 23:59:59";
+
 	rslocal = null;
 	rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
 	while(rslocal.next()){
