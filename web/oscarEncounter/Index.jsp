@@ -30,6 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*"%>
+<%@page import="oscar.oscarMDS.data.MDSResultsData"%>
 <%
   response.setHeader("Cache-Control","no-cache");
   //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
@@ -58,6 +59,8 @@
   String providerName = bean.userName;
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+  MDSResultsData labResults =  new MDSResultsData();    
+  labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
 %>
 
 <html:html locale="true">
@@ -666,6 +669,12 @@ border-right: 2px solid #cfcfcf;
                         <a href="#" onClick="popupPage(500,600, '../eform/showmyform.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="global.eForms"/></a><br>
                  	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a>
                         <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(200,100,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a>
+                        <select name="selectCurrentForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View <%=patientName%>\'s lab results'; return true;">
+                            <option value="null" selected>-lab results-</option>
+                            <% for(int j=0; j<labResults.segmentID.size(); j++) { %>                                
+                                <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=bean.curProviderNo%>&segmentID=<%=(String)labResults.segmentID.get(j)%>&status=<%=(String)labResults.reportStatus.get(j)%>"><%=((String)labResults.dateTime.get(j)).substring(0,10)%> <%=(String)labResults.discipline.get(j)%></option>
+                            <% } %>
+                        </select>
                  </td>
                 </tr>
                 <tr><td>&nbsp;</td></tr>
