@@ -28,7 +28,7 @@ import oscar.OscarProperties;
 
 public class dxResearchCodingSystem{
 
-    private String codingSystem = OscarProperties.getInstance().getProperty("dxResearch_coding_sys");
+    private String codingSystem = OscarProperties.getInstance().getProperty("dxResearch_coding_sys","ichppccode");
     public dxResearchCodingSystem(){
     }
     
