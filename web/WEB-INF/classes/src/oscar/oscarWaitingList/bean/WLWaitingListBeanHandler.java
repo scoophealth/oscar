@@ -55,11 +55,12 @@ public class WLWaitingListBeanHandler {
             }
             
 
-            sql = "SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.phone, w.position, w.note, w.onListSince FROM waitingList w, demographic d WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "'";
+            sql = "SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, d.phone, w.position, w.note, w.onListSince FROM waitingList w, demographic d WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "' ORDER BY w.position";
                     
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
-                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( rs.getString("position"),
+                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( rs.getString("demographic_no"),
+                                                                                rs.getString("position"),
                                                                                 rs.getString("patientName"), 
                                                                                 rs.getString("phone"),
                                                                                 rs.getString("note"),

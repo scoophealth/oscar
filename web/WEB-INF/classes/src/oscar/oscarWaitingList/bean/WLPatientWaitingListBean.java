@@ -35,6 +35,7 @@ import oscar.oscarDB.DBHandler;
 
 public class WLPatientWaitingListBean{
 
+       String demographicNo;
        String waitingList;
        String position;
        String onListSince;
@@ -42,19 +43,25 @@ public class WLPatientWaitingListBean{
        String patientName;
        String note;
        
-       public WLPatientWaitingListBean(String waitingList, String position, String note, String onListSince){
+       public WLPatientWaitingListBean(String demographicNo, String waitingList, String position, String note, String onListSince){
+           this.demographicNo=demographicNo;
            this.waitingList = waitingList;
            this.note = note;
            this.position = position;
            this.onListSince = onListSince;
        }
        
-       public WLPatientWaitingListBean(String position, String patientName, String phoneNumber, String note, String onListSince){
+       public WLPatientWaitingListBean(String demographicNo, String position, String patientName, String phoneNumber, String note, String onListSince){
+           this.demographicNo = demographicNo;
            this.position=position;
            this.patientName=patientName;
            this.phoneNumber=phoneNumber;
            this.onListSince=onListSince;      
            this.note=note;
+       }
+       
+       public String getDemographicNo(){
+           return demographicNo;
        }
        
        public String getWaitingList(){

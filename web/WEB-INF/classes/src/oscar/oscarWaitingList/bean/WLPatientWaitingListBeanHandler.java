@@ -54,7 +54,8 @@ public class WLPatientWaitingListBeanHandler {
             ResultSet rs;        
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
-                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( rs.getString("name"),
+                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( demographicNo,
+                                                                                rs.getString("name"),
                                                                                 rs.getString("position"), 
                                                                                 rs.getString("note"),
                                                                                 rs.getString("onListSince"));   
@@ -86,7 +87,7 @@ public class WLPatientWaitingListBeanHandler {
                 for(rsWL = db.GetSQL(sql); rsWL.next(); ){
                     sql = "DELETE FROM waitingList WHERE demographic_no='"+demographicNo +"' AND listID='" + rsWL.getString("listID") +"'";
                     db.RunSQL(sql);
-                    sql = "update waitingList set position = position -1 where listID='" + rsWL.getString("listID");
+                    sql = "update waitingList set position = position -1 where listID='" + rsWL.getString("listID") +"'";
                     db.RunSQL(sql);
                 }
                 rsWL.close();

@@ -60,7 +60,8 @@ public final class WLSetupDisplayPatientWaitingListAction extends Action {
         WLPatientWaitingListBeanHandler hd = new WLPatientWaitingListBeanHandler(demographicNo);           
         HttpSession session = request.getSession();
         session.setAttribute("demoInfo", demoInfo);
-        session.setAttribute( "patientWaitingList", hd );            
+        session.setAttribute( "patientWaitingList", hd );  
+        session.setAttribute("demographicNo", demographicNo);
        
         return (mapping.findForward("continue"));
     }
