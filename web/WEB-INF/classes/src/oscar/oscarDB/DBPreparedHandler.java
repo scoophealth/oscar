@@ -41,8 +41,12 @@ public class DBPreparedHandler  {
   public DBPreparedHandler(String dbDriver,String dbName, String dbUser,String dbPwd ) throws SQLException {      
       try {
           init(dbDriver,dbName,dbUser,dbPwd);      
-      } catch (Exception e) {
-          throw new SQLException(e.getMessage());  // cast all exceptions to SQLExceptions because having this function throw and Exception breaks too much code
+      } catch (Exception e) {          
+          if (e.getClass().getName().equals("java.sql.SQLException")) {
+              throw new SQLException(e.getMessage());  
+          } else {
+              throw new SQLException(e.toString()); // cast all exceptions to SQLExceptions because having this function throw and Exception breaks too much code
+          }
       }
   }
   
