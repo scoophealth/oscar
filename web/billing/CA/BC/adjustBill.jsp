@@ -417,7 +417,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
                 <option value="O" <%=BillType.equals("O")?"selected":""%>>O | Bill MSP</option>
                 <option value="P" <%=BillType.equals("P")?"selected":""%>>P | Bill Patient</option>
                 <option value="N" <%=BillType.equals("N")?"selected":""%>>N | Do Not Bill</option>
-                <option value="W" <%=BillType.equals("W")?"selected":""%>>W | Bill Worker's Compensation Board</option>
+                <!--<option value="W" <%=BillType.equals("W")?"selected":""%>>W | Bill Worker's Compensation Board</option>-->
                 <option value="B" <%=BillType.equals("B")?"selected":""%>>B | Summitted MSP</option>
                 <option value="S" <%=BillType.equals("S")?"selected":""%>>S | Settled/Paid by MSP</option>
                 <option value="X" <%=BillType.equals("X")?"selected":""%>>X | Bad Debt</option>
