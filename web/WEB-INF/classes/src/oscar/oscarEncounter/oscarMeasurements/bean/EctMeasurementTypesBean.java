@@ -46,6 +46,9 @@ public class EctMeasurementTypesBean{
        String lastDateObserved =null;
        String lastDateEntered = null;
        Vector validationRules = new Vector();
+
+       //for forms connecting to miles, determine whether to prefill the data or not when a new form is opened
+       boolean canPrefill = false;
        
        public EctMeasurementTypesBean(){}
        
@@ -186,5 +189,13 @@ public class EctMeasurementTypesBean{
        
        public void setLastDateEntered(String lastDateEntered){
            this.lastDateEntered = lastDateEntered;
+       }
+       
+       public boolean getCanPrefill(){
+           return canPrefill;
+       }
+       
+       public void setCanPrefill(boolean canPrefill){
+           this.canPrefill = canPrefill;         
        }
 }
