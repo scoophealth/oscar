@@ -293,7 +293,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
  rslocation = apptMainBean.queryResults(billNo, "search_teleplanbill");
  while(rslocation.next()){ 
     DemoNo = rslocation.getString("demographic_no");
-    DemoName = rslocation.getString("demographic_name");
+    //DemoName = rslocation.getString("demographic_name");
     UpdateDate = rslocation.getString("update_date");
     BillDate = rslocation.getString("billing_date");
     BillType = rslocation.getString("status");
@@ -305,7 +305,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
  rsPatient = null;
  rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
  while(rsPatient.next()){
-     
+     DemoName = rsPatient.getString("last_name")+", "+rsPatient.getString("first_name");
      DemoSex = rsPatient.getString("sex");
      DemoAddress = rsPatient.getString("address");
      DemoCity = rsPatient.getString("city");
@@ -344,7 +344,11 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
         <input type="hidden" name="demo_name" value="<%=DemoName%>">
     </td>
     <td width="46%"  class="bCellData">Health# : 
+      <% if (HCTYPE != null && HCTYPE.equals("BC")){ %>
       <%=allFields.getProperty("phn")%>
+      <%}else{%>
+      <%=allFields.getProperty("oin_registration_no")%>
+      <%}%>
       Type
       <%=HCTYPE%>
     </td>
