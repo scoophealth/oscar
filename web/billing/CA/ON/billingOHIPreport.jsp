@@ -170,7 +170,7 @@ while(rslocal.next()){
 %>
 	</select>
 	</td><td width="200">
-	Select billing center
+	Billing center
 	</td><td width="254">
 	<select name="billcenter">
 
@@ -223,7 +223,7 @@ paramYear[1] = thisyear+"/12/31";
 String pro_ohip="", pro_group="", pro_name="", updatedate="", cr="", oFile="", hFile="", total="";
 
 int count = 0;
-rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
+rslocal = apptMainBean.queryResults(paramYear, "search_billactivity_short");
 while(rslocal.next()){
 	count++;
 	pro_ohip = rslocal.getString("providerohipno"); 

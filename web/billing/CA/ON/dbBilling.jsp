@@ -106,6 +106,7 @@
     {"search_research_code", "select ichppccode, description from ichppccode where ichppccode like ? or ichppccode like ? or ichppccode like ? or description like ? or description like ? or description like ?"},
     {"save_billactivity", "insert into billactivity values(?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"search_billactivity", "select * from billactivity where updatedatetime >= ? and updatedatetime <=? and status <> 'D' order by updatedatetime desc"},
+    {"search_billactivity_short", "select htmlfilename, ohipfilename, providerohipno, groupno, creator, claimrecord, updatedatetime, total  from billactivity where updatedatetime >= ? and updatedatetime <=? and status <> 'D' order by updatedatetime desc"},
     {"search_billactivity_monthCode", "select * from billactivity where monthCode=? and providerohipno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
     {"search_billactivity_monthCodeshort", "select batchcount from billactivity where monthCode=? and providerohipno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
     {"search_billactivity_group_monthCode", "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
