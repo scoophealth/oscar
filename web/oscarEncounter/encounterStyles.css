@@ -214,3 +214,11 @@ TH {
     font-size:110%;
     color:white;
 }
+.fieldBox {
+    font-family: tahoma, helvetica;
+    background-color:"#ddddff";
+}
+.note {
+    font-size:80%; 
+    color:#3366CC;
+}
