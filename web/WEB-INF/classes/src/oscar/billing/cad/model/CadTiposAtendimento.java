@@ -5,61 +5,64 @@
  */
 package oscar.billing.cad.model;
 
-import java.util.*;
 import oscar.billing.fat.model.FatBpa;
 
 /**
  * <p>
- * 
+ * Bean used for attendance type
  * </p>
  */
 public class CadTiposAtendimento {
 
-  ///////////////////////////////////////
-  // attributes
+	///////////////////////////////////////
+	// attributes
 
+	private long coTipoatendimento;
+	private String dsTipoatendimento;
 
-/**
- * <p>
- * Represents ...
- * </p>
- */
-    private long coTipoatendimento; 
+	///////////////////////////////////////
+	// associations
 
-/**
- * <p>
- * Represents ...
- * </p>
- */
-    private String dsTipoatendimento; 
+	public FatBpa fatBpa;
 
-   ///////////////////////////////////////
-   // associations
+	///////////////////////////////////////
+	// operations
 
-/**
- * <p>
- * 
- * </p>
- */
-    public FatBpa fatBpa; 
+	public void clear() {
+		coTipoatendimento = 0;
+		dsTipoatendimento = "";
+	}
 
+	/**
+	 * Returns the coTipoatendimento.
+	 * @return long
+	 */
+	public long getCoTipoatendimento() {
+		return coTipoatendimento;
+	}
 
-  ///////////////////////////////////////
-  // operations
+	/**
+	 * Returns the dsTipoatendimento.
+	 * @return String
+	 */
+	public String getDsTipoatendimento() {
+		return dsTipoatendimento;
+	}
 
+	/**
+	 * Sets the coTipoatendimento.
+	 * @param coTipoatendimento The coTipoatendimento to set
+	 */
+	public void setCoTipoatendimento(long coTipoatendimento) {
+		this.coTipoatendimento = coTipoatendimento;
+	}
 
-/**
- * <p>
- * Does ...
- * </p><p>
- * 
- * </p>
- */
-    public void clear() {        
-        // your code here
-    } // end clear        
+	/**
+	 * Sets the dsTipoatendimento.
+	 * @param dsTipoatendimento The dsTipoatendimento to set
+	 */
+	public void setDsTipoatendimento(String dsTipoatendimento) {
+		this.dsTipoatendimento = dsTipoatendimento;
+	}
 
 } // end CadTiposAtendimento
-
-
-
