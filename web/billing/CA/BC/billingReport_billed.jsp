@@ -89,7 +89,7 @@
     <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason%>(<%=note%>)
       </font></b></TD>
-    <TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+    <TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href="javascript: function myFunction() {return false; }" onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
       <%=rs.getString("billing_no")%></a></font></b></TD>                                 
   </tr>
   <%  rowCount = rowCount + 1;
