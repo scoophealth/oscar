@@ -340,6 +340,7 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 
   String dateBegin = xml_vdate;
   String dateEnd = xml_appointment_date;
+  String provider = "";
   if (dateEnd.compareTo("") == 0) dateEnd = "9999-12-31";
   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
   ResultSet rs=null ;
@@ -354,6 +355,13 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
   while (rs.next()) {
      nItems = nItems +1;
      bodd=bodd?false:true;
+     if (rs.getString("provider_last")==null || rs.getString("provider_first")==null){
+        provider = "";
+     }
+     else{
+        provider = rs.getString("provider_last") + "," + rs.getString("provider_first");
+     }
+
      vGrantdate = rs.getString("service_date")+ " 00:00:00.0";
      java.util.Date grantdate = dateFormat.parse(vGrantdate); 
      java.util.Date toDate = new java.util.Date(); 
@@ -365,7 +373,7 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 <tr >
 <TD width="5%"  ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><input type="checkbox" name="checkbox" value="<%=rs.getString("tickler_no")%>"></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
-<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("provider_last")%>,<%=rs.getString("provider_first")%></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=provider%></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("service_date")%> </TD>
 <TD width="10%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
 <TD width="30%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("message")%></TD>
@@ -376,7 +384,7 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 <tr >
 <TD width="5%"  ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><input type="checkbox" name="checkbox" value="<%=rs.getString("tickler_no")%>"></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
-<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("provider_last")%>,<%=rs.getString("provider_first")%></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("service_date")%> </TD>
 <TD width="10%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
 <TD width="30%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("message")%></TD>
