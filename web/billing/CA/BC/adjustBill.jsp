@@ -174,7 +174,7 @@
                     t0 = escape(document.ReProcessBilling.elements[d].value);                  
                     t1 = escape("");
                     t2 = escape("");
-                    awnd=rs('att','<rewrite:reWrite jspPage="billingDigNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=&formElement=' +d+ '&formName=ReProcessBilling',600,600,1);
+                    awnd=rs('att','<rewrite:reWrite jspPage="billingDigNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=&formElement=' +d+ '&formName=ReProcessBilling',820,660,1);
                     awnd.focus();
                 }
 
@@ -182,7 +182,7 @@
                       t0 = escape(document.ReProcessBilling.service_code.value);
                       t1 = escape("");
                       t2 = escape("");
-                      awnd=rs('att','<rewrite:reWrite jspPage="billingCodeNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=&formName=ReProcessBilling&formElement=service_code',600,600,1);                      
+                      awnd=rs('att','<rewrite:reWrite jspPage="billingCodeNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=&formName=ReProcessBilling&formElement=service_code',820,660,1);                      
                       awnd.focus();
                 }
 
