@@ -58,6 +58,7 @@ public class EctFindMeasurementTypeUtil {
 	    digester.addBeanPropertySetter("formProp/measurement/validationRule/minLength", "minLength");
 	    digester.addBeanPropertySetter("formProp/measurement/validationRule/maxLength", "maxLength");
             digester.addBeanPropertySetter("formProp/measurement/validationRule/isNumeric", "isNumeric");
+            digester.addBeanPropertySetter("formProp/measurement/validationRule/isDate", "isDate");
             digester.addSetNext("formProp/measurement/validationRule", "addValidationRule");
             
             digester.addSetNext("formProp/measurement", "addMeasurementType");
