@@ -1,0 +1,77 @@
+<%
+	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
+    	response.sendRedirect("../../../logout.jsp");
+    }
+    String demo_no = request.getParameter("demo_no"),
+    pid = request.getParameter("pid");
+	if(null != request.getParameter("unlink")){
+		String update_link = "UPDATE hl7_link SET hl7_link.status = 'P' WHERE hl7_link.pid_id='@pid';";
+		oscar.oscarDB.DBHandler dbLink = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+		dbLink.RunSQL(update_link.replaceAll("@pid", pid));
+		dbLink.CloseConn();
+	}
+	if(null == demo_no){
+		out.println("<script language=\"JavaScript\">javascript:window.close();</SCRIPT>");
+		return;
+	}
+	String select_lab_reports = "SELECT DISTINCT hl7_link.pid_id, hl7_obr.requested_date_time, hl7_obr.diagnostic_service_sect_id FROM hl7_link, hl7_obr WHERE hl7_link.demographic_no='@demo_no' AND hl7_link.pid_id=hl7_obr.pid_id AND (hl7_link.status='N' OR hl7_link.status='A' OR hl7_link.status='S') ORDER BY hl7_obr.requested_date_time DESC";
+%>
+<html>
+<head>
+<title>OSCAR PathNET - View Lab Reports</title>
+<link rel="stylesheet" href="../../../share/css/oscar.css">
+<script language="JavaScript">
+var lab;
+window.name= 'LabDemoIndex';
+function PopupLab(pid)
+{
+	lab = window.open('report.jsp?viewed=true&pid=' + pid,'Lab','height=500,width=900,scrollbars=1,toolbar=0,status=1,menubar=0,location=0,directories=0,resizable=1');
+	lab.focus();
+	return false;
+}
+</script>
+</head>
+<body>
+<table width="100%" class="DarkBG">
+  <tr> 
+    <td height="40" width="25"></td>
+    <td width="90%" align="left"> 
+      <font color="#4D4D4D"><b><font size="4">oscar<font size="3">PathNET - View Lab Reports</font></font></b></font> 
+    </td>
+  </tr>
+</table>
+<form action="viewreports.jsp" method="post">
+<table width="100%">
+<%
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	java.sql.ResultSet rs = db.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));
+	if(rs.isBeforeFirst()){
+		String dpid = "",
+		diagnostic = "";
+		java.text.SimpleDateFormat format = null;
+		java.util.Date date = null;
+		boolean other = false;
+		while(rs.next()){
+			format = new java.text.SimpleDateFormat("yyyy-MM-d HH:mm:ss");
+			date = (format.parse(rs.getString("requested_date_time")));
+			format.applyPattern("MMM d, yyyy");
+			if(dpid.equals(rs.getString("pid_id"))){
+				diagnostic += ", " + rs.getString("diagnostic_service_sect_id");
+			}else{
+				if(!dpid.equals("")){
+					out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");
+				}
+				dpid = rs.getString("pid_id");
+				diagnostic = rs.getString("diagnostic_service_sect_id");
+				other = !other;
+			}
+		}
+		out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");
+		rs.close();
+	}
+	db.CloseConn();
+%>
+</table>
+</form>
+</body>
+</html>

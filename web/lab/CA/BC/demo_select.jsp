@@ -1,0 +1,96 @@
+<%
+	if(session.getAttribute("user") == null){
+		response.sendRedirect("../../../logout.jsp");
+	}
+	String postTo = request.getParameter("postTo");
+	if(null == postTo){
+		out.println("<script language=\"JavaScript\">javascript:window.close();</SCRIPT>");
+		return;
+	}
+	String startLimit = oscar.Misc.check(request.getParameter("startLimit"), "0"),
+	       orderby = oscar.Misc.check(request.getParameter("orderby"), "last_name"),
+	       column = oscar.Misc.check(request.getParameter("column"), null, orderby),
+	       keyword = oscar.Misc.check(request.getParameter("keyword"), ""),
+          
+	sql_select = "SELECT demographic.demographic_no, demographic.last_name, demographic.first_name, demographic.chart_no, demographic.sex, demographic.year_of_birth, demographic.month_of_birth, demographic.date_of_birth, demographic.patient_status FROM demographic",
+		sql_where =" WHERE demographic.@column LIKE '@keyword%'",
+		sql_orderby = " ORDER BY demographic.@orderby LIMIT @startLimit, 10",
+		query = sql_select + (keyword.equals("")? "" : sql_where) + sql_orderby,
+		url = "demo_select.jsp?keyword=" + keyword + "&postTo=" + postTo + (column.equals("")? "" : "&column=" + column),
+		sql = query.replaceAll("@keyword", keyword).replaceAll("@orderby", orderby).replaceAll("@startLimit", startLimit).replaceAll("@column", column);
+%>
+<html>
+<head>
+<title>OSCAR Patient Search</title>
+<link rel="stylesheet" href="../../../share/css/oscar.css">
+<script language="JavaScript">
+function PopupReturn(index){
+	window.opener.location = '<%=postTo.replaceAll("-","&")%>' + index;
+	window.opener.focus();
+	window.close();
+};
+</SCRIPT>
+</head>
+<body>
+<form method="post" action="demo_select.jsp">
+<table width="100%" class="DarkBG">
+  <tr> 
+    <td height="40" width="25"></td>
+    <td width="90%" align="left"> 
+      <font color="#4D4D4D"><b><font size="4">oscar<font size="3">Search For Patient</font></font></b></font> 
+    </td>
+  </tr>
+</table>
+<table>
+<tr>
+	<td>
+		<input type="hidden" name="postTo" value="<%=postTo%>" />
+		<input type="text" name="keyword" value="<%=keyword%>" />
+		<input type="submit" value="Search" />
+	</td>
+</tr>
+</table>
+<table width="100%" border="0" bgcolor="#ffffff" cellspacing="2" cellpadding="2" > 
+<tr>
+	<td width="10%" class="Text"><input type="radio" name="column" value="demographic_no" <%=(column.equals("demographic_no")? "checked" : "")%>/><a href="<%=url%>&orderby=demographic_no">Demo No</a></td>
+	<td width="20%" class="Text"><input type="radio" name="column" value="last_name" <%=(column.equals("last_name")? "checked" : "")%>/><a href="<%=url%>">Last Name</a> </td>
+	<td width="15%" class="Text"><input type="radio" name="column" value="first_name" <%=(column.equals("first_name")? "checked" : "")%>/><a href="<%=url%>&orderby=first_name">First Name</a> </td>
+	<td width="10%" class="Text" align="center"><input type="radio" name="column" value="chart_no" <%=(column.equals("chart_no")? "checked" : "")%>/><a href="<%=url%>&orderby=chart_no">Chart#</a></td>
+	<td width="2%" class="Text" align="center"><input type="radio" name="column" value="sex" <%=(column.equals("sex")? "checked" : "")%>/><a href="<%=url%>&orderby=sex">Sex</a></td>
+	<td width="15%" class="Text" align="center"><input type="radio" name="column" value="year_of_birth" <%=(column.equals("year_of_birth")? "checked" : "")%>/><a href="<%=url%>&orderby=year_of_birth,month_of_birth,date_of_birth">DOB</a></td>
+	<td width="2%" class="Text" align="center"><input type="radio" name="column" value="patient_status" <%=(column.equals("patient_status")? "checked" : "")%>/><a href="<%=url%>&orderby=patient_status">Status</a></td>
+</tr>
+<%
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	java.sql.ResultSet rs = db.GetSQL(sql);
+	boolean other = true;
+	int count = 0;
+	while (rs.next()){
+%>
+<tr class="<%=(other? "LightBG" : "WhiteBG")%>">
+	<td class="Text" align="center"><a href="javascript:PopupReturn('<%=rs.getString("demographic_no")%>')"><%=rs.getString("demographic_no")%></a></td>
+	<td class="Text"><%=oscar.Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
+	<td class="Text"><%=oscar.Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
+	<td class="Text" align="center"><%=oscar.Misc.check(rs.getString("chart_no"), "")%></td>
+	<td class="Text" align="center"><%=oscar.Misc.check(rs.getString("sex"), "")%></td>
+	<td class="Text" align="center" nowrap><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
+	<td class="Text" align="center"><%=oscar.Misc.check(rs.getString("patient_status"), "")%></td>
+</tr>
+<%
+		count++;
+		other = !(other);
+	}
+	rs.close();
+	db.CloseConn();
+	int start = Integer.parseInt(startLimit);
+	String next = url + "&orderby=" + orderby + "&startLimit=" + (start + 10),
+	previous = url + "&orderby=" + orderby + "&startLimit=" + (start - 10);
+%> 
+<tr>
+	<td width="50%" colspan="3" align="right" class="SmallerText">&nbsp;<%=(start>0? "<a href=" + previous + ">previous</a>" : "")%></td>
+	<td width="50%" colspan="4" align="left" class="SmallerText"> | <%=(count==10? "<a href=" + next + ">next</a>" : "" )%>&nbsp;</td>
+</tr>
+</table>
+</form>
+</body>
+</html>
