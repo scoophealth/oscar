@@ -436,7 +436,7 @@ if (billTypes == null){
 String getReasonEx(String reason){
     if (reason.equals("N")) reason="Do Not Bill ";
     if (reason.equals("O")) reason="Bill MSP ";
-    if (reason.equals("W")) reason="Bill WSIB ";
+    if (reason.equals("W")) reason="Bill WCB ";
     if (reason.equals("H")) reason="Capitated Bill ";
     if (reason.equals("P")) reason="Bill Patient";
     return reason;

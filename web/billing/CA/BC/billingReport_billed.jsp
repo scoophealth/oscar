@@ -79,7 +79,7 @@
       
       if (reason.compareTo("N") == 0) reason="Do Not Bill ";
            if (reason.compareTo("O") == 0) reason="Bill MSP ";
-                if (reason.compareTo("W") == 0) reason="Bill WSIB ";
+                if (reason.compareTo("W") == 0) reason="Bill WCB ";
                      if (reason.compareTo("H") == 0) reason="Capitated Bill ";
                           if (reason.compareTo("P") == 0) reason="Bill Patient";
 %>
