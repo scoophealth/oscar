@@ -42,6 +42,7 @@ public class BillingSaveBillingAction extends Action {
             return (mapping.findForward("Logout"));
         }
         
+        BillingSaveBillingForm frm = (BillingSaveBillingForm) form;
         
         oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean;
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
@@ -372,8 +373,11 @@ public class BillingSaveBillingAction extends Action {
 
         ////////////////////
         //      System.out.println("Service count : "+ billItem.size());
-        
-        return (mapping.findForward("success"));
+        ActionForward af = mapping.findForward("success");
+        if (frm.getSubmit().equals("Another Bill")){
+           af = mapping.findForward("anotherBill");
+        }
+        return af;//(mapping.findForward("success"));
     }
     
     public String convertDate8Char(String s){
