@@ -36,7 +36,7 @@
 
         function setfocus() {
             document.titlesearch.keyword.focus();
-            document.titlesearch.keyword.select();
+            document.titlesearch.keyword.select();            
         }
         
         function checkTypeIn() {
@@ -67,9 +67,60 @@
         }
          
         </SCRIPT>
-        <link rel="stylesheet" href="../web.css">
+        <style type="text/css">
+    BODY{
+        FONT-SIZE: Normal;
+        FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+    }
+    TABLE{
+        font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+    }
+    TD{
+        font-size:11pt;
+    }
+
+    TH{
+        font-size:11pt;            
+    }
+    .blueText{
+        font-size:9pt;        
+        vertical-align: top;
+    }
+    .mbttn {
+        background: #D7DBF2;
+        border-bottom: 1px solid #104A7B;
+        border-right: 1px solid #104A7B;
+        border-left: 1px solid #AFC4D5;
+        border-top:1px solid #AFC4D5;
+        color:#000066;height:19px;
+        text-decoration:none;
+        cursor: hand
+    }
+    .subject {
+        background-color: #003399;
+        color: #FFFFFF;  
+        font-size: 14pt;
+        font-weight: bold;
+        text-align: centre;        
+    }
+    .searchTitle {
+        background-color: #6699CC;
+        color: #000000;            
+        font-weight: bold;
+        text-align: left;
+        height="20px"
+    }
+    .title {
+        background-color: #6699CC;
+        color: #000000;            
+        font-weight: bold;
+        text-align: center;
+        height="20px"
+    }
+    
+</style>
     </head>
-    <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+    <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
             <tr bgcolor="#CCCCFF"><th NOWRAP><font face="Helvetica"><bean:message key="demographic.search.msgSearchPatient"/></font></th></tr>
         </table>
