@@ -474,6 +474,11 @@ function disableFTExam(control){
 function DMCheck(){
     if(document.forms[0].elements[DMValue].checked==false && document.forms[0].elements[PVDValue].checked==false){
         disableFTExam(true);
+    }    
+    else{
+        disableFTExam(false);        
+    }    
+    if(document.forms[0].elements[DMValue].checked==false){
         document.forms[0].elements[HbA1Value].disabled= true;
         document.forms[0].elements[HbA1Date].disabled= true;
         document.forms[0].elements[HbA1Cmt].disabled= true;
@@ -481,8 +486,7 @@ function DMCheck(){
         document.forms[0].elements[DMCDate].disabled= true;
         document.forms[0].elements[DMCCmt].disabled= true;
     }
-    else{
-        disableFTExam(false);
+    else{        
         document.forms[0].elements[HbA1Value].disabled= false;
         document.forms[0].elements[HbA1Date].disabled= false;
         document.forms[0].elements[HbA1Cmt].disabled= false;
