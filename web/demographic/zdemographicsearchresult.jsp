@@ -57,9 +57,13 @@
             param[2]=""+MyDateFormat.getDayFromStandardDate(keyword);//+"%";  
             //System.out.println("1111111111111111111 " +param[0]+param[1]+param[2]);
             rs = apptMainBean.queryResults(param, dboperation);
+  } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {
+            keyword = keyword.replaceAll("-", "-?");
+            if (keyword.length() < 1) keyword="^";
+            rs = apptMainBean.queryResults(keyword, dboperation);
   } else {
-    keyword="^"+request.getParameter("keyword");
-    rs = apptMainBean.queryResults(keyword, dboperation);
+            keyword="^"+request.getParameter("keyword");
+            rs = apptMainBean.queryResults(keyword, dboperation);
   }
  
   boolean bodd=false;

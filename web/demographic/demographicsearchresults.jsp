@@ -109,6 +109,10 @@ function checkTypeIn() {
 		//param[2] = param[2].startsWith("0") ? param[2].substring(1) : param[2];
 		System.out.println(param[1] + " "+ param[2] );
 		rs = apptMainBean.queryResults(param, dboperation);
+        } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {
+                keyword = keyword.replaceAll("-", "-?");
+                if (keyword.length() < 1) keyword="^";
+                rs = apptMainBean.queryResults(keyword, dboperation);
 	} else {
 		keyword="^"+request.getParameter("keyword");		
 		rs = apptMainBean.queryResults(keyword, dboperation);
