@@ -105,12 +105,12 @@ String paymentdate="" , payable="";
   <tr>  
     
      <td width="5%" height="16">Payment Date </td>
-     <td width="10%" height="16">Payable </td>
-     <td width="10%" height="16">Amount Billed</td>
-     <td width="10%" height="16">Amount Paid</td>
-     <td width="10%" height="16">Balance Fwd</td>
-     <td width="10%" height="16">Cheque Amount</td>
-     <td width="10%" height="16">New Balance</td>
+     <td width="10%" height="16" align="right">Payable </td>
+     <td width="10%" height="16" align="right">Amount Billed</td>
+     <td width="10%" height="16" align="right">Amount Paid</td>
+     <td width="10%" height="16" align="right">Balance Fwd</td>
+     <td width="10%" height="16" align="right">Cheque Amount</td>
+     <td width="10%" height="16" align="right">New Balance</td>
       <td width="20%" height="16">Action</td>
       <td width="5%" height="16">Status</td>
   </tr>
@@ -134,20 +134,31 @@ String paymentdate="" , payable="";
    %> 
 		     
   <tr> 
-    <td><%=paymentdate%>  </td>
-    <td><%=payable%> </td>
-    <td><%=amtbilled%></td>
-    <td><%=amtpaid%></td>
-    <td><%=balancefwd%></td>
-    <td><%=chequeamt%></td>
-    <td><%=newbalance%></td>
-    <td><a href="genTAS01.jsp?rano=<%=raNo%>&proNo=" target="_blank">Billed</a> | <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a>| <a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a></td>
-    <td><%=rsdemo.getString("status")%></td>
+    <td ><%=paymentdate%>  </td>
+    <td align="right"><%=moneyFormat(payable)%> </td>
+    <td align="right"><%=moneyFormat(amtbilled)%></td>
+    <td align="right"><%=moneyFormat(amtpaid)%></td>
+    <td align="right"><%=moneyFormat(balancefwd)%></td>
+    <td align="right"><%=moneyFormat(chequeamt)%></td>
+    <td align="right"><%=moneyFormat(newbalance)%></td>
+    <td >&nbsp;&nbsp;<a href="genTAS01.jsp?rano=<%=raNo%>&proNo=" target="_blank">Billed</a> | <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a> | <a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a></td>
+    <td ><%=rsdemo.getString("status")%></td>
   </tr>
-
+  <tr>
+    <td colspan="10" bgcolor="#EBF4F5">&nbsp;</td>
+  </tr>
  <% }%>
 
 </table>
 
 </body>
 </html>
+<%!
+    String moneyFormat(String str){       
+        String moneyStr = "0.00";
+        try{             
+            moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
+        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+    return moneyStr;
+    }
+%>
