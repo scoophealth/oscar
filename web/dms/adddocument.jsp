@@ -93,7 +93,7 @@ function rs(n,u,w,h,x) {
 var awnd=null;
 function ScriptAttach() {
   f0 = escape(document.aDoc.docfilename.value);
-  awnd=rs('att','../dms/zadddocument.jsp' ,400,200,1);
+  awnd=rs('att','../dms/zadddocument.jsp' ,500,150,1);
   awnd.focus();
 }
 //-->
@@ -101,7 +101,7 @@ function ScriptAttach() {
 <link rel="stylesheet" href="../web.css" />
 </head>
 
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#C4D9E7" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr bgcolor="#486ebd">
     <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="dms.addDocument.msgAddDocument"/></font></th>
@@ -189,6 +189,7 @@ function ScriptAttach() {
             <tr> 
               <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF" size="1"><b><i> 
                 <input type="SUBMIT" value="Submit" name="<bean:message key="dms.addDocument.btnSubmit"/>">
+                <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="self.close();">
                 </i></b></font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
             </tr>
           </table>
@@ -199,10 +200,5 @@ function ScriptAttach() {
     </tr>
   </form>
 </table>
-<br>
-<br>
-<form>
-  <input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onclick=self.close();>
-</form>
 </body>
 </html:html>

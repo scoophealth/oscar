@@ -64,7 +64,7 @@ function CodeAttach(File2) {
 </form>
 <script LANGUAGE="JavaScript">
       self.close();
-         self.opener.document.aDoc.docfilename.value = <%=filename%>;
+         self.opener.document.aDoc.docfilename.value="<%=filename%>";
 </script>
 </body>
 </html:html> 

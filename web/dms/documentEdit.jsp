@@ -27,12 +27,6 @@ GregorianCalendar now=new GregorianCalendar();
 <script language="JavaScript">
 <!--
 
-function setfocus() {
-  this.focus();
-  document.aDoc.docfilename.focus();
-  document.aDoc.docfilename.select();
-}
-
 var remote=null;
 
 function rs(n,u,w,h,x) {
@@ -57,7 +51,7 @@ function ScriptAttach() {
 <link rel="stylesheet" href="../web.css" />
 </head>
 
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#C4D9E7" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr bgcolor="#486ebd">
     <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="dms.documentEdit.msgAddDocument"/></font></th>
