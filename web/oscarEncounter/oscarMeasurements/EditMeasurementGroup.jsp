@@ -61,7 +61,7 @@
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="window.resizeTo(1000,350)">
+<body class="BodyStyle" vlink="#0000FF" onload="window.resizeTo(1000,500)">
 <!--  -->
     <html:errors/>
     <html:form action="/oscarEncounter/oscarMeasurements/EditMeasurementGroup.do">
