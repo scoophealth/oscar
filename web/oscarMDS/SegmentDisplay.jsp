@@ -158,7 +158,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <input type="hidden" name="status" value="A">
                         <input type="hidden" name="comment" value="">
                         <% if ( request.getParameter("providerNo") != null && ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) ) { %>
-                        <input type="submit" value="Acknowledge" onclick="getComment()">
+                        <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
                         <% } %>
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
