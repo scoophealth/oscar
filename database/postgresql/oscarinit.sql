@@ -501,7 +501,7 @@ CREATE TABLE demographic (
   year_of_birth varchar(4) DEFAULT NULL,
   month_of_birth char(2) DEFAULT NULL,
   date_of_birth char(2) DEFAULT NULL,
-  hin varchar(10) DEFAULT NULL,
+  hin varchar(20) DEFAULT NULL,
   ver char(3) DEFAULT NULL,
   roster_status varchar(20) DEFAULT NULL,
   patient_status varchar(20) DEFAULT NULL,
