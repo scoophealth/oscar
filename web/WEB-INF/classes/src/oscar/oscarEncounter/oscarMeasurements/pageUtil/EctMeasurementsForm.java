@@ -44,27 +44,5 @@ public final class EctMeasurementsForm extends ActionForm {
     public Object getValue(String key) {
         return values.get(key);
     }
-    
-
-/*    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
-    {
-        ActionErrors errors = new ActionErrors();
-        if(service == null || service.length() == 0)
-            errors.add("service", new ActionError("Errors.service.null"));
-        try
-        {
-            int temp = Integer.parseInt(service);
-            if(temp < 0)
-                errors.add("service", new ActionError("Errors.service.noServiceSelected"));
-        }
-        catch(Exception e)
-        {
-            errors.add("fName", new ActionError("Errors.service.notNum"));
-        }
-        if(!errors.empty())
-            request.setAttribute("validateError", "blah");
-        return errors;
-    }
-    */
-    
+        
 }

@@ -67,8 +67,7 @@ public class EctMeasurementsAction extends Action {
             providerNo = bean.getCurProviderNo();
         }
         
-        MsgStringQuote str = new MsgStringQuote();
-        String requestId = "";
+        MsgStringQuote str = new MsgStringQuote();       
         
         List messages = new LinkedList();
         String textOnEncounter = "**********************************************************************************\\n";        
@@ -76,27 +75,52 @@ public class EctMeasurementsAction extends Action {
         try
             {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                EctValidation ectValidation = new EctValidation();                    
+                ActionErrors errors = new ActionErrors();   
                 
+                String inputValueName;
+                String inputTypeName;
+                String inputTypeDisplayName;
+                String mInstrcName;
+                String commentsName;
+                String dateName;
+                String validationName;
+                String inputValue;
+                String inputType;
+                String inputTypeDisplay;
+                String mInstrc;
+                String comments;
+                String dateObserved; 
+                String validation;
+                String msg = null;
+                String regExp = null;
+                double dMax = 0;
+                double dMin = 0;
+                
+                ResultSet rs;
+                String regCharExp;
                 //goes through each type to check if the input value is valid
                 for(int i=0; i<iType; i++){
-                    String inputValueName = "inputValue-" + i;
-                    String inputTypeName = "inputType-" + i;
-                    String mInstrcName = "inputMInstrc-" + i;
-                    String commentsName = "comments-" + i;
-                    String inputValue = (String) frm.getValue(inputValueName);
-                    String inputType = (String) frm.getValue(inputTypeName);
-                    String mInstrc = (String) frm.getValue(mInstrcName);
-                    String comments = (String) frm.getValue(commentsName);
+                    inputValueName = "inputValue-" + i;
+                    inputTypeName = "inputType-" + i;
+                    inputTypeDisplayName = "inputTypeDisplayName-" + i;
+                    mInstrcName = "inputMInstrc-" + i;
+                    commentsName = "comments-" + i;
+                    dateName = "date-" + i;
+                    inputValue = (String) frm.getValue(inputValueName);
+                    inputType = (String) frm.getValue(inputTypeName);
+                    inputTypeDisplay = (String) frm.getValue(inputTypeDisplayName);
+                    mInstrc = (String) frm.getValue(mInstrcName);
+                    comments = (String) frm.getValue(commentsName);
+                    dateObserved = (String) frm.getValue(dateName);
                     
-                    String msg = null;
-                    String regExp = null;
-                    double dMax = 0;
-                    double dMin = 0;
-                    
-                    EctValidation ectValidation = new EctValidation();                    
-                    ActionErrors errors = new ActionErrors();                    
-                    ResultSet rs = ectValidation.getValidationType(inputType, mInstrc);
-                    String regCharExp = ectValidation.getRegCharacterExp();
+                    msg = null;
+                    regExp = null;
+                    dMax = 0;
+                    dMin = 0;
+                                                       
+                    rs = ectValidation.getValidationType(inputType, mInstrc);
+                    regCharExp = ectValidation.getRegCharacterExp();
                     
                     if (rs.next()){
                         dMax = rs.getDouble("maxValue");
@@ -105,25 +129,31 @@ public class EctMeasurementsAction extends Action {
                     }                                                                                                                        
 	
                     if(!ectValidation.isInRange(dMax, dMin, inputValue)){                       
-                        errors.add(inputValueName, new ActionError("errors.range", inputType, Double.toString(dMin), Double.toString(dMax)));
+                        errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
                         saveErrors(request, errors);
                         valid = false;
                     }
-                    else if(!ectValidation.matchRegExp(regExp, inputValue)){                        
+                    if(!ectValidation.matchRegExp(regExp, inputValue)){                        
                         errors.add(inputValueName,
-                        new ActionError("errors.invalid", inputType));
+                        new ActionError("errors.invalid", inputTypeDisplay));
                         saveErrors(request, errors);
                         valid = false;
                     }
-                    else if(!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
+                    if(!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
                         errors.add(inputValueName,
                         new ActionError("error.bloodPressure"));
                         saveErrors(request, errors);
                         valid = false;
                     }
-                    else if(!ectValidation.matchRegExp(regCharExp, comments)){                        
+                    if(!ectValidation.matchRegExp(regCharExp, comments)){                        
                         errors.add(commentsName,
-                        new ActionError("errors.invalidComments", inputType));
+                        new ActionError("errors.invalidComments", inputTypeDisplay));
+                        saveErrors(request, errors);
+                        valid = false;
+                    }
+                    if(!ectValidation.isDate(dateObserved)&&inputValue.compareTo("")!=0){                        
+                        errors.add(dateName,
+                        new ActionError("errors.invalidDate", inputTypeDisplay));
                         saveErrors(request, errors);
                         valid = false;
                     }
@@ -133,24 +163,19 @@ public class EctMeasurementsAction extends Action {
                 if(valid){
                     for(int i=0; i<iType; i++){
 
-                        String inputValueName = "inputValue-" + i;
-                        String inputTypeName = "inputType-" + i;
-                        String inputMInstrcName = "inputMInstrc-" + i;
-                        String commentsName = "comments-" + i;
-                        String validationName = "validation-" + i;
-                        String dayName = "day-" + i;
-                        String monthName = "month-" + i;
-                        String yearName = "year-" + i;             
+                        inputValueName = "inputValue-" + i;
+                        inputTypeName = "inputType-" + i;
+                        mInstrcName = "inputMInstrc-" + i;
+                        commentsName = "comments-" + i;
+                        validationName = "validation-" + i;
+                        dateName = "date-" + i;                       
 
-                        String inputValue = (String) frm.getValue(inputValueName);
-                        String inputType = (String) frm.getValue(inputTypeName);
-                        String inputMInstrc = (String) frm.getValue(inputMInstrcName);
-                        String comments = (String) frm.getValue(commentsName);
-                        String validation = (String) frm.getValue(validationName);
-                        String day = (String) frm.getValue(dayName);
-                        String month = (String) frm.getValue(monthName);
-                        String year = (String) frm.getValue(yearName);
-                        String dateObserved = year+"/"+month+"/"+day;
+                        inputValue = (String) frm.getValue(inputValueName);
+                        inputType = (String) frm.getValue(inputTypeName);
+                        mInstrc = (String) frm.getValue(mInstrcName);
+                        comments = (String) frm.getValue(commentsName);
+                        validation = (String) frm.getValue(validationName);
+                        dateObserved = (String) frm.getValue(dateName);                        
                         
                         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
                         if(!gValidator.isBlankOrNull(inputValue)){
@@ -158,21 +183,22 @@ public class EctMeasurementsAction extends Action {
                             String sql = "INSERT INTO measurements"
                                     +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
                                     +" VALUES ('"+str.q(inputType)+"','"+str.q(demographicNo)+"','"+str.q(providerNo)+"','"+str.q(inputValue)+"','"
-                                    + str.q(inputMInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";
-                            System.out.println(" sql statement "+sql);
+                                    + str.q(mInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";                           
                             db.RunSQL(sql);
                             //prepare input values for writing to the encounter form
-                            textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + inputMInstrc + " " + comments + "\\n";                             
+                            textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";                             
                             
                         }
-                        else{
-                            System.out.println("there's no inputvalue");
-                        }                       
+                                            
                     }
                     textOnEncounter = textOnEncounter + "**********************************************************************************\\n";
                     System.out.println(textOnEncounter);
                 }
-                else{
+                else{                                        
+                    String groupName = (String) frm.getValue("groupName");
+                    String css = (String) frm.getValue("css");
+                    request.setAttribute("groupName", groupName);
+                    request.setAttribute("css", css);
                     return (new ActionForward(mapping.getInput()));
                 }
                 /* select the correct db specific command */
@@ -186,11 +212,7 @@ public class EctMeasurementsAction extends Action {
                 }
                 else
                     throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-
-                    
-                ResultSet rs = db.GetSQL(dbSpecificCommand);
-                if(rs.next())
-                    requestId = Integer.toString(rs.getInt(1));
+                                    
                 db.CloseConn();
                 
             }

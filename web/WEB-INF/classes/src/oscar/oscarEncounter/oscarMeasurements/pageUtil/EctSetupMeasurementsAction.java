@@ -53,11 +53,18 @@ public final class EctSetupMeasurementsAction extends Action {
         throws Exception {
         
         HttpSession session = request.getSession();
+        EctMeasurementsForm frm = (EctMeasurementsForm) form;
         
         String groupName = (String) request.getParameter("groupName");
         EctValidation ectValidation = new EctValidation();             
         String css = ectValidation.getCssPath(groupName);
+        java.util.Calendar calender = java.util.Calendar.getInstance();
+        String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
+        String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
+        String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
+        String today = year+"-"+month+"-"+day;
         
+        request.setAttribute("today", today);
         request.setAttribute("groupName", groupName);
         request.setAttribute("css", css);
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
@@ -67,6 +74,10 @@ public final class EctSetupMeasurementsAction extends Action {
             String demo = (String) bean.getDemographicNo();
                                
             oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler(groupName, demo);
+            for(int i=0; i<hd.getMeasurementTypeVector().size(); i++){
+                frm.setValue("date-" + i, today);
+            }
+            session.setAttribute("EctMeasurementsForm", frm);            
             session.setAttribute("measurementTypes", hd);
             Vector mInstrcVector = hd.getMeasuringInstrcVectorVector();
             for(int i=0; i<mInstrcVector.size(); i++){
@@ -75,9 +86,7 @@ public final class EctSetupMeasurementsAction extends Action {
                 session.setAttribute(mInstrcName, mInstrcs);
 
             }
-            
-            
-            
+           
         }
         return (mapping.findForward("continue"));
     }
