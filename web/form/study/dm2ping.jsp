@@ -4,7 +4,7 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 
 
 <%@ page contentType="text/xml" %>
-<%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"  errorPage="../../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"%>
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>  
@@ -17,6 +17,7 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 <%@ page import="org.chip.ping.xml.record.impl.*"%>
 <%@ page import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
 <%@ page import="oscar.OscarPingTalk"%>
+<%@ page import="oscar.oscarDemographic.data.*"%>
 
 <%@ include file="../../admin/dbconnection.jsp" %>
 <% 
@@ -33,7 +34,9 @@ studyBean.doConfigure(dbParams,dbQueries);
 String actorTicket = null;
 String actor = "rene@citizenhealth.ca";
 String actorPassword = "password";
-String patientPingId = "jay10@citizenhealth.ca";
+DemographicData demoData = new DemographicData();
+String patientPingId = demoData.getDemographic(request.getParameter("demographic_no")).getEmail();
+
 OscarPingTalk ping = new OscarPingTalk();
 boolean connected = true;
 String connectErrorMsg = "";
@@ -137,8 +140,12 @@ if(connected){
 	DataType dataType = ping.getDataType(DMRecord);
 	CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);
 	
-	ping.sendCddm(actorTicket, patientPingId,cddmType);
-
+//	ping.sendCddm(actorTicket, patientPingId,cddmType);
+        try{                                        
+            ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
+        }catch(Exception sendCon){
+            connectErrorMsg = "<font style=\"font-size: 19px; color: red; font-family : tahoma, Arial,Helvetica,Sans Serif;\">Could Not Send to PHR</font>";
+        }
 
 
 	//xml part
