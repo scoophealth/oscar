@@ -66,7 +66,8 @@ public final class LoginAction extends Action {
         session = request.getSession();// Create a new session for this user
       }
 
-      System.out.println("Assigned new session for: " + strAuth[0]+ " : "+ strAuth[3] ); 
+      java.util.Date date = new java.util.Date();
+      System.out.println("Assigned new session for: " + strAuth[0]+ " : "+ strAuth[3] + "   " + date.toString()); 
       session.setMaxInactiveInterval(6800);
     
       //initial db setting
