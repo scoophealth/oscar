@@ -18,13 +18,13 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
 -->   
 
- <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,oscar.oscarBilling.MSP.*,oscar.*"  %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
@@ -38,6 +38,7 @@ GregorianCalendar now=new GregorianCalendar();
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   
   String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
+  MSPReconcile mspReconcile = new MSPReconcile();
 %>
   
 
@@ -54,23 +55,20 @@ String t_practitionerno="",t_msprcddate="", t_initial="", t_surname="", t_phn=""
 String t_billamt="", t_paidnoservices="", t_paidclafcode="", t_paidfeeschedule ="", t_paidamt ="", t_officeno="", t_exp1="",  t_exp2="",t_exp3="", t_exp4="",t_exp5="", t_exp6="",t_exp7="";
 String t_ajc1="",t_aja1="",t_ajc2="",t_aja2="",t_ajc3="",t_aja3="", t_ajc4="",t_aja4="",t_ajc5="",t_aja5="",t_ajc6="",t_aja6="",t_ajc7="",t_aja7="";
 String t_paidrate="", t_planrefno="",t_claimsource="",t_previouspaiddate ="",t_icbcwcb="", t_insurercode="";
-String t_ajc ="", t_aji ="", t_ajm ="", t_calcmethod="",  t_rpercent="",  t_opercent="", t_gamount="", t_ramount="",t_oamount="", t_adjmade ="",t_adjoutstanding ="";
+String t_ajc ="", t_aji ="", t_ajm ="", t_calcmethod="",  t_rpercent="",  t_opercent="", t_gamount="", t_ramount="",t_oamount="", t_adjmade ="",t_adjoutstanding ="",t_c12type = "" ,t_officefolioclaimno = "";
 String t_practitionername="", t_message="" ;
 ResultSet rslocal;
 filename = documentBean.getFilename();
 
+String forwardPage = "viewReconcileReports.jsp";                      
 
+filepath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 
- String url=request.getRequestURI();
-   
-        url = url.substring(1);
-        url = url.substring(0,url.indexOf("/")); 
-
-filepath = "/usr/local/OscarDocument/" + url +"/document/";
 FileInputStream file = new FileInputStream(filepath + filename);
 InputStreamReader reader = new InputStreamReader(file);
 BufferedReader input = new BufferedReader(reader);
 String nextline;
+
 while ((nextline=input.readLine())!=null){
    header = nextline.substring(0,3);
    if (header.compareTo("S21") == 0) {
@@ -143,8 +141,7 @@ while ((nextline=input.readLine())!=null){
 	     raNo = rsdemo.getString("s21_id");
 	  }
        }
-   }
-   if (header.compareTo("S01") == 0){
+   }else if (header.compareTo("S01") == 0){
    
        //  s00_id int(10) NOT NULL auto_increment,
        //  s21_id int(10) NOT NULL,
@@ -289,12 +286,13 @@ while ((nextline=input.readLine())!=null){
            param00[52] =  t_insurercode ; //(2),
            param00[53] =  t_filler ; //(87),
             int rowsAffected00 = apptMainBean.queryExecuteUpdate(param00,"save_tadt");
+            mspReconcile.updateStat(MSPReconcile.SETTLED,Integer.toString(Integer.parseInt(t_officeno)));
+                              
+            //UPDate Table for settle e
         }
 
 
-   }
-   
-   if (header.compareTo("S02") == 0 || header.compareTo("S00") == 0 || header.compareTo("S03") == 0){
+   }else if (header.compareTo("S02") == 0 || header.compareTo("S00") == 0 || header.compareTo("S03") == 0){
         t_s00type = nextline.substring(0,3);
         t_datacenter = nextline.substring(3,8);
         t_dataseq = nextline.substring(8,15);
@@ -405,10 +403,15 @@ while ((nextline=input.readLine())!=null){
            param02[52] =  t_insurercode ; //(2),
            param02[53] =  t_filler ; //(87),
            int rowsAffected02 = apptMainBean.queryExecuteUpdate(param02,"save_tadt");
+           if(header.equals("S02")){ //header.compareTo("S00") == 0 || header.compareTo("S03") == 0){
+              mspReconcile.updateStat(MSPReconcile.PAIDWITHEXP,Integer.toString(Integer.parseInt(t_officeno)));
+           }else if (header.equals("S03")){
+           mspReconcile.updateStat(MSPReconcile.REFUSED,Integer.toString(Integer.parseInt(t_officeno)));
+           }else if (header.equals("S00")){ 
+           mspReconcile.updateStat(MSPReconcile.DATACENTERCHANGED,Integer.toString(Integer.parseInt(t_officeno)));
+           }
         } 
-   }
-      
-   if (header.compareTo("S04") == 0){
+   }else if (header.compareTo("S04") == 0){
         t_s00type = nextline.substring(0,3);
         t_datacenter = nextline.substring(3,8);
         t_dataseq = nextline.substring(8,15);
@@ -429,7 +432,7 @@ while ((nextline=input.readLine())!=null){
         t_icbcwcb= nextline.substring(69,77);
         t_insurercode= nextline.substring(77,79);
         t_filler= nextline.substring(79,165);
-      
+
         if (recFlag >0) {
          String[] param04 = new String[54];
            param04[0] =  raNo;
@@ -487,11 +490,10 @@ while ((nextline=input.readLine())!=null){
            param04[52] =  t_insurercode ; //(2),
            param04[53] =  t_filler ; //(87),
            int rowsAffected04 = apptMainBean.queryExecuteUpdate(param04,"save_tadt");
+            System.out.println("held "+MSPReconcile.HELD+" office no "+Integer.toString(Integer.parseInt(t_officeno)));
+           mspReconcile.updateStat(MSPReconcile.HELD,Integer.toString(Integer.parseInt(t_officeno)));
         }     
-   }
-   
-    
-   if (header.compareTo("S23") == 0||header.compareTo("S24")==0){
+   } else if (header.compareTo("S23") == 0||header.compareTo("S24")==0){
        //  s23_id int(10) NOT NULL auto_increment,
        //  s21_id int(10) NOT NULL,
        //  filename varchar(30),
@@ -563,12 +565,8 @@ while ((nextline=input.readLine())!=null){
             param23[20] =  t_adjoutstanding; //(7),
             param23[21] =  t_filler; //(3),
                 int rowsAffected23 = apptMainBean.queryExecuteUpdate(param23,"save_tadt_s23");
-
-        }
-  
-   } 
-
-   if (header.compareTo("S25") == 0){
+        }  
+   } else if (header.compareTo("S25") == 0){
          //filename varchar(30),
 	 // t_s25type varchar(3),
 	 // t_datacenter varchar(5),
@@ -611,10 +609,7 @@ while ((nextline=input.readLine())!=null){
             param25[11] =  t_filler; //(2),
             int rowsAffected25 = apptMainBean.queryExecuteUpdate(param25,"save_tadt_s25");
         }
-   }
-   
-   
-   if (header.compareTo("S22") == 0){
+   } else if (header.compareTo("S22") == 0){
             //filename varchar(30),
    	 // t_s25type varchar(3),
    	 // t_datacenter varchar(5),
@@ -661,12 +656,65 @@ while ((nextline=input.readLine())!=null){
 	        param22[13] =  t_filler; //(10),
 	        int rowsAffected22 = apptMainBean.queryExecuteUpdate(param22,"save_tadt_s22");	       
         }
-   }
-
+   }else if (header.compareTo("C12") == 0){
+                t_c12type = nextline.substring(0, 3);
+                t_datacenter = nextline.substring(3, 8);
+                t_dataseq = nextline.substring(8, 15);
+                t_payeeno = nextline.substring(15, 20);
+                t_practitionerno = nextline.substring(20, 25);
+                t_exp1 = nextline.substring(25, 27);
+                t_exp2 = nextline.substring(27, 29);
+                t_exp3 = nextline.substring(29, 31);
+                t_exp4 = nextline.substring(31, 33);
+                t_exp5 = nextline.substring(33, 35);
+                t_exp6 = nextline.substring(35, 37);
+                t_exp7 = nextline.substring(37, 39);
+                t_officefolioclaimno = nextline.substring(39, 46);
+                t_filler = nextline.substring(46, 70);
+                if (raNo.equals("")){
+                    String[] param2 = {filename, t_payment, t_payeeno};
+                    ResultSet rsdemo = apptMainBean.queryResults(param2, "search_tahd");
+                    while (rsdemo.next()){
+                            raNo = rsdemo.getString("s21_id");
+                    }
+                    if (raNo.compareTo("") == 0 || raNo == null){
+                        recFlag = 1;
+                        String[] param = new String[15];
+                        param[0] = filename;
+                        param[1] = t_datacenter;
+                        param[2] = t_dataseq;
+                        param[3] = t_payment;
+                        param[4] = t_linecode;
+                        param[5] = t_payeeno;
+                        param[6] = t_mspctlno;
+                        param[7] = t_payeename;
+                        param[8] = t_amtbilled;
+                        param[9] = t_amtpaid;
+                        param[10] = t_balancefwd;
+                        param[11] = t_cheque;
+                        param[12] = t_newbalance;
+                        param[13] = t_filler;
+                        param[14] = "D";
+                        apptMainBean.queryExecuteUpdate(param, "save_tahd");
+                        rsdemo = apptMainBean.queryResults(param2, "search_tahd");
+                        while (rsdemo.next()){
+                            raNo = rsdemo.getString("s21_id");
+                        }
+                    }
+                }
+                if (recFlag > 0){
+                        apptMainBean.queryExecuteUpdate(new String[]{raNo,filename,t_datacenter,t_dataseq,t_payeeno,t_practitionerno,t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7,t_officefolioclaimno,t_filler}, "save_tadt_C12");
+                        mspReconcile.updateStat(MSPReconcile.REJECTED,Integer.toString(Integer.parseInt(t_officefolioclaimno )));
+                }
+                forwardPage = "billStatus.jsp";
+        }
+//
 }
 
+
 %>   
-   
+
+<jsp:forward page="<%=forwardPage%>"/>
 
 <html>
 <head>
