@@ -239,8 +239,8 @@ public class MsgDisplayMessagesBean {
 ////////////////////////////////////////////////////////////////////////////////
   public String getOrderBy(String order){          
      String orderBy = null;
-     if(order == null){
-        orderBy = "message";
+     if(order == null){        
+        orderBy="messageId desc";
      }else{
         String desc = "";
         if (order.charAt(0) == '!'){
@@ -257,7 +257,7 @@ public class MsgDisplayMessagesBean {
         if (orderBy == null){
            orderBy = "message";
         }
-        orderBy += desc;
+        orderBy += desc + ", messageId desc";
      }     
      return orderBy; 
   }
