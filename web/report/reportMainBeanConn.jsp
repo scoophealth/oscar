@@ -15,6 +15,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
  * 
  * <OSCAR TEAM>
+ * Date         Implemented By  Company                 Comments
+ * 29-09-2004   Ivy Chan        iConcept Technologies   added search_waiting_list query
  * 
  * This software was written for the 
  * Department of Family Medicine 
@@ -39,6 +41,7 @@
     {"search_form_demo", "select demographic_no from form group by demographic_no"},
 
     {"search_demo_active", "select * from demographic where end_date = '0001-01-01' order by last_name limit ? offset ?"},
+    {"search_waiting_list", "select * from waitingListName"},
   };
 
   reportMainBean.doConfigure(dbParams,dbQueries);

@@ -15,6 +15,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
  * 
  * <OSCAR TEAM>
+ * Date         Implemented By  Company                 Comments
+ * 29-09-2004   Ivy Chan        iConcept Technologies   added link to waiting list
  * 
  * This software was written for the 
  * Department of Family Medicine 
@@ -121,6 +123,11 @@ function nsgo() {
   var t = document.report.nsdate.value ;
   var u = 'reportnoshowapptlist.jsp?provider_no=' + s +'&sdate='+ t;
 	popupPage(600,750,u);
+}
+function popUpWaitingList(vheight,vwidth,varpage) {    
+    var page = varpage + document.report.list_id.options[document.report.list_id.selectedIndex].value;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+    var popup=window.open(page, "Waiting List", windowprops);
 }
 //-->
 </script>
@@ -425,6 +432,15 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
         <td></td>
+    </tr>
+    <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
+        <td width="300"><a href="../oscarWaitingList/SetupDisplayWaitingList.do?waitingListId=">Waiting List</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
     <tr>
         <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
         <td></td>
