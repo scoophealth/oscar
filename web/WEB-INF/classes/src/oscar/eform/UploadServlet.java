@@ -33,7 +33,7 @@ public class UploadServlet extends HttpServlet{
     FileOutputStream fileOut=null;
 
     try   {
-      response.setContentType("text/plain");
+      response.setContentType("text/html");
       out = response.getOutputStream();
     }  catch (IOException e)  {
       System.out.println("Error getting output stream.");
@@ -113,6 +113,7 @@ public class UploadServlet extends HttpServlet{
         fileString = ""; 
 
         // send back message to user
+	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " + "Transitional//EN\">");
         out.println("<head>");
         out.println("<script language=\"JavaScript\">");
         out.println("setTimeout(\"top.location.href = '../eform/uploadhtml.jsp'\",500);");
