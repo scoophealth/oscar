@@ -34,7 +34,7 @@
 <html>
 <head>
 <title>
-Configure Immunization Schedule
+<bean:message key="oscarEncounter.immunization.ScheduleConfig.title"/>
 </title>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
@@ -46,7 +46,7 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Immunization
+                <bean:message key="oscarEncounter.immunization.ScheduleConfig.msgImm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -57,7 +57,7 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
                         <td>
                         </td>
                         <td style="text-align:right" NOWRAP>
-                                <a href="javascript:history.go(-1);"  >Back</a> | <a href="javascript:window.close();" >Close</a> |
+                                <a href="javascript:history.go(-1);"><bean:message key="global.btnBack"/></a> | <a href="javascript:window.close();" ><bean:message key="global.btnClose"/></a> |
                         </td>
                     </tr>
                 </table>
@@ -95,10 +95,12 @@ for(int i=0; i<cfgSet.size(); i++) {
 <br>
 <table width="80%">
 <tr><td>
-<html:submit value="Add Immu. Template" />
-<input type="button" value="Cancel" onclick="javascript:location.href='loadSchedule.do';" />
+<html:submit>
+  <bean:message key="oscarEncounter.immunization.ScheduleConfig.addTemplate"/>
+</html:submit>
+<input type="button" value='<bean:message key="global.btnCancel"/>' onclick="javascript:location.href='loadSchedule.do';" />
   </td><td align="right">
-<input type="button" value="Create Immu. Template" onclick="javascript:location.href='config/initConfig.do';" />
+<input type="button" value='<bean:message key="oscarEncounter.immunization.ScheduleConfig.createTemplate"/>' onclick="javascript:location.href='config/initConfig.do';" />
 </td>
 </tr>
 </table>
