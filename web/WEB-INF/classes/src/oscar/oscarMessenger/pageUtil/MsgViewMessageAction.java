@@ -55,7 +55,11 @@ public class MsgViewMessageAction extends Action {
         MessageResources messages = getResources();
 
         oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
-        String providerNo= bean.getProviderNo();
+        String providerNo= null;
+        if(bean!=null)
+            providerNo = bean.getProviderNo();
+        else
+            System.out.println("MsgSessionBean is null");
 
         // System.out.println(request.getAttributeNames());
         // System.out.println(request.getQueryString());
@@ -102,7 +106,7 @@ public class MsgViewMessageAction extends Action {
                  request.setAttribute("viewMessageId",messageNo);                 
                  // not from query
                  request.setAttribute("viewMessageNo",messageNo);
-                 request.setAttribute("provideNo",providerNo);
+                 request.setAttribute("providerNo",providerNo);                 
               }
               else{
                  i=0; // somethin wrong no message there
