@@ -73,13 +73,46 @@ public class EctFindMeasurementTypeUtil {
         return ret;
     }
     
+    static public Vector getMeasurementsType(String formName, String demo) {
+        
+        boolean verdict = true;
+        Vector measurementTypeVector = new Vector();
+        
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql =   "SELECT mf.typeId, mt.type, mt.typeDisplayName, mt.typeDescription, " 
+                            + "mt.measuringInstruction, mt.validation"
+                            + " FROM measurementForm mf, measurementType mt WHERE mf.formName='" + formName 
+                            + "' AND mf.typeId=mt.id";            
+            ResultSet rs = db.GetSQL(sql);
+            while(rs.next()){                                      
+                EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rs.getInt("typeId"), 
+                                                                                        rs.getString("type"), 
+                                                                                        rs.getString("typeDisplayName"), 
+                                                                                        rs.getString("typeDescription"), 
+                                                                                        rs.getString("measuringInstruction"), 
+                                                                                        rs.getString("validation")); 
+                measurementTypeVector.add(measurementTypes);                                                       
+                System.out.println("getMeasurementType() type: " + rs.getString("typeId"));
+            }
+            
+            rs.close();            
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return measurementTypeVector;
+    }
+    
     /**
      * Compare the form definition xml file with the measurementtype table in the database. 
      * If a measurment type found in the definition file but not in the database, add a new type to the measurementtype table
      * @param xmlpath the path of the form definition xml file
      * @author - Ivy Chan - iConcept Technologies Inc.
      */
-    static public Vector checkMeasurmentTypes(InputStream is){
+    static public Vector checkMeasurmentTypes(InputStream is, String formName){
         //System.out.println("in checkMeasurementTypes");
         EctFormProp formProp = getEctMeasurementsType(is);
         //System.out.println("xmlpath:" + xmlPath);
@@ -89,19 +122,43 @@ public class EctFindMeasurementTypeUtil {
             EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
             EctValidationsBean validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);           
             //System.out.println(mt.getType() + " " + validation.getName() + " " + validation.getRegularExp());
-            if(!measurementTypeIsFound(mt)){
-                addMeasurementType(mt);
+            if(!measurementTypeIsFound(mt, formName)){
+                addMeasurementType(mt, formName);
             }
         }
         return measurementTypes;
     }
     
-    static public boolean measurementTypeIsFound(EctMeasurementTypesBean mt){
+    static public boolean measurementTypeIsFound(EctMeasurementTypesBean mt, String formName){
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT * from measurementType where type='"+ mt.getType() + "' AND measuringInstruction='"
                          + mt.getMeasuringInstrc() + "'";
+            ResultSet rs = db.GetSQL(sql);
+            if(!rs.next()){                  
+                verdict = false;
+            }
+            else{
+                if(!measurementFrmIsAdded(formName, rs.getString("id")))
+                    add2MeasurementForm(formName, rs.getString("id"));
+            }
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
+    
+    static public boolean measurementFrmIsAdded(String formName, String typeId){
+        boolean verdict = true;
+        try {
+            //System.out.println("check if form "+ formName + " and type " + typeId + " exists");
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT * FROM measurementForm WHERE formName='" + formName + "' AND typeId='"+typeId+"'";
             ResultSet rs = db.GetSQL(sql);
             if(!rs.next()){            
                 verdict = false;
@@ -115,8 +172,7 @@ public class EctFindMeasurementTypeUtil {
         }
         return verdict;
     }
-    
-    static public void addMeasurementType(EctMeasurementTypesBean mt){
+    static public void addMeasurementType(EctMeasurementTypesBean mt, String formName){
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             //Find validation if not found add validation
@@ -131,13 +187,34 @@ public class EctFindMeasurementTypeUtil {
                 String sql ="INSERT INTO measurementType(type, typeDisplayName, typeDescription, measuringInstruction, validation)" +
                             "VALUES('" + mt.getType() + "', '" + mt.getTypeDisplayName() + "', '" + mt.getTypeDesc() + "', '" +
                             mt.getMeasuringInstrc() + "', '" + validationId + "')";
-                db.RunSQL(sql);
+                db.RunSQL(sql);                
+                sql = "SELECT * FROM measurementType ORDER BY id DESC LIMIT 1";
+                ResultSet rs = db.GetSQL(sql);             
+                if(rs.next()){
+                    if(!measurementFrmIsAdded(formName, rs.getString("id")))
+                        add2MeasurementForm(formName, rs.getString("id"));
+                }
             }
             db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());         
         }
+    }
+    
+    static public void add2MeasurementForm(String formName, String typeId){
+        boolean verdict = true;
+        try {
+            //System.out.println("add form"+ formName + " and type " + typeId + " into measurementGroup table");
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "INSERT INTO measurementForm VALUES('" + formName + "','"+typeId+"')";
+            db.RunSQL(sql);
+            db.CloseConn();
+            
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());           
+        }        
     }
         
 }
