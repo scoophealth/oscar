@@ -255,7 +255,7 @@ if (billTypes == null){
     String dateBegin = request.getParameter("xml_vdate");
     String dateEnd = request.getParameter("xml_appointment_date");
     
-    ArrayList list = msp.getBillsMaster(billTypes);
+    ArrayList list;
     MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd);
     list = bSearch.list;
     Properties p2 = bSearch.getCurrentErrorMessages();
@@ -266,11 +266,8 @@ if (billTypes == null){
         MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records                           
-      String rejected = isRejected(b.billMasterNo,p);      
-      if (rejected == null){     
-        //rejected  = msp.getS00String(b.billMasterNo);
-        rejected  = isRejected(b.billMasterNo,p2);
-      }
+      String rejected = isRejected(b.billMasterNo,p);            
+      rejected  = isRejected(b.billMasterNo,p2);      
    %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <TD align="center" class="bCellData" ><%=b.apptDate%></TD>
@@ -311,7 +308,7 @@ String getReasonEx(String reason){
 String isRejected(String billingNo,Properties p){
     String s = "&nbsp;";
     if (p.containsKey(billingNo)){
-        s = "<a href=\"javascript: popupPage(700,700,'adjustBill.jsp?billing_no="+billingNo+"')\" >"+p.getProperty(billingNo)+"</a>";
+        s = "<a href=\"javascript: popupPage(700,700,'adjustBill.jsp?billing_no="+billingNo+"')\" >Edit "+p.getProperty(billingNo)+"</a>";
     }    
     return s;
 }
