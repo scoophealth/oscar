@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------------------
 // *
 // *
 // * Copyright (c) 2001-2002. Department of Family Medicine, McMaster
@@ -26,129 +26,173 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileUploadException;
+
 public class DocumentUploadServlet extends HttpServlet {
-	final static int BUFFER = 2048;
-	public void service(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		int c;
-		int count;
-		byte data[] = new byte[BUFFER];
-		byte data1[] = new byte[BUFFER / 2];
-		byte data2[] = new byte[BUFFER / 2];
-		byte enddata[] = new byte[2];
-		//HttpSession session = request.getSession(true);
-		//String backupfilepath = ((String) session.getAttribute("homepath"))
-		// != null ? ((String) session.getAttribute("homepath")) : "null";
-		count = request.getContentType().indexOf('=');
-		String temp = request.getContentType().substring(count + 1);
-		String filename = "test.txt", foldername = "", fileheader = "", forwardTo = "", function = "", function_id = "", filedesc = "", creator = "", doctype = "", docxml = "";
-		String home_dir = "", doc_forward = "";
-		//String userHomePath = System.getProperty("user.home", "user.dir");
-		//System.out.println(userHomePath);
-		//File pFile = new File(userHomePath, backupfilepath + ".properties");
-		//   File pFile = new File(userHomePath, "oscar_sfhc.properties");
-		//FileInputStream pStream = new FileInputStream(pFile.getPath());
-		//Properties ap = new Properties();
-		//ap.load(pStream);
-		//forwardTo = ap.getProperty("RA_FORWORD");
-		//foldername = ap.getProperty("DOCUMENT_DIR");
-		//pStream.close();
-		// function = request.getParameter("function");
-		// function_id = request.getParameter("functionid");
-		// filedesc = request.getParameter("filedesc");
-		// creator = request.getParameter("creator");
-		forwardTo = OscarProperties.getInstance().getProperty("RA_FORWORD");
-		foldername = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-		
-		if (forwardTo == null || forwardTo.length() < 1) return;
-		
-		ServletInputStream sis = request.getInputStream();
-		BufferedOutputStream dest = null;
-		FileOutputStream fos = null;
-		boolean bwri = false;
-		boolean bfbo = true;
-		boolean benddata = false;
-		boolean bf = false;
-		byte boundary[] = temp.getBytes();
-		while (bf ? true : ((count = sis.readLine(data, 0, BUFFER)) != -1)) {
-			bf = false;
-			benddata = false;
-			if (count == 2 && data[0] == 13 && data[1] == 10) {
-				enddata[0] = 13;
-				enddata[1] = 10;
-				for (int i = 0; i < BUFFER; i++)
-					data[i] = 0;
-				count = sis.readLine(data, 0, BUFFER);
-				if (count == 2 && data[0] == 13 && data[1] == 10) {
-					dest.write(enddata, 0, 2);
-					bf = true;
-					continue;
-				} else {
-					benddata = true;
-				}
-			}
-			String s = new String(data, 2, temp.length());
-			if (temp.equals(s)) {
-				if (benddata)
-					break;
-				if ((c = sis.readLine(data1, 0, BUFFER)) != -1) {
-					filename = new String(data1);
-					if (filename.length() > 2
-							&& filename.indexOf("filename") != -1) {
-						filename = filename.substring(filename
-								.lastIndexOf('\\') + 1, filename
-								.lastIndexOf('\"'));
-						//System.out.println("filename: "+filename);
-						fileheader = filename;
-						fos = new FileOutputStream(foldername + filename);
-						dest = new BufferedOutputStream(fos, BUFFER);
-					}
-					c = sis.readLine(data2, 0, BUFFER);
-					if ((c = sis.readLine(data2, 0, BUFFER)) != -1) {
-						bwri = bfbo ? true : false;
-					}
-				}
-				bfbo = bfbo ? false : true;
-				for (int i = 0; i < BUFFER; i++)
-					data[i] = 0;
-				continue;
-			} //end period
-			if (benddata) {
-				benddata = false;
-				dest.write(enddata, 0, 2);
-				for (int i = 0; i < 2; i++)
-					enddata[i] = 0;
-			}
-			if (bwri) {
-				dest.write(data, 0, count);
-				for (int i = 0; i < BUFFER; i++)
-					data[i] = 0;
-			}
-		} //end while
-		//dest.flush();
-		dest.close();
-		sis.close();
-		DocumentBean documentBean = new DocumentBean();
-		request.setAttribute("documentBean", documentBean);
-		documentBean.setFilename(fileheader);
-		//  documentBean.setFileDesc(filedesc);
-		//  documentBean.setFoldername(foldername);
-		//  documentBean.setFunction(function);
-		//  documentBean.setFunctionID(function_id);
-		//  documentBean.setCreateDate(fileheader);
-		//  documentBean.setDocCreator(creator);
-		// Call the output page.
-		RequestDispatcher dispatch = getServletContext().getRequestDispatcher(
-				forwardTo);
-		dispatch.forward(request, response);
-	}
+
+    final static int BUFFER = 2048;
+
+    public void service(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        int c;
+        int count;
+        byte data[] = new byte[BUFFER];
+        byte data1[] = new byte[BUFFER / 2];
+        byte data2[] = new byte[BUFFER / 2];
+        byte enddata[] = new byte[2];
+        //HttpSession session = request.getSession(true);
+        //String backupfilepath = ((String) session.getAttribute("homepath"))
+        // != null ? ((String) session.getAttribute("homepath")) : "null";
+        count = request.getContentType().indexOf('=');
+        String temp = request.getContentType().substring(count + 1);
+        String filename = "test.txt", foldername = "", fileheader = "", forwardTo = "", function = "", function_id = "", filedesc = "", creator = "", doctype = "", docxml = "";
+        String home_dir = "", doc_forward = "";
+        //String userHomePath = System.getProperty("user.home", "user.dir");
+        //System.out.println(userHomePath);
+        //File pFile = new File(userHomePath, backupfilepath + ".properties");
+        //   File pFile = new File(userHomePath, "oscar_sfhc.properties");
+        //FileInputStream pStream = new FileInputStream(pFile.getPath());
+        //Properties ap = new Properties();
+        //ap.load(pStream);
+        //forwardTo = ap.getProperty("RA_FORWORD");
+        //foldername = ap.getProperty("DOCUMENT_DIR");
+        //pStream.close();
+        // function = request.getParameter("function");
+        // function_id = request.getParameter("functionid");
+        // filedesc = request.getParameter("filedesc");
+        // creator = request.getParameter("creator");
+        forwardTo = OscarProperties.getInstance().getProperty("RA_FORWORD");
+        foldername = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+
+        if (forwardTo == null || forwardTo.length() < 1) return;
+
+        boolean isMultipart = FileUpload.isMultipartContent(request);
+        //		 Create a new file upload handler
+        DiskFileUpload upload = new DiskFileUpload();
+
+        try {
+            //		 Parse the request
+            List /* FileItem */items = upload.parseRequest(request);
+//          Process the uploaded items
+            Iterator iter = items.iterator();
+            while (iter.hasNext()) {
+                FileItem item = (FileItem) iter.next();
+
+                if (item.isFormField()) {
+                    //String name = item.getFieldName();
+                    //String value = item.getString(); 
+                    //System.out.println("Fieldname: " + item.getFieldName());
+                } else {
+                    String pathName = item.getName();  
+                    String [] fullFile = pathName.split("[/|\\\\]");
+            		File savedFile = new File(foldername, fullFile[fullFile.length-1]);
+                    //System.out.println(item.getName() + "fullFile: " + fullFile[fullFile.length-1]);
+                    fileheader = fullFile[fullFile.length-1];
+            		
+            		item.write(savedFile);
+                }
+            }
+        } catch (FileUploadException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+/*
+        ServletInputStream sis = request.getInputStream();
+        BufferedOutputStream dest = null;
+        FileOutputStream fos = null;
+        boolean bwri = false;
+        boolean bfbo = true;
+        boolean benddata = false;
+        boolean bf = false;
+        byte boundary[] = temp.getBytes();
+        while (bf ? true : ((count = sis.readLine(data, 0, BUFFER)) != -1)) {
+            bf = false;
+            benddata = false;
+            if (count == 2 && data[0] == 13 && data[1] == 10) {
+                enddata[0] = 13;
+                enddata[1] = 10;
+                for (int i = 0; i < BUFFER; i++)
+                    data[i] = 0;
+                count = sis.readLine(data, 0, BUFFER);
+                if (count == 2 && data[0] == 13 && data[1] == 10) {
+                    dest.write(enddata, 0, 2);
+                    bf = true;
+                    continue;
+                } else {
+                    benddata = true;
+                }
+            }
+            String s = new String(data, 2, temp.length());
+            if (temp.equals(s)) {
+                if (benddata) break;
+                if ((c = sis.readLine(data1, 0, BUFFER)) != -1) {
+                    filename = new String(data1);
+                    if (filename.length() > 2
+                            && filename.indexOf("filename") != -1) {
+                        filename = filename.substring(filename
+                                .lastIndexOf('\\') + 1, filename
+                                .lastIndexOf('\"'));
+                        //System.out.println("filename: "+filename);
+                        fileheader = filename;
+                        fos = new FileOutputStream(foldername + filename);
+                        dest = new BufferedOutputStream(fos, BUFFER);
+                    }
+                    c = sis.readLine(data2, 0, BUFFER);
+                    if ((c = sis.readLine(data2, 0, BUFFER)) != -1) {
+                        bwri = bfbo ? true : false;
+                    }
+                }
+                bfbo = bfbo ? false : true;
+                for (int i = 0; i < BUFFER; i++)
+                    data[i] = 0;
+                continue;
+            } //end period
+            if (benddata) {
+                benddata = false;
+                dest.write(enddata, 0, 2);
+                for (int i = 0; i < 2; i++)
+                    enddata[i] = 0;
+            }
+            if (bwri) {
+                dest.write(data, 0, count);
+                for (int i = 0; i < BUFFER; i++)
+                    data[i] = 0;
+            }
+        } //end while
+        //dest.flush();
+        dest.close();
+        sis.close();
+*/
+        DocumentBean documentBean = new DocumentBean();
+        request.setAttribute("documentBean", documentBean);
+        documentBean.setFilename(fileheader);
+        //  documentBean.setFileDesc(filedesc);
+        //  documentBean.setFoldername(foldername);
+        //  documentBean.setFunction(function);
+        //  documentBean.setFunctionID(function_id);
+        //  documentBean.setCreateDate(fileheader);
+        //  documentBean.setDocCreator(creator);
+        // Call the output page.
+        RequestDispatcher dispatch = getServletContext().getRequestDispatcher(
+                forwardTo);
+        dispatch.forward(request, response);
+    }
 }
