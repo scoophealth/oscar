@@ -236,9 +236,9 @@ function showHideLayers() { //v3.0
         <tr> 
           <td width="12%" height="16">Billing Type:</td>
           <td width="12%"><%=bean.getBillingType()%></td>
-          <td width="16%">Visit Type:</td>
+          <td width="16%">Service Location:</td>
           <td width="17%"><%=bean.getVisitType()%></td>
-          <td width="19%">Visit Location:</td>
+          <td width="19%">Clarification Code:</td>
           <td width="24%"><%=bean.getVisitLocation()%></td>
         </tr>
         <tr> 
