@@ -54,7 +54,7 @@ public class MsgNewMessagesTag extends TagSupport{
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       java.sql.ResultSet rs;
    //   String sdaf = new String("sdf");
-      String sql = new String("select count(*) from messagelisttbl where provider_no = "+ providerNo +" and status = 'new' ");
+      String sql = new String("select count(*) from messagelisttbl where provider_no = '"+ providerNo +"' and status = 'new' ");
       rs = db.GetSQL(sql);
       while (rs.next()) {
          numNewMessages = (rs.getInt(1));

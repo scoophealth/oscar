@@ -95,8 +95,8 @@ function setfocus() {
     </tr>
     <tr> 
       <td align="center" bgcolor="#CCCCFF"> 
-      <input type="hidden" name="submit_form" value="">
-      <input type="button" name="submit_form" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="document.forms['baseurl'].submit_form.value=' Save '; document.forms['baseurl'].submit();">
+      <input type="hidden" name="submit_form" value=' Save '>
+      <input type="submit" name="confirmButton" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" >
 <input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
       </td>
     </tr>

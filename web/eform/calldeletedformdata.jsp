@@ -66,8 +66,8 @@ function newWindow(file,window) {
 </table>
 
 <table border="0" cellspacing="0" cellpadding="2" width="98%">
-  <tr bgcolor=<%=weakColor%>>
-    <td>Deleted Forms: </td>
+  <tr bgcolor="<%=weakColor%>">
+    <td><bean:message key="eform.calldeletedform.msgtitle"/>: </td>
     <td align='right'><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a> | 
       <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"> <bean:message key="global.btnBack" /></a>
     </td> 
@@ -75,12 +75,12 @@ function newWindow(file,window) {
 </table>
   
 <table border="0" cellspacing="2" cellpadding="2" width="98%">
-  <tr bgcolor=<%=deepColor%> >
+  <tr bgcolor="<%=deepColor%>" >
   <th width=20%><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
   <th width=40%><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
   <th><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
   <th><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
-  <th>Action</th>
+  <th><bean:message key="eform.showmyform.msgAction"/></th>
   </tr> 
 <%
   String bgcolor = null;

@@ -226,7 +226,7 @@ function onButRepeat() {
           </tr>
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
             <td width="20%"> 
-              <div align="right"><font face="arial"><bean:message key="Appointment.formName"/>:</font></div>
+              <div align="right"><font face="arial"><bean:message key="appointment.addappointment.formSurName"/>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="keyword" VALUE="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">

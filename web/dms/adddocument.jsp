@@ -188,7 +188,7 @@ function ScriptAttach() {
             </tr>
             <tr> 
               <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF" size="1"><b><i> 
-                <input type="SUBMIT" value="Submit" name="<bean:message key="dms.addDocument.btnSubmit"/>">
+                <input type="SUBMIT" name="Submit" value="<bean:message key="dms.addDocument.btnSubmit"/>">
                 <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="self.close();">
                 </i></b></font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
             </tr>
