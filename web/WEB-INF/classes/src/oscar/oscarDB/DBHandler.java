@@ -36,13 +36,22 @@ public class DBHandler {
 	private static String connDriver = "org.gjt.mm.mysql.Driver";
 	private static String connURL = "jdbc:mysql://"; //"jdbc:mysql://";/;
 													 // //oscar?user=root&password=oscar";
-	private static String connUser = "root";
-	private static String connPwd = "liyi";
+	private static String connUser = null;
+	private static String connPwd = null;
 	private int connInitialConnections = 1;
 	private int connMaxConnections = 100;
 	private boolean connWaitIfBusy = true;
 	private Connection conn;
 	private DBConnectionPool pool;
+        
+        public static boolean isInit(){
+           boolean initd = true;
+           if (connPwd == null){
+              initd = false;
+           }
+           return initd;
+        }
+        
 	public static void init(String db_name, String db_driver, String db_uri,
 			String db_username, String db_password) {
 		OSCAR_DATA = db_name;
@@ -68,18 +77,19 @@ public class DBHandler {
 			conn = pool.getConnection();
 		}
 	}
-	synchronized public java.sql.ResultSet GetSQL(String SQLStatement)
-			throws SQLException {
+        
+        synchronized public Connection GetConnection() throws SQLException{
+           return conn;
+        }
+	synchronized public java.sql.ResultSet GetSQL(String SQLStatement) throws SQLException {
 		return this.GetSQL(SQLStatement, false);
 	}
         
-	synchronized public java.sql.ResultSet GetSQL(String SQLStatement,
-			boolean updatable) throws SQLException {
+	synchronized public java.sql.ResultSet GetSQL(String SQLStatement,boolean updatable) throws SQLException {
 		Statement stmt;
 		ResultSet rs = null;
 		if (updatable) {
-			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-					ResultSet.CONCUR_UPDATABLE);
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 		} else {
 			stmt = conn.createStatement();
 		}
