@@ -38,6 +38,8 @@ import java.util.Properties;
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.Misc;
+import oscar.oscarBilling.ca.bc.MSP.*;
+
 
 
 public class ExtractBean extends Object implements Serializable {
@@ -200,11 +202,18 @@ public class ExtractBean extends Object implements Serializable {
                                  System.out.println("processing "+invNo);
 
                                  String dataLine = getClaimDetailRecord(rs2,logNo);
-                                 if (dataLine.length() != 424 ){ System.out.println("dataLine2 "+logNo+" Len"+dataLine.length()); }                        
+                                 if (dataLine.length() != 424 ){ System.out.println("dataLine2 "+logNo+" Len"+dataLine.length()); }                                                                                          
                                  
                                  value += "\n"+dataLine+"\r";
                                  logValue = dataLine;
                                  setLog(logNo,logValue);
+                                 
+                                 if (hasNoteRecord(rs2)){
+                                    String noteLogNo = getSequence();
+                                    String noteRecordLine = getNoteRecord(rs2,noteLogNo);
+                                    value += "\n"+noteRecordLine+"\r";                                 
+                                    setLog(noteRecordLine,noteLogNo);
+                                 }
                                  
                                  dFee = Double.parseDouble(rs2.getString("bill_amount"));
                                  bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -222,7 +231,8 @@ public class ExtractBean extends Object implements Serializable {
                                  htmlContent += errorMsg;
 
                                  invCount++;                                     
-                                 setAsBilledMaster(rs2.getString("billingmaster_no"));                                 
+                                 setAsBilledMaster(rs2.getString("billingmaster_no"));   
+                                 
                               }// while
                         }else if (billType.equals("WCB")){                           
                            /////////////////////////////////////
@@ -617,6 +627,25 @@ public class ExtractBean extends Object implements Serializable {
                             + misc.backwardSpace(rs2.getString("oin_address4"),25)       //p120 25
                             + misc.backwardSpace(rs2.getString("oin_postalcode"),6);     //p122  6
         return dataLine;
+    }
+    
+    public boolean hasNoteRecord (ResultSet rs) throws SQLException{
+       boolean retval = false;
+       try{
+          String correspondenceCode = rs.getString("correspondence_code");
+          if (correspondenceCode.equals("N") || correspondenceCode.equals("B")){            
+             retval = true;
+          }
+       }catch(Exception e){
+          retval = false;
+          e.printStackTrace();
+       }
+       return retval;
+    }
+    
+    public String getNoteRecord(ResultSet rs, String seqNo) throws SQLException{                                  
+       MSPBillingNote note = new MSPBillingNote();
+       return note.getN01(rs.getString("datacenter"), seqNo, rs.getString("payee_no"), rs.getString("practitioner_no"), "A", note.getNote(rs.getString("billingmaster_no")));
     }
     
     public String htmlContentHeaderGen(String providerNo,String output,String errorMsg){
