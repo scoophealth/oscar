@@ -66,6 +66,8 @@ public class EctFormData {
             this.hidden = hidden;
         }
 
+        public Form(){}
+        
         public String getFormName() {
             return formName;
         }
@@ -79,6 +81,7 @@ public class EctFormData {
         public boolean isHidden() {
             return hidden;
         }
+                
     }
 
     public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
@@ -160,6 +163,23 @@ public class EctFormData {
         db.CloseConn();
 
         return ret;
+    }
+    
+    public String getFormNameByFormTable(String value){
+        String formName = "";
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT form_name from encounterForm where form_value='" + value + "'";
+            ResultSet rs = db.GetSQL(sql);
+            if (rs.next())
+                formName = rs.getString("form_name");
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return formName;
     }
 
 }
