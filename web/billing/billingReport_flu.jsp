@@ -105,8 +105,8 @@ int rowCount1 = 0;
       Total1 = Total1.add(bdFee);
   } else{
   %>
-    <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
-      <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../billing/billingOB2.jsp?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+    <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">       
+      <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
         <%=rs.getString("billing_no")%></a></font></b></TD>
           <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
           <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
