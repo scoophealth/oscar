@@ -44,6 +44,7 @@
   String            action            = "edit";
   Properties        propHist          = null;
   Vector            vecHist           = new Vector();
+System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;" + msg);
   // get provider's detail
   String proOHIPNO="", proRMA="";
   String sql = "select * from provider where provider_no='" + request.getParameter("xml_provider") + "'";
@@ -531,6 +532,9 @@ System.out.println(" * ******************************" + sql);
   <script language="JavaScript">
 
             <!--
+function setfocus() {
+    this.focus();
+}
 function gotoBillingOB() {
   if(self.location.href.lastIndexOf("?") > 0) {
     a = self.location.href.substring(self.location.href.lastIndexOf("?"));
@@ -551,12 +555,12 @@ function showHideLayers() { //v3.0
 	if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
 	obj.visibility=v; }
 }
-    function onSave() {
+    function onNext() {
         //document.forms[0].submit.value="save";
         var ret = checkAllDates();
         if(ret==true)
         {
-            ret = confirm("Are you sure you want to save this form?");
+            //ret = confirm("Are you sure you want to save this form?");
         }
         return ret;
     }
@@ -565,7 +569,7 @@ function showHideLayers() { //v3.0
         if(document.forms[0].billDate.value.length<1){
         	alert("No billing date!");
             b = false;
-        } else if(!isChecked("xml_") && document.forms[0].serviceDate0.value.length!=5 || !isServiceCode(document.forms[0].serviceDate0.value)){
+        } else if(!isChecked("code_xml_") && document.forms[0].serviceDate0.value.length!=5 || !isServiceCode(document.forms[0].serviceDate0.value)){
         	alert("Need service code!");
             b = false;
         } else if(document.forms[0].serviceDate1.value.length>0 && document.forms[0].serviceDate1.value.length!=5 || !isServiceCode(document.forms[0].serviceDate1.value)){
@@ -583,7 +587,8 @@ function showHideLayers() { //v3.0
         } else if(document.forms[0].dxCode.value.length!=3){
         	alert("Wrong dx code!");
             b = false;
-        } else if(document.forms[0].xml_provider.options[0].selected){
+        //} else if(document.forms[0].xml_provider.options[0].selected){
+        } else if(document.forms[0].xml_provider.value=="000000"){
         	alert("Please select a provider.");
             b = false;
         } else if(document.forms[0].xml_visittype.options[2].selected && document.forms[0].xml_vdate.value==""){
@@ -632,7 +637,7 @@ function showHideLayers() { //v3.0
     }
 function isChecked(s) {
     for (var i =0; i <document.forms[0].elements.length; i++) {
-        if (document.forms[0].elements[i].name.indexOf(s)==0 && document.forms[0].elements[i].name.length==9) {
+        if (document.forms[0].elements[i].name.indexOf(s)==0 && document.forms[0].elements[i].name.length==14) {
             if (document.forms[0].elements[i].checked) {
 				return true;
 			}
@@ -644,7 +649,7 @@ function isChecked(s) {
 //-->
 
   </script>
-  <body topmargin="0" >
+  <body onload="setfocus();" topmargin="0" >
 <div id="Layer1" style="position:absolute; left:1px; top:159px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr bgcolor="#393764">
@@ -701,7 +706,7 @@ ctlCount = 0;
 
 
   <table border="0" cellpadding="0" cellspacing="2" width="100%" bgcolor="#CCCCFF">
-    <form method="post" name="titlesearch" action="billingShortcutPg2.jsp" onsubmit="return checkTypeIn()">
+    <form method="post" name="titlesearch" action="billingShortcutPg2.jsp" onsubmit="return onNext();">
       <tr>
         <td>
           <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -709,7 +714,7 @@ ctlCount = 0;
           	<b>OscarBilling </b>
         	</td>
 			<td align="right">
-            <input type="submit" name="submit" value="Save" onclick="javascript:return onSave();" />
+            <input type="submit" name="submit" value="Next"  />
             </td>
 			</tr>
 		  </table>
@@ -750,8 +755,8 @@ ctlCount = 0;
 	                </td><td>
 	                Cal.% mode<br>
 					<select name="rulePerc" >
-					<option value="allAboveCode" >All</option>
 					<option value="onlyAboveCode" >Only Above</option>
+					<option value="allAboveCode" >All</option>
 	                </select>
 	                </td></tr>
                 </table>
@@ -769,14 +774,20 @@ ctlCount = 0;
               <tr><td nowrap width="30%" align="center">
 				<b>Billing Physician</b></td>
 				<td width="20%">
-				<select name="xml_provider" datafld='xml_provider'>
+				<select name="xml_provider">
+				<%
+				if(vecProvider.size()==1) {
+					propT = (Properties) vecProvider.get(0);
+				%>
+					<option value="<%=propT.getProperty("proOHIP")%>" <%=providerview.equals(propT.getProperty("proOHIP"))?"selected":""%>><b><%=propT.getProperty("last_name")%>, <%=propT.getProperty("first_name")%></b></option>
+				<%	} else { %>
 				<option value="000000" <%=providerview.equals("000000")?"selected":""%>><b>Select Provider</b></option>
 				<%
 				for(int i=0; i<vecProvider.size(); i++) {
 					propT = (Properties) vecProvider.get(i);
 				%>
 					<option value="<%=propT.getProperty("proOHIP")%>" <%=providerview.equals(propT.getProperty("proOHIP"))?"selected":""%>><b><%=propT.getProperty("last_name")%>, <%=propT.getProperty("first_name")%></b></option>
-				<%
+				<%	}
 				}
 				%>
 				</select></td>
@@ -827,10 +838,9 @@ ctlCount = 0;
 				<input type="text" name="xml_vdate" value="<%=visitdate%>" size='10' maxlength='10' readonly>
               	<img src="../../../images/cal.gif" id="xml_vdate_cal">
 				</td>
-				<td>
+				<td colspan="2">
 				<a href="#" onClick="showHideLayers('Layer1','','show');return false;">Billing form</a>:</font></b>
-				</td>
-				<td><%=currentFormName.length()<30 ? currentFormName : currentFormName.substring(0,30)%>
+				<%=currentFormName.length()<30 ? currentFormName : currentFormName.substring(0,30)%>
 				</td>
 
               </tr>
@@ -1115,7 +1125,7 @@ String getDefaultValue(String paraName, Vector vec, String propName) {
   String ret = "";
   if(paraName!=null && !"".equals(paraName)) {
     ret = paraName;
-  } else if(vec.get(0)!=null) {
+  } else if(vec!=null && vec.size()>0 && vec.get(0)!=null) {
     ret = ((Properties)vec.get(0)).getProperty(propName, "") ;
   }
   System.out.println("paraName:" + paraName + " propName:" + propName + " :" + ret);
