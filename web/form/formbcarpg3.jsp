@@ -22,11 +22,7 @@
     //props.setProperty("c_lastVisited", "pg3");
 
 	//get project_home
-	String project_home = getServletContext().getRealPath("/") ;
-	String sep = project_home.substring(project_home.length()-1);
-	project_home = project_home.substring(0, project_home.length()-1) ;
-	project_home = project_home.substring(project_home.lastIndexOf(sep)+1) ;
-	//System.out.println(project_home);
+	String project_home = request.getContextPath().substring(1);
 %>
 <%
   boolean bView = false;
@@ -43,20 +39,16 @@
 
 <script type="text/javascript" language="Javascript">
     function reset() {
-        document.forms[0].target = "apptProviderSearch";
+        document.forms[0].target = "";
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
 	}
     function onPrint() {
         document.forms[0].submit.value="print"; 
         var ret = checkAllDates();
         if(ret==true)
-        {
-            //ret = confirm("Do you wish to save this form and view the print preview?");
-            popupFixedPage(650,850,'../provider/notice.htm');
+        {            
             document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+Part+2&__cfgfile=bcar2PrintCfgPg2&__cfgfile=bcar1PrintCfgPg2&__cfgGraphicFile=bcar2PrintGraphCfgPg2&__template=bcar2";
-            document.forms[0].target="planner";
-            document.forms[0].submit();
-            document.forms[0].target="apptProviderSearch";
+            document.forms[0].target="_blank";            
         }
        return ret;
     }
