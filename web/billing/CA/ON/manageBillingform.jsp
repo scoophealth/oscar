@@ -10,7 +10,7 @@
 String service_form="", service_name="";
 %>       
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %>            
 <%

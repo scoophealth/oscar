@@ -25,7 +25,7 @@
 -->
 
  <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
 <%@ include file="../billing/dbBilling.jsp" %>

@@ -38,7 +38,7 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %> 
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %> 
 <html>
