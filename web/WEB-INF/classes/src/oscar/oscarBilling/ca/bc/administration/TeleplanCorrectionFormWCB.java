@@ -85,7 +85,8 @@ extends org.apache.struts.action.ActionForm {
    w_wcbadvisor = "",
    w_feeitem = "",
    w_extrafeeitem = "",
-   status = "";
+   status = "",
+   formNeeded = "";
    ;
    public TeleplanCorrectionFormWCB() {
       super();
@@ -151,6 +152,7 @@ extends org.apache.struts.action.ActionForm {
             w_feeitem = result.getString("w_feeitem");
             w_extrafeeitem = result.getString("w_extrafeeitem");
             status = result.getString("billingstatus");  
+            formNeeded = result.getString("formNeeded");
          }
       }
       catch (java.lang.Exception ex) {
@@ -596,6 +598,22 @@ extends org.apache.struts.action.ActionForm {
     */
    public void setStatus(java.lang.String status) {
       this.status = status;
+   }
+   
+   /**
+    * Getter for property formNeeded.
+    * @return Value of property formNeeded.
+    */
+   public java.lang.String getFormNeeded() {
+      return formNeeded;
+   }
+   
+   /**
+    * Setter for property formNeeded.
+    * @param formNeeded New value of property formNeeded.
+    */
+   public void setFormNeeded(java.lang.String formNeeded) {
+      this.formNeeded = formNeeded;
    }
    
 }
