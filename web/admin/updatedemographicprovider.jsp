@@ -33,18 +33,18 @@
 <jsp:useBean id="namevector" class="java.util.Vector" scope="page" />
 <jsp:useBean id="novector" class="java.util.Vector" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
-<% 
+<% // table demographiccust: cust1 = nurse   cust2 = resident   cust4 = midwife
   String [][] dbQueries=new String[][] { 
-{"update_residentmultiple", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in " }, 
-{"update_nursemultiple", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in " }, 
-{"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
-{"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-{"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by last_name"}, 
-
-{"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-
-{"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " }, 
-{"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " }, 
+    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " }, 
+    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " }, 
+    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " }, 
+    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
+    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
+    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
+    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
+    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
+    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " }, 
+    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " }, 
   };
   String[][] responseTargets=new String[][] {  };
   updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
@@ -62,12 +62,17 @@ function setfocus() {
 function setregexp() {
 	var exp = "^[" +document.ADDAPPT.last_name_from.value + "-" +document.ADDAPPT.last_name_to.value + "]" ;
 	document.ADDAPPT.regexp.value = exp ;
-//	alert(document.ADDAPPT.regexp.value);
+	//alert(document.ADDAPPT.regexp.value);
 }
 function setregexp1() {
 	var exp = "^[" +document.ADDAPPT1.last_name_from.value + "-" +document.ADDAPPT1.last_name_to.value + "]" ;
 	document.ADDAPPT1.regexp.value = exp ;
-//	alert(document.ADDAPPT1.regexp.value);
+	//alert(document.ADDAPPT1.regexp.value);
+}
+function setregexp2() {
+	var exp = "^[" +document.ADDAPPT2.last_name_from.value + "-" +document.ADDAPPT2.last_name_to.value + "]" ;
+	document.ADDAPPT2.regexp.value = exp ;
+	//alert(document.ADDAPPT2.regexp.value);
 }
 // stop javascript -->
 </script>
@@ -90,8 +95,8 @@ function setregexp1() {
     param1[0] = request.getParameter("oldcust2") ;
     param1[1] = request.getParameter("regexp") ;
     rsgroup = updatedpBean.queryResults(param1, "select_demoname");
-    while (rsgroup.next()) { 
- 	    novector.add(rsgroup.getString("demographic_no"));
+    while (rsgroup.next()) {
+        novector.add(rsgroup.getString("demographic_no"));
     }
     int nosize = novector.size();
     int rowsAffected = 0;
@@ -99,28 +104,28 @@ function setregexp1() {
       String [] param = new String[nosize+2] ;
       param[0] = request.getParameter("newcust2") ;
       param[1] = request.getParameter("oldcust2") ;
- 	    StringBuffer sbtemp = new StringBuffer("?") ;
+      StringBuffer sbtemp = new StringBuffer("?") ;
       param[0+2] = (String) novector.get(0);
 
- 	    if(nosize>1) {
- 	      for(int i=1; i<nosize; i++) {
- 	        sbtemp = sbtemp.append(",?");
-          param[i+2] = (String) novector.get(i);
- 	      }
+      if(nosize>1) {
+          for(int i=1; i<nosize; i++) {
+ 	      sbtemp = sbtemp.append(",?");
+              param[i+2] = (String) novector.get(i);
+ 	  }
       }
- 	    String instrdemo = sbtemp.toString();
+      String instrdemo = sbtemp.toString();
       dbQueries[0][1] = dbQueries[0][1] + "("+ instrdemo +")" ; 
-//      System.out.println( dbQueries[0][1] );    
+      // System.out.println( dbQueries[0][1] );    
       updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
-  	  rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_residentmultiple");
-  	}
-    out.print( (rowsAffected==1?(rowsAffected+" record has "):(rowsAffected+" record(s) have ")) + "been updated. <br> "); 
-  }
+      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_residentmultiple");    
+    } %>
+    <%=rowsAffected %> <bean:message key="admin.updatedemographicprovider.msgRecords"/> <br>
+<%}
 
   if(request.getParameter("update")!=null && request.getParameter("update").equals(" Submit ") ) {
     String [] param1 = new String[2] ;
-    param1[0] = request.getParameter("oldcust2") ;
-    param1[1] = request.getParameter("regexp") ;
+    param1[0] = request.getParameter("oldcust1") ;
+    param1[1] = request.getParameter("regexp") ;    
     rsgroup = updatedpBean.queryResults(param1, "select_demoname1");
 
     while (rsgroup.next()) { 
@@ -131,28 +136,62 @@ function setregexp1() {
 
     if(nosize != 0) { 
       String [] param = new String[nosize+2] ;
-      param[0] = request.getParameter("newcust2") ;
-      param[1] = request.getParameter("oldcust2") ;
+      param[0] = request.getParameter("newcust1") ;
+      param[1] = request.getParameter("oldcust1") ;
 
- 	    StringBuffer sbtemp = new StringBuffer("?") ;
+      StringBuffer sbtemp = new StringBuffer("?") ;
       param[0+2] = (String) novector.get(0);
 
- 	    if(nosize>1) {
- 	      for(int i=1; i<nosize; i++) {
- 	        sbtemp = sbtemp.append(",?");
-          param[i+2] = (String) novector.get(i);
- 	      }
+      if(nosize>1) {
+          for(int i=1; i<nosize; i++) {
+ 	      sbtemp = sbtemp.append(",?");
+              param[i+2] = (String) novector.get(i);
+ 	  }
       }
- 	    String instrdemo = sbtemp.toString();
+      String instrdemo = sbtemp.toString();
       dbQueries[1][1] += "("+ instrdemo +")" ; 
-//    System.out.println( dbQueries[1][1] );    
+      // System.out.println( dbQueries[1][1] );    
       updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
-  	  rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_nursemultiple");
-  	} %>
+      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_nursemultiple");
+    } %>
+    <%=rowsAffected %> <bean:message key="admin.updatedemographicprovider.msgRecords"/> <br>
+<%}
+
+  if(request.getParameter("update")!=null && request.getParameter("update").equals("UpdateMidwife") ) {
+    String [] param1 = new String[2] ;
+    param1[0] = request.getParameter("oldcust4") ;
+    param1[1] = request.getParameter("regexp") ;    
+    rsgroup = updatedpBean.queryResults(param1, "select_demoname2");
+
+    while (rsgroup.next()) { 
+ 	    novector.add(rsgroup.getString("demographic_no"));
+    }
+    int nosize = novector.size();
+    int rowsAffected = 0;
+
+    if(nosize != 0) { 
+      String [] param = new String[nosize+2] ;
+      param[0] = request.getParameter("newcust4") ;
+      param[1] = request.getParameter("oldcust4") ;
+
+      StringBuffer sbtemp = new StringBuffer("?") ;
+      param[0+2] = (String) novector.get(0);
+
+      if(nosize>1) {
+          for(int i=1; i<nosize; i++) {
+ 	      sbtemp = sbtemp.append(",?");
+              param[i+2] = (String) novector.get(i);
+ 	  }
+      }
+      String instrdemo = sbtemp.toString();
+      dbQueries[2][1] += "("+ instrdemo +")" ; 
+      // System.out.println( dbQueries[2][1] );    
+      updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
+      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_midwifemultiple");
+    } %>
     <%=rowsAffected %> <bean:message key="admin.updatedemographicprovider.msgRecords"/> <br>
 <%
   }
-
 %>
 
 <center>
@@ -220,7 +259,7 @@ function setregexp1() {
   <tr><td><b><bean:message key="admin.updatedemographicprovider.msgNurse"/></b></td></tr>
   <tr><td>
   <bean:message key="admin.updatedemographicprovider.formUse"/>
-  <select name="newcust2" >
+  <select name="newcust1" >
 <%
  	 for(int i=0; i<namevector.size(); i=i+2) {
 %>
@@ -231,7 +270,7 @@ function setregexp1() {
 </select>
 
   <bean:message key="admin.updatedemographicprovider.formReplace"/>
-  <select name="oldcust2" >
+  <select name="oldcust1" >
 <%
  	 for(int i=0; i<namevector.size(); i=i+2) {
 %>
@@ -266,11 +305,67 @@ function setregexp1() {
   <INPUT TYPE="hidden" NAME="regexp" VALUE="">
   <input type="hidden" name="update" value=" Submit ">
   <INPUT TYPE="submit" VALUE="<bean:message key="admin.updatedemographicprovider.btnGo"/>" >
-
-
   </td></tr>
-
+  </form>
 </table>
+
+<hr width=90% color='<%=deepcolor%>'>
+<!-- for midwife -->
+<table border="0" cellpadding="0" cellspacing="2" width="90%" bgcolor="<%=weakcolor%>" >
+<FORM NAME = "ADDAPPT2" METHOD="post" ACTION="updatedemographicprovider.jsp" onsubmit="return(setregexp2())">
+  <tr><td><b><bean:message key="admin.updatedemographicprovider.msgMidwife"/></b></td></tr>
+  <tr><td>
+  <bean:message key="admin.updatedemographicprovider.formUse"/>
+  <select name="newcust4" >
+<%
+ 	 for(int i=0; i<namevector.size(); i=i+2) {
+%>
+  <option value="<%=namevector.get(i)%>" ><%=namevector.get(i+1)%></option>
+<%
+ 	 }
+%>
+</select>
+
+  <bean:message key="admin.updatedemographicprovider.formReplace"/>
+  <select name="oldcust4" >
+<%
+ 	 for(int i=0; i<namevector.size(); i=i+2) {
+%>
+  <option value="<%=namevector.get(i)%>" ><%=namevector.get(i+1)%></option>
+<%
+ 	 }
+%>
+</select><br>
+  <bean:message key="admin.updatedemographicprovider.formCondition"/>
+  <select name="last_name_from" >
+<%
+   cletter = 'A';
+ 	 for(int i=0; i<26; i++) {
+%>
+  <option value="<%=(char) (cletter+i) %>" ><%=(char) (cletter+i)%></option>
+<%
+ 	 }
+%>
+</select>
+  <bean:message key="admin.updatedemographicprovider.formTo"/>
+  <select name="last_name_to" >
+<%
+   cletter = 'A';
+ 	 for(int i=0; i<26; i++) {
+%>
+  <option value="<%=(char) (cletter+i) %>" ><%=(char) (cletter+i)%></option>
+<%
+ 	 }
+%>
+</select>
+<br>
+  <INPUT TYPE="hidden" NAME="regexp" VALUE="">
+  <input type="hidden" name="update" value="UpdateMidwife">
+  <INPUT TYPE="submit" VALUE="<bean:message key="admin.updatedemographicprovider.btnGo"/>" >
+  </td></tr>
+  </form>
+</table>
+
 <%
     updatedpBean.closePstmtConn();
 %>
