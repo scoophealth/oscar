@@ -232,7 +232,7 @@ function next() {
   }
 	%> 
 </form>
-
-Please select by clicking on the demographic no button.</center>
+<%--
+Please select by clicking on the demographic no button.</center> --%>
 </body>
 </html>
