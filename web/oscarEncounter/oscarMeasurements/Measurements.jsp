@@ -165,6 +165,13 @@ function write2Parent(text){
                         </tr>
                         </logic:iterate>
                         <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>
+                        <html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>
+                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.between"/>"/>    
+                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.mustBe"/>"/>    
+                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.and"/>"/>  
+                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.numericValue"/>"/>  
+                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.inThisFormat"/>"/>  
+                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.bloodPressure"/>"/> 
                         <tr>
                             <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
                             <td><input type="button" name="Button" value="<bean:message key="global.btnSubmit"/>" onclick="document.forms['EctMeasurementsForm'].submit();"/></td>
@@ -176,15 +183,6 @@ function write2Parent(text){
         </td>   
     </tr>
 </table>
-
-<html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>
-<input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.between"/>    
-<input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.mustBe"/>   
-<input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.and"/> 
-<input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.numericValue"/> 
-<input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.inThisFormat"/> 
-<input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.bloodPressure"/>
-
 </html:form>
 
 
