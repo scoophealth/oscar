@@ -17,7 +17,7 @@
 // * <OSCAR TEAM>
 // * This software was written for the
 // * Department of Family Medicine
-// * McMaster Unviersity
+// * McMaster University
 // * Hamilton
 // * Ontario, Canada
 // *
@@ -49,7 +49,7 @@ import oscar.util.UtilXML;
 
 public final class EctImmSaveConfigAction extends Action {
    
-   public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+   public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
       //System.out.println("Save Config Action Jackson");
       Locale locale = getLocale(request);

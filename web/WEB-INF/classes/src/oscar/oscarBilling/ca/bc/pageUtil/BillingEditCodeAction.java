@@ -43,7 +43,7 @@ import oscar.oscarDB.*;
 
 public final class BillingEditCodeAction extends Action {
     
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)

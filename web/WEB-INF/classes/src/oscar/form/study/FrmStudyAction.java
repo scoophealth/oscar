@@ -35,7 +35,7 @@ import org.apache.struts.action.*;
 import oscar.form.study.FrmStudyRecord;
 
 public final class FrmStudyAction extends Action {
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException   {
         int newID = 0;
         FrmStudyRecord rec = null;

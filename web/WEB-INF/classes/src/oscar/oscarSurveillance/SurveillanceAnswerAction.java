@@ -46,7 +46,7 @@ public class SurveillanceAnswerAction extends Action {
    public SurveillanceAnswerAction() {
    }
    
-   public ActionForward perform(ActionMapping mapping,
+   public ActionForward execute(ActionMapping mapping,
 				ActionForm form,
 				HttpServletRequest request,
 				HttpServletResponse response) throws IOException, ServletException {
