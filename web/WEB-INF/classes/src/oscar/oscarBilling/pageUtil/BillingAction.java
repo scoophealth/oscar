@@ -39,7 +39,8 @@ public final class BillingAction extends Action {
         if(request.getParameter("billRegion").equals("ON")){                        
             String newURL = mapping.findForward("ON").getPath();
             newURL = newURL + "?"+request.getQueryString();                            
-            return (new ActionForward(newURL));                
+            //return (new ActionForward(newURL));                
+            return (mapping.findForward(newURL));                
         }else{
                 
             if(request.getParameter("demographic_no")!=null & request.getParameter("appointment_no")!=null) {
