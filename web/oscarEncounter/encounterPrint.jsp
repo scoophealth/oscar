@@ -60,7 +60,7 @@
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 <html:errors/>
 
-<table class="Header">
+<table class="Header" style="width:7in">
     <tr>
         <td align="left">
             <input type="button" value="<bean:message key="global.btnPrint"/>" onclick="javascript:return onPrint();" />
@@ -71,10 +71,10 @@
 
 <table cellpadding="0" cellspacing="0" style="border-collapse:collapse; width:7in;padding-left:3px;">
     <tr>
-        <td style="text-align:left;height:34px;" >
+        <td style="text-align:left;height:34px;border-left: 2px solid #A9A9A9;border-bottom: 2px solid #A9A9A9;border-top:2px solid #A9A9A9;" >
             <span style="font-weight:bold;"><%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%></span>
         </td>
-        <td style="text-align:right;height:34px;">
+        <td style="text-align:right;height:34px;border-bottom: 2px solid #A9A9A9;border-right: 2px solid #A9A9A9;border-top:2px solid #A9A9A9;">
             <span style="font-weight:bold;"><bean:message key="oscarEncounter.encounterPrint.msgDr"/>. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>
         </td>
     </tr>
@@ -86,13 +86,13 @@
                         <table width="100%">
                             <tr>
                                <td width="33%">
-                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgSocialHist"/>:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.Index.socialFamHist"/>:</div>
                                 </td>
                                 <td width="33%">
-                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgFamilyHist"/>:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.Index.otherMed"/>:</div>
                                 </td>
                                 <td width="33%">
-                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgMed"/>:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.Index.medHist"/>:</div>
                                 </td>
                             </tr>
                             <tr>
@@ -155,7 +155,7 @@
     </tr>
 </table>
 
-<table class="Header">
+<table class="Header" style="width:7in">
     <tr>
         <td align="left">
             <input type="button" value="<bean:message key="global.btnPrint"/>" onclick="javascript:return onPrint();" />
