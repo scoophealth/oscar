@@ -41,7 +41,7 @@
 <%
 String demo = request.getParameter("de");
 String requestId = request.getParameter("requestId");
-String team = (String) request.getAttribute("teamVar");
+String team = (String) request.getParameter("teamVar");
 String providerNo = (String) session.getAttribute("user");
 oscar.oscarDemographic.data.DemographicData demoData = null;
 oscar.oscarDemographic.data.DemographicData.Demographic demographic = null;
