@@ -10,14 +10,16 @@ import java.util.ArrayList;
 public class Headers
 {
 
-    Headers(String rF, String rS)
+    Headers(String rF, String rS, String[] rH)
     {
         groupedReportsArray = new ArrayList();
         reportFlag = rF;
         reportSequence = rS;
+        reportHeading = rH;
     }
 
     public String reportFlag;
     public String reportSequence;
+    public String[] reportHeading;
     public ArrayList groupedReportsArray;
 }

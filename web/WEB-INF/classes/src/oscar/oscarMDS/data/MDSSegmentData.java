@@ -134,14 +134,31 @@ public class MDSSegmentData
       
       // Get the report section names
       
-      sql = "select reportGroupDesc,reportGroupID, reportSequence from mdsZRG where segmentID='"+this.segmentID+"' group by reportGroupDesc, reportGroupID order by reportSequence";
+      sql = "select reportGroupDesc,reportGroupID,count(reportGroupID),reportGroupHeading,reportSequence from mdsZRG where segmentID='"+this.segmentID+"' group by reportGroupDesc, reportGroupID order by reportSequence";
 
       
       rs = db.GetSQL(sql);
-      while(rs.next()){
-        headersArray.add(new Headers(rs.getString("reportGroupDesc"),rs.getString("reportGroupID") ));
+      while(rs.next()){        
+        if (rs.getInt("count(reportGroupID)") == 1 && !rs.getString("reportGroupHeading").equals("")) {
+            String[] rGH = { rs.getString("reportGroupHeading") };
+            headersArray.add(new Headers(rs.getString("reportGroupDesc"),rs.getString("reportGroupID"), rGH));            
+        } else if (rs.getInt("count(reportGroupID)") > 1) {
+            sql = "select reportGroupHeading from mdsZRG where segmentID='"+this.segmentID+"' and reportGroupID='"+rs.getString("reportGroupID")+"' order by reportSequence";
+            ResultSet rs2;
+            rs2 = db.GetSQL(sql);            
+            ArrayList tempArray = new ArrayList();
+            while (rs2.next()) {
+                tempArray.add(rs2.getString("reportGroupHeading"));
+            }
+            rs2.close();
+            String[] reportGroupHeading = new String[tempArray.size()];
+            reportGroupHeading = (String[]) tempArray.toArray(reportGroupHeading);
+            headersArray.add(new Headers(rs.getString("reportGroupDesc"),rs.getString("reportGroupID"), reportGroupHeading));
+        } else {
+            headersArray.add(new Headers(rs.getString("reportGroupDesc"),rs.getString("reportGroupID"), null));
+        }
       }
-      rs.close();
+      rs.close();      
       
       // Create the data structures for each section, grouped by OBR
 
