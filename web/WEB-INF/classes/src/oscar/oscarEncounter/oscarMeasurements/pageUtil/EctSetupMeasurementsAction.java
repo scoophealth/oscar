@@ -78,9 +78,9 @@ public final class EctSetupMeasurementsAction extends Action {
             }
             session.setAttribute("EctMeasurementsForm", frm);            
             session.setAttribute("measurementTypes", hd);
-            Vector mInstrcVector = hd.getMeasuringInstrcVectorVector();
+            Vector mInstrcVector = hd.getMeasuringInstrcHdVector();
             for(int i=0; i<mInstrcVector.size(); i++){
-                Collection mInstrcs = (Vector) mInstrcVector.elementAt(i);
+                EctMeasuringInstructionBeanHandler mInstrcs = (EctMeasuringInstructionBeanHandler) mInstrcVector.elementAt(i);
                 String mInstrcName = "mInstrcs" + i;
                 session.setAttribute(mInstrcName, mInstrcs);
 

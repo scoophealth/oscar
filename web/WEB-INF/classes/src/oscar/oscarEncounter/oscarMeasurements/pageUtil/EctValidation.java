@@ -38,7 +38,7 @@ import oscar.OscarProperties;
 
 public class EctValidation{
 
-    public String regCharacterExp = "^[\\w\\s]*$";        
+    public String regCharacterExp = "^[\\w\\s,.?]*$";        
 
     public EctValidation(){
     }
@@ -88,7 +88,7 @@ public class EctValidation{
         return validation;
      }
     
-        
+     
     public boolean isInRange(double dMax, double dMin, String inputValue){
 
         boolean validation = true;
@@ -109,7 +109,33 @@ public class EctValidation{
         }
         return validation;
     }
+    
 
+    public boolean maxLength(int iMax, String inputValue){
+
+        boolean validation = true;
+        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+        
+        if (iMax!=0){            
+            if(!gValidator.maxLength(inputValue, iMax)){                
+                    validation=false;
+                }                       
+        }
+        return validation;
+    }
+
+    public boolean minLength(int iMin, String inputValue){
+
+        boolean validation = true;
+        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+        
+        if (iMin!=0){            
+            if(!gValidator.minLength(inputValue, iMin)){                
+                    validation=false;
+                }                       
+        }
+        return validation;
+    }    
     
     public boolean isInteger(String inputValue){
 
@@ -207,7 +233,7 @@ public class EctValidation{
         return cssLocation;
     }
     
-         /*****************************************************************************************
+     /*****************************************************************************************
      * find the css name from the database
      *
      * @return String
