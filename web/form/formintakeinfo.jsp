@@ -133,6 +133,7 @@
     
     var choiceFormat  = new Array(11,15,16,22,24,26,27,31,32,36,37,45,46,53,54,56,62,63,65,66,67,68,69,72,73,76,77,80,81,84,85,88,89,92,93,96,97,100,101,104,105,108,109,112,113,116,117,120,121,124);    
     var allNumericField = new Array(23,57,58,59,60,64);
+    var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";
     
     function goToPage1(){             
