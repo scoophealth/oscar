@@ -66,7 +66,7 @@ public final class EctSetupMeasurementsAction extends Action {
             request.getSession().setAttribute("EctSessionBean", bean);
             String demo = (String) bean.getDemographicNo();
                                
-            EctMeasurementTypesBeanHandler hd = new EctMeasurementTypesBeanHandler(groupName, demo);
+            oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler(groupName, demo);
             session.setAttribute("measurementTypes", hd);
             Vector mInstrcVector = hd.getMeasuringInstrcVectorVector();
             for(int i=0; i<mInstrcVector.size(); i++){
