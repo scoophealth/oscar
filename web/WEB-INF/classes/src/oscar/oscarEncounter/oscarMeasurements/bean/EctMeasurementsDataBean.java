@@ -34,6 +34,7 @@ public class EctMeasurementsDataBean{
 
        int id = 0;
        String type = "";
+       String typeDisplayName = "";
        String demo = "";
        String providerFirstName = "";
        String providerLastName = "";
@@ -47,11 +48,12 @@ public class EctMeasurementsDataBean{
        public EctMeasurementsDataBean(){
        }
 
-       public EctMeasurementsDataBean(int id, String type, String demo, String providerFirstName, String providerLastName, 
+       public EctMeasurementsDataBean(int id, String type, String typeDisplayName, String demo, String providerFirstName, String providerLastName, 
                                       String dataField, String measuringInstrc, String comments, String dateObserved, 
                                       String dateEntered, String canPlot){
             this.id = id;
             this.type = type;
+            this.typeDisplayName = typeDisplayName;
             this.demo = demo;
             this.providerFirstName = providerFirstName;
             this.providerLastName = providerLastName;
@@ -68,6 +70,9 @@ public class EctMeasurementsDataBean{
        }
        public String getType(){
            return type;
+       }
+       public String getTypeDisplayName(){
+           return typeDisplayName;
        }
        public String getDemo(){
            return demo;
@@ -104,7 +109,10 @@ public class EctMeasurementsDataBean{
        }
        public void setType(String type){
            this.type = type;
-       }      
+       } 
+       public void setTypeDisplayName(String typeDisplayName){
+           this.typeDisplayName = typeDisplayName;
+       }
        public void setDemo(String demo){
            this.demo = demo;
        }

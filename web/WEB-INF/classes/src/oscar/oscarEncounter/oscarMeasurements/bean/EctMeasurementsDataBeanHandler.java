@@ -47,7 +47,7 @@ public class EctMeasurementsDataBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql ="SELECT m.id, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
+            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.providerNo= p.provider_no AND m.type = mt.type " +
@@ -63,7 +63,7 @@ public class EctMeasurementsDataBeanHandler {
                     else
                         canPlot = null;
                     //System.out.println("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
                                                                                rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
                                                                                rs.getString("comments"), rs.getString("dateObserved"), 
@@ -86,7 +86,7 @@ public class EctMeasurementsDataBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql ="SELECT m.id, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
+            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
@@ -102,7 +102,7 @@ public class EctMeasurementsDataBeanHandler {
                     else
                         canPlot = null;
                     //System.out.println("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
                                                                                rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
                                                                                rs.getString("comments"), rs.getString("dateObserved"), 
