@@ -134,10 +134,31 @@
     var choiceFormat  = new Array(7,11,16,20);        
     var allNumericField = null;
     var allMatch = null;
-    var action = "/<%=project_home%>/form/formname.do";        
+    var action = "/<%=project_home%>/form/formname.do";
+    
+    function checkBeforeSave(){
+        var distance = document.forms[0].elements[6].value;
+        var re1 = new RegExp('^[0-9][0-9][0-9][0-9][\.][0-9]$');
+        var re2 = new RegExp('^[0-9][0-9][0-9][\.][0-9]$');
+        var re3 = new RegExp('^[0-9][0-9][\.][0-9]$');
+        var re4 = new RegExp('^[0-9][\.][0-9]$');
+        var match1 = document.forms[0].elements[6].value.match(re1);
+        var match2 = document.forms[0].elements[6].value.match(re2);
+        var match3 = document.forms[0].elements[6].value.match(re3);
+        var match4 = document.forms[0].elements[6].value.match(re4);
+        if(match1||match2||match3||match4){            
+            return true;       
+        }
+        else{
+            alert("The input distance must be in ####.# format");
+            return false;
+        }
+        return true;
+    }
 
 </script>
 <script type="text/javascript" src="formScripts.js">
+    
 </script>
 
 
@@ -189,7 +210,7 @@
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="4">
-                        Distance: <input type="text" size="10" name="distance" value="<%= props.getProperty("distance", "") %>"/>
+                        Distance: <input type="text" size="10" name="distance" value="<%= props.getProperty("distance", "") %>"/> meter
                     </td>
                 </tr>
                 <tr class="title" >
@@ -365,8 +386,8 @@
 <%
   if (!bView) {
 %>
-            <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save" onclick="javascript: if(checkBeforeSave()==true) return onSave(); else return false;" />
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>
