@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.lang.*,oscar.oscarReport.pageUtil.*"%>
+<%@ page import="oscar.oscarReport.pageUtil.*"%>
 
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -41,17 +41,16 @@
 
 <head>
 <title>
-<bean:message key="global.measurements.general"/>
+<bean:message key="oscarReport.CDMReport.msgProcessSelectCDMReportAction"/>
 </title>
 <html:base/>
-<style type="text/css">
 </head>
 
 <script language="javascript">
 
 function submitForm(){
     
-    document.forms['selectCDMReportForm'].submit();
+    document.forms[0].submit();
     
  }
 
@@ -62,8 +61,8 @@ function submitForm(){
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 <html:errors/>
 <table>
-    <form name="selectCDMReportForm" action="SetupSelectCDMReport.do">
-        <tr>
+    <form action="SetupSelectCDMReport.do">
+        <tr>            
             <td> Processing... </td>
             <script>
                 submitForm();
@@ -77,4 +76,3 @@ function submitForm(){
 
 </body>
 </html:html>
-
