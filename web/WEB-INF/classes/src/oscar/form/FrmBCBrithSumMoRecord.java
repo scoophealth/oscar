@@ -1,16 +1,11 @@
 package oscar.form;
 
-import oscar.oscarDB.*;
-import oscar.oscarEncounter.data.*;
-import oscar.util.* ;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Date;
-import java.util.*;
-import java.sql.*;
-import java.io.*;
-import java.lang.String;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class FrmBCBrithSumMoRecord extends FrmRecord {
 	private String _dateFormat = "dd/MM/yyyy";
@@ -38,7 +33,7 @@ public class FrmBCBrithSumMoRecord extends FrmRecord {
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date,_dateFormat));
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
                 props.setProperty("c_phone", rs.getString("phone") +"  "+ rs.getString("phone2"));
-                //props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
+                props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
             }
             rs.close();
 			db.CloseConn();
