@@ -1,0 +1,8 @@
+# profession : type
+doctor : doctor
+resident : doctor
+nurse : doctor
+
+receptionist : receptionist
+
+admin : admin
