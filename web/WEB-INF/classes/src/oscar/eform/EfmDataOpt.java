@@ -181,10 +181,10 @@ public class EfmDataOpt {
     String temp = ""; 
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+      ResultSet rs = db.GetSQL(" select p.last_name, p.first_name from provider p, demographic d where d.provider_no=p.provider_no and d.demographic_no= '"+ demographic_no + "'") ;
 
       if (rs.next()){
-        temp = rs.getString("p.last_name") +","+ rs.getString("p.first_name");
+        temp = rs.getString("last_name") +", "+ rs.getString("first_name");
         rs.close();
       }
       db.CloseConn();
