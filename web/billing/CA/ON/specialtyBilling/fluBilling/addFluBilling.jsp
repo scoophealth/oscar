@@ -41,8 +41,8 @@ int curDay = now.get(Calendar.DAY_OF_MONTH);
 String clinicNo = oscarVariables.getProperty("clinic_no");
 String clinicview = oscarVariables.getProperty("clinic_view");
 
-String nowDateTime = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
-String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
+String nowDateTime = String.valueOf(curYear)+"-"+String.valueOf(curMonth) + "-" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
+String nowDate = String.valueOf(curYear)+"-"+String.valueOf(curMonth) + "-" + String.valueOf(curDay);
 String proFirst1="", proLast1="", proOHIP1="", proNo="";
 int Count = 0;
 ResultSet rslocal = apptMainBean.queryResults(request.getParameter("creator"), "search_provider_name");
