@@ -22,7 +22,7 @@
 // * Ontario, Canada 
 // *
 // -----------------------------------------------------------------------------------------------------------------------
-package oscar.oscarEncounter.oscarMeasurements.pageUtil;
+package oscar.oscarEncounter.oscarMeasurements.bean;
 
 import java.io.PrintStream;
 import java.sql.ResultSet;
