@@ -52,6 +52,10 @@ public class RxDrugRef {
         server_url = url;
     }
     
+    public String getDrugRefURL(){
+       return server_url;
+    }
+    
     /**
      *returns all matching ATC codes for a given (fraction of) a drug name.
      *Search is case insensitive
@@ -677,5 +681,29 @@ public class RxDrugRef {
        public Vector list_references(Hashtable tags){
            return new Vector();
        }
-
+       //////DRUGREF Second Gen API 
+       
+       public Vector getInteractions(Vector drugs)throws Exception{
+         Vector params = new Vector();
+         params.addElement("interactions_byATC");
+         params.addElement(drugs);         
+         //Vector vec = (Vector) callWebserviceLite("get",params); 
+         Vector vec = new Vector();
+         Object obj =  callWebserviceLite("fetch",params); 
+         if (obj instanceof Vector){
+            vec = (Vector) obj;
+         }else if(obj instanceof Hashtable){
+            Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");
+            if (holbrook instanceof Vector){
+               vec = (Vector) holbrook;   
+            }                       
+            Enumeration e = ((Hashtable) obj).keys();
+            while (e.hasMoreElements()){
+               String s = (String) e.nextElement();
+               System.out.println(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
+            }
+         }
+         
+         return vec;
+     }
 }
