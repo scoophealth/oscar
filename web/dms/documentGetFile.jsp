@@ -44,7 +44,9 @@
   doc_no = request.getParameter("doc_no");
 // response.sendRedirect("../document/"+filename);
 
-   String filePath = request.getContextPath() + System.getProperty("file.separator") + docdownload + System.getProperty("file.separator") + filename;
+  //String filePath = request.getContextPath() + System.getProperty("file.separator") + docdownload + System.getProperty("file.separator") + filename;
+  String filePath = "../../OscarDocument"+request.getContextPath()+"/document/"+filename;
+
 if (filetype.compareTo("active") == 0){
 
 %>
