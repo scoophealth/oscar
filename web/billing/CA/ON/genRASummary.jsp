@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 
- // a little bit change by Li 2004/02/16
+ // a little bit change by Li 2004/02/26
  // 
  // 
 --%>
@@ -46,21 +46,14 @@
 <tr bgcolor="#486ebd">
 	<th align='LEFT'> 
 	<input type='button' name='print' value='Print' onClick='window.print(); return false;'> </th> 
-	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing 
-	Reconcilliation - Payment Summary</font></th>
+	<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
+	Billing Reconcilliation - Payment Summary</font></th>
 	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
 </tr>
 </table>
 <% 
-GregorianCalendar now=new GregorianCalendar();
-int curYear = now.get(Calendar.YEAR);
-int curMonth = (now.get(Calendar.MONTH)+1);
-int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
-String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); // String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
-%>
- 
-<% 
+String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+
 String raNo = "", flag="", plast="", pfirst="", pohipno="", proNo="";
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
 String transactiontype="", providerno="", specialty="", account="", patient_last="", patient_first="", provincecode="", hin="", ver="", billtype="", location="";
@@ -134,7 +127,13 @@ ResultSet rsdemo01 = apptMainBean.queryResults(raNo, "search_racolposcopy");
 while (rsdemo01.next()) {
 	CObilling_no.add((String)rsdemo01.getString("billing_no"));
 }
-      	     
+
+Properties propProvierName = new Properties();
+rsdemo1 = apptMainBean.queryResults("%", "search_provider_ohip_dt");
+while (rsdemo1.next()){
+	propProvierName.setProperty(rsdemo1.getString("ohip_no"), (rsdemo1.getString("last_name") + "," + rsdemo1.getString("first_name")) );
+}
+
 BigDecimal bdCFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 BigDecimal bdPFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
@@ -157,7 +156,12 @@ double dCOFee = 0.00;
 double dOBFee = 0.00; 
 double dCFee = 0.00;       	
 double dPFee = 0.00;       	       	
-double dOFee = 0.00;       	       	
+double dOFee = 0.00;
+
+double dLocalHFee = 0.00;        
+BigDecimal bdLocalHFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+BigDecimal BigLocalHTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+String localServiceDate = "";
        	
 proNo = request.getParameter("proNo");
 //raNo = request.getParameter("rano");
@@ -210,28 +214,36 @@ if (raNo.compareTo("") == 0 || raNo == null){
 	String[] param = new String[2];
 	param[0] = raNo;
 	param[1] = "%";
-	rsdemo = null;
 	rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
 	while (rsdemo.next()) {   
 		account = rsdemo.getString("billing_no");
 		location="";  
 		demo_name ="";
-		demo_hin = "";
+		demo_hin = rsdemo.getString("hin") != null? rsdemo.getString("hin") : "";
 		rsdemo3 = null;
-		rsdemo3 = apptMainBean.queryResults(account, "search_bill"); // change search_bill to a small sql
+		rsdemo3 = apptMainBean.queryResults(account, "search_bill_short"); // change search_bill to a small sql
 		while (rsdemo3.next()){
 			demo_name = rsdemo3.getString("demographic_name");
-			demo_hin = rsdemo3.getString("hin");
+			if (rsdemo3.getString("hin") != null) {
+				if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
+					demo_hin = "";
+					demo_name ="";
+				}
+			} else {
+				demo_hin = "";
+				demo_name ="";
+			}
 			location = rsdemo3.getString("visittype");
+			localServiceDate = rsdemo3.getString("billing_date");
 		}
 
-		rsdemo2 = null;
-		// should take it out of the loop, use prop
-		rsdemo2 = apptMainBean.queryResults(rsdemo.getString("providerohip_no"), "search_provider_ohip_dt");
-		while (rsdemo2.next()){
-			proName = rsdemo2.getString("last_name") + "," + rsdemo2.getString("first_name");
-		}
+		// take it out of the loop, use prop
+		//rsdemo2 = apptMainBean.queryResults(rsdemo.getString("providerohip_no"), "search_provider_ohip_dt");
+		//while (rsdemo2.next()){
+		//	proName = rsdemo2.getString("last_name") + "," + rsdemo2.getString("first_name");
+		//}
 
+		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
 		servicecode = rsdemo.getString("service_code");
 		servicedate = rsdemo.getString("service_date");
 		serviceno = rsdemo.getString("service_count");
@@ -294,6 +306,11 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			dHFee = Double.parseDouble(amountpay);
 			bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigHTotal = BigHTotal.add(bdHFee);
+
+			// is local for hospital
+			if (demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
+				BigLocalHTotal = BigLocalHTotal.add(bdHFee);
+			}
 %>
 
 <tr> 
@@ -555,7 +572,8 @@ if (raNo.compareTo("") == 0 || raNo == null){
 
 <% 
 BigLTotal = BigLTotal.add(BigTotal);
-BigLTotal = BigLTotal.add(BigHTotal);
+//BigLTotal = BigLTotal.add(BigHTotal);
+BigLTotal = BigLTotal.add(BigLocalHTotal);
 %>
 <tr bgcolor='#FFFF3E'> 
 	<td width="7%" height="16"></td>
