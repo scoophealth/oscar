@@ -397,7 +397,7 @@ function calByLMP() {
       <td width="30%"><b>1.</b> HOSPITAL<br>
       <input type="text" name="c_hospital" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_hospital", "") %>" @oscar.formDB />
       </td>
-	  <td width="33%">PRIMARY CARE GIVER<br>
+	  <td width="33%"><a href=# onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp'); return false;">PRIMARY CARE GIVER</a><br>
       <input type="text" name="pg1_priCare" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_priCare", "") %>" @oscar.formDB />
       </td><td colspan="2">FAMILY PHYSICIAN<br>
       <input type="text" name="pg1_famPhy" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_famPhy", "") %>" @oscar.formDB />
