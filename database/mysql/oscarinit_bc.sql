@@ -82,6 +82,24 @@ CREATE TABLE billingmaster (
   PRIMARY KEY  (billingmaster_no)
 ) TYPE=MyISAM;
 
+
+--
+-- Table structure for table 'billingnote'
+--
+
+CREATE TABLE billingnote (
+  billingnote_no int(10) NOT NULL auto_increment,
+  billingmaster_no int(10) NOT NULL default '0',
+  createdate datetime default NULL,
+  provider_no varchar(6) NOT NULL default '',
+  note text default '',    
+  PRIMARY KEY  (`billingnote_no`),
+  KEY billingmaster_no (billingmaster_no),
+  KEY provider_no  (provider_no),
+  KEY createdate (createdate)
+) TYPE=MyISAM;
+
+
 --
 -- Table structure for table 'billingreferral'
 --
