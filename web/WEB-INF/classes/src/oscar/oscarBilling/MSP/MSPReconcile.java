@@ -180,16 +180,41 @@ public class MSPReconcile{
     }
     
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate){
+        
+        
         BillSearch billSearch = new BillSearch();
+        
+        String providerQuery = "";
+        String startDateQuery = "";
+        String endDateQuery = "";
+        
+        if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")){
+            providerQuery = " and provider_no = '"+providerNo+"'" ; 
+        }
+        
+        if (startDate != null && !startDate.trim().equalsIgnoreCase("")){
+            startDateQuery = " and ( to_days(service_date) > to_days('"+startDate+"')) ";
+        }
+        
+        if (endDate != null && !endDate.trim().equalsIgnoreCase("")){
+            endDateQuery = " and ( to_days(service_date) < to_days('"+endDate+"')) ";
+        }
+        
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, "
                  +" b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
                  +" b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no from billing b, "
-                 +" billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus = '"+statusType+"' ";
+                 +" billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus = '"+statusType+"' "
+                 +  providerQuery
+                 +  startDateQuery
+                 +  endDateQuery;
+        
+        
         //String 
         billSearch.list = new ArrayList();
         billSearch.count = 0;
         billSearch.justBillingMaster = new ArrayList();
 
+        System.out.println("\n"+p+"\n");
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet  rs = db.GetSQL(p);
