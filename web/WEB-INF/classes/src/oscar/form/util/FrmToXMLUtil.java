@@ -26,8 +26,11 @@ import java.util.*;
 import java.io.*;
 import java.lang.reflect.*;
 import java.text.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.XmlCalendar;
+import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.*;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarRx.data.*;
@@ -199,6 +202,16 @@ public class FrmToXMLUtil{
                 drugName.setSignedWhen(when);
                 drugName.setValue(prescribedDrugs[i].getDrugName());
             }
+            if (getFluShotBillingDate((String) dataProps.getProperty("demographic_no"))!=null){
+                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug drug = visit.addNewSitePatientVisitDrug();                
+                drug.setDrugCod("ATC_J07BB01");
+                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug.TxtDrugName drugName = drug.addNewTxtDrugName();                
+                drugName.setSignedHow(how);
+                drugName.setSignedWho(who);
+                drugName.setSignedWhen(getFluShotBillingDate((String) dataProps.getProperty("demographic_no")));
+                drugName.setValue("flu Shot");
+            }
+                        
                                         
         }
         catch(NoSuchMethodException e){
@@ -339,6 +352,26 @@ public class FrmToXMLUtil{
         }
         return input;
             
+    }
+   
+   private static String getFluShotBillingDate(String demoNo) {
+        String s = null;
+        try {
+                DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+                String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where b.demographic_no='"
+                                + demoNo
+                                + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
+                                + " and bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
+                ResultSet rs = dbhandler.GetSQL(s1);
+                //System.out.println("flushot: " + s1);
+                if (rs.next())
+                        s = rs.getString("billing_date");
+                rs.close();
+                dbhandler.CloseConn();
+            } catch (SQLException sqlexception) {
+                System.out.println(sqlexception.getMessage());
+        }
+        return s;
     }
           
 }
