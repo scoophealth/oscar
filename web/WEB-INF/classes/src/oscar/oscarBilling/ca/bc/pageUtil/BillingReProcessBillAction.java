@@ -133,6 +133,9 @@ public class BillingReProcessBillAction extends Action {
         String claimComment = frm.getShortComment();//f
         
         String billingStatus =frm.getStatus();//f
+        
+        String facilityNum = frm.getFacilityNum();
+        String facilitySubNum= frm.getFacilitySubNum();
                 
         String originalMSPNumber = misc.forwardZero("", 20);
         
@@ -235,6 +238,9 @@ public class BillingReProcessBillAction extends Action {
                         + "correspondence_code = '"+correspondenceCode+"', "
                         + "claim_comment = '"+claimComment+"', " 
                         + "original_claim = '"+originalMSPNumber+"',"
+                        + "facility_no = '"+facilityNum+"',"
+                        + "facility_sub_no = '"+facilitySubNum+"',"
+                        
                         
                         + "oin_insurer_code = '"+oinInsurerCode+"', "
                         + "oin_registration_no = '"+UtilMisc.mysqlEscape(oinRegistrationNo)+"', "
