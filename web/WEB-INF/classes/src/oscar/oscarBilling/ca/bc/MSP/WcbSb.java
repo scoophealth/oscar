@@ -94,7 +94,7 @@ public class WcbSb {
    
    public WcbSb(java.sql.ResultSet rs) {
       try {
-         this.bill_amount = rs.getString("bill_amount");
+         this.bill_amount = rs.getString("wcb.bill_amount");
          this.visit_type = rs.getString("w_servicelocation");
          this.billing_no = getBillingMasterNo(rs.getString("billing_no"));
          this.invoice_no = rs.getString("billing_no");
@@ -284,16 +284,22 @@ public class WcbSb {
    private String Note(String logNo, String a, String b) {
       return "N01" + this.ClaimNote1Head(logNo) + "W" + a + b;
    }
+   
+   
+    
+    
+    
    private String Claim(String logNo, String billedAmount, String feeitem,String correspondenceCode) {
       return "C02"
       + this.ClaimNote1Head(logNo)
-      + misc.zero(10)
+      + misc.forwardZero(this.w_phn,10)
+      //+ misc.zero(10)      //phn
       + misc.backwardSpace(this.w_fname, 1).toUpperCase()
       + misc.space(1)
       + misc.backwardSpace(this.w_lname, 2).toUpperCase()
       + misc.zero(2)
       + misc.forwardZero("1", 3)
-      + misc.zero(2 + 2 + 1 + 2)
+      + misc.zero(2 + 2 + 1 + 2)  //clarification
       + misc.forwardZero(feeitem, 5)
       + misc.moneyFormatPaddedZeroNoDecimal(billedAmount, 7)
       + misc.zero(1)
