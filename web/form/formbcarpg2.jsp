@@ -747,6 +747,7 @@ function calToday(field) {
 <div ID="UrineDiv" class="demo">
    <table bgcolor='silver' width='100%'>
      <tr><td align='right'><a href=# onclick="showHideBox('UrineDiv',0); return false;">X</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('-', 'UrineDiv'); return false;">-</a></td></tr>
      <tr><td><a href=# onclick="insertBox('+', 'UrineDiv'); return false;">+</a></td></tr>
      <tr><td><a href=# onclick="insertBox('++', 'UrineDiv'); return false;">++</a></td></tr>
      <tr><td><a href=# onclick="insertBox('+++', 'UrineDiv'); return false;">+++</a></td></tr>
