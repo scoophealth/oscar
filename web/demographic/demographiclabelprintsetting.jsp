@@ -32,6 +32,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <%@ include file="../admin/dbconnection.jsp" %>
 <%//operation available to the client - dboperation
   String [][] dbQueries=new String[][] {
@@ -118,7 +119,8 @@ function checkTotal() {
   phone2 = phone2.equals("")?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
 /*  String label1 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br><br><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br></font>";
   String label2 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "  &nbsp;" +chart_no+ "</b><br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br>Home: " +phone+ "<br>" +dob+ " " +sex+ "<br>" +hin+ "<br>Bus:" +phone2+ "Dr."+  providername+ "<br></font>";
-  String label3 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +last_name+ ", " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";*/
+  String label3 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +last_name+ ", " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";
+*/
 %> 
 
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
@@ -158,16 +160,16 @@ function checkTotal() {
       </td>
       <td bgcolor="#999999" rowspan="3" valign="middle" align="right"> 
         <p><bean:message key="demographic.demographiclabelprintsetting.formLeft"/>:
-          <input type="text" name="left" size="3" maxlength="3" value="200">
+          <input type="text" name="left" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.left","200") %>"/>
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
         <p><bean:message key="demographic.demographiclabelprintsetting.formTop"/>: 
-          <input type="text" name="top" size="3" maxlength="3" value="0">
+          <input type="text" name="top" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.top","0")%>"/>
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
         <p><bean:message key="demographic.demographiclabelprintsetting.formHeight"/>:
-          <input type="text" name="height" size="3" maxlength="3" value="145">
+          <input type="text" name="height" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.height","145")%>"/>
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
         <p><bean:message key="demographic.demographiclabelprintsetting.formGap"/>:
-          <input type="text" name="gap" size="3" maxlength="3" value="0">
+          <input type="text" name="gap" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.gap","0")%>"/>
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
       </td>
     </tr>
@@ -191,7 +193,8 @@ function checkTotal() {
       <td align="center"><br>
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr> 
-<%--            <td><%=label3%></td>--%>
+<%--            <td><%=label3%></td>
+--%>
             <td>
             <font face="Courier New, Courier, mono" size="2"><%=last_name%>,&nbsp;<%=first_name%><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br></font>
             </td>
