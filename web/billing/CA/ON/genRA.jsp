@@ -29,10 +29,10 @@
 --%>
 
 <% 
-    if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+    if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ page import="java.io.*, java.sql.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
@@ -56,188 +56,195 @@ String raNo = "";
 ResultSet rslocal;
 filename = documentBean.getFilename();
 
-filepath = oscarVariables.getProperty("DOCUMENT_DIR").trim(); //"/usr/local/OscarDocument/" + url +"/document/";
-FileInputStream file = new FileInputStream(filepath + filename);
-InputStreamReader reader = new InputStreamReader(file);
-BufferedReader input = new BufferedReader(reader);
-String nextline;
+if(!filename.equals("")) {
 
-while ((nextline=input.readLine())!=null){
-	header = nextline.substring(0,1);
-
-	if (header.compareTo("H") == 0) { 
-		headerCount = nextline.substring(2,3);
-
-		if (headerCount.compareTo("1") == 0){
-			paymentdate = nextline.substring(21,29);
-			payable = nextline.substring(29,59);
-			total = nextline.substring(59,68);
-			totalStatus = nextline.substring(68,69);
-			deposit = nextline.substring(69,77);
-   
-			totalsum = Integer.parseInt(total);
-			total = String.valueOf(totalsum);
-			if (total.compareTo("0") == 0){
-				total = "000";
-			}
-
-			total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2) + totalStatus;      
-   
-			String[] param2 = new String[2];
-			param2[0] = filename;
-			param2[1] = paymentdate;
-
-			ResultSet rsdemo = apptMainBean.queryResults(param2, "search_rahd");
-			while (rsdemo.next()) {   
-				raNo = rsdemo.getString("raheader_no");
-			}
-             
-			//judge if it is empty in table radt
-			int radtNum = 0;
-			if (raNo!=null && raNo.length()>0) {
-				// can't make sure the record has only one result here
-				rsdemo = apptMainBean.queryResults(new String[]{raNo}, "search_radt");
-				while (rsdemo.next()) {   
-					radtNum = rsdemo.getInt("count(raheader_no)");
+	filepath = oscarVariables.getProperty("DOCUMENT_DIR").trim(); //"/usr/local/OscarDocument/" + url +"/document/";
+	FileInputStream file = new FileInputStream(filepath + filename);
+	InputStreamReader reader = new InputStreamReader(file);
+	BufferedReader input = new BufferedReader(reader);
+	String nextline;
+	
+	while ((nextline=input.readLine())!=null){
+		header = nextline.substring(0,1);
+	
+		if (header.compareTo("H") == 0) { 
+			headerCount = nextline.substring(2,3);
+	
+			if (headerCount.compareTo("1") == 0){
+				paymentdate = nextline.substring(21,29);
+				payable = nextline.substring(29,59);
+				total = nextline.substring(59,68);
+				totalStatus = nextline.substring(68,69);
+				deposit = nextline.substring(69,77);
+	   
+				totalsum = Integer.parseInt(total);
+				total = String.valueOf(totalsum);
+				if (total.compareTo("0") == 0){
+					total = "000";
 				}
-
-				// if there is no radt record for the rahd, update the rahd status to "D"
-				// if (radtNum == 0) update rahd
-			}
-
-			if (raNo.compareTo("") == 0 || raNo == null || radtNum == 0){
-				recFlag = 1;
-
-				String[] param =new String[9];
-				param[0]=filename;
-				param[1]=paymentdate;
-				param[2]=payable; 
-				param[3]=total;
-				param[4]="0";
-				param[5]="0";
-				param[6]="N";
-				param[7]=nowDate;
-				param[8]="<xml_cheque>"+total+"</xml_cheque>";
-				int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_rahd");
-
-				rsdemo = null;
-				rsdemo = apptMainBean.queryResults(param2, "search_rahd");
-				// can't make sure the record has only one result here
+	
+				total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2) + totalStatus;      
+	   
+				String[] param2 = new String[2];
+				param2[0] = filename;
+				param2[1] = paymentdate;
+	
+				ResultSet rsdemo = apptMainBean.queryResults(param2, "search_rahd");
 				while (rsdemo.next()) {   
 					raNo = rsdemo.getString("raheader_no");
 				}
-			}
-		} // ends with "1"
-
-		if (headerCount.compareTo("4") == 0){
-			transactiontype = nextline.substring(14,15);
-			providerno = nextline.substring(15,21);
-			specialty = nextline.substring(21,23);
-			account = nextline.substring(23,31);
-			patient_last = nextline.substring(31,45);
-			patient_first = nextline.substring(45,50);
-			hin = nextline.substring(52,64);
-			ver = nextline.substring(64,66);
-			billtype = nextline.substring(66,69);
-			location = nextline.substring(69,73);
-
-
-			count = count + 1;
-
-			String validnum = "0123456789- ";
-			boolean valid = true;
-			for (int i = 0; i < account.length(); i++) {
-				char c = account.charAt(i);
-				if (validnum.indexOf(c) == -1) {
-					valid = false;
-					break;
+	             
+				//judge if it is empty in table radt
+				int radtNum = 0;
+				if (raNo!=null && raNo.length()>0) {
+					// can't make sure the record has only one result here
+					rsdemo = apptMainBean.queryResults(new String[]{raNo}, "search_radt");
+					while (rsdemo.next()) {   
+						radtNum = rsdemo.getInt("count(raheader_no)");
+					}
+	
+					// if there is no radt record for the rahd, update the rahd status to "D"
+					// if (radtNum == 0) update rahd
+				}
+	
+				if (raNo.compareTo("") == 0 || raNo == null || radtNum == 0){
+					recFlag = 1;
+	
+					String[] param =new String[9];
+					param[0]=filename;
+					param[1]=paymentdate;
+					param[2]=payable; 
+					param[3]=total;
+					param[4]="0";
+					param[5]="0";
+					param[6]="N";
+					param[7]=nowDate;
+					param[8]="<xml_cheque>"+total+"</xml_cheque>";
+					int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_rahd");
+	
+					rsdemo = null;
+					rsdemo = apptMainBean.queryResults(param2, "search_rahd");
+					// can't make sure the record has only one result here
+					while (rsdemo.next()) {   
+						raNo = rsdemo.getString("raheader_no");
+					}
+				}
+			} // ends with "1"
+	
+			if (headerCount.compareTo("4") == 0){
+				transactiontype = nextline.substring(14,15);
+				providerno = nextline.substring(15,21);
+				specialty = nextline.substring(21,23);
+				account = nextline.substring(23,31);
+				patient_last = nextline.substring(31,45);
+				patient_first = nextline.substring(45,50);
+				hin = nextline.substring(52,64);
+				ver = nextline.substring(64,66);
+				billtype = nextline.substring(66,69);
+				location = nextline.substring(69,73);
+	
+	
+				count = count + 1;
+	
+				String validnum = "0123456789- ";
+				boolean valid = true;
+				for (int i = 0; i < account.length(); i++) {
+					char c = account.charAt(i);
+					if (validnum.indexOf(c) == -1) {
+						valid = false;
+						break;
+					}
+				}
+	
+				if (account.trim().length() == 0) account = "0";
+	
+				if (valid){
+					accountno= Integer.parseInt(account.trim());
+					account = String.valueOf(accountno);
 				}
 			}
-
-			if (account.trim().length() == 0) account = "0";
-
-			if (valid){
-				accountno= Integer.parseInt(account.trim());
-				account = String.valueOf(accountno);
+		   
+			if (headerCount.compareTo("5") == 0){
+				transactiontype = nextline.substring(14,15);
+				servicedate = nextline.substring(15,23);
+				serviceno= nextline.substring(23,25);
+				servicecode = nextline.substring(25,30);
+				amountsubmit = nextline.substring(31,37);
+				amountpay = nextline.substring(37,43);
+				amountpaysign = nextline.substring(43,44);
+				explain = nextline.substring(44,46);
+	
+				payFlag = 0;
+				error = "";
+				tCount = tCount +1;
+				amountPaySum = Integer.parseInt(amountpay );
+				amountpay  = String.valueOf(amountPaySum );
+				if (amountpay.compareTo("0") == 0)	amountpay = "000";
+	
+				amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);      
+				amountSubmitSum = Integer.parseInt(amountsubmit);
+				amountsubmit  = String.valueOf(amountSubmitSum );
+				if (amountsubmit.compareTo("0") == 0) amountsubmit = "000";
+	
+				amountsubmit =amountsubmit.substring(0, amountsubmit.length()-2) + "." + amountsubmit.substring(amountsubmit.length()-2);      
+				newhin = hin + ver;
+	
+				// if it needs to write a radt record for the rahd record
+				if (recFlag > 0) {
+					String[] param4 =new String[11];
+					param4[0]=raNo;
+					param4[1]=providerno;
+					param4[2]=account; 
+					param4[3]=servicecode;
+					param4[4]=serviceno;
+					param4[5]=newhin;
+					param4[6]=amountsubmit;
+					param4[7]=amountpaysign+amountpay;
+					param4[8]=servicedate;
+					param4[9]=explain;
+					param4[10]=billtype;
+					int rowsAffected3 = apptMainBean.queryExecuteUpdate(param4,"save_radt");
+				}
 			}
-		}
-	   
-		if (headerCount.compareTo("5") == 0){
-			transactiontype = nextline.substring(14,15);
-			servicedate = nextline.substring(15,23);
-			serviceno= nextline.substring(23,25);
-			servicecode = nextline.substring(25,30);
-			amountsubmit = nextline.substring(31,37);
-			amountpay = nextline.substring(37,43);
-			amountpaysign = nextline.substring(43,44);
-			explain = nextline.substring(44,46);
-
-			payFlag = 0;
-			error = "";
-			tCount = tCount +1;
-			amountPaySum = Integer.parseInt(amountpay );
-			amountpay  = String.valueOf(amountPaySum );
-			if (amountpay.compareTo("0") == 0)	amountpay = "000";
-
-			amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);      
-			amountSubmitSum = Integer.parseInt(amountsubmit);
-			amountsubmit  = String.valueOf(amountSubmitSum );
-			if (amountsubmit.compareTo("0") == 0) amountsubmit = "000";
-
-			amountsubmit =amountsubmit.substring(0, amountsubmit.length()-2) + "." + amountsubmit.substring(amountsubmit.length()-2);      
-			newhin = hin + ver;
-
-			// if it needs to write a radt record for the rahd record
-			if (recFlag > 0) {
-				String[] param4 =new String[11];
-				param4[0]=raNo;
-				param4[1]=providerno;
-				param4[2]=account; 
-				param4[3]=servicecode;
-				param4[4]=serviceno;
-				param4[5]=newhin;
-				param4[6]=amountsubmit;
-				param4[7]=amountpaysign+amountpay;
-				param4[8]=servicedate;
-				param4[9]=explain;
-				param4[10]=billtype;
-				int rowsAffected3 = apptMainBean.queryExecuteUpdate(param4,"save_radt");
+	
+			if (headerCount.compareTo("6") == 0){
+				// balancefwd = "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4'>Balance Forward Record - Amount Brought Forward (ABF)</td></tr><tr><td>Claims Adjustment</td><td>Advances</td><td>Reductions</td><td>Deductions</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table>";
+				abf_ca = nextline.substring(3,10)+"."+nextline.substring(10,13);
+				abf_ad = nextline.substring(13,20)+"."+nextline.substring(20,23);
+				abf_re = nextline.substring(23,30)+"."+nextline.substring(30,33);
+				abf_de = nextline.substring(33,40)+"."+nextline.substring(40,43);
 			}
-		}
+		   
+			if (headerCount.compareTo("7") == 0){
+				trans_code = nextline.substring(3,5);
+				if (trans_code.compareTo("10")==0) trans_code="Advance";
+				if (trans_code.compareTo("20")==0) trans_code="Reduction";
+				if (trans_code.compareTo("30")==0) trans_code="Unused";
+				if (trans_code.compareTo("40")==0) trans_code="Advance repayment";
+				if (trans_code.compareTo("50")==0) trans_code="Accounting adjustment";
+				if (trans_code.compareTo("70")==0) trans_code="Attachments";
+				cheque_indicator = nextline.substring(5,6);
+				if (cheque_indicator.compareTo("M")==0) cheque_indicator="Manual Cheque issued";
+				if (cheque_indicator.compareTo("C")==0) cheque_indicator="Computer Cheque issued";
+				if (cheque_indicator.compareTo("I")==0) cheque_indicator="Interim payment Cheque/Direct Bank Deposit issued";
+	
+				trans_date = nextline.substring(6,14);
+				trans_amount= nextline.substring(14,20)+"."+nextline.substring(20,23);
+				trans_message = nextline.substring(23,73);
+	
+				transaction = transaction + "<tr><td width='14%'>"+trans_code+"</td><td width='12%'>"+trans_date+"</td><td width='17%'>"+cheque_indicator+"</td><td width='13%'>"+trans_amount+"</td><td width='44%'>"+trans_message+"</td></tr>";
+			} 
+	
+			if (headerCount.compareTo("8") == 0){
+				message_txt = message_txt + nextline.substring(3,73)+"<br>";
+			}
+	
+		} // ends with header "H"
+	}
+	file.close();
+	reader.close();
+	input.close();
 
-		if (headerCount.compareTo("6") == 0){
-			// balancefwd = "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4'>Balance Forward Record - Amount Brought Forward (ABF)</td></tr><tr><td>Claims Adjustment</td><td>Advances</td><td>Reductions</td><td>Deductions</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table>";
-			abf_ca = nextline.substring(3,10)+"."+nextline.substring(10,13);
-			abf_ad = nextline.substring(13,20)+"."+nextline.substring(20,23);
-			abf_re = nextline.substring(23,30)+"."+nextline.substring(30,33);
-			abf_de = nextline.substring(33,40)+"."+nextline.substring(40,43);
-		}
-	   
-		if (headerCount.compareTo("7") == 0){
-			trans_code = nextline.substring(3,5);
-			if (trans_code.compareTo("10")==0) trans_code="Advance";
-			if (trans_code.compareTo("20")==0) trans_code="Reduction";
-			if (trans_code.compareTo("30")==0) trans_code="Unused";
-			if (trans_code.compareTo("40")==0) trans_code="Advance repayment";
-			if (trans_code.compareTo("50")==0) trans_code="Accounting adjustment";
-			if (trans_code.compareTo("70")==0) trans_code="Attachments";
-			cheque_indicator = nextline.substring(5,6);
-			if (cheque_indicator.compareTo("M")==0) cheque_indicator="Manual Cheque issued";
-			if (cheque_indicator.compareTo("C")==0) cheque_indicator="Computer Cheque issued";
-			if (cheque_indicator.compareTo("I")==0) cheque_indicator="Interim payment Cheque/Direct Bank Deposit issued";
-
-			trans_date = nextline.substring(6,14);
-			trans_amount= nextline.substring(14,20)+"."+nextline.substring(20,23);
-			trans_message = nextline.substring(23,73);
-
-			transaction = transaction + "<tr><td width='14%'>"+trans_code+"</td><td width='12%'>"+trans_date+"</td><td width='17%'>"+cheque_indicator+"</td><td width='13%'>"+trans_amount+"</td><td width='44%'>"+trans_message+"</td></tr>";
-		} 
-
-		if (headerCount.compareTo("8") == 0){
-			message_txt = message_txt + nextline.substring(3,73)+"<br>";
-		}
-
-	} // ends with header "H"
 }
 
 if (transaction.compareTo("") != 0){
@@ -357,9 +364,6 @@ while (rsdemo.next()) {
 }
 apptMainBean.closePstmtConn();
 
-file.close();
-reader.close();
-input.close();
 %>
 </table>
 
