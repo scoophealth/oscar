@@ -333,6 +333,13 @@ function gotoPrintReceipt(){
                 <td>&nbsp;</td>
               </tr>
               <tr bgcolor="#EAEAFF"> 
+                <td height="14" colspan="4">Correspondence Note</td>                
+              </tr>
+              <tr > 
+                <td height="14" colspan="4"><%=bean.getMSPBillingNote()%></td>                
+              </tr>
+              
+              <tr bgcolor="#EAEAFF"> 
                 <td height="14" colspan="4">Messages</td>                
               </tr>
               <tr > 
