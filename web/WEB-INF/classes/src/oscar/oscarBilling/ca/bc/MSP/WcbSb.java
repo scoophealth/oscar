@@ -294,9 +294,9 @@ public class WcbSb {
       + this.ClaimNote1Head(logNo)
       + misc.forwardZero("",10)
       //+ misc.zero(10)      //phn
-      + misc.backwardSpace(this.w_fname, 1).toUpperCase()
+      + misc.backwardSpace("", 1).toUpperCase()
       + misc.space(1)
-      + misc.backwardSpace(this.w_lname, 2).toUpperCase()
+      + misc.backwardSpace("", 2).toUpperCase()
       + misc.zero(2)
       + misc.forwardZero("1", 3)
       + misc.zero(2 + 2 + 1 + 2)  //clarification
