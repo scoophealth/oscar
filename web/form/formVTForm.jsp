@@ -541,23 +541,22 @@ function PVDCheck(){
                                     <html:errors/>  
                                         <tr>
                                             <td colspan="2">
-                                                <table>
+                                                <table width="95%">
                                                     <tr>
-                                                        <td>
+                                                        <td width="35%">
                                                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
                                                         </td>
                                                         <html:hidden property="value(MIValue)"/>
                                                         <html:hidden property="value(AngValue)"/>
                                                         <html:hidden property="value(ACSValue)"/>                                                        
-                                                        <html:hidden property="value(RVTNValue)"/>
-                                                                                                             
-                                                        <td class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/> DM</td>
-                                                        <td class="sixtyPercent"><html:checkbox property="value(HTNValue)"/> HTN</td>
-                                                        <td class="sixtyPercent"><html:checkbox property="value(HchlValue)"/> Hyperlipidemia</td>
-                                                        <td class="sixtyPercent"><html:checkbox property="value(CADValue)"/> CAD</td>
-                                                        <td class="sixtyPercent"><html:checkbox property="value(CVDValue)"/> CVD</td>
-                                                        <td class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/> PVD</td>
-                                                        
+                                                        <html:hidden property="value(RVTNValue)"/>                                                                                                             
+                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/> DM</td>
+                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(HTNValue)"/> HTN</td>
+                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(HchlValue)"/> Hyperlipidemia</td>
+                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(CADValue)"/> CAD</td>
+                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(CVDValue)"/> CVD</td>
+                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/> PVD</td>                                                    
+                                                        <td align="right">FP Visit Date (YYYYMMDD) <html:text size="8" property="value(visitCod)"/></td>
                                                     </tr>
                                                 </table>                                                
                                             </td>
