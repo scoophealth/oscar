@@ -88,7 +88,8 @@ function set(target) {
 function changeList(){
     var quickList = document.forms[0].quickList.options[document.forms[0].quickList.selectedIndex].value;
     var demographicNo = escape(document.forms[0].demographicNo.value);    
-    rs('<bean:message key="oscarEncounter.Index.msgOscarConsultation"/>','/oscar/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo='+demographicNo+'&quickList='+quickList,600,600,1);    
+    var providerNo = escape(document.forms[0].providerNo.value);    
+    rs('<bean:message key="oscarEncounter.Index.msgOscarConsultation"/>','/oscar/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo='+demographicNo+'&quickList='+quickList+'&providerNo='+providerNo,600,600,1);    
 }
 //-->
 </SCRIPT>
@@ -196,7 +197,9 @@ function changeList(){
             </tr>
             <tr> 
                 <td>
-                    <input type="text" name="xml_research1" size="30"><input type="hidden" name="demographicNo" value="<bean:write name="demographicNo"/>">
+                    <input type="text" name="xml_research1" size="30">
+                    <input type="hidden" name="demographicNo" value="<bean:write name="demographicNo"/>">
+                    <input type="hidden" name="providerNo" value="<bean:write name="providerNo"/>">
                 </td>
             </tr>
             <tr> 
@@ -278,7 +281,7 @@ function changeList(){
                 <td class="notResolved"><bean:write name="diagnotics" property="start_date" /></td>                            
                 <td class="notResolved"><bean:write name="diagnotics" property="end_date" /></td>
                 <td class="notResolved">
-                    <a href='dxResearchUpdate.do?status=C&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/></a> | <a href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>            
+                    <a href='dxResearchUpdate.do?status=C&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/></a> | <a href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>            
                 </td>
             </tr>
             </logic:equal>
@@ -288,7 +291,7 @@ function changeList(){
                 <td><bean:write name="diagnotics" property="start_date" /></td>                            
                 <td><bean:write name="diagnotics" property="end_date" /></td>
                 <td>                
-                   <bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/> | <a href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>
+                   <bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/> | <a href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>
                 </td>
             </tr>
             </logic:equal>
