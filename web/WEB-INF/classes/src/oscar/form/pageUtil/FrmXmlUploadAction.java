@@ -42,7 +42,6 @@ import org.apache.struts.util.MessageResources;
 import org.apache.struts.upload.FormFile;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
-import oscar.oscarBilling.bean.*;
 import oscar.OscarProperties;
 import oscar.util.JDBCUtil;
 
