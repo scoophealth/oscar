@@ -3,6 +3,8 @@ doctor : doctor
 resident : doctor
 nurse : doctor
 midwife : doctor
+locum : doctor
+doctorView : doctor
 
 receptionist : receptionist
 

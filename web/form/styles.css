@@ -92,7 +92,8 @@ A IMG
 .Type2DiabetesTextarea {
     width:118px;
     overflow:auto;
-    font-size:80%;
+    font-family:  Arial, Verdana, Tahoma, Helvetica, sans-serif;
+    font-size:100%;
 }
 
 .Type2DiabetesInput {
