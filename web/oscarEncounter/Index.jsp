@@ -996,7 +996,7 @@ border-right: 2px solid #cfcfcf;
                                     <div class="presBox" id="allergyBox">
                                     <ul >
                                     <%      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
-                                            = new oscar.oscarRx.data.RxPatientData().getPatient(demoNo).getAllergies();
+                                            = new oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demoNo)).getAllergies();
         
                                             for (int j=0; j<allergies.length; j++){%>              
                                         <li>
