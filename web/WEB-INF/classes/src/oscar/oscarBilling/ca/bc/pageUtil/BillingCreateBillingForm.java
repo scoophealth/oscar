@@ -49,6 +49,9 @@ public final class BillingCreateBillingForm extends ActionForm {
     private String service_to_date = null;
     private String shortClaimNote = null;
     private String messageNotes = null;
+    private String mva_claim_code = null;
+    private String facilityNum = null;
+    private String facilitySubNum = null;
     
     /**
      * The get method for the message String
@@ -621,6 +624,54 @@ public final class BillingCreateBillingForm extends ActionForm {
      */
     public void setMessageNotes(java.lang.String messageNotes) {
        this.messageNotes = messageNotes;
+    }
+        
+    /**
+     * Getter for property mva_claim_code.
+     * @return Value of property mva_claim_code.
+     */
+    public java.lang.String getMva_claim_code() {
+       return mva_claim_code;
+    }
+    
+    /**
+     * Setter for property mva_claim_code.
+     * @param mva_claim_code New value of property mva_claim_code.
+     */
+    public void setMva_claim_code(java.lang.String mva_claim_code) {
+       this.mva_claim_code = mva_claim_code;
+    }
+    
+    /**
+     * Getter for property facilityNum.
+     * @return Value of property facilityNum.
+     */
+    public java.lang.String getFacilityNum() {
+       return facilityNum;
+    }
+    
+    /**
+     * Setter for property facilityNum.
+     * @param facilityNum New value of property facilityNum.
+     */
+    public void setFacilityNum(java.lang.String facilityNum) {
+       this.facilityNum = facilityNum;
+    }
+    
+    /**
+     * Getter for property facilitySubNum.
+     * @return Value of property facilitySubNum.
+     */
+    public java.lang.String getFacilitySubNum() {
+       return facilitySubNum;
+    }
+    
+    /**
+     * Setter for property facilitySubNum.
+     * @param facilitySubNum New value of property facilitySubNum.
+     */
+    public void setFacilitySubNum(java.lang.String facilitySubNum) {
+       this.facilitySubNum = facilitySubNum;
     }
     
     /**
