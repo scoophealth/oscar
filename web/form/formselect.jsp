@@ -58,14 +58,13 @@
 <script type="text/javascript">
     function set(target) {
      document.forms[0].forward.value=target;
-};
+};    
 </script>
 
 </head>
 
 <body class="BodyStyle" vlink="#0000FF" onload="window.resizeTo(1000,500)">
-<!--  -->
-    <html:errors/>
+<!--  -->        
     <html:form action="/form/select.do">
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -86,7 +85,7 @@
             <td class="MainTableRightColumn">
                <table border=0 cellspacing=4 width=400>
                 <tr>
-                    <td>
+                    <td>                        
                         <table>
                             <tr>
                                 <th align="left" >
@@ -125,8 +124,13 @@
                                 <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
                                 <td></td>
                             </tr>                            
-                        </table>
+                        </table>                        
                     </td>
+                    <td>                        
+                        <input type="button" name="button" style="width:80" value="Move Up" onclick="set('up');submit();"/>
+                        <br>
+                        <input type="button" name="button" style="width:80" value="Move Down" onclick="set('down');submit();"/>                        
+                    </td>                    
                 </tr>
             </table>
             </td>
@@ -140,6 +144,6 @@
             </td>
         </tr>
     </table>
-</html:form>
+</html:form>    
 </body>
 </html:html>
