@@ -31,7 +31,7 @@ package oscar.oscarSurveillance;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-import net.sf.jasperreports.engine.*;
+
 import oscar.*;
 import oscar.oscarDB.*;
 
