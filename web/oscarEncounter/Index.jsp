@@ -989,7 +989,7 @@ border-right: 2px solid #cfcfcf;
                                 <td colspan="2" valign="top" style="text-align:left">
                                     <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><% if(!bSplit) out.print(bean.encounter); else if(bTruncate) out.print(bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n"); else out.print(bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n");%><%if(bean.eChartTimeStamp==null){%><%="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
                                     // border-right:6px solid #ccccff;border-right:6px solid #ccccff;
-                                        else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0)
+                                        else
                                         {%><%="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
                                         if(!bean.oscarMsg.equals("")){%><%="\n\n"+bean.oscarMsg%><%}%></textarea>
                                 </td>
