@@ -14,6 +14,7 @@ import org.apache.struts.action.*;
 import java.util.Properties;
 import oscar.oscarReport.data.*;
 import oscar.util.*;
+import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 
 public class ObecAction extends Action {
 
@@ -25,54 +26,35 @@ public class ObecAction extends Action {
         ObecForm frm = (ObecForm)form;
         ObecData obecData1 = new ObecData();
         DateUtils dateUtils = new DateUtils();
+        EctValidation validation = new EctValidation();
         ActionErrors errors = new ActionErrors();  
         
         String startDate = frm.getXml_vdate()==null?"":frm.getXml_vdate();
+        if(!validation.isDate(startDate)){        
+                System.out.println("Invalid date format!");
+                errors.add(startDate,
+                new ActionError("errors.invalid", "StartDate"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));            
+        }        
+        
         int numDays = frm.getNumDays();
         int startYear = 0;
         int startMonth = 0;
         int startDay = 0;
         
-        int slashIndex1 = startDate.indexOf("/");
+        int slashIndex1 = startDate.indexOf("-");
         if(slashIndex1>=0){
             startYear = Integer.parseInt(startDate.substring(0,slashIndex1));
-            int slashIndex2 = startDate.indexOf("/", slashIndex1+1);
-            if (slashIndex2>=0){
+            int slashIndex2 = startDate.indexOf("-", slashIndex1+1);
+            if (slashIndex2>slashIndex1){
                 startMonth = Integer.parseInt(startDate.substring(slashIndex1+1, slashIndex2));
                 int length = startDate.length();
                 startDay = Integer.parseInt(startDate.substring(slashIndex2+1, length)); 
-            }
-            else{
-                errors.add(startDate,
-                new ActionError("errors.invalid", "StartDate"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
-            }
+            }            
         }
-        else{
-            slashIndex1 = startDate.indexOf("-");
-            if(slashIndex1>=0){
-                startYear = Integer.parseInt(startDate.substring(0,slashIndex1));
-                int slashIndex2 = startDate.indexOf("-", slashIndex1+1);
-                if (slashIndex2>=0){
-                    startMonth = Integer.parseInt(startDate.substring(slashIndex1+1, slashIndex2));
-                    int length = startDate.length();
-                    startDay = Integer.parseInt(startDate.substring(slashIndex2+1, length));                
-                }
-                else{
-                    errors.add(startDate,
-                    new ActionError("errors.invalid", "StartDate"));
-                    saveErrors(request, errors);
-                    return (new ActionForward(mapping.getInput()));
-                }
-            }
-            else{
-                errors.add(startDate,
-                new ActionError("errors.invalid", "StartDate"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
-            }
-        }
+        
+        
         
         String endDate = dateUtils.NextDay(startDay, startMonth, startYear, numDays);
         
