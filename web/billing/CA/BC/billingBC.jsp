@@ -312,7 +312,7 @@ function showHideLayers() { //v3.0
     	                         %>
                                     <tr bgcolor=<%=color%>> 
                                         <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
-                                        <a href="billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
+                                        <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
                                         </font></b>
                                         </td>
                                     </tr>
