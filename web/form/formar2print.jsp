@@ -678,7 +678,9 @@ ff(665,956,200,20,'<span class="smalltdname">7530-4654</span>' );
 </script>
 
 <div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=10+oox%>px; top:<%=ooy+172%>px; width:330px; height:60px;">
-<pre><%= props.getProperty("c_riskFactors")%></pre>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>
+<%= props.getProperty("c_riskFactors", "").replaceAll("\\n","<br>")%>
+</td></tr></table>
 </div>
 <div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=347+oox%>px; top:<%=ooy+172%>px; width:180px; height:50px;">
 <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><%= props.getProperty("c_allergies", "") %>
