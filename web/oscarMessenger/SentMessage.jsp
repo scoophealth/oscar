@@ -47,7 +47,7 @@ oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUt
 %>
 
 <title>
-SentMessage
+<bean:message key="oscarMessenger.SentMessage.title"/>
 </title>
 <style type="text/css">
 td.messengerButtonsA{
@@ -97,19 +97,19 @@ function BackToOscar()
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Messenger
+                <bean:message key="oscarMessenger.SentMessage.msgMessenger"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            <bean:message key="messageSent.title"/>
+                            <bean:message key="oscarMessenger.SentMessage.msgMessageSent"/>
                         </td>
                         <td  >
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -133,20 +133,20 @@ function BackToOscar()
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                         <html:link page="/oscarMessenger/CreateMessage.jsp" styleClass="messengerButtons">
-                                         <bean:message key="viewMessage.createHRef"/>
+                                         <bean:message key="oscarMessenger.SentMessage.btnCompose"/>
                                         </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                         <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
-                                         <bean:message key="viewMessage.displayMessages"/>
+                                         <bean:message key="oscarMessenger.SentMessagebtnBack"/>
                                         </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                        <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="backToOscar.link"/></a>
+                                        <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.SentMessage.btnExit"/></a>
                                         </td></tr></table>
                                     </td>
                                 </tr>
@@ -155,7 +155,7 @@ function BackToOscar()
                     </tr>
                     <tr>
                         <td>
-                            your message has been sent to <%= request.getAttribute("SentMessageProvs") %>
+                            <bean:message key="oscarMessenger.SentMessage.msgMessageSentTo"/> <%= request.getAttribute("SentMessageProvs") %>
                         </td>
                     </tr>
                 </table>

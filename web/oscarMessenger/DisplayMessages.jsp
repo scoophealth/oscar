@@ -68,12 +68,12 @@ bean.nullAttachment();%>
 
 
 
-<html>
+<html:html locale="true">
 <head>
 <html:base />
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <title>
-DisplayMessages
+<bean:message key="oscarMessenger.DisplayMessages.title"/>
 </title>
 <style type="text/css">
 td.messengerButtonsA{
@@ -122,7 +122,7 @@ function BackToOscar()
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Messenger
+                <bean:message key="oscarMessenger.DisplayMessages.msgMessenger"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -133,15 +133,15 @@ function BackToOscar()
                            String delStyle  = "messengerButtonsA";
                         switch(pageType){
                             case 0: %>
-     		                    <div class="DivContentTitle"><bean:message key="displayMessages.title"/></div>
+     		                    <div class="DivContentTitle"><bean:message key="oscarMessenger.DisplayMessages.msgInbox"/></div>
                         <%      inbxStyle = "messengerButtonsD";
                             break;
                             case 1: %>
-                                <div class="DivContentTitle"><bean:message key="displayMessages.sentTitle"/></div>
+                                <div class="DivContentTitle"><bean:message key="oscarMessenger.DisplayMessages.msgSentTitle"/></div>
                         <%      sentStyle = "messengerButtonsD";
                             break;
                             case 2: %>
-                                <div class="DivContentTitle"><bean:message key="displayMessages.deleteTitle"/></div>
+                                <div class="DivContentTitle"><bean:message key="oscarMessenger.DisplayMessages.msgDeleted"/></div>
                         <%      delStyle =  "messengerButtonsD";
                             break;
                         }%>
@@ -150,7 +150,7 @@ function BackToOscar()
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -169,34 +169,34 @@ function BackToOscar()
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
                                         <html:link page="/oscarMessenger/CreateMessage.jsp" styleClass="messengerButtons">
-                                         <bean:message key="displayMessages.createHRef"/>
+                                         <bean:message key="oscarMessenger.DisplayMessages.btnCompose"/>
                                         </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
                                         <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
-                                         <bean:message key="displayMessages.displayMessages"/>
+                                         <bean:message key="oscarMessenger.DisplayMessages.btnRefresh"/>
                                         </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
                                         <html:link page="/oscarMessenger/DisplayMessages.jsp?boxType=1" styleClass="messengerButtons">
-                                         <bean:message key="displayMessages.displaySentMessages"/><!--sentMessage--link-->
+                                         <bean:message key="oscarMessenger.DisplayMessages.btnSent"/><!--sentMessage--link-->
                                         </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
                                         <html:link page="/oscarMessenger/DisplayMessages.jsp?boxType=2" styleClass="messengerButtons">
-                                         <bean:message key="displayMessages.displayDeletedMessages"/><!--deletedMessage--link-->
+                                         <bean:message key="oscarMessenger.DisplayMessages.btnDeletedMessage"/><!--deletedMessage--link-->
                                         </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                        <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="backToOscar.link"/></a>
+                                        <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.DisplayMessages.btnExit"/></a>
                                         </td></tr></table>
                                     </td>
                                 </tr>
@@ -224,16 +224,16 @@ function BackToOscar()
                                     &nbsp;
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    Status
+                                    <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    From
+                                    <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    Subject
+                                    <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    Date
+                                    <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
                                     </th>
                                 </tr>
                                 <% //java.util.Vector theMessages = new java.util.Vector() ;
@@ -300,9 +300,9 @@ function BackToOscar()
                             <%}%>
                             </table>
                             <%if (pageType == 0){%>
-                                        <input type="submit" value="delete">
+                                        <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
                             <%}else if (pageType == 2){%>
-                                        <input type="submit" value="undelete">
+                                        <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>">
                             <%}%>
                          </html:form>
                         </td>
@@ -320,4 +320,4 @@ function BackToOscar()
         </tr>
     </table>
 </body>
-</html>
+</html:html>

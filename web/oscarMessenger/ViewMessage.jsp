@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<html>
+<html:html locale="true">
 <head>
 
 <logic:notPresent name="msgSessionBean" scope="session">
@@ -21,7 +21,7 @@ oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUt
 %>
 
 <title>
-ViewMessage
+<bean:message key="oscarMessenger.ViewMessage.title"/>
 </title>
 
 
@@ -84,19 +84,19 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Messenger
+                <bean:message key="oscarMessenger.ViewMessage.msgMessenger"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            <bean:message key="displayMessages.title"/>
+                            <bean:message key="oscarMessenger.ViewMessage.msgInbox"/>
                         </td>
                         <td  >
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -115,20 +115,20 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <html:link page="/oscarMessenger/CreateMessage.jsp" styleClass="messengerButtons">
-                                             <bean:message key="viewMessage.createHRef"/>
+                                             <bean:message key="oscarMessenger.ViewMessage.btnCompose"/>
                                             </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
-                                             <bean:message key="viewMessage.displayMessages"/>
+                                             <bean:message key="oscarMessenger.ViewMessage.btnInbox"/>
                                             </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                            <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="backToOscar.link"/></a>
+                                            <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnExit"/></a>
                                         </td></tr></table>
                                     </td>
                                 </tr>
@@ -140,7 +140,7 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
                             <table  cellspacing="1" valign="top">
                                 <tr>
                                     <td bgcolor="#DDDDFF">
-                                    From:
+                                    <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
                                     </td>
                                     <td bgcolor="#CCCCFF">
                                     <%= request.getAttribute("viewMessageSentby") %>
@@ -148,7 +148,7 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
                                 </tr>
                                 <tr>
                                     <td bgcolor="#DDDDFF">
-                                    To:
+                                    <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
                                     </td>
                                     <td bgcolor="#BFBFFF">
                                     <%= request.getAttribute("viewMessageSentto") %>
@@ -156,7 +156,7 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
                                 </tr>
                                 <tr>
                                     <td bgcolor="#DDDDFF">
-                                        Subject:
+                                        <bean:message key="oscarMessenger.ViewMessage.msgSubject"/>:
                                     </td>
                                     <td bgcolor="#BBBBFF">
                                         <%= request.getAttribute("viewMessageSubject") %>
@@ -165,7 +165,7 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
 
                                 <tr>
                                   <td bgcolor="#DDDDFF">
-                                      Date:
+                                      <bean:message key="oscarMessenger.ViewMessage.msgDate"/>:
                                   </td>
                                   <td bgcolor="#B8B8FF">
                                       <%= request.getAttribute("viewMessageDate") %>&nbsp;&nbsp;
@@ -178,11 +178,11 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
                                     %>
                                     <tr>
                                         <td bgcolor="#DDDDFF">
-                                            Attachments:
+                                            <bean:message key="oscarMessenger.ViewMessage.msgAttachments"/>:
                                         </td>
                                         <td bgcolor="#B8B8FF">
                                             <a href="javascript:popupViewAttach(700,960,'ViewAttach.do?attachId=<%=id%>')">
-                                            Click here to view attachment
+                                            <bean:message key="oscarMessenger.ViewMessage.btnAttach"/>
                                             </a>
                                         </td>
                                     </tr>
@@ -220,4 +220,4 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
         </tr>
     </table>
 </body>
-</html>
+</html:html>

@@ -55,10 +55,10 @@ oscar.oscarMessenger.data.MsgReplyMessageData reData = new oscar.oscarMessenger.
 
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<html>
+<html:html locale="true">
 <head>
 <title>
-createMessage
+<bean:message key="oscarMessenger.CreateMessage.title"/>
 </title>
 
 <style type="text/css">
@@ -299,13 +299,13 @@ border-right: 2px solid #cfcfcf;
 <!--
 function validatefields(){
   if (document.forms[0].message.value.length == 0){
-    alert("You have forgot to enter a message");
+    alert("<bean:message key="oscarMessenger.CreateMessage.msgEmptyMessage"/>");
     return false;
   }
   val = validateCheckBoxes(document.forms[0]);
   if (val  == 0)
   {
-    alert("No providers have been selected to send this message too");
+    alert("<bean:message key="oscarMessenger.CreateMessage.msgNoProvider"/>");
     return false;
   }
   return true
@@ -346,19 +346,19 @@ function BackToOscar()
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Messenger
+                <bean:message key="oscarMessenger.CreateMessage.msgMessenger"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            <bean:message key="createMessage.title"/>
+                            <bean:message key="oscarMessenger.CreateMessage.msgCreate"/>
                         </td>
                         <td  >
                             &nbsp;
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -378,20 +378,20 @@ function BackToOscar()
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
                                             <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
-                                             <bean:message key="createMessage.displayMessages"/>
+                                             <bean:message key="oscarMessenger.CreateMessage.btnDisplay"/>
                                             </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
                                             <html:link page="/oscarMessenger/ClearMessage.do" styleClass="messengerButtons">
-                                             <bean:message key="createMessage.createHRef"/>
+                                             <bean:message key="oscarMessenger.CreateMessage.btnClear"/>
                                             </html:link>
                                         </td></tr></table>
                                     </td>
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                            <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="backToOscar.link"/></a>
+                                            <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.CreateMessage.btnExit"/></a>
                                         </td></tr></table>
                                     </td>
                                 </tr>
@@ -405,10 +405,10 @@ function BackToOscar()
                                 <table>
                                     <tr>
                                         <th bgcolor="#DDDDFF" width="75">
-                                            Recipients
+                                            <bean:message key="oscarMessenger.CreateMessage.msgRecipients"/>
                                         </th>
                                         <th align="left" bgcolor="#DDDDFF">
-                                            Message
+                                            <bean:message key="oscarMessenger.CreateMessage.msgMessage"/>
                                         </th>
                                     </tr>
                                     <tr>
@@ -416,7 +416,7 @@ function BackToOscar()
                                             <table>
                                                 <tr>
                                                     <td>
-                                                        <input type="submit" class="ControlPushButton" value="Send Message" >
+                                                        <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>" >
                                                     </td>
                                                 </tr>
                                             </table>
@@ -452,7 +452,7 @@ function BackToOscar()
                                                                     <td>
                                                                             <span class="treeNode" onclick="javascript:showTbl('tblREMO');">
                                                                                 <img class="treeNode" src="img/plusblue.gif" border="0" />
-                                                                                    RemoteLocations
+                                                                                    <bean:message key="oscarMessenger.CreateMessage.msgRemoteLocations"/>
                                                                             </span>
 
                                                                             <table class="treeTable" id="tblREMO" style="display:none" cellspacing=0 cellpadding=3>
@@ -511,15 +511,14 @@ function BackToOscar()
                                             </div>
                                         </td><!--list of the providers cell End-->
                                         <td bgcolor="#EEEEFF" valign=top>   <!--Message and Subject Cell-->
-                                            Subject :
+                                            <bean:message key="oscarMessenger.CreateMessage.formSubject"/> :
                                                 <html:text name="msgCreateMessageForm" property="subject" size="67"/>
                                                 <br><br>
                                                 <html:textarea name="msgCreateMessageForm" property="message" cols="60" rows="18" />
                                                 <%
                                                 String att = bean.getAttachment();
                                                 if (att != null){ %>
-                                                    <br>Message has attachments!
-                                                    <br>Only doctors will recieve your attachments!
+                                                    <br><bean:message key="oscarMessenger.CreateMessage.msgAttachments"/>
 
                                                 <% }
 
@@ -550,7 +549,7 @@ function BackToOscar()
         </tr>
     </table>
 </body>
-</html>
+</html:html>
 
 
 
