@@ -327,8 +327,14 @@
     
     <form-bean      name="ReProcessBilling"
                     type="oscar.oscarBilling.ca.bc.pageUtil.BillingReProcessBillForm"/>
-    <form-bean      name="TeleplanCorrectionFormWCB" type="oscar.oscarBilling.ca.bc.administration.TeleplanCorrectionFormWCB" />                   
-                    
+    <form-bean      name="TeleplanCorrectionFormWCB" type="oscar.oscarBilling.ca.bc.administration.TeleplanCorrectionFormWCB" />  
+    <form-bean      name="BillingSearchCodeForm"
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingSearchCodeForm"/>
+    <form-bean      name="BillingEditCodeForm"
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingEditCodeForm"/>                    
+    <form-bean      name="BillingAddCodeForm"
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingAddCodeForm"/>                                       
+                                        
 <!-- OscarBilling stop -->
 
 <!-- OscarBilling BC stop -->
@@ -1603,7 +1609,7 @@
             scope="request" 
             input="/billing/ca/bc/billingTeleplanCorrectionWCB.jsp">  
 		
-            <forward name="success" path="/billing/CA/BC/billingTeleplanCorrectionList.jsp" />   
+            <forward name="success" path="/billing/CA/BC/billingTeleplanCorrectionWCB.jsp" />   
             <forward name="failure" path="/billing/CA/BC/billingTeleplanCorrectionWCB.jsp" />   
     </action>  
     <action path="/billing/CA/BC/reprocessBill" 
@@ -1613,10 +1619,36 @@
             input="/billing/billingTeleplanCorrection.jsp">
             <forward name="success" path="/billing/CA/BC/adjustBill.jsp" />
             <forward name="save" path="/billing/CA/BC/billStatus.jsp" />
-	</action>
+    </action>
     
+    <!--<action     path="/billing/CA/BC/searchBillingCodes"
+                type="oscar.oscarBilling.ca.bc.pageUtil.BillingSearchCodeAction"
+                name="BillingSearchCodeForm"
+                scope="session"
+                
+                input="/admin/admin.jsp">
+                <forward name="success" path="/billing/CA/BC/billingCodeAdjust.jsp"/>                               
+    </action>-->
     
+    <action     path="/billing/CA/BC/billingEditCode"
+                type="oscar.oscarBilling.ca.bc.pageUtil.BillingEditCodeAction"
+                name="BillingEditCodeForm"
+                scope="request"
+                input="/billing/CA/BC/billingCodeAdjust.jsp">
+                <forward name="success" path="/billing/CA/BC/billingCodeAdjust.jsp"/>
+                <forward name="private" path="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>
+    </action>
 
+    <action     path="/billing/CA/BC/billingAddCode"
+                type="oscar.oscarBilling.ca.bc.pageUtil.BillingAddCodeAction"
+                name="BillingAddCodeForm"
+                scope="request"
+                input="/billing/CA/BC/billingCodeAdjust.jsp">
+                <forward name="success"          path="/billing/CA/BC/billingCodeAdjust.jsp"/>
+                <forward name="normalCodeError"  path="/billing/CA/BC/billingAddCode.jsp"/>
+                <forward name="private"          path="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>
+                <forward name="privateCodeError" path="/billing/CA/BC/billingAddPrivateCode.jsp"/>
+    </action>
     <!-- oscarBilling BC end -->
 
     <!-- oscarBilling ON start -->
@@ -1626,7 +1658,9 @@
                 scope="request"
                 input="/billing/CA/ON/billingOBECEA.jsp">                
        <forward name="success" path="/billing/CA/ON/billingEAreport.jsp"/>
-    </action>          
+    </action>   
+    
+    
     <!-- oscarBilling ON end -->
 
         
