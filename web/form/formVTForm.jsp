@@ -172,10 +172,10 @@ Vascular Tracker (Draft)
     var eyeExCmt, eyeHypCmt, eyeDiaCmt, eyeOthCmt, eyeRefCmt;    
     var eyeExDate, eyeHypDate, eyeDiaDate, eyeOthDate, eyeRefDate;
     var MIValue, AngValue, ACSValue, RVTNValue, CADValue, DMValue, PVDValue;
+    var HTNValue, HchlValue, CVDValue;
     var HbA1Value, HbA1Date, HbA1Cmt;
     var DMCValue, DMCDate, DMCCmt;
-    
-    
+        
 
     function onPrint() {
 //        document.forms[0].submit.value="print";
@@ -438,6 +438,10 @@ function initialize(){
             case 'value(DMValue)': DMValue = i;  break;
             case 'value(PVDValue)': PVDValue = i;  break;
             
+            case 'value(HTNValue)': HTNValue = i; break;
+            case 'value(HchlValue)': HchlValue = i; break;
+            case 'value(CVDValue)': CVDValue = i; break;
+            
             case 'value(HbA1Value)': HbA1Value = i;  break;
             case 'value(HbA1Date)': HbA1Date = i;  break;
             case 'value(HbA1Comments)': HbA1Cmt = i;  break;
@@ -449,10 +453,10 @@ function initialize(){
         }
     }
 
-    if(document.forms[0].elements[MIValue].value=="yes"||document.forms[0].elements[AngValue].value=="yes"||document.forms[0].elements[ACSValue].value=="yes"){
+    /*if(document.forms[0].elements[MIValue].value=="yes"||document.forms[0].elements[AngValue].value=="yes"||document.forms[0].elements[ACSValue].value=="yes"){
         document.forms[0].elements[CADValue].value="yes";
-    }
-    
+    }*/
+        
     DMCheck();
     PVDCheck();
 }
@@ -475,6 +479,20 @@ function disableFTExam(control){
     document.forms[0].elements[ftReId].disabled= control;
 }
 
+function disableEyeExam(control){
+    document.forms[0].elements[eyeExId-1].disabled= control;
+    document.forms[0].elements[eyeHypId-1].disabled= control;
+    document.forms[0].elements[eyeDiaId-1].disabled= control;
+    document.forms[0].elements[eyeOthId-1].disabled= control;
+    document.forms[0].elements[eyeRefId-1].disabled= control;
+    
+    document.forms[0].elements[eyeExId].disabled= control;
+    document.forms[0].elements[eyeHypId].disabled= control;
+    document.forms[0].elements[eyeDiaId].disabled= control;
+    document.forms[0].elements[eyeOthId].disabled= control;
+    document.forms[0].elements[eyeRefId].disabled= control;
+}
+
 function DMCheck(){
     if(document.forms[0].elements[DMValue].checked==false && document.forms[0].elements[PVDValue].checked==false){
         disableFTExam(true);
@@ -483,6 +501,7 @@ function DMCheck(){
         disableFTExam(false);        
     }    
     if(document.forms[0].elements[DMValue].checked==false){
+        disableEyeExam(true);
         document.forms[0].elements[HbA1Value].disabled= true;
         document.forms[0].elements[HbA1Date].disabled= true;
         document.forms[0].elements[HbA1Cmt].disabled= true;
@@ -491,6 +510,7 @@ function DMCheck(){
         document.forms[0].elements[DMCCmt].disabled= true;
     }
     else{        
+        disableEyeExam(false);
         document.forms[0].elements[HbA1Value].disabled= false;
         document.forms[0].elements[HbA1Date].disabled= false;
         document.forms[0].elements[HbA1Cmt].disabled= false;
@@ -509,6 +529,11 @@ function PVDCheck(){
     }
 }
 
+function setCheckboxValue(id){
+    if(document.forms[0].elements[id].checked==false){
+        document.forms[0].elements[id].value="no";
+    }
+}
 function clearAll(yRadio, nRadio){    
     document.forms[0].elements[yRadio].checked=false;
     document.forms[0].elements[nRadio].checked=false;
@@ -552,20 +577,46 @@ function clearAll(yRadio, nRadio){
                                             <td colspan="2">
                                                 <table width="95%">
                                                     <tr>
-                                                        <td width="32%">
+                                                        <td width="30%">
                                                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
                                                         </td>
-                                                        <html:hidden property="value(MIValue)"/>
-                                                        <html:hidden property="value(AngValue)"/>
-                                                        <html:hidden property="value(ACSValue)"/>                                                        
-                                                        <html:hidden property="value(RVTNValue)"/>                                                                                                             
-                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/> DM</td>
-                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(HTNValue)"/> HTN</td>
-                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(HchlValue)"/> Hyperlipidemia</td>
-                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(CADValue)"/> CAD</td>
-                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(CVDValue)"/> CVD</td>
-                                                        <td width="5%" class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/> PVD</td>                                                    
-                                                        <td align="right">FP Visit Date (YYYY-MM-DD) <html:text size="8" property="value(visitCod)"/></td>
+                                                        <td>
+                                                            <table width="60%">
+                                                                <tr>                                                                                                      
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(HTNValue)"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(HchlValue)"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(MIValue)"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(AngValue)"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(ACSValue)"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(RVTNValue)"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(CVDValue)"/></td>
+                                                                    <td align="left" class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/></td>                                                    
+                                                                </tr>
+                                                                <tr>                                                                                                      
+                                                                    <td align="center" class="sixtyPercent"> DM</td>
+                                                                    <td align="center" class="sixtyPercent"> HTN</td>
+                                                                    <td align="center" class="sixtyPercent"> Hyperlipidemia</td>
+                                                                    <td align="center" class="sixtyPercent"> MI</td>
+                                                                    <td align="center" class="sixtyPercent"> Angina</td>
+                                                                    <td align="center" class="sixtyPercent"> ACS</td>
+                                                                    <td align="center" class="sixtyPercent"> Revascularization</td>
+                                                                    <td align="center" class="sixtyPercent"> CVD</td>
+                                                                    <td align="center" class="sixtyPercent"> PVD</td>                                                    
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td align="right">
+                                                            <table>
+                                                                <tr>
+                                                                    <td>FP Visit Date</td>
+                                                                    <td rowspan="2"> <html:text size="8" property="value(visitCod)"/></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>(YYYY-MM-DD)</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
                                                     </tr>
                                                 </table>                                                
                                             </td>
