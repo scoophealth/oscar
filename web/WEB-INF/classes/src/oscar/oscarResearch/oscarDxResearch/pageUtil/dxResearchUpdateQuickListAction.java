@@ -100,9 +100,11 @@ public class dxResearchUpdateQuickListAction extends Action {
             }
             else if(forward.equals("remove")){
                 String[] removedItems = frm.getQuickListItems();
-                for(int i=0; i<removedItems.length; i++){
-                    sql = "Delete from quickList where quickListName = '"+ quickListName + "' AND dxResearchCode = '"+removedItems[i]+"'";
-                    db.RunSQL(sql);
+                if(removedItems!=null){
+                    for(int i=0; i<removedItems.length; i++){
+                        sql = "Delete from quickList where quickListName = '"+ quickListName + "' AND dxResearchCode = '"+removedItems[i]+"'";
+                        db.RunSQL(sql);
+                    }
                 }
             }
         }
