@@ -1125,18 +1125,36 @@ function clearAll(yRadio, nRadio){
                                                  
                                             
                                             <tr>
+                                                <td class="dataEntryTable"><%=request.getAttribute("WHRBDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WHRBMeasuringInstrc")%></font></td>
+                                                <td class="dataEntryTable" align="center">
+                                                    <logic:present name="WHRBLastData">
+                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                    <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WHRBLDDate")%></td></tr>
+                                                    <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WHRBLastData")%></td></tr>
+                                                    </table>
+                                                    </logic:present>
+                                                </td>
+                                                <td class="dataEntryTable" align="center">
+                                                    <html:radio property="value(WHRBValue)" value="yes" />Yes
+                                                    <html:radio property="value(WHRBValue)" value="no" />No
+                                                    <a title="clear all" href="javascript:clearAll(MedAId, MedAId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
+                                                </td>                                                    
+                                                <td class="dataEntryTable" align="center"><html:text property="value(WHRBComments)" size="30%" tabindex="9999"/></td>
+                                            </tr-->
+                                            
+                                            <!--tr>
                                                 <td class="dataEntryTable"><%=request.getAttribute("WHRDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WHRMeasuringInstrc")%></font></td>
                                                 <td class="dataEntryTable" align="center">
-                                                    <logic:present name="WHRLastData">
+                                                    logic:present name="WHRLastData">
                                                     <table cellpadding='0' cellspacing='0'>                                                            
                                                     <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WHRLDDate")%></td></tr>
                                                     <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WHRLastData")%></td></tr>
                                                     </table>
-                                                    </logic:present>
+                                                    /logic:present>
                                                 </td>
                                                 <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%" onchange="javascript: updateWaistHip();"/></td>                                                    
                                                 <td class="dataEntryTable" align="center"><html:text property="value(WHRComments)" size="30%" tabindex="9999"/></td>
-                                            </tr>
+                                            </tr-->
                                             <tr>
                                                 <td class="dataEntryTable"><%=request.getAttribute("WCDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WCMeasuringInstrc")%></font></td>
                                                 <td class="dataEntryTable" align="center">
