@@ -56,9 +56,11 @@ GregorianCalendar now=new GregorianCalendar();
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay):request.getParameter("xml_appointment_date");
 %>
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>oscarTickler</title>
+<title><bean:message key="tickler.ticklerAdd.title"/></title>
 <link rel="stylesheet" href="../billing/billing.css" >
 <style type="text/css">
 <!--
@@ -113,11 +115,11 @@ else{}
 }
 function validateDemoNo() {
   if (document.serviceform.demographic_no.value == "") {
-alert("Invalid demographic information, please verify!");
+alert("<bean:message key="tickler.ticklerAdd.msgInvalidDemographic"/>");
 	return false;
  }
  else{  if (document.serviceform.xml_appointment_date.value == "") {
-alert("Missing service date, please verify!");
+alert("<bean:message key="tickler.ticklerAdd.msgMissingDate"/>");
 	return false;
  }
  else{
@@ -206,7 +208,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
   <tr bgcolor="#000000"> 
     <td height="40" width="10%"> </td>
     <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Tickler</font></font></b></font> 
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="tickler.ticklerAdd.msgTickler"/></font></b></font> 
       </p>
     </td>
   </tr>
@@ -214,11 +216,10 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 <table width="100%" border="0" cellspacing="0" cellpadding="0"bgcolor="#EEEEFF">
  <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
 <tr> 
-      <td width="35%"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><b>Demographic 
-        Name: </b></font></font></td>
+      <td width="35%"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><b><bean:message key="tickler.ticklerAdd.formDemoName"/>: </b></font></font></td>
       <td colspan="2" width="65%">
 <div align="left"><INPUT TYPE="TEXT" NAME="keyword" size="25" VALUE="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>">
-   	 <input type="submit" name="Submit" value="Search">    
+   	 <input type="submit" name="Submit" value="<bean:message key="tickler.ticklerAdd.btnSearch"/>">
   </div>
 </td>
     </tr>
@@ -253,30 +254,29 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 <table width="100%" border="0" bgcolor="#EEEEFF">
   <form name="serviceform" method="post" >
      <tr> 
-      <td width="35%"> <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><strong>Chart 
-          No:</strong> </font></font></div></td>
+      <td width="35%"> <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><strong><bean:message key="tickler.ticklerAdd.formChartNo"/>:</strong> </font></font></div></td>
       <td colspan="2"> <div align="left"><INPUT TYPE="hidden" NAME="demographic_no" VALUE="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>"><%=bFirstDisp?"":request.getParameter("chart_no").equals("")?"":request.getParameter("chart_no")%></div></td>
     </tr>
 
     <tr> 
-      <td><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Service 
-        Date:</strong></font></td>
+      <td><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerAdd.formServiceDate"/>:</strong></font></td>
       <td><input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>"> 
-        <font color="#003366" size="1" face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Calendar 
-        Lookup</a> &nbsp; &nbsp; <a href="#" onClick="addMonth(6)">6-month</a>&nbsp; &nbsp;<a href="#" onClick="addMonth(12)">1-year</a></font> </td>
+        <font color="#003366" size="1" face="Verdana, Arial, Helvetica, sans-serif">
+        <a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="tickler.ticklerAdd.btnCalendarLookup"/></a> &nbsp; &nbsp; 
+        <a href="#" onClick="addMonth(6)"><bean:message key="tickler.ticklerAdd.btn6Month"/></a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(12)"><bean:message key="tickler.ticklerAdd.btn1Year"/></a></font> </td>
       <td>&nbsp;</td>
     </tr>
     <tr> 
-      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Reminder 
-        Message:</strong></font></td>
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerAdd.formReminder"/>:</strong></font></td>
       <td valign="top"> <textarea style="font-face:Verdana, Arial, Helvetica, sans-serif"name="textarea" cols="50" rows="10"></textarea></td>
       <td>&nbsp;</td>
     </tr>
  
      <INPUT TYPE="hidden" NAME="user_no" VALUE="<%=user_no%>">
     <tr> 
-      <td><input type="button" name="Button" value="Cancel and EXIT" onClick="window.close()"></td>
-      <td><input type="button" name="Button" value="Submit and EXIT" onClick="validate(this.form)"></td>
+      <td><input type="button" name="Button" value="<bean:message key="tickler.ticklerAdd.btnCancel"/>" onClick="window.close()"></td>
+      <td><input type="button" name="Button" value="<bean:message key="tickler.ticklerAdd.btnSubmit"/>" onClick="validate(this.form)"></td>
       <td></td>
 	  </tr>
   </form>
@@ -286,4 +286,4 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 <%@ include file="../demographic/zfooterbackclose.jsp" %> 
 
 </body>
-</html>
+</html:html>

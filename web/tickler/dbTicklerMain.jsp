@@ -41,7 +41,7 @@ if (temp== null){
 for (int i=0; i<temp.length; i++){
 
 
-param[0] = request.getParameter("submit").substring(0,1);
+param[0] = request.getParameter("submit_form").substring(0,1);
 param[1] = temp[i];	
 int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_tickler");
 

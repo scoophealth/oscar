@@ -28,9 +28,12 @@ GregorianCalendar now=new GregorianCalendar();
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay):request.getParameter("xml_appointment_date");
 %>
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
-<title>oscarTickler</title>
+<title><bean:message key="tickler.ticklerMain.title"/></title>
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
       
@@ -207,7 +210,7 @@ var beginD = "0000-00-00"
 	var ml = document.messageList;
 	var dbox = ml.destBox;
 	if(dbox.options[dbox.selectedIndex].value == "@NEW") {
-	    nn = window.prompt("Please enter a name for your folder.","");
+	    nn = window.prompt("<bean:message key="tickler.ticklerMain.msgFolderName"/>","");
 	    if(nn == null || nn == "null" || nn == "") {
 		dbox.selectedIndex = 0;
 		ml.destBox2.selectedIndex = 0;
@@ -283,9 +286,9 @@ var beginD = "0000-00-00"
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
-    <td height="40" width="10%"><input type='button' name='print' value='Print' onClick='window.print()' class="sbttn"></td>
+    <td height="40" width="10%"><input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()' class="sbttn"></td>
     <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Tickler</font></font></b></font> 
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="tickler.ticklerMain.msgTickler"/></font></b></font> 
       </p>
     </td>
   </tr>
@@ -295,26 +298,30 @@ var beginD = "0000-00-00"
     <tr>    
       <td width="19%"> 
         <div align="right"> <font color="#003366"><font face="Arial, Helvetica, sans-serif" size="2"><b> 
-          <font color="#333333">Service Date-Range</font></b></font></font> </div>
+          <font color="#333333"><bean:message key="tickler.ticklerMain.formDateRange"/></font></b></font></font> </div>
       </td>
       <td width="41%"> 
         <div align="center">
           <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-          <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</a></font> 
+          <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="tickler.ticklerMain.btnBegin"/>:</a></font> 
         </div>
       </td>
       <td width="40%"> 
         <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
-        <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End:</a> &nbsp; &nbsp; <a href="#" onClick="allYear()">View All</a></font> 
+        <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="tickler.ticklerMain.btnEnd"/>:</a> &nbsp; &nbsp; <a href="#" onClick="allYear()"><bean:message key="tickler.ticklerMain.btnViewAll"/></a></font> 
       </td>
     </tr>
     <tr> 
     
       <td colspan="2"> 
-        <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Move To </b> <select name="ticklerview"><option value="A" <%=ticklerview.equals("A")?"selected":""%>>Active</option><option value="C" <%=ticklerview.equals("C")?"selected":""%>>Completed</option><option value="D" <%=ticklerview.equals("D")?"selected":""%>>Deleted</option></select>
-      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select 
-          provider </b></font> <select name="providerview">
-           <option value="%" <%=providerview.equals("all")?"selected":""%>>All Providers</option>
+        <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formMoveTo"/> </b> 
+        <select name="ticklerview">
+         <option value="A" <%=ticklerview.equals("A")?"selected":""%>><bean:message key="tickler.ticklerMain.formActive"/></option>
+         <option value="C" <%=ticklerview.equals("C")?"selected":""%>><bean:message key="tickler.ticklerMain.formCompleted"/></option>
+         <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>
+        </select>
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formSelectProvider"/> </b></font> <select name="providerview">
+           <option value="%" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
 			<% String proFirst="";
            String proLast="";
            String proOHIP="";
@@ -342,8 +349,8 @@ String billinggroup_no;
    
       </td>
       <td width="40%"> <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
-      
-        <input type="submit" name="Submit" value="Create Report" class="mbttn">
+        <input type="hidden" name="Submit" value="">
+        <input type="button" value="<bean:message key="tickler.ticklerMain.btnCreateReport"/>" class="mbttn" onclick="document.forms['serviceform'].Submit.value='Create Report'; document.forms['serviceform'].submit();">
         </font></td>
     </tr>
 
@@ -356,12 +363,12 @@ String billinggroup_no;
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <TR bgcolor=#666699>
 <TD width="5%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
-<TD width="15%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Demographic Name</B></FONT></TD>
-<TD width="20%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Doctor Name</B></FONT></TD>
-<TD width="20%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Date</B></FONT></TD>
+<TD width="15%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDemographicName"/></B></FONT></TD>
+<TD width="20%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDoctorName"/></B></FONT></TD>
+<TD width="20%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDate"/></B></FONT></TD>
 
-<TD width="10%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Status</B></FONT></TD>
-<TD width="30%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Message</B></FONT></TD>
+<TD width="10%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B></B><bean:message key="tickler.ticklerMain.msgStatus"/></FONT></TD>
+<TD width="30%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgMessage"/></B></FONT></TD>
 </TR>
 <%
  String dateBegin = xml_vdate;
@@ -426,13 +433,22 @@ apptMainBean.closePstmtConn();
 
 if (nItems == 0) {
 %>
-<tr><td colspan="6" class="white">No Tickler Messages</td></tr>
+<tr><td colspan="6" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>
 <%}%>
-<tr bgcolor=#666699><td colspan="6" class="white"><a href="javascript:CheckAll();">Check All</a> - <a href="javascript:ClearAll();">Clear All</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<input type="button" name="button" value="Add Tickler" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn"><% if (ticklerview.compareTo("D") == 0){%><input type="submit" name="submit" value="Erase Completely" class="sbttn"><%} else{%><input type="submit" name="submit" value="Complete" class="sbttn"><input type="submit" name="submit" value="Delete" class="sbttn"><%}%><input type="button" name="button" value="Cancel" onClick="window.close()" class="sbttn"> </td></tr>
+<tr bgcolor=#666699><td colspan="6" class="white"><a href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<input type="button" name="button" value="<bean:message key="tickler.ticklerMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn">
+<input type="hidden" name="submit_form" value="">
+<% if (ticklerview.compareTo("D") == 0){%>
+<input type="button" value="<bean:message key="tickler.ticklerMain.btnEraseCompletely"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Erase Completely'; document.forms['ticklerform'].submit();">
+<%} else{%>
+<input type="button" value="<bean:message key="tickler.ticklerMain.btnComplete"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Complete'; document.forms['ticklerform'].submit();">
+<input type="button" value="<bean:message key="tickler.ticklerMain.btnDelete"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Delete'; document.forms['ticklerform'].submit();">
+<%}%>
+<input type="button" name="button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()" class="sbttn"> </td></tr>
 </table></td></tr></form></table> 
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
   <p>&nbsp; </p>
 <%@ include file="../demographic/zfooterbackclose.jsp" %> 
 
 </body>
-</html> 
+</html:html> 
