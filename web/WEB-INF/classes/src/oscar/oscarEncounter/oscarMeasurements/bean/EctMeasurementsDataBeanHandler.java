@@ -118,11 +118,11 @@ public class EctMeasurementsDataBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, mt.measuringInstruction,"+  
+            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
-                        "AND m.type = mt.type AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC," +
+                        "AND m.type = mt.type AND mt.validation = v.id GROUP BY m.id ORDER BY m.type ASC," +
                         "m.dateEntered DESC";
             System.out.println("sql: " + sql);
             ResultSet rs;
@@ -139,7 +139,8 @@ public class EctMeasurementsDataBeanHandler {
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
                                                                                rs.getString("comments"), rs.getString("dateObserved"), 
                                                                                rs.getString("dateEntered"), canPlot);
-                    measurementsDataVector.add(data);                
+                    measurementsDataVector.add(data);      
+                    
             }
 
             rs.close();
