@@ -462,7 +462,7 @@ public class RxPrescriptionData {
             String sql = "DELETE FROM favorites WHERE favoriteid = " + favoriteId;
             
             db.RunSQL(sql);
-            
+            db.CloseConn();
             ret = true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -557,10 +557,11 @@ public class RxPrescriptionData {
             ResultSet rs;
             // NEEDS TO BE UPDATED FOR POSTGRES
             rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+            
             if(rs.next()){
                 retval = Integer.toString( rs.getInt(1) );
             }
-            
+            db.CloseConn();
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
