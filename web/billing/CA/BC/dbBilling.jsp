@@ -101,6 +101,7 @@
     {"search_rabillno", "select * from radetail where raheader_no=? and billing_no=?"},
     {"search_rasummary", "select r.service_count, r.error_code, r.amountclaim, b.visittype, b.billing_no, r.service_code, r.service_date, r.providerohip_no, r.amountpay, p.last_name, p.first_name from radetail r, billing b, provider p where r.raheader_no=? and b.billing_no=r.billing_no and p.ohip_no=r.providerohip_no and r.providerohip_no like ?"},
     {"search_service_code", "select service_code, description from billingservice where service_code like ? or service_code like ? or service_code like ? or description like ? or description like ? or description like ?"},
+    {"search_service_price", "select value from billingservice where  service_code = ?"},
     {"search_research_code", "select ichppccode, description from ichppccode where ichppccode like ? or ichppccode like ? or ichppccode like ? or description like ? or description like ? or description like ?"},
     {"save_billactivity", "insert into billactivity values(?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"search_billactivity", "select * from billactivity where updatedatetime >= ? and updatedatetime <=? and status <> 'D' order by updatedatetime desc"},
