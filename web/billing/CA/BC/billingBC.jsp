@@ -98,21 +98,39 @@ if (request.getParameter("loadFromSession") == null ){
 	-->
 </style>  
 <script language="JavaScript">
+
+
 <!--                          
 
-function HideICBC(){
-	document.getElementById('ICBC').style.display='none';
+function HideElementById(ele){
+	document.getElementById(ele).style.display='none';
 }
-function ShowICBC(){
-	document.getElementById('ICBC').style.display='';
+
+function ShowElementById(ele){
+	document.getElementById(ele).style.display='';
 }
 function CheckType(){
-	if (document.BillingCreateBillingForm.xml_billtype.value == "ICBC"){
-		ShowICBC();
-	}else{
-		HideICBC();
+	if (document.BillingCreateBillingForm.xml_billtype.value == "ICBC"){		
+		ShowElementById('ICBC');
+	}else{		
+		HideElementById('ICBC');
 	}
 }
+
+function correspondenceNote(){    
+	if (document.BillingCreateBillingForm.correspondenceCode.value == "0" ){
+		HideElementById('CORRESPONDENCENOTE');
+	}else if (document.BillingCreateBillingForm.correspondenceCode.value == "C" ){
+		HideElementById('CORRESPONDENCENOTE');
+	}else if (document.BillingCreateBillingForm.correspondenceCode.value == "N" ){
+	  ShowElementById('CORRESPONDENCENOTE');
+	}else {(document.BillingCreateBillingForm.correspondenceCode.value == "B" )
+     ShowElementById('CORRESPONDENCENOTE');
+	}
+}
+
+
+
 
 function quickPickDiagnostic(diagnos){
 
@@ -158,6 +176,16 @@ function checkUnits(){
 	return true;
 
 }
+
+function checkTextLimit(textField, maximumlength) {
+   if (textField.value.length > maximumlength + 1){   
+      alert("Maximun "+maximumlength+" characters");
+   }
+   if (textField.value.length > maximumlength){
+      textField.value = textField.value.substring(0, maximumlength);
+   }
+}
+
 
 function setfocus() {
 		  //document.serviceform.xml_diagnostic_code.focus();
@@ -269,7 +297,7 @@ function showHideLayers() { //v3.0
 
 
 
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide');CheckType();">
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide');CheckType();correspondenceNote();">
 <div id="Layer2" style="position:absolute; left:362px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden"> 
   <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
     <tr> 
@@ -408,17 +436,14 @@ function showHideLayers() { //v3.0
             <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.billingtype"/></b> </font></td>
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <html:select property="xml_billtype"  onchange="CheckType();" >
-                  <html:option value="MSP" >Bill MSP</html:option>
-		  <html:option value="WCB" >Bill WCB</html:option>
-		  <html:option value="ICBC" >Bill ICBC</html:option>
-		  <html:option value="PRIV" >Private</html:option>
+                 <html:option value="MSP" >Bill MSP</html:option>
+                 <html:option value="WCB" >Bill WCB</html:option>
+                 <html:option value="ICBC" >Bill ICBC</html:option>
+                 <html:option value="PRIV" >Private</html:option>
+                 <html:option value="DONOTBILL" >Do Not Bill</html:option>
               </html:select>
-              </font><font face="Verdana" size="-2"><b>Encounter:</b></font>
+              </font>
               
-              <html:select property="xml_encounter">
-              <html:option value="E">Yes</html:option>
-              <html:option value="0">No</html:option>
-              </html:select>
             </td>
             <td width="33%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <b><bean:message key="billing.visitlocation"/></b> 
@@ -447,28 +472,80 @@ function showHideLayers() { //v3.0
               </font></td>
           </tr>
           </table>
-          <table width="100%">
-            <td>
-                <bean:message key="billing.servicedate"/>:
-            </td>
-            <td>
-                <html:text property="xml_appointment_date" value="<%=bean.getApptDate()%>" size="10" readonly="true" styleId="xml_appointment_date"/>
-                <a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
-            </td>
-            <td>
-    				<font size="-2"><strong><bean:message key="billing.servicedate.starttime"/></strong></font>
-    				<html:text property="xml_starttime" size="4" maxlength="4" />
-        		</td>
-            <td>
-                <font size="-2"><strong><bean:message key="billing.servicedate.endtime"/></strong></font>
-                <html:text property="xml_endtime" size="4" maxlength="4" />
-            </td>
-            <td>
-                <bean:message  key="billing.admissiondate"/>: <html:text property="xml_vdate" readonly="true" value="" size="10" styleId="xml_vdate" />
-                <a id="hlADate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
-            </td>          
+          <!--<table>
+          <tr>
+          <td>Service Date:</td>    <td>	 Service to date: </td>  <td> 	 After Hours: </td>  <td>	 Time Call (HHMM 24hr): </td>  <td> 	 Start (HHMM 24hr): </td>  <td> 	 End (HHMM 24hr): </td>   <td>	 Dependent: </td>  <td>	 Sub Code: </td>  <td>	 Alt. Payment:</td>
           </tr>
-        </table>
+          </table>-->
+          <table width="100%" border=0>
+             <tr>
+                <td >
+                    <a href="javascript: function myFunction() {return false; }" id="hlSDate"><font size="-2"><strong><bean:message key="billing.servicedate"/>:</strong></font></a>                    
+                    <html:text property="xml_appointment_date" value="<%=bean.getApptDate()%>" size="10" readonly="true" styleId="xml_appointment_date"/>
+                    <!--<a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>-->                    
+                </td>
+                <td >                  
+                  <font size="-2"><strong>Service to date:</strong></font>
+                   <html:text property="service_to_date" size="2" maxlength="2" />
+                </td>
+                <td >
+                    After Hours:
+                    <html:select property="afterHours">
+                        <html:option value="0">No</html:option>
+                        <html:option value="E">Evening</html:option>                    
+                        <html:option value="N">Night</html:option>                    
+                        <html:option value="W">Weekend</html:option>                    
+                    </html:select>
+                </td>
+                <td title="(HHMM 24hr):">
+                   <font size="-2"><strong>Time Call:</strong></font>
+                   <html:text property="timeCall" size="4" maxlength="4" />
+                </td>
+                <td >
+                   <font size="-2"><strong><bean:message key="billing.servicedate.starttime"/></strong></font>
+                   <html:text property="xml_starttime" size="4" maxlength="4" />
+                </td>
+                <td >
+                    <font size="-2"><strong><bean:message key="billing.servicedate.endtime"/></strong></font>
+                    <html:text property="xml_endtime" size="4" maxlength="4" />
+                </td>
+                
+                
+                
+                <td>
+                    Dependent:
+                    <html:select property="dependent">
+                        <html:option value="00">No</html:option>
+                        <html:option value="66">Yes</html:option>                    
+                    </html:select>
+                </td>
+                <td title="Submission Code">
+                    Sub Code:
+                    <html:select property="submissionCode">
+                        <html:option value="0">Normal</html:option>
+                        <html:option value="D">Duplicate</html:option>                    
+                    </html:select>
+                </td>
+                <td>
+                  <font  size="-2"><b>Alt. Payment:</b></font>
+                     <html:select property="xml_encounter">
+                        <html:option value="0">No</html:option>
+                        <html:option value="E">Yes</html:option>                    
+                     </html:select>
+                </td>                              
+           </tr>
+          </table>
+         <div style="display: none">
+         <table>
+           <tr>
+                
+                <td>
+                    <bean:message  key="billing.admissiondate"/>: <html:text property="xml_vdate" readonly="true" value="" size="10" styleId="xml_vdate" />
+                    <a id="hlADate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
+                </td>
+           </tr>
+        </table> 
+         </div>
         <script language='javascript'>
            Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
            //Calendar.setup({inputField:"xml_appointment_date", ifFormat:""%d/%m/%Y",",button:"hlSDate", align:"Bl", singleClick:true});
@@ -681,7 +758,7 @@ function showHideLayers() { //v3.0
                             </tr>
                           </table>
                         </td>
-                        <td width="9%"> 
+                        <td width="9%">                         
                           <!--
                           <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
                             <tr> 
@@ -779,10 +856,10 @@ function showHideLayers() { //v3.0
                               <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><a href="javascript:ScriptAttach()"><img src="../../../images/search_dx_code.jpg" border="0"></a></font> 
                                 <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font> </td>
-                            </tr>
+                            </tr>                            
                           </table>
                         </td>
-                        <td width="9%"> 
+                        <td width="9%">                         
                           <!--
                           <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
                             <tr> 
@@ -818,15 +895,42 @@ function showHideLayers() { //v3.0
                           </table> -->
                         </td>
                       </tr>
-                    </table>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr> 
-          <td align="right"> 
-            <input type="submit" name="Submit" value="Continue">
-            <input type="button" name="Button" value="Cancel" onClick="window.close();">
-          </td>
-        </tr>
-      </table>
+                    </table>                    
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td colspan="2" >
+                        <font size="-2"><strong>Short Claim Note:&nbsp;</strong></font>
+                    
+                        <html:text property="shortClaimNote" size="23" maxlength="20" />                        
+                    </td>
+                </tr>
+                <!--<tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>-->
+                <tr> 
+                  <td align="left">
+                    <html:select property="correspondenceCode" onchange="correspondenceNote();">
+                        <html:option value="0">No Correspondence</html:option>
+                        <html:option value="N">Electronic Correspondence</html:option>
+                        <html:option value="C">Paper Correspondence</html:option>
+                        <html:option value="B">Both</html:option>
+                    </html:select>                    
+                  </td>
+                  <td align="right"> 
+                    <input type="submit" name="Submit" value="Continue">
+                    <input type="button" name="Button" value="Cancel" onClick="window.close();">
+                  </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                    <div id="CORRESPONDENCENOTE">
+                        &nbsp;<textarea cols="60" rows="5"name="notes" onkeyup="checkTextLimit(this.form.notes,400);" ></textarea>
+                        <br>
+                        &nbsp;400 characters max. 
+                    </div>
+                    </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
