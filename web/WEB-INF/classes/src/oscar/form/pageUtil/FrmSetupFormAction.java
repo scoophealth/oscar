@@ -123,8 +123,12 @@ public final class FrmSetupFormAction extends Action {
             String xmlStr =  getMostRecentRecord(demo);
             nameProps = convertName(formName);
             FrmXml2VTData xml2VTData = new FrmXml2VTData();
-            FrmVTData vtData = xml2VTData.getObjectFromXmlStr(xmlStr);
-            Class vtDataC = Class.forName("oscar.form.data.FrmVTData");
+            Class vtDataC = null;
+            FrmVTData vtData = null;
+            if(xmlStr!=null){
+                vtData = xml2VTData.getObjectFromXmlStr(xmlStr);
+                vtDataC = Class.forName("oscar.form.data.FrmVTData");
+            }
             
             ResultSet rs;
             
@@ -157,7 +161,7 @@ public final class FrmSetupFormAction extends Action {
                     if(mt.getType().equalsIgnoreCase("BP")){
                         valueMethodCall = (String) nameProps.get("SBPValue");
                         String valueMethodCall2 =(String) nameProps.get("DBPValue");
-                        if (vtDataC!=null && valueMethodCall != null){                      
+                        if (vtData!=null && vtDataC!=null && valueMethodCall != null){                      
                             Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});                        
                             String sbp = (String) vtGetMethods.invoke(vtData, new Object[]{});
                             vtGetMethods = vtDataC.getMethod("get"+valueMethodCall2, new Class[] {});   
@@ -177,7 +181,7 @@ public final class FrmSetupFormAction extends Action {
                     }
                     else{
                                                 
-                        if (vtDataC!=null && valueMethodCall != null){                      
+                        if (vtData!=null && vtDataC!=null && valueMethodCall != null){                      
                             Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});                        
                             String value = (String) vtGetMethods.invoke(vtData, new Object[]{});
 
@@ -299,13 +303,12 @@ public final class FrmSetupFormAction extends Action {
         }
         catch(XmlRpcException e){
             e.printStackTrace();
+            return null;
         }
         catch(IOException e){
             e.printStackTrace();
-        }
-        
-        return null;
-        
+            return null;
+        }                
     }
     
     private String getMostRecentRecord(String demographicNo){
@@ -321,13 +324,12 @@ public final class FrmSetupFormAction extends Action {
         }
         catch(XmlRpcException e){
             e.printStackTrace();
+            return null;
         }
         catch(IOException e){
             e.printStackTrace();
-        }
-        
-        return null;
-        
+            return null;
+        }               
     }
     
     

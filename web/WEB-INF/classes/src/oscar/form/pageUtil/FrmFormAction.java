@@ -345,14 +345,15 @@ public class FrmFormAction extends Action {
         }
         catch(XmlRpcException e){
             e.printStackTrace();
+            return null;
         }
         catch(IOException e){
             e.printStackTrace();
+            return null;
         }
         /*catch(MalformedURLException e){
             e.printStackTrace();
-        }*/
-        return null;
+        }*/        
     }
     
     private Properties convertName(String formName){
