@@ -271,23 +271,30 @@ if (billTypes == null){
     Properties p2 = bSearch.getCurrentErrorMessages();
     Properties p = msp.currentC12Records();    
     boolean bodd = true;
+    boolean incorrectVal = false;
     System.out.println(list.size()+" in this billing list");
     for (int i = 0; i < list.size(); i++){     
-        
-        MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
+      incorrectVal = false;  
+      MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records                           
       String rejected = isRejected(b.billMasterNo,p,b.isWCB()); 
       String rejected2  = isRejected(b.billMasterNo,p2,b.isWCB());      
-      
-      total = total.add(new BigDecimal(b.amount).setScale(2, BigDecimal.ROUND_HALF_UP));
+        BigDecimal valueToAdd = new BigDecimal("0.00");
+      try{
+        valueToAdd = new BigDecimal(b.amount).setScale(2, BigDecimal.ROUND_HALF_UP);  
+      }catch(Exception badValueException){ 
+        System.out.println(" Error calculating value for "+b.billMasterNo); 
+        incorrectVal = true;
+      }
+      total = total.add(valueToAdd);
    %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <td align="center" class="bCellData" ><%=b.apptDate%></td>    
     <td align="center" class="bCellData" ><%=b.demoName%></td>
     <td align="center" class="bCellData" ><%=b.reason%></td>
     <td align="center" class="bCellData" ><%=b.code%></td>
-    <td align="center" class="bCellData" ><%=b.amount%></td>
+    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.amount%></td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
     <td align="center" class="bCellData" ><%=s(b.dx2)%></td>
     <td align="center" class="bCellData" ><%=s(b.dx3)%></td>
@@ -370,4 +377,11 @@ String isRejected(String billingNo,Properties p,boolean wcb){
         return str;
     }
 
+    String isBadVal(boolean valBad){
+        String retval = "";
+        if (valBad){
+            retval = "style=\"background-color: red\" title=\"Unprocessable Value: value will not be included in total\"";
+        }
+        return retval;
+    }
 %>
