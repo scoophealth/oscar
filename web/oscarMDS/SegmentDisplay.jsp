@@ -442,10 +442,10 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                String highlight = "#E0E0FF";
 	
      	       for(i=0;i<mDSSegmentData.headersArray.size();i++){
-                   if ( ((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportFlag.equals("MICROBIOLOGY CULTURE") ) { 
-                      linenum = 1; %>
+                   linenum=0;
+                   if ( ((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportFlag.equals("MICROBIOLOGY CULTURE") ) { %>
 
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#003399">
+                        <table <%=i>0?"style=\"page-break-before:always;\"":""%> border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#003399">
                             <tr>
                                 <td colspan="4" height="7">&nbsp;</td>
                             </tr>
@@ -471,18 +471,14 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestLocation"/></td>
                                 <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                             </tr>
-                            <tr class="NormalRes">
-                                <td align="middle" colspan="8">&nbsp;</td>
-                            </tr>
-                            <tr class="NormalRes">
-                                <td align="middle" colspan="8"><bean:message key="oscarMDS.segmentDisplay.msgMicrobiology"/></td>
-                            </tr>
-                            <tr class="NormalRes">
-                                <td align="middle" colspan="8"><bean:message key="oscarMDS.segmentDisplay.msgCultureAndSensitivity"/></td>
-                            </tr>
-
-
-
+                            <% if (((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading != null) {
+                                for (int x = 0; x < ((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading.length; x++) { %>
+                                    <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">                                
+                                        <td align="middle" colspan="8"><%=((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading[x].equals("")?"&nbsp;":((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading[x]%></td>
+                                    </tr>
+                            <%  }
+                                linenum++;
+                               } %>
 
                                 <% j=0;
                                    int linenumbefore = linenum;
@@ -602,7 +598,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
                 <% } else {  // not a microbiology report group  %>
 
-                        <table bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
                                 <td colspan="4" height="7">&nbsp;</td>
                             </tr>
@@ -628,9 +624,15 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestLocation"/></td>
                                 <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                             </tr>
-
-
-
+                            
+                            <% if (((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading != null) {
+                                for (int x = 0; x < ((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading.length; x++) { %>
+                                    <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">                                
+                                        <td align="middle" colspan="8"><%=((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading[x].equals("")?"&nbsp;":((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).reportHeading[x]%></td>
+                                    </tr>
+                            <%  }
+                                linenum++;
+                               } %>
 
                                 <% int linenumbefore = linenum;
                                    for(j=0;j<((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.size();j++){
