@@ -185,14 +185,8 @@ function nsgo() {
  	}
 %>
 </select>
-        <%
-           // if browser set to pt_BR, do not show following message
-           String country = request.getLocale() .getCountry();
-           if (!country.equals("BR")) {
-        %>
-        <li><!--a HREF="#" ONCLICK ="popupPage(600,750,'reportnoshowlist.jsp')" --><bean:message key="report.reportindex.formNoShow"/></a></li>
-        <% } %>
-        <li><a HREF="#" ONCLICK ="ggo('all')" ><bean:message key="report.reportindex.formBadAppt"/></a>
+
+<li><a HREF="#" ONCLICK ="ggo('all')" ><bean:message key="report.reportindex.formBadAppt"/></a>
 <select name="pprovider_no" >
 <%
    rsgroup = reportMainBean.queryResults("search_group");
@@ -302,6 +296,7 @@ function nsgo() {
         </li>
 	<%
            // If country = Brazil, do not show the following links:
+           String country = request.getLocale() .getCountry();
            if (!country.equals("BR")) {
         %>
         <li>
