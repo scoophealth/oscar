@@ -167,8 +167,8 @@ function checkInput() {
       &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgCode"/><br>
       &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgDescription"/><br>
       &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgDuration"/><br>
-      &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgColor"/></p>
-        
+      &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgColor"/><br>
+      &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgColorLinks"/></p>
       </td>
     </tr>
   </table>
