@@ -229,6 +229,14 @@ function onSub() {
 <%
 	out.flush();
       if (request.getParameter("submit") != null && providerNo!=null) {
+      	// set dx/serviceCode mode
+      	boolean bDx = true;
+      	if ("DxCode".equals(request.getParameter("codeType"))) {
+      		bDx = true;
+      	} else {
+      		bDx = false;
+      	}
+      
         // get dx code list
         Vector     vServiceCode = new Vector();
         Vector     vServiceDesc = new Vector();
@@ -250,6 +258,7 @@ function onSub() {
         indexNum++;
       }
 
+if(bDx) {
         sql = 
                 "select distinct(bd.diagnostic_code), dt.description from billingdetail bd, diagnosticcode dt where bd.status!='D' and bd.diagnostic_code = dt.diagnostic_code and bd.appointment_date>='"
                  + startDate + "' and bd.appointment_date<='" + endDate + "' order by diagnostic_code";
@@ -258,24 +267,44 @@ function onSub() {
           vServiceCode.add(rs.getString("bd.diagnostic_code"));
           vServiceDesc.add(rs.getString("dt.description"));
         }
+} else {
+	// get service code list
+	sql = "select distinct(service_code), service_desc from billingdetail bd where bd.status!='D' and bd.appointment_date>='" + startDate + "' and bd.appointment_date<='" + endDate + "' order by service_code";
+    rs = dbObj.searchDBRecord(sql);
+	while (rs.next()) { 
+		vServiceCode.add(rs.getString("service_code"));
+		vServiceDesc.add(rs.getString("service_desc"));
+	}
+}
 
         for (int i = 0; i < vServiceCode.size(); i++) {
           // get total pat
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd where b.billing_no=bd.billing_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'";
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd where b.billing_no=bd.billing_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+
           // get total vis
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd  where b.billing_no=bd.billing_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'";
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd where b.billing_no=bd.billing_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i), rs.getString("count(distinct(b.billing_no))"
@@ -283,41 +312,61 @@ function onSub() {
           }
 
           // get sex f
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + " and d.sex='F'";
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='F'";
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "patSexF" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + " and d.sex='M'";
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='M'";
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "patSexM" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
-          // get sex m
+          // get visit sex m
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + " and d.sex='F'";
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='F'";
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "visSexF" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.billing_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + " and d.sex='M'";
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='M'";
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "visSexM" + vServiceDesc.get(i), rs.getString(
@@ -325,12 +374,19 @@ function onSub() {
           }
 
           // get age 0-1
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' "
+     + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
 
           while (rs.next()) {
@@ -338,12 +394,19 @@ function onSub() {
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'"
+     + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
 
           while (rs.next()) {
@@ -352,6 +415,7 @@ function onSub() {
           }
 
           // get age 2-11
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -360,12 +424,21 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' " +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=11 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat2_11" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -374,6 +447,14 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=11 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis2_11" + vServiceDesc.get(i), rs.getString(
@@ -381,6 +462,7 @@ function onSub() {
           }
 
           // get age 12-20
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -389,12 +471,21 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' " +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=20 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat12_20" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -403,6 +494,14 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=20 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis12_20" + vServiceDesc.get(i), rs.getString(
@@ -410,6 +509,7 @@ function onSub() {
           }
           
           // get age 21-34
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -418,12 +518,21 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' " +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=34 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat21_34" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -432,6 +541,14 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=34 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis21_34" + vServiceDesc.get(i), rs.getString(
@@ -439,6 +556,7 @@ function onSub() {
           }
           
           // get age 35-50
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -447,12 +565,21 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' " +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=50 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat35_50" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -461,6 +588,14 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=50 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis35_50" + vServiceDesc.get(i), rs.getString(
@@ -468,6 +603,7 @@ function onSub() {
           }
           
           // get age 51-64
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -476,12 +612,21 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' " +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=64 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat51_64" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -490,6 +635,14 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=64 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis51_64" + vServiceDesc.get(i), rs.getString(
@@ -497,6 +650,7 @@ function onSub() {
           }
           
           // get age 65-70
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -505,12 +659,21 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' " +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=70 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat65_70" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
@@ -519,6 +682,14 @@ function onSub() {
                    + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=70 "
+                   + 
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis65_70" + vServiceDesc.get(i), rs.getString(
@@ -526,24 +697,38 @@ function onSub() {
           }
           
           // get age 71-
+if(bDx) {
           sql = 
                   "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 "
                   ;
+} else {
+	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "' " +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i), rs.getString(
                     "count(distinct(b.demographic_no))"));
           }
 
+if(bDx) {
           sql = 
                   "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d  where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no and bd.diagnostic_code='"
                    + vServiceCode.get(i) + "' and b.creator='" + providerNo + "' and b.billing_date>='" + startDate + 
                   "' and b.billing_date<='" + endDate + "' and b.status!='D' and bd.status!='D'" + 
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 "
                   ;
+} else {
+	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, demographic d where b.billing_no=bd.billing_no and b.demographic_no=d.demographic_no  and b.billing_date>='"
+	 + sdate + "' and b.billing_date<='" + edate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" +
+                  " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 "
+	 ;
+}
           rs = dbObj.searchDBRecord(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i), rs.getString(
@@ -580,7 +765,7 @@ function onSub() {
         <table width="100%" border="1" bgcolor="#ffffff" cellspacing="0" cellpadding="0">
           <tr bgcolor="<%=tdTitleColor%>">
             <TH colspan="2" width="10%">
-              Dx Code
+              <%=bDx?"Dx Code":"ServiceCode"%>
             </TH>
             <TH colspan="2" width="6%">
               Total
@@ -759,7 +944,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 <% } %>
           <tr bgcolor="<%=tdTitleColor%>">
             <TH colspan="2" width="10%">
-              Dx Code
+              <%=bDx?"Dx Code":"ServiceCode"%>
             </TH>
             <TH colspan="2" width="6%">
               Total
