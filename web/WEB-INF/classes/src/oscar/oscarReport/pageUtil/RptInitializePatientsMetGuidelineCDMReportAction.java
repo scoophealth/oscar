@@ -49,8 +49,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
     {
  
         RptInitializePatientsMetGuidelineCDMReportForm frm = (RptInitializePatientsMetGuidelineCDMReportForm) form;                       
-        request.getSession().setAttribute("RptInitializePatientsMetGuidelineCDMReportForm", frm);
-        String requestId = "";
+        request.getSession().setAttribute("RptInitializePatientsMetGuidelineCDMReportForm", frm);        
         
         
         try{
@@ -60,9 +59,9 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     return (new ActionForward(mapping.getInput()));
                 }
                 ArrayList reportMsg = new ArrayList();
-                getNbPatientSeen(db, frm, reportMsg);                
-                getMetGuidelinePercentage(db, frm, reportMsg);
-                getPatientsMetAllSelectedGuideline(db, frm, reportMsg);
+                getNbPatientSeen(db, frm, reportMsg, request);                
+                getMetGuidelinePercentage(db, frm, reportMsg, request);
+                getPatientsMetAllSelectedGuideline(db, frm, reportMsg, request);
                 MessageResources mr = getResources(request);
                 String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientWhoMetGuideline");
                 request.setAttribute("title", title);
@@ -79,11 +78,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                 }
                 else
                     throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-
-                    
-                ResultSet rs = db.GetSQL(dbSpecificCommand);
-                if(rs.next())
-                    requestId = Integer.toString(rs.getInt(1));
+                                    
                 db.CloseConn();
                 
         }
@@ -183,7 +178,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/    
-    private ArrayList getNbPatientSeen(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList messages){
+    private ArrayList getNbPatientSeen(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList messages, HttpServletRequest request){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
         String endDateA = frm.getEndDateA();
@@ -196,7 +191,9 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                 System.out.println("SQL Statement: " + sql);
                 rs.last();
                 nbPatient = rs.getRow();
-                String msg = "There are " + Integer.toString(nbPatient) + " patients seen from " + startDateA + " to " + endDateA;
+                
+                MessageResources mr = getResources(request);
+                String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA);                                     
                 System.out.println(msg);
                 messages.add(msg);
                 messages.add("");
@@ -217,13 +214,14 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/  
-    private ArrayList getMetGuidelinePercentage(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList metGLPercentageMsg){
+    private ArrayList getMetGuidelinePercentage(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList metGLPercentageMsg, HttpServletRequest request){
         String[] startDateB = frm.getStartDateB();
         String[] endDateB = frm.getEndDateB(); 
         String[] idB = frm.getIdB();
         String[] guidelineB = frm.getGuidelineB();        
         String[] guidelineCheckbox = frm.getGuidelineCheckbox();
         RptCheckGuideline checkGuideline = new RptCheckGuideline();
+        MessageResources mr = getResources(request);
         
         if (guidelineCheckbox!=null){
             try{
@@ -248,7 +246,16 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                         nbMetGL = 0;
                         String mInstrc = (String) frm.getValue("mInstrcsCheckbox"+ctr+j);
                         
-                        if(mInstrc!=null){                            
+                        if(mInstrc!=null){  
+                            
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate +
+                                  "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
+                            System.out.println("SQL statement is" + sql);
+                            rs = db.GetSQL(sql);
+                            rs.last();
+                            double nbGeneral = rs.getRow();
+                            rs.close();
+                            
                             if (measurementType.compareTo("BP")==0){
                                 sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
                                          + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
@@ -260,6 +267,19 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                         nbMetGL++;
                                     }
                                 }
+                                if(nbGeneral!=0){
+                                    metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
+                                }
+                                String[] param = {  startDate, 
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,
+                                                    Double.toString(metGLPercentage),
+                                                    aboveBelow,
+                                                    guideline};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsMetGuideline", param);    
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg);           
                             }
                             else if (checkGuideline.getValidation(db, measurementType)==1)
                             {
@@ -270,6 +290,19 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                 rs = db.GetSQL(sql);
                                 rs.last();
                                 nbMetGL = rs.getRow();
+                                if(nbGeneral!=0){
+                                    metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
+                                }
+                                String[] param = {  startDate, 
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,
+                                                    Double.toString(metGLPercentage),
+                                                    aboveBelow,
+                                                    guideline};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsMetGuideline", param);                                 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg);           
                             }
                             else{
                                 sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
@@ -282,24 +315,20 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                         nbMetGL++;
                                     }
                                 }
+                                if(nbGeneral!=0){
+                                    metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
+                                }
+                                String[] param = {  startDate,
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,                                                
+                                                    guideline,
+                                                    Double.toString(metGLPercentage)};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsIs", param); 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg);           
                             }
-                            rs.close();
-
-                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate +
-                                  "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
-                            System.out.println("SQL statement is" + sql);
-                            rs = db.GetSQL(sql);
-                            rs.last();
-                            double nbGeneral = rs.getRow();
-                            rs.close();
-
-                            if(nbGeneral!=0){
-                                metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
-                            }
-                            String msg = "From " + startDate + " to " + endDate + ": " + measurementType + "--" + mInstrc + " "
-                                               + metGLPercentage + "% " + aboveBelow + " " + guideline;
-                            System.out.println(msg);
-                            metGLPercentageMsg.add(msg);                     
+                            rs.close();                                                                   
                         }
                     }
                     
@@ -307,6 +336,13 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     
                         metGLPercentage = 0;
                         nbMetGL = 0;
+                        sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate 
+                              + "'AND type='"+ measurementType + "'";
+                        System.out.println("SQL statement is" + sql);
+                        rs = db.GetSQL(sql);
+                        rs.last();
+                        double nbGeneral = rs.getRow();
+                        rs.close();
                         
                         if (measurementType.compareTo("BP")==0){
                             sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
@@ -317,7 +353,22 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                                 if(checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), guideline, aboveBelow)){
                                     nbMetGL++;
                                 }
+                            }                                                        
+
+                        if(nbGeneral!=0){
+                                metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
                             }
+                            String[] param = {  startDate, 
+                                                endDate,
+                                                measurementType,
+                                                "",
+                                                Double.toString(metGLPercentage),
+                                                aboveBelow,
+                                                guideline};
+                            String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsMetGuideline", param); 
+                            System.out.println(msg);
+                            metGLPercentageMsg.add(msg); 
+                            metGLPercentageMsg.add(""); 
                         }
                         else if (checkGuideline.getValidation(db, measurementType)==1)
                         {
@@ -327,36 +378,27 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                             rs = db.GetSQL(sql);
                             rs.last();
                             nbMetGL = rs.getRow();
-                        }
-                        else{
-                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
-                                     + "'AND type='"+ measurementType + "'";
-                            System.out.println("SQL statement is " + sql);
-                            rs = db.GetSQL(sql);
-                            while(rs.next()){
-                                if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), guideline)){
-                                    nbMetGL++;
-                                }
+                            
+
+                            if(nbGeneral!=0){
+                                metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
                             }
+                            String[] param = {  startDate, 
+                                                endDate,
+                                                measurementType,
+                                                "",
+                                                Double.toString(metGLPercentage),
+                                                aboveBelow,
+                                                guideline};
+                            String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsMetGuideline", param); 
+                            System.out.println(msg);
+                            metGLPercentageMsg.add(msg); 
+                            metGLPercentageMsg.add(""); 
                         }
+                        
                         rs.close();
                         
-                        sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate 
-                              + "'AND type='"+ measurementType + "'";
-                        System.out.println("SQL statement is" + sql);
-                        rs = db.GetSQL(sql);
-                        rs.last();
-                        double nbGeneral = rs.getRow();
-                        rs.close();
-
-                        if(nbGeneral!=0){
-                            metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
-                        }
-                        String msg = "From " + startDate + " to " + endDate + ": " + measurementType + " "
-                                           + metGLPercentage + "% " + aboveBelow + " " + guideline;
-                        System.out.println(msg);
-                        metGLPercentageMsg.add(msg); 
-                        metGLPercentageMsg.add(""); 
+                        
                 }
             }
             catch(SQLException e)
@@ -377,7 +419,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/     
-    private ArrayList getPatientsMetAllSelectedGuideline(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList reportMsg){       
+    private ArrayList getPatientsMetAllSelectedGuideline(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList reportMsg, HttpServletRequest request){       
         String[] guidelineCheckbox = frm.getGuidelineCheckbox();
         String[] guidelineB = frm.getGuidelineB();        
         String startDate = frm.getStartDateA();
@@ -385,9 +427,10 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         RptCheckGuideline checkGuideline = new RptCheckGuideline();
         ArrayList patients = checkGuideline.getPatients(db, startDate, endDate);
         int nbPatients = patients.size();
-        int nbPatientsDoneAllTest = 0;
-        int nbPatientsPassAllTest = 0;
+        double nbPatientsDoneAllTest = 0;
+        double nbPatientsPassAllTest = 0;
         double passAllTestsPercentage = 0;
+        MessageResources mr = getResources(request);
         
         if (guidelineCheckbox!=null){
             try{
@@ -453,19 +496,22 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     }
                     if(doneAllTests){
                         System.out.println("doneAllTest is true" );
-                        nbPatientsDoneAllTest++;
-                    }
-                    if(passAllTests){
-                        nbPatientsPassAllTest++;
+                        nbPatientsDoneAllTest++;                   
+                        if(passAllTests){
+                            nbPatientsPassAllTest++;
+                        }
                     }
                 }
 
                 if(nbPatientsDoneAllTest!=0){
-                    passAllTestsPercentage = Math.round( ((double) nbPatientsPassAllTest/ (double) nbPatientsDoneAllTest) * 100);
+                    passAllTestsPercentage = Math.round( (nbPatientsPassAllTest/nbPatientsDoneAllTest) * 100);
                 }
-
-                String msg = "There are " + nbPatientsDoneAllTest + " done all the selected tests and " 
-                             + passAllTestsPercentage + "% pass all the tests";
+               
+                String[] param = {  startDate, 
+                                    endDate,
+                                    Double.toString(nbPatientsDoneAllTest),
+                                    Double.toString(passAllTestsPercentage)};
+                String msg = mr.getMessage("oscarReport.CDMReport.msgPassAllSeletectedTest", param);                 
                 System.out.println(msg); 
 
                 reportMsg.add(msg);

@@ -59,8 +59,8 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 }
                 
                 ArrayList reportMsg = new ArrayList();
-                getNbPatientSeen(db, frm, reportMsg);  
-                getFrequenceOfTestPerformed(db, frm, reportMsg);
+                getNbPatientSeen(db, frm, reportMsg, request);  
+                getFrequenceOfTestPerformed(db, frm, reportMsg, request);
                 MessageResources mr = getResources(request);
                 String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
                 request.setAttribute("title", title);
@@ -137,7 +137,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/  
-    private int getNbPatientSeen(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList messages){
+    private int getNbPatientSeen(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList messages, HttpServletRequest request){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
         String endDateA = frm.getEndDateA();
@@ -150,7 +150,8 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 System.out.println("SQL Statement: " + sql);
                 rs.last();
                 nbPatient = rs.getRow();
-                String msg = "There are " + Integer.toString(nbPatient) + " patients seen from " + startDateA + " to " + endDateA;
+                MessageResources mr = getResources(request);
+                String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
                 System.out.println(msg);
                 messages.add(msg);
                 messages.add("");
@@ -170,13 +171,14 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private ArrayList getFrequenceOfTestPerformed(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList percentageMsg){
+    private ArrayList getFrequenceOfTestPerformed(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList percentageMsg, HttpServletRequest request){
         String[] startDateD = frm.getStartDateD();
         String[] endDateD = frm.getEndDateD();         
         int[] exactly = frm.getExactly(); 
         int[] moreThan = frm.getMoreThan();         
         int[] lessThan = frm.getLessThan();
         String[] frequencyCheckbox = frm.getFrequencyCheckbox();      
+        MessageResources mr = getResources(request);
         
         if (frequencyCheckbox!=null){
             try{
@@ -188,9 +190,6 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                     int exact = exactly[ctr];
                     int more = moreThan[ctr];
                     int less = lessThan[ctr];
-                    int nbExact =0;
-                    int nbMore =0;
-                    int nbLess =0;
                                         
                     String measurementType = (String) frm.getValue("measurementTypeD"+ctr);                    
                     String sNumMInstrc = (String) frm.getValue("mNbInstrcsD"+ctr);
@@ -203,6 +202,10 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                         double exactPercentage = 0;
                         double morePercentage = 0;
                         double lessPercentage = 0;
+                        int nbExact =0;
+                        int nbMore =0;
+                        int nbLess =0;
+                        
                         String mInstrc = (String) frm.getValue("mInstrcsCheckboxD"+ctr+j);
                         if(mInstrc!=null){
                             for(int k=0; k<nbPatients; k++){
@@ -221,10 +224,10 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                 if(nbTest == exact){
                                     nbExact++;
                                 }
-                                else if(nbTest > more){
+                                if(nbTest > more){
                                     nbMore++;
                                 }
-                                else if(nbTest < less){
+                                if(nbTest < less){
                                     nbLess++;
                                 }
 
@@ -236,16 +239,31 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
 
                             }
                         
-                            String msg = "From " + startDate + "to " + endDate + ": " + measurementType + "--" + mInstrc + " "
-                                         + exactPercentage + "% " + " has done the test for " + exact + " times ";
+                            String[] param0 = {  startDate, 
+                                                endDate,
+                                                measurementType,
+                                                mInstrc,
+                                                Double.toString(exactPercentage),
+                                                Integer.toString(exact)};
+                            String msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsExact", param0);                              
                             System.out.println(msg);
                             percentageMsg.add(msg);
-                            msg = "From " + startDate + "to " + endDate + ": " + measurementType + "--" + mInstrc + " "
-                                               + morePercentage + "% " + " has done the test for more than " + more + " times ";
+                            String[] param1 = {   startDate, 
+                                                endDate,
+                                                measurementType,
+                                                mInstrc,
+                                                Double.toString(morePercentage),
+                                                Integer.toString(more)};
+                            msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsMoreThan", param1); 
                             System.out.println(msg);
-                            percentageMsg.add(msg);   
-                            msg = "From " + startDate + "to " + endDate + ": " + measurementType + "--" + mInstrc + " "
-                                               + lessPercentage + "% " + " has done the test for less than " + less + " times ";
+                            percentageMsg.add(msg); 
+                            String[] param2 = {   startDate, 
+                                                endDate,
+                                                measurementType,
+                                                mInstrc,
+                                                Double.toString(lessPercentage),
+                                                Integer.toString(less)};
+                            msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsLessThan", param2); 
                             System.out.println(msg);
                             percentageMsg.add(msg); 
                             percentageMsg.add("");

@@ -49,8 +49,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
     {
  
         RptInitializePatientsInAbnormalRangeCDMReportForm frm = (RptInitializePatientsInAbnormalRangeCDMReportForm) form;                       
-        request.getSession().setAttribute("RptInitializePatientsInAbnormalRangeCDMReportForm", frm);
-        String requestId = "";
+        request.getSession().setAttribute("RptInitializePatientsInAbnormalRangeCDMReportForm", frm);        
 
         try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);  
@@ -60,8 +59,8 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 }
                 
                 ArrayList reportMsg = new ArrayList();
-                getNbPatientSeen(db, frm, reportMsg);  
-                getInAbnormalRangePercentage(db, frm, reportMsg);
+                getNbPatientSeen(db, frm, reportMsg, request);  
+                getInAbnormalRangePercentage(db, frm, reportMsg, request);
                 MessageResources mr = getResources(request);
                 String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientInAbnormalRange");
                 request.setAttribute("title", title);
@@ -78,11 +77,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 }
                 else
                     throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-
-                    
-                ResultSet rs = db.GetSQL(dbSpecificCommand);
-                if(rs.next())
-                    requestId = Integer.toString(rs.getInt(1));
+                                    
                 db.CloseConn();
                 
         }
@@ -205,7 +200,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
      *s
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private int getNbPatientSeen(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList messages){
+    private int getNbPatientSeen(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList messages, HttpServletRequest request){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
         String endDateA = frm.getEndDateA();
@@ -217,8 +212,9 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 rs = db.GetSQL(sql);
                 System.out.println("SQL Statement: " + sql);
                 rs.last();
-                nbPatient = rs.getRow();                
-                String msg = "There are " + Integer.toString(nbPatient) + " patients seen from " + startDateA + " to " + endDateA;
+                nbPatient = rs.getRow();   
+                MessageResources mr = getResources(request);
+                String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
                 System.out.println(msg);
                 messages.add(msg);
                 messages.add("");
@@ -238,13 +234,14 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private ArrayList getInAbnormalRangePercentage(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList metGLPercentageMsg){
+    private ArrayList getInAbnormalRangePercentage(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList metGLPercentageMsg, HttpServletRequest request){
         String[] startDateC = frm.getStartDateC();
         String[] endDateC = frm.getEndDateC();         
         String[] upperBound = frm.getUpperBound(); 
         String[] lowerBound = frm.getLowerBound();         
         String[] abnormalCheckbox = frm.getAbnormalCheckbox();        
         RptCheckGuideline checkGuideline = new RptCheckGuideline();
+        MessageResources mr = getResources(request);
         
         if (abnormalCheckbox!=null){
             try{
@@ -260,10 +257,11 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                     String measurementType = (String) frm.getValue("measurementTypeC"+ctr);                    
                     String sNumMInstrc = (String) frm.getValue("mNbInstrcsC"+ctr);
                     int iNumMInstrc = Integer.parseInt(sNumMInstrc);                                        
-                    int nbMetGL = 0;                    
+                    double nbMetGL = 0;                    
                     double metGLPercentage = 0;
                     ResultSet rs;
                     String sql = "";
+                    
                     
                     for(int j=0; j<iNumMInstrc; j++){
                         metGLPercentage = 0;                        
@@ -271,6 +269,14 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                         
                         String mInstrc = (String) frm.getValue("mInstrcsCheckboxC"+ctr+j);
                         if(mInstrc!=null){
+                            
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate +
+                                  "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
+                            System.out.println("SQL statement is" + sql);
+                            rs = db.GetSQL(sql);
+                            rs.last();
+                            double nbGeneral = rs.getRow();
+                            rs.close();
                             
                             if (measurementType.compareTo("BP")==0){
                                 sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
@@ -285,6 +291,20 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                         nbMetGL++;
                                     }
                                 }
+                                if(nbGeneral!=0){
+                                    System.out.println("the total number of patients seen: " + nbGeneral + " nb of them pass the test: " + nbMetGL);
+                                    metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                                }                                
+                                String[] param = {  startDate, 
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,
+                                                    lower,
+                                                    upper,
+                                                    Double.toString(metGLPercentage)};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param);                                 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg); 
                             }
                             else if (checkGuideline.getValidation(db, measurementType)==1)
                             {
@@ -295,6 +315,19 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                 rs = db.GetSQL(sql);
                                 rs.last();
                                 nbMetGL = rs.getRow();
+                                if(nbGeneral!=0){
+                                    metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                                }                                
+                                String[] param = {  startDate, 
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,
+                                                    lower,
+                                                    upper,
+                                                    Double.toString(metGLPercentage)};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg); 
                             }
                             else{
                                 sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
@@ -303,36 +336,42 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                 System.out.println("SQL statement is " + sql);
                                 rs = db.GetSQL(sql);
                                 while(rs.next()){
-                                    if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), upper) ||
-                                       checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), lower) ){
+                                    if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), upper)){
                                         nbMetGL++;
                                     }
                                 }
+                                if(nbGeneral!=0){
+                                    metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                                }
+                                String[] param = {  startDate,
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,                                                
+                                                    upper,
+                                                    Double.toString(metGLPercentage)};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsIs", param); 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg); 
                             }
                                                                                                                 
                             rs.close();
+                            
 
-                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate +
-                                  "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
-                            System.out.println("SQL statement is" + sql);
-                            rs = db.GetSQL(sql);
-                            rs.last();
-                            int nbGeneral = rs.getRow();
-                            rs.close();
-
-                            if(nbGeneral!=0){
-                                metGLPercentage = Math.round((double)nbMetGL/(double)nbGeneral) * 100;
-                            }
-                            String msg = "From " + startDate + " to " + endDate + ": " + measurementType + "--" + mInstrc + " "
-                                               + metGLPercentage + "% " + " < " + upper + " > " + lower;
-                            System.out.println(msg);
-                            metGLPercentageMsg.add(msg);                     
+                                                
                         }
                     }
                     
                     //percentage of patients who are in abnormal range for the same test with all measuring instruction
                         metGLPercentage = 0; 
                         nbMetGL = 0;
+                        
+                        sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate 
+                              + "'AND type='"+ measurementType + "'";
+                        System.out.println("SQL statement is" + sql);
+                        rs = db.GetSQL(sql);
+                        rs.last();
+                        double nbGeneral = rs.getRow();
+                        rs.close();
                         
                         if (measurementType.compareTo("BP")==0){
                             sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
@@ -346,6 +385,20 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                     nbMetGL++;
                                 }
                             }
+                            
+                            if(nbGeneral!=0){
+                                metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                            }
+                            String[] param = {  startDate, 
+                                                endDate,
+                                                measurementType,
+                                                "",
+                                                lower,
+                                                upper,
+                                                Double.toString(metGLPercentage)};
+                            String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
+                            System.out.println(msg);
+                            metGLPercentageMsg.add(msg); 
                         }
                         else if (checkGuideline.getValidation(db, measurementType)==1)
                         {
@@ -356,37 +409,28 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                             rs = db.GetSQL(sql);
                             rs.last();
                             nbMetGL = rs.getRow();
-                        }
-                        else{
-                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
-                                     + "'AND type='"+ measurementType + "'";
-                            System.out.println("SQL statement is " + sql);
-                            rs = db.GetSQL(sql);
-                            while(rs.next()){
-                                if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), upper) ||
-                                   checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), lower) ){
-                                    nbMetGL++;
-                                }
+                            
+                            if(nbGeneral!=0){
+                                metGLPercentage =Math.round(nbMetGL/nbGeneral* 100);
                             }
-                        }                        
+                            String[] param = {  startDate, 
+                                                endDate,
+                                                measurementType,
+                                                "",
+                                                lower,
+                                                upper,
+                                                Double.toString(metGLPercentage)};
+                            String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
+                            System.out.println(msg);
+                            metGLPercentageMsg.add(msg); 
+                            }
+                                                
                                                          
                         rs.close();
                         
-                        sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate 
-                              + "'AND type='"+ measurementType + "'";
-                        System.out.println("SQL statement is" + sql);
-                        rs = db.GetSQL(sql);
-                        rs.last();
-                        int nbGeneral = rs.getRow();
-                        rs.close();
+                        
 
-                        if(nbGeneral!=0){
-                            metGLPercentage = Math.round((double) nbMetGL/ (double) nbGeneral) * 100;
-                        }
-                        String msg = "From " + startDate + " to " + endDate + ": " + measurementType + " "
-                                           + metGLPercentage + "% " + " < " + upper + " > " + lower;
-                        System.out.println(msg);
-                        metGLPercentageMsg.add(msg); 
+                        
                 }
             }
             catch(SQLException e)
