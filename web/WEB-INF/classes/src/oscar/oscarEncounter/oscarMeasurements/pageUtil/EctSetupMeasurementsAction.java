@@ -42,7 +42,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
-
+import oscar.oscarEncounter.oscarMeasurements.bean.*;
 
 public final class EctSetupMeasurementsAction extends Action {
 
