@@ -48,7 +48,8 @@ public class EctFileUtil {
         URL u=null;
 
         try{
-			File file = new File("./"+projecthome+"/oscarEncounter/dataFiles/"+fileName);
+			//File file = new File("./"+projecthome+"/oscarEncounter/dataFiles/"+fileName);
+			File file = new File(projecthome+"/oscarEncounter/dataFiles/"+fileName);
 			System.out.println(file.getAbsolutePath() );
 			if(!file.isFile() || !file.canRead()) {
 				throw new IOException();
