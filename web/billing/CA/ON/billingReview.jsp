@@ -192,18 +192,18 @@ if (visittype.substring(0,2).compareTo("00") == 0) {
 <table width="100%" border="0">
 <tr> 
   <td><b>Generic Billing Form for General Practice</b></td>
-</tr><tr>
-  <td bgcolor="#EEEEFF"><b><u>Billing Summary</u></b></td>
+</tr><tr bgcolor="#CCCCFF">
+  <td><b><u>Billing Summary</u></b></td>
 </tr>
 </table>
   
-<table width="600" border="1">
-<tr> 
-	<td width="54%"><b>Patient : <%=request.getParameter("demographic_name")%></b></td>
-	<td width="46%"><b>Health# : <%=demoHIN%></b></td>
+<table width="80%" border="0" cellspacing="2" cellpadding="1">
+<tr bgcolor="#EEEEFF"> 
+	<td width="54%">Patient : <b><%=request.getParameter("demographic_name")%></b></td>
+	<td width="46%">Health# : <b><%=demoHIN%></b></td>
 </tr><tr> 
-	<td width="54%"><b>Billing Type: <%=billtype%></b></td>
-	<td width="46%"><b>Service Date: <%=request.getParameter("xml_appointment_date")%></b></td>
+	<td width="54%">Billing Type: <b><%=billtype%></b></td>
+	<td width="46%">Service Date: <b><%=request.getParameter("xml_appointment_date")%></b></td>
 </tr>
 <%  
 String local_desc="";
@@ -213,21 +213,21 @@ while(rslocation.next()){
 	local_desc = rslocation.getString("clinic_location_name");
 }
 %>
-<tr> 
-	<td width="54%"><b>Visit Type Code: <%=request.getParameter("xml_visittype")%></b></td>
-	<td width="46%"><b>Billing Physician: <%=proFirst%> <%=proLast%></b></td>
+<tr bgcolor="#EEEEFF"> 
+	<td width="54%">Visit Type Code: <b><%=request.getParameter("xml_visittype")%></b></td>
+	<td width="46%">Billing Physician: <b><%=proFirst%> <%=proLast%></b></td>
 </tr><tr> 
-	<td width="54%"><b>Visit Location: <%=local_desc%></b></td>
-	<td width="46%"><b>Admission Date: <%=visitdate%></b></td>
+	<td width="54%">Visit Location: <b><%=local_desc%></b></td>
+	<td width="46%">Admission Date: <b><%=visitdate%></b></td>
+</tr><tr bgcolor="#EEEEFF"> 
+	<td width="54%">Appointment Physician: <b> <%=apptFirst%> <%=apptLast%>  </b></td>
+	<td width="46%">Secordary Physician: <b><%=asstFirst%>  <%=asstLast%> </b></td>
 </tr><tr> 
-	<td width="54%"><b>Appointment Physician:  <%=apptFirst%> <%=apptLast%>  </b></td>
-	<td width="46%"><b>Secordary Physician: <%=asstFirst%>  <%=asstLast%> </b></td>
-</tr><tr> 
-	<td width="54%"><b>Referral Physician:  <%=r_doctor%> </b></td>
-	<td width="46%"><b>Referral Physician Number: <%=r_doctor_ohip%> </b></td>
-</tr><tr> 
-	<td width="54%"><b>Creator: <%=crFirst%> <%=crLast%>  </b></td>
-	<td width="46%"><b>Creation Date: <%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%></b></td>
+	<td width="54%">Referral Physician: <b> <%=r_doctor%> </b></td>
+	<td width="46%">Referral Physician Number: <b><%=r_doctor_ohip%> </b></td>
+</tr><tr bgcolor="#EEEEFF"> 
+	<td width="54%">Creator: <b><%=crFirst%> <%=crLast%>  </b></td>
+	<td width="46%">Creation Date:<b> <%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%></b></td>
 </tr>
 </table>
 
@@ -453,13 +453,13 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 }
 %>
 
-<table width="600" border="1">
-<tr> 
-	<td width="22%"><b><font size="2">Service Code</b></td>
-	<td width="58%"><b><font size="2">Description</b></td>
-	<td width="6%" align="right"><b><font size="2" >#Unit</b></td>
-	<td width="14%" align="right"> 
-	<b><font size="2">$ Fee</b></td>
+<table width="600" border="0">
+<tr bgcolor="#CCCCFF"> 
+	<th width="22%"><font size="2">Service Code</th>
+	<th width="58%"><font size="2">Description</th>
+	<th width="6%" align="right"><font size="2" >#Unit</th>
+	<th width="14%" align="right"> 
+	<font size="2">$ Fee</th>
 </tr>
 
 <% 
@@ -522,7 +522,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 			sBuffer.insert(i,"");
 			str = sBuffer.toString();
 %>
-<tr> 
+<tr bgcolor="#EEEEFF"> 
 	<td width="22%"><font size="2"><%=scode%></td>
 	<input type="hidden" name="billrec<%=counter%>" value="<%=scode%>">
 	<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
@@ -540,228 +540,234 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 
 if (otherflag1 == 1) { 
 %>
-      <tr> 
-      <td width="22%"><font size="2"><%=otherdbcode1%></td>
-      <input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode1%>">
-      <input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr%>">
-      <input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc1%>">
-      <input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode1unit%>">
-      <td width="58%"><font size="2"><%=otherdesc1%></td>
-      <td width="6%"> 
-        <div align="right"><font size="2"><%=othercode1unit%></div>
-      </td>
-      <td width="14%"> 
-        <div align="right"><font size="2"><%=otherfee%></div>
-      </td>
-    </tr>
-    <% counter = counter + 1;
-    } %>
-     <% if (otherflag2 == 1) { %>
-      <tr> 
-      <td width="22%"><font size="2"><%=otherdbcode2%></td>
-      <input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode2%>">
-      <input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr2%>">
-      <input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc2%>">
-      <input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode2unit%>">
-      <td width="58%"><font size="2"><%=otherdesc2%></td>
-      <td width="6%"> 
-        <div align="right"><font size="2"><%=othercode2unit%></div>
-      </td>
-      <td width="14%"> 
-        <div align="right"><font size="2"><%=otherfee02%></div>
-      </td>
-    </tr>
-    <% counter = counter + 1;
-    } %>
-     <% if (otherflag3 == 1) { %>
-      <tr> 
-      <td width="22%"><font size="2"><%=otherdbcode3%></td>
-      <input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode3%>">
-      <input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr3%>">
-      <input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc3%>">
-      <input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode3unit%>">
-      <td width="58%"><font size="2"><%=otherdesc3%></td>
-      <td width="6%"> 
-        <div align="right"><font size="2"><%=othercode3unit%></div>
-      </td>
-      <td width="14%"> 
-        <div align="right"><font size="2"><%=otherfee03%></div>
-      </td>
-    </tr>
-    <% counter = counter + 1;
-    } %>
-      <% if (eFlag.compareTo("1")==0) { 
-      
-   percent = new BigDecimal(Double.parseDouble(ePerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
-   percentPremium = percent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
-    BigTotal = BigTotal.add(percentPremium);
-    
-    String str = percentPremium.toString();
-StringBuffer sBuffer = new StringBuffer(str);
-int i = str.indexOf('.');
-sBuffer.deleteCharAt(i);
-sBuffer.insert(i,"");
-str = sBuffer.toString();
-      %>
-           <tr> 
-	       <td width="22%"><font size="2"><%=eCode%></td>
-	       <input type="hidden" name="billrec<%=counter%>" value="<%=eCode%>">
-	       <input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
-	       <input type="hidden" name="billrecdesc<%=counter%>" value="<%=eDesc%>">
-	       <input type="hidden" name="billrecunit<%=counter%>" value="<%=eUnit%>">
-	       <td width="58%"><font size="2"><%=eDesc%></td>
-	       <td width="6%"> 
-	         <div align="right"><font size="2"><%=eUnit%></div>
-	       </td>
-	       <td width="14%"> 
-	         <div align="right"><font size="2"><%=percentPremium%></div>
-	       </td>
-    </tr>
-         <% counter = counter + 1;
-    } %>
-    
-     <% if (xFlag.compareTo("1")==0) { 
-          
-           BigTotal = BigTotal.subtract(percentPremium);
-         xPercent = new BigDecimal(Double.parseDouble(xPerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
-   	 xPercentPremium = xPercent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
-     BigTotal = BigTotal.add(xPercentPremium);
-         BigTotal = BigTotal.add(percentPremium);
-     
-        String str = xPercentPremium.toString();
-    StringBuffer sBuffer = new StringBuffer(str);
-    int i = str.indexOf('.');
-    sBuffer.deleteCharAt(i);
-    sBuffer.insert(i,"");
-    str = sBuffer.toString();
-          %>
-               <tr> 
-    	       <td width="22%"><font size="2"><%=xCode%></td>
-    	       <input type="hidden" name="billrec<%=counter%>" value="<%=xCode%>">
-    	       <input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
-    	       <input type="hidden" name="billrecdesc<%=counter%>" value="<%=xDesc%>">
-    	       <input type="hidden" name="billrecunit<%=counter%>" value="<%=xUnit%>">
-    	       <td width="58%"><font size="2"><%=xDesc%></td>
-    	       <td width="6%"> 
-    	         <div align="right"><font size="2"><%=xUnit%></div>
-    	       </td>
-    	       <td width="14%"> 
-    	         <div align="right"><font size="2"><%=xPercentPremium%></div>
-    	       </td>
-        </tr>
-             <% counter = counter + 1;
-    } %>
-    
-    
-    <% if (counter == 0) { 
-    errorFlag = "1";
-    errorMsg = errorMsg + "Error: No Service/Procedure Code selected. <br>";
-    }
-    
-    if (errorFlag.compareTo("1")==0){
-    %>
-    </table>
-    <p><%=errorMsg%></p>
-     <% session.setAttribute("content", content); %>
-    <form>
-    <input type=button name=back value='Go Back and Change' onClick='javascript:location.href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0"'>
-    </form>
-    
-<% } else { %>
-    
-    <tr> 
-      <td width="22%"><font size="2"><b>Diagnostic 
-        Code</b></td>
-      <td colspan="2"><font size="2"><%=diagnostic_code%></td>
-      <td width="14%"> 
-        <div align="right"><font size="2"></div>
-      </td>
-    </tr>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"><%=otherdbcode1%></td>
+		<input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode1%>">
+		<input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr%>">
+		<input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc1%>">
+		<input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode1unit%>">
+	<td width="58%"><font size="2"><%=otherdesc1%></td>
+	<td width="6%" align="right"><font size="2"><%=othercode1unit%></td>
+	<td width="14%" align="right"><font size="2"><%=otherfee%></td>
+</tr>
+<% 
+	counter = counter + 1;
+} 
+if (otherflag2 == 1) { 
+%>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"><%=otherdbcode2%></td>
+	<input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode2%>">
+	<input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr2%>">
+	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc2%>">
+	<input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode2unit%>">
+	<td width="58%"><font size="2"><%=otherdesc2%></td>
+	<td width="6%"> 
+	<div align="right"><font size="2"><%=othercode2unit%></div>
+	</td>
+	<td width="14%"> 
+	<div align="right"><font size="2"><%=otherfee02%></div>
+	</td>
+</tr>
+<% 
+	counter = counter + 1;
+} 
+if (otherflag3 == 1) { 
+%>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"><%=otherdbcode3%></td>
+	<input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode3%>">
+	<input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr3%>">
+	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc3%>">
+	<input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode3unit%>">
+	<td width="58%"><font size="2"><%=otherdesc3%></td>
+	<td width="6%"> 
+	<div align="right"><font size="2"><%=othercode3unit%></div>
+	</td>
+	<td width="14%"> 
+	<div align="right"><font size="2"><%=otherfee03%></div>
+	</td>
+</tr>
+<% 
+	counter = counter + 1;
+} 
 
-    <% if (request.getParameter("xml_research1") == null || request.getParameter("xml_research1").compareTo("") == 0) { %>
-        <tr> 
-      <td width="22%"><font size="2"></td>
-      <td colspan="2"> 
-        <div align="right"><font size="2">Total:</div>
-      </td>
-      <td width="14%"> 
-        <div align="right"><font size="2"><%=BigTotal%></div>
-      </td>
-    </tr>
-  </table>
-  <% } else { %>
+if (eFlag.compareTo("1")==0) { 
+	percent = new BigDecimal(Double.parseDouble(ePerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
+	percentPremium = percent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
+	BigTotal = BigTotal.add(percentPremium);
+
+	String str = percentPremium.toString();
+	StringBuffer sBuffer = new StringBuffer(str);
+	int i = str.indexOf('.');
+	sBuffer.deleteCharAt(i);
+	sBuffer.insert(i,"");
+	str = sBuffer.toString();
+%>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"><%=eCode%></td>
+	<input type="hidden" name="billrec<%=counter%>" value="<%=eCode%>">
+	<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
+	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=eDesc%>">
+	<input type="hidden" name="billrecunit<%=counter%>" value="<%=eUnit%>">
+	<td width="58%"><font size="2"><%=eDesc%></td>
+	<td width="6%"> 
+	<div align="right"><font size="2"><%=eUnit%></div>
+	</td>
+	<td width="14%"> 
+	<div align="right"><font size="2"><%=percentPremium%></div>
+	</td>
+</tr>
+<% 
+	counter = counter + 1;
+} 
+
+if (xFlag.compareTo("1")==0) { 
+
+	BigTotal = BigTotal.subtract(percentPremium);
+	xPercent = new BigDecimal(Double.parseDouble(xPerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
+	xPercentPremium = xPercent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
+	BigTotal = BigTotal.add(xPercentPremium);
+	BigTotal = BigTotal.add(percentPremium);
+
+	String str = xPercentPremium.toString();
+	StringBuffer sBuffer = new StringBuffer(str);
+	int i = str.indexOf('.');
+	sBuffer.deleteCharAt(i);
+	sBuffer.insert(i,"");
+	str = sBuffer.toString();
+%>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"><%=xCode%></td>
+	<input type="hidden" name="billrec<%=counter%>" value="<%=xCode%>">
+	<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
+	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=xDesc%>">
+	<input type="hidden" name="billrecunit<%=counter%>" value="<%=xUnit%>">
+	<td width="58%"><font size="2"><%=xDesc%></td>
+	<td width="6%"> 
+	<div align="right"><font size="2"><%=xUnit%></div>
+	</td>
+	<td width="14%"> 
+	<div align="right"><font size="2"><%=xPercentPremium%></div>
+	</td>
+</tr>
+<% 
+	counter = counter + 1;
+} 
+
+if (counter == 0) { 
+	errorFlag = "1";
+	errorMsg = errorMsg + "Error: No Service/Procedure Code selected. <br>";
+}
+
+if (errorFlag.compareTo("1")==0){
+%>
+
+</table>
+
+<p bgcolor="orange"><%=errorMsg%></p>
+<% session.setAttribute("content", content); %>
+<form>
+<input type=button name=back value='Go Back and Change' onClick='javascript:location.href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0"'>
+</form>
+    
+<% 
+} else { %>
+    
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"><b>Diagnostic Code</b></td>
+	<td colspan="2"><font size="2"><%=diagnostic_code%></td>
+	<td width="14%"> 
+	<div align="right"><font size="2"></div>
+	</td>
+</tr>
+
+<% 
+	if (request.getParameter("xml_research1") == null || request.getParameter("xml_research1").compareTo("") == 0) { 
+%>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"></td>
+	<td colspan="2"> 
+	<div align="right"><font size="2">Total:</div>
+	</td>
+	<td width="14%"> 
+	<div align="right"><font size="2"><%=BigTotal%></div>
+	</td>
+</tr>
+</table>
+
+<%
+	} else { 
+%>
       
-    <tr> 
-      <td width="22%"><font size="2"><b>Research 
-        Code</b></td>
-      <td colspan="2"><font size="2"><%=request.getParameter("xml_research1")%> <%=request.getParameter("xml_research2").compareTo("")==0?"":", "+request.getParameter("xml_research2")%> <%=request.getParameter("xml_research3").compareTo("")==0?"":", "+request.getParameter("xml_research3")%></td>
-      <td width="14%"> 
-        <div align="right"><font size="2"></div>
-      </td>
-    </tr>
-          <tr> 
-      <td width="22%"><font size="2"></td>
-      <td colspan="2"> 
-        <div align="right"><font size="2">Total:</div>
-      </td>
-      <td width="14%"> 
-        <div align="right"><font size="2"><%=BigTotal%></div>
-      </td>
-    </tr>
-    </table>
-    <% } %>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"><b>Research Code</b></td>
+	<td colspan="2"><font size="2"><%=request.getParameter("xml_research1")%> <%=request.getParameter("xml_research2").compareTo("")==0?"":", "+request.getParameter("xml_research2")%> <%=request.getParameter("xml_research3").compareTo("")==0?"":", "+request.getParameter("xml_research3")%></td>
+	<td width="14%"> 
+	<div align="right"><font size="2"></div>
+	</td>
+</tr>
+<tr bgcolor="#EEEEFF"> 
+	<td width="22%"><font size="2"></td>
+	<td colspan="2"> 
+	<div align="right"><font size="2">Total:</div>
+	</td>
+	<td width="14%"> 
+	<div align="right"><font size="2"><%=BigTotal%></div>
+	</td>
+</tr>
+</table>
+
+<%	} %>
   <p>         
-  <%
-  content = content + "<xml_providername>" +  proFirst + " " + proLast + "</xml_providername>";
-  content = content + "<xml_apptprovidername>" + apptFirst + " " + apptLast + "</xml_apptprovidername>";
-  content = content + "<xml_asstprovidername>" +  asstFirst + " " + asstLast + "</xml_asstprovidername>";
-      content = content + "<xml_creator>" +  crFirst + " " + crLast + "</xml_creator>";
-       content = content + "<rdohip>" + r_doctor_ohip+"</rdohip>" + "<rd>" + r_doctor + "</rd>";
-    content = content + "<hctype>" + demoHCTYPE+"</hctype>" + "<demosex>" + demoSex + "</demosex>";
-  %>
+<%
+	content = content + "<xml_providername>" +  proFirst + " " + proLast + "</xml_providername>";
+	content = content + "<xml_apptprovidername>" + apptFirst + " " + apptLast + "</xml_apptprovidername>";
+	content = content + "<xml_asstprovidername>" +  asstFirst + " " + asstLast + "</xml_asstprovidername>";
+	content = content + "<xml_creator>" +  crFirst + " " + crLast + "</xml_creator>";
+	content = content + "<rdohip>" + r_doctor_ohip+"</rdohip>" + "<rd>" + r_doctor + "</rd>";
+	content = content + "<hctype>" + demoHCTYPE+"</hctype>" + "<demosex>" + demoSex + "</demosex>";
+%>
   
-  
-                     <input type="hidden" name="pohip_no" value="<%=proOHIPNO%>">		
-  		<input type="hidden" name="prma_no" value="<%=proRMA%>">
-  		<input type="hidden" name="record" value="<%=counter%>">		
-  		<input type="hidden" name="diagcode" value="<%=diagcode%>">
-  		<input type="hidden" name="visittype" value="<%=request.getParameter("xml_visittype").substring(0,2)%>">
-  		<input type="hidden" name="billtype" value="<%=billtype.substring(0,1)%>">
-  		<input type="hidden" name="content" value="<%=content%>">
-  	      <input type="hidden" name="provider_no" value="<%=proNO%>">
-  	      <input type="hidden" name="clinic_no" value="<%=request.getParameter("clinic_no")%>">
-   	      <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-              <input type="hidden" name="billing_name" value="OB2">
-              <input type="hidden" name="user_no" value="<%=request.getParameter("user_no")%>">
-              <input type="hidden" name="apptProvider_no" value="<%=request.getParameter("apptProvider_no")%>">
-                <input type="hidden" name="asstProvider_no" value="<%=request.getParameter("asstProvider_no")%>">
-              <input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>">
-              <input type="hidden" name="billing_time" value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>">
-              <input type="hidden" name="billingservice_code" value="">
-              <input type="hidden" name="dboperation" value="save_bill">
-              <input type="hidden" name="appointment_date" value="<%=request.getParameter("xml_appointment_date")%>">
-              <input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
-                   <input type="hidden" name="status" value="<%=request.getParameter("status")%>">
-              <input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
-              <input type="hidden" name="displaymode" value="savebill">
-               <input type="hidden" name="demographic_dob" value="<%=demoDOB%>">
-              <input type="hidden" name="demographic_name" value="<%=demoname%>">
-              <input type="hidden" name="hin" value="<%=demoHIN%>">
-              <input type="hidden" name="ohip_version" value="V03G">
-              <input type="hidden" name="total" value="<%=BigTotal%>">
-              <input type="hidden" name="clinic_ref_code" value="<%=location1%>">
-				<input type="hidden" name="visitdate" value="<%=visitdate%>">
-    <input type="button" name="Submit" value="Confirm" onDblClick="" onClick="form.submit()">
-  <!--  <input type="button" name="Submit2" value="Edit" onclick="javascript:history.go(-1)">
-  -->  <a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
- <% session.setAttribute("content", content); %>
-  </p>
-  <p></p>
-  <p>&nbsp;</p>
+<input type="hidden" name="pohip_no" value="<%=proOHIPNO%>">		
+<input type="hidden" name="prma_no" value="<%=proRMA%>">
+<input type="hidden" name="record" value="<%=counter%>">		
+<input type="hidden" name="diagcode" value="<%=diagcode%>">
+<input type="hidden" name="visittype" value="<%=request.getParameter("xml_visittype").substring(0,2)%>">
+<input type="hidden" name="billtype" value="<%=billtype.substring(0,1)%>">
+<input type="hidden" name="content" value="<%=content%>">
+<input type="hidden" name="provider_no" value="<%=proNO%>">
+<input type="hidden" name="clinic_no" value="<%=request.getParameter("clinic_no")%>">
+<input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
+<input type="hidden" name="billing_name" value="OB2">
+<input type="hidden" name="user_no" value="<%=request.getParameter("user_no")%>">
+<input type="hidden" name="apptProvider_no" value="<%=request.getParameter("apptProvider_no")%>">
+<input type="hidden" name="asstProvider_no" value="<%=request.getParameter("asstProvider_no")%>">
+<input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>">
+<input type="hidden" name="billing_time" value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>">
+<input type="hidden" name="billingservice_code" value="">
+<input type="hidden" name="dboperation" value="save_bill">
+<input type="hidden" name="appointment_date" value="<%=request.getParameter("xml_appointment_date")%>">
+<input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
+<input type="hidden" name="status" value="<%=request.getParameter("status")%>">
+<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
+<input type="hidden" name="displaymode" value="savebill">
+<input type="hidden" name="demographic_dob" value="<%=demoDOB%>">
+<input type="hidden" name="demographic_name" value="<%=demoname%>">
+<input type="hidden" name="hin" value="<%=demoHIN%>">
+<input type="hidden" name="ohip_version" value="V03G">
+<input type="hidden" name="total" value="<%=BigTotal%>">
+<input type="hidden" name="clinic_ref_code" value="<%=location1%>">
+<input type="hidden" name="visitdate" value="<%=visitdate%>">
+<input type="button" name="Submit" value="Confirm" onDblClick="" onClick="form.submit()">
+<a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
+
+<% 
+	session.setAttribute("content", content); 
+}
+%>
+
+<p>&nbsp;</p>
 </form>
 </body>    
-
-<% } 
-
-%>
 </html>
