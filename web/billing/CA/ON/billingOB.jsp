@@ -1,5 +1,5 @@
 <%      
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 String providerview = request.getParameter("providerview")==null?"":request.getParameter("providerview") ;
 String asstProvider_no = "";
@@ -184,6 +184,7 @@ while(rsPatient.next()){
 	dob_date = Integer.parseInt(rsPatient.getString("date_of_birth"));
 	if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 }
+rsPatient.close();
 
 assgProvider_name = providerBean.getProperty(assgProvider_no, "");
 ResultSet rslocal = null;
@@ -221,6 +222,7 @@ while (rsdiagcode.next()){
 	</tr>  
 <%
 }
+rsdiagcode.close();
 %>
 
 	</table>
@@ -258,7 +260,10 @@ while (rsctlcode.next()){
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
 		<td colspan="2"><b><font size="-2" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
 	</tr>
-<% } %>
+<%
+}
+rsctlcode.close();
+%>
 	</table>
 </div>
 
@@ -283,14 +288,15 @@ while (rsctlcode.next()){
 		<td><b><font size="1" >
 		<a href="#" onClick="showHideLayers('Layer1','','show');return false;">Billing form</a>:</font></b>
 <% 
-rsctlcode = null;  
 rsctlcode = apptMainBean.queryResults(ctlBillForm, "search_ctlbillservice");
 while (rsctlcode.next()){
 	ctlcode = rsctlcode.getString("servicetype");
 	ctlcodename = rsctlcode.getString("servicetype_name");
 } 
+rsctlcode.close();
 %>
 <%=ctlcodename.length()<30 ? ctlcodename : ctlcodename.substring(0,30)%>
+%>
 
 		</td><td width="19%"><font size="-2"> 
 <%
@@ -316,7 +322,10 @@ while(rslocal.next()){
 	proOHIP = rslocal.getString("provider_no");
 %>
 			<option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><b><%=proLast%>, <%=proFirst%></b></option>
-<% }  %>
+<% 
+}  
+rslocal.close();
+%>
 		</select></font></td>
 	</tr><tr> 
 		<td width="12%"><font size="-2"><b>Billing Type</b> </font></td>
@@ -333,7 +342,7 @@ while(rslocal.next()){
 if (appt_no.compareTo("0") == 0) {
 %>
 		<a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=service","380","300","0"); return false;'> Service Date:</a> 
-		<input type="text" name="xml_appointment_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>" size="12" datafld='xml_appointment_date'>
+		<input type="text" name="xml_appointment_date" readonly value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>" size="12" datafld='xml_appointment_date'>
 <%
 } else { 
 %>
@@ -366,6 +375,7 @@ while (rsclinic.next()){
 			<option value="<%=clinic_code%>" <%=clinicview.equals(clinic_code)?"selected":""%>><%=clinic_location%></option>
 <%
 }
+rsclinic.close();
 %>
 		</select>
 		<input type="checkbox" name="xml_referral" value="checked" <%=bNew?"":"datafld='xml_referral'"%>>
@@ -408,7 +418,6 @@ param1[1] = "Group1";
 
 int CountService = 0;
 int Count2 = 0;
-rslocal = null;
 rslocal = apptMainBean.queryResults(param1, "search_servicecode");
 while(rslocal.next()){
 	serviceCode = rslocal.getString("service_code");
@@ -423,6 +432,7 @@ while(rslocal.next()){
 	while(rs3.next()){
 		premiumFlag = rs3.getString("status");
 	}
+	rs3.close();
 
 	if (CountService == 0) {
 %>
@@ -440,16 +450,9 @@ while(rslocal.next()){
 	} else {
 		serviceType = "";
 	}
-
-	if (Count2 == 0){
-		Count2 = 1;
-		color = "#FFFFFF";
-	} else {
-		Count2= 0;
-		color="#EEEEFF";
-	}
+	CountService++;
 %>
-		<tr bgcolor=<%=color%>> 
+		<tr bgcolor=<%=CountService%2==0?"#FFFFFF":"#EEEEFF"%>> 
 			<td width="15%"  nowrap> 
 			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
 			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b> &nbsp;</td>
@@ -465,8 +468,8 @@ while(rslocal.next()){
 			</td>
 		</tr>
 <%
-	CountService = CountService +1;
 }
+rslocal.close();
 %>
 		</table>
 
@@ -492,6 +495,7 @@ while(rslocal.next()){
 	while(rs3.next()){
 		premiumFlag = rs3.getString("status");
 	}
+	rs3.close();
 	if (CountService == 0) { // first line
 %>
 		<tr bgcolor="#CCCCFF"> 
@@ -528,6 +532,7 @@ while(rslocal.next()){
 <%
 	CountService++;
 }
+rslocal.close();
 %>
 
 		</table>
@@ -554,6 +559,7 @@ while(rslocal.next()){
 	while(rs3.next()){
 		premiumFlag = rs3.getString("status");
 	}
+	rs3.close();
 
 	if (CountService == 0) {
 %>
@@ -591,6 +597,7 @@ while(rslocal.next()){
 <%
 	CountService++;
 }
+rslocal.close();
 %>
 
 		<tr bgcolor="#CCCCFF"> 
