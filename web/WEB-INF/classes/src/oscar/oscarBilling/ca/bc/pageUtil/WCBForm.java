@@ -299,7 +299,7 @@ public final class WCBForm extends ActionForm {
     public String getW_extrafeeitem() {
         return Misc.safeString(this.w_extrafeeitem);
     }
-    public String getW_wcbavisor() {
+    public String getW_wcbadvisor() {
         return Misc.safeString(this.w_wcbadvisor);
     }
     public void setW_wcbadvisor(String wa) {
