@@ -177,6 +177,31 @@ function unCheck(s) {
     	}
 	}
 }
+function isCheck(s) {
+    for (var i =0; i <document.groupappt.elements.length; i++) {
+        if (document.groupappt.elements[i].name == s) {
+            return (document.groupappt.elements[i].checked);
+    	}
+    }
+}
+function checkAll(col, value, opo) {
+    var f = document.groupappt.elements;
+        for (var i=0; i < document.groupappt.elements.length; i++) {
+            if (value == 'true') {
+                if(document.groupappt.elements[i].name.indexOf(col) != -1) {
+                    var tar = document.groupappt.elements[i].name;
+                    var oposite = opo + tar.substring(3);
+                    if (isCheck(oposite)) continue;
+                    document.groupappt.elements[i].checked = true;
+                }
+            } else {
+                if(document.groupappt.elements[i].name.indexOf(col) != -1) {
+                    document.groupappt.elements[i].checked = false;
+                }
+            }
+        }
+    return false;
+}
 function onExit() {
     if (confirm("<bean:message key="appointment.appointmentgrouprecords.msgExitConfirmation"/>")) {
         window.close()
@@ -301,7 +326,7 @@ function onSub() {
   <td align='right' nowrap>Group : <%=mygroupno%> </td></tr>
 </table>
 <table BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BGCOLOR="white">
-  <tr BGCOLOR="<%=tableTitle%>" > y
+  <tr BGCOLOR="<%=tableTitle%>">
   <th width=30% nowrap><bean:message key="appointment.appointmentgrouprecords.msgProviderName"/></th>
   <th width=11% nowrap><bean:message key="appointment.appointmentgrouprecords.msgFirstAppointment"/></th>
   <th width=11% nowrap><bean:message key="appointment.appointmentgrouprecords.msgSecondAppointment"/></th>
@@ -362,6 +387,12 @@ function onSub() {
     }
     groupApptBean.closePstmtConn();
 %>
+    </tr>
+    <tr bgcolor='silver'>
+	<td align='right' colspan=2><a href=# onClick='checkAll("one", "true", "two"); return false;'>Check All</a>
+	|<a href=# onClick='checkAll("one", "false", "two"); return false;'>Clear All</a></td>
+	<td colspan=2><a href=# onClick='checkAll("two", "true", "one"); return false;'>Check All</a>
+	|<a href=# onClick='checkAll("two", "false", "one"); return false;'>Clear All</a></td>
     </tr>
     </table>
 
