@@ -402,7 +402,7 @@ function nsgo() {
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
-        <td width="300"><a href='../oscarReport/SetupSelectCDMReport.do' ><bean:message key="report.reportindex.chronicDiseaseManagement"/></a></td>
+        <td width="300"><a href='../oscarReport/oscarMeasurements/SetupSelectCDMReport.do' ><bean:message key="report.reportindex.chronicDiseaseManagement"/></a></td>
         <td></td>
         <td></td>
         <td></td>
