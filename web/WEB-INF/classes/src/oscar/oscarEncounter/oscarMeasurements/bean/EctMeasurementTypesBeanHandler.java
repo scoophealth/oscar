@@ -101,7 +101,7 @@ public class EctMeasurementTypesBeanHandler {
                 
                 //Get the data last entered for the current measurement type
                 String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + rsMT.getString("type")
-                                 + "' ORDER BY dateEntered DESC";
+                                 + "' ORDER BY dateEntered DESC LIMIT 1";
                 ResultSet rsData = db.GetSQL(sqlData);
                 boolean hasPreviousData = false;
                 if(rsData.next()){
