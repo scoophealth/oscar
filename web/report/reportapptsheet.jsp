@@ -27,7 +27,7 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date, start_time") ;
+  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.appointment_date, a.start_time") ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -36,18 +36,16 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-{"search_apptsheetall", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, p.last_name, p.first_name from appointment a, provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, "+orderby }, 
-{"search_apptsheetsingleall", "select a.appointment_no, a.appointment_date, a.name, a.provider_no,a.start_time,a.end_time,p.last_name,p.first_name from appointment a,provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by "+orderby }, 
+{"search_apptsheetall", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, p.last_name, p.first_name from appointment a, provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>=? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, "+orderby }, 
+{"search_apptsheetsingleall", "select a.appointment_no, a.appointment_date, a.name, a.provider_no,a.start_time,a.end_time,p.last_name,p.first_name from appointment a,provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>=? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by "+orderby }, 
 {"searchmygroupall", "select * from mygroup where mygroup_no= ?"}, 
   };
   String[][] responseTargets=new String[][] {  };
   daySheetBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<html:html locale="true">
+<html>
 <head>
-<title><bean:message key="report.reportapptsheet.title"/> </title>
+<title>BAD APPT SHEET </title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" >
@@ -99,9 +97,9 @@ function refresh() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportapptsheet.title"/></font></th>
+  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica">BAD APPT SHEET</font></th>
     <th width="10%" nowrap><%=createtime%> 
-      <input type="button" name="Button" value="<bean:message key="global.btnPrint" />" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit" />" onClick="window.close()"></th></tr>
+      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
 </table>
 <%
   boolean bFistL = true; //first line in a table for TH
@@ -147,11 +145,11 @@ function refresh() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=appointment_date"><bean:message key="report.reportapptsheet.msgApptDate"/></a></b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=start_time"><bean:message key="report.reportapptsheet.msgStartTime"/></a> </b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=end_time"><bean:message key="report.reportapptsheet.msgEndTime"/></a> </b></TH>
-<TH width="10%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=name"><bean:message key="report.reportapptsheet.msgName"/></a></b></TH>
-<TH width="30%"><b><bean:message key="report.reportapptsheet.msgComments"/></b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.appointment_date">Appt Date</a></b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time">Start Time</a> </b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.end_time">End Time</a> </b></TH>
+<TH width="10%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.name">Patient's Name</a></b></TH>
+<TH width="30%"><b>Comments</b></TH>
 </tr>
 <%
     }
@@ -171,4 +169,4 @@ function refresh() {
 
 </table>
 </body>
-</html:html>
+</html>
