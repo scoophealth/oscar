@@ -19,7 +19,12 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
-        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);                
+        if(choiceFormat!=null && allNumericField!=null)
+            var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);
+        else if(choiceFormat!=null)
+            var ret = is1CheckboxChecked(0, choiceFormat);
+        else if(allNumericField!=null)
+            var ret = allAreNumeric(0, allNumericField);             
         if(ret==true) {            
             reset();
             ret = confirm("Are you sure you want to save this form?");
@@ -34,7 +39,13 @@
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
-        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);
+        if(choiceFormat!=null && allNumericField!=null)
+            var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);
+        else if(choiceFormat!=null)
+            var ret = is1CheckboxChecked(0, choiceFormat);
+        else if(allNumericField!=null)
+            var ret = allAreNumeric(0, allNumericField);
+
         if(ret == true) {
             reset();
             ret = confirm("Are you sure you wish to save and close this window?");
