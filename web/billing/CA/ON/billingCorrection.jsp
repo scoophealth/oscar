@@ -217,7 +217,7 @@ if (billNo.compareTo("") == 0 || billNo == null) {
 		<option value="AB"  <%=HCTYPE.equals("AB")?"selected":""%>>AB-Alberta</option>
 		<option value="BC" <%=HCTYPE.equals("BC")?"selected":""%>>BC-British Columbia</option>
 		<option value="MB" <%=HCTYPE.equals("MB")?"selected":""%>>MB-Manitoba</option>
-		<option value="NL" <%=HCTYPE.equals("NF")?"selected":""%>>NF-Newfoundland</option>
+		<option value="NL" <%=HCTYPE.equals("NL")?"selected":""%>>NL-Newfoundland</option>
 		<option value="NB" <%=HCTYPE.equals("NB")?"selected":""%>>NB-New Brunswick</option>
 		<option value="YT" <%=HCTYPE.equals("YT")?"selected":""%>>YT-Yukon</option>
 		<option value="NS" <%=HCTYPE.equals("NS")?"selected":""%>>NS-Nova Scotia</option>
