@@ -32,7 +32,7 @@ public class AuditLine {
                getPaddedString(patientName,61,bl)+delimiter+
                getPaddedString(orderingClient,8,bl)+delimiter+
                getPaddedString(messageDate,11,bl)+delimiter+
-               getPaddedString(messageTime,8,bl)+"\n";             
+               getPaddedString(messageTime,8,bl)+"\n\r";             
    
 	}
 
