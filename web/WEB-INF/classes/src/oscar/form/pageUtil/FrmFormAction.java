@@ -138,10 +138,18 @@ public class FrmFormAction extends Action {
             props.setProperty("provider_no", providerNo);
             props.setProperty("visitCod", visitCod);
             String diagnosisVT = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT"));
-            System.out.println("diagnosisVT >"+diagnosisVT+"< form val >"+frm.getValue("diagnosisVT"));
+            //System.out.println("diagnosisVT >"+diagnosisVT+"< form val >"+frm.getValue("diagnosisVT"));
+            String subjective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("subjective"));
+            String objective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("objective"));
+            String assessment = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("assessment"));
+            String plan = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("plan"));
             
             //for VTForm            
-            props.setProperty("diagnosis", diagnosisVT);
+            props.setProperty("Diagnosis", diagnosisVT);
+            props.setProperty("Subjective", subjective);
+            props.setProperty("Objective", objective);
+            props.setProperty("Assessment", assessment);
+            props.setProperty("Plan", plan);
             //System.out.println("diagnosis: " + props.getProperty("diagnosis"));
            
             startTime = System.currentTimeMillis();
@@ -172,8 +180,8 @@ public class FrmFormAction extends Action {
                     props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
                 System.out.println("type: " + type + " input: " + inputValue);
                 
-                props.setProperty(type+"Date", observationDate);
-                props.setProperty(type+"Comments", comments);                
+                props.setProperty(type+"Date", observationDate==null?dateEntered:observationDate);
+                props.setProperty(type+"Comments", comments==null?"":comments);                
                     
                 if(!GenericValidator.isBlankOrNull(inputValue)){
                     props.setProperty(type+"Value", inputValue);
@@ -227,7 +235,13 @@ public class FrmFormAction extends Action {
         
         System.out.println("submit value: " + submit);
         if(submit.equalsIgnoreCase("exit")){
-            String toEChart = "[" + timeStamp + ".: Vascular Tracker] \n " + (String) frm.getValue("diagnosisVT");
+            String toEChart = "[" + timeStamp + ".: Vascular Tracker] \n\n" 
+                                + "Subjective: \n \t" + (String) frm.getValue("subjective") + "\n"
+                                + "Objective: \n \t" + (String) frm.getValue("objective") + "\n"
+                                + "Assessment: \n \t" + (String) frm.getValue("assessment") + "\n"
+                                + "Plan: \n \t" + (String) frm.getValue("plan") + "\n"
+                                + "Diagnosis: \n \t" + (String) frm.getValue("diagnosisVT") + "\n\n"
+                                + "[end of Vascular Tracker] \n";
             request.setAttribute("diagnosisVT", org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(toEChart));
             return (new ActionForward("/form/formSaveAndExit.jsp"));
         }
