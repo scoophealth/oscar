@@ -54,6 +54,7 @@ public class EctSessionBean {
     public ArrayList appointmentsNamesArray;
     public ArrayList templateNames;
     public ArrayList templateValues;
+    public ArrayList measurementGroupNames;
     
     public void resetAll(){
       eChartTimeStamp = null;
@@ -95,7 +96,8 @@ public class EctSessionBean {
         appointmentsNamesArray = new ArrayList();
         templateNames = new ArrayList();
         templateValues = new ArrayList();
-
+        measurementGroupNames = new ArrayList();
+        
         //This block gets the patient age and
         try {
             db =  new DBHandler(DBHandler.OSCAR_DATA);
@@ -141,6 +143,14 @@ public class EctSessionBean {
                 templateValues.add(rs.getString("encountertemplate_value"));
             }
             rs.close();
+            
+            sql = "SELECT DISTINCT name from measurementGroup ORDER BY name";
+            rs = db.GetSQL(sql);
+            while(rs.next()){
+                measurementGroupNames.add(rs.getString("name"));
+            }
+            rs.close();
+            
             db.CloseConn();
         }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
         try{
@@ -349,6 +359,10 @@ public class EctSessionBean {
         return demographicNo;
     }
 
+    public String getCurProviderNo(){
+        return curProviderNo;
+    }
+    
     public void setConsultationRequestId(String str){
         //System.out.println("CON ID setting too "+str);
         consultationRequestId = str;
