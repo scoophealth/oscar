@@ -126,11 +126,11 @@ public class BillingCreateBillingAction extends Action {
         bean.setShortClaimNote(frm.getShortClaimNote());
         bean.setService_to_date(frm.getService_to_date());
 	bean.setIcbc_claim_no(frm.getIcbc_claim_no());
-        if (((BillingCreateBillingForm) form).getXml_billtype().equalsIgnoreCase("WCB")){
-                WCBForm wcbForm = new WCBForm();
-                wcbForm.Set(bean);
-                request.getSession().putValue("WCBForm", wcbForm);
-                return (mapping.findForward("WCB"));
+        if (frm.getXml_billtype().equalsIgnoreCase("WCB")){
+           WCBForm wcbForm = new WCBForm();
+           wcbForm.Set(bean);
+           request.getSession().putValue("WCBForm", wcbForm);
+           return (mapping.findForward("WCB"));
         }               
         //      System.out.println("Service count : "+ billItem.size());        
         return (mapping.findForward("success"));
