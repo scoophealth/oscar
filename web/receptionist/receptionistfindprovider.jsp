@@ -23,6 +23,10 @@
  * Ontario, Canada 
  */
 -->
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
 
 <%
   if(session.getValue("user") == null ) response.sendRedirect("../logout.jsp");
@@ -44,16 +48,20 @@
 %>
 <%
   String curUser_no = (String) session.getAttribute("user");
-  int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
-  int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
-  int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
+  String strStartHour = (String) session.getAttribute("starthour");
+  String strEndHour = (String) session.getAttribute("endhour");
+  String strEveryMin = (String) session.getAttribute("everymin");
+  
+  int startHour=Integer.parseInt(strStartHour.trim());
+  int endHour=Integer.parseInt(strEndHour.trim());
+  int everyMin=Integer.parseInt(strEveryMin.trim());
 %>
 <html>
 <head>
-<title> SEARCH RESULTS </title>
+<title> <bean:message key="receptionist.receptionistfindprovider.title"/></title>
 <link rel="stylesheet" href="../web.css" >
 <script language="JavaScript">
-<!--
+
 function setfocus() {
   this.focus();
 }
@@ -61,30 +69,30 @@ function selectProvider(p,pn) {
 	  newGroupNo = p;
 	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
 }
-//-->
+
 </SCRIPT>
 </head>
 <body  bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr>
-    <th NOWRAP bgcolor="#CCCCFF"><font face="Helvetica">SEARCH PROVIDER</font></th>
+    <th NOWRAP bgcolor="#CCCCFF"><font face="Helvetica"><bean:message key="receptionist.receptionistfindprovider.2ndtitle"/></font></th>
   </tr>
 </table>
 
 <table width="100%" border="0">
 <tr>
-<td align="left"><i>Keyword(s)</i>: <%=providername%></td>
-<td align="right"><INPUT TYPE="SUBMIT" NAME="displaymode" VALUE=" Exit " SIZE="17" onClick="window.close();"></td>
+<td align="left"><i><bean:message key="receptionist.receptionistfindprovider.keywords"/></i> <%=providername%></td>
+<td align="right"><INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="<bean:message key="receptionist.receptionistfindprovider.btnExit"/>" SIZE="17" onClick="window.close();"></td>
 </tr>
 </table>
 
 <CENTER>
   <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" >
     <tr bgcolor="#CCCCFF"> 
-      <TH width="20%">No</TH>
-      <TH width="40%">Last Name</TH>
-      <TH width="40%">First Name</TH>
+      <TH width="20%"><bean:message key="receptionist.receptionistfindprovider.no"/></TH>
+      <TH width="40%"><bean:message key="receptionist.receptionistfindprovider.lastname"/></TH>
+      <TH width="40%"><bean:message key="receptionist.receptionistfindprovider.firstname"/></TH>
     </tr>
 <%
   boolean bGrpSearch = providername.startsWith(".")?true:false ;
@@ -152,6 +160,6 @@ function selectProvider(p,pn) {
   </table>
 <br>
 
-<p>Please select by clicking on the No.</p></center>
+<p><bean:message key="receptionist.receptionistfindprovider.msgSelect"/></p></center>
 </body>
 </html>
