@@ -43,7 +43,7 @@ public class AppointmentMainBean {
   public boolean getBDoConfigure() {return bDoConfigure;}
   public void setBDoConfigure() { bDoConfigure = false;}
   
-  public void doConfigure( String[]dbParams,String[][]dbOperation ) throws SQLException {  
+  public void doConfigure( String[]dbParams,String[][]dbOperation ) throws Exception {  
     bDoConfigure = true;
     if(dbPH!=null) dbPH=null;
     
@@ -52,7 +52,7 @@ public class AppointmentMainBean {
     dbPH=new DBPreparedHandler(dbParams[0],dbParams[1],dbParams[2],dbParams[3]);
   }
   
-  public void doConfigure( String[]dbParams,String[][]dbOperation,String[][]controlToFile) throws SQLException {  
+  public void doConfigure( String[]dbParams,String[][]dbOperation,String[][]controlToFile) throws Exception {  
     bDoConfigure = true;
     if(dbPH!=null) dbPH=null;
     
