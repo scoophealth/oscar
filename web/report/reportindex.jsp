@@ -78,7 +78,7 @@ function ogo() {
   var u = '';
   if (region == "BC") u = 'reportbcedblist.jsp?startDate=' + s + '&endDate=' + e;
   else  u = 'reportnewedblist.jsp?startDate=' + s + '&endDate=' + e;
-	popupPage(600,750,u);
+	popupPage(700,900,u);
 }
 function go(r) {
 //s.options[s.selectedIndex].value

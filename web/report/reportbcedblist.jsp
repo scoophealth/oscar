@@ -46,7 +46,7 @@ if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDat
 <% 
 String [][] dbQueries=new String[][] { 
 //{"select_bcformar", "select distinct(demographic_no) from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, 
-{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_dateOfBirth, pg1_langPref, c_phn, pg1_gravida, pg1_term, c_phone, c_phyMid, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
+{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_dateOfBirth, pg1_langPref, c_phn, pg1_gravida, pg1_term, c_phone, c_phyMid, ar2_doula, ar2_doulaNo, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
 };
 reportMainBean.doConfigure(dbParams,dbQueries);
@@ -79,15 +79,17 @@ function setfocus() {
 
 <CENTER><table width="100%" border="0" bgcolor="silver" cellspacing="2" cellpadding="2"> 
 <tr bgcolor='<%=deepcolor%>'> 
-<TH align="center" width="10%" nowrap><b><bean:message key="report.reportnewdblist.msgEDD"/></b></TH>
-<TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
+<TH align="center" width="6%" nowrap><b><bean:message key="report.reportnewdblist.msgEDD"/></b></TH>
+<TH align="center" width="20%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
 <!--TH align="center" width="20%"><b>Demog' No </b></TH-->
-<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgDOB"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgGravida"/></b></TH>
+<TH align="center" width="9%"><b><bean:message key="report.reportnewdblist.msgDOB"/></b></TH>
+<TH align="center" width="5%"><b>G</b><font size="-2">ravida</font></TH>
 <TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgTerm"/></b></TH>
-<TH align="center" width="15%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
-<TH align="center"><b><bean:message key="report.reportnewdblist.msLanguage"/></b></TH>
-<TH align="center"><b><bean:message key="report.reportnewdblist.msPHN"/></b></TH>
+<TH align="center" width="10%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
+<TH align="center" width="10%"><b><bean:message key="report.reportnewdblist.msLanguage"/></b></TH>
+<TH align="center" width="8%"><b><bean:message key="report.reportnewdblist.msPHN"/></b></TH>
+<TH align="center" width="20%"><b>Doula</b></TH>
+<TH align="center"><b>Doula#</b></TH>
 </tr>
 <%
   ResultSet rs=null ;
@@ -129,6 +131,8 @@ function setfocus() {
       <!--td><%--=rs.getString("c_phyMid")--%><%--=providerNameBean.getProperty(rs.getString("provider_no"), "")--%></td-->
       <td><%=rs.getString("pg1_langPref")%></td>
       <td><%=rs.getString("c_phn")%></td> 
+      <td><%=rs.getString("ar2_doula")%></td> 
+      <td><%=rs.getString("ar2_doulaNo")%></td> 
 </tr>
 <%
   }
