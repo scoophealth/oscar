@@ -36,7 +36,7 @@
 
 <%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp" %>
 <%@ include file="dbBilling.jsp" %>
 
 <html>
