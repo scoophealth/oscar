@@ -176,10 +176,10 @@ var maxYear=9900;
         if (pos1==-1 || pos2==-1){
             return "format"
         }
-        if (month<1 || month>12){
+        if (month<0 || month>12){
             return "month"
         }
-        if (day<1 || day>31 || (month==2 && day>daysInFebruary(year)) || day > daysInMonth[month]){
+        if (day<0 || day>31 || (month==2 && day>daysInFebruary(year)) || day > daysInMonth[month]){
             return "day"
         }
         if (strYear.length != 4 || year==0 || year<minYear || year>maxYear){
@@ -241,16 +241,6 @@ var maxYear=9900;
         } else if(valDate(document.forms[0].pg1_formDate)==false){
             b = false;
         } else if(valDate(document.forms[0].pg1_signDate)==false){
-            b = false;
-        } else if(valDate(document.forms[0].pg1_obHistDate1)==false){
-            b = false;
-        } else if(valDate(document.forms[0].pg1_obHistDate2)==false){
-            b = false;
-        } else if(valDate(document.forms[0].pg1_obHistDate3)==false){
-            b = false;
-        } else if(valDate(document.forms[0].pg1_obHistDate4)==false){
-            b = false;
-        } else if(valDate(document.forms[0].pg1_obHistDate5)==false){
             b = false;
         } else if(valDate(document.forms[0].pg1_lmp)==false){
             b = false;
@@ -471,10 +461,10 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <th width="8%">PRESENT<br>HEALTH</th>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate1", "") %>" @oscar.formDB dbType="date"/>
+  <input type="text" name="pg1_obHistDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_birthOrAbort1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_birthOrAbort1", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_birthOrAbort1" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort1", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg1_deliWeek1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_deliWeek1", "") %>" @oscar.formDB />
@@ -500,10 +490,10 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate2", "") %>" @oscar.formDB dbType="date"/>
+  <input type="text" name="pg1_obHistDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_birthOrAbort2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_birthOrAbort2", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_birthOrAbort2" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort2", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg1_deliWeek2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_deliWeek2", "") %>" @oscar.formDB />
@@ -529,10 +519,10 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate3", "") %>" @oscar.formDB dbType="date"/>
+  <input type="text" name="pg1_obHistDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_birthOrAbort3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_birthOrAbort3", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_birthOrAbort3" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort3", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg1_deliWeek3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_deliWeek3", "") %>" @oscar.formDB />
@@ -558,10 +548,10 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate4", "") %>" @oscar.formDB dbType="date"/>
+  <input type="text" name="pg1_obHistDate4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate4", "") %>" @oscar.formDB  />
   </td>
   <td>
-  <input type="text" name="pg1_birthOrAbort4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_birthOrAbort4", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_birthOrAbort4" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort4", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg1_deliWeek4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_deliWeek4", "") %>" @oscar.formDB />
@@ -587,10 +577,10 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate5", "") %>" @oscar.formDB dbType="date"/>
+  <input type="text" name="pg1_obHistDate5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_birthOrAbort5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_birthOrAbort5", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_birthOrAbort5" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort5", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg1_deliWeek5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_deliWeek5", "") %>" @oscar.formDB />
