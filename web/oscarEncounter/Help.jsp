@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,11 +22,9 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java" %>
-<%@ page import="oscar.encounter.immunization.data.*, oscar.encounter.immunization.util.*" %>
-<%@ page import="oscar.encounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -40,43 +38,22 @@ Template
 
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Help
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-
-                        </td>
-                        <td  >
-
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:window.close()">close</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
+    <table class="MainTable" id="scrollNumber1" name="encounterTable" height="95%" width="100">
+        <tr bgcolor="#000099" height="35">
+            <td>
+                <font color="white" size="+1"><b>&nbsp;Help</b></font>
+            </td>            
         </tr>
         <tr>
-            <td class="MainTableLeftColumn">
-            </td>
-            <td class="MainTableRightColumn">
-
-
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
+            <form action="">
+                <td height="95%">
+                    <center>
+                        This feature is under construction.<br><br>
+                        <input type="button" value="Close" onClick="window.close()">
+                    </center>
+                </td>
+            </form>
+        </tr>        
     </table>
 </body>
 </html:html>
