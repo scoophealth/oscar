@@ -85,7 +85,11 @@
         TH{
             font-size:14pt;            
         }
-
+        .finalScore{
+            border: 0px solid;
+            background-color:#F2F2F2;
+            font-weight: bold;
+        }
         .leftcol{
             width="100%";            
             color: #A9A9A9;              
@@ -154,7 +158,7 @@
         }
         .score{
             font-size=80%;
-        }
+        }        
         .smallTable{
             border: 2px solid #F2F2F2;
         }
@@ -184,10 +188,11 @@
                                   46,50,51,55,56,60,61,65,66,70,71,75,76,80,81,85,
                                   86,90,91,95,96,100,101,105,106,110,111,115,116,120,121,125,
                                   126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165,
-                                  166,170,171,175,176,180,181,185,186,190,191,195,196,200,201,205);
+                                  167,171,172,176,177,181,182,186,187,191,192,196,197,201,202,206);
     var allNumericField = null;     
     var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";
+    var totalScore = 0;
 
     function goToInstructions(){
         document.getElementById('instruction').style.display = 'block';
@@ -197,7 +202,8 @@
         document.getElementById('page2').style.display = 'none';  
         document.getElementById('page3').style.display = 'none';
         document.getElementById('page4').style.display = 'none';
-        document.getElementById('page5').style.display = 'none'; 
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('totalScore').style.display = 'none'; 
         document.getElementById('subject2').style.display = 'none';
         document.getElementById('functionBar').style.display = 'none';
         document.getElementById('copyRight').style.display = 'block';
@@ -211,7 +217,8 @@
         document.getElementById('page2').style.display = 'none';  
         document.getElementById('page3').style.display = 'none';
         document.getElementById('page4').style.display = 'none';
-        document.getElementById('page5').style.display = 'none'; 
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('totalScore').style.display = 'none'; 
         document.getElementById('subject2').style.display = 'none';
         document.getElementById('functionBar').style.display = 'none';
         document.getElementById('copyRight').style.display = 'block';
@@ -226,6 +233,7 @@
         document.getElementById('page3').style.display = 'none';
         document.getElementById('page4').style.display = 'none';
         document.getElementById('page5').style.display = 'none'; 
+        document.getElementById('totalScore').style.display = 'none';
         document.getElementById('subject2').style.display = 'none';
         document.getElementById('functionBar').style.display = 'none';
         document.getElementById('copyRight').style.display = 'block';
@@ -240,6 +248,7 @@
             document.getElementById('page3').style.display = 'none';
             document.getElementById('page4').style.display = 'none';
             document.getElementById('page5').style.display = 'none'; 
+            document.getElementById('totalScore').style.display = 'none';
             document.getElementById('subject2').style.display = 'none';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
@@ -256,6 +265,7 @@
             document.getElementById('page3').style.display = 'none'; 
             document.getElementById('page4').style.display = 'none';
             document.getElementById('page5').style.display = 'none';
+            document.getElementById('totalScore').style.display = 'none';
             document.getElementById('subject2').style.display = 'none';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
@@ -273,6 +283,7 @@
             document.getElementById('page3').style.display = 'block';  
             document.getElementById('page4').style.display = 'none';
             document.getElementById('page5').style.display = 'none';
+            document.getElementById('totalScore').style.display = 'none';
             document.getElementById('subject2').style.display = 'none';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
@@ -290,6 +301,7 @@
             document.getElementById('page3').style.display = 'none';  
             document.getElementById('page4').style.display = 'block';
             document.getElementById('page5').style.display = 'none';
+            document.getElementById('totalScore').style.display = 'none';
             document.getElementById('subject2').style.display = 'none';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
@@ -307,18 +319,60 @@
             document.getElementById('page3').style.display = 'none';  
             document.getElementById('page4').style.display = 'none';
             document.getElementById('page5').style.display = 'block';
+            document.getElementById('totalScore').style.display = 'none';
             //document.getElementById('subject2').style.display = 'block';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
         }
     }
+
+    function goToScorePage(){      
+        var checkboxes = new Array(126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165);
+        if (is1CheckboxChecked(0, checkboxes)==true){
+            document.getElementById('instruction').style.display = 'none';
+            document.getElementById('visualAid1').style.display = 'none';
+            document.getElementById('visualAid2').style.display = 'none';
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'none'; 
+            document.getElementById('page3').style.display = 'none';  
+            document.getElementById('page4').style.display = 'none';
+            document.getElementById('page5').style.display = 'none';
+            document.getElementById('totalScore').style.display = 'block';
+            //document.getElementById('subject2').style.display = 'block';
+            document.getElementById('functionBar').style.display = 'block';
+            document.getElementById('copyRight').style.display = 'none';
+        }
+    }
+
     function showSubtitle(){
         if(document.getElementById('questionnaire').style.display == 'block')
             document.getElementById('questionnaire').style.display = 'none';
         else 
             document.getElementById('questionnaire').style.display = 'block';
     }
-        
+
+    function calculateScore(){
+        var nbElements = document.forms[0].elements.length;        
+        var element;
+        var score = 0;
+        for(var i=6; i<nbElements; i++){
+            element = document.forms[0].elements[i]
+            if(element.checked == true){
+                if(element.name.match("None")=="None")
+                    score = score + 5;
+                else if(element.name.match("ALittle")=="ALittle")
+                    score = score + 4;
+                else if(element.name.match("Some")=="Some")
+                    score = score + 3;
+                else if(element.name.match("ALot")=="ALot")
+                    score = score + 2;
+                else if(element.name.match("Cannot")=="Cannot")
+                    score = score + 1;
+            }
+        }        
+        document.forms[0].score.value=score;
+        goToScorePage();
+    }
 </script>
 <script type="text/javascript" src="formScripts.js">          
 </script>
@@ -988,22 +1042,22 @@
                         <td class="question" valign="top">
                         Making a bed, including spreading and tucking in bed sheets
                         </td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14None" <%= props.getProperty("F14None", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14ALittle" <%= props.getProperty("F14ALittle", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14Some" <%= props.getProperty("F14Some", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14ALot" <%= props.getProperty("F14ALot", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14Cannot" <%= props.getProperty("F14Cannot", "") %>/></td>                  
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F23None" <%= props.getProperty("F23None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F23ALittle" <%= props.getProperty("F23ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F23Some" <%= props.getProperty("F23Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F23ALot" <%= props.getProperty("F23ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F23Cannot" <%= props.getProperty("F23Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F24.</td>
                         <td class="question" valign="top">
                         Carrying something in both arms while climbing a flight of stairs (e.g. laundry basket)
                         </td> 
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15None" <%= props.getProperty("F15None", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15ALittle" <%= props.getProperty("F15ALittle", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15Some" <%= props.getProperty("F15Some", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15ALot" <%= props.getProperty("F15ALot", "") %>/></td>
-                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15Cannot" <%= props.getProperty("F15Cannot", "") %>/></td>                  
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F24None" <%= props.getProperty("F24None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F24ALittle" <%= props.getProperty("F24ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F24Some" <%= props.getProperty("F24Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F24ALot" <%= props.getProperty("F24ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F24Cannot" <%= props.getProperty("F24Cannot", "") %>/></td>                  
                     </tr>                     
                 </table>      
             </td>
@@ -1135,7 +1189,49 @@
             <td align="left">
                 <a href="javascript: goToPage3();"><< Previous Page</a>
             </td>
-            <td align="right">                
+            <td align="right">
+                <a href="javascript: calculateScore();"> Calculate Total Score</a>
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="totalScore" >    
+        <tr>        
+            <td valign="top" colspan="2">
+                <table width="100%" height="590px" border="0"  cellspacing="1px" cellpadding="0" >                                   
+                    <tr class="title">
+                        <th>
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <tr class="title" ><th>How much difficulty do you have...?</th></tr>
+                                <tr class="title" ><th align="left"><font style="font-size: 65%; text-align:left;">(Remember this is without the help of someone else and without the use of any
+                                        assistive walking device.)</font>
+                                </tr></th>
+                            </table>
+                        </th>                        
+                    </tr>                     
+                    <tr >
+                        <td class="question" valign="top" width="5%">Your total raw score is: <input class="finalScore" type="text" readonly="true" name="score"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table height="520px">
+                                <tr>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>    
+        <tr class="subject">
+            <td align="left">
+                <a href="javascript: goToPage4();"><< Previous Page</a>
+            </td>
+            <td align="right">
+                &nbsp;
             </td>
         </tr>
     </table>
