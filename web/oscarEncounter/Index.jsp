@@ -562,8 +562,7 @@ border-right: 2px solid #cfcfcf;
              <% } %>  
                 <br>
                         <%  if (!vLocale.getCountry().equals("BR")) { %>
-                        <!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">prescriptions</a><br>-->
-                        <a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx');return false;"><bean:message key="global.prescriptions"/></a><br>
+                        <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
                         <% } %>
                         <a href=# onClick="popupOscarCon(100,355,'oscarConsultationRequest/ConsultChoice.jsp');return false;"><bean:message key="global.consultations"/></a><br>
                         <a href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
