@@ -31,7 +31,7 @@
   String form_name = request.getParameter("form_name"); //(session.getValue("form_name")).toString() ; 
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
 %>  
-<%@ page import = "java.sql.ResultSet,oscar.util.*,oscar.eform.*"   errorPage="../errorpage.jsp"%> 
+<%@ page import = "java.sql.ResultSet,oscar.util.*,oscar.eform.*, java.util.Enumeration, org.w3c.dom.*"   %> 
 <jsp:useBean id="dataBean" scope="session" class="oscar.eform.EfmDataOpt" />
 <jsp:useBean id="beanMakeForm" scope="session" class="oscar.eform.EfmMakeForm" />
 <%  
@@ -43,12 +43,31 @@
   String familysocialhistory  = "" ;
   String alert = "" ;
   String subject = "" ;
+  String doctor = "" ;
+  String address = "";
+  String addressLine = "" ;
+  String name = "" ;
+  String params = "" ;
+  
+  Enumeration e = request.getParameterNames() ;
 
   if (request.getParameter("label")!=null){
     label = UtilMisc.charEscape(request.getParameter("label"), '\''); 
   }
   if (request.getParameter("date")!=null){
     date = UtilMisc.charEscape(request.getParameter("date"), '\''); 
+  }
+  if (request.getParameter("doctor")!=null){
+    doctor = UtilMisc.charEscape(request.getParameter("doctor"), '\''); 
+  }
+  if (request.getParameter("address")!=null){
+    address = UtilMisc.charEscape(request.getParameter("address"), '\''); 
+  }
+  if (request.getParameter("addressLine")!=null){
+    addressLine = UtilMisc.charEscape(request.getParameter("addressLine"), '\''); 
+  }
+  if (request.getParameter("name")!=null){
+    name = UtilMisc.charEscape(request.getParameter("name"), '\''); 
   }
   if (request.getParameter("currentproblems")!=null){
     currentproblems = UtilMisc.charEscape(request.getParameter("currentproblems"), '\''); 
@@ -66,6 +85,23 @@
     subject = UtilMisc.charEscape(request.getParameter("subject"), '\''); 
   }
 
+  //Section that creates XML, still needs to be inserted somewhere into a MYSQL table
+  try{
+  Document doc = UtilXML.newDocument();
+  Element root = UtilXML.addNode(doc, form_name);
+    while (e.hasMoreElements()){
+        params = (String)e.nextElement();
+        Element paramElem = UtilXML.addNode(root, params);
+        paramElem.appendChild(doc.createTextNode(request.getParameter(params)));
+        //System.out.println(UtilXML.toXML(doc));
+    }
+  }
+  catch(Exception ex){
+  ex.printStackTrace();
+  }
+  
+
+  
 // "formString" - from eforom
   String formString = dataBean.getFormString(fid);
 
