@@ -156,6 +156,8 @@
                     type="oscar.billing.controler.ProcedimentoRealizadoForm"/>
     <form-bean      name="consultaFaturamentoMedicoForm"
                     type="oscar.billing.controler.ConsultaFaturamentoMedicoForm"/>
+    <form-bean      name="consultaFaturamentoPacienteForm"
+                    type="oscar.billing.controler.ConsultaFaturamentoPacienteForm"/>                    
 <!-- oscarBilling Brazil stop -->
 
   </form-beans>
@@ -807,6 +809,18 @@
         </action>        
     <!-- ConsultaFaturamentoMedico end -->
 
+    <!-- ConsultaFaturamentoPaciente start -->
+  
+        <action   path="/oscar/billing/consultaFaturamentoPaciente/init"
+        	        parameter="init"
+                  type="oscar.billing.controler.ConsultaFaturamentoPacienteAction"
+                  name="consultaFaturamentoPacienteForm"
+                  scope="request"
+                  input="/billing/billingConsFatPatBrazil.jsp">
+           <forward name="success" path="/billing/billingConsFatPatBrazil.jsp"/>
+        </action>
+        
+    <!-- ConsultaFaturamentoPaciente end -->
   </action-mappings>
 </struts-config>
 

@@ -5,6 +5,7 @@
 package oscar.billing.model;
 
 import oscar.billing.cad.model.CadCid;
+
 import oscar.billing.fat.model.FatFormularioProcedimento;
 
 import java.util.*;
@@ -17,11 +18,12 @@ import java.util.Date;
  * </p>
  */
 public class Appointment {
-	public static final String TODOS = "T";
-	public static final String PENDENTE = "D";
-	public static final String AGENDADO = "A";
-	public static final String FATURADO = "F";
-	
+    public static final String TODOS = "T";
+    public static final String PENDENTE = "D";
+    public static final String AGENDADO = "A";
+    public static final String FATURADO = "F";
+    public static final String PREENCHIDO = "P";
+
     ///////////////////////////////////////
     // attributes
 
@@ -73,6 +75,8 @@ public class Appointment {
      * </p>
      */
     private String reason;
+    private String billing;
+    private String descBilling;
 
     ///////////////////////////////////////
     // associations
@@ -109,7 +113,6 @@ public class Appointment {
      *
      */
     public Appointment() {
-
     }
 
     ///////////////////////////////////////
@@ -123,21 +126,24 @@ public class Appointment {
      * </p>
      */
     public void clear() {
-		appointmentNo = 0;
-		appointmentDate = null;
-		startTime = null;
-		endTime = null;
-		name = "";
-		status = "";
-		reason = "";
-		if (provider != null) {
-		   provider.clear();
-		}
-		if (demographic != null) {
-			demographic.clear();
-		}
-		procedimentoRealizado.clear();
-		diagnostico.clear();
+        appointmentNo = 0;
+        appointmentDate = null;
+        startTime = null;
+        endTime = null;
+        name = "";
+        status = "";
+        reason = "";
+
+        if (provider != null) {
+            provider.clear();
+        }
+
+        if (demographic != null) {
+            demographic.clear();
+        }
+
+        procedimentoRealizado.clear();
+        diagnostico.clear();
     }
 
     // end clear        
@@ -163,7 +169,8 @@ public class Appointment {
         if (demographic != null) {
             return demographic;
         } else {
-        	demographic = new Demographic();
+            demographic = new Demographic();
+
             return demographic;
         }
     }
@@ -203,7 +210,8 @@ public class Appointment {
         if (provider != null) {
             return provider;
         } else {
-        	provider = new Provider();
+            provider = new Provider();
+
             return provider;
         }
     }
@@ -317,36 +325,81 @@ public class Appointment {
             this.procedimentoRealizado.add(pr);
         }
     }
-    
-	public void removeProcedimentos(long id) {
-		for (int i = 0; i < procedimentoRealizado.size(); i++) {
-			ProcedimentoRealizado pr = (ProcedimentoRealizado) procedimentoRealizado.get(i);
-			System.out.println("pr " + pr.getCadProcedimentos().getCoProcedimento());
-			if (pr.getCadProcedimentos().getCoProcedimento() == id) {
-				procedimentoRealizado.remove(i);
-			}
-		}
-	}
-	
-	public void removeDiagnostico(String id) {
-		for (int i = 0; i < diagnostico.size(); i++) {
-			Diagnostico diag = (Diagnostico) diagnostico.get(i);
-			if (diag.getCadCid().getCoCid().toUpperCase().trim().equals(id.toUpperCase().trim())) {
-				diagnostico.remove(i);
-			}
-		}
-	}
 
-	public void addDiagnostico(CadCid cid) {
-			Diagnostico diag = new Diagnostico();
-			diag.setAppointment(this);
-			diag.setCadCid(cid);
-			diag.setOrdem(diagnostico.size() + 1);
+    public void removeProcedimentos(long id) {
+        for (int i = 0; i < procedimentoRealizado.size(); i++) {
+            ProcedimentoRealizado pr = (ProcedimentoRealizado) procedimentoRealizado.get(i);
+            System.out.println("pr " +
+                pr.getCadProcedimentos().getCoProcedimento());
 
-			this.diagnostico.add(diag);
-	}
-	
-  
+            if (pr.getCadProcedimentos().getCoProcedimento() == id) {
+                procedimentoRealizado.remove(i);
+            }
+        }
+    }
+
+    public void removeDiagnostico(String id) {
+        for (int i = 0; i < diagnostico.size(); i++) {
+            Diagnostico diag = (Diagnostico) diagnostico.get(i);
+
+            if (diag.getCadCid().getCoCid().toUpperCase().trim().equals(id.toUpperCase()
+                                                                              .trim())) {
+                diagnostico.remove(i);
+            }
+        }
+    }
+
+    public void addDiagnostico(CadCid cid) {
+        Diagnostico diag = new Diagnostico();
+        diag.setAppointment(this);
+        diag.setCadCid(cid);
+        diag.setOrdem(diagnostico.size() + 1);
+
+        this.diagnostico.add(diag);
+    }
+
+    /**
+     * @return
+     */
+    public String getBilling() {
+        return billing;
+    }
+
+    /**
+     * @param string
+     */
+    public void setBilling(String string) {
+        billing = string;
+    }
+
+    /**
+     * @return
+     */
+    public String getDescBilling() {
+        if (billing == null) {
+            descBilling = "Pendente";
+        } else {
+            if (billing.equals(oscar.billing.model.Appointment.AGENDADO)) {
+                descBilling = "Agendado";
+            } else if (billing.equals(oscar.billing.model.Appointment.FATURADO)) {
+                descBilling = "Faturado";
+            } else if (billing.equals(oscar.billing.model.Appointment.PENDENTE)) {
+                descBilling = "Pendente";
+            } else if (billing.equals(
+                        oscar.billing.model.Appointment.PREENCHIDO)) {
+                descBilling = "Informado";
+            }
+        }
+
+        return descBilling;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDescBilling(String string) {
+        descBilling = string;
+    }
 }
 
 

@@ -1,6 +1,7 @@
 package oscar.billing.dao;
 
 import oscar.billing.model.Appointment;
+import oscar.billing.model.Demographic;
 import oscar.billing.model.Diagnostico;
 import oscar.billing.model.ProcedimentoRealizado;
 import oscar.billing.model.Provider;
@@ -207,7 +208,7 @@ public class AppointmentDAO extends DAO {
 			sql = sql + " and a.provider_no = " +  provider.getProviderNo().trim();
         }
 
-        sql = sql + " order by a.appointment_date";
+        sql = sql + " order by a.appointment_date desc";
 
         DBHandler db = getDb();
 
@@ -233,4 +234,40 @@ public class AppointmentDAO extends DAO {
 
         return list;
     }
+
+	public ArrayList listFatPatiente(Demographic demographic)
+		throws SQLException {
+		ArrayList list = new ArrayList();
+		String sql =
+			"select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " +
+			"b.first_name, a.billing " +
+			"from appointment a, provider b, demographic c " +
+			"where a.provider_no = b.provider_no and " +
+			"a.demographic_no = c.demographic_no and " +
+			"a.demographic_no = " + demographic.getDemographicNo() + " and " +
+			"a.billing is not null " +
+			"order by a.appointment_date desc";
+
+		DBHandler db = getDb();
+
+		try {
+			ResultSet rs = db.GetSQL(sql);
+
+			while (rs.next()) {
+				Appointment app = new Appointment();
+				app.setAppointmentNo(rs.getLong(1));
+				app.setAppointmentDate(rs.getDate(2));
+				app.getProvider().setProviderNo(rs.getString(3));
+				app.getProvider().setLastName(rs.getString(4));
+				app.getProvider().setFirstName(rs.getString(5));
+				app.setBilling(rs.getString(6));
+				
+				list.add(app);            	
+			}
+		} finally {
+			db.CloseConn();
+		}
+
+		return list;
+	}
 }
