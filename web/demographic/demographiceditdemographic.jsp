@@ -25,7 +25,7 @@
  */
 --%>
 
-<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -45,6 +45,8 @@
         String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
         
         OscarProperties oscarProps = OscarProperties.getInstance();
+        
+        ProvinceNames pNames = ProvinceNames.getInstance();
 %>
 
 
@@ -179,7 +181,7 @@ function formatPhoneNum() {
 }
 function checkONReferralNo() {
   var referralNo = document.updatedelete.r_doctor_ohip.value ;
-  if (document.updatedelete.hc_type.options[8].selected && referralNo.length > 0 && referralNo.length != 6) {
+  if (document.updatedelete.hc_type.value == 'ON' && referralNo.length > 0 && referralNo.length != 6) {
     alert("The referral doctor's no. is wrong. Please correct it!") ;
   }
 }
@@ -465,23 +467,30 @@ function newStatus() {
                                 <% if (vLocale.getCountry().equals("BR")) { %>
                                 <input type="text" name="province" value="<%=rs.getString("province")%>">
                                 <% } else { %>
-                                <select name="province" style="width:200px">
                                 <% String province = rs.getString("province"); %>          
-                                  <option value="AB"<%=province.equals("AB")?" selected":""%>>AB-Alberta</option>
-                                  <option value="BC"<%=province.equals("BC")?" selected":""%>>BC-British Columbia</option>
-                                  <option value="MB"<%=province.equals("MB")?" selected":""%>>MB-Manitoba</option>          
-                                  <option value="NB"<%=province.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-                                  <option value="NL"<%=province.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-                                  <option value="NT"<%=province.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
-                                  <option value="NS"<%=province.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-                                  <option value="NU"<%=province.equals("NU")?" selected":""%>>NU-Nunavut</option>
-                                  <option value="ON"<%=province.equals("ON")?" selected":""%>>ON-Ontario</option>
-                                  <option value="PE"<%=province.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-                                  <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
-                                  <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-                                  <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option> 
-                                  <option value="US"<%=province.equals("US")?" selected":""%>>US resident</option> 
+                                <select name="province" style="width:200px">
                                   <option value="OT"<%=(province.equals("OT") || province.equals("") || province.length() > 2)?" selected":""%>>Other</option>
+                                <% if (pNames.isDefined()) { 
+                                       for (ListIterator li = pNames.listIterator(); li.hasNext(); ) { 
+                                           String pr2 = (String) li.next(); %>
+                                           <option value="<%=pr2%>"<%=pr2.equals(province)?" selected":""%>><%=li.next()%></option>
+                                       <% } %>
+                                    <% } else { %>
+                                      <option value="AB"<%=province.equals("AB")?" selected":""%>>AB-Alberta</option>
+                                      <option value="BC"<%=province.equals("BC")?" selected":""%>>BC-British Columbia</option>
+                                      <option value="MB"<%=province.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+                                      <option value="NB"<%=province.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+                                      <option value="NL"<%=province.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+                                      <option value="NT"<%=province.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+                                      <option value="NS"<%=province.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+                                      <option value="NU"<%=province.equals("NU")?" selected":""%>>NU-Nunavut</option>
+                                      <option value="ON"<%=province.equals("ON")?" selected":""%>>ON-Ontario</option>
+                                      <option value="PE"<%=province.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+                                      <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
+                                      <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+                                      <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option> 
+                                      <option value="US"<%=province.equals("US")?" selected":""%>>US resident</option> 
+                                    <% } %>                                  
                                 </select>
                                 <% } %>
                               </td>
@@ -559,7 +568,13 @@ function newStatus() {
                                 <% } else {%>
                                 <% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
                                 <select name="hc_type" style="width:200px">
-                                  <option value="" >None Selected</option>
+                                <option value="OT"<%=(hctype.equals("OT") || hctype.equals("") || hctype.length() > 2)?" selected":""%>>Other</option>
+                                <% if (pNames.isDefined()) { 
+                                       for (ListIterator li = pNames.listIterator(); li.hasNext(); ) { 
+                                           String province = (String) li.next(); %>
+                                           <option value="<%=province%>"<%=province.equals(hctype)?" selected":""%>><%=li.next()%></option>
+                                       <% } %>
+                                <% } else { %>                                    
                                   <option value="AB"<%=hctype.equals("AB")?" selected":""%>>AB-Alberta</option>
                                   <option value="BC"<%=hctype.equals("BC")?" selected":""%>>BC-British Columbia</option>
                                   <option value="MB"<%=hctype.equals("MB")?" selected":""%>>MB-Manitoba</option>          
@@ -574,7 +589,7 @@ function newStatus() {
                                   <option value="SK"<%=hctype.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
                                   <option value="YT"<%=hctype.equals("YT")?" selected":""%>>YT-Yukon</option>                                       
                                   <option value="US"<%=hctype.equals("US")?" selected":""%>>US resident</option> 
-                                  <option value="OT"<%=(hctype.equals("OT") || hctype.equals("") || hctype.length() > 2)?" selected":""%>>Other</option>
+                                <% } %>                                
                                 </select>
                                 <% }%>
                               </td>

@@ -7,7 +7,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames" errorPage="errorpage.jsp" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="addDemoBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -30,6 +30,8 @@
   if (curMonth.length() < 2) curMonth = "0"+curMonth;
   String curDay = Integer.toString(now.get(Calendar.DAY_OF_MONTH));
   if (curDay.length() < 2) curDay = "0"+curDay;
+  
+  ProvinceNames pNames = ProvinceNames.getInstance();
 %>
 
 <html:html locale="true">
@@ -240,25 +242,33 @@ function formatPhoneNum() {
         <% if (vLocale.getCountry().equals("BR")) { %>
         <input type="text" name="province" value="<%=props.getProperty("billregion", "ON")%>">
         <% } else { %>
-        <select name="province">
-        <% String billregion = props.getProperty("billregion", ""); %> 
-          <option value="" >None Selected</option>
-          <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
-          <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
-          <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
-          <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-          <option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-          <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
-          <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-          <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
-          <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
-          <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-          <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
-          <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-          <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
-          <option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option> 
-          <option value="OT"<%=billregion.equals("")?" selected":""%>>Other</option>
-        </select>
+            <select name="province">
+            <% String billregion = props.getProperty("billregion", ""); %> 
+              <option value="OT"<%=billregion.equals("")||billregion.equals("OT")?" selected":""%>>Other</option>            
+              <%-- <option value="">None Selected</option> --%>
+            <% if (pNames.isDefined()) { 
+                   for (ListIterator li = pNames.listIterator(); li.hasNext(); ) { 
+                       String province = (String) li.next(); %>
+                       <option value="<%=province%>"<%=province.equals(billregion)?" selected":""%>><%=li.next()%></option>
+                   <% } %>
+            <% } else { %>
+              <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
+              <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
+              <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+              <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+              <option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+              <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+              <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+              <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
+              <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
+              <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+              <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
+              <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+              <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
+              <option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option> 
+
+            <% } %>
+            </select>
         <% } %>
       </td>
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPostal"/>: </b> </td>
@@ -384,24 +394,31 @@ function formatPhoneNum() {
         <% if(vLocale.getCountry().equals("BR")) { %>
            <input type="text" name="hc_type" value="">
         <% } else {%>
-        <select name="hc_type">
         <% String billregion = props.getProperty("billregion", ""); %>          
-          <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
-          <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
-          <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
-          <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-          <option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-          <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
-          <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-          <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
-          <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
-          <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-          <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
-          <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-          <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
-          <option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option> 
-          <option value="OT"<%=billregion.equals("")?" selected":""%>>Other</option>
-        </select>
+        <select name="hc_type">
+        <option value="OT"<%=billregion.equals("")||billregion.equals("OT")?" selected":""%>>Other</option>
+        <% if (pNames.isDefined()) { 
+                   for (ListIterator li = pNames.listIterator(); li.hasNext(); ) { 
+                       String province = (String) li.next(); %>
+                       <option value="<%=province%>"<%=province.equals(billregion)?" selected":""%>><%=li.next()%></option>
+                   <% } %>
+            <% } else { %>                
+                  <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
+                  <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
+                  <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+                  <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+                  <option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+                  <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+                  <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+                  <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
+                  <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
+                  <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+                  <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
+                  <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+                  <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
+                  <option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option>        
+          <% } %>
+          </select>
         <% }%>
       </td>
       <td>
