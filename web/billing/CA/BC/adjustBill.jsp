@@ -178,6 +178,17 @@
                     awnd.focus();
                 }
 
+                function GetPriceOfCode(formName,codeElementName,priceElementName ) {               
+                    var code = codeElementName;
+                    var form = formName;                    
+                    var price = priceElementName;                    
+                    t0 = escape(document.forms[form].elements[code].value);                                      
+                    t1 = escape("");
+                    t2 = escape("");
+                    awnd=rs('att','<rewrite:reWrite jspPage="billingGetPriceCode.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=&formElementCode=' +t0+ '&formName=' +form+ '&formElementPrice=' +price+ '&formNothing=blank' ,820,660,1);
+                    awnd.focus();
+                }
+                
                 function OtherScriptAttach() {
                       t0 = escape(document.ReProcessBilling.service_code.value);
                       t1 = escape("");
@@ -577,19 +588,20 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
   </tr>
     
     <tr> 
-      <td width="25%"  class="bCellData">
+      <td  class="bCellData">
         <input type="button" onclick="javascript:OtherScriptAttach()" value="Search"/>
         <input type="text" style="font-size:80%;" name="service_code" value="<%=allFields.getProperty("billing_code")%>" size="10" >
       </td>
       <td width="50%"  class="bCellData">
         <%=billform.getServiceDesc(allFields.getProperty("billing_code"),billRegion)%>
       </td>
-      <td width="12%" class="bCellData">
+      <td  class="bCellData">
         <input type="hidden" name="billing_unit" value="<%=allFields.getProperty("billing_unit")%>">
         <input type="text" style="font-size:80%;" name="billingUnit" value="<%=allFields.getProperty("billing_unit")%>" size="3" maxlength="3">
       </td>
-      <td width="13%"  class="bCellData"> 
+      <td   class="bCellData" nowrap> 
         <div align="right">
+           <input type="button" onclick="javascript:GetPriceOfCode('ReProcessBilling','service_code','billingAmount')" value="$"/>
            <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bill_amount")%>">
            <input type="text" style="font-size:80%;" size="6" maxlength="6" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>">
         </div>
