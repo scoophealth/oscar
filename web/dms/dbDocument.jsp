@@ -71,13 +71,13 @@ if ( docdesc.compareTo("") == 0 || docfilename.compareTo("") == 0 || doctype.com
     ResultSet rsdemo2 = null;
     int count1 = 0;
 
-    String[] param4=new String[4];
+    String[] param4=new String[1];
     param4[0] = docfilename;
-    param4[1] = "";
-    param4[2] = "";
-    param4[3] = "";
+    //param4[1] = "";
+    //param4[2] = "";
+    //param4[3] = "";
 
-    rsdemo2 = apptMainBean.queryResults(param4, "search_document");  // check to see whether document is already entered in the database
+    rsdemo2 = apptMainBean.queryResults(param4, "search_document_by_file_name");  // check to see whether document is already entered in the database
     while (rsdemo2.next()) {   
         count1 = count1 + 1;
     }
@@ -103,13 +103,13 @@ if ( docdesc.compareTo("") == 0 || docfilename.compareTo("") == 0 || doctype.com
 
 	String docNo = null;
         ResultSet rsdemo = null;
-        String[] param3 =new String[4];
+        String[] param3 =new String[1];
         param3[0]=docfilename;
-        param3[1]="";
-        param3[2]="";
-        param3[3]="";
+        //param3[1]="";
+        //param3[2]="";
+        //param3[3]="";
 
-        rsdemo = apptMainBean.queryResults(param3, "search_document");
+        rsdemo = apptMainBean.queryResults(param3, "search_document_by_file_name");
         while (rsdemo.next()) {   
             docNo = rsdemo.getString("document_no");
         }
