@@ -47,7 +47,7 @@ public class BillingCreateBillingAction extends Action {
         String other_service3_unit = ((BillingCreateBillingForm)form).getXml_other3_unit();
         oscar.oscarBilling.pageUtil.BillingBillingManager bmanager;
         bmanager = new BillingBillingManager();
-        ArrayList billItem = bmanager.getDups(service, other_service1, other_service2, other_service3,other_service1_unit, other_service2_unit, other_service3_unit);
+        ArrayList billItem = bmanager.getDups2(service, other_service1, other_service2, other_service3,other_service1_unit, other_service2_unit, other_service3_unit);
         System.out.println("Calling getGrandTotal");
         
         bean.setGrandtotal(bmanager.getGrandTotal(billItem));
