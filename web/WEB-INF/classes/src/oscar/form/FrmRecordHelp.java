@@ -45,7 +45,7 @@ public class FrmRecordHelp {
                 String name = md.getColumnName(i);
                 String value;
 
-                if (md.getColumnTypeName(i).equalsIgnoreCase("TINY")) {
+                if (md.getColumnTypeName(i).startsWith("TINY")) {
                     if (rs.getInt(i) == 1)
                         value = "checked='checked'";
                     else
@@ -75,7 +75,7 @@ public class FrmRecordHelp {
         rs = updateResultSet(props, rs, true);
         rs.insertRow();
         String saveAsXml = OscarProperties.getInstance().getProperty("save_as_xml", "false");
-        System.out.println("the value of save_as_xml is: " + saveAsXml);
+        //System.out.println("the value of save_as_xml is: " + saveAsXml);
 
         if (saveAsXml.equalsIgnoreCase("true")) {
             //System.out.println("savs as XML");
@@ -135,12 +135,14 @@ public class FrmRecordHelp {
             }
 
             String value = props.getProperty(name, null);
-            if (md.getColumnTypeName(i).equalsIgnoreCase("TINY")) {
+            if (md.getColumnTypeName(i).startsWith("TINY")) {
                 if (value != null) {
-                    if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("checked='checked'"))
+                    if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("checked='checked'")) {
                         rs.updateInt(name, 1);
-                    else
+                        //System.out.println(name + "   - " + md.getColumnTypeName(i) + value);
+                    } else {
                         rs.updateInt(name, 0);
+                    }
                 } else {
                     rs.updateInt(name, 0);
                 }
@@ -149,10 +151,11 @@ public class FrmRecordHelp {
 
             if (md.getColumnTypeName(i).equalsIgnoreCase("date")) {
                 java.util.Date d;
-                if (md.getColumnName(i).equalsIgnoreCase("formEdited"))
+                if (md.getColumnName(i).equalsIgnoreCase("formEdited")) {
                     d = UtilDateUtilities.Today();
-                else
+                } else {
                     d = UtilDateUtilities.StringToDate(value, _dateFormat);
+                }
                 if (d == null)
                     rs.updateNull(name);
                 else
@@ -207,7 +210,7 @@ public class FrmRecordHelp {
                 String name = md.getColumnName(i);
                 String value;
 
-                if (md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1) {
+                if (md.getColumnTypeName(i).startsWith("TINY") && md.getScale(i) == 1) {
                     if (rs.getInt(i) == 1)
                         value = "on";
                     else
@@ -244,12 +247,12 @@ public class FrmRecordHelp {
 
         if (action.equalsIgnoreCase("print")) {
             temp = where + "?demoNo=" + demoId + "&formId=" + formId; // + "&study_no=" + studyId +
-                                                                      // "&study_link" + studyLink;
+            // "&study_link" + studyLink;
         } else if (action.equalsIgnoreCase("save")) {
             temp = where + "?demographic_no=" + demoId + "&formId=" + formId; // "&study_no=" +
-                                                                              // studyId +
-                                                                              // "&study_link" +
-                                                                              // studyLink; //+
+            // studyId +
+            // "&study_link" +
+            // studyLink; //+
         } else if (action.equalsIgnoreCase("exit")) {
             temp = where;
         } else {
