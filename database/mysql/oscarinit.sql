@@ -5610,3 +5610,27 @@ create table demographicPharmacy (
    status char(1) default '1',
    addDate timestamp
 ) ;
+
+
+
+CREATE TABLE surveyData (
+  surveyDataId int(10) NOT NULL auto_increment,
+  surveyId varchar(5) default NULL,
+  demographic_no int(10) default NULL,
+  provider_no varchar(6) default NULL,
+  status char(2) default NULL,
+  survey_date date default NULL,
+  answer varchar(10) default NULL,
+  processed int(10) default NULL,
+  PRIMARY KEY  (`surveyDataId`)
+) ;
+
+create index surveyId_index on surveyData (surveyId(5));
+create index demographic_no_index on surveyData (demographic_no);
+create index provider_no_index on surveyData (provider_no(6));
+create index status_index on surveyData (status(2));
+create index survey_date_index on surveyData (survey_date);
+create index answer_index on surveyData (answer(10));
+create index processed_index on surveyData (processed);
+
+
