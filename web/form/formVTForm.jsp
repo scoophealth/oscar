@@ -632,7 +632,7 @@ function clearAll(yRadio, nRadio){
             </td>
         </tr>
     </table>
-    <table width="640px">
+    <table width="640px" border=0 cellpadding="0" cellspacing="0" >
         <tr>            
             <td class="subject">
                 Vascular Data Entry Template (draft) <%=request.getAttribute("decisionSupportURL")==null?"(Miles server is not available)":""%>
@@ -640,17 +640,17 @@ function clearAll(yRadio, nRadio){
         </tr>
         <tr>                     
             <td>
-               <table border=0 cellspacing=0 >
+               <table border="0" cellspacing="0" cellpadding="0" >
                 <tr>
                     <td>
-                        <table width="640px">
+                        <table width="640px" border="0" cellspacing="0" cellpadding="0">
                             <tr>
                                 <td>
-                                    <table width="100%">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <html:errors/>  
                                         <tr>
                                             <td colspan="2">
-                                                <table width="95%">
+                                                <table width="100%" border="0" cellspacing="0" cellpadding="1">
                                                     <tr>
                                                         <td valign="top" width="22%">
                                                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
@@ -663,7 +663,7 @@ function clearAll(yRadio, nRadio){
                                                             
                                                         </td>
                                                         <td  width="53%">
-                                                            <table>
+                                                            <table width="100%">
                                                                 <tr>                                                                                                      
                                                                     <td align="left" class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/></td>
                                                                     <td align="left" class="sixtyPercent"><html:checkbox property="value(HTNValue)"/></td>
@@ -676,15 +676,15 @@ function clearAll(yRadio, nRadio){
                                                                     <td align="left" class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/></td>                                                    
                                                                 </tr>
                                                                 <tr>                                                                                                      
-                                                                    <td valign="top" align="center" class="sixtyPercent"> DM</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> HTN</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> Hyperlipidemia</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> MI</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> Angina</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> Acute coronary syndrome</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> Revascularization</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> Stroke/TIA</td>
-                                                                    <td valign="top" align="center" class="sixtyPercent"> PVD</td>                                                    
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="DM"> DM</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="HTN"> HTN</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="Hyperlipidemia">Hyperlipidemia</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="MI">MI</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="Angina"> Angina</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="Acute Coronary Syndrome"> ACS</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="Revascularization">Revascularization</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="Stroke/TIA"> Stroke/TIA</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent" title="PVD"> PVD</td>                                                    
                                                                 </tr>
                                                             </table>
                                                         </td>
