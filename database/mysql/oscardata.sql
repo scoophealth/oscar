@@ -455,10 +455,8 @@ INSERT INTO encountertemplate VALUES ('NASAL INJURY','0001-01-01 00:00:00','1. D
 INSERT INTO encountertemplate VALUES ('VENEREAL WARTS (COND','0001-01-01 00:00:00','1. Inquiry re duration of lesions? \r\n2. Description of size AND extent of lesions? \r\n3. VDRL OR syphilis screen? ','Unknow');
 
 --
--- Dumping data for table `encounterWindow`
+-- Dumping data for table 'encounterWindow'
 --
-                                                                                                                                                             
-INSERT INTO encounterWindow VALUES (60,60,30,378);
 
 --
 -- Dumping data for table 'favorites'
