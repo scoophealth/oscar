@@ -211,7 +211,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         <p>
         <% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
           <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a><br>
-          <a href=# onClick ="popupPage(600,600,'../billing/CA/BC/billingPrivateCodeAdjust.jsp');return false;">Manage Private Bill</a>
+          <a href=# onClick ="popupPage(600,600,'../billing/CA/BC/billingPrivateCodeAdjust.jsp');return false;">Manage Private Bill</a><br/>
           <a href=# onClick ="popupPage(700,1000,'../billing/CA/BC/billingSim.jsp');return false;">Simulate Submission File</a><br>
           <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a><br>          
           <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Upload Remittance Files</a><br>     
