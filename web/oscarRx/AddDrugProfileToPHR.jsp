@@ -26,7 +26,6 @@
 
 <%
 
-
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 String actorTicket = null;
 String actor = "rene@citizenhealth.ca";
@@ -43,7 +42,7 @@ actorTicket = ping.connect(actor,actorPassword);
 }
 
 
-String owner = actor;
+String owner = patientPingId;      
 String originAgent = actor;
 String author = actor;
 String level1 = CddmLevels.CUMULATIVE;
