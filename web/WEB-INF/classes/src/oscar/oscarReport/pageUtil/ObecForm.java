@@ -8,7 +8,7 @@ import org.apache.struts.action.*;
 public final class ObecForm extends ActionForm {
 
     String xml_vdate;
-    String xml_appointment_date;
+    int numDays;
 
     public String getXml_vdate(){
        return xml_vdate;
@@ -18,12 +18,12 @@ public final class ObecForm extends ActionForm {
        this.xml_vdate = id;
     }
 
-        public String getXml_appointment_date(){
-	       return xml_appointment_date;
-	    }
+    public int getNumDays(){
+       return numDays;
+    }
 
-	    public void setXml_appointment_date(String id ){
-	       this.xml_appointment_date = id;
+    public void setNumDays(int numDays ){
+       this.numDays = numDays;
     }
 
 }

@@ -13,21 +13,73 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import java.util.Properties;
 import oscar.oscarReport.data.*;
+import oscar.util.*;
+
 public class ObecAction extends Action {
 
     public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-			Properties proppies = (Properties)  request.getSession().getAttribute("oscarVariables");
+        Properties proppies = (Properties)  request.getSession().getAttribute("oscarVariables");
 
-          	 ObecForm frm = (ObecForm)form;
-             ObecData obecData1 = new ObecData();
-		     String startDate = frm.getXml_vdate()==null?"":frm.getXml_vdate();
-		     String endDate = frm.getXml_appointment_date()==null?"":frm.getXml_appointment_date();
-           	 String obectxt = obecData1.generateOBEC(startDate, endDate, proppies)==null?"":obecData1.generateOBEC(startDate, endDate, proppies);
-             request.setAttribute("obectxt", obectxt);
+        ObecForm frm = (ObecForm)form;
+        ObecData obecData1 = new ObecData();
+        DateUtils dateUtils = new DateUtils();
+        ActionErrors errors = new ActionErrors();  
+        
+        String startDate = frm.getXml_vdate()==null?"":frm.getXml_vdate();
+        int numDays = frm.getNumDays();
+        int startYear = 0;
+        int startMonth = 0;
+        int startDay = 0;
+        
+        int slashIndex1 = startDate.indexOf("/");
+        if(slashIndex1>=0){
+            startYear = Integer.parseInt(startDate.substring(0,slashIndex1));
+            int slashIndex2 = startDate.indexOf("/", slashIndex1+1);
+            if (slashIndex2>=0){
+                startMonth = Integer.parseInt(startDate.substring(slashIndex1+1, slashIndex2));
+                int length = startDate.length();
+                startDay = Integer.parseInt(startDate.substring(slashIndex2+1, length)); 
+            }
+            else{
+                errors.add(startDate,
+                new ActionError("errors.invalid", "StartDate"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+        }
+        else{
+            slashIndex1 = startDate.indexOf("-");
+            if(slashIndex1>=0){
+                startYear = Integer.parseInt(startDate.substring(0,slashIndex1));
+                int slashIndex2 = startDate.indexOf("-", slashIndex1+1);
+                if (slashIndex2>=0){
+                    startMonth = Integer.parseInt(startDate.substring(slashIndex1+1, slashIndex2));
+                    int length = startDate.length();
+                    startDay = Integer.parseInt(startDate.substring(slashIndex2+1, length));                
+                }
+                else{
+                    errors.add(startDate,
+                    new ActionError("errors.invalid", "StartDate"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }
+            else{
+                errors.add(startDate,
+                new ActionError("errors.invalid", "StartDate"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+        }
+        
+        String endDate = dateUtils.NextDay(startDay, startMonth, startYear, numDays);
+        
+        String obectxt = obecData1.generateOBEC(startDate, endDate, proppies)==null?"":obecData1.generateOBEC(startDate, endDate, proppies);
+        request.setAttribute("obectxt", obectxt);
 
-    		 return mapping.findForward("success");
+        return mapping.findForward("success");
     }
 }
 
