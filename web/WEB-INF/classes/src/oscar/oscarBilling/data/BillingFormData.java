@@ -1,8 +1,9 @@
 package oscar.oscarBilling.data;
 
-import java.util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import oscar.oscarDB.DBHandler;
 
 
@@ -36,9 +37,9 @@ public class BillingFormData {
             sql = "SELECT b.service_code, b.description , b.value, b.percentage "
             + "FROM billingservice b, ctl_billingservice c WHERE b.service_code="
             + "c.service_code and b.region='" + billRegion +"' and c.service_group='"
-            + serviceGroup + "' and c.servicetype='" + serviceType + "'";
+            + serviceGroup + "' and c.servicetype='" + serviceType + "' order by c.service_order";
             
-            System.out.println("getServiceList "+sql);
+            //System.out.println("getServiceList "+sql);
             rs = db.GetSQL(sql);
             
             while(rs.next()) {
@@ -557,6 +558,29 @@ public class BillingFormData {
         
     }
     
+    public String getServiceGroupName(String serviceGroup) {
+        String ret = "";
+        
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT service_group_name FROM ctl_billingservice WHERE service_group='"
+            + serviceGroup +"'";
+
+            rs = db.GetSQL(sql);
+            
+            if(rs.next()) {
+                ret = rs.getString("service_group_name");
+            }
+            
+            rs.close();
+            db.CloseConn();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return ret;
+    }
     
     
 }
