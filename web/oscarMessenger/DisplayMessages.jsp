@@ -42,6 +42,20 @@ if (boxType == null || boxType.equals("")){
 }else{
     pageType = 0;
 }   //messageid
+
+pageContext.setAttribute("pageType",""+pageType);
+
+
+if (request.getParameter("orderby") != null){
+    String orderby = request.getParameter("orderby");
+    String sessionOrderby = (String) session.getAttribute("orderby");     
+    if (sessionOrderby != null && sessionOrderby.equals(orderby)){
+        orderby = "!"+orderby;
+    }
+    session.setAttribute("orderby",orderby);
+}
+String orderby = (String) session.getAttribute("orderby");
+ 
 %>
 
 
@@ -224,34 +238,42 @@ function BackToOscar()
                                     &nbsp;
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
+                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=status" paramId="boxType" paramName="pageType">
                                     <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
+                                    </html:link>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
+                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from" paramId="boxType" paramName="pageType">
                                     <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
+                                    </html:link>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
+                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=subject" paramId="boxType" paramName="pageType">
                                     <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
+                                    </html:link>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
+                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=date" paramId="boxType" paramName="pageType">
                                     <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
-                                    </th>
+                                    </html:link>
+                                    </th>                                    
                                 </tr>
                                 <% //java.util.Vector theMessages = new java.util.Vector() ;
                                    java.util.Vector theMessages2 = new java.util.Vector() ;
                                 switch(pageType){
                                     case 0:
 //                                        theMessages =  DisplayMessagesBeanId.getMessageid();
-                                        theMessages2 = DisplayMessagesBeanId.estInbox();
+                                        theMessages2 = DisplayMessagesBeanId.estInbox(orderby);
                                         // System.out.println("normal messages");
                                     break;
                                     case 1:
   //                                      theMessages  = DisplayMessagesBeanId.getSentMessageid();
-                                        theMessages2 = DisplayMessagesBeanId.estSentItemsInbox();
+                                        theMessages2 = DisplayMessagesBeanId.estSentItemsInbox(orderby);
                                         // System.out.println("Sent messages");
                                     break;
                                     case 2:
     ///                                    theMessages  = DisplayMessagesBeanId.getDelMessageid();
-                                        theMessages2 = DisplayMessagesBeanId.estDeletedInbox();
+                                        theMessages2 = DisplayMessagesBeanId.estDeletedInbox(orderby);
                                         // System.out.println("deleted messages");
                                     break;
                                 }   //messageid
