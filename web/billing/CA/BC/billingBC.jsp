@@ -165,7 +165,7 @@ function ScriptAttach() {
   t0 = escape(document.BillingCreateBillingForm.xml_diagnostic_detail1.value);
   t1 = escape(document.BillingCreateBillingForm.xml_diagnostic_detail2.value);
   t2 = escape(document.BillingCreateBillingForm.xml_diagnostic_detail3.value);
-  awnd=rs('att','billingDigNewSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+  awnd=rs('att','<rewrite:reWrite jspPage="billingDigNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
   
   
@@ -181,7 +181,7 @@ function OtherScriptAttach() {
  // f1 = document.serviceform.xml_dig_search1.value;
  // f2 = escape(document.serviceform.elements["File2Data"].value);
  // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','billingCodeNewSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+  awnd=rs('att','<rewrite:reWrite jspPage="billingCodeNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
 }
 function ReferralScriptAttach() {
@@ -191,7 +191,7 @@ function ReferralScriptAttach() {
  // f1 = document.serviceform.xml_dig_search1.value;
  // f2 = escape(document.serviceform.elements["File2Data"].value);
  // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','billingReferCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=&search=',600,600,1);
+  awnd=rs('att','<rewrite:reWrite jspPage="billingReferCodeSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=&search=',600,600,1);
   awnd.focus();
 }
 
@@ -200,7 +200,7 @@ function ResearchScriptAttach() {
   t0 = escape(document.serviceform.xml_referral1.value);
   t1 = escape(document.serviceform.xml_referral2.value);
   
-  awnd=rs('att','../billing/billingReferralCodeSearch.jsp?name='+t0 + '&name1=' + t1 +  '&search=',600,600,1);
+  awnd=rs('att','../<rewrite:reWrite jspPage="billingReferralCodeSearch.jsp"/>?name='+t0 + '&name1=' + t1 +  '&search=',600,600,1);
   awnd.focus();
 }
 
