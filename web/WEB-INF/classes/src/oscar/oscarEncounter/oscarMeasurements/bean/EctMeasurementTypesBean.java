@@ -180,7 +180,7 @@ public class EctMeasurementTypesBean{
        }
        
        public String getLastDateEntered(){
-           lastDateEntered = (lastDateEntered==null?"":lastDateEntered.substring(0,10));
+           lastDateEntered = (lastDateEntered==null?null:lastDateEntered.substring(0,10));
            return lastDateEntered;
        }
        
