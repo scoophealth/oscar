@@ -32,7 +32,7 @@ studyBean.doConfigure(dbParams,dbQueries);
 <% response.setHeader("Cache-Control","no-cache");%>
 <%
 String actorTicket = null;
-String actor = "rene@citizenhealth.ca";
+String actor = "clinic@citizenhealth.ca";
 String actorPassword = "password";
 DemographicData demoData = new DemographicData();
 String patientPingId = demoData.getDemographic(request.getParameter("demographic_no")).getEmail();
