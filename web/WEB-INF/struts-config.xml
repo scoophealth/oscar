@@ -78,6 +78,9 @@
     <form-bean      name="FrmSelectForm"
                     type="oscar.form.pageUtil.FrmSelectForm"/>
 
+    <form-bean      name="FrmXmlUploadForm"
+                    type="oscar.form.pageUtil.FrmXmlUploadForm"/>
+
     <!-- new form bean -->
     <form-bean      name="FrmForm"
                     type="oscar.form.FrmForm"/>
@@ -654,6 +657,13 @@
                 scope="request"
                 input="/form/formselect.jsp">
 	<forward name="success" path="/form/setupSelect.do" />        
+    </action>
+    <action	path="/form/xmlUpload"
+                type="oscar.form.pageUtil.FrmXmlUploadAction"
+                name="FrmXmlUploadForm"
+                scope="request"
+                input="/form/formXmlUpload.jsp">
+	<forward name="success" path="/form/formXmlUpload.jsp" />        
     </action>
     <!-- new form -->
     <action		path="/form/formname"
