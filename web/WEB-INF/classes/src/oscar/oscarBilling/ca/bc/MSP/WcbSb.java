@@ -308,7 +308,7 @@ public class WcbSb {
       + misc.zero(1)
       + dateFormat(this.w_servicedate)
       + misc.zero(2)
-      + misc.zero(1) //Submission Code
+      + "W"//misc.zero(1) //Submission Code
       + misc.space(1)
       + misc.forwardZero(this.w_icd9, 5)
       + misc.space(5 + 5 + 15)
