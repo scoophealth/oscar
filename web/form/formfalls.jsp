@@ -37,7 +37,7 @@
             background-color:#BBBBBB;
             padding-top:3px;
             padding-bottom:3px;
-            width:940px;
+            width:739px;
             font-size:12pt;
         }
 
@@ -273,7 +273,7 @@ var maxYear=9900;
     }
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,670)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -291,34 +291,6 @@ var maxYear=9900;
 <!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
 <input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
 <input type="hidden" name="submit" value="exit"/>
-
-
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
-  if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
-  }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-<%
-  if (!bView) {
-%>
-        <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
-        </td>
-<%
-  }
-%>
-    </tr>
-</table>
-
 
 <table border="0" cellspacing="1" cellpadding="0" width="100%" >
  <tr bgcolor="#486ebd">
@@ -429,15 +401,6 @@ var maxYear=9900;
             <input type="button" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:window.print();"/>
         </td>
-<%
-  if (!bView) {
-%>
-        <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
-        </td>
-<%
-  }
-%>
     </tr>
 </table>
 

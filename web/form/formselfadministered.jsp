@@ -30,14 +30,14 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>History of Falls Questionnaire</title>
+    <title>Self Administered Questions Used in Self-Report Risk Index</title>
     <html:base/>
         <style type="text/css">
 	.Head {
             background-color:#BBBBBB;
             padding-top:3px;
             padding-bottom:3px;
-            width:940px;
+            width:739px;
             font-size:12pt;
         }
 
@@ -59,11 +59,11 @@
         }
         
         TD{
-            font-size:14.5pt;
+            font-size:13.5pt;
         }
 
         TH{
-            font-size:14.5pt;
+            font-size:14pt;
         }
 
         INPUT.checkbox{
@@ -273,7 +273,7 @@ var maxYear=9900;
     }
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -303,7 +303,8 @@ var maxYear=9900;
         <td>
             <table width="100%" border="0"  cellspacing="0" cellpadding="0" >
                 <tr>
-                    <td colspan="2">1. Would you say, in general your health is</td>
+                    <td align="right">1. </td>
+                    <td>Would you say, in general your health is</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -336,7 +337,8 @@ var maxYear=9900;
                     <td>Poor</td>
                 </tr>    
                 <tr>
-                    <td colspan="2">2. In the previous 12 months have you stayed overnight as a patient in a hospital?</td>
+                    <td align="right">2. </td>
+                    <td>In the previous 12 months have you stayed overnight as a patient in a hospital?</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -363,7 +365,8 @@ var maxYear=9900;
                     <td>More than three times</td>
                 </tr>
                 <tr>
-                    <td colspan="2">3. In the previous 12 months, how many times did you visit a physician or clinic?</td>
+                    <td align="right">3. </td>
+                    <td>In the previous 12 months, how many times did you visit a physician or clinic?</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -390,7 +393,8 @@ var maxYear=9900;
                     <td>More than three times</td>
                 </tr>
                 <tr>
-                    <td colspan="2">4. In the previous 12 months, did you have diabetes?</td>
+                    <td align="right">4. </td>
+                    <td>In the previous 12 months, did you have diabetes?</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -405,7 +409,8 @@ var maxYear=9900;
                     <td>No</td>
                 </tr>
                 <tr>
-                    <td colspan="2">5. Have you ever had ...</td>
+                    <td align="right">5. </td>
+                    <td>Have you ever had ...</td>
                 </tr>
                 <tr bgcolor="white">                    
                     <td colspan="2">
@@ -456,7 +461,8 @@ var maxYear=9900;
                     </td>
                 </tr>                
                 <tr>
-                    <td colspan="2">6. Is there a friend, relative neighbour who would take care of you for a few days if needed?</td>
+                    <td align="right" valign="top" >6. </td>
+                    <td>Is there a friend, relative neighbour who would take care of you for a few days if neccessary?</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -474,7 +480,6 @@ var maxYear=9900;
     </td>
 </tr>
 </table>
-
 <table class="Head" class="hidePrint">
     <tr>
         <td align="left">
@@ -489,19 +494,8 @@ var maxYear=9900;
             <input type="button" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:window.print();"/>
         </td>
-<%
-  if (!bView) {
-%>
-        <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
-        </td>
-<%
-  }
-%>
     </tr>
 </table>
-
-
 </html:form>
 </body>
 </html:html>
