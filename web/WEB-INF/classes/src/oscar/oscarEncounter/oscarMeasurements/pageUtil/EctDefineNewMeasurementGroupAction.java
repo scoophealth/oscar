@@ -37,6 +37,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 import org.apache.commons.validator.*;
 import org.apache.struts.util.MessageResources;
+//import org.apache.regexp.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
@@ -52,7 +53,7 @@ public class EctDefineNewMeasurementGroupAction extends Action {
         EctDefineNewMeasurementGroupForm frm = (EctDefineNewMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctDefineNewMeasurementGroupForm", frm);
         
-        String groupName = (String) frm.getValue("groupName");
+        String groupName = (String) frm.get("groupName");
         System.out.println("The selected group is: " + groupName);                        
         HttpSession session = request.getSession();
         session.setAttribute( "groupName", groupName);

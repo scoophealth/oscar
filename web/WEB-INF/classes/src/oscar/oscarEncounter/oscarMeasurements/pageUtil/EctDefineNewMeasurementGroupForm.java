@@ -30,18 +30,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
+//import org.apache.regexp.*;
 
-public final class EctDefineNewMeasurementGroupForm extends ActionForm{
+public final class EctDefineNewMeasurementGroupForm extends DynaValidatorForm{
 
     
-    private final Map values = new HashMap();
-
-    public void setValue(String key, Object value) {
-        values.put(key, value);
+    private String groupName;
+    public String getGroupName(){
+        return this.groupName;
     }
-
-    public Object getValue(String key) {
-        return values.get(key);
+    public void setGroupName(String groupName){
+        this.groupName = groupName;
     }
     
     
