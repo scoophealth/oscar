@@ -405,24 +405,56 @@ function popupSearchPage(vheight,vwidth,varpage) { //open a new popup window
   var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>", windowprop);
 }
 
+
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 document.onmouseup = getActiveText;
+
 function getActiveText(e) {
+  
   //text = (document.all) ? document.selection.createRange().text : document.getSelection();
-  //document.ksearch.term.value = text;
+  //document.ksearch.keyword.value = text;
  if(document.all) {
+    //alert("one");
     text = document.selection.createRange().text;
-    if(text != "" && document.ksearch.term.value=="") {
-      document.ksearch.term.value += text;
+    if(text != "" && document.ksearch.keyword.value=="") {
+      document.ksearch.keyword.value += text;
     }
-    if(text != "" && document.ksearch.term.value!="") {
-      document.ksearch.term.value = text;
+    if(text != "" && document.ksearch.keyword.value!="") {
+      document.ksearch.keyword.value = text;
     }
-  } else {
-    text = window.getSelection();
-    document.ksearch.term.value = text;
+  } else {    
+    text = window.getSelection();        
+        
+    if (text.toString().length == 0){  //for firefox    
+       var txtarea = document.encForm.enTextarea;
+       var selLength = txtarea.textLength;
+       var selStart = txtarea.selectionStart;
+       var selEnd = txtarea.selectionEnd;
+       if (selEnd==1 || selEnd==2) selEnd=selLength;
+       text = (txtarea.value).substring(selStart, selEnd);
+    }
+    //
+    document.ksearch.keyword.value = text;
   }
   return true;
+}
+
+function tryAnother(){
+////
+    var txt = "null";
+    var foundIn = "null";
+    if (window.getSelection){
+		txt = window.getSelection();
+		foundIn = 'window.getSelection()';
+	 }else if (document.getSelection){
+		txt = document.getSelection();
+		foundIn = 'document.getSelection()';
+	 }else if (document.selection){
+		txt = document.selection.createRange().text;
+		foundIn = 'document.selection.createRange()';
+	 }
+	 alert (txt+"\n"+foundIn);
+    ////
 }
 function popupPageK(page) {
     windowprops = "height=700,width=960,location=no,"
@@ -546,6 +578,16 @@ function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
   popup.focus();
 }
 
+
+function grabEnter(event){
+  if(window.event && window.event.keyCode == 13){
+      popupSearchPage(600,800,document.forms['ksearch'].channel.options[document.forms['ksearch'].channel.selectedIndex].value+urlencode(document.forms['ksearch'].keyword.value));
+      return false;
+  }else if (event && event.which == 13){
+      popupSearchPage(600,800,document.forms['ksearch'].channel.options[document.forms['ksearch'].channel.selectedIndex].value+urlencode(document.forms['ksearch'].keyword.value));
+      return false;    
+  }
+}
 </script>
 
 <style type="text/css">
@@ -783,7 +825,7 @@ border-right: 2px solid #cfcfcf;
                         <select name="selectCurrentForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View <%=patientName%>\'s lab results'; return true;">
                             <option value="null" selected>-lab results-</option>
                             <% for(int j=0; j<labResults.segmentID.size(); j++) { %>                                
-                                <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=bean.curProviderNo%>&segmentID=<%=(String)labResults.segmentID.get(j)%>&status=<%=(String)labResults.reportStatus.get(j)%>"><%=((String)labResults.dateTime.get(j)).substring(0,10)%> <%=(String)labResults.discipline.get(j)%></option>
+                                <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=(String)labResults.segmentID.get(j)%>&status=<%=(String)labResults.reportStatus.get(j)%>"><%=((String)labResults.dateTime.get(j)).substring(0,10)%> <%=(String)labResults.discipline.get(j)%></option>
                             <% } %>
                         </select>
                  </td>
@@ -801,7 +843,7 @@ border-right: 2px solid #cfcfcf;
                         <td><bean:message key="oscarEncounter.Index.searchFor"/></td>
                     </tr>
                     <tr>
-                        <td><input type="text" name="keyword" class="ControlSelect" value=""/></td>                        
+                        <td><input type="text" name="keyword" class="ControlSelect" value=""  onkeypress="return grabEnter(event)"/></td>                        
                     </tr>
                     <tr>
                         <td><bean:message key="oscarEncounter.Index.using"/></td>
@@ -960,7 +1002,8 @@ border-right: 2px solid #cfcfcf;
                                         <table>
                                             <%for (int i = 0; i < arr.length; i++){
                                                 String rxD = arr[i].getRxDate().toString();
-                                                String rxP = arr[i].getRxDisplay();
+                                                //String rxP = arr[i].getRxDisplay();
+                                                String rxP = arr[i].getFullOutLine().replaceAll(";"," ");
                                                 rxP = rxP + "   " + arr[i].getEndDate();
                                                 String styleColor = "";
                                                 if(arr[i].isCurrent() == true){  styleColor="style='color:red;'";  }
@@ -1077,7 +1120,7 @@ border-right: 2px solid #cfcfcf;
                                 <td style="text-align:right" nowrap>
 				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterPrint.jsp');"/>
 				    <input type="hidden"  name="btnPressed" value="">
-
+ 
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
