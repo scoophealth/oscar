@@ -42,9 +42,9 @@ public class MspErrorCodes extends Properties{
       super();
       try {
             load(new FileInputStream(oscar.OscarProperties.getInstance().getProperty("msp_error_codes"))); 
-      } catch (Exception e) {
+      } catch (Exception e) {            
 		e.printStackTrace();
-                System.out.println("Error loading MSP Error codes file");
+                System.out.println("Error loading MSP Error codes file :"+oscar.OscarProperties.getInstance().getProperty("msp_error_codes"));
       }      
    }
    
