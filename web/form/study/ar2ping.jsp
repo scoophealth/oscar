@@ -61,12 +61,28 @@ ResultSetMetaData md = rsdemo.getMetaData();
 if (rsdemo.next()) { 
 	for(int i = 1; i <= md.getColumnCount(); i++)  {
         String name = md.getColumnName(i);
+        
+        // for "_a", to change to "A"
+        String jaxbName = "" ;
+        if (name.indexOf("_")>0) {
+        	//int j = name.indexOf("_");
+        	String[] aName = name.split("_");
+        	for(int k=0; k<aName.length; k++) {
+        		if (k==0) jaxbName += aName[k];
+        		else jaxbName += aName[k].substring(0, 1).toUpperCase()
+                        + aName[k].substring(1);
+        	}
+        } else {
+        	jaxbName = name ;
+        }
+        
         String type = md.getColumnTypeName(i);
 		//System.out.println(demoNo + " l :" + name);
 		if (type.equals("TINY") || name.equals("ID")) {
-			prop.setProperty(name, "" + rsdemo.getInt(name) );
+			prop.setProperty(jaxbName, "" + rsdemo.getInt(name) );
 		} else {
-			prop.setProperty(name, (rsdemo.getString(name)==null?"":rsdemo.getString(name) ) );
+			prop.setProperty(jaxbName, (rsdemo.getString(name)==null?"":rsdemo.getString(name) ) );
+			//if (name.equals("pg1DateOfBirth")) System.out.println(" l :" + rsdemo.getString("pg1_dateOfBirth"));
 		}
 	}
 }
@@ -76,7 +92,8 @@ studyBean.closePstmtConn();
 // send to ping
 oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();
 ARRecord ARRecord = _respFactory.createARRecord();
-ARRecord.setSubject("Antenatal Record");
+//ARRecord.setSubject("Antenatal Record");
+prop.setProperty("subject", "Antenatal Record" );
 
 
 if(connected){
@@ -96,10 +113,12 @@ if(connected){
                 //System.out.println("fieldNameU: " + fieldNameU);
                 String fieldNameL = fieldNameU.substring(0, 1).toLowerCase()
                         + fieldNameU.substring(1);
+                //System.out.println("fieldNameL: " + fieldNameL);
                 String fieldValue = prop.getProperty(fieldNameL) == null ? prop
                         .getProperty(fieldNameU, "") : prop
                         .getProperty(fieldNameL);
-                System.out.println("Name: " + methodString + " | " + fieldValue);
+                //if (fieldValue.length() >= 1) System.out.println("Name: " + methodString + " | " + fieldValue);
+                //if (fieldNameL.equalsIgnoreCase("pg1_dateOfBirth") ) System.out.println("N  ame: " + methodString + " | " + fieldValue);
                 //String returnString =
                 // theMethods[i].getReturnType().getName();
                 //System.out.println(" Return Type: " + returnString);
