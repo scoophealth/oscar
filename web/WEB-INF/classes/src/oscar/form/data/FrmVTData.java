@@ -171,15 +171,15 @@ public class FrmVTData {
     String dat_EyeExam$signed_who;
     String dat_EyeExam$signed_how;
 
-    String dbl_HbA1c;
-    String dbl_HbA1c$signed_when;
-    String dbl_HbA1c$signed_who;
-    String dbl_HbA1c$signed_how;
+    String dbl_HbA1C;
+    String dbl_HbA1C$signed_when;
+    String dbl_HbA1C$signed_who;
+    String dbl_HbA1C$signed_how;
 
-    String dat_HbA1c;
-    String dat_HbA1c$signed_when;
-    String dat_HbA1c$signed_who;
-    String dat_HbA1c$signed_how;
+    String dat_HbA1C;
+    String dat_HbA1C$signed_when;
+    String dat_HbA1C$signed_who;
+    String dat_HbA1C$signed_how;
 
     String dbl_Glucose_mM;
     String dbl_Glucose_mM$signed_when;
@@ -1288,29 +1288,29 @@ public class FrmVTData {
     public void setDat_Glucose$signed_who(String dat_Glucose$signed_who) {
         this.dat_Glucose$signed_who = dat_Glucose$signed_who;
     }
-    public String getDat_HbA1c() {
-        return dat_HbA1c;
+    public String getDat_HbA1C() {
+        return dat_HbA1C;
     }
-    public void setDat_HbA1c(String dat_HbA1c) {
-        this.dat_HbA1c = dat_HbA1c;
+    public void setDat_HbA1C(String dat_HbA1C) {
+        this.dat_HbA1C = dat_HbA1C;
     }
-    public String getDat_HbA1c$signed_how() {
-        return dat_HbA1c$signed_how;
+    public String getDat_HbA1C$signed_how() {
+        return dat_HbA1C$signed_how;
     }
-    public void setDat_HbA1c$signed_how(String dat_HbA1c$signed_how) {
-        this.dat_HbA1c$signed_how = dat_HbA1c$signed_how;
+    public void setDat_HbA1C$signed_how(String dat_HbA1C$signed_how) {
+        this.dat_HbA1C$signed_how = dat_HbA1C$signed_how;
     }
-    public String getDat_HbA1c$signed_when() {
-        return dat_HbA1c$signed_when;
+    public String getdat_HbA1C$signed_when() {
+        return dat_HbA1C$signed_when;
     }
-    public void setDat_HbA1c$signed_when(String dat_HbA1c$signed_when) {
-        this.dat_HbA1c$signed_when = dat_HbA1c$signed_when;
+    public void setdat_HbA1C$signed_when(String dat_HbA1C$signed_when) {
+        this.dat_HbA1C$signed_when = dat_HbA1C$signed_when;
     }
-    public String getDat_HbA1c$signed_who() {
-        return dat_HbA1c$signed_who;
+    public String getdat_HbA1C$signed_who() {
+        return dat_HbA1C$signed_who;
     }
-    public void setDat_HbA1c$signed_who(String dat_HbA1c$signed_who) {
-        this.dat_HbA1c$signed_who = dat_HbA1c$signed_who;
+    public void setdat_HbA1C$signed_who(String dat_HbA1C$signed_who) {
+        this.dat_HbA1C$signed_who = dat_HbA1C$signed_who;
     }
     public String getDat_HDL() {
         return dat_HDL;
@@ -1480,29 +1480,29 @@ public class FrmVTData {
     public void setDbl_Glucose_mM$signed_who(String dbl_Glucose_mM$signed_who) {
         this.dbl_Glucose_mM$signed_who = dbl_Glucose_mM$signed_who;
     }
-    public String getDbl_HbA1c() {
-        return dbl_HbA1c;
+    public String getDbl_HbA1C() {
+        return dbl_HbA1C;
     }
-    public void setDbl_HbA1c(String dbl_HbA1c) {
-        this.dbl_HbA1c = dbl_HbA1c;
+    public void setDbl_HbA1C(String dbl_HbA1C) {
+        this.dbl_HbA1C = dbl_HbA1C;
     }
-    public String getDbl_HbA1c$signed_how() {
-        return dbl_HbA1c$signed_how;
+    public String getDbl_HbA1C$signed_how() {
+        return dbl_HbA1C$signed_how;
     }
-    public void setDbl_HbA1c$signed_how(String dbl_HbA1c$signed_how) {
-        this.dbl_HbA1c$signed_how = dbl_HbA1c$signed_how;
+    public void setDbl_HbA1C$signed_how(String dbl_HbA1C$signed_how) {
+        this.dbl_HbA1C$signed_how = dbl_HbA1C$signed_how;
     }
-    public String getDbl_HbA1c$signed_when() {
-        return dbl_HbA1c$signed_when;
+    public String getDbl_HbA1C$signed_when() {
+        return dbl_HbA1C$signed_when;
     }
-    public void setDbl_HbA1c$signed_when(String dbl_HbA1c$signed_when) {
-        this.dbl_HbA1c$signed_when = dbl_HbA1c$signed_when;
+    public void setDbl_HbA1C$signed_when(String dbl_HbA1C$signed_when) {
+        this.dbl_HbA1C$signed_when = dbl_HbA1C$signed_when;
     }
-    public String getDbl_HbA1c$signed_who() {
-        return dbl_HbA1c$signed_who;
+    public String getDbl_HbA1C$signed_who() {
+        return dbl_HbA1C$signed_who;
     }
-    public void setDbl_HbA1c$signed_who(String dbl_HbA1c$signed_who) {
-        this.dbl_HbA1c$signed_who = dbl_HbA1c$signed_who;
+    public void setDbl_HbA1C$signed_who(String dbl_HbA1C$signed_who) {
+        this.dbl_HbA1C$signed_who = dbl_HbA1C$signed_who;
     }
     public String getDbl_HDL_mM() {
         return dbl_HDL_mM;
