@@ -23,6 +23,8 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
+
+import java.util.*;
 import oscar.oscarDB.DBHandler;
 
 public class MsgDisplayMessagesBean {
@@ -235,8 +237,37 @@ public class MsgDisplayMessagesBean {
 
   }//getMessageIDs
 ////////////////////////////////////////////////////////////////////////////////
-//INBOX
+  public String getOrderBy(String order){          
+     String orderBy = null;
+     if(order == null){
+        orderBy = "message";
+     }else{
+        String desc = "";
+        if (order.charAt(0) == '!'){
+           desc = " desc ";
+           order = order.substring(1);
+        }
+        Hashtable orderTable = new Hashtable();
+        orderTable.put("status", "status");    
+        orderTable.put("from","sentby");
+        orderTable.put("subject","thesubject");
+        orderTable.put("date","thedate");
+                                
+        orderBy = (String) orderTable.get(order);  
+        if (orderBy == null){
+           orderBy = "message";
+        }
+        orderBy += desc;
+     }     
+     return orderBy; 
+  }
+  
+  
   public java.util.Vector estInbox(){
+     return estInbox(null);
+  }
+//INBOX
+  public java.util.Vector estInbox(String orderby){
 
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
@@ -248,7 +279,8 @@ public class MsgDisplayMessagesBean {
 
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and ml.message = m.messageid order by message");
+        +" and ml.message = m.messageid order by "+getOrderBy(orderby));
+                
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
@@ -283,7 +315,11 @@ public class MsgDisplayMessagesBean {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-public java.util.Vector estDeletedInbox(){
+  public java.util.Vector estDeletedInbox(){
+     return estDeletedInbox(null); 
+  }
+  
+  public java.util.Vector estDeletedInbox(String orderby){
 
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
@@ -295,7 +331,8 @@ public java.util.Vector estDeletedInbox(){
 
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and ml.message = m.messageid order by message");
+        +" and ml.message = m.messageid order by "+getOrderBy(orderby));
+                
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
@@ -401,6 +438,9 @@ public java.util.Vector estDeletedInbox(){
 ////////////////////////////////////////////////////////////////////////////////
 //INBOX
   public java.util.Vector estSentItemsInbox(){
+     return estSentItemsInbox(null);
+  }
+  public java.util.Vector estSentItemsInbox(String orderby){
 
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
@@ -410,7 +450,7 @@ public java.util.Vector estDeletedInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select messageid, thedate,  thesubject, sentby, attachment from messagetbl where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'");
+        String sql = new String("select messageid as status,messageid as message, thedate,  thesubject, sentby, attachment from messagetbl where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"' order by "+getOrderBy(orderby));
 
 
         rs = db.GetSQL(sql);
@@ -419,7 +459,7 @@ public java.util.Vector estDeletedInbox(){
 
            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
            dm.status     = "sent";
-           dm.messageId  = rs.getString("messageid");
+           dm.messageId  = rs.getString("status");
            dm.thesubject = rs.getString("thesubject");
            dm.thedate    = rs.getString("thedate");
            dm.sentby     = rs.getString("sentby");
