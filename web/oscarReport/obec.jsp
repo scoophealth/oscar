@@ -131,6 +131,7 @@ function refresh() {
 </table>
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
+<html:errors/>
   <form name="serviceform" method="get" action="obec.do">
     <tr> 
       <td width="50%" align="left"> <font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
@@ -159,9 +160,12 @@ function refresh() {
   </form>
 </table>
 <pre>
-<% if (obectxt.compareTo("0")!=0){ %>
+<% if (obectxt.compareTo("0")!=0 && obectxt.compareTo("")!=0 ){ %>
 
 <a href="../servlet/OscarDownload?homepath=obecdownload&filename=<%=obectxt%>" target="_blank">File Created <%=obectxt%></a>
+<%}
+    else{%>
+        <font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif">File not created!</font>
 <%}%>
 </pre>
 <%@ include file="../demographic/zfooterbackclose.jsp" %> 
