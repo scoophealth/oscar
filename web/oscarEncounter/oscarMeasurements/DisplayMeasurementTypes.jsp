@@ -37,27 +37,6 @@
 <title>
 <bean:message key="oscarEncounter.Measurements.msgDisplayMeasurementTypes"/>
 </title>
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-   th.VCRheads {
-    background-color: #ddddff;
-    color : black;
-    }
-</style>
 
 <script type="text/javascript">
     function set(target) {
@@ -79,10 +58,7 @@
             <td class="MainTableTopRowRightColumn" width="400">
                 <table class="TopStatusBar" >                 
                     <tr>
-                        <td ><bean:message key="oscarEncounter.Measurements.msgDisplayMeasurementTypes"/></td>                        
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
+                        <td ><bean:message key="oscarEncounter.Measurements.msgDisplayMeasurementTypes"/></td>                                                
                     </tr>                  
                 </table>
             </td>
@@ -105,27 +81,27 @@
                             <tr>
                                 <td>               
                                     <tr>
-                                        <th align="left" class="VCRheads" width="5">
+                                        <th align="left" class="Header" width="5">
                                             <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
                                         </th>
-                                        <th align="left" class="VCRheads" width="20">
+                                        <th align="left" class="Header" width="20">
                                             <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingDisplayName"/>
                                         </th>
-                                        <th align="left" class="VCRheads" width="10">
+                                        <th align="left" class="Header" width="10">
                                             <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingTypeDesc"/>
                                         </th>
-                                        <th align="left" class="VCRheads" width="300">
+                                        <th align="left" class="Header" width="300">
                                             <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
                                         </th>
-                                        <th align="left" class="VCRheads" width="300">
+                                        <th align="left" class="Header" width="300">
                                             <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValidation"/>
                                         </th>
-                                        <th align="left" class="VCRheads" width="10">
+                                        <th align="left" class="Header" width="10">
                                             <bean:message key="oscarEncounter.oscarMeasurements.MeasurementAction.headingDelete"/>
                                         </th>
                                      </tr>
                                     <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
-                                    <tr>
+                                    <tr class="data">
                                         <td width="5"><bean:write name="measurementType" property="type" /></td>
                                         <td width="20"><bean:write name="measurementType" property="typeDisplayName" /></td>                            
                                         <td width="10"><bean:write name="measurementType" property="typeDesc" /></td>
