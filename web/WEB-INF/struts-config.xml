@@ -199,20 +199,24 @@
     </form-bean>
     <form-bean      name="EctSelectMeasurementGroupForm"
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSelectMeasurementGroupForm"/> 
+    <form-bean      name="EctSetupAddMeasurementGroupForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasurementGroupForm"/>                     
     <form-bean      name="EctSetupEditMeasurementGroupForm"
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupEditMeasurementGroupForm"/> 
     <form-bean      name="EctEditMeasurementGroupForm"
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctEditMeasurementGroupForm"/> 
     <form-bean      name="EctDefineNewMeasurementGroupForm"
-                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDefineNewMeasurementGroupForm">
-                    <form-property
-                        name="groupName"
-                        type="java.lang.String"/>                                                 
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDefineNewMeasurementGroupForm">                     
     </form-bean> 
-    <form-bean      name="EctSetupAddMeasurementGroupForm"
-                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasurementGroupForm"/> 
+    <form-bean      name="EctEditMeasurementStyleForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctEditMeasurementStyleForm"/> 
     <form-bean      name="EctAddMeasurementGroupForm"
-                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementGroupForm"/>                     
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementGroupForm"/> 
+    <form-bean      name="EctDeleteMeasurementStyleSheetForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementStyleSheetForm"/>      
+    <form-bean      name="EctAddMeasurementStyleSheetForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementStyleSheetForm"/>                          
+                                    
 <!-- OscarComm start -->
     <form-bean      name="EctViewAttachmentForm"
                     type="oscar.oscarEncounter.pageUtil.EctViewAttachmentForm"/>
@@ -1030,18 +1034,25 @@
        <forward name="success" path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp"/>
        <forward name="failure" path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp"/>
     </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupStyleSheetList"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupStyleSheetListAction"                
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/DefineNewMeasurementGroup.jsp"/>
+    </action> 
     <action     path="/oscarEncounter/oscarMeasurements/SetupGroupList"
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupGroupListAction"                
                 scope="request">                
        <forward name="continue" path="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup.jsp"/>
-    </action>  
+    </action>
     <action     path="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup"
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSelectMeasurementGroupAction"
                 name="EctSelectMeasurementGroupForm"
                 scope="request"
                 input="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup.jsp">                
-       <forward name="continue" path="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp"/>
-    </action>
+       <forward name="type" path="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp"/>
+       <forward name="style" path="/oscarEncounter/oscarMeasurements/EditMeasurementGroupStyle.jsp"/>       
+       <forward name="delete" path="/oscarEncounter/oscarMeasurements/SetupGroupList.do"/>              
+    </action>  
     <action     path="/oscarEncounter/oscarMeasurements/SetupEditMeasurementGroup"
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupEditMeasurementGroupAction"
                 name="EctSetupEditMeasurementGroupForm"
@@ -1069,6 +1080,13 @@
                 scope="request"
                 input="/oscarEncounter/oscarMeasurements/ProcessAddMeasurementGroupAction.jsp">                
        <forward name="continue" path="/oscarEncounter/oscarMeasurements/AddMeasurementGroup.jsp"/>
+    </action>    
+    <action     path="/oscarEncounter/oscarMeasurements/EditMeasurementStyle"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctEditMeasurementStyleAction"
+                name="EctEditMeasurementStyleForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/EditMeasurementGroupStyle.jsp">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/SetupGroupList.do"/>
     </action> 
     <action     path="/oscarEncounter/oscarMeasurements/AddMeasurementGroup"
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementGroupAction"
@@ -1077,6 +1095,26 @@
                 input="/oscarEncounter/oscarMeasurements/AddMeasurementGroup.jsp">                
        <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp"/>
     </action>
+    <action     path="/oscarEncounter/oscarMeasurements/DeleteMeasurementStyleSheet"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementStyleSheetAction" 
+                name="EctDeleteMeasurementStyleSheetForm"
+                input="/oscarEncounter/oscarMeasurements/DisplayMeasurementStyleSheet.jsp"
+                scope="request">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/SetupDisplayMeasurementStyleSheet.do"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupDisplayMeasurementStyleSheet"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupDisplayMeasurementStyleSheetAction"                
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/DisplayMeasurementStyleSheet.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/AddMeasurementStyleSheet"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementStyleSheetAction" 
+                name="EctAddMeasurementStyleSheetForm"
+                input="/oscarEncounter/oscarMeasurements/AddMeasurementStyleSheet.jsp"
+                scope="request">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/AddMeasurementStyleSheet.jsp"/>
+    </action>
+    
 <!-- end measurements actions-->    
 
 
