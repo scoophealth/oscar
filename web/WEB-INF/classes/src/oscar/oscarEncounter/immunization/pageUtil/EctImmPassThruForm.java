@@ -25,18 +25,22 @@
 package oscar.oscarEncounter.immunization.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.*;
 
-public final class EctImmPassThruForm extends ActionForm
-{
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
 
-    public void reset(ActionMapping actionmapping, HttpServletRequest httpservletrequest)
-    {
-    }
+public final class EctImmPassThruForm extends ActionForm {
 
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
-    {
-        ActionErrors errors = new ActionErrors();
-        return errors;
-    }
+	public void reset(
+		ActionMapping actionmapping,
+		HttpServletRequest httpservletrequest) {
+	}
+
+	public ActionErrors validate(
+		ActionMapping mapping,
+		HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		return errors;
+	}
 }

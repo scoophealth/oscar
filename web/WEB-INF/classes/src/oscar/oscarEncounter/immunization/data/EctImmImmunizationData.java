@@ -31,7 +31,6 @@ import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import oscar.oscarDB.DBHandler;
-import oscar.OscarProperties;
 
 public class EctImmImmunizationData
 {
@@ -55,18 +54,9 @@ public class EctImmImmunizationData
     {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         System.out.println(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
-        String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURRENT_DATE, 0)")));
+        String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURDATE(), 0)")));
         db.RunSQL(sql);
-        /* Use different commands for each base */
-        String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-        String dbSpecificCommand;
-        if (db_type.equalsIgnoreCase("mysql")) {
-           dbSpecificCommand = " LAST_INSERT_ID()";
-        } else if (db_type.equalsIgnoreCase("postgresql")) {
-           dbSpecificCommand = " CURRVAL('immunizations_numeric_seq')";
-	} else
-           throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-        sql = String.valueOf(String.valueOf((new StringBuffer("UPDATE immunizations SET archived = 1 WHERE demographic_no = ")).append(demographicNo).append(" AND ID <> ").append(dbSpecificCommand)));
+        sql = String.valueOf(String.valueOf((new StringBuffer("UPDATE immunizations SET archived = 1 WHERE demographic_no = ")).append(demographicNo).append(" AND ID <> LAST_INSERT_ID()")));
         db.RunSQL(sql);
         db.CloseConn();
     }

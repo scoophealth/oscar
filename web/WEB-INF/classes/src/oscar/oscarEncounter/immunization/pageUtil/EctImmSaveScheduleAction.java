@@ -27,7 +27,7 @@ package oscar.oscarEncounter.immunization.pageUtil;
 import java.io.IOException;
 import java.util.Locale;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
+//import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
@@ -43,8 +43,11 @@ public final class EctImmSaveScheduleAction extends Action
     public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+    	if(request.getParameter("hdnAction").equalsIgnoreCase("Configure"))
+    		return mapping.findForward("configure");
+    	
         Locale locale = getLocale(request);
-        MessageResources messages = getResources();
+        MessageResources messages = getResources(request);
         ActionErrors errors = new ActionErrors();
         EctSessionBean bean = null;
         bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
@@ -99,9 +102,7 @@ public final class EctImmSaveScheduleAction extends Action
         {
             throw new ServletException("Exception occurred in SaveScheduleAction", ex);
         }
-        if(request.getParameter("hdnAction").equalsIgnoreCase("Configure"))
-            return mapping.findForward("configure");
-        else
-            return mapping.findForward("reload");
+        
+        return mapping.findForward("reload");
     }
 }

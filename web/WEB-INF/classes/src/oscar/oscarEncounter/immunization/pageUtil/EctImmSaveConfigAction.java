@@ -25,64 +25,87 @@
 package oscar.oscarEncounter.immunization.pageUtil;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Locale;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.*;
-import org.apache.struts.action.*;
-import org.apache.struts.util.MessageResources;
-import org.w3c.dom.*;
-import oscar.oscarEncounter.immunization.data.EctImmImmunizationData;
-import oscar.util.UtilMisc;
-import oscar.util.UtilXML;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
-public final class EctImmSaveConfigAction extends Action
-{
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.util.MessageResources;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+
+import oscar.oscarEncounter.immunization.config.data.EctImmImmunizationSetData;
+import oscar.oscarEncounter.immunization.data.EctImmImmunizationData;
+import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.util.UtilXML;
+
+public final class EctImmSaveConfigAction extends Action {
 
 	public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        System.out.println("Save Config Action Jackson");
+        //System.out.println("Save Config Action Jackson");
         Locale locale = getLocale(request);
-        MessageResources messages = getResources();
+        MessageResources messages = getResources(request);
         ActionErrors errors = new ActionErrors();
         EctSessionBean bean = null;
         bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         try
         {
-            String sCfgDoc = UtilMisc.decode64(request.getParameter("xmlDoc"));
-            Document cfgDoc = UtilXML.parseXML(sCfgDoc);
+            //String sCfgDoc = UtilMisc.decode64(request.getParameter("xmlDoc"));
+            //Document cfgDoc = UtilXML.parseXML(sCfgDoc);
+            //NodeList cfgSets = cfgDoc.getElementsByTagName("immunizationSet");
+            
             EctImmImmunizationData imm = new EctImmImmunizationData();
             String sDoc = imm.getImmunizations(bean.demographicNo);
             Document doc;
             Element root;
-            try
-            {
+            try {
                 doc = UtilXML.parseXML(sDoc);
                 root = doc.getDocumentElement();
-            }
-            catch(Exception ex)
-            {
+            } catch(Exception ex) {
                 doc = UtilXML.newDocument();
                 root = UtilXML.addNode(doc, "immunizations");
             }
-            NodeList cfgSets = cfgDoc.getElementsByTagName("immunizationSet");
-            for(int i = 0; i < cfgSets.getLength(); i++)
+            //add new src
+            String[] setId = request.getParameterValues("chkSet");
+            if (setId == null) return mapping.findForward("success");
+            
+            for (int i=0; i<setId.length; i++) {
+            	String sCfgDoc = (new EctImmImmunizationSetData()).getSetXMLDoc(setId[i]);
+				Document cfgDoc = UtilXML.parseXML(sCfgDoc);
+				NodeList cfgSets = cfgDoc.getElementsByTagName("immunizationSet");
+				
+				Element cfgSet = (Element)cfgSets.item(i);
+				Node nod = doc.importNode(cfgSet, true);
+				root.appendChild(nod);
+				
+            }
+
+/*            
+            for(int i = 0; i < cfgSets.getLength(); i++) {
                 if(request.getParameter("chkSet".concat(String.valueOf(String.valueOf(i)))) != null && request.getParameter("chkSet".concat(String.valueOf(String.valueOf(i)))).equalsIgnoreCase("on"))
                 {
                     Element cfgSet = (Element)cfgSets.item(i);
                     Node nod = doc.importNode(cfgSet, true);
                     root.appendChild(nod);
                 }
-
-            String sXML = UtilXML.toXML(doc);
-            imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
+            }
+*/
+            if (doc != null) {
+            	String sXML = UtilXML.toXML(doc);
+            	imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
+            }
             //System.out.println("after save imm");
-        }
-        catch(Exception ex)
-        {
+        } catch(Exception ex)  {
             throw new ServletException("Exception occurred in SaveConfigAction", ex);
         }
         return mapping.findForward("success");
