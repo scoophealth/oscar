@@ -2,6 +2,10 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
  <%   
   if(session.getValue("user") == null)
     response.sendRedirect("../../logout.jsp");
@@ -58,7 +62,7 @@ function popPage(url) {
 </script>
 <link rel="stylesheet" href="dms.css" />
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="self.focus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr bgcolor="#486ebd">
      <th align='LEFT'>
@@ -151,7 +155,7 @@ function popPage(url) {
 </table>
 <br>
 <form>
-  <input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onclick=closeit();>
+  <input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onclick="closeit();">
 </form>
 </body>
 </html:html>
