@@ -102,7 +102,7 @@
                         <logic:present name="data" property="canPlot">
                         <tr class="data">
                             <td width="5"><img src="img/chart.gif" title="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.plot"/>" onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>')"/></td>
-                            <td width="5"><bean:write name="data" property="type" /></td>
+                            <td width="5"><bean:write name="data" property="typeDisplayName" /></td>
                             <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                                                        
                             <td width="200"><bean:write name="data" property="measuringInstrc" /></td>
                             <td width="10"><bean:write name="data" property="dataField" /></td>
@@ -115,7 +115,7 @@
                         <logic:notPresent name="data" property="canPlot">
                         <tr class="data">
                             <td width="5"></td>
-                            <td width="5"><bean:write name="data" property="type" /></td>
+                            <td width="5"><bean:write name="data" property="typeDisplayName" /></td>
                             <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                                                        
                             <td width="200"><bean:write name="data" property="measuringInstrc" /></td>
                             <td width="10"><bean:write name="data" property="dataField" /></td>
