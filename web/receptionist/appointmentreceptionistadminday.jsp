@@ -132,10 +132,10 @@ function changeGroup(s) {
 	}
 }
 function ts1(s) {
-  popupPage(360,680,('../appointment/addappointment.jsp?'+s));
+  popupPage(400,680,('../appointment/addappointment.jsp?'+s));
 }
 function tsr(s) {
-  popupPage(360,680,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s)); 
+  popupPage(400,680,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s)); 
 }
 function goFilpView(s) {
 	self.location.href = "../schedule/scheduleflipview.jsp?originalpage=../receptionist/receptionistcontrol.jsp&startDate=<%=year+"-"+month+"-"+day%>" + "&provider_no="+s ;
