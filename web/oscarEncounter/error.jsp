@@ -33,9 +33,10 @@
 <title><bean:message key="oscarEncounter.error.title"/></title>
 </head>
 <body style="width:600px">
-<h1><bean:message key="oscarEncounter.error.msgExpired"/></h1>
+<h2><bean:message key="oscarEncounter.error.msgExpired"/></h2>
 <p>
     <bean:message key="oscarEncounter.error.msgSessionFailed"/>
-<a href="javascript:window.close();"><bean:message key="global.btnClose"/></a>
+<p>
+    <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();">
 </body>
 </html:html>
