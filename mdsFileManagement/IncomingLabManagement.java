@@ -98,7 +98,7 @@ public class IncomingLabManagement {
         
         IncomingMDSFiles inMDS = new IncomingMDSFiles();
                 
-        if (!inMDS.checkForBusyFile(busyFile) ){                                                //CHeck for "BUSY.TXT"
+        if (!inMDS.checkForBusyFile(incomingHL7dir+"/"+busyFile) ){                                                //CHeck for "BUSY.TXT"
             
             logger.info("Busy File Not Found");
             
