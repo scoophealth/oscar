@@ -57,4 +57,9 @@ public class DBPreparedHandlerAdvanced extends DBPreparedHandler {
         throws SQLException {
         return preparedSQL.executeUpdate();
     }
+    
+	synchronized public ResultSet executeQuery(PreparedStatement preparedSQL)
+		throws SQLException {
+		return preparedSQL.executeQuery();
+	}    
 }
