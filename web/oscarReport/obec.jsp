@@ -24,7 +24,7 @@
  */
 -->
 <%@ page language="java" %>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.util.DateUtils, java.net.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -36,22 +36,23 @@
   user_no = (String) session.getAttribute("user");
 
 %><%
-GregorianCalendar now=new GregorianCalendar();
+  GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
-  String todayDate = String.valueOf(curYear)+"/" + String.valueOf(curMonth)+"/" + String.valueOf(curDay);
+  DateUtils dateUtils = new DateUtils();
+  String tomorrowDate = dateUtils.NextDay(curDay, curMonth, curYear);
   String clinic="";
   Properties proppies = (Properties)  request.getSession().getAttribute("oscarVariables");
   String homepath = proppies.getProperty("DOCUMENT_DIR");
- session.setAttribute("obecdownload", homepath);
+  session.setAttribute("obecdownload", homepath);
   
   
   %><% 
-  	int flag = 0, rowCount=0;
-  	   String obectxt=(String) request.getAttribute("obectxt") == null?"":(String)request.getAttribute("obectxt");
-  String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
-   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?todayDate:request.getParameter("xml_appointment_date");
+    int flag = 0, rowCount=0;
+    String obectxt=(String) request.getAttribute("obectxt") == null?"":(String)request.getAttribute("obectxt");
+    String xml_vdate=request.getParameter("xml_vdate") == null?tomorrowDate:request.getParameter("xml_vdate");
+    String numDays = request.getParameter("numDays")==null?"4":request.getParameter("numDays");
 %>
 <html>
 <head>
@@ -149,7 +150,7 @@ function refresh() {
    </div>
       </td>
       <td colspan='2' > 
-        <div align="left">    <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End Date:</a></font> <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
+        <div align="left">    <font size="1" face="Arial, Helvetica, sans-serif">Number of Days:</font> <input type="text" name="numDays" value="<%=numDays%>">
          <input type="submit" name="Submit" value="Create Report">
 
               </div>
