@@ -850,7 +850,12 @@
             <forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/DeleteServices.jsp"/>
    </action>
 
-
+   <action   path="/oscarEncounter/InsertTemplate"
+              type="oscar.oscarEncounter.pageUtil.EctInsertTemplateAction"
+              name=""
+              scope="request">
+              <forward name="success" path="/oscarEncounter/InsertTemplate.jsp"/>
+    </action>
 
     <action   path="/oscarEncounter/SearchDemographic"
               type="oscar.oscarEncounter.search.pageUtil.EctDemographicSearchAction"
