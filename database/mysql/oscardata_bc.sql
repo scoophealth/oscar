@@ -14818,6 +14818,27 @@ INSERT INTO billingservice VALUES (17818,'','96502','MHR SECTION 3 ASSESSOR REPO
 INSERT INTO billingservice VALUES (17819,'','14000','DELIVERY BONUS                                    ','258.33','','2004-04-02','','BC','00');
 INSERT INTO billingservice VALUES (17820,'','13050','CHRONIC CARE BONUS                                ','75.00','','2004-04-02','','BC','00');
 
+INSERT INTO billingservice VALUES (17821,'','36010','Phase 1 (first trimester) - total care','215.17','','2005-02-16','','BC','00');									
+INSERT INTO billingservice VALUES (17822,'','36014','Phase 1 (first trimester) - when care is transferred TO another midwife prior to completion of phase 1 (40%)','86.07','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17823,'','36016','Phase 1 (first trimester) - when care has been transferred FROM another midwife during phase 1 (60%)','129.10','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17824,'','36021','Phase 1 - when first visit is in 2nd phase, with no previous care by a physician or other midwife','215.17','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17825,'','36020','Phase 2 (second trimester) - total care','215.17','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17826,'','36024','Phase 2 (second trimester) - when care is transferred TO another midwife prior to completion of phase 2 (40%)','86.07','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17827,'','36026','Phase 2 (second trimester) - when care has been transferred FROM another midwife during phase 2 (60%)','129.10','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17828,'','36030','Phase 3 (third trimester) - total care','430.41','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17829,'','36034','Phase 3 (third trimester) - when care is transferred TO another midwife prior to completion of phase 3 (40%)','172.16','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17830,'','36036','Phase 3 (third trimester) - when care has been transferred FROM another midwife during phase 3 (60%)','258.25','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17831,'','36040','Phase 4 (labour and delivery) - first contact with the client prior to 34 weeks','860.73','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17832,'','36044','Phase 4 (labour and delivery) - first contact with the client after 34 weeks','430.37','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17833,'','36050','Phase 5 (post-partum care) - total care','860.73','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17834,'','36056','Phase 5 (post-partum care) - when care is transferred TO another midwife during the first 2 weeks of postpartum care (60%)','516.44','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17835,'','36054','Phase 5 (post-partum care) - when care is transferred FROM another midwife during the first 2 weeks of postpartum care (40%)','344.29','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17836,'','36061','Supervision of up to 5 births or 4 full courses of care','2582.21','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17837,'','36062','Supervision of 5 full courses of care','5164.42','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17838,'','36063','Supervision of 6-10 full courses of care','7746.63','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17839,'','36064','Supervision of 11-15 full courses of care','10328.84','','2005-02-16','','BC','00');
+INSERT INTO billingservice VALUES (17840,'','36065','Supervision of 16-30 full courses of care','12911.05','','2005-02-16','','BC','00');
+
 
 INSERT INTO billingvisit VALUES ('R','Patient\'s residence','BC');
 INSERT INTO billingvisit VALUES ('O','Physician\'s office','BC');
