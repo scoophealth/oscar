@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.Properties;
 import oscar.oscarDB.DBHandler;
@@ -81,12 +82,25 @@ public class EctType2DiabetesRecord {
     }
 
     public int saveType2DiabetesRecord(Properties props) throws SQLException {
+
+	/* if database = postgres, make a properties with ignore case */
+	String db_type = oscar.OscarProperties.getInstance() .getProperty("db_type") .trim();
+	if (db_type.equalsIgnoreCase("postgresql")) {
+	    Properties temp = new Properties();
+	    java.util.Enumeration enum = props.propertyNames();
+	    while (enum.hasMoreElements()){
+		String parameter = ((String) enum.nextElement());
+		temp.setProperty(parameter.toLowerCase(), props.getProperty(parameter));
+	    }
+	    props = temp;
+	}
         String demographic_no = props.getProperty("demographic_no");
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no="+demographic_no+" AND ID=0";
         ResultSet rs = db.GetSQL(sql, true);
         rs.moveToInsertRow();
         ResultSetMetaData md = rs.getMetaData();
+
         for(int i = 1; i <= md.getColumnCount(); i++) {
             String name = md.getColumnName(i);
             if(name.equalsIgnoreCase("ID")) {
@@ -94,12 +108,14 @@ public class EctType2DiabetesRecord {
                 continue;
             }
             String value = props.getProperty(name, null);
-            if(md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1) {
+            if((md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1)
+	       || md.getColumnTypeName(i).trim().equalsIgnoreCase("numeric")
+	       || md.getColumnTypeName(i).equalsIgnoreCase("int2")) {
                 if(value != null) {
                     if(value.equalsIgnoreCase("on"))
                         rs.updateInt(name, 1);
                     else
-                        rs.updateInt(name, 0);
+                        rs.updateInt(name, Integer.parseInt(value));
                 } else {
                     rs.updateInt(name, 0);
                 }
@@ -124,15 +140,27 @@ public class EctType2DiabetesRecord {
                 rs.updateString(name, value);
         }
 
+	
+        int ret = 0;
+	/* another fix */
+	if (db_type.equalsIgnoreCase("postgresql")) {
+	    ResultSet rs1 = db.GetSQL("select nextval('formtype2diabetes_numeric_se')");
+	    rs1.next();
+	    ret = rs1.getInt(1);
+	    rs.updateInt("id", ret);	    
+	    rs1.close();
+	}
         rs.insertRow();
         rs.close();
-        int ret = 0;
-        sql = "SELECT LAST_INSERT_ID()";
-        rs = db.GetSQL(sql);
-        if(rs.next())
-            ret = rs.getInt(1);
-        rs.close();
-        db.CloseConn();
+
+	if (db_type.equalsIgnoreCase("mysql")) {
+	    sql = "SELECT LAST_INSERT_ID()";
+	    rs = db.GetSQL(sql);
+	    if(rs.next())
+		ret = rs.getInt(1);
+	    rs.close();
+	}
+	db.CloseConn();
         return ret;
     }
 }

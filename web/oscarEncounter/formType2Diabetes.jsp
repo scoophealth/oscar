@@ -45,6 +45,8 @@
     int provNo = Integer.parseInt(request.getParameter("provNo"));
     EctType2DiabetesRecord rec = new EctType2DiabetesRecord();
     java.util.Properties props = rec.getType2DiabetesRecord(demoNo, formId);
+
+
 %>
 
 <script type="text/javascript" language="Javascript">
@@ -238,11 +240,11 @@ function checkAllDates()
 
 
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="ID" value="<%= props.getProperty("ID", "0") %>"/>
+<input type="hidden" name="ID" value="<%= props.getProperty("id", "0") %>"/>
 <input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="formEdited" value="<%= props.getProperty("formEdited", "") %>" />
-<input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" />
+<input type="hidden" name="formCreated" value="<%= props.getProperty("formcreated", "") %>" />
+<input type="hidden" name="formEdited" value="<%= props.getProperty("formedited", "") %>" />
+<input type="hidden" name="provNo" value="<%= request.getParameter("provno") %>" />
 
 <table class="Head" class="hidePrint">
     <tr>
@@ -265,13 +267,13 @@ function checkAllDates()
     </tr>
     <tr>
         <td>
-            Name: <input type="text" class="Type2DiabetesInput" name="pName" readonly="true" size="30" value="<%= props.getProperty("pName", "") %>" />
+            Name: <input type="text" class="Type2DiabetesInput" name="pName" readonly="true" size="30" value="<%= props.getProperty("pname", "") %>" />
         </td>
         <td>
-            DOB<small>(yyyy/mm/dd)</small>: <input type="text" class="Type2DiabetesInput" readonly="true" name="birthDate" size="11" value="<%= props.getProperty("birthDate", "") %>" readonly="true" />
+            DOB<small>(yyyy/mm/dd)</small>: <input type="text" class="Type2DiabetesInput" readonly="true" name="birthDate" size="11" value="<%= props.getProperty("birthdate", "") %>" readonly="true" />
         </td>
         <td>
-            Date of Dx<small>(yyyy/mm/dd)</small>: <input type="text" class="Type2DiabetesInput" name="dateDx" size="11" value="<%=props.getProperty("dateDx", "") %>" />
+            Date of Dx<small>(yyyy/mm/dd)</small>: <input type="text" class="Type2DiabetesInput" name="dateDx" size="11" value="<%=props.getProperty("datedx", "") %>" />
         </td>
         <td>
             Height: <input type="text" class="Type2DiabetesInput" name="height" size="5" value="<%= props.getProperty("height", "") %>" />
@@ -339,25 +341,25 @@ function checkAllDates()
                 </tr>
             </table>
         </td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA1"><%= props.getProperty("glucoseA1", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA2"><%= props.getProperty("glucoseA2", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA3"><%= props.getProperty("glucoseA3", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA4"><%= props.getProperty("glucoseA4", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA5"><%= props.getProperty("glucoseA5", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA1"><%= props.getProperty("glucosea1", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA2"><%= props.getProperty("glucosea2", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA3"><%= props.getProperty("glucosea3", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA4"><%= props.getProperty("glucosea4", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseA5"><%= props.getProperty("glucosea5", "") %></textarea></td>
     </tr>
     <tr>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB1"><%= props.getProperty("glucoseB1", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB2"><%= props.getProperty("glucoseB2", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB3"><%= props.getProperty("glucoseB3", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB4"><%= props.getProperty("glucoseB4", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB5"><%= props.getProperty("glucoseB5", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB1"><%= props.getProperty("glucoseb1", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB2"><%= props.getProperty("glucoseb2", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB3"><%= props.getProperty("glucoseb3", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB4"><%= props.getProperty("glucoseb4", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseB5"><%= props.getProperty("glucoseb5", "") %></textarea></td>
     </tr>
     <tr>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC1"><%= props.getProperty("glucoseC1", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC2"><%= props.getProperty("glucoseC2", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC3"><%= props.getProperty("glucoseC3", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC4"><%= props.getProperty("glucoseC4", "") %></textarea></td>
-        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC5"><%= props.getProperty("glucoseC5", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC1"><%= props.getProperty("glucosec1", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC2"><%= props.getProperty("glucosec2", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC3"><%= props.getProperty("glucosec3", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC4"><%= props.getProperty("glucosec4", "") %></textarea></td>
+        <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="glucoseC5"><%= props.getProperty("glucosec5", "") %></textarea></td>
     </tr>
     <tr>
         <td align="left">
@@ -378,11 +380,11 @@ function checkAllDates()
             <span style="padding-left:20px;"></span>
             <small>*if +ve (female &gt;=2.8 or male &gt;=2.0) see step 3</small>
         </td>
-        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio1"><%= props.getProperty("urineRatio1", "") %></textarea></td>
-        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio2"><%= props.getProperty("urineRatio2", "") %></textarea></td>
-        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio3"><%= props.getProperty("urineRatio3", "") %></textarea></td>
-        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio4"><%= props.getProperty("urineRatio4", "") %></textarea></td>
-        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio5"><%= props.getProperty("urineRatio5", "") %></textarea></td>
+        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio1"><%= props.getProperty("urineratio1", "") %></textarea></td>
+        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio2"><%= props.getProperty("urineratio2", "") %></textarea></td>
+        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio3"><%= props.getProperty("urineratio3", "") %></textarea></td>
+        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio4"><%= props.getProperty("urineratio4", "") %></textarea></td>
+        <td><textarea style="height:37px;" class="Type2DiabetesTextarea" name="urineRatio5"><%= props.getProperty("urineratio5", "") %></textarea></td>
     </tr>
     <tr>
         <td align="left">
@@ -394,11 +396,11 @@ function checkAllDates()
             <span style="padding-left:20px;"></span>
             Nephrologist (if cr. clear <font face="Symbols">&#223</font> by 50%)
         </td>
-        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance1"><%= props.getProperty("urineClearance1", "") %></textarea></td>
-        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance2"><%= props.getProperty("urineClearance2", "") %></textarea></td>
-        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance3"><%= props.getProperty("urineClearance3", "") %></textarea></td>
-        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance4"><%= props.getProperty("urineClearance4", "") %></textarea></td>
-        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance5"><%= props.getProperty("urineClearance5", "") %></textarea></td>
+        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance1"><%= props.getProperty("urineclearance1", "") %></textarea></td>
+        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance2"><%= props.getProperty("urineclearance2", "") %></textarea></td>
+        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance3"><%= props.getProperty("urineclearance3", "") %></textarea></td>
+        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance4"><%= props.getProperty("urineclearance4", "") %></textarea></td>
+        <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance5"><%= props.getProperty("urineclearance5", "") %></textarea></td>
     </tr>
     <tr>
         <td rowspan="3">
@@ -426,25 +428,25 @@ function checkAllDates()
                 </tr>
             </table>
         </td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA1"><%= props.getProperty("lipidsA1", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA2"><%= props.getProperty("lipidsA2", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA3"><%= props.getProperty("lipidsA3", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA4"><%= props.getProperty("lipidsA4", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA5"><%= props.getProperty("lipidsA5", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA1"><%= props.getProperty("lipidsa1", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA2"><%= props.getProperty("lipidsa2", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA3"><%= props.getProperty("lipidsa3", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA4"><%= props.getProperty("lipidsa4", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsA5"><%= props.getProperty("lipidsa5", "") %></textarea></td>
     </tr>
     <tr>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB1"><%= props.getProperty("lipidsB1", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB2"><%= props.getProperty("lipidsB2", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB3"><%= props.getProperty("lipidsB3", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB4"><%= props.getProperty("lipidsB4", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB5"><%= props.getProperty("lipidsB5", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB1"><%= props.getProperty("lipidsb1", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB2"><%= props.getProperty("lipidsb2", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB3"><%= props.getProperty("lipidsb3", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB4"><%= props.getProperty("lipidsb4", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsB5"><%= props.getProperty("lipidsb5", "") %></textarea></td>
     </tr>
     <tr>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC1"><%= props.getProperty("lipidsC1", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC2"><%= props.getProperty("lipidsC2", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC3"><%= props.getProperty("lipidsC3", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC4"><%= props.getProperty("lipidsC4", "") %></textarea></td>
-        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC5"><%= props.getProperty("lipidsC5", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC1"><%= props.getProperty("lipidsc1", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC2"><%= props.getProperty("lipidsc2", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC3"><%= props.getProperty("lipidsc3", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC4"><%= props.getProperty("lipidsc4", "") %></textarea></td>
+        <td><textarea style="height:30px;" class="Type2DiabetesTextarea" name="lipidsC5"><%= props.getProperty("lipidsc5", "") %></textarea></td>
     </tr>
     <tr>
         <td align="left">
@@ -479,7 +481,7 @@ function checkAllDates()
                     <td>1. METFORMIN</td>
                     <td><input type="checkbox" name="metformin" <%= props.getProperty("metformin", "") %> /></td>
                     <td>5. ACE INHIBITOR</td>
-                    <td nowrap="true"><input type="checkbox" name="aceInhibitor" <%= props.getProperty("aceInhibitor", "") %> />*</td>
+                    <td nowrap="true"><input type="checkbox" name="aceInhibitor" <%= props.getProperty("aceinhibitor", "") %> />*</td>
                 </tr>
                 <tr>
                     <td>2. GLYBURIDE</td>
@@ -489,13 +491,13 @@ function checkAllDates()
                 </tr>
                 <tr>
                     <td>3. OTHER OHA</td>
-                    <td><input type="checkbox" name="otherOha" <%= props.getProperty("otherOha", "") %> /></td>
-                    <td colspan="2">7. <input type="text" class="Type2DiabetesInput" name="otherBox7" value="<%= props.getProperty("otherBox7", "") %>" /></td>
+                    <td><input type="checkbox" name="otherOha" <%= props.getProperty("otheroha", "") %> /></td>
+                    <td colspan="2">7. <input type="text" class="Type2DiabetesInput" name="otherBox7" value="<%= props.getProperty("otherbox7", "") %>" /></td>
                 </tr>
                 <tr>
                     <td>4. INSULIN</td>
                     <td><input type="checkbox" name="insulin" <%= props.getProperty("insulin", "") %> /></td>
-                    <td colspan="2">8. <input type="text" class="Type2DiabetesInput" name="otherBox8" value="<%= props.getProperty("otherBox8", "") %>" /></td>
+                    <td colspan="2">8. <input type="text" class="Type2DiabetesInput" name="otherBox8" value="<%= props.getProperty("otherbox8", "") %>" /></td>
                 </tr>
             </table>
         </td>
@@ -537,11 +539,11 @@ function checkAllDates()
         <td style="padding-left:60px;"  align="left">
             Sexual Function
         </td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction1" value="<%= props.getProperty("sexualFunction1", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction2" value="<%= props.getProperty("sexualFunction2", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction3" value="<%= props.getProperty("sexualFunction3", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction4" value="<%= props.getProperty("sexualFunction4", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction5" value="<%= props.getProperty("sexualFunction5", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction1" value="<%= props.getProperty("sexualfunction1", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction2" value="<%= props.getProperty("sexualfunction2", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction3" value="<%= props.getProperty("sexualfunction3", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction4" value="<%= props.getProperty("sexualfunction4", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="sexualFunction5" value="<%= props.getProperty("sexualfunction5", "") %>" /></td>
     </tr>
     <tr>
         <td style="padding-left:60px;"  align="left">
@@ -555,11 +557,11 @@ function checkAllDates()
     </tr>
     <tr>
         <td align="left">OTHER/PLAN</td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan1" value="<%= props.getProperty("otherPlan1", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan2" value="<%= props.getProperty("otherPlan2", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan3" value="<%= props.getProperty("otherPlan3", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan4" value="<%= props.getProperty("otherPlan4", "") %>" /></td>
-        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan5" value="<%= props.getProperty("otherPlan5", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan1" value="<%= props.getProperty("otherplan1", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan2" value="<%= props.getProperty("otherplan2", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan3" value="<%= props.getProperty("otherplan3", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan4" value="<%= props.getProperty("otherplan4", "") %>" /></td>
+        <td><input type="text" class="Type2DiabetesTextarea" name="otherPlan5" value="<%= props.getProperty("otherplan5", "") %>" /></td>
     </tr>
     <tr>
         <td rowspan="1">
