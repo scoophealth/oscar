@@ -162,7 +162,16 @@ String level2 = CddmLevels.MEDICATIONS;
                         
                         
                         <%= drug.getRxDisplay() %><br>
-                        
+                        <!--
+                        Prescription.setComments(<%=drug.getSpecial()%>);
+                        Prescription.setDiagnosis(<%=""%>);
+                        Prescription.setDose(<%=""%>);
+                        Prescription.setDrug(<%=drug.getDrugName()%>);
+                        Prescription.setDuration(<%=drug.getFullDuration()%>);
+                        Prescription.setFrequency(<%=drug.getFullFrequency()%>);
+                        Prescription.setRoute(<%=""%>);
+                        Prescription.setUnit(<%=""%>);                           
+                        -->
                       
 
                 
