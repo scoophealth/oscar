@@ -91,22 +91,46 @@ public class BillingBillingManager {
             ResultSet rs;            
             //oscar.oscarBilling.pageUtil.BillingBillingManager bbm = new oscar.oscarBilling.pageUtil.BillingBillingManager();
             
-            String sql;
-            sql = "select billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,";
-            sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
-            sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment ";
-            sql = sql + "from billingmaster where billing_no='" + billing_no+"'";
-            System.out.println(sql);
-            rs = db.GetSQL(sql);
+            ///is msp or wcb?
             
-            while(rs.next()){
-                BillingItem billingItem = new BillingItem(rs.getString("billing_code"),rs.getString("billing_unit"));
-                billingItem.fill();
-                billingItemsArray.add(billingItem);
-                
+            rs = db.GetSQL("select billingtype from billing where billing_no = '"+ billing_no +"'");
+            
+            String billingType = "";
+            
+            if(rs.next()){
+               billingType = rs.getString("billingType");
             }
-            
             rs.close();
+            
+            if (billingType.equals("WCB")){
+               rs = db.GetSQL("select w_feeitem from wcb where billing_no = '"+ billing_no +"'");
+               
+               while (rs.next()){
+                  BillingItem billingItem = new BillingItem(rs.getString("w_feeitem"),""+1);
+                  billingItem.fill();
+                  billingItemsArray.add(billingItem);                  
+               }
+               rs.close();
+               
+            }else{
+            
+               String sql;
+               sql = "select billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,";
+               sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
+               sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment ";
+               sql = sql + "from billingmaster where billing_no='" + billing_no+"'";
+               System.out.println(sql);
+               rs = db.GetSQL(sql);
+
+               while(rs.next()){
+                   BillingItem billingItem = new BillingItem(rs.getString("billing_code"),rs.getString("billing_unit"));
+                   billingItem.fill();
+                   billingItemsArray.add(billingItem);
+
+               }
+               rs.close();
+            }
+                        
             db.CloseConn();
             
         } catch (SQLException e){ System.out.println(e.getMessage());  }
