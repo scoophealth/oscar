@@ -21,27 +21,41 @@
  * Hamilton 
  * Ontario, Canada 
  */
+html,table,textarea,input
+{
+	font-family:"Times New Roman";
+	font-size:7pt;
+}
 
 BODY
 {
     background-color: white;
     color: black;
     width:750px;
-    font-size:90%;
+    font-size:7pt;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px
 }
 
 BODY A
 {
     color: black;
 }
-
-TABLE {
-    font-size:90%;
+tr
+{
+	vertical-align:top;
+}
+textarea
+{
+	overflow:visible; 
+}
+.cntrTable
+{
+	width:650px;
 }
 
-INPUT {
-    size:80%;
-}
 .head
 {
     display:none;
@@ -82,19 +96,47 @@ INPUT {
 {
     background-color: #FFFFFF;
     color: #000000;
+	 padding-top:0px;
+    padding-bottom:0px;
 }
 .column
 {
     background-color: #FFFFFF;
-    color: #000000;
+    color: #cccccc;
+	font-size:7pt;
+	overflow:visible;
+	 padding-top:0px;
+    padding-bottom:0px;
+	vertical-align:top;
+    text-align:center;
+	width:100px;
 }
 .titleBar
 {
     background-color: #FFFFFF;
     color: #000000;
+	padding-top:0px;
+    padding-bottom:0px;
+
 }
 .outerTable {
     padding: 0;
     border-spacing: 0;
 	width:650px;
+}
+
+.chk{
+	width:7pt;
+	height:7pt;
+}
+
+input
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+.wide 
+{
+   width:100%; 
 }

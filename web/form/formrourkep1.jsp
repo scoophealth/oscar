@@ -1,26 +1,26 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 
@@ -252,7 +252,7 @@ var maxYear=3100;
 <input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "p1")%> />
 <input type="hidden" name="submit" value="exit" />
 
-<table class="Header" class="hidePrint">
+<table cellpadding="0" cellspacing="0"   class="Header" class="hidePrint">
     <tr>
         <td nowrap="true">
             <input type="submit" value="<bean:message key="oscarEncounter.formRourke1.btnSave"/>" onclick="javascript:return onSave();" />
@@ -274,12 +274,12 @@ var maxYear=3100;
     </tr>
 </table>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+<table cellpadding="0" cellspacing="0"   border="0"   width="100%" >
     <tr class="titleBar">
         <th><bean:message key="oscarEncounter.formRourke1.msgRourkeBabyRecord"/></th>
     </tr>
 </table>
-<table width="100%" border="0" cellspacing="1" cellpadding="2">
+<table cellpadding="0" cellspacing="0"   width="100%" border="0"  >
     <tr valign="top">
         <td nowrap align="center"><bean:message key="oscarEncounter.formRourke1.formBirhtRemarks"/><br>
             <textarea name="c_birthRemarks" rows="2" cols="17"><%= props.getProperty("c_birthRemarks", "") %></textarea>
@@ -314,7 +314,7 @@ var maxYear=3100;
         </td>
     </tr>
 </table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0">
+<table cellpadding="0" cellspacing="0"   width="100%" border="1"  >
     <tr align="center">
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.btnAge"/></a></td>
         <td colspan="3" class="row"><bean:message key="oscarEncounter.formRourke1.msgWithin"/> <a><bean:message key="oscarEncounter.formRourke1.btn1Week"/></a></td>
@@ -376,81 +376,81 @@ var maxYear=3100;
     <tr>
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgNutrition"/>:</a></td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_nutrition1w" value="<%= props.getProperty("p1_nutrition1w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_nutrition1w" cols="25" class="wide"><%= props.getProperty("p1_nutrition1w", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_breastFeeding1w" <%= props.getProperty("p1_breastFeeding1w", "") %>/></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_breastFeeding1w" <%= props.getProperty("p1_breastFeeding1w", "") %>/></td>
                     <td><b><a href="<%=resource%>n_breastFeeding"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/></a><bean:message key="oscarEncounter.formRourke1.msgBreastFeedingDescr"/></b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_formulaFeeding1w" <%= props.getProperty("p1_formulaFeeding1w", "") %>/></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_formulaFeeding1w" <%= props.getProperty("p1_formulaFeeding1w", "") %>/></td>
                     <td><bean:message key="oscarEncounter.formRourke1.msgFormulaFeeding"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_stoolUrine1w" <%= props.getProperty("p1_stoolUrine1w", "") %>/></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_stoolUrine1w" <%= props.getProperty("p1_stoolUrine1w", "") %>/></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formStoolPatern"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_nutrition2w" value="<%= props.getProperty("p1_nutrition2w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_nutrition2w" cols="25" class="wide"><%= props.getProperty("p1_nutrition2w", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_breastFeeding2w" <%= props.getProperty("p1_breastFeeding2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_breastFeeding2w" <%= props.getProperty("p1_breastFeeding2w", "") %>></td>
                     <td><b><a href="<%=resource%>n_breastFeeding"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/></a><bean:message key="oscarEncounter.formRourke1.msgBreastFeedingDescr"/></b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_formulaFeeding2w" <%= props.getProperty("p1_formulaFeeding2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_formulaFeeding2w" <%= props.getProperty("p1_formulaFeeding2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.msgFormulaFeeding"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_stoolUrine2w" <%= props.getProperty("p1_stoolUrine2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_stoolUrine2w" <%= props.getProperty("p1_stoolUrine2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formStoolPatern"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table height="100%">
+            <table cellpadding="0" cellspacing="0" width="100%" height="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_nutrition1m" value="<%= props.getProperty("p1_nutrition2m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_nutrition1m" cols="25" class="wide"><%= props.getProperty("p1_nutrition2m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_breastFeeding1m" <%= props.getProperty("p1_breastFeeding1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_breastFeeding1m" <%= props.getProperty("p1_breastFeeding1m", "") %>></td>
                     <td><b><a href="<%=resource%>n_breastFeeding"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/></a><bean:message key="oscarEncounter.formRourke1.msgBreastFeedingDescr"/></b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_formulaFeeding1m" <%= props.getProperty("p1_formulaFeeding1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_formulaFeeding1m" <%= props.getProperty("p1_formulaFeeding1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.msgFormulaFeeding"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_stoolUrine1m" <%= props.getProperty("p1_stoolUrine1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_stoolUrine1m" <%= props.getProperty("p1_stoolUrine1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formStoolPatern"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_nutrition2m" value="<%= props.getProperty("p1_nutrition2m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_nutrition2m" cols="25" class="wide"><%= props.getProperty("p1_nutrition2m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_breastFeeding2m" <%= props.getProperty("p1_breastFeeding2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_breastFeeding2m" <%= props.getProperty("p1_breastFeeding2m", "") %>></td>
                     <td nowrap="true"><b><a href="<%=resource%>n_breastFeeding"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/></a><bean:message key="oscarEncounter.formRourke1.msgBreastFeedingDescr"/></b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_formulaFeeding2m" <%= props.getProperty("p1_formulaFeeding2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_formulaFeeding2m" <%= props.getProperty("p1_formulaFeeding2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.msgFormulaFeeding"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
     </tr>
     <tr>
         <td class="column">
-            <table width="100%" class="column">
+            <table cellpadding="0" cellspacing="0"   width="100%" class="column">
                 <tr>
                     <td nowrap="true"><a><bean:message key="oscarEncounter.formRourke1.msgEducational"/></a></td>
                 </tr>
@@ -479,190 +479,190 @@ var maxYear=3100;
             </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_educationAdvice1w" value="<%= props.getProperty("p1_educationAdvice1w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_educationAdvice1w" cols="25" class="wide"><%= props.getProperty("p1_educationAdvice1w", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_carSeat1w" <%= props.getProperty("p1_carSeat1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_carSeat1w" <%= props.getProperty("p1_carSeat1w", "") %>></td>
                     <td><b><a href="<%=resource%>s_motorVehicleAccidents"><bean:message key="oscarEncounter.formRourke1.formCarSeat"/></a>*</b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_cribSafety1w" <%= props.getProperty("p1_cribSafety1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_cribSafety1w" <%= props.getProperty("p1_cribSafety1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formCribSafety"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sleeping1w" <%= props.getProperty("p1_sleeping1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sleeping1w" <%= props.getProperty("p1_sleeping1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSleeping"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sooth1w" <%= props.getProperty("p1_sooth1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sooth1w" <%= props.getProperty("p1_sooth1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSoothability"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_bonding1w" <%= props.getProperty("p1_bonding1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_bonding1w" <%= props.getProperty("p1_bonding1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formParenting"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_fatigue1w" <%= props.getProperty("p1_fatigue1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_fatigue1w" <%= props.getProperty("p1_fatigue1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFatigue"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_family1w" <%= props.getProperty("p1_family1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_family1w" <%= props.getProperty("p1_family1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFamilyConflict"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_siblings1w" <%= props.getProperty("p1_siblings1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_siblings1w" <%= props.getProperty("p1_siblings1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSiblings"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_homeVisit1w" <%= props.getProperty("p1_homeVisit1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_homeVisit1w" <%= props.getProperty("p1_homeVisit1w", "") %>></td>
                     <td><b><a href="<%=resource%>hri_homeVisits"><bean:message key="oscarEncounter.formRourke1.btnHomeVisit"/></a>*</b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sleepPos1w" <%= props.getProperty("p1_sleepPos1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sleepPos1w" <%= props.getProperty("p1_sleepPos1w", "") %>></td>
                     <td><b><a href="<%=resource%>o_sleepPosition"><bean:message key="oscarEncounter.formRourke1.btnSleepPosition"/></a>*</b><td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_temp1w" <%= props.getProperty("p1_temp1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_temp1w" <%= props.getProperty("p1_temp1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formTemperatureControl"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_smoke1w" <%= props.getProperty("p1_smoke1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_smoke1w" <%= props.getProperty("p1_smoke1w", "") %>></td>
                     <td><b><a href="<%=resource%>o_secondHandSmoke"><bean:message key="oscarEncounter.formRourke1.formSecondHandSmoke"/></a>*</b></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_educationAdvice2w" value="<%= props.getProperty("p1_educationAdvice2w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_educationAdvice2w" cols="25" class="wide"><%= props.getProperty("p1_educationAdvice2w", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_carSeat2w" <%= props.getProperty("p1_carSeat2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_carSeat2w" <%= props.getProperty("p1_carSeat2w", "") %>></td>
                     <td><b><a href="<%=resource%>s_motorVehicleAccidents"><bean:message key="oscarEncounter.formRourke1.formCarSeat"/></a>*</b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_cribSafety2w" <%= props.getProperty("p1_cribSafety2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_cribSafety2w" <%= props.getProperty("p1_cribSafety2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formCribSafety"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sleeping2w" <%= props.getProperty("p1_sleeping2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sleeping2w" <%= props.getProperty("p1_sleeping2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSleeping"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sooth2w" <%= props.getProperty("p1_sooth2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sooth2w" <%= props.getProperty("p1_sooth2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSoothability"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_bonding2w" <%= props.getProperty("p1_bonding2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_bonding2w" <%= props.getProperty("p1_bonding2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formParenting"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_fatigue2w" <%= props.getProperty("p1_fatigue2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_fatigue2w" <%= props.getProperty("p1_fatigue2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFatigue"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_family2w" <%= props.getProperty("p1_family2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_family2w" <%= props.getProperty("p1_family2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFamilyConflict"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_siblings2w" <%= props.getProperty("p1_siblings2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_siblings2w" <%= props.getProperty("p1_siblings2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSiblings"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_homeVisit2w" <%= props.getProperty("p1_homeVisit2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_homeVisit2w" <%= props.getProperty("p1_homeVisit2w", "") %>></td>
                     <td><b><a href="<%=resource%>hri_homeVisits"><bean:message key="oscarEncounter.formRourke1.btnHomeVisit"/></a>*</b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sleepPos2w" <%= props.getProperty("p1_sleepPos2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sleepPos2w" <%= props.getProperty("p1_sleepPos2w", "") %>></td>
                     <td><b><a href="<%=resource%>o_sleepPosition"><bean:message key="oscarEncounter.formRourke1.btnSleepPosition"/>*</a>*</b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_temp2w" <%= props.getProperty("p1_temp2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_temp2w" <%= props.getProperty("p1_temp2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formTemperatureControl"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_smoke2w" <%= props.getProperty("p1_smoke2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_smoke2w" <%= props.getProperty("p1_smoke2w", "") %>></td>
                     <td><b><a href="<%=resource%>o_secondHandSmoke"><bean:message key="oscarEncounter.formRourke1.formSecondHandSmoke"/></a>* </b></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_educationAdvice1m" value="<%= props.getProperty("p1_educationAdvice1m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_educationAdvice1m" cols="25" class="wide"><%= props.getProperty("p1_educationAdvice1m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_carbonMonoxide1m" <%= props.getProperty("p1_carbonMonoxide1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_carbonMonoxide1m" <%= props.getProperty("p1_carbonMonoxide1m", "") %>></td>
                     <td>Carbon monoxide/ <i><a href="<%=resource%>s_burns">Smoke detectors</a>*</i></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sleepwear1m" <%= props.getProperty("p1_sleepwear1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sleepwear1m" <%= props.getProperty("p1_sleepwear1m", "") %>></td>
                     <td><i><a href="<%=resource%>s_burns"><bean:message key="oscarEncounter.formRourke1.formSleepwear"/></a></i></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hotWater1m" <%= props.getProperty("p1_hotWater1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hotWater1m" <%= props.getProperty("p1_hotWater1m", "") %>></td>
                     <td><i><a href="<%=resource%>s_burns"><bean:message key="oscarEncounter.formRourke1.btnHotWater"/></a>*</i></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_toys1m" <%= props.getProperty("p1_toys1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_toys1m" <%= props.getProperty("p1_toys1m", "") %>></td>
                     <td><a href="<%=resource%>s_choking"><bean:message key="oscarEncounter.formRourke1.btnSafeToys"/></a>*</td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_crying1m" <%= props.getProperty("p1_crying1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_crying1m" <%= props.getProperty("p1_crying1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSleeping"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sooth1m" <%= props.getProperty("p1_sooth1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sooth1m" <%= props.getProperty("p1_sooth1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSoothability"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_interaction1m" <%= props.getProperty("p1_interaction1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_interaction1m" <%= props.getProperty("p1_interaction1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formParentChildinteraction"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_supports1m" <%= props.getProperty("p1_supports1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_supports1m" <%= props.getProperty("p1_supports1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formAssessSupports"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_educationAdvice2m" value="<%= props.getProperty("p1_educationAdvice2m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_educationAdvice2m" cols="25" class="wide"><%= props.getProperty("p1_educationAdvice2m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_falls2m" <%= props.getProperty("p1_falls2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_falls2m" <%= props.getProperty("p1_falls2m", "") %>></td>
                     <td><i><a href="<%=resource%>s_falls"><bean:message key="oscarEncounter.formRourke1.btnFalls"/></a>*</i></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_toys2m" <%= props.getProperty("p1_toys2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_toys2m" <%= props.getProperty("p1_toys2m", "") %>></td>
                     <td><a href="<%=resource%>s_choking"><bean:message key="oscarEncounter.formRourke1.btnSafeToys"/></a>*</td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_crying2m" <%= props.getProperty("p1_crying2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_crying2m" <%= props.getProperty("p1_crying2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSleeping"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sooth2m" <%= props.getProperty("p1_sooth2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sooth2m" <%= props.getProperty("p1_sooth2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSoothability"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_interaction2m" <%= props.getProperty("p1_interaction2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_interaction2m" <%= props.getProperty("p1_interaction2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formParentChildinteraction"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_stress2m" <%= props.getProperty("p1_stress2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_stress2m" <%= props.getProperty("p1_stress2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formDepression"/></td>
                 </tr>
                 <tr>
@@ -678,10 +678,10 @@ var maxYear=3100;
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                     <td valign="top"><input type="checkbox" name="p1_fever2m" <%= props.getProperty("p1_fever2m", "") %>></td>
+                     <td valign="top"><input type="checkbox" class="chk"  name="p1_fever2m" <%= props.getProperty("p1_fever2m", "") %>></td>
                      <td><bean:message key="oscarEncounter.formRourke1.formFeverControl"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
     </tr>
     <tr>
@@ -689,68 +689,68 @@ var maxYear=3100;
                 <bean:message key="oscarEncounter.formRourke1.msgDevelopmentDesc"/>
         </td>
         <td colspan="3" valign="top" align="center">
-            <table width="100%">
+            <table cellpadding="0" cellspacing="0"   width="100%">
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_development1w" value="<%= props.getProperty("p1_development1w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_development1w" cols="25" class="wide"><%= props.getProperty("p1_development1w", "") %></textarea></td>
                 </tr>
             </table>
         </td>
         <td colspan="3" valign="top" align="center">
-            <table width="100%">
+            <table cellpadding="0" cellspacing="0"   width="100%">
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_development2w" value="<%= props.getProperty("p1_development2w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_development2w" cols="25" class="wide"><%= props.getProperty("p1_development2w", "") %></textarea></td>
                 </tr>
             </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_development1m" value="<%= props.getProperty("p1_development1m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_development1m" cols="25" class="wide"><%= props.getProperty("p1_development1m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_focusGaze1m" <%= props.getProperty("p1_focusGaze1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_focusGaze1m" <%= props.getProperty("p1_focusGaze1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFocusesGaze"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_startles1m" <%= props.getProperty("p1_startles1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_startles1m" <%= props.getProperty("p1_startles1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSuddenNoise"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sucks1m" <%= props.getProperty("p1_sucks1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sucks1m" <%= props.getProperty("p1_sucks1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formSucksWell"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_noParentsConcerns1m" <%= props.getProperty("p1_noParentsConcerns1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_noParentsConcerns1m" <%= props.getProperty("p1_noParentsConcerns1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formNoparentConcerns"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_development2m" value="<%= props.getProperty("p1_development2m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_development2m" cols="25" class="wide"><%= props.getProperty("p1_development2m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_followMoves2m" <%= props.getProperty("p1_followMoves2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_followMoves2m" <%= props.getProperty("p1_followMoves2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFollowsMovement"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_sounds2m" <%= props.getProperty("p1_sounds2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_sounds2m" <%= props.getProperty("p1_sounds2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formVarietyOfSounds"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_headUp2m" <%= props.getProperty("p1_headUp2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_headUp2m" <%= props.getProperty("p1_headUp2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHoldHeadsUp"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_cuddled2m" <%= props.getProperty("p1_cuddled2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_cuddled2m" <%= props.getProperty("p1_cuddled2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.EnjoysBeingTouched"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_noParentConcerns2m" <%= props.getProperty("p1_noParentConcerns2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_noParentConcerns2m" <%= props.getProperty("p1_noParentConcerns2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formNoparentConcerns"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
     </tr>
     <tr>
@@ -759,197 +759,197 @@ var maxYear=3100;
             </div>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_physical1w" value="<%= props.getProperty("p1_physical1w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_physical1w" cols="25" class="wide"><%= props.getProperty("p1_physical1w", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_skin1w" <%= props.getProperty("p1_skin1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_skin1w" <%= props.getProperty("p1_skin1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formDrySkin"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_fontanelles1w" <%= props.getProperty("p1_fontanelles1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_fontanelles1w" <%= props.getProperty("p1_fontanelles1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFontanelles"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_eyes1w" <%= props.getProperty("p1_eyes1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_eyes1w" <%= props.getProperty("p1_eyes1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formRedReflex"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_ears1w" <%= props.getProperty("p1_ears1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_ears1w" <%= props.getProperty("p1_ears1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formEarDrums"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_heartLungs1w" <%= props.getProperty("p1_heartLungs1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_heartLungs1w" <%= props.getProperty("p1_heartLungs1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHeart"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_umbilicus1w" <%= props.getProperty("p1_umbilicus1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_umbilicus1w" <%= props.getProperty("p1_umbilicus1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formUmbilicus"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_femoralPulses1w" <%= props.getProperty("p1_femoralPulses1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_femoralPulses1w" <%= props.getProperty("p1_femoralPulses1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFemoralPulses"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hips1w" <%= props.getProperty("p1_hips1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hips1w" <%= props.getProperty("p1_hips1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHips"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_testicles1w" <%= props.getProperty("p1_testicles1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_testicles1w" <%= props.getProperty("p1_testicles1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formTescicles"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_maleUrinary1w" <%= props.getProperty("p1_maleUrinary1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_maleUrinary1w" <%= props.getProperty("p1_maleUrinary1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formMaleUrinaryStream"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_physical2w" value="<%= props.getProperty("p1_physical2w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_physical2w" cols="25" class="wide"><%= props.getProperty("p1_physical2w", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_skin2w" <%= props.getProperty("p1_skin2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_skin2w" <%= props.getProperty("p1_skin2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formDrySkin"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_fontanelles2w" <%= props.getProperty("p1_fontanelles2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_fontanelles2w" <%= props.getProperty("p1_fontanelles2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFontanelles"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_eyes2w" <%= props.getProperty("p1_eyes2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_eyes2w" <%= props.getProperty("p1_eyes2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formRedReflex"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_ears2w" <%= props.getProperty("p1_ears2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_ears2w" <%= props.getProperty("p1_ears2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formEarDrums"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_heartLungs2w" <%= props.getProperty("p1_heartLungs2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_heartLungs2w" <%= props.getProperty("p1_heartLungs2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHeart"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_umbilicus2w" <%= props.getProperty("p1_umbilicus2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_umbilicus2w" <%= props.getProperty("p1_umbilicus2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formUmbilicus"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_femoralPulses2w" <%= props.getProperty("p1_femoralPulses2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_femoralPulses2w" <%= props.getProperty("p1_femoralPulses2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFemoralPulses"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hips2w" <%= props.getProperty("p1_hips2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hips2w" <%= props.getProperty("p1_hips2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHips"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_testicles2w" <%= props.getProperty("p1_testicles2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_testicles2w" <%= props.getProperty("p1_testicles2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formTescicles"/><br></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_maleUrinary2w" <%= props.getProperty("p1_maleUrinary2w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_maleUrinary2w" <%= props.getProperty("p1_maleUrinary2w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formMaleUrinaryStream"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_physical1m" value="<%= props.getProperty("p1_physical1m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_physical1m" cols="25" class="wide"><%= props.getProperty("p1_physical1m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_fontanelles1m" <%= props.getProperty("p1_fontanelles1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_fontanelles1m" <%= props.getProperty("p1_fontanelles1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFontanelles"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_eyes1m" <%= props.getProperty("p1_eyes1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_eyes1m" <%= props.getProperty("p1_eyes1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formRedReflex"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_cover1m" <%= props.getProperty("p1_cover1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_cover1m" <%= props.getProperty("p1_cover1m", "") %>></td>
                     <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke1.btnCoverTest"/></a>*</b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hearing1m" <%= props.getProperty("p1_hearing1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hearing1m" <%= props.getProperty("p1_hearing1m", "") %>></td>
                     <td><b><bean:message key="oscarEncounter.formRourke1.formHearingInquirity"/></b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_heart1m" <%= props.getProperty("p1_heart1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_heart1m" <%= props.getProperty("p1_heart1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHeart1"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hips1m" <%= props.getProperty("p1_hips1m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hips1m" <%= props.getProperty("p1_hips1m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHips"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_physical2m" value="<%= props.getProperty("p1_physical2m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_physical2m" cols="25" class="wide"><%= props.getProperty("p1_physical2m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_fontanelles2m" <%= props.getProperty("p1_fontanelles2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_fontanelles2m" <%= props.getProperty("p1_fontanelles2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formFontanelles"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_eyes2m" <%= props.getProperty("p1_eyes2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_eyes2m" <%= props.getProperty("p1_eyes2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formRedReflex"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_cover2m" <%= props.getProperty("p1_cover2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_cover2m" <%= props.getProperty("p1_cover2m", "") %>></td>
                     <td></i><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke1.btnCoverTest"/></a>*</b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hearing2m" <%= props.getProperty("p1_hearing2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hearing2m" <%= props.getProperty("p1_hearing2m", "") %>></td>
                     <td><b><bean:message key="oscarEncounter.formRourke1.formHearingInquirity"/></b></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_heart2m" <%= props.getProperty("p1_heart2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_heart2m" <%= props.getProperty("p1_heart2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHeart1"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hips2m" <%= props.getProperty("p1_hips2m", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hips2m" <%= props.getProperty("p1_hips2m", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formHips"/></td>
                 </tr>
-            </table>
+          </table>
         </td>
     </tr>
     <tr>
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgProblemsAndPlans"/></a></td>
         <td colspan="3" valign="top">
-            <table>
+            <table cellpadding="0" cellspacing="0" width="100%"  >
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_problems1w" value="<%= props.getProperty("p1_problems1w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_problems1w" cols="25" class="wide"><%= props.getProperty("p1_problems1w", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_pkuThyroid1w" <%= props.getProperty("p1_pkuThyroid1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_pkuThyroid1w" <%= props.getProperty("p1_pkuThyroid1w", "") %>></td>
                     <td><bean:message key="oscarEncounter.formRourke1.formThyroid"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hemoScreen1w" <%= props.getProperty("p1_hemoScreen1w", "") %>></td>
+                    <td valign="top"><input type="checkbox" class="chk"  name="p1_hemoScreen1w" <%= props.getProperty("p1_hemoScreen1w", "") %>></td>
                     <td><b><a href="<%=resource%>pp_hemoglobinopathyScreening"><bean:message key="oscarEncounter.formRourke1.formHemoglobinopathy"/></a> (if at risk)*</b></td>
                 </tr>
-            </table>
+          </table>
         </td>
         <td colspan="3" valign="top">
-            <table width="100%">
+            <table cellpadding="0" cellspacing="0"   width="100%">
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_problems2w" value="<%= props.getProperty("p1_problems2w", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_problems2w" cols="25" class="wide"><%= props.getProperty("p1_problems2w", "") %></textarea></td>
                 </tr>
             </table>
         </td>
         <td colspan="3" valign="top">
-            <table width="100%">
+            <table cellpadding="0" cellspacing="0"   width="100%">
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_problems1m" value="<%= props.getProperty("p1_problems1m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_problems1m" cols="25" class="wide"><%= props.getProperty("p1_problems1m", "") %></textarea></td>
                 </tr>
             </table>
         </td>
         <td colspan="3" valign="top">
-            <table width="100%">
+            <table cellpadding="0" cellspacing="0"   width="100%">
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_problems2m" value="<%= props.getProperty("p1_problems2m", "") %>" /></td>
+                    <td colspan="2"><textarea name="p1_problems2m" cols="25" class="wide"><%= props.getProperty("p1_problems2m", "") %></textarea></td>
                 </tr>
             </table>
         </td>
@@ -958,71 +958,16 @@ var maxYear=3100;
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgImmunization"/></a><br>
                 <bean:message key="oscarEncounter.formRourke1.msgImmunizationDesc"/>
         </td>
+        <td colspan="3" valign="top">      <textarea name="p1_immunization1w" cols="25" class="wide"><%= props.getProperty("p1_immunization1w", "") %></textarea></td>
         <td colspan="3" valign="top">
-            <table>
-                <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_immunization1w" value="<%= props.getProperty("p1_immunization1w", "") %>" /></td>
-                </tr>
+            <table cellpadding="0" cellspacing="0"   width="100%">
                 <tr>
-                    <td colspan="2"><bean:message key="oscarEncounter.formRourke1.formHBsAg"/>:</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="p1_hepB1w" <%= props.getProperty("p1_hepB1w", "") %>></td>
-                    <td width="100%"><b><a href="<%=resource%>i_hepB"><bean:message key="oscarEncounter.formRourke1.btnHep"/></a>*</b></td>
+                    <td colspan="2" align="center"><textarea name="p1_immunization2w" cols="25" class="wide"><%= props.getProperty("p1_immunization2w", "") %></textarea></td>
                 </tr>
             </table>
         </td>
-        <td colspan="3" valign="top">
-            <table width="100%">
-                <tr>
-                    <td colspan="2" align="center"><input type="text" class="wide" name="p1_immunization2w" value="<%= props.getProperty("p1_immunization2w", "") %>" /></td>
-                </tr>
-            </table>
-        </td>
-        <td colspan="3" valign="top">
-            <table>
-                <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_immunization1m" value="<%= props.getProperty("p1_immunization1m", "") %>" /></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><bean:message key="oscarEncounter.formRourke1.msgGiveInformation"/>:</td>
-                </tr>
-                <tr>
-                    <td valign="top"><input type="checkbox" name="p1_immuniz1m" <%= props.getProperty("p1_immuniz1m", "") %>></td>
-                    <td width="100%"><bean:message key="oscarEncounter.formRourke1.formImmunization"/></td>
-                </tr>
-                <tr>
-                    <td valign="top"><input type="checkbox" name="p1_acetaminophen1m" <%= props.getProperty("p1_acetaminophen1m", "") %>></td>
-                    <td><bean:message key="oscarEncounter.formRourke1.formAcetaminophen"/></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><bean:message key="oscarEncounter.formRourke1.formHBsAg"/>:</td>
-                </tr>
-                <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hepB1m" <%= props.getProperty("p1_hepB1m", "") %>></td>
-                    <td><b><a href="<%=resource%>i_hepB">Hep. B vaccine</a>*</b></td>
-                </tr>
-            </table>
-        </td>
-        <td colspan="3" valign="top">
-            <table width="100%">
-                <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_immunization2m" value="<%= props.getProperty("p1_immunization2m", "") %>" /></td>
-                </tr>
-                <tr>
-                    <td valign="top"><input type="checkbox" name="p1_acetaminophen2m" <%= props.getProperty("p1_acetaminophen2m", "") %>></td>
-                    <td width="100%"><bean:message key="oscarEncounter.formRourke1.formAcetaminophen"/></td>
-                </tr>
-                <tr>
-                    <td valign="top"><input type="checkbox" name="p1_hib2m" <%= props.getProperty("p1_hib2m", "") %>></td>
-                    <td><bean:message key="oscarEncounter.formRourke1.formHIB"/></td>
-                </tr>
-                <tr>
-                    <td valign="top"><input type="checkbox" name="p1_polio2m" <%= props.getProperty("p1_polio2m", "") %>></td>
-                    <td><bean:message key="oscarEncounter.formRourke1.formPolio"/></td>
-                </tr>
-            </table>
-        </td>
+        <td colspan="3" valign="top">      <textarea name="p1_immunization1m" cols="25" class="wide"><%= props.getProperty("p1_immunization1m", "") %></textarea></td>
+        <td colspan="3" valign="top">      <textarea name="p1_immunization2m" cols="25" class="wide"><%= props.getProperty("p1_immunization2m", "") %></textarea></td>
     </tr>
     <tr>
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.formSignature"/></a></td>
@@ -1042,7 +987,7 @@ var maxYear=3100;
 
 </table>
 
-<table class="Header" class="hidePrint">
+<table cellpadding="0" cellspacing="0"   class="Header" class="hidePrint">
     <tr>
         <td nowrap="true">
             <input type="submit" value="<bean:message key="oscarEncounter.formRourke1.btnSave"/>" onclick="javascript:return onSave();" />

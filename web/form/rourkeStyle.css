@@ -21,21 +21,17 @@
  * Hamilton 
  * Ontario, Canada 
  */
+.contain{table-layout:fixed;}
 
 BODY {
-	font-size:80%;
+	font-size:10pt;
     background-color:#DAEBFC;
-    font-family: ARIAL, SANS-SERIF;
+	font-family:"Times New Roman", Times, serif;
 //    #c1ddf9;
 }
 
-TABLE {
-	font-size:100%;
-    border-collapse:true;
-}
-
-TEXTAREA {
-    overflow: auto;
+html,TABLE {
+	font-size:10pt;
 }
 
 /**************************************/
@@ -85,6 +81,8 @@ A:link
 
 .row A {
     font-weight:bold;
+	font-family:"Times New Roman", Times, serif;
+	font-size:10pt;
 }
 
 .titleBar {
@@ -97,9 +95,15 @@ A:link
 }
 
 .wide {
-    width:100%;
+   width:100%; 
 }
 
 .data {
-    font-size:9pt;
+    font-size:10pt;
+	font-family:"Times New Roman", Times, serif;
+}
+tr{vertical-align:top;}
+input {
+		margin: 0px;
+	padding: 0px;
 }
