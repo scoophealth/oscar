@@ -1321,7 +1321,7 @@
                   scope="session"
                   input="/billing/billingBrazil.jsp">
            <forward name="success" path="/billing/billingBrazil.jsp"/>
-           <forward name="failure"  path="/failure.jsp" />
+           <forward name="failure"  path="/billing/billingBrazil.jsp" />
         </action>
         <action   path="/oscar/billing/procedimentoRealizado/add"
         		      parameter="add"
@@ -1334,6 +1334,7 @@
            <forward name="procedimento" path="/billing/billingBrazil.jsp"/>
            <forward name="diagnostico" path="/billing/billingBrazil.jsp"/>
            <forward name="gravar" path="/billing/billingBrazilSuccess.jsp"/>
+           <forward name="failure"  path="/billing/billingBrazil.jsp" />
         </action>
         
         <action   path="/oscar/billing/procedimentoRealizado/deleteProc"
