@@ -31,11 +31,7 @@
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
-<%
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
-%>
+
 <html:html locale="true">
 <head>
 <title>
@@ -59,7 +55,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
 </head>
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
+<body topmargin="0" leftmargin="0" vlink="#0000FF">
 <html:errors/>
 <table>
     <tr>
@@ -68,12 +64,12 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
         <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(200,1000,'DefineNewMeasurementGroup.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
+            <a href=# onClick="popupOscarConS(300,1000,'DefineNewMeasurementGroup.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
             </td></tr></table>
         </td>
         <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(200,1000,'ProcessGroupListAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.editMeasurementGroup"/></a>
+            <a href=# onClick="popupOscarConS(300,1000,'SetupGroupList.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.editMeasurementGroup"/></a>
             </td></tr></table>
         </td>
     </tr>
@@ -83,12 +79,12 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
          <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(600,1000,'ProcessDisplayMeasurementTypesAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementType"/></a>
+            <a href=# onClick="popupOscarConS(700,1000,'SetupDisplayMeasurementTypes.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementType"/></a>
             </td></tr></table>
         </td>
          <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(200,1000,'ProcessAddMeasurementTypeAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementType"/></a>
+            <a href=# onClick="popupOscarConS(300,1000,'SetupAddMeasurementType.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementType"/></a>
             </td></tr></table>
         </td>
     </tr>
@@ -98,7 +94,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
         <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(200,1000,'ProcessAddMeasuringInstructionAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasuringInstruction"/></a>
+            <a href=# onClick="popupOscarConS(300,1000,'SetupAddMeasuringInstruction.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasuringInstruction"/></a>
             </td></tr></table>
         </td>
     </tr>
