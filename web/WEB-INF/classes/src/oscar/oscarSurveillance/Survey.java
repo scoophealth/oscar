@@ -47,6 +47,8 @@ public class Survey {
    String surveyQuestion;
    String surveyId;
    String patientCriteria = null;
+   String exportString = null;
+   String exportQuery = null;
    int randomness;
    int period;// num days
    ArrayList providersParticipating = null;
@@ -304,7 +306,13 @@ public class Survey {
    
    
    
-   
+   public boolean hasExport(){
+      boolean export = false;
+      if (exportString != null && exportQuery != null){
+         export = true;
+      }
+      return export;
+   }
    
    
    
@@ -561,6 +569,38 @@ public class Survey {
    public void setPatientCriteria(java.lang.String patientCriteria) {
       this.patientCriteria = patientCriteria;
    }   
+   
+   /**
+    * Getter for property exportString.
+    * @return Value of property exportString.
+    */
+   public java.lang.String getExportString() {
+      return exportString;
+   }
+   
+   /**
+    * Setter for property exportString.
+    * @param exportString New value of property exportString.
+    */
+   public void setExportString(java.lang.String exportString) {
+      this.exportString = exportString;
+   }
+   
+   /**
+    * Getter for property exportQuery.
+    * @return Value of property exportQuery.
+    */
+   public java.lang.String getExportQuery() {
+      return exportQuery;
+   }
+   
+   /**
+    * Setter for property exportQuery.
+    * @param exportQuery New value of property exportQuery.
+    */
+   public void setExportQuery(java.lang.String exportQuery) {
+      this.exportQuery = exportQuery;
+   }
    
    class Answer {
       public String answerString = "";
