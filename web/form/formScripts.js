@@ -52,11 +52,12 @@
     }
     function onExit() {
         if(confirm("Are you sure you wish to exit without saving your changes?")==true) {        
-            window.opener.location.href = window.opener.location.href;
-            if (window.opener.progressWindow)
-            {
-                window.opener.progressWindow.close()
-            }         
+            window.opener.location.reload();
+            //window.opener.location.href = window.opener.location.href;
+            //if (window.opener.progressWindow)
+            //{
+            //    window.opener.progressWindow.close()
+            //}         
             window.close();
         }
         return(false);
@@ -69,11 +70,12 @@
             ret = confirm("Are you sure you wish to save and close this window?");
         }
         if(ret == true){
-            window.opener.location.href = window.opener.location.href;
-            if (window.opener.progressWindow)
-            {
-                window.opener.progressWindow.close()
-            } 
+            window.opener.location.reload();
+            //window.opener.location.href = window.opener.location.href;
+            //if (window.opener.progressWindow)
+            //{
+            //    window.opener.progressWindow.close()
+            //} 
         }        
         return ret;
     }
