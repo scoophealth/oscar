@@ -1,5 +1,6 @@
 package oscar.oscarBilling.ca.bc.administration;
 import java.sql.ResultSet;
+import oscar.*;
 import oscar.MyDateFormat;
 import oscar.oscarDemographic.data.*;
 /*
@@ -392,13 +393,13 @@ extends org.apache.struts.action.ActionForm {
       return oscar.Misc.safeString(w_ftreatment);
    }
    public void setW_ftreatment(String w_ftreatment) {
-      this.w_ftreatment = w_ftreatment;
+      this.w_ftreatment = Misc.stripLineBreaks(w_ftreatment);
    }
    public String getW_problem() {
       return oscar.Misc.safeString(w_problem);
    }
    public void setW_problem(String w_problem) {
-      this.w_problem = w_problem;
+      this.w_problem = Misc.stripLineBreaks(w_problem);
    }
    public String getW_servicedate() {
       return oscar.Misc.safeString(w_servicedate);
@@ -410,7 +411,7 @@ extends org.apache.struts.action.ActionForm {
       return oscar.Misc.safeString(w_diagnosis);
    }
    public void setW_diagnosis(String w_diagnosis) {
-      this.w_diagnosis = w_diagnosis;
+      this.w_diagnosis = Misc.stripLineBreaks(w_diagnosis);
    }
    public String getW_icd9() {
       return oscar.Misc.safeString(w_icd9);
@@ -452,7 +453,7 @@ extends org.apache.struts.action.ActionForm {
       return oscar.Misc.safeString(w_clinicinfo);
    }
    public void setW_clinicinfo(String w_clinicinfo) {
-      this.w_clinicinfo = w_clinicinfo;
+      this.w_clinicinfo = Misc.stripLineBreaks(w_clinicinfo);
    }
    public String getW_capability() {
       return oscar.Misc.safeString(w_capability);
@@ -464,7 +465,7 @@ extends org.apache.struts.action.ActionForm {
       return oscar.Misc.safeString(w_capreason);
    }
    public void setW_capreason(String w_capreason) {
-      this.w_capreason = w_capreason;
+      this.w_capreason = Misc.stripLineBreaks(w_capreason);
    }
    public String getW_estimate() {
       return oscar.Misc.safeString(w_estimate);
