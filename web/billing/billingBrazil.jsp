@@ -8,6 +8,18 @@
 <title>Faturamento</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" href="../../../web_fat.css">
+<script src="../../../oscar.js"></script>
+<script>
+  var xsize = 650;
+  var ysize = 400;	
+
+  function popupProcedimento() {
+      popup('/oscar/popup/procedimento/findProc.do?formCoProc=coProc&formDsProc=dsProc&coProc=' + document.forms[0].coProc.value + '&dsProc=' + document.forms[0].dsProc.value + '',xsize,ysize);
+  }
+
+</script>
+
+
 </head>
 
 <body background="../../../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -49,7 +61,7 @@
   <p>&nbsp;</p>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
     <tr class="body">
-      <td width="10%"><span class="formLabel">Formul&aacute;rio</span></td>
+      <td width="10%"><span class="formLabel">Formul&aacute;rio de Faturamento</span></td>
       <td width="90%"> 
        <html:select property="formulario.coFormulario">
           <html:options name="procedimentoRealizadoForm" collection="FORMULARIOS" property="coFormulario" labelProperty="dsFormulario"/>
@@ -60,7 +72,7 @@
   </table>
   <p>&nbsp;</p>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
-   <tr><th>Procedimentos do formul&aacute;rio <b><bean:write name="procedimentoRealizadoForm" property="formulario.dsFormulario"/></b></th></tr>
+   <tr><th>Procedimentos encontrados no formul&aacute;rio <b><bean:write name="procedimentoRealizadoForm" property="formulario.dsFormulario"/></b></th></tr>
   </table>
   <br>
   <table cellspacing="2" cellpadding="2" width="95%" border="1" align="center">
@@ -87,12 +99,22 @@
   </table>
   <br>
   <table cellspacing="0" cellpadding="2" width="95%" border="0" align="center">
-   <tr><td align="left"><html:submit onclick="set('procedimento');"> Inserir procedimentos </html:submit></td></tr>
+   <tr><td align="left"><html:submit onclick="set('procedimento');"> Inserir procedimentos selecionados </html:submit></td></tr>
   </table>
   <br>
+  <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
+    <tr class="body">
+      <td width="20%"><a href="#" class="formLink" onclick="popupProcedimento()">Pesquisar</a> &nbsp; <span class="formLabel">Procedimento</span></td>
+      <td width="80%"> 
+        <html:text property="cadProcedimentos.coProcedimento" size="10" maxlength="8" styleId="coProc"/> &nbsp; 
+        <html:text property="cadProcedimentos.dsProcedimento" size="50" maxlength="100" styleId="dsProc"/> &nbsp; 
+        <html:submit onclick="set('add_proc');"> Inserir </html:submit>
+	  </td>
+    </tr>
+  </table>
   <br>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
-   <tr><th>Procedimentos Realizados</th></tr>
+   <tr><th>Rela&ccedil;&atilde;o dos Procedimentos Realizados no Paciente</th></tr>
   </table>
   <br>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
@@ -121,7 +143,7 @@
   <br>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
     <tr class="body">
-      <td width="20%"><span class="formLabel">C&oacute;digo CID*</span></td>
+      <td width="20%"><span class="formLabel">C&oacute;digo CID-10*</span></td>
       <td width="80%"> 
        <html:text property="coCid" size="10" maxlength="4"/> &nbsp; <html:submit onclick="set('diagnostico');"> Inserir diagn&oacute;stico </html:submit>
 	  </td>
@@ -129,7 +151,7 @@
   </table>
   <br>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
-   <tr><th>Diagn&oacute;sticos realizados</th></tr>
+   <tr><th>Rela&ccedil;&atilde;o dos Diagn&oacute;sticos do Paciente</th></tr>
   </table>
   <br>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
@@ -154,7 +176,7 @@
     </logic:iterate>
   </table>
   <p align="center"> 
-    <html:submit onclick="set('gravar');"> Gravar faturamento </html:submit>
+    <html:submit onclick="set('gravar');"> Gravar </html:submit>
   </p>
 
 <html:hidden property="dispatch" value="error"/>
