@@ -108,6 +108,8 @@ public final class BillingReProcessBillForm extends ActionForm {
     
     String debitRequestSeqNum = null;
     String debitRequestDate = null;
+    
+    
     /*
         
      //
