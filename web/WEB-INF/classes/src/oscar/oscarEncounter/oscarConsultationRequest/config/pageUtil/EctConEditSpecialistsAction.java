@@ -25,7 +25,7 @@ public class EctConEditSpecialistsAction extends Action
         String specialists[] = editSpecialistsForm.getSpecialists();
         System.out.println(String.valueOf(String.valueOf((new StringBuffer("===>")).append(delete).append("<==="))));
         
-        ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources");
+        ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
                 
         if(delete.equals(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.EditSpecialists.btnDeleteSpecialist")))
         {
