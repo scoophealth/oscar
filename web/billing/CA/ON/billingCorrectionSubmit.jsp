@@ -85,6 +85,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
   
   
   String[] param2 =new String[11];
+		if(_p0_18 == null) _p0_18 = "000";
 	  param2[0]=_p0_2;
 	  param2[1]=_p0_6;
 	  param2[2]=_p0_3;
@@ -93,7 +94,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
 	  param2[5]=_p0_7;
 	  param2[6]=_p0_5;
 	  param2[7]=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
-	  param2[8] = _p0_18;
+	  param2[8] = new java.math.BigDecimal(_p0_18).movePointLeft(2).toString(); // _p0_18;
 	  param2[9]=_p0_16;
 	  param2[10]=_p0_1;
 	 
