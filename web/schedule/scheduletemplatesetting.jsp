@@ -1,0 +1,265 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<%--
+/*
+ * $RCSfile: scheduletemplatesetting.jsp,v $ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * (your name here) 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+*/
+--%> 
+<%
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ include file="scheduleMainBeanConn.jsp" %>  
+<%  
+  GregorianCalendar now=new GregorianCalendar();
+  int year = now.get(Calendar.YEAR);
+  int month = (now.get(Calendar.MONTH)+1);
+  int day = now.get(Calendar.DAY_OF_MONTH);
+  
+%>
+
+<html>
+<head>
+<title>SCHEDULE SETTING</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" href="../web.css" />
+
+<script language="JavaScript">
+<!--
+function setfocus() {
+  this.focus();
+  //document.schedule.keyword.focus();
+  //document.schedule.keyword.select();
+}
+function selectprovider(s) {
+  //for a small clinic
+	//self.location.href = "scheduletemplatesetting1.jsp?provider_no="+s.options[s.selectedIndex].value+"&provider_name="+urlencode(s.options[s.selectedIndex].text);
+	//for a large clinic&hospital
+	self.location.href = "scheduletemplateapplying.jsp?provider_no="+s.options[s.selectedIndex].value+"&provider_name="+urlencode(s.options[s.selectedIndex].text);
+}
+function urlencode(str) {
+	var ns = (navigator.appName=="Netscape") ? 1 : 0;
+	if (ns) { return escape(str); }
+	var ms = "%25#23 20+2B?3F<3C>3E{7B}7D[5B]5D|7C^5E~7E`60";
+	var msi = 0;
+	var i,c,rs,ts ;
+	while (msi < ms.length) {
+		c = ms.charAt(msi);
+		rs = ms.substring(++msi, msi +2);
+		msi += 2;
+		i = 0;
+		while (true)	{ 
+			i = str.indexOf(c, i);
+			if (i == -1) break;
+			ts = str.substring(0, i);
+			str = ts + "%" + rs + str.substring(++i, str.length);
+		}
+	}
+	return str;
+}
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=100,left=115";//360,680
+  var popup=window.open(page, "scheduleholiday", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
+function go() {
+  var s = document.schedule.providerid.value ;
+  var u = 'scheduleedittemplate.jsp?providerid=' + s +'&providername='+urlencode(document.schedule.providerid.options[document.schedule.providerid.selectedIndex].text);
+	popupPage(390,700,u);
+}
+//-->
+</script>
+</head>
+<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<form method="post" name="schedule" action="schedulecreatedate.jsp">
+
+<table border="0" width="100%">
+<tr>
+      <td width="150" bgcolor="#009966"> 
+        <!--left column-->
+  <table border="0" cellspacing="0" cellpadding="0" width="100%" >
+    <tr bgcolor="#486ebd"> 
+            <th align="CENTER" bgcolor="#009966">
+              <p>&nbsp;</p>
+              <p><font face="Helvetica" color="#FFFFFF">SCHEDULE TEMPLATE SETTING</font></p>
+            </th>
+    </tr>
+  </table>
+      <table width="98%" border="0" cellspacing="0" cellpadding="0" height="500">
+        <tr>
+            <td>
+              <p>&nbsp;</p>
+              <p><font size="-1">1. Select the provider's name to set up the provider's 
+                schedule.</font></p>
+              <p><font size="-1">2. Check the 'Holiday Setting' link to specify 
+                the holidays.</font></p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+            </td>
+          </tr>
+        </table>
+
+      </td><td>
+
+<center>
+      <table width="95%" border="0" cellspacing="0" cellpadding="0" >
+        <tr> 
+              <td>Select a provider: </td>
+            </tr>
+            <tr> 
+              <td>&nbsp;</td>
+            </tr>
+            <tr> 
+              <td bgcolor="#CCFFCC"> &nbsp; 
+                <select name="provider_no" onChange="selectprovider(this)">
+                  <option value="">---None---</option>
+<%
+   String [] param = new String[2];
+   param[0] = "doctor";
+   param[1] = "last_name" ;
+   ResultSet rsgroup = scheduleMainBean.queryResults(param, "search_provider");
+ 	 while (rsgroup.next()) { 
+%>
+                  <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+<% } 
+   param[0] = "receptionist";
+   rsgroup = scheduleMainBean.queryResults(param, "search_provider");
+ 	 while (rsgroup.next()) { 
+%>
+                  <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+<% } 
+   param[0] = "admin";
+   rsgroup = scheduleMainBean.queryResults(param, "search_provider");
+ 	 while (rsgroup.next()) { 
+%>
+                  <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+<% } %>
+                </select>
+              </td>
+            </tr>
+            <tr> 
+              <td>&nbsp;</td>
+            </tr>
+            <tr> 
+              <td> 
+                <p>Or do:</p>
+              </td>
+            </tr>
+            <tr> 
+              <td>&nbsp;</td>
+            </tr>
+            <tr> 
+              <td nowrap bgcolor="#CCFFCC">&nbsp; <a HREF="#" ONCLICK ="popupPage(380,530,'scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>')" TITLE='Define Holidays';return true">Holiday 
+                Setting</a></td>
+            </tr>
+            <tr> 
+              <td>&nbsp;</td>
+            </tr>
+            <tr> 
+              <td nowrap bgcolor="#CCFFFF">&nbsp; <a HREF="#" ONCLICK ="popupPage(380,530,'scheduletemplatecodesetting.jsp')" >Template 
+                Code Setting</a></td>
+            </tr>
+            <tr> 
+              <td nowrap bgcolor="#CCFFFF">&nbsp; <a HREF="#" onClick="go()"  >
+              Template Setting</a> for
+                <select name="providerid">
+                  <option value="Public">Public</option>
+<%
+   param[0] = "doctor";
+   param[1] = "last_name" ;
+   rsgroup = scheduleMainBean.queryResults(param, "search_provider");
+ 	 while (rsgroup.next()) { 
+%>
+                  <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+<% } 
+   param[0] = "receptionist";
+   rsgroup = scheduleMainBean.queryResults(param, "search_provider");
+ 	 while (rsgroup.next()) { 
+%>
+                  <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+<% } 
+   param[0] = "admin";
+   rsgroup = scheduleMainBean.queryResults(param, "search_provider");
+ 	 while (rsgroup.next()) { 
+%>
+                  <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+<% } %>
+                </select>
+              </td>
+            </tr>
+            <tr> 
+              <td> 
+                <div align="left"></div>
+              </td>
+            </tr>
+            <tr> 
+              <td> 
+                <div align="right">
+                  <input type="button" name="Button" value="Cancel" onClick="window.close()">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+            </tr>
+          </table>
+<p> 
+
+        </center>
+  </td></tr>
+</table>
+
+</form>
+</body>
+</html>
