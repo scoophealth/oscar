@@ -1,3 +1,4 @@
+<%System.out.println("GET CALLED");%>
 <!--  
 /*
  * 
@@ -39,15 +40,23 @@
  if (search.compareTo("") == 0){
  search = "search_referral_code";
  }
+
  
-    String codeName= "",codeName1 = "", codeName2 = "";
-       String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
+   String codeName= "",codeName1 = "", codeName2 = "";
+   String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
    codeName = request.getParameter("name");
    codeName1= request.getParameter("name1");
    codeName2 = request.getParameter("name2");
-  xcodeName = request.getParameter("name");
-     xcodeName1= request.getParameter("name1");
-      xcodeName2 = request.getParameter("name2");
+   xcodeName = request.getParameter("name");
+   xcodeName1= request.getParameter("name1");
+   xcodeName2 = request.getParameter("name2");
+
+   String formName = request.getParameter("formName");
+   String formElement = request.getParameter("formElement");
+   if ( formName == null || formElement == null){
+      formName = "";
+      formElement = "";
+   }
    
    String desc = "", desc1 = "", desc2 = "";
     String fdesc = "", fdesc1 = "", fdesc2 = "";
@@ -126,7 +135,7 @@ codeName2 = codeName2 + "%";
 <script LANGUAGE="JavaScript">
 <!--
 function CodeAttach(File0) {
-      
+      alert("h");
       self.close();
       self.opener.document.BillingCreateBillingForm.xml_refer1.value = File0;
       self.opener.document.BillingCreateBillingForm.xml_refer2.value ='';
@@ -137,13 +146,15 @@ function CodeAttach(File0) {
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000"  topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#FFFFFF" text="#000000"  topmargin="0" leftmargin="0" rightmargin="0" >
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#486ebd">
     <th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica" color="#000000">Referral Doctor</font><font face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3 selections)</font></th>
   </tr>
 </table>
  <form name="servicecode" id="servicecode" method="post" action="billingReferCodeUpdate.jsp">
+<input type="hidden" name="formName" value="<%=formName%>" />
+ <input type="hidden" name="formElement" value="<%=formElement%>" />
 <table width="600" border="1">
   <tr bgcolor="#CCCCFF"> 
     <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>

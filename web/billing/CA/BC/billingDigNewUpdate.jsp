@@ -42,6 +42,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">
 <!--
+<%
+      boolean multipage = false;
+      String formName = request.getParameter("formName");
+      String formElement = request.getParameter("formElement");
+      if ( formName != null && !formName.equals("") && formElement != null && !formElement.equals("") ){
+         multipage = true;
+      }    
+
+      if (multipage){%>
+function CodeAttach(File0, File1, File2) {
+     
+      self.close();
+      self.opener.document.<%=formName%>.<%=formElement%>.value = File0;
+}
+      <%}else{%>
 function CodeAttach(File0, File1, File2) {
       
       self.close();
@@ -49,6 +64,7 @@ function CodeAttach(File0, File1, File2) {
       self.opener.document.BillingCreateBillingForm.xml_diagnostic_detail2.value = File1;
       self.opener.document.BillingCreateBillingForm.xml_diagnostic_detail3.value = File2;
 }
+    <%}%>
 -->
 </script>
 

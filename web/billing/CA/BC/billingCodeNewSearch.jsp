@@ -48,6 +48,13 @@
   xcodeName = request.getParameter("name");
      xcodeName1= request.getParameter("name1");
       xcodeName2 = request.getParameter("name2");
+
+      String formName = request.getParameter("formName");
+      String formElement = request.getParameter("formElement");
+      if ( formName == null || formElement == null){
+         formName = "";
+         formElement = "";
+      }
    
    String desc = "", desc1 = "", desc2 = "";
    
@@ -110,6 +117,8 @@ function CodeAttach(File0) {
   </tr>
 </table>
  <form name="servicecode" id="servicecode" method="post" action="billingCodeNewUpdate.jsp">
+ <input type="hidden" name="formName" value="<%=formName%>" />
+ <input type="hidden" name="formElement" value="<%=formElement%>" />
 <table width="600" border="1">
   <tr bgcolor="#CCCCFF"> 
     <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>
@@ -132,25 +141,32 @@ String Dcode="", DcodeDesc="";
  rslocal = null;
   rslocal = apptMainBean.queryResults(param, search);
  while(rslocal.next()){
- intCount = intCount + 1;
- Dcode = rslocal.getString("service_code");
-  DcodeDesc = rslocal.getString("description");
- if (Count == 0){
- Count = 1;
- color = "#FFFFFF";
- } else {
- Count = 0;
- color="#EEEEFF";
- }
+    intCount = intCount + 1;
+    Dcode = rslocal.getString("service_code");
+    DcodeDesc = rslocal.getString("description");
+    if (Count == 0){
+       Count = 1;
+       color = "#FFFFFF";
+    } else {
+       Count = 0;
+       color="#EEEEFF";
+    }
  %>
   
   <tr bgcolor="<%=color%>"> 
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %><input type="checkbox" name="code_<%=Dcode%>" checked><%}else{%><input type="checkbox" name="code_<%=Dcode%>"><%}%><%=Dcode%></font></td>
+    <td width="12%">
+        <font face="Arial, Helvetica, sans-serif" size="2">
+        <% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %>
+            <input type="checkbox" name="code_<%=Dcode%>" checked>
+        <%}else{%>
+            <input type="checkbox" name="code_<%=Dcode%>">
+        <%}%>
+        <%=Dcode%>
+        </font>
+    </td>
     <td width="88%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>"><input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="50"><input type="submit" name="update" value="update <%=Dcode%>"></font></td>
   </tr>
-  <% 
-  }
-  %>
+<%}%>
   
   <%  if (intCount == 0 ) { %>
   <tr bgcolor="<%=color%>"> 
