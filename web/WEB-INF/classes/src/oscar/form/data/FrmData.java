@@ -135,11 +135,32 @@ public class FrmData {
             table = rs.getString("form_table");
         }
 
-		ret[1] = "0";
-        sql = "SELECT ID FROM " + table + " WHERE demographic_no=" + demoNo +" order by formEdited desc limit 0,1";
-        rs = db.GetSQL(sql);
-        while(rs.next()) {
-            ret[1] = rs.getString("ID");
+	ret[1] = "0";
+        if (table.equals("form")) {
+            sql = "SELECT form_no FROM " + table + " WHERE demographic_no=" + demoNo +" AND form_name='" + formName + "' order by form_no desc limit 0,1";
+            rs = db.GetSQL(sql);
+            while(rs.next()) {
+                ret[1] = rs.getString("form_no");
+            }
+            if ( ret[1].equals("0") && formName.equals("AR1") ) { // quick hack for ease of migration from old forms to new
+                ret = getShortcutFormValue(demoNo, "AR");
+                System.out.println("ret[0] is: " + ret[0]);                
+                String[] foo = ret[0].split(".jsp");
+                ret[0] = foo[0] + "pg1.jsp" + foo[1];
+                System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+            }
+            if ( ret[1].equals("0") && formName.equals("AR2") ) { // ditto
+                ret = getShortcutFormValue(demoNo, "AR");
+                String[] foo = ret[0].split(".jsp");
+                ret[0] = foo[0] + "pg2.jsp" + foo[1];
+                System.out.println("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
+            }
+        } else {
+            sql = "SELECT ID FROM " + table + " WHERE demographic_no=" + demoNo +" order by formEdited desc limit 0,1";
+            rs = db.GetSQL(sql);
+            while(rs.next()) {
+                ret[1] = rs.getString("ID");
+            }
         }
 
         rs.close();
