@@ -48,6 +48,12 @@ public class BillingSessionBean {
     private String notes = "";
     private String encounter = "";
     private String icbc_claim_no = "";
+    private String correspondenceCode = "";
+    private String dependent = "";
+    private String afterHours = "";
+    private String timeCall = "";
+    private String submissionCode = "";
+    private String service_to_date = "";
     
     public String getIcbc_claim_no(){
         this.icbc_claim_no = (null != this.icbc_claim_no) ? this.icbc_claim_no : "";
@@ -159,7 +165,7 @@ public class BillingSessionBean {
      * Getter for property notes.
      * @return Value of property notes.
      */
-    public java.lang.String getNotes() {
+    public String getNotes() {
         return notes;
     }
     
@@ -167,8 +173,104 @@ public class BillingSessionBean {
      * Setter for property notes.
      * @param notes New value of property notes.
      */
-    public void setNotes(java.lang.String notes) {
+    public void setNotes(String notes) {
         this.notes = notes;
+    }
+    
+    /**
+     * Getter for property correspondenceCode.
+     * @return Value of property correspondenceCode.
+     */
+    public String getCorrespondenceCode() {
+       return correspondenceCode;
+    }
+    
+    /**
+     * Setter for property correspondenceCode.
+     * @param correspondenceCode New value of property correspondenceCode.
+     */
+    public void setCorrespondenceCode(String correspondenceCode) {
+       this.correspondenceCode = correspondenceCode;
+    }
+    
+    /**
+     * Getter for property dependent.
+     * @return Value of property dependent.
+     */
+    public java.lang.String getDependent() {
+       return dependent;
+    }
+    
+    /**
+     * Setter for property dependent.
+     * @param dependent New value of property dependent.
+     */
+    public void setDependent(java.lang.String dependent) {
+       this.dependent = dependent;
+    }
+    
+    /**
+     * Getter for property afterHours.
+     * @return Value of property afterHours.
+     */
+    public java.lang.String getAfterHours() {
+       return afterHours;
+    }
+    
+    /**
+     * Setter for property afterHours.
+     * @param afterHours New value of property afterHours.
+     */
+    public void setAfterHours(java.lang.String afterHours) {
+       this.afterHours = afterHours;
+    }
+    
+    /**
+     * Getter for property timeCall.
+     * @return Value of property timeCall.
+     */
+    public java.lang.String getTimeCall() {
+       return timeCall;
+    }
+    
+    /**
+     * Setter for property timeCall.
+     * @param timeCall New value of property timeCall.
+     */
+    public void setTimeCall(java.lang.String timeCall) {
+       this.timeCall = timeCall;
+    }
+    
+    /**
+     * Getter for property submissionCode.
+     * @return Value of property submissionCode.
+     */
+    public java.lang.String getSubmissionCode() {
+       return submissionCode;
+    }
+    
+    /**
+     * Setter for property submissionCode.
+     * @param submissionCode New value of property submissionCode.
+     */
+    public void setSubmissionCode(java.lang.String submissionCode) {
+       this.submissionCode = submissionCode;
+    }
+    
+    /**
+     * Getter for property service_to_date.
+     * @return Value of property service_to_date.
+     */
+    public java.lang.String getService_to_date() {
+       return service_to_date;
+    }
+    
+    /**
+     * Setter for property service_to_date.
+     * @param service_to_date New value of property service_to_date.
+     */
+    public void setService_to_date(java.lang.String service_to_date) {
+       this.service_to_date = service_to_date;
     }
     
     // public void estUserName(){
