@@ -308,7 +308,12 @@
             document.getElementById('copyRight').style.display = 'none';
         //}
     }
-    
+    function showSubtitle(){
+        if(document.getElementById('questionnaire').style.display == 'block')
+            document.getElementById('questionnaire').style.display = 'none';
+        else 
+            document.getElementById('questionnaire').style.display = 'block';
+    }
         
 </script>
 <script type="text/javascript" src="formScripts.js">          
@@ -362,20 +367,34 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="leftcol"><a href="javascript: goToVisualAid1();">Visual Aid 1</a></td>
+                <td class="leftcol"><a href="javascript: goToVisualAid1();" title="for core questions" >Visual Aid 1</a></td>
             </tr>
             <tr>
                 <td></td>
             </tr>
             <tr>
-                <td class="leftcol"><a href="javascript: goToVisualAid2();">Visual Aid 2</a></td>
+                <td class="leftcol"><a href="javascript: goToVisualAid2();" title="for additional device questions">Visual Aid 2</a></td>
             </tr>            
             <tr>
                 <td></td>
             </tr>
             <tr>
-                <td class="leftcol"><a href="javascript: goToPage1();">Questionnaire</a></td>
-            </tr>           
+                <td class="leftcol"><a href="javascript: showSubtitle();">Questionnaire</a></td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" style="display:none" id="questionnaire">
+                        <tr>
+                            <td width="10%"></td>
+                            <td><a href="javascript: goToPage1();" title="Core questions">&bull; <font style="font-size:70%">Core</font></a></td>
+                        </tr>
+                        <tr>
+                            <td width="10%"></td>
+                            <td><a href="javascript: goToPage5();" title="Additional questions for users of assistive devices">&bull; <font style="font-size:70%">Additional</font></a></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         </table>
     </td>
     <td width="83%"><table>
@@ -619,8 +638,8 @@
                     </tr> 
                     <tr>
                         <td colspan="3">
-                            <table height="10px">
-                                <tr><td>&nbsp;</td></tr>
+                            <table height="8px">
+                                <tr><td></td></tr>
                             </table>
                         </td>
                     </tr> 
