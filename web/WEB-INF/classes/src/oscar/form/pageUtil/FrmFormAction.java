@@ -179,7 +179,13 @@ public class FrmFormAction extends Action {
         }
         
          //return mapping.findForward("success");
-        //forward to the for with updated formId    
+        //forward to the for with updated formId  
+        
+        String submit = request.getParameter("submit");
+        System.out.println("submit value: " + submit);
+        if(submit.equalsIgnoreCase("exit")){
+            return (new ActionForward("/form/formSaveAndExit.jsp"));
+        }
         EctFormData fData = new EctFormData();
         String formNameByFormTable = fData.getFormNameByFormTable("../form/SetupForm.do?formName="+formName+"&demographic_no=");
         String[] formPath = {"","0"};
