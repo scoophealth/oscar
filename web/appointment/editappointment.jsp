@@ -336,7 +336,7 @@ function checkTimeTypeIn(obj) {
 	<td align="right" nowrap> 
 	<input type = "button" name="labelprint" value = "<bean:message key="appointment.editappointment.btnLabelPrint"/>" onClick="window.open('../demographic/demographiclabelprintsetting.jsp?demographic_no='+document.EDITAPPT.demographic_no.value, 'labelprint','height=550,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no' )">
 	<!--input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="self.close()"-->
-	<a href=# onclick="onButRepeat()">.</a>
+	<input type="button" value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()">	
 	</td>
 </tr>
 </table>
