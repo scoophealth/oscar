@@ -110,18 +110,18 @@ function searchAll() {
         <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
         <input type="hidden" name="displaymode" value="Search " >
         <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
-        <input type="SUBMIT" name="displaymode" value="Search " size="17" title="Search active patients">
+        <input type="SUBMIT" name="displaymode" value='<bean:message key="global.search"/>' size="17" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>
         &nbsp;&nbsp;
-        <a href="javascript:searchInactive();" title="Search inactive patients">Inactive</a> |
-        <a href="javascript:searchAll();" title="Search all patients">All</a>
+        <a href="javascript:searchInactive();" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>'><bean:message key="demographic.search.Inactive"/></a> |
+        <a href="javascript:searchAll();" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>'><bean:message key="demographic.search.All"/></a>
       </td></tr><tr>
 			
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
         <input type="radio" name="search_mode" value="search_address" <%=request.getParameter("search_mode").equals("search_address")?"checked":""%>>
-        Address </font></td>
+        <bean:message key="demographic.demographicsearch2apptresults.optAddress"/> </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
           <input type="radio" name="search_mode" value="search_hin" <%=request.getParameter("search_mode").equals("search_hin")?"checked":""%>>
-          HIN</font></td>
+          <bean:message key="demographic.demographicsearch2apptresults.optHIN"/> </font></td>
         <td></td>
 		</tr>
 	<%
