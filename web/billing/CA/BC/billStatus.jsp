@@ -64,6 +64,12 @@
      String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
      String xml_demoNo           = request.getParameter("demographicNo")==null?"":request.getParameter("demographicNo"); 
      
+     boolean defaultShow = request.getParameter("submitted")==null?true:false;
+     
+     boolean showMSP              = request.getParameter("showMSP")==null?defaultShow:!defaultShow;  //request.getParameter("showMSP");
+     boolean showWCB              = request.getParameter("showWCB")==null?defaultShow:!defaultShow;  //request.getParameter("showWCB");
+     boolean showPRIV             = request.getParameter("showPRIV")==null?defaultShow:!defaultShow;  //request.getParameter("showPRIV");     
+     
 %>
 
 <html>
@@ -181,6 +187,19 @@ function setDemographic(demoNo){
 <table width="100%" border="0" bgcolor="#EEEEFF">
   <form name="serviceform" method="get" action="billStatus.jsp">
     <tr>  
+    <td rowspan="2">
+    <table>
+        <tr>
+            <td class="bCellData" ><input type="checkbox" name="showMSP" value="show"  <%=showMSP?"checked":""%> />MSP</td>
+        </tr>
+        <tr>
+            <td class="bCellData" ><input type="checkbox" name="showWCB" value="show"  <%=showWCB?"checked":""%> />WCB</td>
+        </tr>
+        <tr>
+            <td class="bCellData" ><input type="checkbox" name="showPRIV" value="show" <%=showPRIV?"checked":""%>  />Private</td>
+        </tr>
+    </table>
+    </td>
       <td colspan=2>         
         <div align="center">
             <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select provider </b></font> 
@@ -262,7 +281,7 @@ if (billTypes == null){
         <input type="radio" name="billTypes" value="<%=MSPReconcile.DONOTBILL%>"    <%=billTypes.equals(MSPReconcile.DONOTBILL)?"checked":""%>/> Do Not Bill
         <input type="radio" name="billTypes" value="<%=MSPReconcile.BILLPATIENT%>"  <%=billTypes.equals(MSPReconcile.BILLPATIENT)?"checked":""%>/> Bill Patient
         <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/> All
-
+        <input type="hidden" name="submitted" value="yes"/>
       </td>
     </tr>
 </table>
@@ -293,7 +312,8 @@ if (billTypes == null){
     String demoNo = request.getParameter("demographicNo");
     
     ArrayList list;
-    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd,demoNo);
+                         
+    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd,demoNo,!showWCB,!showMSP,!showPRIV);
     list = bSearch.list;
     Properties p2 = bSearch.getCurrentErrorMessages();
     Properties p = msp.currentC12Records();    
@@ -417,7 +437,7 @@ String isRejected(String billingNo,Properties p,boolean wcb){
         String moneyStr = "0.00";
         try{             
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
-        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+        }catch (Exception moneyException) {}
     return moneyStr;
     }
     
