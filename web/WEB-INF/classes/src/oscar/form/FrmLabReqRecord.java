@@ -94,40 +94,40 @@ public class FrmLabReqRecord  extends FrmRecord {
 			String sql = null;
 
 			if ( Integer.parseInt(demoProvider) == provNo) {
-                // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
-                    + "FROM provider WHERE provider_no = " + provNo;
-                rs = db.GetSQL(sql);
+                            // from provider table
+                            sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
+                                + "FROM provider WHERE provider_no = " + provNo;
+                            rs = db.GetSQL(sql);
 
-                if(rs.next()) {
-                    String num = rs.getString("ohip_no");
-                    //props.setProperty("apptProvName", "");
-                    props.setProperty("provName", rs.getString("provName"));
-                    props.setProperty("practitionerNo", "0000-"+num+"-00");
-                }
-                rs.close();
+                            if(rs.next()) {
+                                String num = rs.getString("ohip_no");
+                                props.setProperty("reqProvName", rs.getString("provName"));
+                                props.setProperty("provName", rs.getString("provName"));
+                                props.setProperty("practitionerNo", "0000-"+num+"-00");
+                            }
+                            rs.close();
 			} else {
 			    // from provider table
-	            sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = " + provNo;
-                rs = db.GetSQL(sql);
+                            sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = " + provNo;
+                            rs = db.GetSQL(sql);
 				
-				if(rs.next()) {
-					String num = rs.getString("ohip_no");
-					props.setProperty("reqProvName", rs.getString("provName"));
-                }
-                rs.close();
+                            if(rs.next()) {
+                                    String num = rs.getString("ohip_no");
+                                    props.setProperty("reqProvName", rs.getString("provName"));
+                            }
+                            rs.close();
 
-				// from provider table
-				sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = " + demoProvider;
-                rs = db.GetSQL(sql);
+                            // from provider table
+                            sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = " + demoProvider;
+                            rs = db.GetSQL(sql);
 
-                if(rs.next()) {
-                    String num = rs.getString("ohip_no");
-                    props.setProperty("provName", rs.getString("provName"));
-                    props.setProperty("practitionerNo", "0000-"+num+"-00");
-                }
-                rs.close();
-            }
+                            if(rs.next()) {
+                                String num = rs.getString("ohip_no");
+                                props.setProperty("provName", rs.getString("provName"));
+                                props.setProperty("practitionerNo", "0000-"+num+"-00");
+                            }
+                            rs.close();
+                        }
 			db.CloseConn();
 		}
 
