@@ -74,8 +74,7 @@ public class EctSaveEncounterAction extends Action {
             httpservletrequest.getParameter("rowOneSize")+"', '"+
             httpservletrequest.getParameter("rowTwoSize")+"', '"+
             httpservletrequest.getParameter("presBoxSize")+"', '"+
-            httpservletrequest.getParameter("rowThreeSize")+"')";
-            System.out.println("DB query: "+s);
+            httpservletrequest.getParameter("rowThreeSize")+"')";            
             dbhandler.RunSQL(s);
         } catch(Exception e) {
             e.printStackTrace(System.out);
