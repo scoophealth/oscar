@@ -100,6 +100,7 @@ public class BillingCreateBillingAction extends Action {
         bean.setAfterHours(frm.getAfterHours());
         bean.setTimeCall(frm.getTimeCall());
         bean.setSubmissionCode(frm.getSubmissionCode());
+        bean.setShortClaimNote(frm.getShortClaimNote());
         bean.setService_to_date(frm.getService_to_date());
 	bean.setIcbc_claim_no(frm.getIcbc_claim_no());
         if (((BillingCreateBillingForm) form).getXml_billtype().equalsIgnoreCase("WCB")){
