@@ -200,7 +200,8 @@
 		            b = false;
 		            alert ("The percentage should be less than 1.");
 		        }
-	        } else if(document.forms[0].billingservice_date.value.length == 0) {
+	        }
+			if(document.forms[0].billingservice_date.value.length<10) {
 	            b = false;
 	            alert ("You need to select a date from the calendar.");
 	        }
