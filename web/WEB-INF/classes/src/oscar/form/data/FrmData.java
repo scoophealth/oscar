@@ -137,12 +137,15 @@ public class FrmData {
 
 	ret[1] = "0";
         if (table.equals("form")) {
-            sql = "SELECT form_no FROM " + table + " WHERE demographic_no=" + demoNo +" AND form_name='" + formName + "' order by form_no desc limit 0,1";
+            String searchFormName = formName;
+            if (searchFormName.equals("AR1")) searchFormName = "ar1_99_12"; // quick hack for ease of migration from old forms to new
+            if (searchFormName.equals("AR2")) searchFormName = "ar2_99_08"; // ditto
+            sql = "SELECT form_no FROM " + table + " WHERE demographic_no=" + demoNo +" AND form_name='" + searchFormName + "' order by form_no desc limit 0,1";
             rs = db.GetSQL(sql);
             while(rs.next()) {
                 ret[1] = rs.getString("form_no");
             }
-            if ( ret[1].equals("0") && formName.equals("AR1") ) { // quick hack for ease of migration from old forms to new
+            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
                 ret = getShortcutFormValue(demoNo, "AR");
                 System.out.println("ret[0] is: " + ret[0]);                
                 String[] foo = ret[0].split(".jsp");
