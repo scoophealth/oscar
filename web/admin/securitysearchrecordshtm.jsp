@@ -77,7 +77,7 @@
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Security_Search" >
-				<INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"></td>
+				<INPUT TYPE="SUBMIT" NAME="button" VALUE="<bean:message key="admin.securitysearchrecordshtm.btnSearch"/>" SIZE="17"></td>
     </tr><tr> 
         <td nowrap><font size="1" face="Verdana" color="#0000FF"><bean:message key="admin.securitysearchrecordshtm.reserved"/> </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> </font></td>
