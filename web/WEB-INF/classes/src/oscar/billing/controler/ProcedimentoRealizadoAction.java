@@ -226,6 +226,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 			}
                     
 			form.setCoCid("");
+			form.setDsCid("");
 		} catch (Exception e) {
 			generalError(request, e, "error.general");
 

@@ -25,6 +25,7 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     private List formularios;
     private FatFormularios formulario;
     private String coCid;
+	private String dsCid;
     private CadProcedimentos cadProcedimentos;
 
     public ProcedimentoRealizadoForm() {
@@ -190,6 +191,20 @@ public class ProcedimentoRealizadoForm extends ActionForm {
 	 */
 	public void setCadProcedimentos(CadProcedimentos procedimentos) {
 		cadProcedimentos = procedimentos;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getDsCid() {
+		return dsCid;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setDsCid(String string) {
+		dsCid = string;
 	}
 
 }
