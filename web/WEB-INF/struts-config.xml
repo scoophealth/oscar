@@ -642,6 +642,7 @@
         <forward name="failure" path="/oscarEncounter/error.jsp"/>
         <forward name="success" path="/oscarEncounter/TimeOut.jsp"/>
         <forward name="splitchart" path="/oscarEncounter/Index.jsp?saved=true&amp;splitchart=true"/>
+        <forward name="close" path="/oscarEncounter/close.jsp"/>
     </action>
     <action     path="/oscarEncounter/AR"
                 type="oscar.oscarEncounter.pageUtil.EctARAction"
