@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.util.*;
 //import oscar.OscarProperties;
@@ -59,14 +61,14 @@ public class FrmRecordHelp {
          * but if db_type = postgresql, return a prepared statement, since
          * here we dont know which sequence will be used
          */ 
-        //String db_type = OscarProperties.getInstance() != null ? OscarProperties.getInstance().getProperty("db_type", "") : "";
-        //if (db_type.equals("") || db_type.equalsIgnoreCase("mysql")) {
+        String db_type = OscarProperties.getInstance() != null ? OscarProperties.getInstance().getProperty("db_type", "") : "";
+        if (db_type.equals("") || db_type.equalsIgnoreCase("mysql")) {
         	sql = "SELECT LAST_INSERT_ID()";
-        //} else if (db_type.equalsIgnoreCase("postgresql")) {
-        //	sql = "SELECT CURRVAL('?')";
-        //} else {
-        //	throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-        //}
+        } else if (db_type.equalsIgnoreCase("postgresql")) {
+        	sql = "SELECT CURRVAL('?')";
+        } else {
+        	throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+        }
         rs = db.GetSQL(sql);
         if(rs.next())
             ret = rs.getInt(1);
