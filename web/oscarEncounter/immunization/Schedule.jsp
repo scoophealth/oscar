@@ -191,7 +191,7 @@ TD.grey
                         <td  >
                         </td>
                         <td style="text-align:right" NOWRAP>
-                                <a href="javascript:window.close();"  ><bean:message key="global.btnClose"</a> |  
+                                <a href="javascript:window.close();"  ><bean:message key="global.btnClose"/></a> |  
                         </td>
                     </tr>
                 </table>
