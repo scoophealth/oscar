@@ -263,7 +263,7 @@ function OtherScriptAttach() {
  // f1 = document.serviceform.xml_dig_search1.value;
  // f2 = escape(document.serviceform.elements["File2Data"].value);
  // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','<rewrite:reWrite jspPage="billingCodeNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+  awnd=rs('att','<rewrite:reWrite jspPage="billingCodeNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',820,660,1);
   awnd.focus();
 }
 function ReferralScriptAttach() {
