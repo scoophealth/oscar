@@ -481,7 +481,7 @@ function showHideLayers() { //v3.0
              <tr>
                 <td >
                     <a href="javascript: function myFunction() {return false; }" id="hlSDate"><font size="-2"><strong><bean:message key="billing.servicedate"/>:</strong></font></a>                    
-                    <html:text property="xml_appointment_date" value="<%=bean.getApptDate()%>" size="10" readonly="true" styleId="xml_appointment_date"/>
+                    <html:text property="xml_appointment_date"  size="10" readonly="true" styleId="xml_appointment_date"/>
                     <!--<a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>-->                    
                 </td>
                 <td >                  
