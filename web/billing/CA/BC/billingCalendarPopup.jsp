@@ -23,16 +23,28 @@
  * Ontario, Canada 
  */
 -->
+<%@ page language="java" contentType="text/html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
  <%
   if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../../../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"  %>
 <%
   //to prepare calendar display  
   String type = request.getParameter("type");
   int year = Integer.parseInt(request.getParameter("year"));
   int month = Integer.parseInt(request.getParameter("month"));
+  String returnForm = request.getParameter("returnForm");
+  if(returnForm == null){
+    returnForm = "anyThing";
+  }  
+  String returnItem = request.getParameter("returnItem");
+  if(returnItem == null){
+    returnItem = "anyname";
+  }
   //int day = now.get(Calendar.DATE);
   int delta = request.getParameter("delta")==null?0:Integer.parseInt(request.getParameter("delta")); //add or minus month
   GregorianCalendar now = new GregorianCalendar(year,month-1,1);
@@ -43,26 +55,33 @@
 %>
 
 <html>
+
 <head>
+<html:base/>
 <title>CALENDAR</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
-<!--
+
 function setfocus() {
   this.focus();
 }
+
 function typeInDate(year1,month1,day1) {
     self.close();
-    opener.document.BillingCreateBillingForm.xml_vdate.value=year1+"-"+month1+"-"+day1;    
-    
-
+    opener.document.BillingCreateBillingForm.xml_vdate.value=year1+"-"+month1+"-"+day1;        
 }
+
 function typeSrvDate(year1,month1,day1) {
   self.close();
   opener.document.BillingCreateBillingForm.xml_appointment_date.value=year1+"-"+month1+"-"+day1;  
 }
-//-->
+
+function typeMultiDate(year1,month1,day1){  
+  self.close();  
+  opener.document.<%=returnForm%>.<%=returnItem%>.value=year1+"-"+month1+"-"+day1;
+}
+
 </script>
 </head>
 <body bgcolor="ivory" onLoad="setfocus()">
@@ -74,9 +93,9 @@ function typeSrvDate(year1,month1,day1) {
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   			<tr>
         	  <td BGCOLOR="#FFD7C4" width="50%" align="center" >
-			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
+			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
               </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
   			</TR>
 		</table>
 <p>
@@ -98,18 +117,21 @@ function typeSrvDate(year1,month1,day1) {
                     if(dateGrid[i][j]==0){
                         out.println("<td></td>");
                     }else {
-                        now.add(now.DATE, 1);
-                        if (type.compareTo("admission") == 0) {
+                       now.add(now.DATE, 1);
+                       if (type.compareTo("admission") == 0) {
             %>
-                      <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-                      <%= dateGrid[i][j] %> </a>
-                      </td>
-            <%         }else {%>
-                      <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-		      <%= dateGrid[i][j] %> </a>
-                      </td>
+                       <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+                       <%= dateGrid[i][j] %> </a>
+                       </td>
+            <%         }else if (type.equals("service")){%>
+                       <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+		       <%= dateGrid[i][j] %> </a>
+                       </td>
+            <%         }else{ %>
+                       <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeMultiDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+		       <%= dateGrid[i][j] %> </a>
+                       </td>
             <%         }
-                 
                     }
                  
                 }
