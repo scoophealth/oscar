@@ -46,7 +46,7 @@ public class dxResearchBeanHandler {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "select d.start_date, d.update_date, i.description, i.ichppccode, d.dxresearch_no, d.status from dxresearch d, ichppccode i where d.dxresearch_code=i.ichppccode and d.status<>'D' and d.demographic_no ='" + demographicNo 
                         +"' order by d.start_date desc, d.update_date desc";
-            System.out.println("Sql Statement: " + sql);
+            //System.out.println("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
