@@ -61,23 +61,24 @@ studyBean.doConfigure(dbParams,dbQueries);
 		}
 
 		form.setProperty("formType2Diabetes.formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rsdemo.getString("formEdited"), "yyyyMMddHHmmss"), "yyyy-MM-dd hh:mm:ss a") );
-		form.setProperty("formType2Diabetes.bp", rsdemo.getString("bp" + k));
-		form.setProperty("formType2Diabetes.weight", rsdemo.getString("weight" + k));
-		form.setProperty("formType2Diabetes.height", rsdemo.getString("height"));
-		form.setProperty("formType2Diabetes.lipidsA", rsdemo.getString("lipidsA" + k));
-		form.setProperty("formType2Diabetes.lipidsB", rsdemo.getString("lipidsB" + k));
-		form.setProperty("formType2Diabetes.lipidsC", rsdemo.getString("lipidsC" + k));
-		form.setProperty("formType2Diabetes.eyes", rsdemo.getString("eyes" + k));
-		form.setProperty("formType2Diabetes.feet", rsdemo.getString("feet" + k));
 
-		form.setProperty("formType2Diabetes.lifestyle", rsdemo.getString("lifestyle" + k));
-		form.setProperty("formType2Diabetes.exercise", rsdemo.getString("exercise" + k));
-		form.setProperty("formType2Diabetes.alcohol", rsdemo.getString("alcohol" + k));
-		form.setProperty("formType2Diabetes.sexualFunction", rsdemo.getString("sexualFunction" + k));
-		form.setProperty("formType2Diabetes.diet", rsdemo.getString("diet" + k));
+		form.setProperty("formType2Diabetes.date", rsdemo.getString("date" + k));
+		form.setProperty("formType2Diabetes.bp", rsdemo.getString("bp" + k)==null?"":rsdemo.getString("bp" + k));
+		form.setProperty("formType2Diabetes.glucoseA", rsdemo.getString("glucoseA" + k)==null?"":rsdemo.getString("glucoseA" + k));
+		form.setProperty("formType2Diabetes.lifestyle", rsdemo.getString("lifestyle" + k)==null?"":rsdemo.getString("lifestyle" + k));
+		form.setProperty("formType2Diabetes.exercise", rsdemo.getString("exercise" + k)==null?"":rsdemo.getString("exercise" + k));
+		
+		form.setProperty("formType2Diabetes.weight", rsdemo.getString("weight" + k)==null?"":rsdemo.getString("weight" + k));
+		form.setProperty("formType2Diabetes.aceInhibitor", rsdemo.getString("aceInhibitor")==null?"":rsdemo.getString("aceInhibitor"));
+		form.setProperty("formType2Diabetes.asa", rsdemo.getString("asa")==null?"":rsdemo.getString("asa"));
+		form.setProperty("formType2Diabetes.lipidsA", rsdemo.getString("lipidsA" + k)==null?"":rsdemo.getString("lipidsA" + k));
+		form.setProperty("formType2Diabetes.urineRatio", rsdemo.getString("urineRatio" + k)==null?"":rsdemo.getString("urineRatio" + k));
+
+		form.setProperty("formType2Diabetes.feet", rsdemo.getString("feet" + k)==null?"":rsdemo.getString("feet" + k));
+		form.setProperty("formType2Diabetes.eyes", rsdemo.getString("eyes" + k)==null?"":rsdemo.getString("eyes" + k));
 	}
 
-    //take data from eChart
+/*     //take data from eChart
 	String health_condition_name = null;
     rsdemo = studyBean.queryResults(demoNo, "search_echart");
     while (rsdemo.next()) { 
@@ -100,7 +101,7 @@ studyBean.doConfigure(dbParams,dbQueries);
 		k++;
 	}
 
-/*    //take data from drugs
+	//take data from drugs
     GregorianCalendar now=new GregorianCalendar();
     now.add(now.DATE, -7);
     String rxLastTime = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) ;
@@ -173,15 +174,19 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
 	UtilXML.addNode(dt, "encounter");
 */
 
-	UtilXML.addNode(doc, "encounter");
+	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria"} ;
+	String nodeName = "DMRecord";
+	String dtdFileName = "ping_dm_1_0.dtd";
+
+	UtilXML.addNode(doc, nodeName);
 
 	Node encounter = doc.getLastChild();
-	UtilXML.addNode(encounter, "contact_healthnumber", demo.getProperty(studyMapping.getProperty("encounter.contact_healthnumber")));
-	UtilXML.addNode(encounter, "encounter_date", form.getProperty(studyMapping.getProperty("encounter.encounter_date")));
-	UtilXML.addNode(encounter, "encounter_entry_date", form.getProperty(studyMapping.getProperty("encounter.encounter_entry_date")));
-	UtilXML.addNode(encounter, "encounter_class_ID", studyMapping.getProperty("encounter.encounter_class_ID"));
+	for (int i = 0; i < elementName1.length; i++) {
+		UtilXML.addNode(encounter, elementName1[i], form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[i]), "") );
+//		UtilXML.addNode(encounter, elementName1[0], form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[0]), "") );
+	}
 
-	UtilXML.addNode(encounter, "vitals");
+/*	UtilXML.addNode(encounter, "vitals");
 	Node vitals1 = encounter.getLastChild();
 	UtilXML.addNode(vitals1, "vital_sign_name", studyMapping.getProperty("encounter.vitals.vital_sign_name^1"));
 	UtilXML.addNode(vitals1, "vitals_result", form.getProperty(studyMapping.getProperty("encounter.vitals.vitals_result^1")));
@@ -275,8 +280,8 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
 	UtilXML.addNode(adverse_reactions, "adverse_reactions_offending_drug", allergy.getProperty("encounter.adverse_reactions.adverse_reactions_offending_drug^"+n_adverse_reactions));
 	n_adverse_reactions++;
 	}
-/*	
     int n_medication = 0;
+    
     Node medication = null;
 	while (drug.getProperty(studyMapping.getProperty("encounter.medication.medication_EHR_supplied_drug_name^*")+n_medication) != null) {
 	UtilXML.addNode(encounter, "medication");
@@ -298,7 +303,7 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
 */	
 	out.clear();
     out.flush();
-    out.println(UtilXML.toXML(doc, "encounter1_3.dtd"));
+	out.println(UtilXML.toXML(doc, dtdFileName));
     //System.out.println(UtilXML.toXML(doc));
 
 %>

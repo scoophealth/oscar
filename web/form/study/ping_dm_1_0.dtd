@@ -1,0 +1,11 @@
+<!ELEMENT DMRecord (fpVisit, bloodPressure?, hbA1c?, smoking, exercise?, weight?, medsACE?, medsASA?, lipids?, albuminuria?)>
+<!ELEMENT fpVisit (#PCDATA)>
+<!ELEMENT bloodPressure (#PCDATA)>
+<!ELEMENT hbA1c (#PCDATA)>
+<!ELEMENT smoking (#PCDATA)>
+<!ELEMENT exercise (#PCDATA)>
+<!ELEMENT weight (#PCDATA)>
+<!ELEMENT medsACE (#PCDATA)>
+<!ELEMENT medsASA (#PCDATA)>
+<!ELEMENT lipids (#PCDATA)>
+<!ELEMENT albuminuria (#PCDATA)>

@@ -17,6 +17,17 @@ contact.conEHRpatient.conEHRpatient_EHRpatient_id	:demographic.demographic_no
 #DMRecord.contact_healthnumber			:demographic.hin
 #DMRecord.entry_date					:formType2Diabetes.formEdited
 
-DMRecord.fpVisit^1						:formType2Diabetes.date
-DMRecord.bloodPressure^1				:formType2Diabetes.bp
-DMRecord.hbA1c^1						:formType2Diabetes.glucoseA1
+DMRecord.fpVisit						:formType2Diabetes.date
+DMRecord.bloodPressure				:formType2Diabetes.bp
+DMRecord.hbA1c						:formType2Diabetes.glucoseA
+DMRecord.smoking						:formType2Diabetes.lifestyle
+DMRecord.exercise						:formType2Diabetes.exercise
+
+DMRecord.weight						:formType2Diabetes.weight
+DMRecord.medsACE						:formType2Diabetes.aceInhibitor
+DMRecord.medsASA						:formType2Diabetes.asa
+DMRecord.lipids						:formType2Diabetes.lipidsA
+DMRecord.albuminuria						:formType2Diabetes.urineRatio
+
+DMRecord.footCheck						:formType2Diabetes.feet
+DMRecord.eyeCheck						:formType2Diabetes.eyes
