@@ -32,6 +32,8 @@
   String mygroupno = (String) session.getAttribute("groupno");  
 
   String curProvider_no=request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"174";
+  String curDemoNo = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"";
+  String curDemoName = request.getParameter("demographic_name")!=null?request.getParameter("demographic_name"):"";
   String [] param = new String[3];
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
@@ -82,7 +84,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 function t(s1,s2,s3,s4,s5,s6) {
-  popupPage(360,680,('../appointment/addappointment.jsp?provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+  popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
 }
 </SCRIPT>
 
