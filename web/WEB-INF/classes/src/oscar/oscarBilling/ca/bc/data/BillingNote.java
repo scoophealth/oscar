@@ -65,6 +65,24 @@ public void addNote(String billingmaster_no,String provider_no,String note) thro
                 db.RunSQL(notesql);
                 db.CloseConn();                    
    }
+
+public void addNoteFromBillingNo(String billingNo, String provider,String note) throws SQLException{
+   note = oscar.Misc.removeNewLine(note);
+   String sql = "select billingmaster_no from billingmaster where billing_no = '"+billingNo+"' ";
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         ResultSet rs = db.GetSQL(sql);
+         if(rs.next()){
+            String billingMasterNo =  rs.getString("billingmaster_no");
+            addNote(billingMasterNo,provider,note);
+         }
+         rs.close();          
+         db.CloseConn();                    
+      }catch (Exception e){
+         e.printStackTrace();        
+      }
+   
+}
    
    /**
     *
