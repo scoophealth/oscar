@@ -95,7 +95,7 @@ function ScriptAttach() {
   t0 = escape(document.serviceform.xml_diagnostic_detail1.value);
   t1 = escape(document.serviceform.xml_diagnostic_detail2.value);
   t2 = escape(document.serviceform.xml_diagnostic_detail3.value);
-  awnd=rs('att','../billing/billingDigSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+  awnd=rs('att','/billingDigSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
   
   
@@ -111,7 +111,7 @@ function OtherScriptAttach() {
  // f1 = document.serviceform.xml_dig_search1.value;
  // f2 = escape(document.serviceform.elements["File2Data"].value);
  // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','../billing/billingCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+  awnd=rs('att','billingCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
 }
 function ResearchScriptAttach() {
@@ -121,7 +121,7 @@ function ResearchScriptAttach() {
  // f1 = document.serviceform.xml_dig_search1.value;
  // f2 = escape(document.serviceform.elements["File2Data"].value);
  // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','../billing/billingResearchCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+  awnd=rs('att','billingResearchCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
 }
 
@@ -130,7 +130,7 @@ function ResearchScriptAttach() {
   t0 = escape(document.serviceform.xml_referral1.value);
   t1 = escape(document.serviceform.xml_referral2.value);
   
-  awnd=rs('att','../billing/billingReferralCodeSearch.jsp?name='+t0 + '&name1=' + t1 +  '&search=',600,600,1);
+  awnd=rs('att','billingReferralCodeSearch.jsp?name='+t0 + '&name1=' + t1 +  '&search=',600,600,1);
   awnd.focus();
 }
 
