@@ -134,8 +134,7 @@ codeName2 = codeName2 + "%";
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">
 <!--
-function CodeAttach(File0) {
-      alert("h");
+function CodeAttach(File0) {      
       self.close();
       self.opener.document.BillingCreateBillingForm.xml_refer1.value = File0;
       self.opener.document.BillingCreateBillingForm.xml_refer2.value ='';
