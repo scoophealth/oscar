@@ -40,7 +40,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@ page import="java.util.*, oscar.oscarDemographic.data.*" %>
-<%@ page import="oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*" %>
+<%@ page import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*" %>
 <%
 
 String color = "", colorflag ="";
@@ -327,20 +327,28 @@ function showHideLayers() { //v3.0
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
               </tr>
+              <tr bgcolor="#F6F6F6"><td colspan="4">notes</td></tr>
+              <tr><td colspan="4"><%= bean.getNotes() %>&nbsp;</td></tr>              
             </table>
             <table width="100%" border="0">
               <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-                <td align="right">
-<html:form action="/billing/CA/BC/SaveBilling" >
-	            <input type="button" name="Submit3" value="Go Back" onClick="location.href='billingBC.jsp?loadFromSession=yes'"/>
+              	<td colspan="4">
+               <%if (bean.getBillingType().compareTo("WCB") == 0){
+						WCBForm wcb =(WCBForm) request.getSession().getAttribute("WCBForm");
+                %>
+						<%=wcb.getW_fname()%>
+               <%}%>
+              	</td>
+              </tr>
+                <td align="right" colspan="4">  
+                  <html:form action="/billing/CA/BC/SaveBilling" >
+	                 <input type="button" name="Submit3" value="Go Back" onClick="location.href='billingBC.jsp?loadFromSession=yes'"/>
                     <input type="submit" name="Submit" value="Save Bill">
                     <input type="button" name="Submit2" value="Cancel" onClick="window.close();">
-                  </html:form></td>
-  </tr>
-</table>
+                  </html:form>
+                </td>
+              </tr>
+            </table>
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr> 
