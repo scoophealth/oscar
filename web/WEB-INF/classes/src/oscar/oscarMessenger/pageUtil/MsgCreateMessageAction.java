@@ -101,10 +101,10 @@ public class MsgCreateMessageAction extends Action {
             // System.out.println("messages id = "+messageId);
 
             if (messageData.isRemotes()){
-//                oscar.oscarMessenger.data.MsgRemoteMessageData  remoteMessageData;
-//                remoteMessageData = new oscar.oscarMessenger.data.MsgRemoteMessageData(messageId,currLoco);
-//
-//                remoteMessageData.start();
+                oscar.oscarMessenger.data.MsgRemoteMessageData  remoteMessageData;
+                remoteMessageData = new oscar.oscarMessenger.data.MsgRemoteMessageData(messageId,currLoco);
+
+                remoteMessageData.start();
 
             }
 
