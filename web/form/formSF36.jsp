@@ -1300,11 +1300,58 @@
                                 <td align="center" bgcolor="white">
                                     <textarea cols="20" rows="2" name="Q10dCmt"><%= props.getProperty("Q10dCmt", "") %></textarea>
                                 </td>
-                            </tr>
-                            <tr><td><table border="0"  cellspacing="0" cellpadding="0" height="300px"><tr><td>&nbsp;</td></tr></table></td></tr>
+                            </tr>                            
                         </table>
                     </td>                    
-                </tr>          
+                </tr>
+                <tr>                    
+                    <th width="3%" valign="top" >11. </th>
+                    <th valign="top" class="question">
+                        Regardless of your current level of sexual activity, please answer the following question.
+                        If you prefer not to answer it, please check this box: 
+                        <input type="checkbox"  class="checkbox" name="Q11aNotAns" <%= props.getProperty("Q11aNotAns", "") %>/>
+                    </th>
+                </tr>                                
+                <tr>
+                    <td valign="top" colspan="2">
+                        <table>
+                            <tr class="question">
+                                <th width="3%"></th>
+                                <th width="30%"></th>
+                                <th width="8%"  valign="top" align="center">Not at all</th>
+                                <th width="8%"  valign="top" align="center">A little bit</th>
+                                <th width="8%"  valign="top" align="center">Some what</th>
+                                <th width="8%"  valign="top" align="center">Quite a lot</th>
+                                <th width="8%"  valign="top" align="center">Very much</th>                                
+                                <th width="27%" valign="top" align="center">Comments</th>
+                            </tr>
+                            <tr>
+                                <td valign="top">a. </td>
+                                <td>
+                                    I am satisfied with my sex life
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="checkbox" name="Q11aNot" <%= props.getProperty("Q11aNot", "") %>/>
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="checkbox" name="Q11aLittle" <%= props.getProperty("Q11aLittle", "") %>/>
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="checkbox" name="Q11aSome" <%= props.getProperty("Q11aSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="checkbox" name="Q11aLot" <%= props.getProperty("Q11aLot", "") %>/>
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="checkbox" name="Q11aMuch" <%= props.getProperty("Q11aMuch", "") %>/>
+                                </td>                                
+                                <td align="center" bgcolor="white">
+                                    <textarea cols="20" rows="2" name="Q11aCmt"><%= props.getProperty("Q11aCmt", "") %></textarea>
+                                </td>
+                            </tr> 
+                        </table>
+                    </td>
+                </tr>
             </table>              
         </td>
     </tr>    
