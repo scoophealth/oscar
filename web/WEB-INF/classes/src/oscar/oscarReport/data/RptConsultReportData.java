@@ -43,8 +43,7 @@ public class RptConsultReportData {
               ResultSet rs;
               // mysql function for dates = select date_sub(now(),interval 1 month); 
               String sql = "select distinct c.demographicNo from consultationRequests c , demographic d where "
-                          +" ( to_days( now() ) - to_days(referalDate) ) <= "
-                          +" ( to_days( now() ) - to_days( date_sub(now(),interval "+days+" month) ) )"
+                          +" referalDate >= (CURRENT_DATE - interval " + days + " month)"
                           +" and c.demographicNo = d.demographic_no ";
               if (!providerNo.equals("-1")){
                  sql = sql +" and d.provider_no = '"+providerNo+"' "; 
