@@ -5,13 +5,15 @@
  */
 
 import java.io.*;
+import java.util.logging.*;
 
 public class FileLineReader {
-   
+   Logger logger = Logger.getLogger("mdsFileManagement.FileLineReader");
    private BufferedReader bReader=null;
    
    
    public void openFile(String streamName) {
+      logger.info("Opening file: "+streamName);
       try {
          bReader = new BufferedReader(new FileReader(streamName));
       }catch (FileNotFoundException fnfe) {
@@ -37,6 +39,7 @@ public class FileLineReader {
    }
    
    public void closeFile(){
+      logger.info("Closing File");
       if (bReader != null){
          try{
             bReader.close();

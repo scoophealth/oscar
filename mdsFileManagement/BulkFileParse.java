@@ -3,6 +3,8 @@ import oscar.oscarMDSLab.dbUtil.*;
 import java.sql.*;
 import java.text.*;
 import java.io.*;
+import java.util.logging.*;
+
 /**
  * parses a desired MDS HL7 lab results file and stores the details
  * of the parse in an array list. From the list the file details can
@@ -10,6 +12,9 @@ import java.io.*;
  * database.
  */
 public class BulkFileParse {
+    
+    Logger logger = Logger.getLogger("mdsFileManagement.BulkFileParse");
+   
     public ArrayList aList = new ArrayList();
     private FileLineReader fReader = new FileLineReader();
     private String currentLine = null;
@@ -99,7 +104,7 @@ public class BulkFileParse {
     
     
     public void processResult(String auditLogFile,String dupsHL7dir){
-        System.out.println("Entering Proccess Result   ");
+        logger.info("Proccessing Result");
         int insertID;
         for(int i=0;i<aList.size();i++){
             MDSHL7Message segm = (MDSHL7Message) aList.get(i);
@@ -111,7 +116,7 @@ public class BulkFileParse {
                 providerRouteReport(insertID);
                 patientRouteReport(insertID);
             } else {
-                System.out.println("THOSE WERE DUPS");
+                logger.info("Duplicates found");
 
                 Long lon = new Long(Calendar.getInstance().getTimeInMillis());
 
@@ -257,6 +262,7 @@ public class BulkFileParse {
     
     
     public int commitFileToDB(String fileName){
+        logger.info("Commiting File to Database: "+fileName);
         String sql = null;
         int insertID=0;
         java.sql.ResultSet rs;
@@ -344,14 +350,14 @@ public class BulkFileParse {
             }
             db.CloseConn();
         }catch(Exception e) {
-            System.out.println("Inside the BulkFileParse::"+e);
+            logger.severe("Error Inside the BulkFileParse::"+e.getMessage());
             try{
                 if(db !=null){
                     db.CloseConn();
                 }
             }
             catch(Exception f){
-                System.out.println("Inside the BulkFileParse::"+f);
+                logger.severe("Error Inside the BulkFileParse::"+f.getMessage());
             }
         }
         return insertID;
@@ -385,7 +391,7 @@ public class BulkFileParse {
     
     public int commitSegmentToDB(int i){
         
-        System.out.println("COMMITTING SEGMENT TO DB");
+        logger.info("COMMITTING SEGMENT TO DataBase");
         String sql = null;
         int insertID=0;
         java.sql.ResultSet rs;
@@ -480,21 +486,22 @@ public class BulkFileParse {
             
             db.CloseConn();
         }catch(Exception e){
-            System.out.println("Inside the BulkFileParse::"+e);
+            logger.info("Error writing Segment to Database");
             try{
                 if(db !=null){
                     db.CloseConn();
                 }
             }
             catch(Exception f){
-                System.out.println("Inside the BulkFileParse::"+f);
+                logger.info("Error closing connection");
             }
         }
         return insertID;
     }
     
     
-    public boolean parseFile(String fileName){
+    public boolean parseFile(String fileName){       
+        logger.info("Parsing File "+fileName);
         boolean retval = true;
         try{
             int i=-1;//the MSH header counter
@@ -817,6 +824,7 @@ public class BulkFileParse {
     }
     
     public void printAll() {
+        logger.info("Printing All to Std out");
         int i = 0;
         int j = 0;
         
@@ -958,6 +966,7 @@ public class BulkFileParse {
     }
     
     public void printSegment(String title,String filename, MDSHL7Message segm){
+        logger.info("Printing Segment to file :"+filename);
         int i = 0;
         int j = 0;
         try {

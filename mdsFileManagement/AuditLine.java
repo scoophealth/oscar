@@ -6,17 +6,18 @@ import java.sql.ResultSet;
 import java.text.*;
 import java.lang.reflect.*;
 import java.io.*;
+import java.util.logging.*;
 
 
 
 public class AuditLine {
-
+    Logger logger = Logger.getLogger("mdsFileManagement.AuditLine");
     String delimiter = "  ";
     char bl = ' ';
     
 
     public  String getAuditLine(String procDate, String procTime, String logId,String formStatus, String formType, String accession, String hcNum, String hcVerCode, String patientName,String orderingClient,String  messageDate,String messageTime){
-
+        logger.info("Getting Audit Line");
                 
 
 
