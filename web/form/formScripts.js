@@ -48,6 +48,14 @@
         if(ret==true) {                        
             ret = confirm("Are you sure you want to save this form?");
         }
+        if(ret == true){
+            window.opener.location.reload();
+            //window.opener.location.href = window.opener.location.href;
+            //if (window.opener.progressWindow)
+            //{
+            //    window.opener.progressWindow.close()
+            //} 
+        }  
         return ret;
     }
     function onExit() {
