@@ -640,7 +640,7 @@
               input="/StartCookie.jsp">
               <forward name="failure" path="/oscarEncounter/error.jsp"/>
               <forward name="success" path="/oscarEncounter/Index.jsp" />
-    </action>
+    </action>    
     <action     path="/oscarEncounter/SaveEncounter"
                 type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction"
                 name=""
@@ -1482,12 +1482,5 @@
         
   </action-mappings>
 
-<!-- ========== Plug-in Definitions ============================== -->
-<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
-    <set-property 
-    property="pathnames" 
-    value="/WEB-INF/validator-rules.xml, 
-        /WEB-INF/validation.xml"/>
-</plug-in>
 </struts-config>
 
