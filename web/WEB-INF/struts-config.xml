@@ -506,7 +506,7 @@
         <forward name="failure" path="/errorpage.jsp"/>        
         <forward name="success" path="/oscarMDS/OpenEChart.jsp"/>
     </action>        
->>>>>>> 1.8
+
 
     <!-- form study -->
     <action		path="/form/study/studyname"
