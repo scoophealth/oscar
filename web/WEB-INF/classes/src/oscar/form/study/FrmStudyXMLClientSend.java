@@ -15,6 +15,10 @@ xercesImpl.jar
 xsltc.jar
 javac -d . FrmStudyXMLClientSend.java
 java -classpath .:%CLASSPATH% oscar.form.study.FrmStudyXMLClientSend /root/oscar_sfhc.properties https://67.69.12.115:8443/OscarComm/DummyReceiver
+java -classpath .:%CLASSPATH% oscar.form.study.FrmStudyXMLClientSend /root/oscar_sfhc.properties https://192.168.42.180:15000/ /root/oscarComm/oscarComm.keystore
+
+java -classpath .:%CLASSPATH% oscar.form.study.FrmStudyXMLClientSend /root/oscar_sfhc.properties https://130.113.150.203:15501/ /root/oscarComm/enleague.keystore
+java -classpath .:%CLASSPATH% oscar.form.study.FrmStudyXMLClientSend /root/oscar_sfhc.properties https://192.168.42.180:15000/ /root/oscarComm/compete.keystore
 java oscar.form.study.FrmStudyXMLClientSend c:\\root\\oscar_sfhc.properties https://67.69.12.115:8443/OscarComm/DummyReceiver
 */
 
@@ -46,18 +50,18 @@ public class FrmStudyXMLClientSend {
 	private String URLService = null;
 
 	Properties param = new Properties();
-	Properties studyContent = new Properties();
+	Vector studyContent = new Vector();
+	Vector studyNo = new Vector();
 	DBHandler db = null; 
 	String sql = null; 
 	ResultSet rs = null; 
 
 //	Properties studyTableName = null;
-//	Vector studyDemoNo = null;
 	String dateYesterday = null;
 	String dateTomorrow = null;
 
 	public static void main (String[] args) throws java.sql.SQLException, java.io.IOException  {
-		if (args.length != 2) {
+		if (args.length != 3) {
 			System.out.println("Please run: java path/FrmStudyXMLClient dbname WebServiceUrl");
 			return; 
 		}
@@ -69,13 +73,17 @@ public class FrmStudyXMLClientSend {
 		if (aStudy.studyContent.size() == 0) {aStudy.db.CloseConn(); return;}
 
 		//loop for each content record
-		for (Enumeration e = aStudy.studyContent.propertyNames() ; e.hasMoreElements() ;)	{
+		for (int i = 0; i < aStudy.studyContent.size() ; i++ )	{
+			aStudy.sendJaxmMsg((String)aStudy.studyContent.get(i), args[2]);
+			aStudy.updateStatus((String)aStudy.studyNo.get(i));
+		}
+/*		for (Enumeration e = aStudy.studyContent.propertyNames() ; e.hasMoreElements() ;)	{
 			String tempStudyNo = (String) e.nextElement();
 
-			aStudy.sendJaxmMsg(aStudy.studyContent.getProperty(tempStudyNo));
+			aStudy.sendJaxmMsg(aStudy.studyContent.getProperty(tempStudyNo), args[2]);
 			aStudy.updateStatus(tempStudyNo);
 		}
- 
+*/ 
 		aStudy.db.CloseConn();
 
 	}
@@ -94,10 +102,11 @@ public class FrmStudyXMLClientSend {
 	}
 
 	private synchronized void getStudyContent () throws java.sql.SQLException  {
-        sql = "SELECT studydata_no, content from studydata where timestamp > '" + dateYesterday + "' and timestamp < '" + dateTomorrow + "' and status='ready'";
+        sql = "SELECT studydata_no, content from studydata where timestamp > '" + dateYesterday + "' and timestamp < '" + dateTomorrow + "' and status='ready' order by studydata_no";
         rs = db.GetSQL(sql);
         while(rs.next()) {
-			studyContent.setProperty(rs.getString("studydata_no"), rs.getString("content")); 
+			studyContent.add(rs.getString("content")); 
+			studyNo.add(rs.getString("studydata_no")); 
 		}
         rs.close();
 	}
@@ -109,12 +118,12 @@ public class FrmStudyXMLClientSend {
 	}
 
 
-	private void sendJaxmMsg (String aMsg) throws java.sql.SQLException  {
+	private void sendJaxmMsg (String aMsg, String u) throws java.sql.SQLException  {
 		try	{
 			//System.setProperty("javax.net.ssl.trustStore", "c:\\root\\oscarComm\\oscarComm.keystore");
-			System.setProperty("javax.net.ssl.trustStore", "/root/oscarComm/compete.keystore");
-                        //System.setProperty("javax.net.ssl.trustStore", "/root/oscarComm/oscarComm.keystore");
-                        //System.setProperty("javax.net.debug", "ssl,handshake,trustmanager");
+			//System.setProperty("javax.net.ssl.trustStore", "/root/oscarComm/compete.keystore");
+			System.setProperty("javax.net.ssl.trustStore", u);
+            //System.setProperty("javax.net.debug", "ssl,handshake,trustmanager");
 
 			//URL endPoint = new URL (" https://67.69.12.115:8443");
 			//javax.xml.soap.SOAPConnectionFactory=com.sun.xml.messaging.saaj.client.p2p.HttpSOAPConnectionFactory
@@ -130,8 +139,8 @@ public class FrmStudyXMLClientSend {
 			SOAPHeader header = envelope.getHeader();
 		    SOAPBody body = envelope.getBody();
 
-			//SOAPHeaderElement headerElement = header.addHeaderElement(envelope.createName("OSCAR", "DT", "http://www.oscarhome.org/"));
-		    //headerElement.addTextNode("header");
+			SOAPHeaderElement headerElement = header.addHeaderElement(envelope.createName("OSCAR", "DT", "http://www.oscarhome.org/"));
+		    headerElement.addTextNode("header");
 			//SOAPBodyElement bodyElement = body.addBodyElement(envelope.createName("Text", "jaxm", "http://java.sun.com/jaxm"));
 
 			SOAPBodyElement bodyElement = body.addBodyElement(envelope.createName("Service"));

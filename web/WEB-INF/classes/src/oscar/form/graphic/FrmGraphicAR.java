@@ -53,6 +53,23 @@ public class FrmGraphicAR {
         }
         return height;
     }
+    public String getWt(String weight) {
+        weight = weight.trim();
+		String ret = "";
+		if (weight.length() == 0) return "-1";
+
+		int N=weight.length();
+		StringBuffer sb=new StringBuffer(N);
+		for(int i=0;i<N;i++){
+			char c=weight.charAt(i);
+			if(c=='.')sb.append(".");
+			else if(c>='0' && c<='9') sb.append(c);
+			else break;
+		}
+		ret = sb.toString().length()>0 ? sb.toString(): "-1";
+		
+        return ret;
+    }
 
     private boolean checkDateStr(String strDate) {
         return true;

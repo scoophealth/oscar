@@ -27,12 +27,12 @@ public class FrmLabReqRecord  extends FrmRecord {
 
                     props.setProperty("demographic_no", rs.getString("demographic_no"));
                     props.setProperty("patientName", rs.getString("patientName"));
-                    props.setProperty("healthNumber", rs.getString("hin"));
+                    props.setProperty("healthNumber", rs.getString("hin"));                    
                     props.setProperty("version", rs.getString("ver"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                    props.setProperty("homePhone", rs.getString("phone"));
+                    props.setProperty("phoneNumber", rs.getString("phone"));
                     props.setProperty("patientAddress", rs.getString("address"));
                     props.setProperty("patientCity", rs.getString("city"));
                     props.setProperty("patientPC", rs.getString("postal"));
@@ -52,7 +52,7 @@ public class FrmLabReqRecord  extends FrmRecord {
             }
             rs.close();
 
-			db.CloseConn();
+            db.CloseConn();
 
         } else {
             String sql = "SELECT * FROM formLabReq WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;

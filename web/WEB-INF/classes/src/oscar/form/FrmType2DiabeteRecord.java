@@ -11,9 +11,9 @@ import oscar.util.*;
 
 public class FrmType2DiabeteRecord extends FrmRecord {
     public Properties getFormRecord(int demographicNo, int existingID) throws SQLException    {
-        Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        Properties props = new Properties();        
         if(existingID <= 0) {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = " +demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())
@@ -26,15 +26,17 @@ public class FrmType2DiabeteRecord extends FrmRecord {
                 props.setProperty("pName", rs.getString("pName"));
             }
             rs.close();
+            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
-            ResultSet rs = db.GetSQL(sql);
+            props = (new FrmRecordHelp()).getFormRecord(sql);
+            /* ResultSet rs = db.GetSQL(sql);
             if(rs.next()) {
                 ResultSetMetaData md = rs.getMetaData();
                 for(int i = 1; i <= md.getColumnCount(); i++) {
                     String name = md.getColumnName(i);
                     String value;
-                    if(md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1) {
+                    if(md.getColumnTypeName(i).equalsIgnoreCase("TINY")) {
                         if(rs.getInt(i) == 1)
                             value = "checked='checked'";
                         else
@@ -48,17 +50,21 @@ public class FrmType2DiabeteRecord extends FrmRecord {
                 }
 
             }
-            rs.close();
+            rs.close(); */
         }
-        db.CloseConn();
+        
         //props.list(System.out);
         return props;
     }
 
     public int saveFormRecord(Properties props) throws SQLException {
         String demographic_no = props.getProperty("demographic_no");
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        // DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no="+demographic_no+" AND ID=0";
+        
+        return ((new FrmRecordHelp()).saveFormRecord(props, sql));
+        
+        /*
         ResultSet rs = db.GetSQL(sql, true);
         rs.moveToInsertRow();
         ResultSetMetaData md = rs.getMetaData();
@@ -121,7 +127,7 @@ public class FrmType2DiabeteRecord extends FrmRecord {
             ret = rs.getInt(1);
         rs.close();
         db.CloseConn();
-        return ret;
+        return ret; */
     }
 
     public String findActionValue(String submit) throws SQLException {

@@ -17,7 +17,7 @@ public class FrmMentalHealthRecord  extends FrmRecord {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
                 + "sex, CONCAT(address, ', ', city, ', ', province, ' ', postal) AS address, "
-                + "phone, year_of_birth, month_of_birth, date_of_birth "
+                + "phone, year_of_birth, month_of_birth, date_of_birth, roster_status "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
             ResultSet rs = db.GetSQL(sql);
 
@@ -33,6 +33,7 @@ public class FrmMentalHealthRecord  extends FrmRecord {
                 props.setProperty("c_address", rs.getString("address"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("c_homePhone", rs.getString("phone"));
+                props.setProperty("demo_roster_status", rs.getString("roster_status"));
             }
             rs.close();
 			db.CloseConn();
@@ -40,6 +41,17 @@ public class FrmMentalHealthRecord  extends FrmRecord {
         } else {
             String sql = "SELECT * FROM formMentalHealth WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			props = (new FrmRecordHelp()).getFormRecord(sql);
+
+			// get roster_status from demographic table
+			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			ResultSet rs = null;
+			sql = "SELECT roster_status FROM demographic WHERE demographic_no = " + demographicNo;
+			rs = db.GetSQL(sql);
+			if(rs.next()) {
+				props.setProperty("demo_roster_status", rs.getString("roster_status"));
+			}
+			rs.close();
+			db.CloseConn();
         }
 
         return props;
