@@ -42,12 +42,13 @@ if(sDoc == null){
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
+
 <html>
 <head>
 <title>
 <bean:message key="oscarEncounter.immunization.Schedule.title"/>
 </title>
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <style type="text/css">
 
 .ellipsis
@@ -214,7 +215,7 @@ TD.grey
                 <tr>
                     <td>
 
-                        <table width="80%">
+                        <table  border=0>
                             <tr>
                                 <td>
                         <%
@@ -225,8 +226,13 @@ TD.grey
                         <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
                                 </td>
                                 <td align="right">
-                        <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
-                        <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
+                                    <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
+                                </td>
+                                <td>
+                                   <input type="button" value="Show All" onclick="formSubmit('ShowAll');" style="width:100px" />
+                                </td>
+                                <td>
+                                   <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
                                 </td>
                             </tr>
                         </table>
@@ -238,129 +244,123 @@ TD.grey
                         <input type="hidden" name="xmlDoc" value='<%= UtilMisc.encode64(UtilXML.toXML(doc)) %>' />
                         <%
 
-                        for(int i=0; i<sets.getLength(); i++)
-                        {
+                        for(int i=0; i<sets.getLength(); i++){
                             Element set = (Element)sets.item(i);
 
-                            %>
-                            <div style="font-weight: bold">
-                                <input type="checkbox" onclick="javascript:showSet('tblSet<%=i%>', event);" id="chkSet<%=i%>"  />
-                                <a href=# onclick="javascript:showSetName('tblSet<%=i%>', 'chkSet<%=i%>');">
-                                <%= set.getAttribute("name") %></a>
-                            </div>
+                            String status = set.getAttribute("status"); 
+                            String showDeleted = (String) request.getAttribute("showDeleted");
+                            if (showDeleted == null) {showDeleted = "";}
+                                
+                            if ( (status != null && !status.equals("deleted"))  || showDeleted.equals("true") ){
+                               String fontStyle = ""; 
+                               if (status.equals("deleted")){ fontStyle= "style=\"text-decoration: line-through;\"";}  %> 
+                               <div style="font-weight: bold">
+                                  <input type="checkbox" onclick="javascript:showSet('tblSet<%=i%>', event);" id="chkSet<%=i%>"  />
+                                     <a href=# onclick="javascript:showSetName('tblSet<%=i%>', 'chkSet<%=i%>');" <%=fontStyle%> >
+                                     <%= set.getAttribute("name") %></a> 
+                                     &nbsp;&nbsp;
+                                     
+                                     <% if (!status.equals("deleted")){ %>
+                                     <a href="deleteSchedule.do?method=delete&tblSet=<%=i%>&demoNo=<%=bean.demographicNo%>" onclick="return confirm('Are you sure you want to delete this record ?');" >del</a> 
+                                     <%}else{%>
+                                     <a href="deleteSchedule.do?method=restore&tblSet=<%=i%>&demoNo=<%=bean.demographicNo%>" onclick="return confirm('Are you sure you want to restore this record ?');" >restore</a> 
+                                     <%}%>
+                                     
+                               </div>
 
-                            <table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>"  style="display:none" >
-                            <%
+                               <table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>"  style="display:none" >
+                               <%
 
-                            int colCount = -1;
-                            Element columnList = (Element)set.getElementsByTagName("columnList").item(0);
-                            NodeList columns = columnList.getElementsByTagName("column");
+                                  int colCount = -1;
+                                  Element columnList = (Element)set.getElementsByTagName("columnList").item(0);
+                                  NodeList columns = columnList.getElementsByTagName("column");
 
-                            if(set.getAttribute("headers").equalsIgnoreCase("true"))
-                            {
-                                %><tr>
-                                <td class="head">&nbsp;</td><%
+                                  if(set.getAttribute("headers").equalsIgnoreCase("true")){%>
+                                  <tr>
+                                     <td class="head">&nbsp;</td><%
 
-                                for(int j=0; j<columns.getLength(); j++)
-                                {
-                                    Element column = (Element)columns.item(j);
+                                     for(int j=0; j<columns.getLength(); j++){
+                                        Element column = (Element)columns.item(j);%>
+                                        <td class="head"><%= column.getAttribute("name") %>&nbsp;</td>
+                                   <%colCount = j+2;
+                                     }%>  
+                                     <td class="head"><bean:message key="oscarEncounter.immunization.Schedule.msgComments"/></td>
+                                  </tr>
+                                <%}
 
-                                    %><td class="head"><%= column.getAttribute("name") %>&nbsp;</td><%
+                                  Element rowList = (Element)set.getElementsByTagName("rowList").item(0);
+                                  NodeList rows = rowList.getElementsByTagName("row");
 
-                                    colCount = j+2;
-                                }
+                                  for(int j=0; j<rows.getLength(); j++){
+                                     Element row = (Element)rows.item(j);
 
-                                %><td class="head"><bean:message key="oscarEncounter.immunization.Schedule.msgComments"/></td>
-                                </tr><%
-                            }
+                                     String sName = row.getAttribute("name");
+                                     if(sName.length()<1){
+                                        String s = "tdSet" + i + "_Row" + j + "_name"; %>
+                                        <tr> 
+                                           <td class="head" id="<%=s%>"><%=genText(s, "")%></td>
+                                <%   }else{%>
+                                        <tr>
+                                           <td class="head"><%= sName %></td>
+                                <%   }
 
-                            Element rowList = (Element)set.getElementsByTagName("rowList").item(0);
-                            NodeList rows = rowList.getElementsByTagName("row");
-
-                            for(int j=0; j<rows.getLength(); j++)
-                            {
-                                Element row = (Element)rows.item(j);
-
-                                String sName = row.getAttribute("name");
-                                if(sName.length()<1)
-                                {
-                                    String s = "tdSet" + i + "_Row" + j + "_name";
-                                    %><tr><td class="head" id="<%=s%>"><%=genText(s, "")%></td><%
-                                }
-                                else
-                                {
-                                    %><tr><td class="head"><%= sName %></td><%
-                                }
-
-                                if(colCount>0)
-                                {
-                                    int n=0;
-                                    NodeList cells = row.getElementsByTagName("cell");
-                                    for(int k=1; k<colCount; k++)
-                                    {
-                                        Element cell = (Element)cells.item(n);
-                                        if(cell != null)
-                                        {
-                                            if(String.valueOf(k).equals(cell.getAttribute("index")))
-                                            {
-                                                String s = "tdSet" + i + "_Row" + j + "_Col" + k;
-                                                %><td class="normal" id="<%=s%>"><%= genCell(s, cell, sName+" - "+((Element)columns.item(k-1)).getAttribute("name"))%></td><%
-                                                n++;
-                                            }
-                                            else
-                                            {
-                                                %><td class="grey">&nbsp;</td><%
-                                            }
+                                     if(colCount>0){
+                                        int n=0;
+                                        NodeList cells = row.getElementsByTagName("cell");
+                                        for(int k=1; k<colCount; k++){
+                                           Element cell = (Element)cells.item(n);
+                                           if(cell != null){
+                                              if(String.valueOf(k).equals(cell.getAttribute("index"))){
+                                                 String s = "tdSet" + i + "_Row" + j + "_Col" + k; %>
+                                                    <td class="normal" id="<%=s%>">
+                                                       <%= genCell(s, cell, sName+" - "+((Element)columns.item(k-1)).getAttribute("name"))%>
+                                                    </td>
+                                            <%   n++;
+                                              }else{ %>
+                                                    <td class="grey">&nbsp;</td><%
+                                              }
+                                           }else{ %>
+                                              <td class="grey">&nbsp;</td>
+                                         <%}
                                         }
-                                        else
-                                        {
-                                            %><td class="grey">&nbsp;</td><%
+                                     }else{
+                                        NodeList cells = row.getElementsByTagName("cell");
+                                        for(int k=0; k<cells.getLength(); k++){
+                                           Element cell = (Element)cells.item(k);
+
+                                           if(cell.getAttribute("index").equals(String.valueOf(k+1))){
+                                              String s = "tdSet" + i + "_Row" + j + "_Col" + (k+1); %>
+                                                 <td id="<%=s%>">
+                                                    <%= genCell(s, cell, "")%>
+                                                 </td>
+                                         <%}else{%>
+                                                 <td class="grey">&nbsp;</td>
+                                         <%}
                                         }
-                                    }
-                                }
-                                else
-                                {
-                                    NodeList cells = row.getElementsByTagName("cell");
-                                    for(int k=0; k<cells.getLength(); k++)
-                                    {
-                                        Element cell = (Element)cells.item(k);
+                                     }
 
-                                        if(cell.getAttribute("index").equals(String.valueOf(k+1)))
-                                        {
-                                            String s = "tdSet" + i + "_Row" + j + "_Col" + (k+1);
-                                            %><td id="<%=s%>"><%= genCell(s, cell, "")%></td><%
-                                        }
-                                        else
-                                        {
-                                            %><td class="grey">&nbsp;</td><%
-                                        }
-                                    }
-                                }
+                                     String sID = "tdSet" + i + "_Row" + j + "_comments";
+                                     String sValue = "";
 
-                                String sID = "tdSet" + i + "_Row" + j + "_comments";
-                                String sValue = "";
-
-                                NodeList comments = row.getElementsByTagName("comments");
-                                if(comments.getLength()>0)
-                                {
-                                    sValue = UtilXML.getText(comments.item(0));
-                                }
-
-                                %><td id="<%=sID%>"><%= genText(sID, sValue)%></td><%
-
-                                %></tr><%
-                            }
-
+                                     NodeList comments = row.getElementsByTagName("comments");
+                                     if(comments.getLength()>0){
+                                        sValue = UtilXML.getText(comments.item(0));
+                                     }%>
+                                     <td id="<%=sID%>">
+                                        <%= genText(sID, sValue)%>
+                                     </td>
+                                  </tr>
+                          <%
+                                  }
                             %>
                             </table>
-                            <%
+                          <%}
                         }
 
                         %>
 
                         <%!
-                        String genText(String id, String value)
-                        {
+                        String genText(String id, String value){
                             String s = "\n<span style='width:100%'>"
                                 + "<input type=text style='width:100%;' name='"
                                 + id + "_text' value='" + value + "'></input>"
@@ -369,8 +369,7 @@ TD.grey
                             return s;
                         }
 
-                        String genCell(String id, Element cell, String colName)
-                        {
+                        String genCell(String id, Element cell, String colName){
                             String s = "\n<span style='width:100%'>";
 
                             String givenDate = cell.getAttribute("givenDate");
@@ -386,18 +385,12 @@ TD.grey
                                      + "<input type=hidden name='" + id + "_comments' value='" + comments + "' />";
 
                             s += "<span id='" + id + "_label' style='font-size:8pt;width:75px'>";
-                            if(givenDate.length()>0)
-                            {
+                            if(givenDate.length()>0){
                                 s += givenDate;
-                            }
-                            else
-                            {
-                                if(refusedDate.length()>0)
-                                {
+                            }else{
+                                if(refusedDate.length()>0){
                                     s += "Refused "+refusedDate;
-                                }
-                                else
-                                {
+                                }else{
                                     s += "&nbsp;";
                                 }
                             }
@@ -428,6 +421,9 @@ TD.grey
                                         </td>
                                         <td>
                                             <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
+                                        </td>
+                                        <td>
+                                            <input type="button" value="Show All" onclick="formSubmit('ShowAll');" style="width:100px" />
                                         </td>
                                         <td>
                                             <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
