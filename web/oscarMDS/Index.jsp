@@ -216,7 +216,7 @@ function checkSelected() {
                                 <% } %>
                             </td>                            
                             <td align="right" valign="center" width="30%">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>                        
+                                <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')">Help</a> | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" >About</a>
                             </td>
                         </tr>
                     </table>                        
