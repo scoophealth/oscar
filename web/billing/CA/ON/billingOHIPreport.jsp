@@ -229,7 +229,7 @@ while(rspro.next()){
 
 String[] paramYear = new String[2];
 paramYear[0] = thisyear+"/01/01";
-paramYear[1] = thisyear+"/12/31";
+paramYear[1] = thisyear+"/12/31 23:59:59";
 String pro_ohip="", pro_group="", pro_name="", updatedate="", cr="", oFile="", hFile="", total="";
 
 int count = 0;
