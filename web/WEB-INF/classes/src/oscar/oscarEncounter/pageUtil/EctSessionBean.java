@@ -44,6 +44,8 @@ public class EctSessionBean {
     public String encounter;
     public String subject;
     public String template = "";
+    public String oscarMsgID; 
+    public String oscarMsg = "";
     public ArrayList eChartIdArray;
     public ArrayList socialHistoryArray;
     public ArrayList familyHistoryArray;
@@ -78,6 +80,7 @@ public class EctSessionBean {
       phone = "";
       roster = "";
       template ="";
+      oscarMsg="";
     }
 
     /**
@@ -172,6 +175,26 @@ public class EctSessionBean {
             }
             rs.close();
             db.CloseConn();
+            
+            if (oscarMsgID!=null){
+                sql = "Select * from messagetbl where messageid = \'"+oscarMsgID+"\' ";
+                rs = db.GetSQL(sql);
+                if(rs.next()){
+                    String message = (rs.getString("themessage"));
+                    String subject = (rs.getString("thesubject"));
+                    String sentby  = (rs.getString("sentby"));
+                    String sentto  = (rs.getString("sentto"));
+                    String thetime = (rs.getString("theime"));
+                    String thedate = (rs.getString("thedate"));
+                    oscarMsg = "From: " + sentby + "\n" + "To: " + sentto + "\n" + "Date: " + thedate + " " + thetime + "\n" +
+                               "Subject: " + subject + "\n" + message;
+                }
+                rs.close();
+
+                db.CloseConn();
+            }
+            
+            
         }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
     }
     /**
