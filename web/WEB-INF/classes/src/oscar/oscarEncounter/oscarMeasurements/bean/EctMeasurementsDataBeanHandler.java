@@ -43,7 +43,7 @@ public class EctMeasurementsDataBeanHandler {
         init(demo, type);
     }
     
-    public boolean init(String demo) {
+    /*public boolean init(String demo) {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -53,7 +53,8 @@ public class EctMeasurementsDataBeanHandler {
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.providerNo= p.provider_no AND m.type = mt.type " +
                         "AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC," +
                         "m.dateEntered DESC";
-            System.out.println("sql: " + sql);
+            
+            System.out.println(" EctMeasurementDataBeanHandler sql: " + sql);
             ResultSet rs;
             String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); )
@@ -79,14 +80,45 @@ public class EctMeasurementsDataBeanHandler {
             verdict = false;
         }
         return verdict;
-    }
+    }*/
 
+    public boolean init(String demo) {
+        boolean verdict = true;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql ="SELECT mt.type, mt.typeDisplayName, mt.typeDescription, mt.measuringInstruction FROM measurements m," +
+                        "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = mt.type " +
+                        "GROUP BY mt.id ORDER BY m.type ASC";
+            
+            System.out.println(" EctMeasurementDataBeanHandler sql: " + sql);
+            ResultSet rs;
+            String canPlot = null;
+            for(rs = db.GetSQL(sql); rs.next(); )
+            {                                                   
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean();
+                    data.setType(rs.getString("type"));
+                    data.setTypeDisplayName(rs.getString("typeDisplayName"));
+                    data.setTypeDescription(rs.getString("typeDescription"));
+                    data.setMeasuringInstrc(rs.getString("measuringInstruction"));
+                    //System.out.println("Measurments: " + rs.getString("type") + " " + rs.getString("typeDisplayName") + " " + rs.getString("typeDescription"));
+                    measurementsDataVector.add(data);                
+            }
+
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
     
     public boolean init(String demo, String type) {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
+            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
@@ -102,7 +134,7 @@ public class EctMeasurementsDataBeanHandler {
                     else
                         canPlot = null;
                     //System.out.println("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("typeDescription"), rs.getString("demographicNo"), 
                                                                                rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
                                                                                rs.getString("comments"), rs.getString("dateObserved"), 
