@@ -137,9 +137,9 @@ public class FrmFormAction extends Action {
             props.setProperty("demographic_no", demographicNo);
             props.setProperty("provider_no", providerNo);
             props.setProperty("visitCod", visitCod);
-            
+            String diagnosisVT = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT"));
             //for VTForm            
-            props.setProperty("diagnosis", org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT")));
+            props.setProperty("diagnosis", diagnosisVT);
             //System.out.println("diagnosis: " + props.getProperty("diagnosis"));
            
             startTime = System.currentTimeMillis();
