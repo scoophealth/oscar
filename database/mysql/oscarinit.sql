@@ -67,6 +67,16 @@ CREATE TABLE appointment (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table batchEligibility
+--
+CREATE TABLE batchEligibility(
+  responseCode int(9) NOT NULL ,
+  MOHResponse varchar(100) NOT NULL,
+  reason varchar(100) NOT NULL,
+  PRIMARY KEY  (responseCode)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `billactivity`
 --
 
