@@ -161,6 +161,7 @@ public class FrmFormAction extends Action {
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
+                System.out.println("exit "+submit+" inputValue "+inputValue);
                 if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))                    //System.out.println("write to measurement table: " + mt.getType());
                     write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
                 
