@@ -38,7 +38,7 @@
 <% 
   String [][] dbQueries=new String[][] { 
 //{"search_noshowappt", "select provider_no, last_name, first_name, chart_no from appointment where provider_no = ? order by "+orderby }, 
-{"search_noshowappt", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, d.last_name, d.first_name from appointment a, demographic d where a.status = 'N' and a.provider_no = ? and a.appointment_date >= ? and a.appointment_date<= ? and a.demographic_no=d.demographic_no  order by "+orderby }, 
+{"search_noshowappt", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, d.last_name, d.first_name from appointment a, demographic d where (a.status = 'N' or a.status = 'NS') and a.provider_no = ? and a.appointment_date >= ? and a.appointment_date<= ? and a.demographic_no=d.demographic_no  order by "+orderby }, 
 {"searchmygroupall", "select * from mygroup where mygroup_no= ? order by last_name"}, 
   };
   String[][] responseTargets=new String[][] {  };
