@@ -1373,7 +1373,6 @@ CREATE TABLE formBCNewBorn(
   pg3_Signature varchar(80),
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
-
 --
 -- Table structure for table 'formWCB'
 --
