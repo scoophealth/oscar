@@ -390,28 +390,28 @@ public class BillingSaveBillingAction extends Action {
             String billamt = "";
 
             try {
-                double amnt = 0;
+                String amnt = "0.00";
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 db.RunSQL(insertBillingMaster);
                 rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+wcb.getW_feeitem()+"'");
                 System.out.println("SELECT value FROM billingservice WHERE service_code='"+wcb.getW_feeitem()+"'");
                 if (rs.next()) {
-                    amnt = rs.getDouble("value");
+                    amnt = rs.getString("value");
                 }
                 //rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
                 //if (rs.next()) {
                 //    amnt += rs.getDouble("value");
                 //}
                 
-                billamt = moneyFormat(String.valueOf(amnt));
-                System.out.println("billamt"+billamt);
-                db.RunSQL(wcb.SQL(billingid, billamt));
+                //billamt = moneyFormat(String.valueOf(amnt));
+                System.out.println("billamt"+amnt);
+                db.RunSQL(wcb.SQL(billingid, amnt));
                                              
                 
                 if ( wcb.getW_extrafeeitem() != null && wcb.getW_extrafeeitem().trim().length() != 0 ){
                    System.out.println("Adding Second billing item");
                    String secondWCBBillingId = null;
-                   double secondBillingAmt = 0d ;
+                   String secondBillingAmt = "0.00" ;
                    db.RunSQL(billingSQL);
                    rs = db.GetSQL("SELECT LAST_INSERT_ID()");            
                    if (rs.next()){
@@ -425,9 +425,9 @@ public class BillingSaveBillingAction extends Action {
                    db.RunSQL(secondBillingMaster);
                    rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
                    if (rs.next()) {
-                      secondBillingAmt = rs.getDouble("value");
+                      secondBillingAmt = rs.getString("value");
                    }
-                   db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, moneyFormat(String.valueOf(secondBillingAmt))));
+                   db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, secondBillingAmt));
         
                    
                 }
