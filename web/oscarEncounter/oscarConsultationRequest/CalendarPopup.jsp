@@ -126,7 +126,7 @@ opener.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (da
             <tr>
               <td bgcolor="#bbbbff">
                 <div align="center">
-                  <input type="button" name="Cancel" value=" Exit " onClick="window.close()">
+                  <input type="button" name="Cancel" value="<bean:message key="global.btnClose"/>" onClick="window.close()">
                 </div>
               </td>
             </tr>
