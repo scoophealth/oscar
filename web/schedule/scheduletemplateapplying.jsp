@@ -342,13 +342,13 @@ function addDataString1() {
               <td colspan="2">&nbsp;</td>
             </tr>
             <tr> 
-              <td bgcolor="#CCFFCC" colspan="2">Date: &nbsp; from<font size="-2">(yyyy-mm-dd)</font>: 
+              <td bgcolor="#CCFFCC" colspan="2"><bean:message key="schedule.scheduletemplateapplying.msgDate"/>: &nbsp; <bean:message key="schedule.scheduletemplateapplying.msgFrom"/><font size="-2"><bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/></font>: 
                 <input type="text" name="syear" size="4" maxlength="4" value="<%=syear%>">
                 - 
                 <input type="text" name="smonth" size="2" maxlength="2" value="<%=smonth%>">
                 - 
                 <input type="text" name="sday" size="2" maxlength="2" value="<%=sday%>" onChange="onChangeDates()">
-                &nbsp; &nbsp; to<font size="-2">(yyyy-mm-dd)</font>: 
+                &nbsp; &nbsp; <bean:message key="schedule.scheduletemplateapplying.msgTo"/><font size="-2"><bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/></font>: 
                 <input type="text" name="eyear" size="4" maxlength="4" value="<%=eyear%>">
                 - 
                 <input type="text" name="emonth" size="2" maxlength="2" value="<%=emonth%>">
