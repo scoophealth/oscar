@@ -357,7 +357,7 @@
                                 <tr>
                                     <td width="3%"></td>                                    
                                     <td class="instruction" colspan="2">
-                                        <font style="font-weight: bold">Exaplain each question and subsequent answer options:</font>
+                                        <font style="font-weight: bold">Explain each question and subsequent answer options:</font>
                                         <br>
                                         <br>For the first question (<font style="font-style:italic">How often do you do the activity?</font>), please
                                             choose from these answers:                                        

@@ -1011,19 +1011,19 @@
                 <tr>
                     <td colspan="2"></td>
                     <td colspan="2" class="score">
-                        2 = 1 - 5 hours
+                        2 = 1 - 18 hours
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
                     <td colspan="2" class="score">
-                        3 = 6 - 10 hours
+                        3 = 19 - 47 hours
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
                     <td colspan="2" class="score">
-                        4 = 11 or more hours
+                        4 = 48 or more hours
                     </td>
                 </tr>
                 <tr>
