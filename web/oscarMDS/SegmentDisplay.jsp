@@ -21,7 +21,7 @@ String AbnFlag = "";
 <html>
 
 <head>
-<title><bean:message key="oscarMDS.segmentDisplay.title"/></title>
+<title><%=pd.getPatientName()%> - <bean:message key="oscarMDS.segmentDisplay.title"/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <style type="text/css">
@@ -385,7 +385,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 </td>
                                 <td bgcolor="white" align="right">
                                     <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formCCClient"/>cc: Client : </strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formCCClient"/>: </strong>
                                             <%= mDSSegmentData.providers.consultingDoctor %>
                                     </div>
                                 </td>
