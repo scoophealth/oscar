@@ -466,7 +466,7 @@ function findProvider(p,m,d) {
         			if(demographic_no==0) {
         %>
         		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title='<bean:message key="receptionist.appointmentreceptionistadminday.ticklerMsg"/>: <%=Misc.htmlEscape(tickler_note)%>'><font color="red">!</font></a><%} %>
-<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
+<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 reason: <%=Misc.htmlEscape(reason)%>
 notes: <%=Misc.htmlEscape(notes)%>">
             .<%=(view==0?(name.length()>len?name.substring(0,len):name):name).toUpperCase()%></font></a></td>
