@@ -35,7 +35,7 @@ String content = (String) session.getAttribute("content");
 session.setAttribute("content", ""); 
 %>
 
-<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.util.*, oscar.oscarBilling.data.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
+<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.util.*, oscar.oscarBilling.ca.bc.data.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <%@ include file="dbBilling.jsp" %>

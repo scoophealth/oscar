@@ -24,7 +24,7 @@
  */
 -->
 
- <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
+ <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -83,7 +83,7 @@ batchCount = rslocal2.getString("batchcount");
            if ( billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0){
          billinggroup_no = "0000";
           } 
-         oscar.oscarBilling.OHIP.ExtractBean extract = new oscar.oscarBilling.OHIP.ExtractBean();
+         oscar.oscarBilling.ca.on.OHIP.ExtractBean extract = new oscar.oscarBilling.ca.on.OHIP.ExtractBean();
          extract.seteFlag("1");
  extract.setOscarHome(oscar_home);
  extract.setOhipVer(request.getParameter("verCode"));
@@ -168,7 +168,7 @@ batchCount = rslocal2.getString("batchcount");
            if ( billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0){
          billinggroup_no = "0000";
           } 
-             oscar.oscarBilling.OHIP.ExtractBean extract = new oscar.oscarBilling.OHIP.ExtractBean();
+             oscar.oscarBilling.ca.on.OHIP.ExtractBean extract = new oscar.oscarBilling.ca.on.OHIP.ExtractBean();
 	      extract.setOscarHome(oscar_home);
 	      extract.seteFlag("1");
 	     extract.setOhipVer(request.getParameter("verCode"));
