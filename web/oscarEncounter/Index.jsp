@@ -664,7 +664,7 @@ border-right: 2px solid #cfcfcf;
                         }
 
                         %>
-                        
+                        <option value="oscarMeasurements/oscarForm/SetupVTForm.do"/>VT
                         </select>
 
                     </td>
