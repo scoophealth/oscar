@@ -126,6 +126,7 @@ public class BillingCreateBillingAction extends Action {
         bean.setShortClaimNote(frm.getShortClaimNote());
         bean.setService_to_date(frm.getService_to_date());
 	bean.setIcbc_claim_no(frm.getIcbc_claim_no());
+        bean.setMessageNotes(frm.getMessageNotes());
         if (frm.getXml_billtype().equalsIgnoreCase("WCB")){
            WCBForm wcbForm = new WCBForm();
            wcbForm.Set(bean);
