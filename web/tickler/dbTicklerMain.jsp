@@ -31,23 +31,19 @@
 <%
 String[] param = new String[2];
 String[] temp = request.getParameterValues("checkbox");
-if (temp== null){
+if (temp == null){
 %>
   <% response.sendRedirect("ticklerMain.jsp"); %>
 <%}else{
-		//temp=e.nextElement().toString();
-		
+		//temp=e.nextElement().toString();		    
+    for (int i=0; i<temp.length; i++){
+        param[0] = request.getParameter("submit_form").substring(0,1);
+        param[1] = temp[i];	
+        int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_tickler");
 
-for (int i=0; i<temp.length; i++){
-
-
-param[0] = request.getParameter("submit_form").substring(0,1);
-param[1] = temp[i];	
-int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_tickler");
-
-}}
-
-apptMainBean.closePstmtConn();
-
+    } 
+    apptMainBean.closePstmtConn();  
+    response.sendRedirect("ticklerMain.jsp"); 
+}
 %>
-  <% response.sendRedirect("ticklerMain.jsp"); %>
+
