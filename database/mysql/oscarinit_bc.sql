@@ -1570,6 +1570,32 @@ CREATE TABLE teleplanS25 (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'teleplanC12'
+--
+
+CREATE TABLE teleplanC12 (
+  c12_id int(10) unsigned NOT NULL auto_increment,
+  s21_id int(10) unsigned NOT NULL default '0',
+  filename varchar(50) NOT NULL default '',
+  t_datacenter varchar(5) NOT NULL default '',
+  t_dataseq varchar(7) NOT NULL default '',
+  t_payeeno varchar(5) NOT NULL default '',
+  t_practitioner_no varchar(5) NOT NULL default '',
+  t_exp1 char(2) NOT NULL default '',
+  t_exp2 char(2) NOT NULL default '',
+  t_exp3 char(2) NOT NULL default '',
+  t_exp4 char(2) NOT NULL default '',
+  t_exp5 char(2) NOT NULL default '',
+  t_exp6 char(2) NOT NULL default '',
+  t_exp7 char(2) NOT NULL default '',
+  t_officefolioclaimno varchar(7) NOT NULL default '',
+  t_filler varchar(24) NOT NULL default '',
+  status char(1) NOT NULL default 'O',
+  PRIMARY KEY  (c12_id)
+) TYPE=MyISAM;
+
+
+--
 -- Table structure for table 'wcb_bp_code'
 --
 
