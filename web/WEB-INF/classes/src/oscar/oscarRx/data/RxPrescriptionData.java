@@ -1001,6 +1001,50 @@ public class Prescription {
         }
     }
     
+    public String getDrugName(){
+        String ret;            
+        if(this.isCustom()){
+            if(this.customName != null){
+                ret = this.customName + " ";
+            }else{
+                ret = "Unknown ";
+            }
+        }else{            
+            ret = this.getBrandName()+ " ";          
+        }        
+        return ret;
+    }
+    
+    public String getFullFrequency(){
+        String ret = "";
+        if(this.getTakeMin() != this.getTakeMax()){
+            ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
+        }else{
+            ret += this.getTakeMinString();
+        }
+
+        ret += " " + this.getFrequencyCode();
+        return ret;
+    }
+    
+    
+    public String getFullDuration(){
+        String ret = this.getDuration();
+        if(this.getDurationUnit().equals("D")){
+            ret += "Day";
+        }
+        if(this.getDurationUnit().equals("W")){
+            ret += "Week";
+        }
+        if(this.getDurationUnit().equals("M")){
+            ret += "Month";
+        }
+
+        if(Integer.parseInt(this.getDuration()) > 1){
+            ret += "s";
+        }
+        return ret;
+    }
     public void Delete() {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
