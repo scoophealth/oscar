@@ -86,7 +86,7 @@ SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            page title goes here <%=sMaster.numSurveys()%>
+                            Current Surveys: <%=sMaster.numSurveys()%>
                         </td>
                         <td  >&nbsp;
 							
