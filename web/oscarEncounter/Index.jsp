@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
-<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.Properties"%>
+<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.Properties"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
@@ -636,12 +636,13 @@ border-right: 2px solid #cfcfcf;
                             for(int j=0; j<forms.length; j++) {
                                 EctFormData.Form frm = forms[j];
                                 String table = frm.getFormTable();
-                                EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
-                                if(pforms.length>0) {
-                                    EctFormData.PatientForm pfrm = pforms[0];
-                            %>
-                            <option value="<%="../form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+demoNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
-                            <%}}
+                                if(!table.equalsIgnoreCase("")){
+                                    EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
+                                    if(pforms.length>0) {
+                                        EctFormData.PatientForm pfrm = pforms[0];
+                                %>
+                                <option value="<%="../form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+demoNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
+                                <%}}}
 
                             %>
                         </select>
@@ -663,8 +664,7 @@ border-right: 2px solid #cfcfcf;
                             }
                         }
 
-                        %>
-                        <option value="oscarMeasurements/oscarForm/SetupVTForm.do"/>VT
+                        %>                        
                         </select>
 
                     </td>
