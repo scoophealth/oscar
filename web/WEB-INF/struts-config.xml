@@ -427,6 +427,14 @@
                input="/oscarMessenger/CreateMessage.jsp">
        <forward name="success" path="/oscarMessenger/CreateMessage.jsp"/>
    </action>
+   
+  <action     path="/oscarMessenger/WriteToEncounter"
+               type="oscar.oscarMessenger.pageUtil.MsgWriteToEncounterAction"
+               name=""
+               scope="request"
+               input="/oscarMessenger/ViewMessage.jsp">
+       <forward name="success" path="/oscarEncounter/IncomingEncounter.do"/>
+   </action>
 
     <!-- Edit oscarRx -->
     <action     path="/oscarRx/choosePatient"
