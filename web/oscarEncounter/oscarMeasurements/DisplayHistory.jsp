@@ -83,12 +83,18 @@
                 <tr>
                     <td>               
                         <tr>
-                            
-                            <th align="left" class="Header" width="5">                                
-                            </th>
-                            <th align="left" class="Header" width="5">
-                                <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingType"/>
-                            </th>
+                            <logic:present name="data" property="canPlot">
+                                <th align="left" class="Header" width="5">                                
+                                </th>
+                                <th align="left" class="Header" width="5">
+                                    <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingType"/>
+                                </th>
+                            </logic:present>                            
+                            <logic:notPresent name="data" property="canPlot">
+                                <th colspan="2" align="left" class="Header" width="5">
+                                    <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingType"/>
+                                </th>
+                            </logic:notPresent>
                             <th align="left" class="Header" width="20">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingProvider"/>
                             </th>                            
@@ -115,7 +121,7 @@
                         <logic:present name="data" property="canPlot">
                         <tr class="data">
                             <td width="5"><img src="img/chart.gif" title="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.plot"/>" onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>')"/></td>
-                            <td width="5"><bean:write name="data" property="typeDisplayName" /></td>
+                            <td width="5"><a title="<bean:write name="data" property="typeDescription" />"><bean:write name="data" property="type" /></a></td>
                             <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                                                        
                             <td width="200"><bean:write name="data" property="measuringInstrc" /></td>
                             <td width="10"><bean:write name="data" property="dataField" /></td>
@@ -126,9 +132,8 @@
                         </tr>
                         </logic:present>
                         <logic:notPresent name="data" property="canPlot">
-                        <tr class="data">
-                            <td width="5"></td>
-                            <td width="5"><bean:write name="data" property="typeDisplayName" /></td>
+                        <tr class="data">                            
+                            <td width="5" colspan=2><a title="<bean:write name="data" property="typeDescription" />"><bean:write name="data" property="type" /></a></td>
                             <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                                                        
                             <td width="200"><bean:write name="data" property="measuringInstrc" /></td>
                             <td width="10"><bean:write name="data" property="dataField" /></td>
@@ -143,10 +148,8 @@
                 </tr>
             </table>
             <table>
-                <tr>
-                    <logic:present name="back">
-                    <td><input type="button" name="Button" value="<bean:message key="global.btnBack"/>" onClick="window.history.go(-1)"></td>
-                    </logic:present>
+                <tr>                    
+                    <td><input type="button" name="Button" value="List Old Measurements Index" onClick="javascript: popupPage(300,800,'SetupHistoryIndex.do')"></td>                    
                     <td><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"></td>
                     <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
                     <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>" onclick="submit();"/></td>
