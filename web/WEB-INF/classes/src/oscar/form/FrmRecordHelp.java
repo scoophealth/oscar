@@ -4,12 +4,14 @@ import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.util.*;
-//import oscar.OscarProperties;
+import oscar.OscarProperties;
+import org.w3c.dom.Document;
 
 public class FrmRecordHelp {
 	private String _dateFormat = "yyyy/MM/dd";
@@ -48,12 +50,35 @@ public class FrmRecordHelp {
 
     public synchronized int saveFormRecord(Properties props, String sql)  throws SQLException  {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-
-        ResultSet rs = db.GetSQL(sql, true);
-        rs.moveToInsertRow();
-
-		rs = updateResultSet(props,  rs, true);
+        
+        ResultSet rs = db.GetSQL(sql, true);        
+        rs.moveToInsertRow();        
+	rs = updateResultSet(props,  rs, true);
         rs.insertRow();
+        String saveAsXml = OscarProperties.getInstance().getProperty("save_as_xml"); 
+        System.out.println("the value of save_as_xml is: " + saveAsXml);
+        if(saveAsXml.equalsIgnoreCase("true")){
+            //System.out.println("savs as XML");
+            String demographicNo = props.getProperty("demographic_no");
+            int index = sql.indexOf("form");
+            int spaceIndex = sql.indexOf(" ",index);;            
+            String formClass = sql.substring(index, spaceIndex);
+            java.util.Date d = UtilDateUtilities.Today();            
+            String now = UtilDateUtilities.DateToString(d, "yyyyMMddhhmmss");
+            String place= OscarProperties.getInstance().getProperty("form_record_path");            
+            
+            if(!place.endsWith("/"))
+                place = new StringBuffer(place).insert(place.length(),"/").toString();
+            String fileName = place+formClass+"_"+demographicNo+"_"+now+".xml";
+
+            try{
+                Document doc = JDBCUtil.toDocument(rs);
+                JDBCUtil.saveAsXML(doc,fileName);
+            }
+            catch (Exception e){            
+                System.out.println(e.getMessage());
+            }        
+        }
         rs.close();
 
         int ret = 0;
