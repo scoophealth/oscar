@@ -5544,7 +5544,6 @@ CREATE TABLE tmpdiagnosticcode (
 --
 -- Table structure for table `validations`
 --
-DROP TABLE IF EXISTS validations;
 CREATE TABLE validations(
   id int UNSIGNED AUTO_INCREMENT,
   name varchar(100) NOT NULL,
@@ -5557,3 +5556,24 @@ CREATE TABLE validations(
   isTrue bool,
  PRIMARY KEY(id)
 ) TYPE =MyISAM;
+
+--
+-- Table structure for table `waitingListName`
+--
+CREATE TABLE waitingListName(
+  ID int(10) NOT NULL auto_increment,
+  name varchar(60) NOT NULL,
+  PRIMARY KEY(ID)
+);
+  
+--
+-- Table structure for table `waitingList`
+--
+CREATE TABLE waitingList(
+  listID int(10),   
+  demographic_no int(10) NOT NULL,
+  note varchar(255),
+  position int(10) NOT NULL,
+  onListSince datetime NOT NULL,  
+  INDEX (listID)  
+);
