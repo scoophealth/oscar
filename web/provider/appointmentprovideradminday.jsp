@@ -1,6 +1,6 @@
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
-
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -654,7 +654,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
     <%}%>
 
       <% if (!vLocale.getCountry().equals("BR")) { %>
-      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message key="global.rx"/></a>| <b><%=reason%></b>
+      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message key="global.rx"/></a><oscarProp:oscarPropertiesCheck property="SHOW_APPT_REASON" value="yes">| <b><%=reason%></b></oscarProp:oscarPropertiesCheck>
       <%
      //out.print(monthDay + " " + demBday);
       if(isBirthday(monthDay,demBday)){%>
