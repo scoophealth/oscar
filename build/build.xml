@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<project name="oscar" 
+         default="dist">
+  <property name="catalina" location="/home/users/wagner/jakarta-tomcat-4.1.21" />
+
+  <property environment="env"/>
+  <path id="classpath.path">
+   <fileset dir="${catalina}/common/lib">
+    <include name="*.jar"/>
+   </fileset>
+   <pathelement location="${classes}"/>
+   <fileset dir="../web/WEB-INF/lib">
+    <include name="*.jar"/>
+   </fileset>
+  </path>
+
+ <target name="init" 
+         description="Init build directories">
+  <tstamp/>
+
+  <property name="project" value="${ant.project.name}"/>
+
+  <property name="version" value="1.2" />
+  <property name="now" value="${DSTAMP}-${TSTAMP}" />
+
+  <property name="build" location="." />
+  <property name="root_web" location="${build}/web" /> 
+  <property name="classes_web" location="${root_web}/classes" /> 
+  <property name="doc" location="${build}/doc" /> 
+  <property name="tarball.tar" value="${project}-${now}.tar" />  
+  <property name="tarball.tar.gz" value="${tarball.tar}.gz" />  
+  <property name="test" location="${build}/test" />
+  <property name="src_web" location="../web/WEB-INF/classes/src" />
+  <property name="webapp" location="../web" />
+  <property name="jspbasedir" location="${catalina}/webapps/oscar" />
+
+  <mkdir dir="${build}" />
+  <mkdir dir="${root_web}" />
+  <mkdir dir="${classes_web}" />
+  <mkdir dir="${doc}" />
+  <mkdir dir="${root_web}/WEB-INF"/>
+  <mkdir dir="${root_web}/WEB-INF/lib"/>
+  <mkdir dir="${test}" />
+
+  <!-- webapp filtering - splice version etc. into web files -->
+  <filter token="project" value="${project}" />
+  <filter token="version" value="${version}" /> 
+  <filter token="date" value="${TODAY}" />
+  <filter token="now" value="${now}" />
+  <filter token="tarball" value="${tarball.tar.gz}" />
+
+  <!-- deployment properties -->
+  <property name="live.user" value="alex"/>
+  <property name="live.server" value="www.purpletech.com"/>
+  <property name="live.tomcat" value="/usr/local/java/tomcat"/>
+  <property name="live.webapps" value="/opt/webapps"/>
+  <property name="rsync" value="rsync"/>  <!-- local location of rsync -->
+  <property name="ssh" value="ssh"/>  <!-- local location of rsync -->
+
+ </target>
+
+ <target name="clean" depends="init">
+  <delete dir="${test}"/>
+  <delete dir="${build}"/>
+  <delete dir="${lib}"/>
+  <delete dir="${ear}"/>
+ </target>
+
+ <target name="web" depends="init">
+  <javac 
+	 srcdir="${src_web}"
+	 destdir="${classes_web}"
+	 deprecation="on"
+	 debug="on">
+   <classpath>
+      <pathelement path="${classes_web}/"/>
+      <path refid="classpath.path"/>
+   </classpath>
+  </javac>
+ </target>
+
+ <target name="testprep" depends="init">
+  <copy todir="${test}/polls">
+   <fileset dir="polls" includes="**" />
+  </copy>
+ </target>
+
+ <target name="junittest" depends="init,testprep">
+  <junit printsummary="on"
+         fork="yes"
+	 failureproperty="testfailed">
+   <classpath>
+    <pathelement path="${classpath}" />
+   </classpath>
+   <jvmarg value="-Djava.compiler=NONE"/>
+   <formatter type="plain"/>
+   <batchtest todir="${test}">
+    <fileset dir="${src}">
+     <include name="**/AllTests.java" />
+    </fileset>
+   </batchtest>
+  </junit>
+ </target>
+
+ <target name="javatest" depends="init,testprep" >
+  <java classname="junit.textui.TestRunner" classpath="${classpath}" fork="yes">
+   <arg value="irv.AllTests"/>
+  </java>
+ </target>
+
+ <target name="test" depends="junittest" if="testfailed">
+  <fail message="one or more tests failed"/>
+ </target>
+
+ <target name="testgui" depends="init,testprep">
+  <java classname="junit.awtui.TestRunner" classpath="${classpath}" fork="yes">
+   <arg value="irv.AllTests"/>
+  </java>
+ </target>
+
+ <target name="javadoc" depends="init">
+  <javadoc sourcepath="${src}" destdir="${build}/doc" packagenames="oscar.*" classpath="${classpath}" />
+ </target>
+
+ <target name="jsp" depends="init">
+  <copy todir="${jspbasedir}/">
+   <fileset dir="${webapp}">
+      <exclude name="WEB-INF/*"/>
+   </fileset>
+  </copy>
+ </target>
+
+ <target name="webinf" depends="init">
+  <copy todir="${jspbasedir}/WEB-INF">
+   <fileset dir="${webapp}/WEB-INF"/>
+  </copy>
+ </target>
+
+ <target name="class" depends="web">
+  <copy todir="${jspbasedir}/WEB-INF/classes">
+   <fileset dir="${classes_web}"/>
+  </copy>
+ </target>
+
+ <target name="dist" depends="web">
+  <!-- make the webapp clean, so even files that haven't changed get
+  their filters updated -->
+
+  <war destfile="${dist}/oscar.war" webxml="../web/WEB-INF/web.xml"> 
+       <fileset dir="${webapp}"/> 
+       <lib dir="${webapp}/WEB-INF/lib"/>
+       <classes dir="${classes_web}"/>
+  </war>
+ </target>
+
+ <target name="deploy" depends="dist">
+ </target>
+
+ <target name="restart" depends="init" >
+ </target>
+
+</project>
+
