@@ -52,11 +52,11 @@ public class FrmToXMLUtil{
         String _dateFormat = "yyyy-MM-dd hh:mm:ss";
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         ProviderData prData = new ProviderData(dataProps.getProperty("provider_no"));
-        String vType = "7"; //Other
+        String vType = "Other"; //Other
         if(prData.getProvider_type().equalsIgnoreCase("doctor"))
-            vType = "1"; //FamilyMDVisit
+            vType = "FamilyMDVisit"; //FamilyMDVisit
         else if(prData.getProvider_type().equalsIgnoreCase("nurse"))
-            vType = "3"; //NurseVisit        
+            vType = "NurseVisit"; //NurseVisit        
 
         SitePatientVisitRecordsDocument visitDocument = SitePatientVisitRecordsDocument.Factory.newInstance();
         SitePatientVisitRecordsDocument.SitePatientVisitRecords visitRecord = visitDocument.addNewSitePatientVisitRecords();
