@@ -1,0 +1,40 @@
+These are the menu functions:
+Emergency Record - Show the Patient Summary screen for now.
+Self Assessment - Show AR1 with risk checklist (great demo!)
+Smart Checkup - Show AR2  with checklist (this too is great demo!)
+Make Appointment - Show "Please call your clinic receptionist to obtain
+permission for Internet Booking."
+Mail Us - Show "Your message: text box" with Submit /Cancel buttons in 
+the
+bottom
+Finish & Exit - Logout
+
+Notice this is all done without javascript. I intend to keep this part
+low-bandwidth and compliant with everything under the sun!
+Regarding the Report page, what would be most flexible is to build a
+datadict.xml record (which you can Edit in Preference) which looks something
+like this:
+<Data_Dictionary_Name>Name
+     <Source_table>Demo</Source_table>
+     <Row>Row or field name</Row>
+     <Conversion>if conversion needed</Conversion>
+</Data_dictionary_Name>
+
+<Data_Dictionary_Name>EDB
+     <Source_table>AR1 or wherever you can get the latest
+data</Source_table>
+     <Row>Row or field name or xml tag name</Row>
+     <Conversion>if conversion needed for the date field</Conversion>
+</Data_dictionary_Name>
+
+etc.. At the end of the day, you provide a program which will extra data
+from the database and dynamically create a mySQL table. The Report page is
+just a list of reports which are SQL commands. Later you can provide a
+facility to allow user to add report by learning from the sample reports you
+give them. When you execute SQL commands, disable any DELETE type commands.
+Let's work on this a bit more. This is bread and butter of a data-management
+system. If you can export the extracted data to another subdirectory where
+users can use standard reporting program (hopefully also Open Source,
+something like Crystal Reports if we have to pay) that will be GREAT!
+
+David

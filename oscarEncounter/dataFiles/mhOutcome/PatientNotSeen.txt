@@ -1,0 +1,6 @@
+Patient Not Seen:
+Patient did not follow through
+Patient no longer requires service
+Patient sought help elsewhere
+Unknown
+Other

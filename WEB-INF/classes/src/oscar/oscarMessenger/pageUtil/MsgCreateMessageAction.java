@@ -1,0 +1,117 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// *
+// *
+// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+// * This software is published under the GPL GNU General Public License. 
+// * This program is free software; you can redistribute it and/or 
+// * modify it under the terms of the GNU General Public License 
+// * as published by the Free Software Foundation; either version 2 
+// * of the License, or (at your option) any later version. * 
+// * This program is distributed in the hope that it will be useful, 
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+// * along with this program; if not, write to the Free Software 
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+// * 
+// * <OSCAR TEAM>
+// * This software was written for the 
+// * Department of Family Medicine 
+// * McMaster Unviersity 
+// * Hamilton 
+// * Ontario, Canada 
+// *
+// -----------------------------------------------------------------------------------------------------------------------
+package oscar.oscarMessenger.pageUtil;
+import oscar.oscarDB.DBHandler;
+
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Locale;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionServlet;
+import org.apache.struts.util.MessageResources;
+
+public class MsgCreateMessageAction extends Action {
+
+
+    public ActionForward perform(ActionMapping mapping,
+				 ActionForm form,
+				 HttpServletRequest request,
+				 HttpServletResponse response)
+	throws IOException, ServletException {
+            System.out.println("CreateMessageAction Jackson");
+            // Extract attributes we will need
+            Locale locale = getLocale(request);
+            MessageResources messages = getResources();
+
+            oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
+            bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
+                String userNo   = bean.getProviderNo();
+                String userName = bean.getUserName();
+                String att      = bean.getAttachment();
+                bean.nullAttachment();
+            String message      = ((MsgCreateMessageForm)form).getMessage();
+            String[] providers  = ((MsgCreateMessageForm)form).getProvider();
+            String subject      = ((MsgCreateMessageForm)form).getSubject();
+            String sentToWho    = null;
+            String currLoco     = null;
+            String messageId    = null;
+
+            java.util.ArrayList providerListing, localProviderListing, remoteProviderListing;
+
+
+            subject.trim();
+            if (subject.length() == 0) {subject = "none";}
+
+            oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
+            providers               = messageData.getDups4(providers);
+            providerListing         = messageData.getProviderStructure(providers);
+            localProviderListing    = messageData.getLocalProvidersStructure();
+            remoteProviderListing   = messageData.getRemoteProvidersStructure();
+            currLoco                = messageData.getCurrentLocationId();
+
+
+            System.out.println("provider Listing : "+providerListing.size());
+            System.out.println("Local Listings : "+localProviderListing.size());
+            System.out.println("RemoteProviderListing : "+remoteProviderListing.size());
+
+            if (messageData.isLocals()){
+            sentToWho = messageData.createSentToString(localProviderListing);
+            }else{
+            sentToWho = "";
+            }
+
+            if (messageData.isRemotes()){
+                sentToWho = sentToWho+" "+messageData.getRemoteNames(remoteProviderListing);
+            }
+
+            messageId = messageData.sendMessage2(message,subject,userName,sentToWho,userNo,providerListing,att);
+
+            System.out.println("messages id = "+messageId);
+/*
+            if (messageData.isRemotes()){
+                oscar.oscarMessenger.data.MsgRemoteMessageData  remoteMessageData;
+                remoteMessageData = new oscar.oscarMessenger.data.MsgRemoteMessageData(messageId,currLoco);
+
+                remoteMessageData.start();
+
+            }
+*/
+
+    request.setAttribute("SentMessageProvs",sentToWho.toString());
+
+    return (mapping.findForward("success"));
+    }
+
+}

@@ -1,0 +1,76 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<html>
+
+<body>
+<form method="POST" action="--WEBBOT-SELF--">
+<table BORDER="0" NOSAVE width="100%">
+<TR>
+<TD VALIGN="MIDDLE" WIDTH="10%">
+  <P ALIGN="CENTER"><IMG SRC="images/sfhc.gif" WIDTH=65 HEIGHT=65>
+</TD>
+<TD ALIGN="LEFT" VALIGN="MIDDLE" WIDTH="40%">
+<FONT FACE="Arial" SIZE=1><P>Stonechurch Family Health Centre<br>
+549 Stonechurch Road East<br>
+Hamilton, ON L8W 3L2
+</FONT></TD>
+<TD width="50%"><textarea rows="6" name=label cols="40" oscarDB=Label></textarea></TD>
+</TR>
+</TABLE>
+
+<p><font size="4"><b>CONSULTATION REQUEST</b></font></p>
+
+<p>&nbsp;</p>
+
+  <!--webbot bot="SaveResults"
+  U-File="C:\jakarta-tomcat-3.2.2\webapps\oscar_form\_private\form_results.txt"
+  S-Format="TEXT/CSV" S-Label-Fields="TRUE" -->
+  <table BORDER="1" NOSAVE width="100%">
+  <TR>
+  <TD width="50%">
+  <p>Date: <input type="text" name=date size="20" oscarDB=Today></p>
+  <p>Service:<input type="text" name=service size="20" oscarDB=service></p>
+  <p>Consultant:<input type="text" name=consultant size="20"  oscarDB=consultant></p>
+  </TD><TD width="50%">
+  <p>Reason for consultation:<br>
+  <textarea rows="6" name=reason cols="40" oscarDB=reason></textarea></p>
+  </TD>
+  </table>
+  <p>Patient clinical information:</p>
+  <p><textarea rows="4" name=clinicalinformation cols="80" oscarDB=clinicalinformation></textarea></p>
+  <p>Significant concurrent problem:</p>
+  <p><textarea rows="4" name=currentproblems cols="80" oscarDB=Problem_List></textarea></p>
+  <p>Current medication:</p>
+  <p><textarea rows="4" name=currentmedications cols="80" oscarDB=Medication></textarea></p>
+  <p>&nbsp;</p>
+  <p><input type="submit" value="Submit" name="B1"><input type="reset" value="Reset" name="B2"></p>
+</form>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

@@ -1,0 +1,468 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<%@ page language="java" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
+<html:html>
+
+<%
+    oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm;
+    reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil ();
+    reqFrm.estRequestFromId((String)request.getAttribute("reqId"));
+
+    if (reqFrm.specPhone == null || reqFrm.specPhone.equals("null")){
+        reqFrm.specPhone = new String();
+    }
+    
+    if (reqFrm.specFax == null || reqFrm.specFax.equals("null")){
+        reqFrm.specFax = new String();
+    }
+    if (reqFrm.specAddr == null || reqFrm.specAddr.equals("null")){
+        reqFrm.specAddr = new String();
+    }
+%>
+<head>
+<html:base/>
+<style type="text/css" media="print">
+.header {
+    display:none;
+}
+.header INPUT {
+    display:none;
+}
+
+.header A {
+    display:none;
+}
+
+</style>
+
+<style type="text/css">
+
+.Header{
+    background-color:#BBBBBB;
+    padding-top:5px;
+    padding-bottom:5px;
+    width: 450pt;
+    font-size:12pt;
+}
+
+.Header INPUT{
+    width: 100px;
+}
+
+.Header A{
+    font-size: 12pt;
+}
+
+table.patientInfo{
+border: 1pt solid #888888;
+}
+
+table.leftPatient{
+border-left: 1pt solid #AAAAAA;
+}
+
+table.printTable{
+width: 450pt;
+border: 1pt solid #888888;
+font-size: 10pt;
+font-family: arial, verdana, tahoma, helvetica, sans serif;
+}
+td.subTitles{
+font-size:12pt;
+font-family: arial, verdana, tahoma, helvetica, sans serif;
+}
+
+td.fillLine{
+border-bottom: 1pt solid #444444;
+font-size:10pt;
+font-family: arial, verdana, tahoma, helvetica, sans serif;
+}
+pre.text{
+font-size:10pt;
+font-family: arial, verdana, tahoma, helvetica, sans serif;
+}
+td.title4{
+font-size:10pt;
+font-family: arial, verdana, tahoma, helvetica, sans serif;
+
+
+}
+td.address{
+font-size:8pt;
+font-family: arial, verdana, tahoma, helvetica, sans serif;
+
+}
+
+</style>
+
+<script type="text/javascript">
+var flag = 1;
+function PrintWindow()
+{
+       window.print();
+}
+
+function CloseWindow()
+{
+       window.close();
+}
+
+function CloseWindow()
+{
+       window.close();
+}
+
+
+function flipFaxFooter(){
+
+      if (flag == 1 ){
+      document.getElementById("faxFooter").innerHTML="<hr>This information is direct in confidence solely to the person named above and may not otherwise be distributed, copied or disclosed. Therefore, this information should be considered strictly confidential.  If you have received this telecopy in error, please notify us immediately by telephone. Thank you for your assistance.";
+      flag = 0;
+      }else{
+      document.getElementById("faxFooter").innerHTML="";
+      flag = 1;
+      }
+}
+
+</script>
+<title>
+ConsultationFormPrint
+</title>
+</head>
+<body>
+<table class="header" >
+    <tr>
+       	<td>
+            <input type=button value="Fax Footer" onclick="javascript :flipFaxFooter();"/>
+        </td>
+        
+	<td>
+            <input type=button value="Print" onclick="javascript: PrintWindow();"/>
+        </td>
+
+        <td>
+            <input type=button value="Exit" onclick="javascript: CloseWindow();"/>
+        </td>
+    </tr>
+</table>
+<table class="printTable" name="headerTable">
+<!--header-->
+<tr>
+    <td>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </td>
+</tr>
+<tr>
+    <td align="center">
+       Consultation Request
+    </td>
+</tr>
+
+<tr>
+    <td>
+        <table border=0 align="center" width="100%" cellspacing="0" class="patientInfo">
+            <tr>
+                <td valign="top" align="right">
+                    <table border=0  >
+                        <tr>
+                            <td class="subTitles">
+                                Date:
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.referalDate%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                                Status:
+                            </td>
+                            <td class="fillLine">
+                                <%=urg(reqFrm.urgency) %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                                Service:
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.getServiceName(reqFrm.service) %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                                Consultant:
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.getSpecailistsName(reqFrm.specialist) %>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="subTitles">
+                                Phone:
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.specPhone%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                                Fax:
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.specFax%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles" >
+                                Address:
+                            </td>
+
+                            <td class="fillLine" >
+                                <%=reqFrm.specAddr%>
+                            </td>
+                        </tr>
+
+
+
+                    </table>
+                </td>
+                <td valign="top">
+                    <table border=0 class="leftPatient">
+                        <tr>
+                            <td class="subTitles">
+                            Patient:
+                            </td>
+                            <td class="fillLine">
+                            <%=reqFrm.patientName %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                            Address:
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.patientAddress %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                               Tel.No.
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.patientPhone %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                               Birthdate:
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.patientDOB %>  (d/m/y)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                               Health Card No.
+                            </td>
+                            <td class="fillLine">
+                             <%=reqFrm.patientHealthNum %>&nbsp;<%=reqFrm.patientHealthCardVersionCode%>&nbsp;<%=reqFrm.patientHealthCardType%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                            Appointment date:
+                            </td>
+                            <td class="fillLine">
+                            <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
+                                <%=reqFrm.appointmentDay %>/<%=reqFrm.appointmentMonth %>/<%=reqFrm.appointmentYear %>  (d/m/y)
+                            <%}else{%>
+				&nbsp;
+			    <%}%>
+			    </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                            Time:
+                            </td>
+
+                            <td class="fillLine">
+                            <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
+                                <%=reqFrm.appointmentHour %>:<%=reqFrm.appointmentMinute %> <%=reqFrm.appointmentPm %>
+                            <%}else{%>
+				&nbsp;
+		            <%}%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subTitles">
+                            Chart No.
+                            </td>
+                            <td class="fillLine">
+                                <%=reqFrm.patientChartNo%>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+
+<tr>
+    <td class="subTitles">
+        Reason for consultation:
+    </td>
+</tr>
+<tr>
+    <td class="fillLine">
+        <%=reqFrm.reasonForConsultation %>
+       &nbsp;<br>
+    </td>
+</tr>
+
+<tr>
+    <td class="subTitles">
+        Pertinent Clinical Information:
+    </td>
+</tr>
+<tr>
+    <td class="fillLine">
+        <%=divy(reqFrm.clinicalInformation) %>
+       &nbsp;<br>
+    </td>
+</tr>
+
+
+<tr>
+    <td class="subTitles">
+        Significant Concurrent Problems:
+    </td>
+</tr>
+<tr>
+    <td class="fillLine">
+
+        <%=divy(reqFrm.concurrentProblems) %>
+
+       &nbsp;<br>
+    </td>
+</tr>
+
+
+
+<tr>
+    <td class="subTitles">
+        Current Medications
+    </td>
+</tr>
+<tr>
+    <td class="fillLine">
+        <%=divy(reqFrm.currentMedications) %>
+
+       &nbsp;<br>
+    </td>
+</tr>
+
+<tr>
+    <td class="subTitles">
+        Allergies
+    </td>
+</tr>
+<tr>
+    <td class="fillLine">
+        <%=divy(reqFrm.allergies) %>
+       &nbsp;<br>
+    </td>
+</tr>
+<tr>
+    <td class="subTitles">
+    Associated with : <%=reqFrm.getProviderName(reqFrm.providerNo) %>   
+       &nbsp;<br>
+    </td>
+</tr>
+<tr>
+    <td class="subTitles">
+       Family Doctor : <%=reqFrm.getFamilyDoctor() %>
+       &nbsp;<br>
+    </td>
+</tr>
+<tr>
+    <td id="faxFooter">
+    </td>
+</tr>
+</table>
+</body>
+</html:html>
+<%!
+public String divy (String str){
+    StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(str);
+    int j =0;
+    int i = 0 ;
+    System.out.println("str "+str);
+    while (i < stringBuffer.length() ){
+        if (stringBuffer.charAt(i) == '\n'){
+
+        stringBuffer.insert(i,"<BR>");
+
+
+        System.out.println("i = "+stringBuffer.charAt(i)+" i-1 = "+stringBuffer.charAt(i-1)+" i+1 "+stringBuffer.charAt(i+4));
+        i = i + 4;
+        }
+
+
+    i++;
+    }
+
+
+return stringBuffer.toString();
+
+}
+
+%>
+<%!
+public String urg(String str){
+    String retval = "";
+    if (str.equals("1")){
+        retval = "Urgent";
+    }else if(str.equals("2")){
+        retval = "Non-Urgent";
+    }else if (str.equals("3")){
+        retval = "Return";
+    }
+    return retval;
+}
+%>

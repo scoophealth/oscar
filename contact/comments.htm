@@ -1,0 +1,144 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<HTML>
+<HEAD>
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin
+function getCookie(name){
+var cname = name + "=";               
+var dc = document.cookie;             
+if (dc.length > 0) {              
+begin = dc.indexOf(cname);       
+if (begin != -1) {           
+begin += cname.length;       
+end = dc.indexOf(";", begin);
+if (end == -1) end = dc.length;
+return unescape(dc.substring(begin, end));
+} 
+}
+return null;
+}
+function setCookie(name, value) {
+var now = new Date();
+var then = new Date(now.getTime() + 31536000000);
+document.cookie = name + "=" + escape(value) + "; expires=" + then.toGMTString() + "; path=/";
+}
+function getInfo(form) {
+form.info.value = "Browser Information: " + navigator.userAgent;
+}
+function getValue(element) {
+var value = getCookie(element.name);
+if (value != null) element.value = value;
+}
+function setValue(element) {
+setCookie(element.name, element.value);
+}
+function fixElement(element, message) {
+alert(message);
+element.focus();
+}
+function isMailReady(form) {
+var passed = false;
+if (form.NAME.value == "") {
+fixElement(form.NAME, "Please include your name.");
+}
+else if (form.EMAIL.value.indexOf("@") == -1 ||
+form.EMAIL.value.indexOf(".") == -1) {
+fixElement(form.EMAIL, "Please include a proper EMAIL address.");
+}
+else if (form.message.value == "") {
+fixElement(form.message, "Please include a message.");
+}
+else {
+getInfo(form);
+passed = true;
+}
+return passed;
+}
+// End ENCTYPE = "text/plain"-->
+</SCRIPT>
+<TITLE>COMMENTS</TITLE>
+<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+</HEAD>
+
+<BODY background="../images/gray_bg.jpg" BGCOLOR="#ffffff"  bgproperties="fixed">
+<BR><BR><BR>
+<table border=0 cellspacing=0 cellpadding=0 width="100%" >
+   <tr bgcolor="#486ebd">
+      <th align="CENTER" NOWRAP><font class="thheader">CONTACT US</font></th></tr>
+</table>
+
+<center>
+  <p></p>
+  <table border="0" cellpadding="2" cellspacing="2" width="80%">
+<tr>
+  <td valign="top">
+    <p>Our address is:</p>
+        <pre>
+  549 StoneChurch Road East
+  Hamilton, ON
+  Canada
+  M5T 1L6
+
+  Tel: 905 1234567
+	</pre></td>
+  <td></td>
+<FORM NAME = "mail" METHOD="post" ACTION="contact/comments.jsp"
+ onSubmit = "return isMailReady(this);">
+<td valign="top">
+<TABLE BORDER = "0" CELLPADDING = "2" CELLSPACING = "0">
+  <TR>
+    <TD>Your Name:
+   	<INPUT TYPE = "TEXT" NAME = "NAME" onFocus = "getValue(this)" onBlur = "setValue(this)"></td>
+	<TD>Your EMAIL Address:
+	<INPUT TYPE = "TEXT" NAME = "EMAIL" value="" onFocus = "getValue(this)" onBlur = "setValue(this)"></TD>
+  </TR><TR>
+	          <TD COLSPAN = "2"> Enter your message: 
+                <TEXTAREA ROWS = "8" COLS = "40" NAME = "message"></TEXTAREA>
+              </TD>
+  </TR><TR>
+	<TD align="center" COLSPAN = "2"><INPUT TYPE="submit" NAME="SUBMIT" VALUE="SUBMIT" SIZE="17"><INPUT TYPE = "RESET" VALUE = " Cancel "></TD>
+  </TR>
+</TABLE>
+
+</td>
+</FORM></tr>
+</table>
+<p></p></center>
+<hr>
+  <table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="middle"><a href="../index.html"> <img src="../images/leftarrow.gif" width="25" height="20" border="0"> 
+      Back to StoneChurch Home Page</a></td>
+    <td align="right"></td>
+  </tr>
+  </table>
+
+</BODY>
+</HTML>

@@ -1,0 +1,174 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<%@ page language="java" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<link rel="stylesheet" type="text/css" href="encounterStyles.css">
+<html>
+<head>
+
+<logic:notPresent name="msgSessionBean" scope="session">
+    <logic:redirect href="index.jsp" />
+</logic:notPresent>
+<logic:present name="msgSessionBean" scope="session">
+    <bean:define id="bean" type="oscar.oscarMessenger.pageUtil.MsgSessionBean" name="msgSessionBean" scope="session" />
+    <logic:equal name="bean" property="valid" value="false">
+        <logic:redirect href="index.jsp" />
+    </logic:equal>
+</logic:present>
+<%
+oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
+%>
+
+<title>
+SentMessage
+</title>
+<style type="text/css">
+td.messengerButtonsA{
+    /*background-color: #6666ff;*/
+    /*background-color: #6699cc;*/
+    background-color: #003399;
+}
+td.messengerButtonsD{
+    /*background-color: #84c0f4;*/
+    background-color: #555599;
+}
+a.messengerButtons{
+    color: #ffffff;
+    font-size: 9pt;
+    text-decoration: none;
+}
+
+
+table.messButtonsA{
+border-top: 2px solid #cfcfcf;
+border-left: 2px solid #cfcfcf;
+border-bottom: 2px solid #333333;
+border-right: 2px solid #333333;
+}
+
+table.messButtonsD{
+border-top: 2px solid #333333;
+border-left: 2px solid #333333;
+border-bottom: 2px solid #cfcfcf;
+border-right: 2px solid #cfcfcf;
+}
+
+
+</style>
+
+<script type="text/javascript">
+function BackToOscar()
+{
+       window.close();
+}
+</script>
+
+</head>
+
+<body class="BodyStyle" vlink="#0000FF" >
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                Messenger
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+                            <bean:message key="messageSent.title"/>
+                        </td>
+                        <td  >
+
+                        </td>
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn">
+            &nbsp;
+            </td>
+            <td class="MainTableRightColumn">
+                <table>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table cellspacing=3>
+                                <tr>
+                                    <td>
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
+                                        <html:link page="/oscarMessenger/CreateMessage.jsp" styleClass="messengerButtons">
+                                         <bean:message key="viewMessage.createHRef"/>
+                                        </html:link>
+                                        </td></tr></table>
+                                    </td>
+                                    <td>
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
+                                        <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
+                                         <bean:message key="viewMessage.displayMessages"/>
+                                        </html:link>
+                                        </td></tr></table>
+                                    </td>
+                                    <td>
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
+                                        <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="backToOscar.link"/></a>
+                                        </td></tr></table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            your message has been sent to <%= request.getAttribute("SentMessageProvs") %>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

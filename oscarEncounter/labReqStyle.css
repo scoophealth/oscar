@@ -1,0 +1,65 @@
+BODY {
+	font-size: 10pt;
+	background-color: white;
+	font-family: Arial, Tahoma, Verdana;
+}
+
+TABLE {
+	font-size: 10pt;
+	border-spacing: 0;
+}
+TABLE TD {
+	padding: 0;
+}
+
+.Head {
+    background-color:#BBBBBB;
+    padding-top:3px;
+    padding-bottom:3px;
+    width:100%;
+    font-size:12pt;
+}
+
+.Head INPUT {
+    width: 100px;
+}
+
+.Head A {
+    font-size:12pt;
+}
+
+.outerTable {
+    padding: 0;
+    border-spacing: 0;
+}
+
+.TableWithBorder {
+    border-width:2px;
+    border-style:solid;
+    border-color:#999999;
+}
+
+.title {
+	font-weight: bold;
+	font-size: 12pt;
+}
+
+.lab {
+	background-color: #CD9B9B;
+}
+
+.testType {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: #CD9B9B;
+}
+
+.testType A {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 10pt;
+}
+
+.code {
+    font-size:7pt;
+}

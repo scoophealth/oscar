@@ -1,0 +1,11 @@
+Patient declined referral to HSO Social work/counselling
+Patient declined referral to HSO Psychiatrist
+Patient declined referral to HSO Group
+Patient declined referral to Community Agency
+Patient unmotivated
+Patient non-compliant with treatment plan
+Long waiting list at community agency
+No appropriate community resource exists
+Spouse or family did not follow through
+Language barrier
+Other

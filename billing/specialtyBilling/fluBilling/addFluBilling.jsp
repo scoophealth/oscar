@@ -1,0 +1,341 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
+<%@ include file="dbFLU.jsp" %>
+<%
+GregorianCalendar now=new GregorianCalendar();
+  int curYear = now.get(Calendar.YEAR);
+  int curMonth = (now.get(Calendar.MONTH)+1);
+  int curDay = now.get(Calendar.DAY_OF_MONTH);
+  
+  
+     String clinicNo = oscarVariables.getProperty("clinic_no");
+     String clinicview = oscarVariables.getProperty("clinic_view");
+  
+  String nowDateTime = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
+  String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
+  String proFirst1="", proLast1="", proOHIP1="", proNo="";
+   int Count = 0;
+   ResultSet rslocal=null;
+    rslocal = null;
+   rslocal = apptMainBean.queryResults(request.getParameter("creator"), "search_provider_name");
+   while(rslocal.next()){
+   
+   proFirst1 = rslocal.getString("first_name");
+   proLast1 = rslocal.getString("last_name");
+   proOHIP1 = rslocal.getString("provider_no");
+}
+%>
+<html>
+<head>
+<title>FLU BILLING</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<script language="JavaScript">
+<!--
+
+function setfocus() {
+  this.focus();
+}
+
+var remote=null;
+
+function rs(n,u,w,h,x) {
+  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+  remote=window.open(u,n,args);
+  if (remote != null) {
+    if (remote.opener == null)
+      remote.opener = self;
+  }
+  if (x == 1) { return remote; }
+}
+
+
+var awnd=null;
+function ScriptAttach() {
+  f0 = escape(document.serviceform.xml_diagnostic_detail.value);
+  f1 = document.serviceform.xml_dig_search1.value;
+ // f2 = escape(document.serviceform.elements["File2Data"].value);
+ // fname = escape(document.Compose.elements["FName"].value);
+  awnd=rs('att','../billingDigSearch.jsp?name='+f0 + '&search=' + f1,600,600,1);
+  awnd.focus();
+}
+
+
+
+function OtherScriptAttach() {
+  t0 = escape(document.serviceform.xml_other1.value);
+ // t1 = escape(document.serviceform.xml_other2.value);
+ // t2 = escape(document.serviceform.xml_other3.value);
+ // f1 = document.serviceform.xml_dig_search1.value;
+ // f2 = escape(document.serviceform.elements["File2Data"].value);
+ // fname = escape(document.Compose.elements["FName"].value);
+  awnd=rs('att','../billingCodeSearch.jsp?name='+t0 + '&name1=' + "" + '&name2=' + "" + '&search=',600,600,1);
+  awnd.focus();
+}
+
+
+function validate(form){
+if (validateProviderNo(form)){
+form.action = "dbAddFluBilling.jsp"
+form.submit()
+}
+
+else{}
+}
+function validateProviderNo() {
+  if (document.serviceform.provider.value == "") {
+alert("Please select a valid Billing Provider!");
+	return false;
+ }
+ else{
+ return true;
+}
+ 
+}
+
+//-->
+</script>
+<style type="text/css">
+	<!--
+	BODY                  {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TD                    {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000                                                    }
+	TD.black              {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
+	TD.lilac              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
+	TD.boldlilac          {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
+	TD.lilac A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
+	TD.lilac A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
+	TD.lilac A:hover      {font-weight: normal;                                                                            color: #000000; background-color: #CDCFFF  ;}
+	TD.white              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TD.heading            {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
+	H2                    {font-weight: bold  ; font-size: 12pt; font-family: verdana,arial,helvetica; color: #000000; }
+	H3                    {font-weight: bold  ; font-size: 10pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	H4                    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	H6                    {font-weight: bold  ; font-size: 7pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	A:link                {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #336666; background-color: #FFFFFF;}
+	A:visited             {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #336666; background-color: #FFFFFF;}
+	A:hover               {                                                                            color: red; background-color: #CDCFFF  ;}
+	TD.cost               {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #FFFFFF;}
+	TD.black A:link       {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699;}
+	TD.black A:visited    {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699;}
+	TD.black A:hover      {                                                                            color: #FDCB03; background-color: #666699;}
+	TD.title              {font-weight: bold  ; font-size: 10pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TD.white 	      {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TD.white A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TD.white A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TD.white A:hover      {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #CDCFFF  ;}
+	#navbar               {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
+	SPAN.navbar A:link    {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
+	SPAN.navbar A:visited {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #EFEFEF; background-color: #666699   ;}
+	SPAN.navbar A:hover   {                                                                            color: #FDCB03; background-color: #666699   ;}
+	SPAN.bold             {font-weight: bold  ;                                                                                            background-color: #666699   ;}
+	.sbttn {background: #EEEEFF;border-bottom: 1px solid #104A7B;border-right: 1px solid #104A7B;border-left: 1px solid #AFC4D5;border-top:1px solid #AFC4D5;color:#000066;height:19px;text-decoration:none;cursor: hand}
+	.mbttn {background: #D7DBF2;border-bottom: 1px solid #104A7B;border-right: 1px solid #104A7B;border-left: 1px solid #AFC4D5;border-top:1px solid #AFC4D5;color:#000066;height:19px;text-decoration:none;cursor: hand}
+
+	-->
+</style>  
+</head>
+
+<body leftmargin="0" topmargin="5" rightmargin="0" onLoad="setfocus()">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#000000"> 
+    <td height="40" width="10%"> </td>
+    <td width="90%" align="left"> 
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Billing</font></font></b></font> 
+      </p>
+    </td>
+  </tr>
+</table> 
+
+ 
+
+          
+<table width="100%" border="0" bgcolor="#666699" cellspacing="0">
+  <form name="serviceform" method="post">
+            <tr> 
+              <td>
+                
+        <table width="100%" border="0" bgcolor="#CCCCCC" cellpadding="5" cellspacing="0">
+          <tr bgcolor="#E1E1FF"> 
+            <td colspan="4" height="15"> 
+              <p align="center"><font color="#FBF4C6" face="Arial, Helvetica, sans-serif"><b><font color="#000000">flu 
+                billing </font></b></font></p>
+            </td>
+          </tr>
+          <tr bgcolor="#FFFFFF"> 
+            <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Demographic 
+              Name </font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              <input type="text" name="demo_name" value="<%=request.getParameter("demographic_name")%>" size="20">
+              <input type="hidden" name="functionid" value="<%=request.getParameter("functionid")%> " size="20">
+              </font></td>
+            <td width="26%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Health 
+              Number </font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              <input type="text" name="demo_hin" value="<%=request.getParameter("hin")%>" size="20">
+              </font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              </font></td>
+            <td width="31%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Demographic 
+              DOB</font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              <input type="text" name="demo_dob" value="<%=request.getParameter("dob")%>" size="20">
+              </font></td>
+            <td width="24%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1">Appointment 
+              Date 
+              <input type="text" name="apptDate" value="<%=nowDate%>" >
+              </font></td>
+          </tr>
+          <tr bgcolor="#DFDFEA"> 
+            <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Billing 
+              Provider 
+              <select name="provider">
+                <option value="" <%=request.getParameter("creator").equals("")?"selected":""%>>Select 
+                Provider</option>
+                <% String proFirst="";
+		             String proLast="";
+		             String proOHIP="";
+		             String specialty_code; 
+		  String billinggroup_no;
+		             
+		       //   ResultSet rslocal;
+		          rslocal = null;
+		   rslocal = apptMainBean.queryResults("%", "search_provider_dt");
+		   while(rslocal.next()){
+		   proFirst = rslocal.getString("first_name");
+		   proLast = rslocal.getString("last_name");
+		   proOHIP = rslocal.getString("ohip_no"); 
+		 //  billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+		 // specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+		   specialty_code = rslocal.getString("provider_no"); 
+		  
+		   %>
+                <option value="<%=proOHIP%>|<%=specialty_code%>" <%=request.getParameter("creator").equals(specialty_code)?"selected":""%>><%=proLast%>, 
+                <%=proFirst%></option>
+                <% 
+		  
+		   }
+		  // apptMainBean.closePstmtConn();
+  %>
+              </select>
+              </font></td>
+            <td width="26%"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Appointment 
+              Provider 
+              <select name="apptProvider">
+                <option value=""<%=request.getParameter("creator").equals("")?"selected":""%>>Select 
+                Provider</option>
+                <%// String proFirst="";
+		          //   String proLast="";
+		          //   String proOHIP="";
+		          //   String specialty_code; 
+		 // String billinggroup_no;
+		             
+		       //   ResultSet rslocal;
+		          rslocal = null;
+		   rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
+		   while(rslocal.next()){
+		   proFirst = rslocal.getString("first_name");
+		   proLast = rslocal.getString("last_name");
+		   proOHIP = rslocal.getString("provider_no"); 
+		 //  billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+		 // specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+		 //  specialty_code = rslocal.getString("provider_no"); 
+		  
+		   %>
+                <option value="<%=proOHIP%>" <%=request.getParameter("creator").equals(proOHIP)?"selected":""%>><%=proLast%>, 
+                <%=proFirst%></option>
+                <% 
+		  
+		   }
+		  // apptMainBean.closePstmtConn();
+  %>
+              </select>
+              </font></td>
+            <td width="31%"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Billing 
+              Type 
+              <select name="xml_billtype">
+                <option value="HSO | Capitated">Capitated</option>
+                <option value="ODP | Bill OHIP" selected>Bill OHIP</option>
+                <option value="PAT | Bill Patient">Bill Patient</option>
+                <option value="NOB | Do Not Bill">Do Not Bill</option>
+                <option value="WCB | Worker's Compensation Board">WSIB</option>
+              </select>
+              </font></td>
+            <td width="24%"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Visit 
+              Type 
+              <select name="xml_visittype">
+                <option value="00| Clinic Visit"  selected>00 | Clinic Visit</option>
+              </select>
+              </font></td>
+          </tr>
+          <tr bgcolor="#FFFFFF"> 
+            <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Service 
+              Code </font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              <input type="text" name="svcCode"  size="20" value="G591A">
+              </font></td>
+            <td width="26%"><font size="1">Diagnostic Code 
+              <input type="text" name="dxCode" size="20" value="896">
+              </font></td>
+            <td width="31%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Create 
+              Date</font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              <input type="text" name="docdate" readonly value="<%=nowDate%>" size="20" >
+              </font></td>
+            <td width="24%"><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000" size="1">Creator 
+              </font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              <input type="text" name="dispcreator"  readonly value="<%=proLast1%>, <%=proFirst1%>" size="20">
+              </font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+              <input type="hidden" name="doccreator" value="<%=request.getParameter("creator")%>" size="20">
+		      <input type="hidden" name="demo_sex" value="<%=request.getParameter("demo_sex")%>" size="20">
+		            <input type="hidden" name="rdohip" value="<%=request.getParameter("rdohip")%>" size="20">
+		                  <input type="hidden" name="rd" value="<%=request.getParameter("rd")%>" size="20">
+		                        <input type="hidden" name="demo_hctype" value="<%=request.getParameter("demo_hctype")%>" size="20">
+		<input type="hidden" name="clinic_ref_code" value="<%=clinicview%>" size="20">
+			    <input type="hidden" name="clinicNo" value="<%=clinicNo%>" size="20">
+			    		    <input type="hidden" name="appointment_no" value="0" size="20">
+              <input type="hidden" name="orderby" value="updatedatetime desc" size="20">
+              </font><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000" size="1"> 
+              </font></td>
+          </tr>
+          <tr bgcolor="#DFDFEA"> 
+            <td width="19%" height="20"><input type="button" name="cancel" value="Submit" class="mbttn" onClick="validate(this.form)">
+              <input type="button" name="cancel" value="Cancel" onClick="window.close()" class="mbttn">
+            </td>
+            <td width="26%" height="20">&nbsp;</td>
+            <td width="31%" height="20">&nbsp;</td>
+            <td width="24%" height="20">&nbsp;</td>
+          </tr>
+        </table>
+              </td>
+            </tr>  </form>
+          </table>
+   
+   
+
+
+
+ 
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<title>MakeMyForm</title>
+</head>
+<body>
+ 
+<html>
+
+<body>
+<form method="POST" action="">
+<table BORDER="0" NOSAVE width="95%">
+<TR>
+<TD VALIGN="MIDDLE" WIDTH="10%">
+  <P ALIGN="CENTER"><IMG SRC="images/sfhc.gif" WIDTH=65 HEIGHT=65>
+</TD>
+<TD ALIGN="LEFT" VALIGN="MIDDLE" WIDTH="40%">
+<FONT FACE="Arial" SIZE=2><P>Stonechurch Family Health Centre<br>
+549 Stonechurch Road East<br>
+Hamilton, ON L8W 3L2
+</FONT></TD>
+<TD width="50%"><textarea rows="6" name=label cols="40" oscarDB=Label></textarea></TD>
+</TR>
+</TABLE>
+
+<p><font size="4"><b>MENTAL HEALTH ASSESSMENT and INTERVENTION PLAN</b></font><BR>
+Referral Date: <input type="text" name=date size="20" oscarDB=Today><br>
+Referred By: <input type="text"  size="40" name=name_01></p>
+Assessment Date: <input type="text" name=date size="20" oscarDB=Today><br>
+HSO Specialist: <input type="text"  size="40" name=name_02></p>
+
+  <!--webbot bot="SaveResults"
+  U-File="C:jakarta-tomcat-3.2.2webappsoscar_form\_privateform_results.txt"
+  S-Format="TEXT/CSV" S-Label-Fields="TRUE" -->
+  <table BORDER="1" NOSAVE width="95%">
+  <TR>
+  <TD width="33%">
+  <p>Psychiatric Symptoms:<br>
+  <textarea rows="6" cols="25" name=name_03></textarea></p>
+  </td>
+  <TD width="33%">
+  <p>Psychosocial Issues:<br>
+  <textarea rows="6" cols="25" name=name_04></textarea></p>
+  </td>
+  <TD width="33%">
+  <p>Med/Phy Issues:<br>
+  <textarea rows="6" cols="25" name=name_05></textarea></p>
+  </td>
+  </tr></table>
+  <p>Treatment Plan:<br>
+  <textarea rows="10" cols="80" name=name_06></textarea></p>
+  <p>Comments:<br>
+  <textarea rows="4" cols="80" name=name_07></textarea></p>
+  <p>&nbsp;</p>
+  <p>Subject: <input type="text"  size="60" name=subject oscarDB=Subject> 
+ 
+ <input type="submit" value="Submit" name="B1">
+  <input type="reset" value="Reset" name="B2">
+  <input type=button value=Print onclick="javascript:window.print()"></p>
+</form>
+<p>&nbsp;</p>
+
+</body>
+
+</html>
+               
+ 
+</body>
+</html>
