@@ -145,61 +145,58 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
             <td class="MainTableLeftColumn">
             </td>
             <td class="MainTableRightColumn">
-                 <table width="50%" border=0 cellspacing=1>
-                 <html:form action="/oscarEncounter/immunization/config/deleteImmunizationSet">
-                 
-                    <tr>
-                    <th></th>
-                            <th><font color="red"><%=deletedList?"(Deleted)":""%></font>
+               <html:form action="/oscarEncounter/immunization/config/deleteImmunizationSet">
+                  <table width="50%" border=0 cellspacing=1>                                  
+                     <tr>
+                        <th>&nbsp;</th>
+                        <th><font color="red"><%=deletedList?"(Deleted)":""%></font>
                             <bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.msgImmName"/>
-                            </th>
-                            <th>
+                        </th>
+                        <th>
                             <bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.msgDateCreated"/>
-                            </th>
-                    </tr>
-                    <%for ( int i = 0; i < immuSets.setNameVec.size();i++){
-                        String name = (String) immuSets.setNameVec.elementAt(i);
-                        String id = (String) immuSets.setIdVec.elementAt(i);
+                        </th>
+                     </tr>
+                     <%for ( int i = 0; i < immuSets.setNameVec.size();i++){
+                        String name       = (String) immuSets.setNameVec.elementAt(i);
+                        String id         = (String) immuSets.setIdVec.elementAt(i);
                         String createDate = (String) immuSets.createDateVec.elementAt(i);
-                    %>
-                        <tr bgcolor="<%= i%2==0? "#EEEEFF" : "#CCCCFF"%>">
-                          <td width="3%"><input type="checkbox" name="chkSetId" value="<%=id%>" />
-                          </td>
-                            <td width="70%">
+                     %>
+                     <tr bgcolor="<%= i%2==0? "#EEEEFF" : "#CCCCFF"%>">
+                        <td width="3%"><input type="checkbox" name="chkSetId" value="<%=id%>" />
+                        </td>
+                        <td width="70%">
+                           <a href="javascript:popupImmunizationSet(768,1024,'ImmunizationSetDisplay.do?setId=<%=id%>')">
+                              <%=name%>
+                           </a>
+                        </td>
+                        <td align="center" >
+                           <%=createDate%>
+                        </td>
+                     </tr>
+                     <%}%>
+                  </table>
+                  <br/>
+                  <table width="50%" border=0 cellspacing=1>
+                     <tr>
+                        <td>
+                        <% if (deletedList == true) { %>
+                           <input type="submit" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnRestore"/>">
+                        <% } else { %>
+                           <input type="submit" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnDelete"/>">
+                        <% } %>
+                        </td>
+                        <td align="right">
+                           <input type="button" name="Button" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnAddNew"/>" onClick="javascript:goURL('CreateImmunizationSetInit.jsp');">
+                        <% if (deletedList == true) { %>
+                           <input type="button" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnSetlist"/>" onClick="goURL('AdministrateImmunizationSets.jsp');">
+                        <% } else { %>
+                           <input type="button" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnDelList"/>" onClick="goURL('AdministrateImmunizationSets.jsp?stat=2');">
+                        <% } %>
 
-                            <a href="javascript:popupImmunizationSet(768,1024,'ImmunizationSetDisplay.do?setId=<%=id%>')">
-                            <%=name%>
-                            </a>
-                            </td>
-                            <td align="center" >
-                            <%=createDate%>
-                            </td>
-                        </tr>
-                    <%}%>
-                </table>
-                <br/>
-                <table width="50%" border=0 cellspacing=1>
-                <tr>
-                  <td>
-                  <% if (deletedList == true) { %>
-                    <input type="submit" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnRestore"/>">
-                  <% } else { %>
-                    <input type="submit" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnDelete"/>">
-                  <% } %>
-                  </td>
-                  <td align="right">
-                  <input type="button" name="Button" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnAddNew"/>" onClick="javascript:goURL('CreateImmunizationSetInit.jsp');">
-                  <% if (deletedList == true) { %>
-                  <input type="button" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnSetlist"/>" onClick="goURL('AdministrateImmunizationSets.jsp');">
-                  <% } else { %>
-                  <input type="button" name="action" value="<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnDelList"/>" onClick="goURL('AdministrateImmunizationSets.jsp?stat=2');">
-                  <% } %>
-
-                  </td>
-                </tr>
-                </html:form>
-                
-                </table>
+                        </td>
+                     </tr>                                
+                  </table>
+               </html:form>
             </td>
         </tr>
         <tr>
