@@ -308,8 +308,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
                 String sqlDemo = "SELECT * FROM demographic WHERE hin='" + hin + "'";
                 ResultSet rsDemo = db.GetSQL(sqlDemo);
                 
-                if (rsDemo.next()){
-                    if(rsDemo.getString("ver").compareTo(bean.getVersion())==0){
+                if (rsDemo.next() && rs.next()){
                         String sqlVer = "UPDATE demographic SET ver ='##' WHERE hin='" + hin + "'";
                         db.RunSQL(sqlVer);
                         String sqlAlert = "SELECT * FROM demographiccust where demographic_no ='" + rsDemo.getString("demographic_no") + "'";
@@ -321,8 +320,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
                             System.out.println("Update alert msg: " + newAlertSql);
                             db.RunSQL(newAlertSql);
                         }
-                        rsAlert.close();   
-                    }
+                        rsAlert.close();                       
                     rs.close();                    
                     rsDemo.close();
                 }
