@@ -17,7 +17,7 @@
  *
  * This software was written for the
  * Department of Family Medicine
- * McMaster Unviersity
+ * McMaster University
  * Hamilton
  * Ontario, Canada
  */
@@ -37,7 +37,7 @@ public class SearchPatientAction extends Action {
    public SearchPatientAction() {
    }
    
-   public ActionForward perform(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
+   public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
    throws ServletException, IOException {
       //System.out.println("inside ReportStatusUpdateAction");
       

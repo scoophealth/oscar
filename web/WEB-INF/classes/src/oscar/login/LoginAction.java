@@ -17,7 +17,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -38,8 +38,8 @@ import org.apache.struts.action.ActionMapping;
 
 public final class LoginAction extends Action {
 
-  public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+  public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {      
     String ip = request.getRemoteAddr();
     String where = "failure"; 
     //String userName, password, pin, propName;
