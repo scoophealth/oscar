@@ -51,7 +51,9 @@
     ClinicData clinic = new ClinicData();
     
     String strPhones = clinic.getClinicDelimPhone();
+    if (strPhones == null) { strPhones = ""; }
     String strFaxes  = clinic.getClinicDelimFax();
+    if (strFaxes == null) { strFaxes = ""; }
     Vector vecPhones = new Vector();
     Vector vecFaxes  = new Vector();
     StringTokenizer st = new StringTokenizer(strPhones,"|");
