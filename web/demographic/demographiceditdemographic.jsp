@@ -33,7 +33,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%
-	if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 	
 	String curProvider_no = (String) session.getAttribute("user");
 	String demographic_no = request.getParameter("demographic_no") ;
@@ -376,7 +376,8 @@ function newStatus() {
           <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option> 
-          <option value=""<%=(province.equals("") || province.length() > 2)?" selected":""%>>Other</option>
+          <option value="US"<%=province.equals("US")?" selected":""%>>US resident</option> 
+          <option value="OT"<%=(province.equals("OT") || province.equals("") || province.length() > 2)?" selected":""%>>Other</option>
         </select>
         <% } %>
       </td>

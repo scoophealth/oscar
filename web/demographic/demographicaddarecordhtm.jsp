@@ -271,7 +271,8 @@ function newStatus() {
           <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
-          <option value=""  <%=billregion.equals("")?" selected":""%>>Other</option>
+          <option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option> 
+          <option value="OT"<%=billregion.equals("")?" selected":""%>>Other</option>
         </select>
         <% } %>
       </td>
