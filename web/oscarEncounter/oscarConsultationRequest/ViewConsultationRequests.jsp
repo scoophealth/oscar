@@ -54,6 +54,13 @@
       //System.out.println("team wasn't set");
     }
   }
+
+String protocol = "http";
+if (request.isSecure()){
+   protocol = "https";
+}
+
+String serverURL = protocol+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
 %>
 
 
@@ -184,8 +191,10 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                         <table>
                             <tr>
                                 <td bgcolor="#9999ff">
-                                <a href="javascript:popupOscarConsultationConfig(700,960,'../oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
+
+                                <a href="javascript:popupOscarConsultationConfig(700,960,'<%serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
                                     <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/></a>
+
                                 </td>
                             <tr>
                         </table>
@@ -268,7 +277,7 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                                 <%=provide%>
                                 </td>
                                 <td class="stat<%=status%>">
-                                <a href="javascript:popupOscarRx(700,960,'../oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
                                 <%=service%>
                                 </a>
 
