@@ -71,37 +71,36 @@ function BackToOscar() {
 }
 </script>
 
-<link rel="stylesheet" type="text/css" href="../../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<link rel="stylesheet" type="text/css" href="../../encounterStyles.css">
+<body class="BodyStyle" vlink="#0000FF" >
 
 <html:errors/>
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-    <tr>
-        <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
-        </td>
-    </tr>
-    <tr>
-        <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-        <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><%=transactionType%></p>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-
-            <!----Start new rows here-->
-               <tr>
-                  <td >
-                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                Consultation
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td class="Header">
+                            <%=transactionType%>
+                        </td>                                            
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr style="vertical-align:top">
+            <td class="MainTableLeftColumn">
+                <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                   out.print(titlebar.estBar(request));
                   %>
-                  </td>
-               </tr>
+            </td>
+            <td class="MainTableRightColumn">  
+                <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+
+            <!----Start new rows here-->               
                <%
                    String added = (String) request.getAttribute("Added");
                    if (added != null){  %>
@@ -110,14 +109,7 @@ function BackToOscar() {
                             <font color="red"> <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.msgSpecialistAdded" arg0="<%=added%>"/> </font>
                        </td>
                     </tr>
-               <%}%>
-               <tr>
-                  <td>
-                        <div class="DivContentSectionHead">
-                           <%=transactionType%>
-                        </div>
-                  </td>
-               </tr>
+               <%}%>               
                <tr>
                   <td>
 
@@ -222,20 +214,17 @@ function BackToOscar() {
                     </td>
                 </tr>
             </table>
-        </td>
-    </tr>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
 
-	<tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
-</table>
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
 </body>
 </html:html>
 
