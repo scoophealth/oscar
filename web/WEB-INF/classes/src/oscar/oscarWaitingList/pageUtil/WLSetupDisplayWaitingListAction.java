@@ -50,16 +50,18 @@ public final class WLSetupDisplayWaitingListAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
         
+        HttpSession session = request.getSession();
         String waitingListId = (String) request.getParameter("waitingListId");
         System.out.println("waitingListId: "+ waitingListId);
         WLWaitingListBeanHandler hd = new WLWaitingListBeanHandler(waitingListId);
         ProviderNameBeanHandler phd = new ProviderNameBeanHandler();
         WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler();
         Collection allWaitingListName = wlNameHd.getWaitingListNameVector();
-        Collection allProviders = phd.getDoctorNameVector();
+        phd.setThisGroupProviderVector((String) session.getAttribute("groupno"));
+        Collection allProviders = phd.getThisGroupProviderVector();
         String nbPatients = Integer.toString(hd.getWaitingListVector().size());
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd");
-        HttpSession session = request.getSession();
+       
         session.setAttribute( "waitingList", hd );            
         session.setAttribute("waitingListName", hd.getWaitingListName());
         session.setAttribute("allProviders", allProviders);
