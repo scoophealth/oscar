@@ -223,6 +223,7 @@ public class MSPReconcile{
         
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, "
                  +" b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
+                 +" bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
                  +" b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no from billing b, "
                  +" billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus = '"+statusType+"' "
                  +  providerQuery
@@ -251,6 +252,12 @@ public class MSPReconcile{
               b.reason = rs.getString("billingstatus");
               b.billMasterNo = rs.getString("billingmaster_no");
               
+              b.amount = rs.getString("bill_amount");
+              b.code   = rs.getString("billing_code");
+              b.dx1    = rs.getString("dx_code1");
+              b.dx2    = rs.getString("dx_code2");
+              b.dx3    = rs.getString("dx_code3");
+              
             billSearch.justBillingMaster.add(b.billMasterNo);
             billSearch.list.add(b);
             billSearch.count++;
@@ -266,6 +273,7 @@ public class MSPReconcile{
     public ArrayList getBillsMaster(String statusType){        
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, "
                  +" b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
+                 +" bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
                  +" b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no from billing b, "
                  +" billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus = '"+statusType+"' ";
   
@@ -285,6 +293,12 @@ public class MSPReconcile{
               b.apptTime = rs.getString("billing_time");
               b.reason = rs.getString("billingstatus");
               b.billMasterNo = rs.getString("billingmaster_no");
+              
+              b.amount = rs.getString("bill_amount");
+              b.code   = rs.getString("billing_code");
+              b.dx1    = rs.getString("dx_code1");
+              b.dx2    = rs.getString("dx_code2");
+              b.dx3    = rs.getString("dx_code3");
               list.add(b);
             }
             rs.close();
@@ -321,6 +335,12 @@ public class MSPReconcile{
       public String apptTime = "";
       public String reason = "";
       public String billMasterNo = "";
+      
+      public String code = "";
+      public String amount = "";
+      public String dx1 = "";
+      public String dx2 = "";
+      public String dx3 = "";
     }
     
     public ArrayList getAllC12Records(String billingNo){
