@@ -30,9 +30,13 @@ function onsub() {
      document.searchprovider.provider_type.value==""  ) {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
-  } else return true;
+  } else {
+    document.forms['searchprovider'].displaymode.value='Provider_Add_Record';
+    document.forms['searchprovider'].submit();
+    return true;
       // do nothing at the moment
       // check input data in the future 
+  }
 }
 function upCaseCtrl(ctrl) {
   ctrl.value = ctrl.value.toUpperCase();
