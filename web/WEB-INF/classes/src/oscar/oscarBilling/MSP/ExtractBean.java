@@ -634,7 +634,16 @@ public class ExtractBean extends Object implements Serializable {
     public synchronized void setDateRange(String newDateRange){
         dateRange = newDateRange;
     }
-    //I don't like passing ResultSets but this will make it easiest for debugging
+    
+    
+    public String  roundUp (String str){
+       String retval = "1";
+       try{
+          retval = new java.math.BigDecimal(str).setScale(0,BigDecimal.ROUND_UP).toString();               
+       }catch(Exception e){ e.printStackTrace();}
+       return retval;
+    }
+    
     public String getClaimDetailRecord(ResultSet rs2,String LogNo) throws SQLException{
         String dataLine =     forwardSpace(rs2.getString("claimcode"),3)            //p00   3
                             + forwardSpace(rs2.getString("datacenter"),5)           //p02   5
@@ -644,7 +653,7 @@ public class ExtractBean extends Object implements Serializable {
                             + forwardZero(rs2.getString("phn"),10)                  //p14  10
                             + forwardSpace(rs2.getString("name_verify"),4)          //p16   4
                             + forwardSpace(rs2.getString("dependent_num"),2)        //p18   2
-                            + forwardZero(rs2.getString("billing_unit"),3)          //p20   3
+                            + forwardZero(roundUp(rs2.getString("billing_unit")),3)          //p20   3
                             + forwardZero(rs2.getString("clarification_code"),2)    //p22   2
                             + forwardSpace(rs2.getString("anatomical_area"), 2)     //p23   2
                             + forwardSpace(rs2.getString("after_hour"),1)           //p24   1
