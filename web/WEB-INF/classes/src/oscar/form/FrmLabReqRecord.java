@@ -101,7 +101,7 @@ public class FrmLabReqRecord  extends FrmRecord {
 
                 if(rs.next()) {
                     String num = rs.getString("ohip_no");
-                    props.setProperty("apptProvName", "");
+                    //props.setProperty("apptProvName", "");
                     props.setProperty("provName", rs.getString("provName"));
                     props.setProperty("practitionerNo", "0000-"+num+"-00");
                 }
@@ -113,7 +113,7 @@ public class FrmLabReqRecord  extends FrmRecord {
 				
 				if(rs.next()) {
 					String num = rs.getString("ohip_no");
-					props.setProperty("apptProvName", rs.getString("provName"));
+					props.setProperty("reqProvName", rs.getString("provName"));
                 }
                 rs.close();
 
