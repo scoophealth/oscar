@@ -93,7 +93,11 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
     }
          
         
-    
+     /*****************************************************************************************
+     * get the number of Patient Seen during a specific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/    
     private ArrayList getNbPatientSeen(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList messages){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
@@ -101,7 +105,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         int nbPatient = 0;
         if(patientSeenCheckbox!=null){
             try{
-                String sql = "SELECT * FROM eChart WHERE timestamp > '" + startDateA + "' AND timestamp < '" + endDateA + "'";
+                String sql = "SELECT * FROM eChart WHERE timestamp >= '" + startDateA + "' AND timestamp <= '" + endDateA + "'";
                 ResultSet rs;
                 rs = db.GetSQL(sql);
                 System.out.println("SQL Statement: " + sql);
@@ -122,13 +126,19 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         }
         return messages;
     }
-    
+
+     /*****************************************************************************************
+     * get the number of Patient met the specific guideline during aspecific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/  
     private ArrayList getMetGuidelinePercentage(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList metGLPercentageMsg){
         String[] startDateB = frm.getStartDateB();
         String[] endDateB = frm.getEndDateB(); 
         String[] idB = frm.getIdB();
         String[] guidelineB = frm.getGuidelineB();        
         String[] guidelineCheckbox = frm.getGuidelineCheckbox();
+        RptCheckGuideline checkGuideline = new RptCheckGuideline();
         
         if (guidelineCheckbox!=null){
             try{
@@ -142,23 +152,55 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     String measurementType = (String) frm.getValue("measurementType"+ctr);
                     String aboveBelow = (String) frm.getValue("aboveBelow"+ctr);
                     String sNumMInstrc = (String) frm.getValue("mNbInstrcs"+ctr);
+                    String sql = "";
+                    ResultSet rs;
                     int iNumMInstrc = Integer.parseInt(sNumMInstrc);                    
+                    double metGLPercentage = 0;
+                    double nbMetGL = 0;
                     
                     for(int j=0; j<iNumMInstrc; j++){
-                        double metGLPercentage = 0;
+                        metGLPercentage = 0;
+                        nbMetGL = 0;
                         String mInstrc = (String) frm.getValue("mInstrcsCheckbox"+ctr+j);
-                        if(mInstrc!=null){
-                            String sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate
+                        
+                        if(mInstrc!=null){                            
+                            if (measurementType.compareTo("BP")==0){
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                         + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
+                                         + "'";
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                while(rs.next()){
+                                    if(checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), guideline, aboveBelow)){
+                                        nbMetGL++;
+                                    }
+                                }
+                            }
+                            else if (checkGuideline.getValidation(db, measurementType)==1)
+                            {
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
                                          + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                          + "' AND dataField" + aboveBelow + "'" + guideline + "'";
-
-                            System.out.println("SQL statement is " + sql);
-                            ResultSet rs = db.GetSQL(sql);
-                            rs.last();
-                            double nbMetGL = rs.getRow();
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                rs.last();
+                                nbMetGL = rs.getRow();
+                            }
+                            else{
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                         + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
+                                         + "'";
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                while(rs.next()){
+                                    if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), guideline)){
+                                        nbMetGL++;
+                                    }
+                                }
+                            }
                             rs.close();
 
-                            sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate +
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate +
                                   "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
                             System.out.println("SQL statement is" + sql);
                             rs = db.GetSQL(sql);
@@ -167,9 +209,9 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                             rs.close();
 
                             if(nbGeneral!=0){
-                                metGLPercentage = (nbMetGL/nbGeneral) * 100;
+                                metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
                             }
-                            String msg = "From " + startDate + "to " + endDate + ": " + measurementType + "--" + mInstrc + " "
+                            String msg = "From " + startDate + " to " + endDate + ": " + measurementType + "--" + mInstrc + " "
                                                + metGLPercentage + "% " + aboveBelow + " " + guideline;
                             System.out.println(msg);
                             metGLPercentageMsg.add(msg);                     
@@ -177,17 +219,44 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     }
                     
                     //percentage of patients who meet guideline for the same test with all measuring instruction
-                        double metGLPercentage = 0;                        
-                        String sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate
+                    
+                        metGLPercentage = 0;
+                        nbMetGL = 0;
+                        
+                        if (measurementType.compareTo("BP")==0){
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                     + "'AND type='"+ measurementType + "'";
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            while(rs.next()){
+                                if(checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), guideline, aboveBelow)){
+                                    nbMetGL++;
+                                }
+                            }
+                        }
+                        else if (checkGuideline.getValidation(db, measurementType)==1)
+                        {
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
                                      + "'AND type='"+ measurementType + "' AND dataField" + aboveBelow + "'" + guideline + "'";
-                                     
-                        System.out.println("SQL statement is " + sql);
-                        ResultSet rs = db.GetSQL(sql);
-                        rs.last();
-                        double nbMetGL = rs.getRow();
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            rs.last();
+                            nbMetGL = rs.getRow();
+                        }
+                        else{
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                     + "'AND type='"+ measurementType + "'";
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            while(rs.next()){
+                                if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), guideline)){
+                                    nbMetGL++;
+                                }
+                            }
+                        }
                         rs.close();
                         
-                        sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate 
+                        sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate 
                               + "'AND type='"+ measurementType + "'";
                         System.out.println("SQL statement is" + sql);
                         rs = db.GetSQL(sql);
@@ -196,7 +265,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                         rs.close();
 
                         if(nbGeneral!=0){
-                            metGLPercentage = (nbMetGL/nbGeneral) * 100;
+                            metGLPercentage = Math.round((nbMetGL/nbGeneral) * 100);
                         }
                         String msg = "From " + startDate + " to " + endDate + ": " + measurementType + " "
                                            + metGLPercentage + "% " + aboveBelow + " " + guideline;
@@ -215,16 +284,25 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         }
         return metGLPercentageMsg;
     }
+
     
+
+    /*****************************************************************************************
+     * get the number of Patient met all the selected guideline during aspecific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/     
     private ArrayList getPatientsMetAllSelectedGuideline(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList reportMsg){       
         String[] guidelineCheckbox = frm.getGuidelineCheckbox();
         String[] guidelineB = frm.getGuidelineB();        
         String startDate = frm.getStartDateA();
         String endDate = frm.getEndDateA();
-        ArrayList patients = getPatients(db, startDate, endDate);
+        RptCheckGuideline checkGuideline = new RptCheckGuideline();
+        ArrayList patients = checkGuideline.getPatients(db, startDate, endDate);
         int nbPatients = patients.size();
         int nbPatientsDoneAllTest = 0;
         int nbPatientsPassAllTest = 0;
+        double passAllTestsPercentage = 0;
         
         try{
             System.out.println("Number of Patients: " + nbPatients);
@@ -245,11 +323,9 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                 for(rs=db.GetSQL(sql);rs.next(); ){                    
                     testsDone.add(rs.getString("type"));
                     data.add(rs.getString("dataField"));
-                }
-                
+                }                
                 System.out.println("guidelineCheckbox length: " + guidelineCheckbox.length);
-                System.out.println("tests done size: " + testsDone.size());
-                
+                System.out.println("testDone size: "+ testsDone.size());
                 if(guidelineCheckbox.length<=testsDone.size()){
                     
                     for(int j=0; j<guidelineCheckbox.length; j++){ 
@@ -258,103 +334,21 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                         String guideline = guidelineB[ctr];
                         String measurementType = (String) frm.getValue("measurementType"+ctr);
                         String aboveBelow = (String) frm.getValue("aboveBelow"+ctr);
-                        System.out.println("guidelineCheckbox loop: " + measurementType);
-                        
+                        System.out.println("guideline: " + guideline);
                         for(int k=0; k<testsDone.size(); k++){  
                             doneAllTests=false;
-                            String testDone = (String) testsDone.get(k);
-                            System.out.println("testsDone loop: " + testDone);
-                                                       
-                            if(measurementType.compareTo(testDone)==0){ 
+                            String testDone = (String) testsDone.get(k);                            
+                            System.out.println("testdone: " + testDone);                           
+                            if(measurementType.compareTo(testDone)==0){                                 
                                 
-                                System.out.println("measurementType is the same as testDone");
-                                System.out.println("the guideline is " + guideline);
-                                String tmp = (String) data.get(k);
-                                System.out.println("the dataEntry is " + tmp);
-                                if(getValidation(db, frm, ctr)==1){ 
-                                    System.out.println("this is a numeric value");
-                                    double dataEntry = Double.parseDouble((String) data.get(k));
-                                    if(aboveBelow.compareTo(">")==0){                                        
-                                        if(Double.parseDouble(guideline)>=dataEntry){
-                                            passAllTests=true;
-                                            System.out.println("Pass double test");
-                                        }
-                                        else{
-                                            passAllTests=false;
-                                        }
-                                    }
-                                    else if(aboveBelow.compareTo("<")==0){
-                                        if(Double.parseDouble(guideline)<=dataEntry){
-                                            passAllTests=true;
-                                            System.out.println("Pass double test");
-                                        }
-                                        else{
-                                            passAllTests=false;
-                                        }
-                                    }
+                                if(checkGuideline.getValidation(db, measurementType)==1){ 
+                                    passAllTests = checkGuideline.isNumericValueMetGuideline(Double.parseDouble((String) data.get(k)), guideline, aboveBelow);                                    
                                 }
                                 else if(measurementType.compareTo("BP") == 0){
-                                    String dataEntry = (String) data.get(k);                                    
-                                    int slashIndex = guideline.indexOf("/");
-                                    int dataSlashIndex = dataEntry.indexOf("/");
-                                    
-                                    if (slashIndex >= 0 && dataSlashIndex >=0){                                                                                                                                                                
-                                        String systolic = guideline.substring(0, slashIndex);
-                                        String diastolic = guideline.substring(slashIndex+1);
-                                        String systolicData = dataEntry.substring(0, dataSlashIndex);
-                                        String diastolicData = dataEntry.substring(dataSlashIndex+1);
-                                        
-                                        int iGuidelineSystolic = Integer.parseInt(systolic);
-                                        int iGuidelineDiastolic = Integer.parseInt(diastolic); 
-                                        int iDataSystolic = Integer.parseInt(systolicData);
-                                        int iDataDiastolic = Integer.parseInt(diastolicData); 
-
-                                        if(aboveBelow.compareTo("<")==0){
-                                            if(iDataSystolic<=iGuidelineSystolic && iDataDiastolic<=iGuidelineDiastolic){
-                                                passAllTests=true;
-                                                System.out.println("pass this BP test");
-                                            }
-                                            else{
-                                                passAllTests=false;
-                                                System.out.println("fail this BP test");
-                                            }
-                                        }
-                                        else if(aboveBelow.compareTo(">")==0){
-                                            if(iDataSystolic>=iGuidelineSystolic && iDataDiastolic>=iGuidelineDiastolic){
-                                                passAllTests=true;
-                                                System.out.println("pass this BP test");
-                                            }
-                                            else{
-                                                passAllTests=false;
-                                                System.out.println("fail this BP test");
-                                            }
-                                        } 
-                                    }
+                                    passAllTests = checkGuideline.isBloodPressureMetGuideline((String) data.get(k), guideline, aboveBelow);                  
                                 }
                                 else{
-                                    String dataEntry = (String) data.get(k);
-                                    if(guideline=="YES"||guideline=="Yes"||guideline=="yes"||guideline=="Y" ){                                        
-                                        if(dataEntry.compareTo("YES")==0 || dataEntry.compareTo("Yes")==0 
-                                           || dataEntry.compareTo("Y")==0 || dataEntry.compareTo("Yes")==0){
-                                               passAllTests=true;
-                                               System.out.println("Pass yesno test");
-                                        }
-                                        else{
-                                            passAllTests=false;
-                                            System.out.println("fail yesno test");
-                                        }
-                                    }
-                                    else if(guideline=="NO"||guideline=="No"||guideline=="no"||guideline=="N" ){
-                                        if(dataEntry.compareTo("NO")==0 || dataEntry.compareTo("No")==0 
-                                           || dataEntry.compareTo("N")==0 || dataEntry.compareTo("no")==0){
-                                               passAllTests=true;
-                                               System.out.println("Pass yesno test");
-                                        }
-                                        else{
-                                            passAllTests=false;
-                                             System.out.println("fail yesno test");
-                                        }
-                                    }
+                                    passAllTests = checkGuideline.isYesNoMetGuideline((String) data.get(k), guideline);
                                 }
                                 data.remove(k);
                                 testsDone.remove(k);
@@ -379,13 +373,17 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     nbPatientsPassAllTest++;
                 }
             }
-            double passAllTestsPercentage = Math.round( ((double) nbPatientsPassAllTest/ (double) nbPatientsDoneAllTest) * 100);
+            
+            if(nbPatientsDoneAllTest!=0){
+                passAllTestsPercentage = Math.round( ((double) nbPatientsPassAllTest/ (double) nbPatientsDoneAllTest) * 100);
+            }
+            
             String msg = "There are " + nbPatientsDoneAllTest + " done all the selected tests and " 
                          + passAllTestsPercentage + "% pass all the tests";
             System.out.println(msg); 
             
             reportMsg.add(msg);
-            reportMsg.add("/n");
+            reportMsg.add("");
         }
         catch(SQLException e)
         {
@@ -394,61 +392,4 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         
         return reportMsg;
     }
-
-    
-    private ArrayList getPatients(DBHandler db, String startDate, String endDate){
-
-        ArrayList patients = new ArrayList();
-        
-        try{
-            String sql = "SELECT DISTINCT demographicNo  FROM eChart WHERE timestamp > '" + startDate + "' AND timestamp < '" + endDate + "'";
-            System.out.println("SQL Statement: " + sql);
-            ResultSet rs;
-            
-            for(rs=db.GetSQL(sql); rs.next();){            
-                String patient = rs.getString("demographicNo");
-                patients.add(patient);                
-            }
-            rs.close();
-        }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-       
-        return patients;
-    }
-    
-    private int getValidation(DBHandler db, RptInitializePatientsMetGuidelineCDMReportForm frm, int ctr){
-        String measurementType = (String) frm.getValue("measurementType"+ctr);
-        
-        try{
-            String sql = "SELECT * FROM measurementType WHERE type='" + measurementType + "'";
-            ResultSet rs;
-            rs = db.GetSQL(sql);
-            rs.next();
-            String validation = rs.getString("validation");
-            rs.close();
-            sql = "SELECT * FROM validations WHERE id='" + validation + "'";
-            rs = db.GetSQL(sql);
-            rs.next();
-            if(rs.getString("isNumeric")!=null){
-                System.out.println("isNumeric: " + rs.getInt("isNumeric"));
-                return rs.getInt("isNumeric");
-            }
-            else{
-                return 0;
-            }
-            
-        }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        
-        return 0;
-    }
-
-    
-    
 }

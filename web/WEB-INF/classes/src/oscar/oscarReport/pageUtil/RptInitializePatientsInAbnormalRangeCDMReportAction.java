@@ -87,7 +87,12 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         }
         return mapping.findForward("success");
     }
-     
+
+     /*****************************************************************************************
+     * get the number of Patients seen during aspecific time period
+     *s
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/      
     private int getNbPatientSeen(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
@@ -112,7 +117,12 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         }
         return nbPatient;
     }    
-    
+
+     /*****************************************************************************************
+     * get the number of Patient in the abnormal range during aspecific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/      
     private ArrayList getInAbnormalRangePercentage(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm){
         String[] startDateC = frm.getStartDateC();
         String[] endDateC = frm.getEndDateC();         
@@ -120,6 +130,8 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         String[] lowerBound = frm.getLowerBound();         
         String[] abnormalCheckbox = frm.getAbnormalCheckbox();
         ArrayList metGLPercentageMsg = new ArrayList();
+        RptCheckGuideline checkGuideline = new RptCheckGuideline();
+        
         if (abnormalCheckbox!=null){
             try{
                 System.out.println("the length of abnormal range checkbox is "  + abnormalCheckbox.length);
@@ -133,23 +145,60 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                     String lower = lowerBound[ctr];
                     String measurementType = (String) frm.getValue("measurementTypeC"+ctr);                    
                     String sNumMInstrc = (String) frm.getValue("mNbInstrcsC"+ctr);
-                    int iNumMInstrc = Integer.parseInt(sNumMInstrc);                    
+                    int iNumMInstrc = Integer.parseInt(sNumMInstrc);                                        
+                    int nbMetGL = 0;                    
+                    double metGLPercentage = 0;
+                    ResultSet rs;
+                    String sql = "";
                     
                     for(int j=0; j<iNumMInstrc; j++){
-                        double metGLPercentage = 0;
+                        metGLPercentage = 0;                        
+                        nbMetGL = 0;
+                        
                         String mInstrc = (String) frm.getValue("mInstrcsCheckboxC"+ctr+j);
                         if(mInstrc!=null){
-                            String sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate
+                            
+                            if (measurementType.compareTo("BP")==0){
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                         + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
+                                         + "'";
+
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                while(rs.next()){
+                                    if(checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), upper, "<") &&
+                                        checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), lower, ">")){
+                                        nbMetGL++;
+                                    }
+                                }
+                            }
+                            else if (checkGuideline.getValidation(db, measurementType)==1)
+                            {
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
                                          + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                          + "' AND dataField <" + "'" + upper + "' AND dataField >" + "'" + lower + "'";
-
-                            System.out.println("SQL statement is " + sql);
-                            ResultSet rs = db.GetSQL(sql);
-                            rs.last();
-                            int nbMetGL = rs.getRow();
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                rs.last();
+                                nbMetGL = rs.getRow();
+                            }
+                            else{
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                         + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
+                                         + "'";
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                while(rs.next()){
+                                    if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), upper) ||
+                                       checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), lower) ){
+                                        nbMetGL++;
+                                    }
+                                }
+                            }
+                                                                                                                
                             rs.close();
 
-                            sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate +
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate +
                                   "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
                             System.out.println("SQL statement is" + sql);
                             rs = db.GetSQL(sql);
@@ -167,18 +216,49 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                         }
                     }
                     
-                    //percentage of patients who meet guideline for the same test with all measuring instruction
-                        double metGLPercentage = 0;                        
-                        String sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate
-                                     + "'AND type='"+ measurementType + "' AND dataField <" + "'" + upper + "' AND dataField >" + "'" + lower + "'";
-                                     
-                        System.out.println("SQL statement is " + sql);
-                        ResultSet rs = db.GetSQL(sql);
-                        rs.last();
-                        int nbMetGL = rs.getRow();
+                    //percentage of patients who are in abnormal range for the same test with all measuring instruction
+                        metGLPercentage = 0; 
+                        nbMetGL = 0;
+                        
+                        if (measurementType.compareTo("BP")==0){
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                     + "'AND type='"+ measurementType + "'";
+
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            while(rs.next()){
+                                if(checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), upper, "<") &&
+                                    checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), lower, ">")){
+                                    nbMetGL++;
+                                }
+                            }
+                        }
+                        else if (checkGuideline.getValidation(db, measurementType)==1)
+                        {
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                     + "'AND type='"+ measurementType + "' AND dataField <=" + "'" + upper + "' AND dataField >=" + "'" + lower + "'";
+
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            rs.last();
+                            nbMetGL = rs.getRow();
+                        }
+                        else{
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                     + "'AND type='"+ measurementType + "'";
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            while(rs.next()){
+                                if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), upper) ||
+                                   checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), lower) ){
+                                    nbMetGL++;
+                                }
+                            }
+                        }                        
+                                                         
                         rs.close();
                         
-                        sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate 
+                        sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate 
                               + "'AND type='"+ measurementType + "'";
                         System.out.println("SQL statement is" + sql);
                         rs = db.GetSQL(sql);

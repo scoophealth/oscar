@@ -87,7 +87,12 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         }
         return mapping.findForward("success");
     }
-     
+
+     /*****************************************************************************************
+     * get the number of Patient seen during aspecific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/  
     private int getNbPatientSeen(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
@@ -95,7 +100,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         int nbPatient = 0;
         if(patientSeenCheckbox!=null){
             try{
-                String sql = "SELECT * FROM eChart WHERE timestamp > '" + startDateA + "' AND timestamp < '" + endDateA + "'";
+                String sql = "SELECT * FROM eChart WHERE timestamp >= '" + startDateA + "' AND timestamp <= '" + endDateA + "'";
                 ResultSet rs;
                 rs = db.GetSQL(sql);
                 System.out.println("SQL Statement: " + sql);
@@ -113,7 +118,11 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         return nbPatient;
     }
     
-    
+     /*****************************************************************************************
+     * get the Frequence of Test Performed during aspecific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/      
     private ArrayList getFrequenceOfTestPerformed(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm){
         String[] startDateD = frm.getStartDateD();
         String[] endDateD = frm.getEndDateD();         
@@ -153,7 +162,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                             for(int k=0; k<nbPatients; k++){
                                 String patient = (String) patients.get(k);                            
 
-                                String sql = "SELECT * FROM measurements WHERE dateObserved >'" + startDate + "'AND dateObserved <'" + endDate
+                                String sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
                                              + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                              + "' AND demographicNo=" + "'" + patient + "'";
 
@@ -162,6 +171,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                 rs.last();
                                 int nbTest = rs.getRow();                              
                                 rs.close();
+                                
                                 if(nbTest == exact){
                                     nbExact++;
                                 }
@@ -208,12 +218,17 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         return percentageMsg;
     }
 
+     /*****************************************************************************************
+     * get the number of patients during aspecific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/      
     private ArrayList getPatients(DBHandler db, String startDate, String endDate){
 
         ArrayList patients = new ArrayList();
         
         try{
-            String sql = "SELECT DISTINCT demographicNo  FROM eChart WHERE timestamp > '" + startDate + "' AND timestamp < '" + endDate + "'";
+            String sql = "SELECT DISTINCT demographicNo  FROM eChart WHERE timestamp >= '" + startDate + "' AND timestamp <= '" + endDate + "'";
             System.out.println("SQL Statement: " + sql);
             ResultSet rs;
             
