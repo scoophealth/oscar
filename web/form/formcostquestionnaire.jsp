@@ -650,6 +650,10 @@
             <input type="button" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:window.print();"/>
         </td>
+        <td align="right">
+            Study ID: <%= props.getProperty("studyID", "N/A") %>
+            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
+        </td>
     </tr>
     <tr>
         <td><font style="font-size:70%">Adapted from SLU cost questionnaire. May 27, 2002</font></td>

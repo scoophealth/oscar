@@ -444,9 +444,6 @@
                     </td>
                 </tr>                
                 <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
                     <td colspan="12" class="score" >
                     Scoring: Score is the mean of the three items. If more than one item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
@@ -510,9 +507,6 @@
                         <input type="text" name="disease1" size="5" onchange="javascript:calDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("disease1", "") %>"/>
                     </td>
                 </tr>                            
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
                 <tr>
                     <td colspan="12" class="score" >
                     Scoring: This is a single-item scale; scores range from 1 to 10, with a higher score indicating greater self-efficacy.
@@ -1573,6 +1567,10 @@
 %>
             <input type="button" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:window.print();"/>
+        </td>
+        <td align="right">
+            Study ID: <%= props.getProperty("studyID", "N/A") %>
+            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
         </td>
     </tr>
 </table>
