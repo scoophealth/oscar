@@ -1,5 +1,5 @@
 <%
-	if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 	String curUser_no = (String) session.getAttribute("user");
 	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
   
@@ -9,7 +9,7 @@
 	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../errorpage.jsp" %>
+<%@ page import="java.sql.*" errorPage="../errorpage.jsp" %>
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="studyBean" class="java.util.Properties" scope="page" />
@@ -18,7 +18,7 @@
 <% 
 	String [][] dbQueries=new String[][] { 
 		{"search_study", "select study_no, study_name, description from study where current = ?"}, 
-		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name , d.first_name, d.provider_no from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by d.last_name"}, 
+		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name , d.first_name, d.provider_no, d.email from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by d.last_name"}, 
 	};
 	reportMainBean.doConfigure(dbParams,dbQueries);
 %>
@@ -75,9 +75,10 @@ function setfocus() {
 
 <table width="100%" border="0" bgcolor="white" cellspacing="2" cellpadding="2"> 
 <tr bgcolor='<%=deepcolor%>'>
-  <TH width="30%" nowrap><bean:message key="report.reportpatientchartlist.msgLastName"/></TH>
-  <TH width="30%"><bean:message key="report.reportpatientchartlist.msgFirstName"/></TH>
+  <TH width="20%" nowrap><bean:message key="report.reportpatientchartlist.msgLastName"/></TH>
+  <TH width="20%"><bean:message key="report.reportpatientchartlist.msgFirstName"/></TH>
   <TH width="20%"><bean:message key="report.demographicstudyreport.msgStudy"/></TH>
+  <TH width="20%">Email</TH>
   <TH><bean:message key="report.demographicstudyreport.msgProvider"/></TH>
 </tr>
 <%
@@ -99,6 +100,7 @@ function setfocus() {
   <td nowrap><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("last_name")%></a></td>
   <td><%=rs.getString("d.first_name")%></td>
   <td  title='<%=studyBean.getProperty(rs.getString("s.study_no")+studyBean.getProperty(rs.getString("s.study_no")), "")%>'><%=studyBean.getProperty(rs.getString("s.study_no"), "")%></td>
+  <td><%=rs.getString("d.email")%></td>
   <td><%=providerBean.getProperty(rs.getString("d.provider_no"), "")%></td>
 </tr>
 <%
