@@ -92,9 +92,9 @@ function upCaseCtrl(ctrl) {
           <select name="provider_type">
             <option value="receptionist"><bean:message key="admin.provider.formType.optionReceptionist"/></option>
             <option value="doctor"><bean:message key="admin.provider.formType.optionDoctor"/></option>
-            <option value="doctor"><bean:message key="admin.provider.formType.optionNurse"/></option>
-            <option value="doctor"><bean:message key="admin.provider.formType.optionResident"/></option>
-            <option value="doctor"><bean:message key="admin.provider.formType.optionMidwife"/></option>
+            <option value="nurse"><bean:message key="admin.provider.formType.optionNurse"/></option>
+            <option value="resident"><bean:message key="admin.provider.formType.optionResident"/></option>
+            <option value="midwife"><bean:message key="admin.provider.formType.optionMidwife"/></option>
             <option value="admin"><bean:message key="admin.provider.formType.optionAdmin"/></option>
           </select>
           <% } %>
