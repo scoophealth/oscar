@@ -27,20 +27,19 @@ public class EctSaveEncounterAction extends Action {
         sessionbean.subject = httpservletrequest.getParameter("subject");
         java.util.Date date = UtilDateUtilities.Today();               
         
-        if(!httpservletrequest.getParameter("btnPressed").equals("Exit")) {
-            if(httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit")) {
-                try {
-                    ResourceBundle prop = ResourceBundle.getBundle("oscarResources", httpservletrequest.getLocale());
+        if(!httpservletrequest.getParameter("btnPressed").equals("Exit")) {            
+            try {
+                ResourceBundle prop = ResourceBundle.getBundle("oscarResources", httpservletrequest.getLocale());
+                if(httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit"))
                     sessionbean.encounter = sessionbean.encounter + "\n" + "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + UtilDateUtilities.DateToString(date, prop.getString("date.yyyyMMddHHmmss"), httpservletrequest.getLocale()) + " " + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + sessionbean.userName + "]";
-                    if(httpservletrequest.getParameter("btnPressed").equals("Verify and Sign"))
-                        sessionbean.encounter = sessionbean.encounter + "\n" + "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + UtilDateUtilities.DateToString(date, prop.getString("date.yyyyMMddHHmmss"), httpservletrequest.getLocale()) + " " + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + sessionbean.userName + "]";
-                    if(httpservletrequest.getParameter("btnPressed").equals("Split Chart"))
-                        sessionbean.subject = prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSplitChart");
-                    sessionbean.template = "";
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+                if(httpservletrequest.getParameter("btnPressed").equals("Verify and Sign"))
+                    sessionbean.encounter = sessionbean.encounter + "\n" + "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + UtilDateUtilities.DateToString(date, prop.getString("date.yyyyMMddHHmmss"), httpservletrequest.getLocale()) + " " + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + sessionbean.userName + "]";
+                if(httpservletrequest.getParameter("btnPressed").equals("Split Chart"))
+                    sessionbean.subject = prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSplitChart");
+                sessionbean.template = "";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }            
             try {
                 DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
                 String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" + UtilDateUtilities.DateToString(date, "yyyy-MM-dd HH:mm:ss") + "'," + sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +  UtilMisc.charEscape(sessionbean.subject, '\'') + "','" + UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" + UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" + UtilMisc.charEscape(sessionbean.encounter, '\'') + "')" ;
