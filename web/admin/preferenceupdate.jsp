@@ -59,7 +59,7 @@
 <%  
   } else {
 %>
-  <h1><bean:message key="admin.preferenceupdate.msgUpdateFailure"/<%= request.getParameter("provider_no") %>.
+  <h1><bean:message key="admin.preferenceupdate.msgUpdateFailure"/><%= request.getParameter("provider_no") %>.
 <%  
   }
   apptMainBean.closePstmtConn(); 
