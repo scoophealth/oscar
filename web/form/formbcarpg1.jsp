@@ -256,6 +256,22 @@ var maxYear=9900;
 
         return b;
     }
+    
+function calByLMP() {
+	if (document.forms[0].pg1_lmp.value!="" && valDate(document.forms[0].pg1_lmp)==true) {
+		var str_date = document.forms[0].pg1_lmp.value;
+        var dd = str_date.substring(0, str_date.indexOf("/"));
+        var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
+        var yyyy  = str_date.substring(eval(str_date.lastIndexOf("/")+1));
+		var calDate=new Date();
+		calDate.setFullYear(yyyy);
+		calDate.setMonth(mm);
+		calDate.setDate(dd);
+		calDate.setHours("8");
+		var odate = new Date(calDate.getTime() + (280 * 86400000));
+		document.forms[0].pg1_eddByDate.value = odate.getDate() + '/' + (odate.getMonth()+1) + '/' + odate.getFullYear();
+	}
+}
 </script>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
@@ -620,7 +636,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
     <input type="text" name="pg1_mensCycle" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_mensCycle", "") %>" @oscar.formDB />
 	</td>
     <td>EDD BY DATES<br> dd/mm/yyyy<br>
-    <input type="text" name="pg1_eddByDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" @oscar.formDB dbType="date"/>
+    <input type="text" name="pg1_eddByDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" onDblClick="calByLMP();" @oscar.formDB dbType="date"/>
 	</td>
   </tr>
   <tr>
