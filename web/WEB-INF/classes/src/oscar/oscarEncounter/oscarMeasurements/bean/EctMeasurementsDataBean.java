@@ -32,21 +32,22 @@ import oscar.oscarDB.DBHandler;
 
 public class EctMeasurementsDataBean{
 
-       int id;
-       String type;
-       String demo;
-       String providerFirstName;
-       String providerLastName;
-       String dataField;
-       String measuringInstrc;
-       String comments;
-       String dateObserved;
-       String dateEntered;
+       int id = 0;
+       String type = "";
+       String demo = "";
+       String providerFirstName = "";
+       String providerLastName = "";
+       String dataField = "";
+       String measuringInstrc = "";
+       String comments = "";
+       String dateObserved = "";
+       String dateEntered = "";
        
        public EctMeasurementsDataBean(){
        }
 
-       public EctMeasurementsDataBean(int id, String type, String demo, String providerFirstName, String providerLastName, String dataField, String measuringInstrc, String comments, String dateObserved, String dateEntered){
+       public EctMeasurementsDataBean(int id, String type, String demo, String providerFirstName, String providerLastName, 
+                                      String dataField, String measuringInstrc, String comments, String dateObserved, String dateEntered){
             this.id = id;
             this.type = type;
             this.demo = demo;
