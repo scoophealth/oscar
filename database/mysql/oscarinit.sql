@@ -706,6 +706,17 @@ CREATE TABLE encountertemplate (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table `encounterWindow`
+--
+                                                                                                                                                             
+CREATE TABLE encounterWindow (
+  rowOneSize int(11) NOT NULL default '60',
+  rowTwoSize int(11) NOT NULL default '60',
+  presBoxSize int(11) NOT NULL default '30',
+  rowThreeSize int(11) NOT NULL default '378'
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `favorites`
 --
 
