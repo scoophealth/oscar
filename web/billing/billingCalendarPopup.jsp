@@ -56,12 +56,15 @@ function setfocus() {
   this.focus();
 }
 function typeInDate(year1,month1,day1) {
-  opener.serviceform.xml_vdate.value=year1+"-"+month1+"-"+day1;
-  close();
+  self.close();
+  opener.document.serviceform.xml_vdate.value=year1+"-"+month1+"-"+day1;
+
+
 }
 function typeSrvDate(year1,month1,day1) {
-  opener.serviceform.xml_appointment_date.value=year1+"-"+month1+"-"+day1;
-  close();
+  self.close();
+  opener.document.serviceform.xml_appointment_date.value=year1+"-"+month1+"-"+day1;
+
 }
 //-->
 </script>
