@@ -337,6 +337,19 @@ public static String[] column(int N,String[][]matrix){
   return col;
 }
 
+public static String removeNewLine(String str){
+   StringBuffer stringBuffer = new java.lang.StringBuffer();              
+   for (int i =0 ; i < str.length(); i++){
+      int a = str.charAt(i);           
+      if ( a == 13 || a == 10 ){
+          stringBuffer.append(" ");                                
+      }else{
+          stringBuffer.append((char)a);                
+      }            
+   }
+   return stringBuffer.toString();
+}
+
 ///
 
 public String space(int i) {
