@@ -689,7 +689,7 @@
                 type="oscar.oscarMDS.pageUtil.SearchPatientAction" 
                 scope="request"
                 name="/SegmentDisplay.jsp">
-        <forward name="failure" path="/oscarMDS/PatientSearch.jsp?keyword=&amp;search_mode=search_name"/>        
+        <forward name="failure" path="/oscarMDS/PatientSearch.jsp?search_mode=search_name&amp;limit1=0&amp;limit2=10"/>        
         <forward name="success" path="/oscarMDS/OpenEChart.jsp"/>
     </action>
     
