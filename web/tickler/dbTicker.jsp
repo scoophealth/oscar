@@ -21,7 +21,7 @@
     {"save_document","insert into document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status) values(?,?,?,?,?,?,?)"},
      {"save_tickler","insert into tickler (demographic_no, message, status, update_date, service_date, creator) values(?,?,?,?,?,?)"},
          {"update_tickler","update tickler set status=? where tickler_no=?"},
-     {"search_tickler","select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and d.provider_no like ? order by t.service_date desc"},
+     {"search_tickler","select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and d.provider_no like ? order by t.service_date desc"},
      {"search_tickler_bydemo","select t.tickler_no, d.demographic_no,d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and t.demographic_no like ? order by t.service_date desc"},
    
     {"save_ctl_document","insert into ctl_document values(?,?,?,?)"},
