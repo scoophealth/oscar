@@ -585,7 +585,7 @@
                                 <th width="8%" align="center">All of the time</th>                                
                                 <th width="8%" align="center">Most of the time</th>
                                 <th width="8%" align="center">Some of the time</th>
-                                <th width="8%" align="center">A litte of the time</th>
+                                <th width="8%" align="center">A little of the time</th>
                                 <th width="8%" align="center">None of the time</th>
                                 <th width="22%" align="center">Comments</th>
                             </tr>
@@ -707,7 +707,7 @@
                                 <th width="8%" align="center">All of the time</th>                                
                                 <th width="8%" align="center">Most of the time</th>
                                 <th width="8%" align="center">Some of the time</th>
-                                <th width="8%" align="center">A litte of the time</th>
+                                <th width="8%" align="center">A little of the time</th>
                                 <th width="8%" align="center">None of the time</th>
                                 <th width="22%" align="center">Comments</th>
                             </tr>
