@@ -33,6 +33,7 @@ public class DBPreparedHandler  {
   String connUser=null; //"mysql";
   String connPwd=null; //"oscar";
   Connection conn = null;
+  DBHandler db = null;
   
   ResultSet rs = null;
   Statement stmt = null; 
@@ -59,8 +60,18 @@ public class DBPreparedHandler  {
     OpenConn(connDriver, connURL, connUser, connPwd);    
   }
   private void OpenConn(String dbDriver, String dbUrl,String dbUser,String dbPwd) throws Exception, SQLException {      
-    Class.forName(dbDriver);
-    conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);    
+     
+    //Class.forName(dbDriver);
+    //conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);         
+     
+    if (!DBHandler.isInit()){
+       //init(String db_name, String db_driver, String db_uri,String db_username, String db_password) {
+       DBHandler.init("",dbDriver, dbUrl, dbUser, dbPwd);
+    }
+    db = new DBHandler(DBHandler.OSCAR_DATA);            
+    
+    conn = db.GetConnection();
+    
   }
   
 
@@ -177,7 +188,8 @@ public class DBPreparedHandler  {
   }
   
   public void closeConn() throws SQLException {
-    conn.close();
+    //conn.close();
+    db.CloseConn(); 
     conn = null;
   }
 
