@@ -29,40 +29,31 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
 <%
-
-
 String location1="",location1desc ="";
 for (int i=1; i<6; i++){
-location1 = request.getParameter("location"+i);
-location1desc=request.getParameter("location"+i+"desc")==null?"":request.getParameter("location"+i+"desc");
+	location1 = request.getParameter("location"+i);
+	location1desc=request.getParameter("location"+i+"desc")==null?"":request.getParameter("location"+i+"desc");
 
- 
+	if (location1 != ""){
+		if (location1desc != null && location1desc.compareTo("") != 0) {
+			StringBuffer sotherBuffer = new StringBuffer(location1desc);
+			int f = location1desc.indexOf('\'');
+			if ( f != -1) {
+				sotherBuffer.deleteCharAt(f);
+				sotherBuffer.insert(f,"\'");
+			}
+			location1desc = sotherBuffer.toString();  
 
-if (location1 != ""){
+			String[] param3 =new String[3];
+			param3[0]=location1;
+			param3[1]="1";
+			param3[2]=location1desc;
 
-if (location1desc != null && location1desc.compareTo("") !=0) {
-	            
-	              StringBuffer sotherBuffer = new StringBuffer(location1desc);
-	              int f = location1desc.indexOf('\'');
-	              if ( f != -1) {
-	              sotherBuffer.deleteCharAt(f);
-	              sotherBuffer.insert(f,"\"");
-		      }
-		      location1desc = sotherBuffer.toString();  
-	     
-	     
-	    	 String[] param3 =new String[3];
-		 	          	    	
-		 	          	    	   
-		 	          	    	  param3[0]=location1;
-		 	          	    	  param3[1]="1";
-		 	          	    	  param3[2]=location1desc;
-		 	          	    	  
-		  int   recordAffected = apptMainBean.queryExecuteUpdate(param3,"save_clinic_location");
+			int   recordAffected = apptMainBean.queryExecuteUpdate(param3,"save_clinic_location");
+		}
+	}
 }
-}
-}
+
+response.sendRedirect("manageBillingLocation.jsp"); 
 
 %>
-
-<%  response.sendRedirect("manageBillingLocation.jsp"); %>
