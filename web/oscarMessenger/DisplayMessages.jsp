@@ -282,7 +282,8 @@ function BackToOscar()
                                     <%}%>
                                     </td>
                                     <td bgcolor="#EEEEFF">
-                                    <%= dm.status %>
+                                    <% String key = "oscarMessenger.DisplayMessages.msgStatus"+dm.status.substring(0,1).toUpperCase()+dm.status.substring(1); %>
+                                    <bean:message key="<%= key %>"/>
                                     </td>
                                     <td bgcolor="#EEEEFF">
                                     <%= dm.sentby  %>
