@@ -38,7 +38,7 @@ String type = request.getParameter("type");
 int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbillservice");	   
 
 String[] group = new String[4];
-int recordAffected = -100;
+int rowsAffected = -100;
 
 for(int j=1;j<4;j++){
 	group[j] = request.getParameter("group"+j);
@@ -58,6 +58,7 @@ for(int j=1;j<4;j++){
 	}
 }
 
-if (recordAffected != -100) apptMainBean.closePstmtConn();
+if (rowsAffected != -100) apptMainBean.closePstmtConn();
 
 response.sendRedirect("manageBillingform.jsp"); 
+%>
