@@ -135,8 +135,9 @@
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
     
-    if(rs.next()) { //!rs.getString("cpp_id").equals("")) %>
+    if(rs.next()) {  %>
       ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord"/></font>***<br>
+      <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
       <% return;
     }
 
