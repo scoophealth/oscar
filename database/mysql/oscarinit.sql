@@ -141,7 +141,8 @@ CREATE TABLE billing (
   KEY provider_no (provider_no),
   KEY provider_ohip_no (provider_ohip_no),
   KEY apptProvider_no (apptProvider_no),
-  KEY creator (creator)
+  KEY creator (creator),
+  KEY status (status)
 ) TYPE=MyISAM;
 
 --
