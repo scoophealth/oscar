@@ -51,7 +51,7 @@ public class EctAddMeasurementGroupAction extends Action {
         EctAddMeasurementGroupForm frm = (EctAddMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctAddMeasurementGroupForm", frm);
         String groupName = frm.getGroupName();
-
+        request.getSession().setAttribute("groupName", groupName);
         MsgStringQuote str = new MsgStringQuote();
         String requestId = "";
         
