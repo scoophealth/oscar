@@ -36,10 +36,27 @@ public final class LoginAction extends Action {
     //The file name is defined on the page an its read as a parameter (propName).
     //String mainConfigFileName = servlet.getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+
     //	    "classes"+pathSeparator+propName;    
-    LoginCheckLogin cl = new LoginCheckLogin(propName);
+    LoginCheckLogin cl = new LoginCheckLogin(propName);    
+    if(!cl.propFileFound) {
+        String newURL = mapping.findForward("error").getPath();
+        newURL = newURL + "?errormsg=Unable to open the properties file "+cl.propFileName+".";
+        return (new ActionForward(newURL));
+    }
+    
     if(cl.isBlock(ip)) return mapping.findForward(where);  //go to block page
 
-    String[] strAuth = cl.auth(userName, password, pin, ip) ;
+    String[] strAuth;
+    try {
+        strAuth = cl.auth(userName, password, pin, ip) ;
+    } catch (Exception e) {
+        String newURL = mapping.findForward("error").getPath();
+        if (e.getClass().toString().equals("class java.lang.ClassNotFoundException")) {
+            newURL = newURL + "?errormsg=Database driver "+e.getMessage()+" not found.";
+        } else {
+            newURL = newURL + "?errormsg=Database connection error: "+e.getMessage()+".";
+        }
+        return (new ActionForward(newURL));
+    }
 
     if(strAuth!=null) { //login successfully
       //invalidate the existing sesson

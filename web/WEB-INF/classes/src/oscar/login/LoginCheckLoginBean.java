@@ -54,8 +54,8 @@ public class LoginCheckLoginBean {
 		} catch (NoSuchAlgorithmException foo) {}
   }
   
-  public String[] authenticate() {
-  	getUserID();
+  public String[] authenticate() throws Exception, SQLException {
+    getUserID();
     if(userpassword==null) return null; // the user is not in security table
     if( isWAN() && (!pin.equals(userpin) || pin.length()<3) ) return null;
     //System.out.println("wan!!!"+pin+" 111 "+userpin) ;
@@ -84,9 +84,9 @@ public class LoginCheckLoginBean {
     }
   }
 
-  private void getUserID() { //if failed, username will be null
+  private void getUserID() throws Exception, SQLException { //if failed, username will be null
   	String [] temp=new String[4];
-    try {
+    // try {
       accessDB = new DBPreparedHandler(oscarVariables.getProperty("db_driver"),oscarVariables.getProperty("db_uri")+oscarVariables.getProperty("db_name")+"?user="+oscarVariables.getProperty("db_username")+"&password="+oscarVariables.getProperty("db_password"),oscarVariables.getProperty("db_username"),oscarVariables.getProperty("db_password") );
       String strSQL="select password, provider_no, user_name, pin from security where user_name = '" + username+"'";
       temp = searchDB(strSQL, "password", "provider_no", "user_name", "pin" ); //use StringBuffer later
@@ -108,13 +108,13 @@ public class LoginCheckLoginBean {
       }
       if (!(profession.equals("receptionist")||profession.equals("doctor")) ) // *****be careful here
         accessDB.closeConn();
-    }catch (SQLException e) {return;}
+    // } catch (SQLException e) {return;}
   }
 
-  private String[] searchDB(String dbSQL, String str1, String str2, String str3, String str4) {
+  private String[] searchDB(String dbSQL, String str1, String str2, String str3, String str4) throws SQLException {
   	String [] temp=new String[4];
     ResultSet rs=null;
-    try {
+    // try {
       rs = accessDB.queryResults(dbSQL);
       while (rs.next()) {
         temp[0] = rs.getString(str1);
@@ -125,8 +125,8 @@ public class LoginCheckLoginBean {
       accessDB.closePstmt();
       return temp;
       //accessDB.closeConn();
-    } catch (SQLException e) {;}
-    return null;
+    // } catch (SQLException e) {;}
+    // return null;
   }
 
   public String[] getPreferences() {

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Properties;
+import java.sql.SQLException;
 
 public class LoginCheckLogin {
     boolean bWAN = true ;
@@ -12,6 +13,9 @@ public class LoginCheckLogin {
     LoginCheckLoginBean lb = null;
     LoginInfoBean linfo = null;
     LoginList llist = null;
+    
+    String propFileName = "";
+    boolean propFileFound = true;
 
     public LoginCheckLogin() { }
     public LoginCheckLogin(String propFile) { 
@@ -47,7 +51,7 @@ public class LoginCheckLogin {
     }
     
     //authenticate is used to check password
-    public String[] auth(String user_name, String password, String pin, String ip) {
+    public String[] auth(String user_name, String password, String pin, String ip) throws Exception, SQLException {
         lb = new LoginCheckLoginBean() ;
         lb.ini(user_name, password, pin, ip, pvar);
         return lb.authenticate();
@@ -74,9 +78,7 @@ public class LoginCheckLogin {
         pvar = new Properties();
         pvar.setProperty("file_separator", System.getProperty("file.separator")); 
         pvar.setProperty("working_dir", System.getProperty("user.dir"));
-        char sep = pvar.getProperty("file_separator").toCharArray()[0];
-        String strTemp = pvar.getProperty("working_dir").substring(0,pvar.getProperty("working_dir").indexOf(sep));
-        String propFileName = "";
+        char sep = pvar.getProperty("file_separator").toCharArray()[0];        
         try {
 	   //This line commented because it was substituted by the code below it.
            //There's no need to mount the file name this way because now we suppose the parameter 'propFile'
@@ -97,6 +99,7 @@ public class LoginCheckLogin {
             System.out.println("Property file not found at:");
             System.out.println(propFileName);
             e.printStackTrace();
+            propFileFound = false;
         }
     }
 
