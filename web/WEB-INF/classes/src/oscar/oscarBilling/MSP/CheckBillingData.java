@@ -80,16 +80,46 @@ public class CheckBillingData {
         return ret;
     }
 
-    public String checkMSPPHN(String m) {
+    public String checkMSPPHN(String m, String ins) {
         String ret = "C02:P14 MSP PHN Wrong! ";
-        if (m != null && (m.equals("") || m.length() == 9 || m.length() == 10)) {
+        if (m != null && (m.length() == 9 || m.length() == 10)) {
             if (m.length() == 10) {
                 if (checkPHN(m)) ret = "";
-            } else
-                ret = "";
-
+            } else if (m.length() == 9) {
+                if (checkOldPHN(m)) ret = "";
+            }
         }
+        if (m != null && m.equals("") && ins != null && !ins.equals(""))
+                ret = "";
+        return ret;
+    }
 
+    public boolean checkOldPHN(String m) {
+        boolean ret = false;
+        if (m.matches("\\d+")) {
+            int sumA = 0;
+            int sumB = 0;
+            int temp = 0;
+
+            // calculate weight result
+            for (int i = 0; i < m.length() - 1; i++) {
+                if (i % 2 == 0) {
+                    sumA += Integer.parseInt("" + m.charAt(i));
+                } else {
+                    temp = Integer.parseInt("" + m.charAt(i)) * 2;
+                    temp = temp > 9 ? (temp / 10 + (temp - 10)) : temp;
+                    sumB += temp;
+                }
+            }
+
+            // calculate
+            temp = sumA + sumB;
+            temp = temp % 10;
+            temp = 10 - temp;
+
+            // compare to the check digit
+            if (("" + temp).equals("" + m.charAt(8))) ret = true;
+        }
         return ret;
     }
 
@@ -101,7 +131,7 @@ public class CheckBillingData {
 
             // calculate weight result
             for (int i = 0; i < m.length(); i++) {
-                temp += m.charAt(i) * consWeight[i];
+                temp += Integer.parseInt("" + m.charAt(i)) * consWeight[i];
             }
 
             // calculate
@@ -263,7 +293,8 @@ public class CheckBillingData {
         ret += checkLength(rs2.getString("practitioner_no"), 5,
                 "C02:P08 Practitioner Num Wrong! "); //P08
         // 5
-        ret += checkMSPPHN(rs2.getString("phn"));//P14
+        ret += checkMSPPHN(rs2.getString("phn"), rs2
+                .getString("oin_insurer_code"));//P14
 
         // 10
         //* + forwardSpace(rs2.getString("name_verify"),4) //P16 4 +
