@@ -143,7 +143,7 @@ function review(key) {
 }
 
 function refresh() {
-  history.go(0);
+  document.location.reload();
 }
 function refresh1() {  
   var u = self.location.href;
