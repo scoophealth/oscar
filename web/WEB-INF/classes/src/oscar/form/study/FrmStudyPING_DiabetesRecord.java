@@ -14,8 +14,8 @@ public class FrmStudyPING_DiabetesRecord extends FrmStudyRecord {
     public Properties getFormRecord(int demographicNo, int existingID)
             throws SQLException {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         if (existingID <= 0) {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
@@ -35,33 +35,12 @@ public class FrmStudyPING_DiabetesRecord extends FrmStudyRecord {
                 props.setProperty("pName", rs.getString("pName"));
             }
             rs.close();
+            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no = "
-                    + demographicNo + " AND ID = " + existingID;
-            ResultSet rs = db.GetSQL(sql);
-            if (rs.next()) {
-                ResultSetMetaData md = rs.getMetaData();
-                for (int i = 1; i <= md.getColumnCount(); i++) {
-                    String name = md.getColumnName(i);
-                    String value;
-                    if (md.getColumnTypeName(i).equalsIgnoreCase("TINY")
-                            && md.getScale(i) == 1) {
-                        if (rs.getInt(i) == 1)
-                            value = "checked='checked'";
-                        else
-                            value = "";
-                    } else if (md.getColumnTypeName(i).equalsIgnoreCase("date"))
-                        value = UtilDateUtilities.DateToString(rs.getDate(i),
-                                "yyyy/MM/dd");
-                    else
-                        value = rs.getString(i);
-                    if (value != null) props.setProperty(name, value);
-                }
-
-            }
-            rs.close();
+                + demographicNo + " AND ID = " + existingID;
+			props = (new oscar.form.FrmRecordHelp()).getFormRecord(sql);
         }
-        db.CloseConn();
         //props.list(System.out);
         return props;
     }
