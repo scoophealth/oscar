@@ -287,7 +287,8 @@
                     type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportForm"/>           
     <form-bean      name="RptInitializeFrequencyOfRelevantTestsCDMReportForm"
                     type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportForm"/>                                                                                                                            
-                    
+    <form-bean      name="RptRehabStudyForm"
+                    type="oscar.oscarReport.pageUtil.RptRehabStudyForm"/>                                                                                                                                                
 <!-- OscarMaintenance start -->
     <form-bean      name="MaintenanceForm"
                     type="oscar.oscarMaintenance.pageUtil.MaintenanceForm"/>
@@ -1392,6 +1393,12 @@
                 scope="request"
                 input="/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp">                
        <forward name="success" path="/oscarReport/oscarMeasurements/CDMReport.jsp"/>
+    </action>
+    <action     path="/oscarReport/RptRehabStudy"
+                type="oscar.oscarReport.pageUtil.RptRehabStudyAction"  
+                name="RptRehabStudyForm"              
+                scope="request">                
+       <forward name="success" path="/oscarReport/oscarReportRehabStudy.jsp"/>
     </action>
 
 <!-- oscarReport End -->  
