@@ -49,7 +49,7 @@ public class EctImmDeleteImmScheduleAction extends Action {
    public EctImmDeleteImmScheduleAction() {
    }
    
-   public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+   public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
       
       EctImmImmunizationData immData = new EctImmImmunizationData();
