@@ -91,6 +91,7 @@ public final class FrmSetupFormAction extends Action {
         String ongoingConcern = chartBean.ongoingConcerns;
         String formName = (String) request.getParameter("formName");        
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
+        String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
         
         List drugLists = getDrugList(demo);
         List allergyList = getDrugAllegyList(demo);
@@ -102,12 +103,16 @@ public final class FrmSetupFormAction extends Action {
         request.setAttribute("drugs", drugLists); 
         request.setAttribute("allergies", allergyList);
         request.setAttribute("ongoingConcerns", chartBean.ongoingConcerns.equalsIgnoreCase("")?"None":chartBean.ongoingConcerns);
-        if(currentRec!=null){            
+        if(currentRec!=null){
+            frm.setValue("visitCod", currentRec.getProperty("visitCod",""));
             frm.setValue("diagnosisVT", currentRec.getProperty("Diagnosis", ""));
             frm.setValue("subjective", currentRec.getProperty("Subjective", ""));            
             frm.setValue("objective", currentRec.getProperty("Objective", ""));
             frm.setValue("assessment", currentRec.getProperty("Assessment", ""));
             frm.setValue("plan", currentRec.getProperty("Plan", ""));
+        }
+        else{
+            frm.setValue("visitCod", visitCod);
         }
         
         try {            
@@ -193,7 +198,7 @@ public final class FrmSetupFormAction extends Action {
                             String value = (String) vtGetMethods.invoke(vtData, new Object[]{});
 
                             vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});
-                            System.out.println("data date " + (String) vtGetMethods.invoke(vtData, new Object[]{}));
+                            //System.out.println("data date " + (String) vtGetMethods.invoke(vtData, new Object[]{}));
                             String dMiles = (String) vtGetMethods.invoke(vtData, new Object[]{});
                             String dMeas = mt.getLastDateEntered();
 
