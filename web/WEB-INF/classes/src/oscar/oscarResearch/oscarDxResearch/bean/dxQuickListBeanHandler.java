@@ -38,7 +38,11 @@ public class dxQuickListBeanHandler {
      
     public dxQuickListBeanHandler(String providerNo) {
         init(providerNo);
-    }    
+    } 
+    
+    public dxQuickListBeanHandler() {
+        init();
+    }
         
     public boolean init(String providerNo) {
         
@@ -83,6 +87,31 @@ public class dxQuickListBeanHandler {
         return verdict;
     }
 
+    public boolean init() {
+        
+        boolean verdict = true;
+        try {
+            ResultSet rsLastUsed;
+            ResultSet rs;
+            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String lastUsed = "";
+            String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName";            
+            rs = db.GetSQL(sql);
+            while(rs.next()){                
+                dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"));                              
+                dxQuickListBeanVector.add(bean);
+            }
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
+    
     public Collection getDxQuickListBeanVector(){
         return dxQuickListBeanVector;
     }
