@@ -1,11 +1,11 @@
--- MySQL dump 9.07
+-- MySQL dump 9.09
 --
 -- Host: localhost    Database: oscar_mcmaster
----------------------------------------------------------
--- Server version	4.0.12-standard
+-- ------------------------------------------------------
+-- Server version	4.0.16-standard
 
 --
--- Table structure for table 'FaxClientLog'
+-- Table structure for table `FaxClientLog`
 --
 
 CREATE TABLE FaxClientLog (
@@ -20,7 +20,7 @@ CREATE TABLE FaxClientLog (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'allergies'
+-- Table structure for table `allergies`
 --
 
 CREATE TABLE allergies (
@@ -39,7 +39,7 @@ CREATE TABLE allergies (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'appointment'
+-- Table structure for table `appointment`
 --
 
 CREATE TABLE appointment (
@@ -67,7 +67,7 @@ CREATE TABLE appointment (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'billactivity'
+-- Table structure for table `billactivity`
 --
 
 CREATE TABLE billactivity (
@@ -87,7 +87,7 @@ CREATE TABLE billactivity (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'billcenter'
+-- Table structure for table `billcenter`
 --
 
 CREATE TABLE billcenter (
@@ -96,7 +96,7 @@ CREATE TABLE billcenter (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'billing'
+-- Table structure for table `billing`
 --
 
 CREATE TABLE billing (
@@ -130,7 +130,7 @@ CREATE TABLE billing (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'billingdetail'
+-- Table structure for table `billingdetail`
 --
 
 CREATE TABLE billingdetail (
@@ -148,7 +148,7 @@ CREATE TABLE billingdetail (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'billinginr'
+-- Table structure for table `billinginr`
 --
 
 CREATE TABLE billinginr (
@@ -172,7 +172,7 @@ CREATE TABLE billinginr (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'billingservice'
+-- Table structure for table `billingservice`
 --
 
 CREATE TABLE billingservice (
@@ -187,7 +187,7 @@ CREATE TABLE billingservice (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'clinic'
+-- Table structure for table `clinic`
 --
 
 CREATE TABLE clinic (
@@ -207,7 +207,7 @@ CREATE TABLE clinic (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'clinic_location'
+-- Table structure for table `clinic_location`
 --
 
 CREATE TABLE clinic_location (
@@ -217,7 +217,7 @@ CREATE TABLE clinic_location (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'config_Immunization'
+-- Table structure for table `config_Immunization`
 --
 
 CREATE TABLE config_Immunization (
@@ -231,7 +231,7 @@ CREATE TABLE config_Immunization (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'consultationRequests'
+-- Table structure for table `consultationRequests`
 --
 
 CREATE TABLE consultationRequests (
@@ -256,7 +256,7 @@ CREATE TABLE consultationRequests (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'consultationServices'
+-- Table structure for table `consultationServices`
 --
 
 CREATE TABLE consultationServices (
@@ -267,7 +267,7 @@ CREATE TABLE consultationServices (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_billingservice'
+-- Table structure for table `ctl_billingservice`
 --
 
 CREATE TABLE ctl_billingservice (
@@ -281,7 +281,7 @@ CREATE TABLE ctl_billingservice (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_billingservice_premium'
+-- Table structure for table `ctl_billingservice_premium`
 --
 
 CREATE TABLE ctl_billingservice_premium (
@@ -292,7 +292,7 @@ CREATE TABLE ctl_billingservice_premium (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_diagcode'
+-- Table structure for table `ctl_diagcode`
 --
 
 CREATE TABLE ctl_diagcode (
@@ -302,7 +302,7 @@ CREATE TABLE ctl_diagcode (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_doctype'
+-- Table structure for table `ctl_doctype`
 --
 
 CREATE TABLE ctl_doctype (
@@ -312,7 +312,7 @@ CREATE TABLE ctl_doctype (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_document'
+-- Table structure for table `ctl_document`
 --
 
 CREATE TABLE ctl_document (
@@ -323,7 +323,7 @@ CREATE TABLE ctl_document (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_frequency'
+-- Table structure for table `ctl_frequency`
 --
 
 CREATE TABLE ctl_frequency (
@@ -335,7 +335,7 @@ CREATE TABLE ctl_frequency (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_provider'
+-- Table structure for table `ctl_provider`
 --
 
 CREATE TABLE ctl_provider (
@@ -345,7 +345,7 @@ CREATE TABLE ctl_provider (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ctl_specialinstructions'
+-- Table structure for table `ctl_specialinstructions`
 --
 
 CREATE TABLE ctl_specialinstructions (
@@ -355,7 +355,7 @@ CREATE TABLE ctl_specialinstructions (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'demographic'
+-- Table structure for table `demographic`
 --
 
 CREATE TABLE demographic (
@@ -393,7 +393,7 @@ CREATE TABLE demographic (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'demographicaccessory'
+-- Table structure for table `demographicaccessory`
 --
 
 CREATE TABLE demographicaccessory (
@@ -403,7 +403,7 @@ CREATE TABLE demographicaccessory (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'demographiccust'
+-- Table structure for table `demographiccust`
 --
 
 CREATE TABLE demographiccust (
@@ -421,7 +421,7 @@ CREATE TABLE demographiccust (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'demographicstudy'
+-- Table structure for table `demographicstudy`
 --
 
 CREATE TABLE demographicstudy (
@@ -433,7 +433,7 @@ CREATE TABLE demographicstudy (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'desannualreviewplan'
+-- Table structure for table `desannualreviewplan`
 --
 
 CREATE TABLE desannualreviewplan (
@@ -449,7 +449,7 @@ CREATE TABLE desannualreviewplan (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'desaprisk'
+-- Table structure for table `desaprisk`
 --
 
 CREATE TABLE desaprisk (
@@ -465,7 +465,7 @@ CREATE TABLE desaprisk (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'diagnosticcode'
+-- Table structure for table `diagnosticcode`
 --
 
 CREATE TABLE diagnosticcode (
@@ -477,7 +477,7 @@ CREATE TABLE diagnosticcode (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'diseases'
+-- Table structure for table `diseases`
 --
 
 CREATE TABLE diseases (
@@ -489,7 +489,7 @@ CREATE TABLE diseases (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'document'
+-- Table structure for table `document`
 --
 
 CREATE TABLE document (
@@ -505,7 +505,7 @@ CREATE TABLE document (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'drugs'
+-- Table structure for table `drugs`
 --
 
 CREATE TABLE drugs (
@@ -533,10 +533,10 @@ CREATE TABLE drugs (
   script_no int(10) default NULL,
   regional_identifier varchar(100) default NULL,
   PRIMARY KEY  (drugid)
-) TYPE=MyISAM ;
+) TYPE=MyISAM;
 
 --
--- Table structure for table 'dxresearch'
+-- Table structure for table `dxresearch`
 --
 
 CREATE TABLE dxresearch (
@@ -550,7 +550,7 @@ CREATE TABLE dxresearch (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'eChart'
+-- Table structure for table `eChart`
 --
 
 CREATE TABLE eChart (
@@ -570,7 +570,7 @@ CREATE TABLE eChart (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'eform'
+-- Table structure for table `eform`
 --
 
 CREATE TABLE eform (
@@ -588,7 +588,7 @@ CREATE TABLE eform (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'eform_data'
+-- Table structure for table `eform_data`
 --
 
 CREATE TABLE eform_data (
@@ -607,7 +607,7 @@ CREATE TABLE eform_data (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'eforms'
+-- Table structure for table `eforms`
 --
 
 CREATE TABLE eforms (
@@ -625,7 +625,7 @@ CREATE TABLE eforms (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'eforms_data'
+-- Table structure for table `eforms_data`
 --
 
 CREATE TABLE eforms_data (
@@ -645,7 +645,7 @@ CREATE TABLE eforms_data (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'encounter'
+-- Table structure for table `encounter`
 --
 
 CREATE TABLE encounter (
@@ -661,7 +661,7 @@ CREATE TABLE encounter (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'encounterForm'
+-- Table structure for table `encounterForm`
 --
 
 CREATE TABLE encounterForm (
@@ -673,7 +673,7 @@ CREATE TABLE encounterForm (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'encountertemplate'
+-- Table structure for table `encountertemplate`
 --
 
 CREATE TABLE encountertemplate (
@@ -686,7 +686,7 @@ CREATE TABLE encountertemplate (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'favorites'
+-- Table structure for table `favorites`
 --
 
 CREATE TABLE favorites (
@@ -713,7 +713,7 @@ CREATE TABLE favorites (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'form'
+-- Table structure for table `form`
 --
 
 CREATE TABLE form (
@@ -728,7 +728,7 @@ CREATE TABLE form (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formAR'
+-- Table structure for table `formAR`
 --
 
 CREATE TABLE formAR (
@@ -1409,7 +1409,77 @@ CREATE TABLE formAR (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formAlpha'
+-- Table structure for table `formAdf`
+--
+
+CREATE TABLE formAdf (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  c_patientname varchar(60) default NULL,
+  residentno varchar(20) default NULL,
+  c_physician varchar(60) default NULL,
+  c_address varchar(80) default NULL,
+  c_phone varchar(20) default NULL,
+  cComplait text,
+  histPresIll text,
+  childhood varchar(80) default NULL,
+  adult varchar(80) default NULL,
+  operations varchar(80) default NULL,
+  injuries varchar(80) default NULL,
+  mentalIll varchar(80) default NULL,
+  familyHist text,
+  socialHist text,
+  general varchar(80) default NULL,
+  histSkin varchar(80) default NULL,
+  headNeck varchar(80) default NULL,
+  respiratory varchar(80) default NULL,
+  cardiovascular varchar(80) default NULL,
+  gi varchar(80) default NULL,
+  gu varchar(80) default NULL,
+  cns varchar(80) default NULL,
+  histExtremities varchar(80) default NULL,
+  allergies text,
+  sensitivityDrug text,
+  currentMedication text,
+  temp varchar(80) default NULL,
+  pulse varchar(80) default NULL,
+  resp varchar(80) default NULL,
+  bp varchar(80) default NULL,
+  height varchar(80) default NULL,
+  weight varchar(80) default NULL,
+  physicalCondition text,
+  mentalCondition text,
+  skin varchar(80) default NULL,
+  eyes varchar(80) default NULL,
+  ears varchar(80) default NULL,
+  nose varchar(80) default NULL,
+  mouthTeeth varchar(80) default NULL,
+  throat varchar(80) default NULL,
+  neck varchar(80) default NULL,
+  chest varchar(80) default NULL,
+  heart varchar(80) default NULL,
+  abdomen varchar(80) default NULL,
+  genitalia varchar(80) default NULL,
+  lymphatics varchar(80) default NULL,
+  bloodVessels varchar(80) default NULL,
+  locomotor varchar(80) default NULL,
+  extremities varchar(80) default NULL,
+  rectal varchar(80) default NULL,
+  vaginal varchar(80) default NULL,
+  neurological varchar(80) default NULL,
+  behaviorProblem text,
+  functionalLimitation text,
+  diagnoses text,
+  sigDate date default NULL,
+  signature varchar(60) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `formAlpha`
 --
 
 CREATE TABLE formAlpha (
@@ -1465,7 +1535,7 @@ CREATE TABLE formAlpha (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formAnnual'
+-- Table structure for table `formAnnual`
 --
 
 CREATE TABLE formAnnual (
@@ -1798,7 +1868,7 @@ CREATE TABLE formAnnualV2 (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formLabReq'
+-- Table structure for table `formLabReq`
 --
 
 CREATE TABLE formLabReq (
@@ -1850,6 +1920,8 @@ CREATE TABLE formLabReq (
   h_wcbCount tinyint(1) default NULL,
   h_hematocrit tinyint(1) default NULL,
   h_prothrombTime tinyint(1) default NULL,
+  h_otherC tinyint(1) default NULL,
+  h_other varchar(20) default NULL,
   i_pregnancyTest tinyint(1) default NULL,
   i_heterophile tinyint(1) default NULL,
   i_rubella tinyint(1) default NULL,
@@ -1857,11 +1929,14 @@ CREATE TABLE formLabReq (
   i_repeatPrenatal tinyint(1) default NULL,
   i_prenatalHepatitisB tinyint(1) default NULL,
   i_vdrl tinyint(1) default NULL,
+  i_otherC tinyint(1) default NULL,
+  i_other varchar(20) default NULL,
   m_cervicalVaginal tinyint(1) default NULL,
   m_sputum tinyint(1) default NULL,
   m_throat tinyint(1) default NULL,
   m_urine tinyint(1) default NULL,
   m_stoolCulture tinyint(1) default NULL,
+  m_otherSwabs tinyint(1) default NULL,
   m_other varchar(20) default NULL,
   otherTest text,
   formDate date default NULL,
@@ -1870,7 +1945,7 @@ CREATE TABLE formLabReq (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formMMSE'
+-- Table structure for table `formMMSE`
 --
 
 CREATE TABLE formMMSE (
@@ -1908,7 +1983,7 @@ CREATE TABLE formMMSE (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formMentalHealth'
+-- Table structure for table `formMentalHealth`
 --
 
 CREATE TABLE formMentalHealth (
@@ -1989,7 +2064,7 @@ CREATE TABLE formMentalHealth (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formPalliativeCare'
+-- Table structure for table `formPalliativeCare`
 --
 
 CREATE TABLE formPalliativeCare (
@@ -2092,7 +2167,7 @@ CREATE TABLE formPalliativeCare (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formPeriMenopausal'
+-- Table structure for table `formPeriMenopausal`
 --
 
 CREATE TABLE formPeriMenopausal (
@@ -2316,7 +2391,7 @@ CREATE TABLE formPeriMenopausal (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formRourke'
+-- Table structure for table `formRourke`
 --
 
 CREATE TABLE formRourke (
@@ -2749,7 +2824,7 @@ CREATE TABLE formRourke (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'formType2Diabetes'
+-- Table structure for table `formType2Diabetes`
 --
 
 CREATE TABLE formType2Diabetes (
@@ -2893,7 +2968,7 @@ CREATE TABLE formType2Diabetes (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'groupMembers_tbl'
+-- Table structure for table `groupMembers_tbl`
 --
 
 CREATE TABLE groupMembers_tbl (
@@ -2902,7 +2977,7 @@ CREATE TABLE groupMembers_tbl (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'groups_tbl'
+-- Table structure for table `groups_tbl`
 --
 
 CREATE TABLE groups_tbl (
@@ -2913,7 +2988,7 @@ CREATE TABLE groups_tbl (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'ichppccode'
+-- Table structure for table `ichppccode`
 --
 
 CREATE TABLE ichppccode (
@@ -2923,7 +2998,7 @@ CREATE TABLE ichppccode (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'immunizations'
+-- Table structure for table `immunizations`
 --
 
 CREATE TABLE immunizations (
@@ -2934,486 +3009,6 @@ CREATE TABLE immunizations (
   save_date date NOT NULL default '0001-01-01',
   archived tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (ID)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'messagelisttbl'
---
-
-CREATE TABLE messagelisttbl (
-  message mediumint(9) default NULL,
-  provider_no varchar(6) default NULL,
-  status varchar(10) default NULL,
-  remoteLocation int(10) default NULL
-) TYPE=MyISAM;
-
---
--- Table structure for table 'messagetbl'
---
-
-CREATE TABLE messagetbl (
-  messageid mediumint(9) NOT NULL auto_increment,
-  thedate date default NULL,
-  theime time default NULL,
-  themessage text,
-  thesubject varchar(128) default NULL,
-  sentby varchar(62) default NULL,
-  sentto varchar(255) default NULL,
-  sentbyNo varchar(6) default NULL,
-  sentByLocation int(10) default NULL,
-  attachment text,
-  actionstatus char(2) default NULL,
-  PRIMARY KEY  (messageid)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'mygroup'
---
-
-CREATE TABLE mygroup (
-  mygroup_no varchar(10) NOT NULL default '',
-  provider_no varchar(6) NOT NULL default '',
-  last_name varchar(30) NOT NULL default '',
-  first_name varchar(30) NOT NULL default '',
-  vieworder char(2) default NULL,
-  PRIMARY KEY  (mygroup_no,provider_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'oscarcommlocations'
---
-
-CREATE TABLE oscarcommlocations (
-  locationId int(10) NOT NULL default '0',
-  locationDesc varchar(50) NOT NULL default '',
-  locationAuth varchar(30) default NULL,
-  current tinyint(1) NOT NULL default '0',
-  addressBook text,
-  remoteServerURL varchar(30) default NULL,
-  PRIMARY KEY  (locationId)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'preference'
---
-
-CREATE TABLE preference (
-  preference_no int(6) NOT NULL auto_increment,
-  provider_no varchar(6) NOT NULL default '',
-  start_hour char(2) default NULL,
-  end_hour char(2) default NULL,
-  every_min char(3) default NULL,
-  mygroup_no varchar(10) default NULL,
-  color_template varchar(10) default NULL,
-  PRIMARY KEY  (preference_no),
-  KEY provider_no (provider_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'prescribe'
---
-
-CREATE TABLE prescribe (
-  prescribe_no int(12) NOT NULL auto_increment,
-  demographic_no int(10) NOT NULL default '0',
-  provider_no varchar(6) NOT NULL default '',
-  prescribe_date date NOT NULL default '0001-01-01',
-  prescribe_time time NOT NULL default '00:00:00',
-  content text,
-  PRIMARY KEY  (prescribe_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'prescription'
---
-
-CREATE TABLE prescription (
-  script_no int(10) NOT NULL auto_increment,
-  provider_no varchar(6) default NULL,
-  demographic_no int(10) default NULL,
-  date_prescribed date default NULL,
-  date_printed date default NULL,
-  dates_reprinted text,
-  textView text,
-  PRIMARY KEY  (script_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'professionalSpecialists'
---
-
-CREATE TABLE professionalSpecialists (
-  specId int(10) NOT NULL auto_increment,
-  fName varchar(32) default NULL,
-  lName varchar(32) default NULL,
-  proLetters varchar(20) default NULL,
-  address varchar(255) default NULL,
-  phone varchar(30) default NULL,
-  fax varchar(30) default NULL,
-  website varchar(128) default NULL,
-  email varchar(128) default NULL,
-  specType varchar(128) default NULL,
-  PRIMARY KEY  (specId)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'property'
---
-
-CREATE TABLE property (
-  name varchar(255) NOT NULL default '',
-  value varchar(255) default NULL,
-  PRIMARY KEY  (name)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'provider'
---
-
-CREATE TABLE provider (
-  provider_no varchar(6) NOT NULL default '',
-  last_name varchar(30) NOT NULL default '',
-  first_name varchar(30) NOT NULL default '',
-  provider_type varchar(15) NOT NULL default '',
-  specialty varchar(20) NOT NULL default '',
-  team varchar(20) default '',
-  sex char(1) NOT NULL default '',
-  dob date default NULL,
-  address varchar(40) default NULL,
-  phone varchar(20) default NULL,
-  work_phone varchar(50) default NULL,
-  ohip_no varchar(20) default NULL,
-  rma_no varchar(20) default NULL,
-  billing_no varchar(20) default NULL,
-  hso_no varchar(10) default NULL,
-  status char(1) default NULL,
-  comments text,
-  provider_activity char(3) default NULL,
-  PRIMARY KEY  (provider_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'providerExt'
---
-
-CREATE TABLE providerExt (
-  provider_no varchar(6) default NULL,
-  signature varchar(255) default NULL
-) TYPE=MyISAM;
-
---
--- Table structure for table 'radetail'
---
-
-CREATE TABLE radetail (
-  radetail_no int(6) NOT NULL auto_increment,
-  raheader_no int(6) NOT NULL default '0',
-  providerohip_no varchar(12) NOT NULL default '',
-  billing_no int(6) NOT NULL default '0',
-  service_code varchar(5) NOT NULL default '',
-  service_count char(2) NOT NULL default '',
-  hin varchar(12) NOT NULL default '',
-  amountclaim varchar(8) NOT NULL default '',
-  amountpay varchar(8) NOT NULL default '',
-  service_date varchar(12) NOT NULL default '',
-  error_code char(2) NOT NULL default '',
-  billtype char(3) NOT NULL default '',
-  PRIMARY KEY  (radetail_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'raheader'
---
-
-CREATE TABLE raheader (
-  raheader_no int(6) NOT NULL auto_increment,
-  filename varchar(12) NOT NULL default '',
-  paymentdate varchar(8) NOT NULL default '',
-  payable varchar(30) NOT NULL default '',
-  totalamount varchar(10) NOT NULL default '',
-  records varchar(5) NOT NULL default '',
-  claims varchar(5) NOT NULL default '',
-  status char(1) NOT NULL default '',
-  readdate varchar(12) NOT NULL default '',
-  content text,
-  PRIMARY KEY  (raheader_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'recycle_bin'
---
-
-CREATE TABLE recycle_bin (
-  provider_no varchar(6) NOT NULL default '',
-  table_name varchar(30) NOT NULL default '',
-  table_content text,
-  updatedatetime datetime default NULL
-) TYPE=MyISAM;
-
---
--- Table structure for table 'recyclebin'
---
-
-CREATE TABLE recyclebin (
-  recyclebin_no int(12) NOT NULL auto_increment,
-  provider_no varchar(6) default NULL,
-  updatedatetime datetime default NULL,
-  table_name varchar(30) default NULL,
-  keyword varchar(50) default NULL,
-  table_content text,
-  PRIMARY KEY  (recyclebin_no),
-  KEY keyword (keyword)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'remoteAttachments'
---
-
-CREATE TABLE remoteAttachments (
-  demographic_no int(10) default NULL,
-  messageid mediumint(9) default NULL,
-  savedBy varchar(255) default NULL,
-  date date default NULL,
-  time time default NULL
-) TYPE=MyISAM;
-
---
--- Table structure for table 'reportagesex'
---
-
-CREATE TABLE reportagesex (
-  demographic_no int(10) default NULL,
-  age int(4) default '0',
-  roster varchar(4) default '',
-  sex char(2) default '',
-  provider_no varchar(6) default NULL,
-  reportdate date default NULL,
-  status char(2) default '',
-  date_joined date default '0001-01-01'
-) TYPE=MyISAM;
-
---
--- Table structure for table 'reportprovider'
---
-
-CREATE TABLE reportprovider (
-  provider_no varchar(10) default '',
-  team varchar(10) default '',
-  action varchar(20) default '',
-  status char(1) default ''
-) TYPE=MyISAM;
-
---
--- Table structure for table 'reporttemp'
---
-
-CREATE TABLE reporttemp (
-  demographic_no int(10) NOT NULL default '0',
-  edb date NOT NULL default '0001-01-01',
-  demo_name varchar(60) NOT NULL default '',
-  provider_no varchar(6) default NULL,
-  address text,
-  creator varchar(10) default NULL,
-  PRIMARY KEY  (demographic_no,edb)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'rschedule'
---
-
-CREATE TABLE rschedule (
-  provider_no varchar(6) NOT NULL default '',
-  sdate date NOT NULL default '0001-01-01',
-  edate date default NULL,
-  available char(1) NOT NULL default '',
-  day_of_week varchar(30) default NULL,
-  avail_hourB varchar(255) default NULL,
-  avail_hour varchar(230) default NULL,
-  creator varchar(50) default NULL,
-  PRIMARY KEY  (provider_no,sdate,available)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'scheduledate'
---
-
-CREATE TABLE scheduledate (
-  sdate date NOT NULL default '0001-01-01',
-  provider_no varchar(6) NOT NULL default '',
-  available char(1) NOT NULL default '',
-  priority char(1) default NULL,
-  reason varchar(255) default NULL,
-  hour varchar(255) default NULL,
-  creator varchar(50) default NULL,
-  PRIMARY KEY  (sdate,provider_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'scheduledaytemplate'
---
-
-CREATE TABLE scheduledaytemplate (
-  provider_no varchar(6) NOT NULL default '',
-  day date NOT NULL default '0001-01-01',
-  template_name varchar(20) default NULL,
-  PRIMARY KEY  (provider_no,day)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'scheduleholiday'
---
-
-CREATE TABLE scheduleholiday (
-  sdate date NOT NULL default '0001-01-01',
-  holiday_name varchar(100) NOT NULL default '',
-  PRIMARY KEY  (sdate)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'scheduletemplate'
---
-
-CREATE TABLE scheduletemplate (
-  provider_no varchar(6) NOT NULL default '',
-  name varchar(20) NOT NULL default '',
-  summary varchar(80) default NULL,
-  timecode varchar(255) default NULL,
-  PRIMARY KEY  (provider_no,name)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'scheduletemplatecode'
---
-
-CREATE TABLE scheduletemplatecode (
-  code char(1) NOT NULL default '',
-  description varchar(80) default NULL,
-  duration char(3) default '',
-  color varchar(10) default NULL,
-  KEY code (code)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'security'
---
-
-CREATE TABLE security (
-  security_no int(6) NOT NULL auto_increment,
-  user_name varchar(30) NOT NULL default '',
-  password varchar(80) NOT NULL default '',
-  provider_no varchar(6) default NULL,
-  pin varchar(6) default NULL,
-  PRIMARY KEY  (security_no),
-  KEY user_name (user_name)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'serviceSpecialists'
---
-
-CREATE TABLE serviceSpecialists (
-  serviceId int(10) default NULL,
-  specId int(10) default NULL
-) TYPE=MyISAM;
-
---
--- Table structure for table 'specialistsJavascript'
---
-
-CREATE TABLE specialistsJavascript (
-  setId char(1) default NULL,
-  javascriptString text
-) TYPE=MyISAM;
-
---
--- Table structure for table 'study'
---
-
-CREATE TABLE study (
-  study_no int(3) NOT NULL auto_increment,
-  study_name varchar(20) NOT NULL default '',
-  study_link varchar(255) NOT NULL default '',
-  description varchar(255) NOT NULL default '',
-  form_name varchar(30) default NULL,
-  current tinyint(1) default '0',
-  remote_serverurl varchar(50) default NULL,
-  provider_no varchar(6) NOT NULL default '',
-  timestamp timestamp(14) NOT NULL,
-  PRIMARY KEY  (study_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'studydata'
---
-
-CREATE TABLE studydata (
-  studydata_no int(10) NOT NULL auto_increment,
-  demographic_no int(10) NOT NULL default '0',
-  study_no int(3) NOT NULL default '0',
-  provider_no varchar(6) NOT NULL default '',
-  timestamp timestamp(14) NOT NULL,
-  status varchar(30) default NULL,
-  content text,
-  PRIMARY KEY  (studydata_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table `studylogin`
---
-
-CREATE TABLE studylogin (
-  id int(6) NOT NULL auto_increment,
-  provider_no varchar(6) default NULL,
-  study_no int(3) default NULL,
-  remote_login_url varchar(100) default NULL,
-  url_name_username varchar(20) NOT NULL default '',
-  url_name_password varchar(20) NOT NULL default '',
-  username varchar(30) NOT NULL default '',
-  password varchar(100) NOT NULL default '',
-  current tinyint(1) default NULL,
-  creator varchar(6) NOT NULL default '',
-  timestamp timestamp(14) NOT NULL,
-  PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'tickler'
---
-
-CREATE TABLE tickler (
-  tickler_no int(10) NOT NULL auto_increment,
-  demographic_no int(10) default '0',
-  message text,
-  status char(1) default NULL,
-  update_date datetime default '0001-01-01 00:00:00',
-  service_date date default NULL,
-  creator varchar(6) default NULL,
-  PRIMARY KEY  (tickler_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'tmpdiagnosticcode'
---
-
-CREATE TABLE tmpdiagnosticcode (
-  diagnosticcode_no int(5) NOT NULL auto_increment,
-  diagnostic_code varchar(5) NOT NULL default '',
-  description text,
-  status char(1) default NULL,
-  PRIMARY KEY  (diagnosticcode_no)
-) TYPE=MyISAM;
-
---
--- Table structure for table `providerLabRouting`
---
-
-CREATE TABLE providerLabRouting (
-  provider_no varchar(6) NOT NULL default '',
-  lab_no int(10) NOT NULL default '0',
-  status char(1) default '',
-  comment varchar(255) default '',
-  timestamp timestamp(14) NOT NULL,
-  PRIMARY KEY  (provider_no,lab_no)
 ) TYPE=MyISAM;
 
 --
@@ -3511,17 +3106,6 @@ CREATE TABLE mdsPV1 (
   accStatus char(2) default NULL,
   admDateTime char(26) default NULL,
   KEY segmentID (segmentID)
-) TYPE=MyISAM;
-
---
--- Table structure for table `patientLabRouting`
---
-
-CREATE TABLE patientLabRouting (
-  demographic_no int(10) NOT NULL default '0',
-  lab_no int(10) NOT NULL default '0',
-  PRIMARY KEY  (lab_no),
-  KEY demographic (demographic_no)
 ) TYPE=MyISAM;
 
 --
@@ -3637,68 +3221,494 @@ CREATE TABLE mdsZRG (
   KEY segmentID (segmentID)
 ) TYPE=MyISAM;
 
-CREATE TABLE formAdf(
-  ID int(10) NOT NULL  auto_increment,
-  demographic_no int(10) NOT NULL default '0' ,
-  provider_no int(10)  default NULL ,
-  formCreated date  default NULL ,
-  formEdited timestamp   ,
-  c_patientname varchar(60),
-  residentno varchar(20),
-  c_physician varchar(60),
-  c_address varchar(80),
-  c_phone varchar(20),
-  cComplait text,
-  histPresIll text,
-  childhood varchar(80),
-  adult varchar(80),
-  operations varchar(80),
-  injuries varchar(80),
-  mentalIll varchar(80),
-  familyHist text,
-  socialHist text,
-  general varchar(80),
-  histSkin varchar(80),
-  headNeck varchar(80),
-  respiratory varchar(80),
-  cardiovascular varchar(80),
-  gi varchar(80),
-  gu varchar(80),
-  cns varchar(80),
-  histExtremities varchar(80),
-  allergies text,
-  sensitivityDrug text,
-  currentMedication text,
-  temp varchar(80),
-  pulse varchar(80),
-  resp varchar(80),
-  bp varchar(80),
-  height varchar(80),
-  weight varchar(80),
-  physicalCondition text,
-  mentalCondition text,
-  skin varchar(80),
-  eyes varchar(80),
-  ears varchar(80),
-  nose varchar(80),
-  mouthTeeth varchar(80),
-  throat varchar(80),
-  neck varchar(80),
-  chest varchar(80),
-  heart varchar(80),
-  abdomen varchar(80),
-  genitalia varchar(80),
-  lymphatics varchar(80),
-  bloodVessels varchar(80),
-  locomotor varchar(80),
-  extremities varchar(80),
-  rectal varchar(80),
-  vaginal varchar(80),
-  neurological varchar(80),
-  behaviorProblem text,
-  functionalLimitation text,
-  diagnoses text,
-  sigDate date,
-  signature varchar(60),
-  PRIMARY KEY (ID)
+--
+-- Table structure for table `messagelisttbl`
+--
+
+CREATE TABLE messagelisttbl (
+  message mediumint(9) default NULL,
+  provider_no varchar(6) default NULL,
+  status varchar(10) default NULL,
+  remoteLocation int(10) default NULL
 ) TYPE=MyISAM;
+
+--
+-- Table structure for table `messagetbl`
+--
+
+CREATE TABLE messagetbl (
+  messageid mediumint(9) NOT NULL auto_increment,
+  thedate date default NULL,
+  theime time default NULL,
+  themessage text,
+  thesubject varchar(128) default NULL,
+  sentby varchar(62) default NULL,
+  sentto varchar(255) default NULL,
+  sentbyNo varchar(6) default NULL,
+  sentByLocation int(10) default NULL,
+  attachment text,
+  actionstatus char(2) default NULL,
+  PRIMARY KEY  (messageid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mygroup`
+--
+
+CREATE TABLE mygroup (
+  mygroup_no varchar(10) NOT NULL default '',
+  provider_no varchar(6) NOT NULL default '',
+  last_name varchar(30) NOT NULL default '',
+  first_name varchar(30) NOT NULL default '',
+  vieworder char(2) default NULL,
+  PRIMARY KEY  (mygroup_no,provider_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `oscarcommlocations`
+--
+
+CREATE TABLE oscarcommlocations (
+  locationId int(10) NOT NULL default '0',
+  locationDesc varchar(50) NOT NULL default '',
+  locationAuth varchar(30) default NULL,
+  current tinyint(1) NOT NULL default '0',
+  addressBook text,
+  remoteServerURL varchar(30) default NULL,
+  PRIMARY KEY  (locationId)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `patientLabRouting`
+--
+
+CREATE TABLE patientLabRouting (
+  demographic_no int(10) NOT NULL default '0',
+  lab_no int(10) NOT NULL default '0',
+  PRIMARY KEY  (lab_no),
+  KEY demographic (demographic_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `preference`
+--
+
+CREATE TABLE preference (
+  preference_no int(6) NOT NULL auto_increment,
+  provider_no varchar(6) NOT NULL default '',
+  start_hour char(2) default NULL,
+  end_hour char(2) default NULL,
+  every_min char(3) default NULL,
+  mygroup_no varchar(10) default NULL,
+  color_template varchar(10) default NULL,
+  PRIMARY KEY  (preference_no),
+  KEY provider_no (provider_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `prescribe`
+--
+
+CREATE TABLE prescribe (
+  prescribe_no int(12) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  prescribe_date date NOT NULL default '0001-01-01',
+  prescribe_time time NOT NULL default '00:00:00',
+  content text,
+  PRIMARY KEY  (prescribe_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `prescription`
+--
+
+CREATE TABLE prescription (
+  script_no int(10) NOT NULL auto_increment,
+  provider_no varchar(6) default NULL,
+  demographic_no int(10) default NULL,
+  date_prescribed date default NULL,
+  date_printed date default NULL,
+  dates_reprinted text,
+  textView text,
+  PRIMARY KEY  (script_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `professionalSpecialists`
+--
+
+CREATE TABLE professionalSpecialists (
+  specId int(10) NOT NULL auto_increment,
+  fName varchar(32) default NULL,
+  lName varchar(32) default NULL,
+  proLetters varchar(20) default NULL,
+  address varchar(255) default NULL,
+  phone varchar(30) default NULL,
+  fax varchar(30) default NULL,
+  website varchar(128) default NULL,
+  email varchar(128) default NULL,
+  specType varchar(128) default NULL,
+  PRIMARY KEY  (specId)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `property`
+--
+
+CREATE TABLE property (
+  name varchar(255) NOT NULL default '',
+  value varchar(255) default NULL,
+  PRIMARY KEY  (name)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `provider`
+--
+
+CREATE TABLE provider (
+  provider_no varchar(6) NOT NULL default '',
+  last_name varchar(30) NOT NULL default '',
+  first_name varchar(30) NOT NULL default '',
+  provider_type varchar(15) NOT NULL default '',
+  specialty varchar(20) NOT NULL default '',
+  team varchar(20) default '',
+  sex char(1) NOT NULL default '',
+  dob date default NULL,
+  address varchar(40) default NULL,
+  phone varchar(20) default NULL,
+  work_phone varchar(50) default NULL,
+  ohip_no varchar(20) default NULL,
+  rma_no varchar(20) default NULL,
+  billing_no varchar(20) default NULL,
+  hso_no varchar(10) default NULL,
+  status char(1) default NULL,
+  comments text,
+  provider_activity char(3) default NULL,
+  PRIMARY KEY  (provider_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `providerExt`
+--
+
+CREATE TABLE providerExt (
+  provider_no varchar(6) default NULL,
+  signature varchar(255) default NULL
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `providerLabRouting`
+--
+
+CREATE TABLE providerLabRouting (
+  provider_no varchar(6) NOT NULL default '',
+  lab_no int(10) NOT NULL default '0',
+  status char(1) default '',
+  comment varchar(255) default '',
+  timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (provider_no,lab_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `radetail`
+--
+
+CREATE TABLE radetail (
+  radetail_no int(6) NOT NULL auto_increment,
+  raheader_no int(6) NOT NULL default '0',
+  providerohip_no varchar(12) NOT NULL default '',
+  billing_no int(6) NOT NULL default '0',
+  service_code varchar(5) NOT NULL default '',
+  service_count char(2) NOT NULL default '',
+  hin varchar(12) NOT NULL default '',
+  amountclaim varchar(8) NOT NULL default '',
+  amountpay varchar(8) NOT NULL default '',
+  service_date varchar(12) NOT NULL default '',
+  error_code char(2) NOT NULL default '',
+  billtype char(3) NOT NULL default '',
+  PRIMARY KEY  (radetail_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `raheader`
+--
+
+CREATE TABLE raheader (
+  raheader_no int(6) NOT NULL auto_increment,
+  filename varchar(12) NOT NULL default '',
+  paymentdate varchar(8) NOT NULL default '',
+  payable varchar(30) NOT NULL default '',
+  totalamount varchar(10) NOT NULL default '',
+  records varchar(5) NOT NULL default '',
+  claims varchar(5) NOT NULL default '',
+  status char(1) NOT NULL default '',
+  readdate varchar(12) NOT NULL default '',
+  content text,
+  PRIMARY KEY  (raheader_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `recycle_bin`
+--
+
+CREATE TABLE recycle_bin (
+  provider_no varchar(6) NOT NULL default '',
+  table_name varchar(30) NOT NULL default '',
+  table_content text,
+  updatedatetime datetime default NULL
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `recyclebin`
+--
+
+CREATE TABLE recyclebin (
+  recyclebin_no int(12) NOT NULL auto_increment,
+  provider_no varchar(6) default NULL,
+  updatedatetime datetime default NULL,
+  table_name varchar(30) default NULL,
+  keyword varchar(50) default NULL,
+  table_content text,
+  PRIMARY KEY  (recyclebin_no),
+  KEY keyword (keyword)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `remoteAttachments`
+--
+
+CREATE TABLE remoteAttachments (
+  demographic_no int(10) default NULL,
+  messageid mediumint(9) default NULL,
+  savedBy varchar(255) default NULL,
+  date date default NULL,
+  time time default NULL
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `reportagesex`
+--
+
+CREATE TABLE reportagesex (
+  demographic_no int(10) default NULL,
+  age int(4) default '0',
+  roster varchar(4) default '',
+  sex char(2) default '',
+  provider_no varchar(6) default NULL,
+  reportdate date default NULL,
+  status char(2) default '',
+  date_joined date default '0001-01-01'
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `reportprovider`
+--
+
+CREATE TABLE reportprovider (
+  provider_no varchar(10) default '',
+  team varchar(10) default '',
+  action varchar(20) default '',
+  status char(1) default ''
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `reporttemp`
+--
+
+CREATE TABLE reporttemp (
+  demographic_no int(10) NOT NULL default '0',
+  edb date NOT NULL default '0001-01-01',
+  demo_name varchar(60) NOT NULL default '',
+  provider_no varchar(6) default NULL,
+  address text,
+  creator varchar(10) default NULL,
+  PRIMARY KEY  (demographic_no,edb)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `rschedule`
+--
+
+CREATE TABLE rschedule (
+  provider_no varchar(6) NOT NULL default '',
+  sdate date NOT NULL default '0001-01-01',
+  edate date default NULL,
+  available char(1) NOT NULL default '',
+  day_of_week varchar(30) default NULL,
+  avail_hourB varchar(255) default NULL,
+  avail_hour varchar(230) default NULL,
+  creator varchar(50) default NULL,
+  PRIMARY KEY  (provider_no,sdate,available)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `scheduledate`
+--
+
+CREATE TABLE scheduledate (
+  sdate date NOT NULL default '0001-01-01',
+  provider_no varchar(6) NOT NULL default '',
+  available char(1) NOT NULL default '',
+  priority char(1) default NULL,
+  reason varchar(255) default NULL,
+  hour varchar(255) default NULL,
+  creator varchar(50) default NULL,
+  PRIMARY KEY  (sdate,provider_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `scheduledaytemplate`
+--
+
+CREATE TABLE scheduledaytemplate (
+  provider_no varchar(6) NOT NULL default '',
+  day date NOT NULL default '0001-01-01',
+  template_name varchar(20) default NULL,
+  PRIMARY KEY  (provider_no,day)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `scheduleholiday`
+--
+
+CREATE TABLE scheduleholiday (
+  sdate date NOT NULL default '0001-01-01',
+  holiday_name varchar(100) NOT NULL default '',
+  PRIMARY KEY  (sdate)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `scheduletemplate`
+--
+
+CREATE TABLE scheduletemplate (
+  provider_no varchar(6) NOT NULL default '',
+  name varchar(20) NOT NULL default '',
+  summary varchar(80) default NULL,
+  timecode varchar(255) default NULL,
+  PRIMARY KEY  (provider_no,name)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `scheduletemplatecode`
+--
+
+CREATE TABLE scheduletemplatecode (
+  code char(1) NOT NULL default '',
+  description varchar(80) default NULL,
+  duration char(3) default '',
+  color varchar(10) default NULL,
+  KEY code (code)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `security`
+--
+
+CREATE TABLE security (
+  security_no int(6) NOT NULL auto_increment,
+  user_name varchar(30) NOT NULL default '',
+  password varchar(80) NOT NULL default '',
+  provider_no varchar(6) default NULL,
+  pin varchar(6) default NULL,
+  PRIMARY KEY  (security_no),
+  KEY user_name (user_name)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `serviceSpecialists`
+--
+
+CREATE TABLE serviceSpecialists (
+  serviceId int(10) default NULL,
+  specId int(10) default NULL
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `specialistsJavascript`
+--
+
+CREATE TABLE specialistsJavascript (
+  setId char(1) default NULL,
+  javascriptString text
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `study`
+--
+
+CREATE TABLE study (
+  study_no int(3) NOT NULL auto_increment,
+  study_name varchar(20) NOT NULL default '',
+  study_link varchar(255) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
+  form_name varchar(30) default NULL,
+  current tinyint(1) default '0',
+  remote_serverurl varchar(50) default NULL,
+  provider_no varchar(6) NOT NULL default '',
+  timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (study_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `studydata`
+--
+
+CREATE TABLE studydata (
+  studydata_no int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  study_no int(3) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  timestamp timestamp(14) NOT NULL,
+  status varchar(30) default NULL,
+  content text,
+  PRIMARY KEY  (studydata_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `studylogin`
+--
+
+CREATE TABLE studylogin (
+  id int(6) NOT NULL auto_increment,
+  provider_no varchar(6) default NULL,
+  study_no int(3) default NULL,
+  remote_login_url varchar(100) default NULL,
+  url_name_username varchar(20) NOT NULL default '',
+  url_name_password varchar(20) NOT NULL default '',
+  username varchar(30) NOT NULL default '',
+  password varchar(100) NOT NULL default '',
+  current tinyint(1) default NULL,
+  creator varchar(6) NOT NULL default '',
+  timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `tickler`
+--
+
+CREATE TABLE tickler (
+  tickler_no int(10) NOT NULL auto_increment,
+  demographic_no int(10) default '0',
+  message text,
+  status char(1) default NULL,
+  update_date datetime default '0001-01-01 00:00:00',
+  service_date date default NULL,
+  creator varchar(6) default NULL,
+  PRIMARY KEY  (tickler_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `tmpdiagnosticcode`
+--
+
+CREATE TABLE tmpdiagnosticcode (
+  diagnosticcode_no int(5) NOT NULL auto_increment,
+  diagnostic_code varchar(5) NOT NULL default '',
+  description text,
+  status char(1) default NULL,
+  PRIMARY KEY  (diagnosticcode_no)
+) TYPE=MyISAM;
+
