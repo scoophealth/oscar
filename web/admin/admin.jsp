@@ -273,7 +273,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
            <% } else {%>
               <a HREF="#" ONCLICK ="popupPage(600,750,'../report/reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a><br/>
            <% } %>
-              <a href="#" onclick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a>
+              <a href="#" onclick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a><br/>
+              <a href="#" onclick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a>
           </td>
       </tr>
 
