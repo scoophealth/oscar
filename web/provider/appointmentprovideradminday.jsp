@@ -145,12 +145,12 @@ function review(key) {
 function refresh() {
   history.go(0);
 }
-function refresh1() {
+function refresh1() {  
   var u = self.location.href;
   if(u.lastIndexOf("view=1") > 0) {
     self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-    history.go(0);
+  } else {    
+    document.location.reload();
   }
 }
 function onUnbilled(url) {
@@ -161,7 +161,6 @@ function onUnbilled(url) {
 function changeGroup(s) {
 	var newGroupNo = s.options[s.selectedIndex].value;
 	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
-	document.location.reload();
 }
 function ts1(s) {
   popupPage(360,680,('../appointment/addappointment.jsp?'+s));
