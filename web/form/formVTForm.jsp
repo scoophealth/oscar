@@ -543,7 +543,7 @@ function PVDCheck(){
                                             <td colspan="2">
                                                 <table width="95%">
                                                     <tr>
-                                                        <td width="35%">
+                                                        <td width="32%">
                                                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
                                                         </td>
                                                         <html:hidden property="value(MIValue)"/>
@@ -556,7 +556,7 @@ function PVDCheck(){
                                                         <td width="5%" class="sixtyPercent"><html:checkbox property="value(CADValue)"/> CAD</td>
                                                         <td width="5%" class="sixtyPercent"><html:checkbox property="value(CVDValue)"/> CVD</td>
                                                         <td width="5%" class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/> PVD</td>                                                    
-                                                        <td align="right">FP Visit Date (YYYYMMDD) <html:text size="8" property="value(visitCod)"/></td>
+                                                        <td align="right">FP Visit Date (YYYY-MM-DD) <html:text size="8" property="value(visitCod)"/></td>
                                                     </tr>
                                                 </table>                                                
                                             </td>
