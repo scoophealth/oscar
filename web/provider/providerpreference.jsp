@@ -23,6 +23,7 @@ function setfocus() {
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
 }
+<!--
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
 	var i = 0;
@@ -47,21 +48,39 @@ function checkTypeIn(obj) {
 	  alert ("You must type in a number in the field.");
 	}
 }
+-->
+
 function checkTypeInAll() {
   var checkin = false;
   var s=0;
   var e=0;
-  if(checkTypeNum(document.UPDATEPRE.start_hour.value) && checkTypeNum(document.UPDATEPRE.end_hour.value) && checkTypeNum(document.UPDATEPRE.every_min.value)) {
+  var i=0;
+  if(isNumeric(document.UPDATEPRE.start_hour.value) && isNumeric(document.UPDATEPRE.end_hour.value) && isNumeric(document.UPDATEPRE.every_min.value)) {
     s=eval(document.UPDATEPRE.start_hour.value);
     e=eval(document.UPDATEPRE.end_hour.value);
-    if(e < 24 && s <e ) {
-	    checkin = true;
-	  } else {
-	    alert ("Something is wrong with your data!!!");
-	  }
-	} else {
-      alert ("<bean:message key="provider.providerpreference.msgTypeNumbers"/>"); 
-	}
+    i=eval(document.UPDATEPRE.every_min.value);
+    if(e < 24){
+      if(s < e){
+        if(i <= (e - s)*60 && i > 0){
+          checkin = true;
+        }else{
+          alert ("Enter a positive Period less than Start minus End.");
+          this.focus();
+          document.UPDATEPRE.every_min.focus();
+         }
+      }else{
+        alert ("Enter a Start Hour earlier than End Hour.");
+        this.focus();
+        document.UPDATEPRE.start_hour.focus();
+       }
+    }else{
+      alert ("Enter an End Hour less than 24.");
+      this.focus();
+      document.UPDATEPRE.end_hour.focus();
+     }
+  } else {
+     alert ("<bean:message key="provider.providerpreference.msgTypeNumbers"/>"); 
+  }
 	return checkin;
 }
 
@@ -75,6 +94,22 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
+function isNumeric(strString){
+        var validNums = "0123456789";
+        var strChar;
+        var retval = true;
+        if(strString.length == 0){
+          retval = false;
+        }
+        for (i = 0; i < strString.length && retval == true; i++){
+           strChar = strString.charAt(i);
+           if (validNums.indexOf(strChar) == -1){
+              retval = false;
+           }
+        }
+         return retval;
+   }
+
 
 // stop javascript -->
 </script>
@@ -94,13 +129,13 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
               <div align="right"><font face="arial"><bean:message key="provider.preference.formStartHour"/>:</font></div>
             </td>
             <td width="20%"> 
-              <INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" onBlur="checkTypeIn(this)">
+              <INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
               <font size="-2"><bean:message key="provider.preference.hr"/></font> </td>
             <td width="20%"> 
               <div align="right"><font face="arial"><bean:message key="provider.preference.formEndHour"/><font size='-2' color='red'>(<=23)</font> :</font></div>
             </td>
             <td width="25%"> 
-              <INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" onBlur="checkTypeIn(this)">
+              <INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
               <font size="-2"><bean:message key="provider.preference.hr"/></font></td>
           </tr>
           <tr  BGCOLOR="<%=weakcolor%>"> 
@@ -108,7 +143,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
               <div align="right"><font face="arial"><bean:message key="provider.preference.formPeriod"/>:</font></div>
             </td>
             <td width="20%"> 
-              <INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" onBlur="checkTypeIn(this)">
+              <INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
               <font size="-2"><bean:message key="provider.preference.min"/></font> </td>
             <td width="20%"> 
               <div align="right"><font face="arial"><a href=# onClick ="popupPage(360,680,'providercontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' );return false;"> 
