@@ -318,7 +318,7 @@ public class WcbSb {
       + misc.zero(8 + 20 + 5 + 5)
       + misc.space(58) //Part II of Claim 1
       +"WC"
-      + misc.forwardZero(this.w_phn, 12)
+      + misc.backwardZero(this.w_phn, 12)
       + dateFormat(this.w_dob)
       + misc.backwardSpace(this.w_fname, 12)
       + misc.backwardSpace(this.w_mname, 1)
