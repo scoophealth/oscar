@@ -165,6 +165,8 @@ Vascular Tracker (Draft)
     var waist, hip, ratio;    
     var smkSDate, smkHDate, smkCDate;
     var smkSCmt, smkHCmt, smkCCmt;
+    var DpScId, StScId, LcCtId;
+    var MedGId, MedNId, MedRId, MedAId;
     var FTExId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
     var FTExDate, ftNeDate, ftIsDate, ftInDate, ftUlDate, ftOtDate, ftReDate;
     var FTExCmt, ftNeCmt, ftIsCmt, ftInCmt, ftUlCmt, ftOtCmt, ftReCmt;
@@ -235,17 +237,57 @@ function showHideItem(id){
         document.getElementById(id).style.display = 'none'; 
 }
 
-function updateWaistHipRatio(){
-    
-    if (document.forms[0].elements[waist].value=="" || document.forms[0].elements[hip].value==""){
-        document.forms[0].elements[ratio].readOnly = false;
+function updateWaistHip(){
+    var r = document.forms[0].elements[ratio].value;
+    var w = document.forms[0].elements[waist].value;
+    var h = document.forms[0].elements[hip].value;
+
+   if (document.forms[0].elements[waist].value!="" && document.forms[0].elements[ratio].value!="" && document.forms[0].elements[waist].value!=0 && document.forms[0].elements[ratio].value!=0){
+        document.forms[0].elements[ratio].readOnly = true; 
+        document.forms[0].elements[hip].value = parseInt(parseInt(w) / parseFloat(r));       
     }
-    else{
-        var r = document.forms[0].elements[ratio].value;
-        var w = document.forms[0].elements[waist].value;
-        var h = document.forms[0].elements[hip].value;
+    else if (document.forms[0].elements[hip].value!="" && document.forms[0].elements[ratio].value!="" && document.forms[0].elements[hip].value!=0 && document.forms[0].elements[ratio].value!=0){
+        document.forms[0].elements[ratio].readOnly = true; 
+        document.forms[0].elements[waist].value = parseInt(parseFloat(r) / parseInt(h));
+    }
+    else{                
+        document.forms[0].elements[ratio].readOnly = false;        
+    }
+}
+
+function updateWaistAndRatio(){
+    var r = document.forms[0].elements[ratio].value;
+    var w = document.forms[0].elements[waist].value;
+    var h = document.forms[0].elements[hip].value;
+
+     if (document.forms[0].elements[waist].value!="" && document.forms[0].elements[hip].value!="" && document.forms[0].elements[waist].value!=0 && document.forms[0].elements[hip].value!=0){
+        document.forms[0].elements[ratio].readOnly = true;
         document.forms[0].elements[ratio].value = parseInt(w) / parseInt(h);
-        document.forms[0].elements[ratio].readOnly = true;        
+    }
+    else if (document.forms[0].elements[hip].value!="" && document.forms[0].elements[ratio].value!="" && document.forms[0].elements[hip].value!=0 && document.forms[0].elements[ratio].value!=0){
+        document.forms[0].elements[ratio].readOnly = false; 
+        document.forms[0].elements[waist].value = parseInt(parseFloat(r) / parseInt(h));
+    }
+    else{                
+        document.forms[0].elements[ratio].readOnly = false;        
+    }
+}
+
+function updateHipAndRatio(){
+    var r = document.forms[0].elements[ratio].value;
+    var w = document.forms[0].elements[waist].value;
+    var h = document.forms[0].elements[hip].value;
+
+    if (document.forms[0].elements[waist].value!="" && document.forms[0].elements[hip].value!="" && document.forms[0].elements[waist].value!=0 && document.forms[0].elements[hip].value!=0){
+        document.forms[0].elements[ratio].readOnly = true;
+        document.forms[0].elements[ratio].value = parseInt(w) / parseInt(h);
+    }
+    else if (document.forms[0].elements[waist].value!="" && document.forms[0].elements[ratio].value!="" && document.forms[0].elements[waist].value!=0 && document.forms[0].elements[ratio].value!=0){
+        document.forms[0].elements[ratio].readOnly = false; 
+        document.forms[0].elements[hip].value = parseInt(parseInt(w) / parseFloat(r));       
+    }
+    else{                
+        document.forms[0].elements[ratio].readOnly = false;        
     }
 }
 
@@ -386,6 +428,15 @@ function initialize(){
             case 'value(SmkSComments)': smkSCmt = i;  break;
             case 'value(SmkHComments)': smkHCmt = i;  break;
             case 'value(SmkCComments)': smkCCmt = i;  break;
+            
+            case 'value(DpScValue)': DpScId = i;  break;
+            case 'value(StScValue)': StScId = i;  break;
+            case 'value(LcCtValue)': LcCtId = i;  break;
+                        
+            case 'value(MedGValue)': MedGId = i;  break;
+            case 'value(MedNValue)': MedNId = i;  break;
+            case 'value(MedRValue)': MedRId = i;  break;
+            case 'value(MedAValue)': MedAId = i;  break;
             
             case 'value(FTExValue)': FTExId = i;  break;
             case 'value(FTNeValue)': ftNeId = i;  break;
@@ -790,6 +841,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(DpScValue)" value="yes" />Yes
                                                         <html:radio property="value(DpScValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(DpScId, DpScId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(DpScDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(DpScComments)" size="30%" tabindex="9999"/></td>
@@ -806,6 +858,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(StScValue)" value="yes" />Yes 
                                                         <html:radio property="value(StScValue)" value="no" />No 
+                                                        <a title="clear all" href="javascript:clearAll(StScId, StScId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(StScDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(StScComments)" size="30%"tabindex="9999"/></td>
@@ -822,6 +875,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(LcCtValue)" value="yes" />Yes 
                                                         <html:radio property="value(LcCtValue)" value="no" />No 
+                                                        <a title="clear all" href="javascript:clearAll(LcCtId, LcCtId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(LcCtDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(LcCtComments)" size="30%" tabindex="9999"/></td>
@@ -859,6 +913,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedGValue)" value="yes" />Yes 
                                                         <html:radio property="value(MedGValue)" value="no" />No 
+                                                        <a title="clear all" href="javascript:clearAll(MedGId, MedGId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(MedGDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedGComments)" size="30%" tabindex="9999"/></td>
@@ -875,6 +930,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedNValue)" value="yes" />Yes 
                                                         <html:radio property="value(MedNValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(MedNId, MedNId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(MedNDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedNComments)" size="30%" tabindex="9999"/></td>
@@ -891,6 +947,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedRValue)" value="yes" />Yes 
                                                         <html:radio property="value(MedRValue)" value="no" />No 
+                                                        <a title="clear all" href="javascript:clearAll(MedRId, MedRId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(MedRDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedRComments)" size="30%" tabindex="9999"/></td>
@@ -907,6 +964,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedAValue)" value="yes" />Yes
                                                         <html:radio property="value(MedAValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(MedAId, MedAId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(MedADate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedAComments)" size="30%" tabindex="9999"/></td>
@@ -967,7 +1025,7 @@ function clearAll(yRadio, nRadio){
                                                         </logic:present>
                                                         
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%" onfocus="javascript: updateWaistHipRatio();"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%" onchange="javascript: updateWaistHip();"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
@@ -983,7 +1041,7 @@ function clearAll(yRadio, nRadio){
                                                         </logic:present>
                                                         
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%" onchange="javascript: updateWaistHipRatio();"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%" onchange="javascript: updateHipAndRatio();"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
@@ -999,7 +1057,7 @@ function clearAll(yRadio, nRadio){
                                                         </logic:present>
                                                         
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistHipRatio();"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistAndRatio();"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>                                                 
