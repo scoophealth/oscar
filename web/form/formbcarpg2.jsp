@@ -868,7 +868,7 @@ function calToday(field) {
           <!--input type="text" name="ar2_labAfpTS" style="width:100%" size="10" maxlength="10" value="<%--= props.getProperty("ar2_labAfpTS", "") --%>" @oscar.formDB /-->
           <select name="ar2_labAfpTS">
           <%
-          String[] optAfp = {"", "Neg", "Pos", "+ve", "-ve", "declined"}; 
+          String[] optAfp = {"", "Neg", "Pos","declined"}; 
           for (int i=0; i<optAfp.length; i++) {
           %>
             <option value="<%=optAfp[i]%>" <%=props.getProperty("ar2_labBlood", "").equals(optAfp[i])?"selected":""%> ><%=optAfp[i]%></option>
