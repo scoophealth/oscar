@@ -740,7 +740,7 @@ function calToday(field) {
      <tr><th align='right'><a href=# onclick="showHideBox('BMIdiv',0); return false;"><font color="red">X</font></a></th></tr>
      <tr><td><a href=# onclick="showHideBox('BMIdiv',0); return false;">
      <font color="#66FF66">The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell. <br>
-      If putting in weight or hight in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the hight or weight cells (kg.) or it will not calculate the BMI.</font><br>&nbsp;</a>
+      If putting in weight or height in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the height or weight cells (kg.) or it will not calculate the BMI.</font><br>&nbsp;</a>
      </td></tr>
    </table>
 </div>
@@ -1084,7 +1084,7 @@ function calToday(field) {
           <input type="text" name="c_ppHt" onDblClick="htEnglish2Metric();" class="spe" style="width:100%;" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>"  />
 		  </td>
 		  <td width="12%">
-		  <a href=# onClick="showBMIBox('BMIdiv',1, this, event);return false;" title='The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell.  If putting in weight or hight in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the hight or weight cells (kg.) or it will not calculate the BMI.'>
+		  <a href=# onClick="showBMIBox('BMIdiv',1, this, event);return false;" title='The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell.  If putting in weight or height in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the height or weight cells (kg.) or it will not calculate the BMI.'>
 		  <font color='red'><b>BMI</b></color></a><br>
           <input type="text" name="c_ppBMI" onDblClick="calcBMIMetric();" class="spe" style="width:100%;" size="5" maxlength="5" value="<%= props.getProperty("c_ppBMI", "") %>" />
 		  </td>
