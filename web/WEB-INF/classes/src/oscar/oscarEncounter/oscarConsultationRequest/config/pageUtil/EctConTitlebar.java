@@ -28,25 +28,47 @@ import java.io.PrintStream;
 import java.util.Vector;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ResourceBundle;
 
 public class EctConTitlebar
 {
 
     public EctConTitlebar()
     {
+    	ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources");
+    	
         jspVect = new Vector();
         displayNameVect = new Vector();
         jspVect.add("AddSpecialist.jsp");
-        displayNameVect.add("Add Specialist");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnAddSpecialist"));
         jspVect.add("AddService.jsp");
-        displayNameVect.add("Add Service");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnAddService"));
         jspVect.add("EditSpecialists.jsp");
-        displayNameVect.add("Edit Specialists");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnEditSpecialists"));
         jspVect.add("ShowAllServices.jsp");
-        displayNameVect.add("Show All Services");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnShowAllServices"));
         jspVect.add("DeleteServices.jsp");
-        displayNameVect.add("Delete Services");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnDeleteServices"));
     }
+
+    public EctConTitlebar(HttpServletRequest request)
+    {
+    	ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
+    	
+        jspVect = new Vector();
+        displayNameVect = new Vector();
+        jspVect.add("AddSpecialist.jsp");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnAddSpecialist"));
+        jspVect.add("AddService.jsp");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnAddService"));
+        jspVect.add("EditSpecialists.jsp");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnEditSpecialists"));
+        jspVect.add("ShowAllServices.jsp");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnShowAllServices"));
+        jspVect.add("DeleteServices.jsp");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnDeleteServices"));
+    }
+
 
     public String estBar(HttpServletRequest request)
     {
