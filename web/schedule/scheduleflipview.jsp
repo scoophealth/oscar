@@ -81,8 +81,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
-function t(s1,s2,s3,s4,s5) {
-  popupPage(360,680,('../appointment/addappointment.jsp?provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time=&duration='+s5 ) );
+function t(s1,s2,s3,s4,s5,s6) {
+  popupPage(360,680,('../appointment/addappointment.jsp?provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
 }
 </SCRIPT>
 
@@ -200,12 +200,20 @@ function t(s1,s2,s3,s4,s5) {
   cal.add(cal.DATE, -31);
   StringBuffer temp = null;
   String strTempDate = null;
+
   for(int i=0; i<31; i++) {
     temp = new StringBuffer();
 	  bgcolor = cal.get(Calendar.DAY_OF_WEEK)==7||cal.get(Calendar.DAY_OF_WEEK)==1?"#EEEEFF":(i%2==0?rColor1:rColor2);
 	  //bgcolor = cal.get(Calendar.DAY_OF_WEEK)==7?"#FFF68F":cal.get(Calendar.DAY_OF_WEEK)==1?"#FFF68F":(i%2==0?rColor1:rColor2);
     temp = temp.append(cal.get(Calendar.YEAR)).append("-").append(cal.get(Calendar.MONTH)+1).append("-").append(cal.get(Calendar.DATE));
     strTempDate = inform.format(inform.parse(temp.toString()));
+
+    /* This calendar will set the end_time of a appointment */
+    Calendar appointmentTime = Calendar.getInstance();
+    appointmentTime.set(appointmentTime.HOUR_OF_DAY, nStartTime);
+    appointmentTime.set(appointmentTime.MINUTE, 0);
+    /* this -1 is explained below */
+    appointmentTime.add(appointmentTime.MINUTE, -1);
 %>  
 	<tr align="center" bgcolor="<%=bgcolor%>"><td align="right" nowrap>
 	<a href="<%=request.getParameter("originalpage")%>?year=<%=cal.get(Calendar.YEAR)%>&month=<%=cal.get(Calendar.MONTH)+1%>&day=<%=cal.get(Calendar.DATE)%>&view=0&displaymode=day&dboperation=searchappointmentday"><%=outform.format(inform.parse(strTempDate) )%>&nbsp;</a></td>
@@ -214,6 +222,10 @@ function t(s1,s2,s3,s4,s5) {
   for(int j=0; j<colscode; j++) {
 	hour = (nStartTime*60 + j*nStep)/60;
 	min = j*nStep%60;
+	/* This appoint will finish one minute before the next appointment
+	   To do this minute before, set -1 outside this loop
+	 */
+	appointmentTime.add(appointmentTime.MINUTE, nStep);
     if(DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))!=null ) {
 	  int nLen = 24*60 / ((String) DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))).length();
 	  int ratio = (hour*60+min)/nLen;
@@ -230,7 +242,7 @@ function t(s1,s2,s3,s4,s5) {
 	}
 %>  
     <td <%=DateTimeCodeBean.get("color"+temp.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+temp.toString()) ):""%> title="<%=hour+":"+(min<10?"0":"")+min%>">
-	<a href=# onClick ="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;" >
+	<a href=# onClick ="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(appointmentTime.HOUR_OF_DAY)%>:<%=appointmentTime.get(appointmentTime.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;" >
 <%=temp.toString()%></a></td>
 <%
   }
