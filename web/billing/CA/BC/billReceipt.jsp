@@ -212,8 +212,7 @@ function showHideLayers() { //v3.0
 
 
 
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')">
-
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')" onunload="self.opener.refresh();">
 <table name="innerTable" border="0">
     <tr>
         <td rowspan=3>
@@ -393,17 +392,69 @@ function showHideLayers() { //v3.0
               </tr>
             </table>
             <table width="100%" border="0">
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td align="right">
+              <tr>  
+                <td align="right" colspan="4">
                    <html:form action="/billing/CA/BC/SaveBilling" >  
-                      <input type="button" name="Submit" value="Print Bill" onClick="javascript:window.print()">
-                      <input type="button" name="Submit2" value="Cancel" onClick="javascript:window.close()">
+                      <input class="header" type="button" name="Submit" value="Print Bill" onClick="javascript:window.print()">
+                      <input class="header" type="button" name="Submit2" value="Cancel" onClick="javascript:window.close()">
                    </html:form>
                 </td>
+                
               </tr>
+              
+              <tr bgcolor="#EAEAFF"class="header"> 
+                <td height="14" colspan="4" class="header">Update Bill</td>                
+              </tr>
+              
+              <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>                
+                 <td class="header" >
+                    Billing Notes:
+                 </td>   
+                 <td colspan="2" class="header">&nbsp;Bill Status
+                    &nbsp;
+                 </td>
+              </tr>
+              <html:form action="/billing/CA/BC/UpdateBilling" > 
+              <%
+              BillingUpdateBillingForm frm = (BillingUpdateBillingForm) request.getAttribute("BillingUpdateBillingForm");
+              frm.setMessageNotes( bean.getMessageNotes() );
+              frm.setBillingNo(bean.getBillingNo());
+              //bean.getBilling      
+              
+              %>
+              <tr>
+                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>                
+                 <td rowspan="2" >                    
+                    <html:hidden property="billingMasterNo" />
+                    <html:hidden property="billingNo"/>
+                    <html:textarea cols="60" rows="5" property="messageNotes" styleClass="header"></html:textarea></td>
+                 <td colspan="1" valign="top">
+                    <html:select style="font-size:80%;" property="status" styleClass="header">                        
+                       <html:option value="O" >O | Bill MSP</html:option>
+                       <html:option value="P" >P | Bill Patient</html:option>
+                       <html:option value="N" >N | Do Not Bill</html:option>                                
+                       <html:option value="B" >B | Summitted MSP</html:option>
+                       <html:option value="S" >S | Settled/Paid by MSP</html:option>
+                       <html:option value="X" >X | Bad Debt</html:option>
+                       <html:option value="D" >D | Deleted Bill</html:option>          
+                       <html:option value="T" >T | Transfer to Collection</html:option>          
+
+                       <html:option value="R" >R | Rejected Bill</html:option>          
+                       <html:option value="Z" >Z | Held Bill</html:option>          
+                       <html:option value="C" >C | Data Center Changed</html:option>                            
+                       <html:option value="E" >E | Paid With Explanation</html:option>          
+                       <html:option value="F" >F | Refused Bill</html:option>              
+                    </html:select>
+                 </td>
+                 <td>&nbsp;</td>
+                 
+              </tr>
+              <tr>
+                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                 <td colspan="2" align="right" valign="bottom"><input type="submit" value="Update Bill" class="header"/>&nbsp;</td>                                     
+              </tr>
+              </html:form>
             </table>
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
