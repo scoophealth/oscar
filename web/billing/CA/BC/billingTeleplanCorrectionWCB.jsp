@@ -343,7 +343,7 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 		<table width="100%">
 				<tr>
 					<td class="FormLabel">Disabled from Work:</td>
-					<td><html:text  property="w_work" value="<%=form.getW_work()%>" />drop box</td>
+					<td><html:text  property="w_work" value="<%=form.getW_work()%>" /></td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Date Of Injury:</td>
