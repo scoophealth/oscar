@@ -36,7 +36,38 @@
                     type="oscar.oscarMessenger.pageUtil.ClearMessageForm"/>
 
     <!-- oscarRx form bean -->
+    <form-bean      name="RxChoosePatientForm"
+                    type="oscar.oscarRx.pageUtil.RxChoosePatientForm"/>
+    <form-bean      name="RxSearchDrugForm"
+                    type="oscar.oscarRx.pageUtil.RxSearchDrugForm"/>
+    <form-bean      name="RxChooseDrugForm"
+                    type="oscar.oscarRx.pageUtil.RxChooseDrugForm"/>
+    <form-bean      name="RxWriteScriptForm"
+                    type="oscar.oscarRx.pageUtil.RxWriteScriptForm"/>
+    <form-bean      name="RxStashForm"
+                    type="oscar.oscarRx.pageUtil.RxStashForm"/>
+    <form-bean      name="RxAddFavoriteForm"
+                    type="oscar.oscarRx.pageUtil.RxAddFavoriteForm"/>
+    <form-bean      name="RxUseFavoriteForm"
+                    type="oscar.oscarRx.pageUtil.RxUseFavoriteForm"/>
+    <form-bean      name="RxUpdateFavoriteForm"
+                    type="oscar.oscarRx.pageUtil.RxUpdateFavoriteForm"/>
+    <form-bean      name="RxDeleteFavoriteForm"
+                    type="oscar.oscarRx.pageUtil.RxDeleteFavoriteForm"/>
+    <form-bean      name="RxSuggestAliasForm"
+                    type="oscar.oscarRx.pageUtil.RxSuggestAliasForm"/>                    
+    <form-bean      name="RxRePrescribeForm"
+                    type="oscar.oscarRx.pageUtil.RxDrugListForm"/>
+    <form-bean      name="RxClearPendingForm"
+                    type="oscar.oscarRx.pageUtil.RxClearPendingForm" />
+    <form-bean      name="RxSearchAllergyForm"
+                    type="oscar.oscarRx.pageUtil.RxSearchAllergyForm" />
+    <form-bean      name="RxAddAllergyForm"
+                    type="oscar.oscarRx.pageUtil.RxAddAllergyForm" />                    
+    <form-bean      name="RxDeleteRxForm"
+                    type="oscar.oscarRx.pageUtil.RxDrugListForm"/>
 
+    
     <!-- oscarEncounter form bean -->
     <!--form-bean      name="EctSaveEncounterForm"
                     type="oscar.oscarEncounter.pageUtil.EctSaveEncounterForm"/-->
@@ -235,6 +266,152 @@
 
     <!-- Edit oscarRx -->
 
+    <action     path="/oscarRx/choosePatient"
+                type="oscar.oscarRx.pageUtil.RxChoosePatientAction"
+                name="RxChoosePatientForm"
+                scope="request">
+        <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+    </action>
+    <action     path="/oscarRx/searchDrug"
+                type="oscar.oscarRx.pageUtil.RxSearchDrugAction"
+                name="RxSearchDrugForm"
+                scope="request"
+                input="/oscarRx/SearchDrug.jsp">
+        <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
+    </action>
+    <action     path="/oscarRx/chooseDrug"
+                type="oscar.oscarRx.pageUtil.RxChooseDrugAction"
+                name="RxChooseDrugForm"
+                scope="request"
+                input="/oscarRx/ChooseDrug.jsp">
+        <forward name="success" path="/oscarRx/WriteScript.jsp" />
+    </action>
+    <action     path="/oscarRx/viewScript"
+                type="oscar.oscarRx.pageUtil.RxViewScriptAction"
+                name=""
+                scope="request"
+                input="/oscarRx/SearchDrug.jsp">
+        <forward name="viewScript" path="/oscarRx/ViewScript.jsp" />
+    </action>
+    <action     path="/oscarRx/writeScript"
+                type="oscar.oscarRx.pageUtil.RxWriteScriptAction"
+                name="RxWriteScriptForm"
+                scope="request"
+                input="/oscarRx/WriteScript.jsp">
+        <forward name="refresh" path="/oscarRx/WriteScript.jsp" />
+        <forward name="addAnother" path="/oscarRx/SearchDrug.jsp" />
+        <forward name="viewScript" path="/oscarRx/ViewScript.jsp" />
+    </action>
+    <action     path="/oscarRx/stash"
+                type="oscar.oscarRx.pageUtil.RxStashAction"
+                name="RxStashForm"
+                scope="request"
+                input="/oscarRx/WriteScript.jsp">
+        <forward name="success" path="/oscarRx/WriteScript.jsp" />
+    </action>
+    <action     path="/oscarRx/useFavorite"
+                type="oscar.oscarRx.pageUtil.RxUseFavoriteAction"
+                name="RxUseFavoriteForm"
+                scope="request">
+        <forward name="success" path="/oscarRx/WriteScript.jsp" />
+    </action>
+   <action      path="/oscarRx/addFavoriteStaticScript"
+                type="oscar.oscarRx.pageUtil.RxAddFavoriteAction"
+                name="RxAddFavoriteForm"
+                scope="request"
+                input="/oscarRx/StaticScript.jsp">
+        <forward name="success" path="/oscarRx/StaticScript.jsp" />
+    </action>
+    <action     path="/oscarRx/addFavoriteViewScript"
+                type="oscar.oscarRx.pageUtil.RxAddFavoriteAction"
+                name="RxAddFavoriteForm"
+                scope="request"
+                input="/oscarRx/ViewScript.jsp">
+        <forward name="success" path="/oscarRx/ViewScript.jsp" />
+    </action>
+    <action     path="/oscarRx/addFavoriteWriteScript"
+                type="oscar.oscarRx.pageUtil.RxAddFavoriteAction"
+                name="RxAddFavoriteForm"
+                scope="request"
+                input="/oscarRx/WriteScript.jsp">
+        <forward name="success" path="/oscarRx/WriteScript.jsp" />
+    </action>
+    <action     path="/oscarRx/updateFavorite"
+                type="oscar.oscarRx.pageUtil.RxUpdateFavoriteAction"
+                name="RxUpdateFavoriteForm"
+                scope="request"
+                input="/oscarRx/EditFavorites.jsp">
+        <forward name="success" path="/oscarRx/EditFavorites.jsp" />
+    </action>
+    <action     path="/oscarRx/deleteFavorite"
+                type="oscar.oscarRx.pageUtil.RxDeleteFavoriteAction"
+                name="RxDeleteFavoriteForm"
+                scope="request"
+                input="/oscarRx/EditFavorites.jsp">
+        <forward name="success" path="/oscarRx/EditFavorites.jsp" />
+    </action>
+    <action     path="/oscarRx/rePrescribe"
+                type="oscar.oscarRx.pageUtil.RxRePrescribeAction"
+                name="RxRePrescribeForm"
+                scope="request"
+                input="/oscarRx/SearchDrug.jsp">
+        <forward name="success" path="/oscarRx/WriteScript.jsp" />
+    </action>
+    <action     path="/oscarRx/deleteRx"
+                type="oscar.oscarRx.pageUtil.RxDeleteRxAction"
+                name="RxDeleteRxForm"
+                scope="request"
+                input="/oscarRx/SearchDrug.jsp">
+        <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+    </action>
+    <action     path="/oscarRx/clearPending"
+                type="oscar.oscarRx.pageUtil.RxClearPendingAction"
+                name="RxClearPendingForm"
+                scope="request"
+                input="/oscarRx/ViewScript.jsp">
+        <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+        <forward name="close" path="/oscarRx/close.html" />
+    </action>
+    <action     path="/oscarRx/searchAllergy"
+                type="oscar.oscarRx.pageUtil.RxSearchAllergyAction"
+                name="RxSearchAllergyForm"
+                scope="request"
+                input="/oscarRx/ChooseAllergy.jsp">
+        <forward name="success" path="/oscarRx/ChooseAllergy.jsp" />
+    </action>
+    <action     path="/oscarRx/addAllergy"
+                type="oscar.oscarRx.pageUtil.RxAddAllergyAction"
+                name="RxAddAllergyForm"
+                scope="request"
+                input="/oscarRx/ChooseAllergy.jsp">
+        <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
+    </action>
+    <action     path="/oscarRx/addReaction"
+                type="oscar.oscarRx.pageUtil.RxAddReactionAction"
+                name=""
+                scope="request"
+                input="/oscarRx/ChooseAllergy.jsp">
+        <forward name="success" path="/oscarRx/AddReaction.jsp" />
+    </action>
+    <action     path="/oscarRx/deleteAllergy"
+                type="oscar.oscarRx.pageUtil.RxDeleteAllergyAction"
+                name=""
+                scope="request"
+                input="/oscarRx/ChooseAllergy.jsp">
+        <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
+    </action>
+    
+    
+    <action     path="/oscarRx/drugInfo"
+                type="oscar.oscarRx.pageUtil.RxDrugInfoAction"
+                name=""
+                scope="request"
+                input="/oscarRx/ChooseDrug.jsp">
+        <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+    </action>
+    
+
+    
 
 
 
