@@ -128,7 +128,8 @@ public class EctAddMeasuringInstructionAction extends Action {
         }            
         
         MessageResources mr = getResources(request);
-        String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasurementType.successful");
+        String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasuringInstruction.successful", "!");
+        //String msg = "Measuring Instruction has been added successfully!";
         messages.add(msg);
         request.setAttribute("messages", messages);                
         return mapping.findForward("success");
