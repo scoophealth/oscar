@@ -1279,6 +1279,27 @@ function controlEyeExam(){
                                                  </tr>
                                             </table></td>
                                         </tr>
+                                        <tr>
+                                            <th class="title" colspan="5">
+                                            Drug Profile <a href="javascript: showHideItem('drugs');"> >> </a>
+                                            </th>
+                                        </tr>
+                                         <tr>
+                                            <td colspan="5"><table style="display:none" cellpadding='1' cellspacing='0' id="drugs">
+                                            <tr>
+                                                <td>
+                                                    <logic:present name="drugs">
+                                                        <logic:iterate id="drg" name="drugs">
+                                                            <bean:write name="drg"/><br>
+                                                        </logic:iterate>
+                                                    </logic:present>
+                                                    <logic:notPresent name="drugs">
+                                                        No Drug in the current drug profile
+                                                    </logic:notPresent>
+                                                </td>
+                                            </tr>
+                                            </td>
+                                        </tr>
                                 </td>   
                             </tr>
                         </table>
