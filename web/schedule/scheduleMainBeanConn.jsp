@@ -28,8 +28,8 @@
     
     {"add_scheduletemplatecode", "insert into scheduletemplatecode values(?,?,?,?)" }, 
     {"search_scheduletemplatecode", "select * from scheduletemplatecode order by code" }, 
-    {"search_scheduletemplatecodesingle", "select * from scheduletemplatecode where code = ?" }, 
-    {"delete_scheduletemplatecode", "delete from scheduletemplatecode where code = ?" }, 
+    {"search_scheduletemplatecodesingle", "select * from scheduletemplatecode where code like binary ?" }, 
+    {"delete_scheduletemplatecode", "delete from scheduletemplatecode where code like binary ?" }, 
     
     {"add_scheduletemplate", "insert into scheduletemplate values(?,?,?,?)" }, 
     //{"search_scheduletemplate", "select * from scheduletemplate where provider_no=? order by ?" }, 
