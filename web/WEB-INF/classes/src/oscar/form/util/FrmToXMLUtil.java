@@ -46,7 +46,7 @@ public class FrmToXMLUtil{
     */
     public static String convertToXml(Vector measurementTypes, Properties nameProps, Properties dataProps){
         // TODO code application logic here            
-        String _dateFormat = "yyyy/MM/dd";
+        String _dateFormat = "yyyy-MM-dd hh:mm:ss";
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         
         SitePatientVisitRecordsDocument visitDocument = SitePatientVisitRecordsDocument.Factory.newInstance();
