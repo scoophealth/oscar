@@ -61,7 +61,7 @@ String [][] dbQueries=new String[][] {
 <title>
 <bean:message key="eform.myform.title"/>
 </title>
-<link rel="stylesheet" type="text/css" href="eformStyle.css">
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <script type="text/javascript">
 
 

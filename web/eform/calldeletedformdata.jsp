@@ -57,7 +57,7 @@
 <title>
 <bean:message key="eform.calldeletedformdata.title"/>
 </title>
-<link rel="stylesheet" type="text/css" href="eformStyle.css">
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <script type="text/javascript">
 
 
