@@ -11,6 +11,7 @@ import org.apache.struts.action.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.OscarProperties;
 
 public class EctConsultationFormRequestAction extends Action {
 
@@ -60,7 +61,18 @@ public class EctConsultationFormRequestAction extends Action {
                             +"','"+str.q(status)+"','"+str.q(statusText)+"','"+str.q(sendTo)+"','"+str.q(concurrentProblems)+"','"+urg+"')";
                 System.out.println(" sql statement "+sql);
                 db.RunSQL(sql);
-                ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+
+		/* select the correct db specific command */
+                String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
+                String dbSpecificCommand;
+                if (db_type.equalsIgnoreCase("mysql")) {
+                            dbSpecificCommand = "SELECT LAST_INSERT_ID()";
+                } else if (db_type.equalsIgnoreCase("postgresql")){
+                            dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
+                } else
+                            throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+
+                ResultSet rs = db.GetSQL(dbSpecificCommand);
                 if(rs.next())
                     requestId = Integer.toString(rs.getInt(1));
                 db.CloseConn();
