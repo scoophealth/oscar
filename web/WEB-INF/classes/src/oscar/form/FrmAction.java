@@ -1,29 +1,18 @@
 /*
- *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- *
- * This software was written for the
- * Department of Family Medicine
- * McMaster University
- * Hamilton
- * Ontario, Canada
+ * This software is published under the GPL GNU General Public License. This program is free
+ * software; you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version. * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details. * * You should have
+ * received a copy of the GNU General Public License along with this program; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * <OSCAR
+ * TEAM> This software was written for the Department of Family Medicine McMaster University
+ * Hamilton Ontario, Canada
  */
 // form_class - a part of class name
 // c_lastVisited, formId - if the form has multiple pages
-
 package oscar.form;
 
 import java.io.IOException;
@@ -40,84 +29,65 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 public final class FrmAction extends Action {
-   public ActionForward execute(
-   ActionMapping mapping,
-   ActionForm form,
-   HttpServletRequest request,
-   HttpServletResponse response)
-   throws ServletException, IOException {
-      int newID = 0;
-      FrmRecord rec = null;
-      String where = "";
-      
-      try {
-         FrmRecordFactory recorder = new FrmRecordFactory();
-         rec = recorder.factory(request.getParameter("form_class"));
-         Properties props = new Properties();
-         
-         boolean bMulPage =
-         request.getParameter("c_lastVisited") != null ? true : false;
-         String name;
-         
-         if (bMulPage) {
-            String curPageNum = request.getParameter("c_lastVisited");
-            String commonField =
-            request.getParameter("commonField") != null
-            ? request.getParameter("commonField")
-            : "&'";
-            curPageNum =
-            curPageNum.length() > 3
-            ? ("" + curPageNum.charAt(0))
-            : curPageNum;
-            
-            //copy an old record
-            props =
-            rec.getFormRecord(
-            Integer.parseInt(
-            request.getParameter("demographic_no")),
-            Integer.parseInt(request.getParameter("formId")));
-            
-            //empty the current page
-            for (Enumeration enum = props.propertyNames();
-            enum.hasMoreElements();
-            ) {
-               name = (String) enum.nextElement();
-               if (name.startsWith(curPageNum + "_")
-               || name.startsWith(commonField)) {
-                  props.remove(name);
-               }
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        int newID = 0;
+        FrmRecord rec = null;
+        String where = "";
+
+        try {
+            FrmRecordFactory recorder = new FrmRecordFactory();
+            rec = recorder.factory(request.getParameter("form_class"));
+            Properties props = new Properties();
+
+            boolean bMulPage = request.getParameter("c_lastVisited") != null ? true : false;
+            String name;
+
+            if (bMulPage) {
+                String curPageNum = request.getParameter("c_lastVisited");
+                String commonField = request.getParameter("commonField") != null ? request
+                        .getParameter("commonField") : "&'";
+                curPageNum = curPageNum.length() > 3 ? ("" + curPageNum.charAt(0)) : curPageNum;
+
+                //copy an old record
+                props = rec.getFormRecord(Integer.parseInt(request.getParameter("demographic_no")), Integer
+                        .parseInt(request.getParameter("formId")));
+
+                //empty the current page
+                Properties currentParam = new Properties();
+                for (Enumeration enum = request.getParameterNames(); enum.hasMoreElements();) {
+                    name = (String) enum.nextElement();
+                    currentParam.setProperty(name, "");
+                }
+                for (Enumeration enum = props.propertyNames(); enum.hasMoreElements();) {
+                    name = (String) enum.nextElement();
+                    // kick off the current page elements, commonField on the current page
+                    if (name.startsWith(curPageNum + "_")
+                            || (name.startsWith(commonField) && currentParam.containsKey(name))) {
+                        props.remove(name);
+                    }
+                }
             }
-         }
-         
-         //update the current record
-         for (Enumeration enum = request.getParameterNames();
-         enum.hasMoreElements();
-         ) {
-            name = (String) enum.nextElement();
-            props.setProperty(name, request.getParameter(name));
-         }
-         
-         props.setProperty(
-         "provider_no",
-         (String) request.getSession().getAttribute("user"));
-         newID = rec.saveFormRecord(props);
-         
-         String strAction =
-         rec.findActionValue(request.getParameter("submit"));
-         ActionForward af = mapping.findForward(strAction);
-         where = af.getPath();
-         where =
-         rec.createActionURL(
-         where,
-         strAction,
-         request.getParameter("demographic_no"),
-         "" + newID);
-         
-      } catch (Exception ex) {
-         throw new ServletException(ex);
-      }
-      
-      return new ActionForward(where);
-   }
-   
+
+            //update the current record
+            for (Enumeration enum = request.getParameterNames(); enum.hasMoreElements();) {
+                name = (String) enum.nextElement();
+                props.setProperty(name, request.getParameter(name));
+            }
+
+            props.setProperty("provider_no", (String) request.getSession().getAttribute("user"));
+            newID = rec.saveFormRecord(props);
+
+            String strAction = rec.findActionValue(request.getParameter("submit"));
+            ActionForward af = mapping.findForward(strAction);
+            where = af.getPath();
+            where = rec.createActionURL(where, strAction, request.getParameter("demographic_no"), "" + newID);
+
+        } catch (Exception ex) {
+            throw new ServletException(ex);
+        }
+
+        return new ActionForward(where);
+    }
+
 }
