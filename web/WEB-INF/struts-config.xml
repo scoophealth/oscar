@@ -857,7 +857,7 @@
         <forward name="success" path="/immunizationConfig/CreateImmunizationSetConfig.jsp"/>
     </action>
     <action path="/CreateImmunizationSetConfig"
-            type="oscar.oscarEncounter.immunization.config.pageUtil.EctCreateImmunizationSetConfigAction"
+            type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmCreateImmunizationSetConfigAction"
             name="CreateImmunizationSetConfigForm"
             scope="request"
             input="/immunizationConfig/CreateImmunizationSetConfig.jsp">
@@ -865,14 +865,14 @@
             <forward name="goBack" path="/immunizationConfig/CreateImmunizationSetConfig.jsp"/>
     </action>
     <action path="/DeleteImmunizationSets"
-            type="oscar.oscarEncounter.immunization.config.pageUtil.EctDeleteImmunizationSetAction"
+            type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmDeleteImmunizationSetAction"
             name="DeleteImmunizationSetForm"
             scope="request"
             input="/immunizationConfig/DeleteImmunizationSets.jsp">
             <forward name="success" path="/immunizationConfig/AdministrateImmunizationSets.jsp"/>
     </action>
     <action path="/ImmunizationSetDisplay"
-            type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmunizationSetDisplayAction"
+            type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmImmunizationSetDisplayAction"
             name="ImmunizationSetDisplayForm"
             scope="request"
             input="/immunizationConfig/ImmunizationSetDisplay.jsp">
