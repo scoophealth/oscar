@@ -2938,7 +2938,25 @@ CREATE TABLE formIntakeInfo(
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
-
+--
+-- Table structure for table `formInternetAccess`
+--
+CREATE TABLE formInternetAccess(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL, 
+  studyID varchar(20) NOT NULL DEFAULT 'N/A',
+  internetY tinyint(1),
+  internetN tinyint(1),
+  internetHome tinyint(1),
+  internetWork tinyint(1),
+  internetFriend tinyint(1),
+  internetOther tinyint(1),
+  internetOtherTx varchar(255),
+  PRIMARY KEY (ID)
+) TYPE=MyISAM;
 
 --
 -- Table structure for table `formLabReq`
