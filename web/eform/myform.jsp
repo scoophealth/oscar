@@ -7,11 +7,13 @@
 <%@ page import = "java.net.*,java.sql.*"   errorPage="../errorpage.jsp"%> 
 <jsp:useBean id="myFormBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
+
 <% 
-  String [][] dbQueries=new String[][] { 
+String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"form_date desc";  
+String [][] dbQueries=new String[][] { 
 // Postgres cant execute this query
 //{"search_eform", "select * from eform where status = 1 order by ?, form_date desc, form_time desc" }, 
-{"search_eform", "select * from eform where status = 1 order by form_date desc, form_time desc" }, 
+{"search_eform", "select * from eform where status = 1 order by " + param + ",form_date desc, form_time desc" }, 
   };
   myFormBean.doConfigure(dbParams,dbQueries);
 
@@ -50,65 +52,134 @@
  * Ontario, Canada 
  */
 -->
+
 <html:html locale="true">
+
+
+
 <head>
-<meta http-equiv="Cache-Control" content="no-cache" />
-<title><bean:message key="eform.myform.title"/></title>
-<link rel="stylesheet" href="../web.css">
-<script language="javascript">
-<!--
-//if (document.all || document.layers)
-//  window.resizeTo(790,580)
-function checkHtml(){
-  if(document.myForm.FileName.value==""){ 
-    alert("<bean:message key="eform.myform.msgChooseFile"/>");
-  } else {
-    document.myForm.submit();
-  } 
+<title>
+<bean:message key="eform.myform.title"/>
+</title>
+<link rel="stylesheet" type="text/css" href="eformStyle.css">
+<script type="text/javascript">
+
+
+function QueryString(key)
+{
+	var value = null;
+	for (var i=0;i<QueryString.keys.length;i++)
+	{
+		if (QueryString.keys[i]==key)
+		{
+			value = QueryString.values[i];
+			break;
+		}
+	}
+	return value;
 }
-function newWindow(file,window) {
-  msgWindow=open(file,window,'scrollbars=yes,width=760,height=520,screenX=0,screenY=0,top=0,left=10');
-  if (msgWindow.opener == null) msgWindow.opener = self;
+QueryString.keys = new Array();
+QueryString.values = new Array();
+
+function QueryString_Parse()
+{
+	var query = window.location.search.substring(1);
+	var pairs = query.split("&");
+	
+	for (var i=0;i<pairs.length;i++)
+	{
+		
+		var pos = pairs[i].indexOf('=');
+		if (pos >= 0)
+		{
+			var argname = pairs[i].substring(0,pos);
+			var value = pairs[i].substring(pos+1);
+			QueryString.keys[QueryString.keys.length] = argname;
+			QueryString.values[QueryString.values.length] = value;		
+		}
+	}
+
 }
-function returnMain(demographic_no) {
-  top.location.href = "../demographic/demographiceditdemographic.jsp?demographic_no="+demographic_no;
+
+QueryString_Parse();
+	switchData();
+        window.focus();
 }
-//-->
 </script>
+
+<style type="text/css">
+	table.outline{
+	   margin-top:50px;
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	table.grid{
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	td.gridTitles{
+		border-bottom: 2pt solid #888888;
+		font-weight: bold;
+		text-align: center;
+	}
+        td.gridTitlesWOBottom{
+                font-weight: bold;
+                text-align: center;
+        }
+	td.middleGrid{
+	   border-left: 1pt solid #888888;	   
+	   border-right: 1pt solid #888888;
+           text-align: center;
+	}	
+</style>
 </head>
 
-<body topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica"><bean:message key="eform.myform.msgEForm"/></font></th></tr>
-</table>
-
-<table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="<%=weakColor%>">
-  <tr><td align='right'>
-<%  if (country.equals("BR")) { %>
-    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a></td>
-<%}else{%>
-	<a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a></td>
-<%}%>
-  </tr>
-</table> 
-   
-<center>
-<table border="0" cellspacing="0" cellpadding="0" width="98%">
-  <tr><td><bean:message key="eform.myform.msgFormLib"/> </td>
-  <td align='right'></td></tr>
-</table>
-
-<table border="0" cellspacing="0" cellpadding="0" width="98%" >
-  <tr>
-    <td>
-    <table border="0" cellspacing="2" cellpadding="2" width="100%">
+<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                <bean:message key="eform.myform.msgEForm"/>
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+						<bean:message key="eform.myform.msgFormLib"/>
+                        </td>
+                        <td  >&nbsp;
+							
+                        </td>
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top">
+               
+                <%  if (country.equals("BR")) { %>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
+                <%}else{%>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
+                <%}%>
+                
+            </td>
+            <td class="MainTableRightColumn">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
       <tr bgcolor=<%=deepColor%> >
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
-      </tr> 
+      </tr>      
+      
 <%
   String bgcolor = null;
   while (rs.next()){
@@ -119,7 +190,6 @@ function returnMain(demographic_no) {
         <a href="makemyform.jsp?fid=<%=rs.getInt("fid")%>&form_name=<%=rs.getString("form_name")%>&demographic_no=<%=demographic_no%>&subject=<%=rs.getString("subject")%>">
 	    <%=rs.getString("form_name")%>
         </a></td>
-		<td width=30% ><%=rs.getString("subject")%></td>
 		<td width=25% ><%=rs.getString("file_name")%></td>
 		<td nowrap align='center'><%=rs.getString("form_date")%></td>
 		<td nowrap align='center'><%=rs.getString("form_time")%></td>
@@ -130,9 +200,15 @@ function returnMain(demographic_no) {
 %>               
  
 </table>
-</center>
+			</td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            </td>
+            <td class="MainTableBottomRowRightColumn">
 
+            </td>
+        </tr>
+    </table>
 </body>
 </html:html>
-
-  
