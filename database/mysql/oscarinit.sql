@@ -2011,6 +2011,7 @@ CREATE TABLE formCaregiver(
   ID int(10) NOT NULL  auto_increment ,
   demographic_no int(10) NOT NULL,
   provider_no int(10),
+  studyID varchar(20) NOT NULL DEFAULT 'N/A',
   formCreated date,
   formEdited timestamp NOT NULL,    
   sexM tinyint(1),
