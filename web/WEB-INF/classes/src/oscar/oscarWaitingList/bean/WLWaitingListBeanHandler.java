@@ -53,7 +53,7 @@ public class WLWaitingListBeanHandler {
             //for(rs = db.GetSQL(sql); rs.next();){
             //    WLPatientWaitingListBeanHandler.updateWaitingList(rs.getString("demographic_no"));
             //}
-            updateWaitingList(waitingListID);
+            //updateWaitingList(waitingListID);
 
             String sql = "SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, d.phone, w.position, w.note, w.onListSince FROM waitingList w, demographic d WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "' ORDER BY w.position";
             ResultSet rs;        
@@ -133,6 +133,8 @@ public class WLWaitingListBeanHandler {
         }        
     } 
         
+    
+    
     public Vector getWaitingListVector(){
         return waitingListVector;
     }    

@@ -49,10 +49,10 @@ public class WLPatientWaitingListBeanHandler {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs; 
             String sql = "SELECT * FROM waitingListName";
-            for (rs = db.GetSQL(sql); rs.next();){
-                WLWaitingListBeanHandler.updateWaitingList(rs.getString("ID"));
-            }
-            rs.close();
+            //for (rs = db.GetSQL(sql); rs.next();){
+            //    WLWaitingListBeanHandler.updateWaitingList(rs.getString("ID"));
+            //}
+            //rs.close();
               
             sql = "SELECT wn.name, w.position, w.note, w.onListSince FROM waitingListName wn, waitingList w WHERE wn.ID = w.ListID AND demographic_no ='"+ demographicNo + "'";            
             for(rs = db.GetSQL(sql); rs.next(); )
