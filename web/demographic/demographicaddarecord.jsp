@@ -183,12 +183,12 @@
     if(rs.next()) { //
         //add democust record for alert
         String[] param2 =new String[6];
-	    param2[0]=rs.getString("demographic_no");
+	    param2[0]=rs.getString("demographic_no");            
 	    param2[1]=request.getParameter("cust1");
 	    param2[2]=request.getParameter("cust2");
 	    param2[3]=request.getParameter("cust3");
 	    param2[4]=request.getParameter("cust4");
-	    param2[5]=request.getParameter("content");
+	    param2[5]="<unotes>"+request.getParameter("content")+"</unotes>";
 	    System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
       
