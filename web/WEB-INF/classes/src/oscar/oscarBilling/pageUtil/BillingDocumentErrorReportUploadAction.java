@@ -84,11 +84,9 @@ public class BillingDocumentErrorReportUploadAction extends Action {
             ByteArrayOutputStream baos = new
             ByteArrayOutputStream();
             InputStream stream = file.getInputStream();
-            Properties props = new Properties();
+            OscarProperties props = OscarProperties.getInstance();
 
-            //properties must exist
-
-            props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar_mcmaster.properties"));            
+            //properties must exist            
             String place= props.getProperty("DOCUMENT_DIR");
             
             if(!place.endsWith("/"))
@@ -153,9 +151,8 @@ public class BillingDocumentErrorReportUploadAction extends Action {
         boolean isGot = true;
         
         try{
-            Properties props = new Properties();        
-            //properties must exist
-            props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar_mcmaster.properties"));            
+            OscarProperties props = OscarProperties.getInstance();        
+            //properties must exist            
             String filepath= props.getProperty("DOCUMENT_DIR");
             if(!filepath.endsWith("/"))
                         filepath = new StringBuffer(filepath).insert(filepath.length(),"/").toString();
