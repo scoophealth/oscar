@@ -71,12 +71,11 @@ public class FrmFormAction extends Action {
     {
         
                      
-        System.out.println("FrmFormAction is called");
-        
+        System.out.println("FrmFormAction is called");        
+        System.gc();
         FrmFormForm frm = (FrmFormForm) form;               
         
-        HttpSession session = request.getSession();
-        request.getSession().setAttribute("FrmFormForm", frm);        
+        HttpSession session = request.getSession();        
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         request.getSession().setAttribute("EctSessionBean", bean);
         
@@ -95,12 +94,15 @@ public class FrmFormAction extends Action {
         errors.clear();
         valid = true;
         
+        EctMeasurementTypesBean mt;
+        EctValidationsBean validation;
+        
         //Validate each measurement
         long startTime = System.currentTimeMillis();
+        
         for(int i=0; i<measurementTypes.size(); i++){
-            
-            EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
-            EctValidationsBean validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
+            mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
+            validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
             String inputValue = (String) frm.getValue(mt.getType()+"Value");
             String observationDate = (String) frm.getValue(mt.getType()+"Date");
             
@@ -110,7 +112,7 @@ public class FrmFormAction extends Action {
             //validate
             valid = validate( inputValue, observationDate, mt, validation, request);
             //if(!valid)
-            //    System.out.println("validate each input: " + valid + " " + mt.getType() + " value:" + inputValue);
+                System.out.println("validate each input: " + valid + " " + mt.getType() + " value:" + inputValue);
         } 
         
         long endTime = System.currentTimeMillis();
@@ -126,8 +128,8 @@ public class FrmFormAction extends Action {
             
             startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
-                EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
-                EctValidationsBean validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
+                mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
+                validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
                 String type = mt.getType();
                 String inputValue = (String) frm.getValue(type+"Value");                
                 String lastData = (String) frm.getValue(type+"LastData");                
