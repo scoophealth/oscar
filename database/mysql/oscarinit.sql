@@ -1,1122 +1,116 @@
-INSERT INTO specialistsJavascript VALUES ('1','function makeSpecialistslist(dec){\n if(dec==\'1\') \n{K(-1,\"----Choose a Service-------\");D(-1,\"--------Choose a Specialist-----\");}\nelse\n{K(-1,\"----All Services-------\");D(-1,\"--------All Specialists-----\");}\nK(5,\"Allergy\");\nD(5,\"8\",\"905-528-3855\",\"Bishay, A MD\",\"905-528-3868\",\"105 Main St. E., Hamilton ON, L8N 1G6\");\nD(5,\"9\",\"905-546-1566\",\"Buttar, K MD\",\"905-546-1584-fax they contact\",\"293 Wellington St. N., Hamilton, ON L8L 8E7\");\nD(5,\"10\",\"905-522-7703\",\"Greenbaum, J MD\",\"905-570-1866\",\"805-25 Charlton Ave E., Hamilton, ON L8N 1Y2\");\nD(5,\"11\",\"905-777-0088\",\"Hayon, Jason A MD\",\"-\",\"1435 Main St. W., Hamilton, ON L8S 1E1\");\nD(5,\"12\",\"905-777-0088\",\"Ohayon, J MD\",\"905-777-0018\",\"201-1685 Main St. W., Hamilton, ON L8S 1G5\");\n\nK(1,\"Cardiology\");\nD(1,\"151\",\"905-527-4322 x42418\",\"Henderson Hospital, Dr. Stimac Cardiology \",\"905-575-7320\",\"-\");\nD(1,\"33\",\"905-521-2100 x5635\",\"Kantor, Paul F -\",\"905-521-1703\",\"1200 Main St. W. Hamilton, ON L8S 4J9\");\nD(1,\"34\",\"905-522-5231\",\"Moniz, F P MD\",\"905-522-5231\",\"305-25 Charlton Ave. E. Hamilton, ON L8N 1Y2\");\n\nK(16,\"Dermatology\");\nD(16,\"10\",\"905-522-7703\",\"Greenbaum, J MD\",\"905-570-1866\",\"805-25 Charlton Ave E., Hamilton, ON L8N 1Y2\");\nD(16,\"11\",\"905-777-0088\",\"Hayon, Jason A MD\",\"-\",\"1435 Main St. W., Hamilton, ON L8S 1E1\");\nD(16,\"150\",\"Shirley - 905-521-6004\",\"St Josephs Hospital, Dermatology/Wound Clinic -\",\"\",\"-\");\nD(16,\"36\",\"905-524-2048 (ref. 524-0012)\",\"Vender, Ronald MD\",\"905-524-2048\",\"132 Young St. Hamilton, ON L8N 1V6\");\nD(16,\"37\",\"905-549-1025\",\"Vignjevic, P MD\",\"905-549-9487\",\"104-132 Parkdale Ave. S. Hamilton, ON L8K 3P3\");\nD(16,\"38\",\"905-304-1122\",\"Wismer, J MD\",\"905-304-37-68\",\"34 Stonechurch Rd. W. Hamilton, ON\");\n\nK(9,\"Hematology\");\n\nK(34,\"Hospitals/Clinics/Services\");\nD(34,\"102\",\"905-521-7939 or 521-2100x74549\",\"Chedoke Hospital, Geriatrics -\",\"-\",\"-\");\nD(34,\"103\",\"905-521-7951\",\"Chedoke Hospital, Audiology -\",\"905-521-4994\",\"-\");\nD(34,\"100\",\"905-521-7950\",\"Chedoke Hospital, Child and Family -\",\"-\",\"-\");\nD(34,\"135\",\"x74234\",\"Chedoke Hospital, Orthotics Clinic -\",\"905-521-7927\",\"-\");\nD(34,\"158\",\"905-574-8488\",\"Coloscopy Clinic, - -\",\"905-575-2587\",\"-\");\nD(34,\"130\",\"523-3600\",\"Community Care Access Centre, - -\",\"-\",\"-\");\nD(34,\"125\",\"905-546-2063\",\"Disease Control Program, - -\",\"-\",\"-\");\nD(34,\"162\",\"905-527-4322 x46237\",\"General Hospital, ENT Clinic -\",\"905-527-6860\",\"-\");\nD(34,\"99\",\"905-527-0271\",\"General Hospital, Lipid Clinic -\",\"905-526-1977\",\"-\");\nD(34,\"114\",\"905-528-1611\",\"Hamilton Academy of Medicine, - -\",\"-\",\"-\");\nD(34,\"88\",\"x42561 or x42247\",\"Henderson Hospital, Radiology/X-ray -\",\"-\",\"-\");\nD(34,\"93\",\"x42222\",\"Henderson Hospital, Exercise Lab -\",\"-\",\"-\");\nD(34,\"101\",\"x42230\",\"Henderson Hospital, Nuclear Medicine Bone Scan -\",\"-\",\"-\");\nD(34,\"86\",\"x42229 or x42217\",\"Henderson Hospital, EMG -\",\"-\",\"-\");\nD(34,\"91\",\"x48003\",\"Henderson Hospital, E.E.G. -\",\"-\",\"-\");\nD(34,\"96\",\"x42334\",\"Henderson Hospital, Endoscopy -\",\"-\",\"-\");\nD(34,\"89\",\"-\",\"Henderson Hospital, Barium Enema (X-Ray) -\",\"905-575-2660\",\"-\");\nD(34,\"94\",\"x42562\",\"Henderson Hospital, Film Library -\",\"-\",\"-\");\nD(34,\"141\",\"905-389-5068\",\"Henderson Hospital, Womens Clinic -\",\"-\",\"-\");\nD(34,\"87\",\"x42580\",\"Henderson Hospital, Diabetic Clinic - Amb. Care -\",\"905-389-3293\",\"-\");\nD(34,\"92\",\"x42217\",\"Henderson Hospital, M.D.U. -\",\"-\",\"-\");\nD(34,\"97\",\"x42478\",\"Henderson Hospital, Colonoscopy -\",\"-\",\"-\");\nD(34,\"85\",\"905-527-4322\",\"Henderson Hospital, - -\",\"905-389-4411\",\"-\");\nD(34,\"90\",\"x42565 or x42276\",\"Henderson Hospital, U/S -\",\"905-389-8488\",\"-\");\nD(34,\"95\",\"x42564 or x42272\",\"Henderson Hospital, CT -\",\"905-389-8488\",\"-\");\nD(34,\"151\",\"905-527-4322 x42418\",\"Henderson Hospital, Dr. Stimac Cardiology \",\"905-575-7320\",\"-\");\nD(34,\"145\",\"x76005\",\"MUMC, 3G anxiety Clinic -\",\"905-521-2628\",\"-\");\nD(34,\"106\",\"x.76417\",\"MUMC, Pain Clinic -\",\"-\",\"-\");\nD(34,\"116\",\"x74774\",\"MUMC, Human Resources (Rebecca) -\",\"-\",\"-\");\nD(34,\"143\",\"x75123\",\"MUMC, Medical Records -\",\"905-528-3828\",\"-\");\nD(34,\"104\",\"905-521-5051\",\"MUMC, Central Booking -\",\"905-525-9548\",\"-\");\nD(34,\"109\",\"x76924\",\"MUMC, Endoscopy -\",\"-\",\"-\");\nD(34,\"132\",\"905-521-2649\",\"MUMC, PreNatal Diagnosis for amnio -\",\"-\",\"-\");\nD(34,\"153\",\"521-5011 x5\",\"MUMC, 3F Clinic -\",\"905-521-2654\",\"-\");\nD(34,\"107\",\"x75004\",\"MUMC, Radiology -\",\"-\",\"-\");\nD(34,\"117\",\"x74636\",\"MUMC, Human Resources (Sue) -\",\"-\",\"-\");\nD(34,\"144\",\"x76891\",\"MUMC, FX Clinic -\",\"905-521-5069\",\"-\");\nD(34,\"105\",\"905-521-5082\",\"MUMC, OB/Gyn 4F Clinic -\",\"-\",\"-\");\nD(34,\"115\",\"x75287\",\"MUMC, CT -\",\"-\",\"-\");\nD(34,\"139\",\"905-521-5075\",\"MUMC, SIS Clinic -\",\"905-521-8675\",\"-\");\nD(34,\"108\",\"x76363\",\"MUMC, EEG -\",\"-\",\"-\");\nD(34,\"131\",\"x.75415 or x.75082\",\"MUMC, 4F Clinic -\",\"905-527-0602\",\"-\");\nD(34,\"126\",\"905-522-6887\",\"St Elizabeths Visiting Nurses, - -\",\"-\",\"-\");\nD(34,\"129\",\"905-521-6000\",\"St Josephs Hospital, Firestone Clinic -\",\"-\",\"-\");\nD(34,\"156\",\"905-522-4941 x3251\",\"St Josephs Hospital, LandD -\",\"-\",\"-\");\nD(34,\"127\",\"905-522-1155\",\"St Josephs Hospital, - -\",\"-\",\"-\");\nD(34,\"150\",\"Shirley - 905-521-6004\",\"St Josephs Hospital, Dermatology/Wound Clinic -\",\"\",\"-\");\nD(34,\"138\",\"905-521-6041\",\"St Josephs Hospital, OB/Gyn -\",\"905-521-6089\",\"-\");\nD(34,\"128\",\"521-6009\",\"St Josephs Hospital, Radiology -\",\"-\",\"-\");\nD(34,\"154\",\"-\",\"St Josephs Hospital, Dr. Christine Lee - Infectious D -\",\"-\",\"-\");\nD(34,\"142\",\"x.3606\",\"St Josephs Hospital, Film Library -\",\"-\",\"-\");\nD(34,\"112\",\"905-574-2777\",\"Walk-in Clinics, 15 Empress -\",\"-\",\"-\");\nD(34,\"113\",\"905-578-9255\",\"Walk-in Clinics, 631 Queenston -\",\"-\",\"-\");\nD(34,\"110\",\"905-570-0440\",\"Walk-In Clinics, 206 Locke -\",\"-\",\"-\");\nD(34,\"111\",\"905-529-4040\",\"Walk-in Clinics, 983 King St. W. -\",\"-\",\"-\");\n\nK(21,\"Infectious Diseases\");\nD(21,\"43\",\"905-574-3301\",\"Rotstein, Coleman MD\",\"-\",\"711 Concession St. Hamilton, ON L8V 1C3\");\nD(21,\"154\",\"-\",\"St Josephs Hospital, Dr. Christine Lee - Infectious D -\",\"-\",\"-\");\n\nK(17,\"Internal Medicine\");\nD(17,\"39\",\"905-574-8533\",\"Dwyer, D MD\",\"905-575-7320\",\"711 Concession St. Hamilton, ON L8V 1C3\");\nD(17,\"159\",\"905-521-9034\",\"Khalidi, N A MD\",\"905-521-8099\",\"240 James St. S. Hamilton, ON\");\n\nK(18,\"Neuro Surgery\");\nD(18,\"40\",\"905-524-1744\",\"De Villiers, Rocco A MD\",\"905-521-6083\",\"204-304 Victoria Ave. N. Hamilton, ON L8L 5G4\");\n\nK(6,\"OB/Gyn\");\nD(6,\"14\",\"905-972-8382\",\"Cepeda, Rolando MD\",\"905-972-8600\",\"102-1057 Main St. W., Hamilton, ON L8S 1E1\");\nD(6,\"146\",\"905-308-7764\",\"Chen, Ann Marie Christine MD\",\"905-308-7765\",\"203-1685 Main St. W. Hamilton, ON L8S 1G5\");\nD(6,\"118\",\"905-387-0621\",\"Cowan, William MD\",\"905-387-9954\",\"640 Concession St. Hamilton, ON L8V 1B5\");\nD(6,\"119\",\"905-521-2788 / 521-8320\",\"Ellis, Susan MD\",\"905-521-1127\",\"302-200 James St. S. Hamilton, ON L8P 3A9\");\nD(6,\"120\",\"527-4322 x42409\",\"Fedorkow, Donna MD\",\"905-575-2587 fax reff\",\"Henderson Hospital, 4th Floor\");\nD(6,\"122\",\"905-389-4785\",\"Kalbfleisch, Rick MD\",\"905-389-9560\",\"304-849 Upper Wentworth St. Hamilton, ON L9A 5H4\");\nD(6,\"15\",\"905-574-8606\",\"Lamont, J A MD\",\"905-975-8606\",\"711 Concession St., Hamilton, ON L8V 1C3\");\nD(6,\"121\",\"905-389-5657\",\"Lightheart, Margaret MD\",\"905-389-3113\",\"1316 Upper Wentworth Hamilton, ON L9A 4W2\");\nD(6,\"123\",\"905-527-0006\",\"Loopstra, Larry MD\",\"905-527-5562\",\"408-1 Young St. Hamilton, ON L8N 1T8\");\nD(6,\"16\",\"905-572-1117\",\"Loosley-Millman, - MD\",\"905-572-7373\",\"610-25 Charlton Ave. E. Hamilton, ON L8N 1Y2\");\nD(6,\"17\",\"905-521-6041\",\"Muggah, H F MD\",\"905-521-6089\",\"Fontbonne Bldg\");\nD(6,\"18\",\"905-972-0911\",\"Ramanna, R MD\",\"905-972-0913\",\"616-25 Charlton Ave. E. Hamilton, On L8N 1Y2\");\nD(6,\"19\",\"905-522-1461\",\"Rastogi, Indra P MD\",\"905-522-0710\",\"307-25 Charlton Ave. E. Hamilton, ON L8N 1Y2\");\nD(6,\"124\",\"905-574-1011\",\"Roth, Paula MD\",\"905-318-8857\",\"662 Concession St. Hamilton, ON L8V 1B8\");\nD(6,\"147\",\"905-308-7764\",\"Sciarra, - MD\",\"905-308-7765\",\"203-1685 Main St. W. Hamilton, ON L8S 1G5\");\nD(6,\"20\",\"905-540-8100\",\"Sibley, Caroline MD\",\"905-540-9094\",\"1481 Main St. W. Hamilton, ON L8S 1E1\");\nD(6,\"21\",\"905-572-1122\",\"Small, David R J MD\",\"905-572-7373-fax referrals\",\"610-25 Charlton Ave. E. Hamilton, ON L8N 1Y2\");\nD(6,\"138\",\"905-521-6041\",\"St Josephs Hospital, OB/Gyn -\",\"905-521-6089\",\"-\");\n\nK(7,\"Oncology\");\nD(7,\"23\",\"905-389-5227\",\"Colterjohn, Nigel MD\",\"905-389-1856\",\"711 Concession St. Hamilton, ON L8V 1C3\");\nD(7,\"24\",\"905-529-3313\",\"Orovan, William MD\",\"905-529-3383\",\"206-200 James St. S. Hamilotn, ON L8P 3A9\");\n\nK(22,\"Ophthalmology\");\nD(22,\"47\",\"905-521-2100\",\"Harvey, John MD\",\"905-521-2332\",\"6662-1200 Main St. W. Hamilton, ON L8N 3Z5\");\nD(22,\"46\",\"905-527-5767\",\"Hirsch, C R MD\",\"905-527-8543\",\"101-225 James St. S. Hamilton, ON L8P 3B2\");\nD(22,\"53\",\"905-525-1969\",\"Kearns, - MD\",\"-\",\"-\");\nD(22,\"44\",\"905-575-7050\",\"Kubikova, Eva MD\",\"905-389-8411\",\"623 Upper Wentworth St. Hamilton, ON L9A 3R2\");\nD(22,\"45\",\"905-525-0545\",\"Madronich, John S MD\",\"905-528-9444\",\"103-225 James St. S. Hamilton, ON L8P 3B2\");\nD(22,\"48\",\"905-387-6668\",\"OBrien, D B MD\",\"905-648-1442 - cataracts only\",\"103-845 James St. S. Hamilton, ON L9C 3A3\");\nD(22,\"49\",\"905-527-0442\",\"Podedworny, Walter M MD\",\"905-389-3986\",\"102-223 James St. S. Hamilton, ON L8P 3B2\");\nD(22,\"50\",\"905-318-5338\",\"Sher, J MD\",\"905-318-5313\",\"1070 Stonechurch Rd. E. Hamilton, ON\");\nD(22,\"51\",\"905-527-4323\",\"Vayalumukal, A J MD\",\"905-527-1301\",\"520-1 Young St. Hamilton, ON\");\n\nK(23,\"Otorhinolaryngology\");\nD(23,\"52\",\"905-383-3468\",\"Menkarios, Gamil MD\",\"905-383-6284\",\"304 Victoria Ave. Hamilton, ON\");\n\nK(11,\"Pediatric Orthopedics\");\nD(11,\"29\",\"905-637-0352\",\"Peddar, Linda MD\",\"-\",\"1433 Ontario St. Burlington, ON L7S 1G5\");\n\nK(12,\"Pediatric Urology\");\nD(12,\"30\",\"905-521-0051\",\"Demaria, J E MD\",\"905-521-9601\",\"700-1 Young St. Hamilton, ON L8N 1T8\");\n\nK(8,\"Pediatrics\");\nD(8,\"28\",\"905-523-1209\",\"Cheung, W MD\",\"905-523-5121\",\"302-25 Charlton Ave. E. Hamilton, On L8N 1Y2\");\nD(8,\"25\",\"905-573-4840\",\"Ladhani, M MD\",\"905-573-4839\",\"2757 King St. E. Hamilton, ON L8G 5E4\");\nD(8,\"26\",\"905-549-3344\",\"Margolis, I MD\",\"905-549-3815\",\"460 Main St. E. Hamilton, ON L8M 1L8\");\nD(8,\"27\",\"905-575-0611\",\"OToole, F J MD\",\"905-575-7737-no ADHD\",\"12-1300 Garth St. Hamilton, ON\");\n\nK(13,\"Physiatry\");\nD(13,\"31\",\"905-574-8515\",\"Harvey, D MD\",\"905-575-2598\",\"711 Concession St. Hamilton, ON L8V 1C3\");\n\nK(14,\"Psychiatry\");\nD(14,\"160\",\"905-388-2511\",\"Mountain Clinic, Mood Disorders -\",\"-\",\"West 5th\");\nD(14,\"32\",\"905-388-2511\",\"Saperson, K MD\",\"905-575-6054\",\"PO Box 585 100 West 5th St. Hamilton, ON L8N 3K7\");\nD(14,\"137\",\"905-527-8515\",\"Schizophrenia Program, - MD\",\"905-527-7301\",\"-\");\n\nK(15,\"Pulmonary Disease\");\n\nK(3,\"Radiology\");\n\nK(35,\"Rehab\");\nD(35,\"148\",\"905-523-7511\",\"Chare, - MD\",\"905-521-8099\",\"240 James St. S. Hamilton, ON\");\n\nK(24,\"Respirology\");\nD(24,\"54\",\"905-521-6000\",\"Pugsley, S O MD\",\"905-521-6037\",\"1200 Main St. W. Hamilton, ON L8N 4A6\");\n\nK(25,\"Rheumatology\");\nD(25,\"55\",\"905-528-1123\",\"Cividino, A MD\",\"905-528-1125- fax referrals\",\"187 Hughson St. S. Hamilton, ON L8N 2B6\");\nD(25,\"56\",\"905-521-2100 x.74047\",\"Khostanteen-Linhartov, - MD\",\"-\",\"PO Box 2000 Stn, LCD Hamilton, ON L8N 3Z5\");\n\nK(36,\"SEE NOTES\");\n\nK(26,\"Sports Medicine\");\nD(26,\"58\",\"905-336-3340\",\"Elliot, - MD\",\"905-336-6095\",\"1100 Walkershine Hamilton, ON\");\nD(26,\"57\",\"905-549-9242\",\"Levy, David MD\",\"905-548-0003\",\"1810 King St. E. Hamilton, ON L8M 1A9\");\n\nK(27,\"Surgery - Cardiovascular\");\n\nK(28,\"Surgery - General\");\nD(28,\"59\",\"905-387-6460\",\"Gagic, N MD\",\"905-387-7470\",\"402-849 Upper Wentworth Hamilton, ON L9A 5H4\");\nD(28,\"60\",\"905-389-2275\",\"Menon, G T MD\",\"905-389-7642\",\"668 Concession St. Hamilton, ON L8V 4T1\");\nD(28,\"61\",\"905-527-0577\",\"Reid, S E MD\",\"905-527-1700\",\"PO Box 2000 Stn, LCD1 Hamilton, ON L8N 3Z5 - MUMC 3V1 Clinic\");\nD(28,\"62\",\"905-387-1367\",\"Sanders, K MD\",\"905-387-4500\",\"9B-688 Concession St. Hamilton, ON L8V 4T1\");\n\nK(29,\"Surgery - Orthopedic\");\nD(29,\"72\",\"905-577-0639\",\"Bednar, Drew MD\",\"905-577-0178-nnr\",\"1102-293 Wellington St. N. Hamilton, ON L8L 8E7\");\nD(29,\"73\",\"905-628-1872\",\"Dale, - MD\",\"-\",\"B-14 Cross St. Dundas, ON\");\nD(29,\"63\",\"905-527-1115\",\"DeBeer, J MD\",\"905-528-8150-hips/knees\",\"307-1 Young St. Hamilton, ON L8N 1T8\");\nD(29,\"70\",\"905-521-5770\",\"Dunlop, Brett MD\",\"-\",\"606-25 Charlton Ave. E. Hamilton, ON L8N 1T8\");\nD(29,\"136\",\"905-527-2991\",\"Ennis, - MD\",\"905-627-4757\",\"-\");\nD(29,\"67\",\"905-526-1880\",\"Mandel, Scott  MD\",\"905-526-6309-no backs\",\"414 Victoria Ave. Hamilton, ON\");\nD(29,\"69\",\"905-540-8448\",\"Moro, J MD\",\"905-540-8414-shoulder/elbow/wr\",\"505-1 Young St. Hamilton, ON\");\nD(29,\"64\",\"905-304-5816\",\"Ogilvie, R MD\",\"905-304-5818\",\"323 Wilson St. Ancaster, ON\");\nD(29,\"134\",\"905-527-4940\",\"Orr, Robert D MD\",\"905-527-9971 or 527-6262\",\"56 Charlton Ave. W. Hamilton, ON L8P 2C1\");\nD(29,\"65\",\"905-577-6677\",\"Punthakee, D K MD\",\"905-522-5101\",\"M10-414 Victoria Ave. W. Hamilton, ON\");\nD(29,\"152\",\"1-519-751-5860\",\"Rerri, - MD\",\"1-519-751-5890\",\"-\");\nD(29,\"66\",\"905-575-0167\",\"Smith, Frank MD\",\"905-575-7643-nnr 3.5yr wait\",\"105-565 Sanitorium Rd. Hamilton, ON L9C 7N4\");\nD(29,\"71\",\"905-570-8884\",\"Winemaker, - MD\",\"no backs\",\"1 Young St. Hamilton, ON\");\nD(29,\"38\",\"905-304-1122\",\"Wismer, J MD\",\"905-304-37-68\",\"34 Stonechurch Rd. W. Hamilton, ON\");\n\nK(30,\"Surgery - Plastic\");\nD(30,\"75\",\"905-529-7195\",\"Heddle, Stuart MD\",\"905-529-0060\",\"247 John St. S. Hamilton, ON L8N 2C9\");\nD(30,\"77\",\"905-645-5640\",\"Hynes, N M MD\",\"905-645-5643\",\"2 Floor - 183 Hughson St. S. Hamilton, ON L8N 2B6\");\nD(30,\"74\",\"905-572-6226\",\"Martin, Stuart MD\",\"905-572-6301-fax referrals\",\"66 Charlton Ave. W. Hamilton, ON L8P 2C1\");\nD(30,\"76\",\"905-523-0019\",\"Thoma, Achilleas MD\",\"905-523-0229-no feet\",\"101-206 James St. S. Hamilton, ON L8P 3A9\");\n\nK(31,\"Surgery - Vascular\");\nD(31,\"78\",\"905-527-2117 ref.527-4322x4626\",\"Evans, Geoffrey MD\",\"905-577-1466\",\"237 Barton St. E. Hamilton, ON L8L 2X2\");\nD(31,\"80\",\"905-524-1125\",\"Mosakoski, - MD\",\"905-524-1195\",\"206 James St. S. Hamilton, ON\");\nD(31,\"79\",\"905-521-5558\",\"Tittley, J MD\",\"905-521-1284\",\"302-304 Victoria Ave. N. Hamilton, ON L8L 5G4\");\n\nK(32,\"Urology\");\nD(32,\"161\",\"905-528-3043\",\"Fischer, A MD\",\"-\",\"1 Young St. Hamilton, ON L8N 1T8\");\nD(32,\"24\",\"905-529-3313\",\"Orovan, William MD\",\"905-529-3383\",\"206-200 James St. S. Hamilotn, ON L8P 3A9\");\nD(32,\"84\",\"905-523-7249\",\"Piercey, Kevin MD\",\"905-528-3043\",\"1 Young St. Hamilton, ON L8N 1T8\");\nD(32,\"83\",\"905-522-4055\",\"Zikman, J M MD\",\"905-522-3414\",\"302-1 Young St. Hamilton, ON L8N 1T8\");\n\n\n}\n');
+-- MySQL dump 9.07
+--
+-- Host: localhost    Database: oscar_sfhc
+---------------------------------------------------------
+-- Server version	4.0.12-standard
 
-INSERT INTO oscarcommlocations (locationId, locationDesc,current) VALUES ('145','Oscar Users',1);
+--
+-- Table structure for table 'FaxClientLog'
+--
 
-INSERT INTO security VALUES (127,'oscarrep','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999999','1117');
-INSERT INTO security VALUES (128,'oscardoc','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999998','1117');
-INSERT INTO security VALUES (129,'oscaradmin','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999997','1117');
+CREATE TABLE FaxClientLog (
+  faxLogId int(9) NOT NULL auto_increment,
+  provider_no varchar(6) default NULL,
+  startTime datetime default NULL,
+  endTime datetime default NULL,
+  result varchar(255) default NULL,
+  requestId varchar(10) default NULL,
+  faxId varchar(10) default NULL,
+  PRIMARY KEY  (faxLogId)
+) TYPE=MyISAM;
 
-INSERT INTO provider VALUES ('999997','oscaradmin','admin','admin','','','','0000-00-00','','','','','','','','');
-INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0000-00-00','','','','','','','','');
-INSERT INTO provider VALUES ('999999','oscarrep','receptionist','receptionist','','','','0000-00-00','','','','','','','','');
-INSERT INTO provider VALUES ('88888','Support','IT','receptionist','','Admin','','0000-00-00','','','','','','','','');
-INSERT INTO provider VALUES ('174','Chan','David','doctor','Family Medicine','SFHC - A','M','0000-00-00','','H 905-','123456','','','BAAP','1','<xml_p_specialty_code>00</xml_p_specialty_code><xml_p_pager>905-521-5070 #2195</xml_p_pager><xml_p_billinggroup_no>0000</xml_p_billinggroup_no>');
-
-
-INSERT INTO encounterForm VALUES ('Annual','formAnnual.jsp?demographic_no=','formAnnual');
-INSERT INTO encounterForm VALUES ('ALPHA','formAlpha.jsp?demographic_no=','formAlpha');
-INSERT INTO encounterForm VALUES ('Rourke','formRourke.jsp?demographic_no=','formRourke');
-INSERT INTO encounterForm VALUES ('T2Diabetes','formType2Diabetes.jsp?demographic_no=','formType2Diabetes');
-INSERT INTO encounterForm VALUES ('Mental Health','formMentalHealth.jsp?demographic_no=','formMentalHealth');
-INSERT INTO encounterForm VALUES ('PeriMenopausal','formPeriMenopausal.jsp?demographic_no=','formPeriMenopausal');
-INSERT INTO encounterForm VALUES ('Lab Req','formLabReq.jsp?demographic_no=','formLabReq');
-INSERT INTO encounterForm VALUES ('MMSE','formMMSE.jsp?demographic_no=','formMMSE');
-INSERT INTO encounterForm VALUES ('Pall. Care','formPalliativeCare.jsp?demographic_no=','formPalliativeCare');
-INSERT INTO encounterForm VALUES ('AR','formAR.jsp?demographic_no=','formAR');
-
-
-INSERT INTO encountertemplate VALUES ('SOAP','SOAP','Subject:\n\nObject: \n\nAssessment: \n\nPlan:\n','<table datasrc=\'#xml_list\' border=\'0\'>\r\n<tr><td><font color=\'blue\'>Content:</font></td></tr>\r\n<tr><td><div datafld=\'xml_content\'></td></tr></table>');
-INSERT INTO encountertemplate VALUES ('BILIARY COLIC','BILIARY COLIC','1. Inquiry re at least three of following?\r\npain, description\r\nAND\r\nlocation\r\nfood intolerance\r\nrecurrence\r\nfever\r\n2. Abdominal exam?\r\n3. Chest exam?\r\n4. Heart rate AND rhythm?\r\n5. Blood pressure?\r\n6. CBC?\r\n7. SGOT, serum bilirubin, alkaline phosphatase?\r\n8. Gall bladder X-ray OR ultrasound?\r\n9. Advice re low-fat diet?\r\n10. One follow-up within 1 month?\r\n11. IF recurrent (2nd or greater episode), referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('PULMONARY EMPHYSEMA','PULMONARY EMPHYSEMA','1. Inquiry re chest symptoms each visit, at least two of the following?\r\ncough\r\nsputum\r\nwheezing\r\ndyspnea\r\n2. CPE at least once in 2 years?\r\n3. ECG on chart (3 minute)? \r\n4. Chest X-ray at least once in 2 years?\r\n5. IF smoker, advice re smoking?\r\n6. Follow-up at least once yearly?','Unknown');
-INSERT INTO encountertemplate VALUES ('OTITIS EXTERNA','OTITIS EXTERNA','1. Inquiry re symptoms?\r\n2. Ear exam?\r\n3. Evidence of \"normal drum\"?','Unknown');
-INSERT INTO encountertemplate VALUES ('URI','URI','1. Complaint of at least one of the following?\r\nnasal discharge\r\nsore throat\r\nmalaise\r\ncold\r\n2. Duration of symptoms noted?\r\n3. IF cough in history, chest exam?\r\n4. IF patient\r\n5. IF sore throat in history, throat exam?\r\n6. IF narcotic antitussives prescribed, cough in history?\r\n7. IF antibiotics prescribed, was there history of secondary infection (coloured phlegm, or fever > 38 for 3 days or more)\r\nOR\r\nhigh risk (cardiac valvular disease or chronic pulmonary disease)?','Unknown');
-INSERT INTO encountertemplate VALUES ('HERPETIC ULCER (EYE)','HERPETIC ULCER (EYE)','1. Inquiry re pain in eye?\r\n2. Red eye noted?\r\n3. Dendrite shaped ulceration noted?\r\n4. Fluorescein staining positive?\r\n5. Referral to ophthalmologist?\r\n6. Steroids used locally?','Unknown');
-INSERT INTO encountertemplate VALUES ('INFLUENZA','INFLUENZA','1. Inquiry re three of the following?\r\nmyalgia\r\nfever\r\ncough\r\nphlegm type\r\nmalaise\r\n2. Inquiry re duration of symptoms?\r\n3. ENT exam?\r\n4. IF coughing, chest exam?\r\n5. IF antibiotics prescribed, was there history of secondary infection (coloured phlegm, or fever > 38 for 3 days or more)\r\nOR\r\nhigh risk (cardiac valvular disease or chronic pulmonary disease)?','Unknown');
-INSERT INTO encountertemplate VALUES ('PEPTIC ULCER','PEPTIC ULCER','1. Inquiry re epigastric pain?\r\n2. Inquiry re past history of similar symptoms?\r\n3. Inquiry re relief from antacid or milk?\r\n4. Abdominal exam?\r\n5. UGI series\r\nOR\r\ngastroscopy done?\r\n6. UGI series\r\nOR\r\ngastroscopy demonstrates ulcer crater\r\nAND/OR scarring?\r\n7. IF GASTRIC ulcer demonstrated by UGI series\r\nOR\r\ngastroscopy, procedure repeated within 6 weeks?\r\n8. Instruction re diet?\r\n9. IF smoker, advice re smoking?\r\n10. Instruction re alcohol?\r\n11. Counselling re stress factors?\r\n12. Were any of the following drugs used?\r\noral steroids\r\nnonsteroidal anti-inflammatories\r\nASA\r\ncolchicine\r\n13. Follow-up at least every 6 weeks until asymptomatic\r\nOR\r\nhealing demonstrated by UGI series\r\nOR\r\ngastroscopy?','Unknown');
-INSERT INTO encountertemplate VALUES ('ALLERGIC REACTION','ALLERGIC REACTION','1. Inquiry re type OR description of reaction?\r\n2. Inquiry re site of reaction?\r\n3. Inquiry re severity of reaction?\r\n4. Inquiry re possible causes (eg. food, medications, bites, inhalation)?\r\n5. Examination of affected area(s)?\r\n6. IF \"severe\" reaction, heart rate AND rymthm?\r\n7. Blood pressure?\r\n8. Chest exam?\r\n9. Discussion re allergies OR on chart (3 minute)?\r\n10. IF patient has specific drug allergy, bracelet?\r\n11. IF patient has specific drug allergy, is this recorded in a\r\nconsistent area of the chart?','Unknown');
-INSERT INTO encountertemplate VALUES ('HEAD INJURY','HEAD INJURY','These questions apply only to the INITIAL\r\nPRESENTATION of a head injury.\r\n1. Description of injury?\r\n2. Level of consciousness since injury noted?\r\n3. Cause of injury noted?\r\n4. Mechanism of injury noted?\r\n5. Head and neck exam?\r\n6. ENT exam?\r\n7. Cranial nerves?\r\n8. Neurological exam?\r\n9. Pulse and blood pressure?\r\n10. Level of consciousness and orientation at time of exam?\r\n11. IF depressed consciousness, skull X-ray\r\nOR CAT scan OR referral?\r\n12. IF neck pain\r\nOR tenderness, cervical spine X-ray?\r\n13. Narcotics prescribed (including codeine)?\r\n14. IF sent home, instructions to family or friend re\r\nobservation for change in level of consciousness (i.e.\r\nhead injury sheet)?\r\n15. IF penetrating wound\r\nOR\r\ndeteriorating (i.e. change in sensorium), immediate referral?\r\n16. IF recurrent, discussion re safety measures (eg. helmets)?\r\n17. IF recurrent in child -abuse considered?','Unknown');
-INSERT INTO encountertemplate VALUES ('ORCHITIS AND EPIDIDY','ORCHITIS AND EPIDIDYMITIS','1. Inquiry re location of pain?\r\n2. Inquiry re swelling of testes?\r\n3. Examination of testicles?\r\n4. Comment re tenderness?\r\n5. WBC?\r\n6. Urinalysis?\r\n7. Urine C & S?\r\n8. Support to scrotum?\r\n9. IF epididymitis, antibiotics used?\r\n10. IF antibiotics used, amount AND duration noted?\r\n11. Follow-up within one week?','Unknown');
-INSERT INTO encountertemplate VALUES ('DIAPER RASH','DIAPER RASH','1. Inquiry re duration?\r\n2. Description of rash?\r\n3. IF monilia, comment on mouth?\r\n4. IF monilia, topical antifungal used?\r\n5. Discussion re cleaning at diaper changing?\r\n6. IF \"severe\", follow-up within 1 month?\r\n7. Were fluorinated steroids used?\r\n8. IF thrush also present, oral mycostatin used?','Unknown');
-INSERT INTO encountertemplate VALUES ('PROSTATITIS CHRONIC','PROSTATITIS CHRONIC','1. Inquiry re at least 3 of following?\r\ndysuria\r\nfrequency\r\nperineal pain\r\npainful sexual activity\r\nurethral discharge\r\nlow back pain\r\nnocturia\r\n2. Abdominal exam?\r\n3. Rectal exam?\r\n4. Description of prostate (size and consistency)?\r\n5. Urine C & S?\r\n6. Septra\r\nOR\r\ntetracycline\r\nOR\r\nampicillin\r\nOR\r\nerythromycin used?\r\n7. Antibiotic used for at least 2 weeks?\r\n8. One follow-up?\r\n9. IF symptoms continue beyond one month\r\nOR\r\npyuria for more than one month\r\nOR\r\nbacteriuria for more than one month, consultation and/or referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('DYSMENORRHEA','DYSMENORRHEA','1. Menstrual history?\r\n2. Inquiry re urinary symptoms?\r\n3. Inquiry re painful periods?\r\n4. IF sexually active, pelvic exam with comment on cervix?\r\n5. Abdominal exam?\r\n6. IF vaginal discharge present, C & S?\r\n7. Follow-up once within 4 months?','Unknown');
-INSERT INTO encountertemplate VALUES ('UTI','UTI','1. Inquiry re duration of symptoms?\r\n2. Inquiry re first or recurring episode?\r\n3. Inquiry re at least two of following?\r\nfrequency\r\ndysuria\r\nhematuria\r\nfever\r\n4. Abdominal exam?\r\n5. Presence/absence of flank OR CVA tenderness noted?\r\n6. IF more than 2 infections within one year in female, vaginal exam?\r\n7. Urinalysis AND micro?\r\n8. Urine C & S?\r\n9. IF 3rd or more occurrence (3 minute) in female, IVP?\r\n10. IF 2nd or more occurrence (3 minute) in males, IVP?\r\n11. IF child AND 2nd or more occurrence in chart, voiding cysto-urethrogram?\r\n12. IF antibiotic used, was it one of penicillins, erythromycins, sulfonamides, cephalosporins, Septra/Bactrim, or tetracyclines?\r\n13. IF tetracycline used, was patient\r\n14. IF child\r\nOR\r\ndiscussion re causes of UTI\'s?\r\n15. IF condition persists without definitive diagnosis for more than 3 months, referral?\r\n16. One follow-up within one month?','Unknown');
-INSERT INTO encountertemplate VALUES ('KNEE INJURIES','KNEE INJURIES','1. Description of how injury happened?\r\n2. Duration of discomfort?\r\n3. Presence/absence of locking or collapse?\r\n4. Presence/absence of swelling?\r\n5. Comment on function?\r\n6. Comment on stability of ligaments?\r\n7. IF effusion persists for more than 72 hours, joint aspiration OR referral?\r\n8. IF locking OR instability, referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('DEAFNESS','DEAFNESS','1. Inquiry re duration of hearing loss?\r\n2. Inquiry re trauma OR infection OR industrial exposure, on chart (3 minute)?\r\n3. Comment on ear drums at least once per year?\r\n4. Audiogram OR referral to ENT on chart (3 minute)?','Unknown');
-INSERT INTO encountertemplate VALUES ('SYPHILIS','SYPHILIS','1. Inquiry re exposure?\r\n2. IF skin lesion present, inquiry re duration?\r\n3. IF primary syphilis, presence/absence of chancre noted?\r\n4. IF secondary syphilis, presence/absence of rash noted?\r\n5. Presence/absence of lymphadenopathy noted?\r\n6. VDRL OR STS?\r\n7. IF VDRL OR STS negative, repeated within 2 months?\r\n8. Swab for C & S for gonorrhea?\r\n9. IF antibiotic used, was it one of the penicillins, erythromycins, tetracyclines or spectinomycin?\r\n10. Notification of public health authorities?\r\n11. One follow-up within 2 months?','Unknown');
-INSERT INTO encountertemplate VALUES ('INGUINAL HERNIA','INGUINAL HERNIA','1. Inquiry re presence/absence of vomiting?\r\n2. Inquiry re at least two of following?\r\ninguinal bulge\r\nduration\r\npain\r\n3. Description of inguinal mass including side?\r\n4. Reducible or not noted?\r\n5. IF not reducible AND painful, referral to surgeon within 24 hours?','Unknown');
-INSERT INTO encountertemplate VALUES ('DEPRESSION','DEPRESSION','1. Inquiry re medications/drugs taken?\r\n2. Inquiry re duration of problem?\r\n3. Inquiry re suicidal thoughts OR statement that depression is mild or minor?\r\n4. IF physical complaints noted, evidence of examination of affected area?\r\n5. CPE within 2 years?\r\n6. Comment on mood OR appearance OR affect?\r\n7. IF antidepressant given, follow-up within 2 weeks?\r\n8. IF first prescription for antidepressant, was duration noted AND was duration\r\n9. IF no antidepressants given, follow-up within 1 month?\r\n10. IF \"suicidal\", referral OR hospitalization?\r\n11. Discussion re stress factors?\r\n12. Were barbiturates prescribed?','Unknown');
-INSERT INTO encountertemplate VALUES ('LARYNGITIS OR TRACHE','LARYNGITIS OR TRACHEITIS','1. Duration of symptoms?\r\n2. Presence/absence of cough noted?\r\n3. Throat exam?\r\n4. Chest exam?','Unknown');
-INSERT INTO encountertemplate VALUES ('GONORRHEA','GONORRHEA','1. Inquiry re time since exposure?\r\n2. Inquiry re sexual contacts?\r\n3. Inquiry re symptoms (discharge, dysuria)?\r\n4. Inquiry re sexual preferences and habits?\r\n5. Genital exam?\r\n6. IF oral sex noted, throat exam?\r\n7. IF anal sex noted, rectal exam?\r\n8. C & S, genital?\r\n9. IF indicated by history, C & S oral AND/OR rectal?\r\n10. Positive culture AND/OR gramstain?\r\n11. Antibiotics according to recommendations of Dept of Health (see list)?\r\n12. One follow-up with repeat cultures within 1 month?\r\n13. Counselling re prevention?\r\n14. Presence/absence of penicillin allergy noted on chart (3 minute)?\r\n15. Refer to Public Health Dept. OR insure follow-up of sexual contacts?\r\n16. VDRL in 6 weeks and 3 months?','Unknown');
-INSERT INTO encountertemplate VALUES ('CORONARY ARTERY DISE','CORONARY ARTERY DISEASE','1. Comment on one of the following with each visit?\r\nangina\r\nshortness of breath\r\nankle edema\r\n2. Yearly comment on pain OR nitroglycerines taken?\r\n3. Yearly comment on exercise tolerance?\r\n4. Blood pressure of each visit for this diagnosis (at least 75%)?\r\n5. One CPE by family physician in 2 years?\r\n6. ECG on chart within 2 years?\r\n7. Drug list every 12 months?\r\n8. Dosage of prescribed drugs every 12 months (at least 75%)?\r\n9. IF obesity noted, advice re weight loss?\r\n10. Follow-up at least twice per year?\r\n11. IF congestive heart failure AND use of non-steroidal anti-inflammatory agents OR beta-blockers OR calcium channel blockers, was there a justification statement?','Unknown');
-INSERT INTO encountertemplate VALUES ('OSTEOPOROSIS','OSTEOPOROSIS','\r\n1. Inquiry re presence/absence of pain?\r\n2. Inquiry re dietary history?\r\n3. Inquiry re menopause date?\r\n4. IF pain present, examination of area?\r\n5. Comment re kyphosis?\r\n6. X-ray OR bone density OR cortical thickness?\r\n7. Confirmation of osteoporosis by any of tests in question 6?\r\n8. Increased calcium intake (supplements or dietary)?','Unknown');
-INSERT INTO encountertemplate VALUES ('ALCOHOLISM','ALCOHOLISM','1. Alcohol intake, amount per day (when drinking)?\r\n2. Duration of problem?\r\n3. Inquiry re time missed from work?\r\n4. Blood pressure yearly?\r\n5. Chest exam yearly?\r\n6. Yearly comment re condition of skin?\r\n7. Abdominal exam yearly?\r\n8. CPE OR CNS examination within past two years?\r\n9. CBC yearly?\r\n10. Three of following done AT LEAST ONCE; serum protein(AG AND total), SGOT, SGPT, alkaline phosphatase,\r\nprothrombin time, bilirubin?\r\n11. Time since last drink before this office visit noted?\r\n12. Initiate education of patient (AA, Alanon, OR note that counselling was done)?\r\n13. Counselling OR referral to alcohol treatment agency for family member(s)?\r\n14. IF first diagnosis within past 2 years, follow-up within one month?','Unknown');
-INSERT INTO encountertemplate VALUES ('LACERATIONS','LACERATIONS','1. Inquiry re how laceration occurred?\r\n2. Time between injury and visit?\r\n3. Description of wound?\r\n4. IF hand or wrist, comment on function?\r\n5. IF tendons severed, referral?\r\n6. Debridement (washing)?\r\n7. IF sutured, one follow-up?\r\n8. IF no tetanus toxoid within 10 years, injection given?','Unknown');
-INSERT INTO encountertemplate VALUES ('STREP THROAT','STREP THROAT','1. Inquiry re sore throat?\r\n2. Inquiry re presence/absence of fever?\r\n3. Inquiry re cough?\r\n4. Throat exam?\r\n5. Presence/absence of cervical lymphadenopathy noted?\r\n6. Presence/absence of pharyngeal exudate noted?\r\n7. IF fever OR lymphadenopathy OR exudate OR enlarged tonsils, throat swab C & S?\r\n8. Antibiotic used AND was it one of the penicillins, erythromycins, or cephalosporins?\r\n9. IF antibiotic used AND patient antibiotic used for at least 7 days?\r\n10. One follow-up within two weeks?\r\n11. IF positive strep culture, antibiotics used?','Unknown');
-INSERT INTO encountertemplate VALUES ('OTITIS MEDIA -SEROUS','OTITIS MEDIA -SEROUS','1. Inquiry re at least two of following; hearing, pain, recurrent URI?\r\n2. Comment re fluid in middle ear OR retracted ear drum?\r\n3. Comment re nose AND throat?\r\n4. IF third episode or more, audiometry OR referral?\r\n5. IF physical findings OR hearing test are abnormal, follow-up until resolved OR referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('HEMORRHOIDS','HEMORRHOIDS','1. Inquiry re pain?\r\n2. Inquiry re bleeding?\r\n3. Rectal exam?\r\n4. IF rectal bleeding, sigmoidoscopic exam on chart (3 minute)?\r\n5. IF patient >40 and no definitive diagnosis for rectal bleeding found on sigmoidoscopic, barium enema?\r\n6. Description of site and location of hemorrhoids?\r\n7. One or more of the following used? dietary (high fibre, avoid constipation) suppositories sitz baths surgical ligation and banding I & D if acute thrombosed hemorrhoids\r\n8. IF symptoms unchanged for more than 3 months, referral?\r\n9. Discussion re high fibre diet and stool softeners?\r\n10. One follow-up within one month?','Unknown');
-INSERT INTO encountertemplate VALUES ('INFECTIOUS NOMONUCLE','INFECTIOUS NOMONUCLEOSIS','1. Inquiry re at least two of following?\r\nsore throat\r\nfever\r\nmalaise\r\nlymphadenopathy\r\nabdominal pain\r\n2. Presence/absence of fever noted?\r\n3. Throat exam?\r\n4. Presence/absence of lymphadenopathy noted?\r\n5. Presence/absence of hepatosplenomegaly noted?\r\n6. WBC AND diff.?\r\n7. Mono screen?\r\n8. Positive mono test OR abnormal WBC\'s?\r\n9. Advice re reduced activity?\r\n10. Ampicillin used?\r\n11. IF splenomegaly present, follow-up within 2 weeks?\r\n12. IF splenomegaly not present, follow-up within 4 weeks?\r\n13. IF splenomegaly present, advice re avoidance of contact sports or activities?','Unknown');
-INSERT INTO encountertemplate VALUES ('HYPERTHYROIDISM, NEW','HYPERTHYROIDISM, NEW','1. Inquiry re one or more of following?\r\nweight loss palpitations\r\ntremulousness restlessness\r\nmuscular weakness\r\nfatigue\r\n2. Thyroid exam?\r\n3. Pulse?\r\n4. Examination of eyes?\r\n5. T4 OR T3 OR resin uptake OR other thyroid tests?\r\n6. T4 AND T3 AND uptake elevated?\r\n7. Follow-up every 6 months?\r\n8. Euthyroid within 6 months OR referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('TRANSIENT CEREBRAL I','TRANSIENT CEREBRAL ISCHEMIA','1. Inquiry re frequency?\r\n2. Inquiry re duration of each episode?\r\n3. Description of symptoms?\r\n4. Neurological exam with description of deficit?\r\n5. Blood pressure?\r\n6. Cardiovascular examination?\r\n7. Presence/absence of bruits in neck?\r\n8. ECG?\r\n9. IF male > 55 years, ASA prescribed as initial medication OR justification noted?\r\n10. IF ASA used, duration AND dosage recorded?\r\n11. IF two or more episodes, referral OR admission to hospital?\r\n12. IF smoker, advice re smoking?\r\n13. One follow-up within one month?\r\n14. Cause (eg. embolus, thrombosis) noted within one month OR referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('IMPETIGO or PYODERMA','IMPETIGO or PYODERMA','1. Site noted?\r\n2. IF oral antibiotic used, was it one of penicillins, erythromycins, sulfonamides, tetracyclines, or cephalosporins?\r\n3. IF tetracycline used, was patient','Unknown');
-INSERT INTO encountertemplate VALUES ('BASAL AND SQUAMOUS C','BASAL AND SQUAMOUS CELL CA','1. Inquiry re duration of lesion?\r\n2. Location of lesion noted?\r\n3. Size of lesion noted?\r\n4. Surgical pathology biopsy OR referral?\r\n5. IF not referred, pathology report positive?\r\n6. Excision OR dessication OR cryosurgery OR referral?\r\n7. IF not referred, follow-up within 1 month?','Unknown');
-INSERT INTO encountertemplate VALUES ('CONJUNCTIVITIS','CONJUNCTIVITIS','1. Inquiry re itching OR discharge?\r\n2. Inquiry re duration?\r\n3. Description of conjunctiva?\r\n4. IF ophthalmic steroids used, was cornea stained with fluorescein?','Unknown');
-INSERT INTO encountertemplate VALUES ('TRIGEMINAL NEURALGIA','TRIGEMINAL NEURALGIA','1. Inquiry re severity of pain?\r\n2. Inquiry re duration of pain?\r\n3. Inquiry re facial pain?\r\n4. Inquiry re initiating stimuli?\r\n5. Neurological exam?\r\n6. IF Tegretol given, liver function tests within 6 weeks?\r\n7. Discussion re natural history of disease OR reassurance?\r\n8. One follow-up within 3 months?','Unknown');
-INSERT INTO encountertemplate VALUES ('GLOMERULONEPHRITIS','GLOMERULONEPHRITIS','1. Inquiry re urination on each visit?\r\n2. Blood pressure?\r\n3. Weight?\r\n4. Urinalysis, routine AND micro yearly?\r\n5. Creatinine yearly?\r\n6. BUN yearly?\r\n7. Creatinine clearance yearly?\r\n8. Serum proteins yearly?\r\n9. Hemoglobin yearly?\r\n10. One of following?\r\nproteinemia reports on chart\r\ngranular casts\r\nrenal biopsy report on chart\r\n11. Follow-up at least yearly?','Unknown');
-INSERT INTO encountertemplate VALUES ('SPONTANEOUS ABORTION','SPONTANEOUS ABORTION, COMPLETE','1. Date of LMP noted?\r\n2. Duration of LMP noted?\r\n3. Uterine cramps noted?\r\n4. Amount AND duration of vaginal bleeding?\r\n5. Passage of tissue?\r\n6. Pelvic exam with comment re cervix open or closed?\r\n7. Blood pressure?\r\n8. Pulse?\r\n9. Presence/absence of fever?\r\n10. Pregnancy test?\r\n11. Hemoglobin?\r\n12. Hematocrit?\r\n13. Rh factors?\r\n14. IF tissue available, specimen sent to lab?\r\n15. IF indicated by Rh factors, RHOGAM/Rh immune globulin?\r\n16. One follow-up within one month?','Unknown');
-INSERT INTO encountertemplate VALUES ('CERVIX, CARCINOMA IN','CERVIX, CARCINOMA IN-SITU','1. Inquiry re vaginal discharge, within one month?\r\n2. Inquiry re presence/absence of vaginal spotting, within one month?\r\n3. Description of cervix, within one month?\r\n4. Positive Pap smear?\r\n5. IF class IV smear or worse, referral within one month?','Unknown');
-INSERT INTO encountertemplate VALUES ('ECTOPIC PREGNANCY','ECTOPIC PREGNANCY','1. Inquiry re presence/absence of lower abdominal pain?\r\n2. Inquiry re date of last menstrual period?\r\n3. Inquiry re presence/absence of vaginal bleeding?\r\n4. Pelvic exam?\r\n5. Blood pressure AND pulse?\r\n6. IF purulent vaginal discharge, C & S?\r\n7. Abdominal exam?\r\n8. Pregnancy test?\r\n9. IF pregnancy test negative, Beta-HCG?\r\n10. IF not referred or admitted, pelvic ultrasound?\r\n11. Positive pregnancy test OR positive Beta-HCG?\r\n12. Referral OR admission?','Unknown');
-INSERT INTO encountertemplate VALUES ('DIZZINESS, NYD','DIZZINESS, NYD','1. Inquiry re details of episode?\r\n2. Inquiry re duration of episode?\r\n3. Inquiry re presence/absence of precipitating factors?\r\n4. Inquiry re presence/absence of medications?\r\n5. Blood pressure?\r\n6. Heart rate AND rhythm?\r\n7. Ear exam?\r\n8. Comment on Rhomberg OR reflexes OR nystagmus?\r\n9. IF on diuretics, electrolytes tested?\r\n10. IF problem persists, on second visit blood sugar AND CBC?\r\n11. IF heart irregular, ECG OR Holter monitor?\r\n12. IF condition persists for more than 3 months AND specific diagnosis is made, referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('UMBILICAL HERNIA','UMBILICAL HERNIA','*** Patient under 1 year old\r\n1. Well baby care visits?\r\n2. IF surgery done, was justification noted (eg. thin skin, too large, pain, ulceration)?','Unknown');
-INSERT INTO encountertemplate VALUES ('DIABETES MELLITUS, T','DIABETES MELLITUS, TYPE II','1. Inquiry re family history of diabetes on chart (3 minute)?\r\n2. Duration of disease OR starting date on chart (3 minute)?\r\n3. Inquiry re one of following on each visit? \r\nurine sugars blood sugars dietary management patient feels well or ill\r\n4. Weight recorded (at least 75% of visits)?\r\n5. Urine glucose each visit?\r\n6. Comment re cardiovascular system AND blood pressure yearly?\r\n7. Examination of fundi yearly?\r\n8. IF on oral hypoglycemics, at least one blood sugar recorded yearly?\r\n9. IF on insulin, at least two blood sugars recorded yearly?\r\n10. BUN OR creatinine on chart (3 minute)?\r\n11. IF diabetes first diagnosed within past 2 years, evidence of 2 fasting blood sugars > 8.8 mmol/L OR random sugar > 13.8 mmol/L prior to treatment?\r\n12. Diabetic diet - caloric intake noted on chart (3 minute)?\r\n13. Evidence of dietary counselling by a health professional on chart (3 minute)?\r\n14. IF newly diagnosed, follow-up within one month?\r\n15. IF on diet alone, follow-up at least once yearly?\r\n16. IF on oral hypoglycemic OR insulin, follow-up at least twice yearly?\r\n17. Inquiry re sexual dysfunction on chart (3 minute)?\r\n18. IF acetohexamide or chlorpropramide used (Glyburide and Diabeta are OK), was BUN > 9 mmol/L OR was creatinine > 140 mmol/L?\r\n19. IF no ketones in serum or urine, was dietary therapy tried prior to starting oral hypoglycemic?','Unknown');
-INSERT INTO encountertemplate VALUES ('HAY FEVER','HAY FEVER','1. Inquiry re seasonal complaint?\r\n2. Inquiry re precipitating factors (e.g. ragweed, grass etc.)?\r\n3. One of following present; sneezing, rhinorrhea, nasal congestion?\r\n4. Examination of nose?\r\n5. Seasonal occurrence of nasal congestion?\r\n6. Discussion re air conditioning OR air filters?\r\n7. Discussion re avoidance of plants and pollen specific to patient?','Unknown');
-INSERT INTO encountertemplate VALUES ('FIBROMYOSITIS','FIBROMYOSITIS','1. Inquiry re pain, description AND location?\r\n2. Inquiry re aggrravating AND/OR relieving factors?\r\n3. Inquiry re duration?\r\n4. Inquiry re sleep patterns?\r\n5. Inquiry re symptoms of fatigue AND/OR possible depression?\r\n6. Description of areas of pain?\r\n7. IF trigger point(s) noted, location(s)\r\n8. Hemoglobin AND sed rate within 6 months?\r\n9. Oral steroids used?\r\n10. Discussion re stress factors OR on chart (3 minute)?','Unknown');
-INSERT INTO encountertemplate VALUES ('DIVERTICULITIS','DIVERTICULITIS','1. Inquiry re abdominal pain?\r\n2. Inquiry re at least one of following?\r\nconstipation\r\ndiarrhea\r\nrectal bleeding\r\nregularity\r\n3. Inquiry re food intolerances?\r\n4. Abdominal exam?\r\n5. Rectal exam?\r\n6. Stool for occult blood OR within 1 year?\r\n7. Barium enema on chart (3 minute)?','Unknown');
-INSERT INTO encountertemplate VALUES ('SYNCOPE, NYD','SYNCOPE, NYD','1. Inquiry re three of the following?\r\nrecurrent or initial episode predisposing factors (stress, pain, hyperventilation) description of event medications taken any associated injuries\r\n2. Inquiry re duration of unconsciousness? \r\n3. Neurological comments (eg. reflexes, pupils, movements)?\r\n4. Blood pressure?\r\n5. Presence/absence of hyperventilation noted?\r\n6. IF > 55 years, ECG?\r\n7. IF 2nd or more episode, blood sugar?\r\n8. IF 2nd or more episode, CBC?\r\n9. IF 2nd or more episode, EEG?\r\n10. IF 2nd or more episode, follow-up within 1 month OR referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('IMPOTENCE','IMPOTENCE','1. Inquiry re impotence, constant or intermittant?\r\n2. Inquiry re alcohol use?\r\n3. Inquiry re D.M., or systemic disease?\r\n4. Inquiry re emotional problems?\r\n5. Inquiry re nocturnal erections?\r\n6. Inquiry re medications?\r\n7. Genital exam?\r\n8. Blood pressure?\r\n9. Abdominal exam?\r\n10. Neurological exam?\r\n11. Exam of pulses?\r\n12. Urinalysis?\r\n13. Fasting blood sugar?\r\n14. One follow-up?\r\n15. IF problem persists for > 3 months, referral?\r\n16. Sexual counselling with partner?','Unknown');
-INSERT INTO encountertemplate VALUES ('ANXIETY','ANXIETY','1. Statement re symptoms?\r\n2. Inquiry re duration of symptoms?\r\n3. Inquiry re precipitating factors?\r\n4. IF physical complaints noted, evidence of examination of affected area?\r\n5. IF anxiolytic agents used, amount and duration recorded?\r\n6. IF first prescription for medication, follow-up within 2 weeks?\r\n7. Counselling OR referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('HEMATURIA','HEMATURIA','1. Inquiry re first or recurrent episode?\r\n2. Inquiry re frequency of hematuria?\r\n3. Presence/absence of flank pain noted?\r\n4. Presence/absence of dysuria OR frequency noted?\r\n5. Microscopic or gross hematuria noted?\r\n6. Presence/absence of colicky pain noted?\r\n7. Abdominal exam?\r\n8. Flank percussion, findings noted?\r\n9. IF male, rectal AND genital exam?\r\n10. IF female AND 2nd or more episode within 1 year, pelvic exam?\r\n11. Urinalysis AND micro?\r\n12. Urine C & S?\r\n13. BUN AND/OR Creatinine?\r\n14. IF 2nd episode within 2 years, IVP OR referral?\r\n15. IF > 60 years AND source not identified, referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('MENORRHAGIA','MENORRHAGIA','1. Inquiry re bleeding pattern, duration AND amount?\r\n2. IF\r\n3. Pelvic exam on initial visit OR when bleeding stops?\r\n4. Hb?\r\n5. Pap smear on initial visit OR when bleeding stops?\r\n6. Cause established OR referral within 3 months of initial visit for problem?','Unknown');
-INSERT INTO encountertemplate VALUES ('PROSTATE CANCER','PROSTATE CANCER','1. Inquiry re urinary symptoms?\r\n2. Rectal exam at least yearly?\r\n3. Serum acid phosphatase yearly?\r\n4. IF new or changed urinary symptoms, C & S AND urinalysis?\r\n5. Pathology report positive?\r\n6. Follow-up every 6 months?','Unknown');
-INSERT INTO encountertemplate VALUES ('VAGINITIS, VULVITIS','VAGINITIS, VULVITIS','1. Inquiry re at least one of following; vaginal itch (pruritis) vulvar irritation, vaginal odour?\r\n2. Presence/absence of vaginal discharge?\r\n3. Vaginal exam?\r\n4. Vaginal AND/OR cervical C & S OR office examination of discharge in saline or KOH?\r\n5. IF Monilia (Candida) AND topical agent used, was it mystatin OR miconazole OR cotrimoxazole?\r\n6. IF Trichomonas AND systemic or topical agent used, was it metronidazole?\r\n7. IF Gardnerella AND systemic or topical agent used, was it metronidazole OR sulfonamide OR tetracycline?\r\n8. IF Trichomonas, discussion re simultaneous treatment of sexual partner?','Unknown');
-INSERT INTO encountertemplate VALUES ('INFERTILITY, FEMALE','INFERTILITY, FEMALE','1. Parity noted?\r\n2. Infertility for more than 2 years?\r\n3. Inquiry re medication history?\r\n4. Inquiry re menstrual history?\r\n5. Pelvic exam?\r\n6. Examination of breasts?\r\n7. CPE within 2 years after initial diagnosis?\r\n8. Pap smear AND/OR referral?\r\n9. Semen analysis (sexual partner/husband) \r\nOR referral?\r\n10. BS within 6 months after initial diagnosis OR referral?\r\n11. T3 AND/OR T4 within 6 months after initial diagnosis OR referral?\r\n12. Plan of action noted OR referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('LARYNGITIS','LARYNGITIS','1. Inquiry re duration?\r\n2. Inquiry re smoking (or on chart) (3 minute)?\r\n3. Inquiry re specific cause (eg. shouting, occupation)?\r\n4. Exam of pharynx?\r\n5. IF persistant for more than 6 weeks, laryngoscopic exam OR referral?\r\n6. IF smoker, advice re smoking?','Unknown');
-INSERT INTO encountertemplate VALUES ('DDD, CERVICAL','DDD, CERVICAL','1. Inquiry re neck pain?\r\n2. Inquiry re presence/absence of trauma?\r\n3. Inquiry re one of following?\r\npain referred to shoulder and arm muscle weakness of forearm paresthesia\r\n4. Comment on reflexes in arms?\r\n5. Comment on presence/absence of weakness in upper extremity muscles?\r\n6. Comment re range of movement of neck OR within 1 year?\r\n7. Cervical spine X-ray on chart (3 minute)?\r\n8. Positive X-ray diagnosis?\r\n9. IF first visit for this episode, follow-up within 6 weeks?\r\n10. Cervical collar used continuously for more than 1 month?','Unknown');
-INSERT INTO encountertemplate VALUES ('FRACTURES','FRACTURES','1. Description of accident?\r\n2. Time since accident noted?\r\n3. Place of accident (eg. work related)?\r\n4. Description of fracture including presence/absence of deformity?\r\n5. Presence/absence of swelling?\r\n6. Comment re involvement of neurovascular structures?\r\n7. X-ray of fracture site?\r\n8. IF displaced, evidence of reduction OR referral?\r\n9. Immobilization?\r\n10. IF cast applied to extremity, follow-up within 48 hours?\r\n11. One follow-up?','Unknown');
-INSERT INTO encountertemplate VALUES ('ARTHRITIS','ARTHRITIS','(less than one month - multiple joints)\r\n1. Inquiry re duration of symptoms?\r\n2. Location of joint pains noted?\r\n3. Description of nature OR severity of pain?\r\n4. Inquiry re aggravating OR precipitating factors?\r\n5. Description of inflammation OR swelling?\r\n6. Description of range of movement?\r\n7. On OR before second visit for same problem, CBC?\r\n8. On OR before second visit for same problem, ESR?\r\n9. On OR before second visit for same problem, anti-nuclear factor (i.e. ANF, ANA)?\r\n10. On OR before second visit for same problem, rheumatoid arthritis factor (i.e. RF, RA)?\r\n11. Were systemic steroids prescribed?\r\n12. Advice re rest OR restrict movement of joint?\r\n13. Follow-up within 2 weeks?\r\n14. IF within 1 year of visit for peptic ulcer disease, were anti-inflammatory agents prescribed?','Unknown');
-INSERT INTO encountertemplate VALUES ('STASIS DERMATITIS','STASIS DERMATITIS','1. Comment on location?\r\n2. Inquiry re duration?\r\n3. Presence/absence of varicose veins noted?\r\n4. Description of lesions?\r\n5. One follow-up within one month?','Unknown');
-INSERT INTO encountertemplate VALUES ('LICE AND SCABIES','LICE AND SCABIES','1. Inquiry re itching or pruritis?\r\n2. Location noted?\r\n3. IF scabies, description of skin lesion(s)?\r\n4. Gamma Benzene Hexachloride Lotion OR Shampoo?\r\n5. IF used?\r\n6. Instructions re washing clothing and bed linen?\r\n7. IF scabies, entire family treated?','Unknown');
-INSERT INTO encountertemplate VALUES ('BLEPHARITIS','BLEPHARITIS','1. Inquiry re symptoms?\r\n2. Duration of symptoms noted?\r\n3. Fluorinated steroids used?\r\n4. Advice re eye care?','Unknown');
-INSERT INTO encountertemplate VALUES ('URETHRITIS, NYD','URETHRITIS, NYD','1. Inquiry re urinary symptoms?\r\n2. Inquiry re sexual contacts OR injury?\r\n3. Comment re presence/absence of urethral discharge?\r\n4. Genital exam?\r\n5. Urinalysis AND micro?\r\n6. Urine C & S?\r\n7. IF discharge present, urethral swab C & S?\r\n8. VDRL OR STS?\r\n9. IF antibiotic used, was it one of the penicillins, erythromycins, sulfonamides, Septra/Bactrim, cephalosporins, or tetracyclines?\r\n10. One follow-up within 2 weeks?\r\n11. IF urine C & S OR urethral swab C & S still positive after antibiotic treatment, antibiotic changed?\r\n12. IF urine C & S OR urethral swab C & S positive, discussion re notification of sexual partner(s)?\r\n13. IF urethral swab C & S positive for gonorrhea or chlamydia, notification of public health authorities?','Unknown');
-INSERT INTO encountertemplate VALUES ('TONSILLITIS, ACUTE','TONSILLITIS, ACUTE','1. Inquiry re sore throat?\r\n2. Description of tonsils?\r\n3. IF erythromycin, cephalosporin or sulfa used?\r\n4. IF > 4 years and cephalosporin, or sulfa used?\r\n5. IF >= 13 years, was penicillin, erythromycin,\r\ncephalosporin, sulfa, or tetracycline used?\r\n6. IF tetracycline used, was patient','Unknown');
-INSERT INTO encountertemplate VALUES ('CYSTITIS, RECURRENT','CYSTITIS, RECURRENT','1. Comment re any urinary symptoms?\r\n2. Urinalysis or dipstick?\r\n3. Urine for C & S?\r\n4. BUN on chart (3 minute)?\r\n5. IF 3 or more episodes within 3 months, urine culture for TB (acid-fast bacilli)?\r\n6. At least one urinary symptom present OR positive culture?\r\n7. IF culture done, do antibiotics reflect culture \r\nsensitivities?\r\n8. IF child with 2 or more UTI, IVP AND voiding cystogram, OR referral?\r\n9. IF adult female with 3 or more culture proven UTI within\r\n2 years, IVP AND (BUN or Creatinine) OR referral?\r\n10. IF abnormal IVP OR (BUN or Creatinine), referral?','Unknown');
-INSERT INTO encountertemplate VALUES ('BRONCHOPNEUMONIA','BRONCHOPNEUMONIA','1. One of more of following?\r\ncough\r\ndyspnea (shortness of breath)\r\nfever\r\n2. Duration of symptoms noted?\r\n3. Chest exam?\r\n4. Rales in chest?\r\n5. Chest X-ray within one day of diagnosis?\r\n6. IF patient has not improved within 7 days, chest X-ray?\r\n7. IF initial X-ray is positive, repeat within 30 days?\r\n8. Positive X-ray OR rales on examination?\r\n9. IF antibiotics used, dose AND duration recorded, (2/3 of visits)?\r\n10. IF X-ray indicates mycopolasma pneumonia, tetracycline or erythromycin used?\r\n11. Follow-up within one week?','Unknown');
-INSERT INTO encountertemplate VALUES ('HEMATOMA,','HEMATOMA,','1. Inquiry re history of trauma, type noted?\r\n2. Inquiry re spontaneous or traumatic?\r\n3. IF spontaneous, inquiry re previous episodes?\r\n4. IF spontaneous, inquiry re family history of bleeding?\r\n5. Description of size?\r\n6. Description of location?\r\n7. IF spontaneous, CBC, platelets, PT, PTT done?\r\n8. IF seen within 48 hours of onset, ice recommended?\r\n9. IF spontaneous OR recurrent, one follow-up?\r\n10. IF child (other recent or old trauma)?\r\n11. IF AND history of repeated trauma (3 or more within 2 years) skeletal survey?','Unknown');
-INSERT INTO encountertemplate VALUES ('KIDNEY OBSTRUCTION','KIDNEY OBSTRUCTION','1. Inquiry re pain? \r\n2. Abdominal exam? \r\n3. Blood pressure? \r\n4. BUN OR creatinine? \r\n5. Urinalysis AND C & S? \r\n6. IVP shows blockage? \r\n7. Referral within 1 week?','Unknown');
-INSERT INTO encountertemplate VALUES ('ARRHYTHMIA (CARDIAC)','ARRHYTHMIA (CARDIAC)','1. Inquiry re frequency of chest discomfort or pain? \r\n2. Inquiry re duration of chest discomfort or pain? \r\n3. Inquiry re frequency of palpitations? \r\n4. Inquiry re duration of palpitations? \r\n5. Inquiry re precipitating factors (coffee, tea, alcohol)? \r\n6. Inquiry re medications taken prior to occurrence? \r\n7. Blood pressure? \r\n8. Cardiac rate AND rhythm? \r\n9. Chest exam? \r\n10. ECG on first visit for this problem? \r\n11. IF on digoxin OR diuretics, electrolytes? \r\n12. IF on digoxin AND new arrhythmia present, digoxin level? \r\n13. ECG OR description of irregularity on chart? \r\n14. IF arrhythmia present at time of examination, treatment with medication OR reassurance OR referral? \r\n15. Advice re precipitating factors (eg. coffee, tea, alcohol, stress factors)? \r\n16. IF paroxysmal atrial tachycardia, inquiry re stress factors? \r\n17. Follow-up until specific diagnosis made OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('NASOPHARYNGITIS OR U','NASOPHARYNGITIS OR U','1. Complaint of at least one of the following? \r\nnasal discharge\r\nsore throat\r\nmalaise \r\ncold \r\n2. Duration of symptoms noted? \r\n3. IF cough in history, chest exam?\r\n4. IF patient \r\n5. IF sore throat in history, throat exam?\r\n6. IF narcotic antitussives prescribed, cough in history? \r\n7. IF antibiotics prescribed, was there history of secondary infection (coloured phlegm, or fever > 38 for 3 days or more)OR\r\nhigh risk (cardiac valvular disease or chronic pulmonary disease)? ','Unknown');
-INSERT INTO encountertemplate VALUES ('MIGRAINE EQUIVALENTS','MIGRAINE EQUIVALENTS','1. Inquiry re presence/absence of aura? \r\n2. IF aura present, inquiry re type of aura? \r\n3. Inquiry re location of pain? \r\n4. Inquiry re change in headaches?\r\n5. Neurological exam within last year? \r\n6. Blood pressure within last year? \r\n7. IF medication prescribed, dosage noted? \r\n8. IF medication prescribed, duration noted?','Unknown');
-INSERT INTO encountertemplate VALUES ('CHRONIC PROSTATITIS','CHRONIC PROSTATITIS','1. Inquiry re at least 3 of following? \r\ndysuria\r\nfrequency\r\nperineal pain\r\npainful sexual activity\r\nurethral discharge \r\nlow back pain\r\nnocturia \r\n2. Abdominal exam? \r\n3. Rectal exam?\r\n4. Description of prostate (size and consistency)? \r\n5. Urine C & S? \r\n6. Septra OR tetracycline OR ampicillin OR\r\nerythromycin used? \r\n7. Antibiotic used for at least 2 weeks?\r\n8. One follow-up? \r\n9. IF symptoms continue beyond one month OR\r\npyuria for more than one month OR  bacteriuria for more than one month, consultation and/or referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('URINARY TRACT INFECT','URINARY TRACT INFECT','1. Inquiry re duration of symptoms? \r\n2. Inquiry re first or recurring episode? \r\n3. Inquiry re at least two of following?\r\nfrequency \r\ndysuria \r\nhematuria\r\nfever \r\n4. Abdominal exam?\r\n5. Presence/absence of flank OR CVA tenderness noted? \r\n6. IF more than 2 infections within one year in female, vaginal exam? \r\n7. Urinalysis AND micro? \r\n8. Urine C & S? \r\n9. IF 3rd or more occurrence (3 minute) in female, IVP? \r\n10. IF 2nd or more occurrence (3 minute) in males, IVP? \r\n11. IF child AND 2nd or more occurrence in chart, voiding cysto-urethrogram? \r\n12. IF antibiotic used, was it one of penicillins, erythromycins, sulfonamides, cephalosporins, Septra/Bactrim, or tetracyclines? \r\n13. IF tetracycline used, was patient\r\n14. IF child OR discussion re causes of UTI\'s? \r\n15. IF condition persists without definitive diagnosis for more than 3 months, referral? \r\n16. One follow-up within one month?','Unknown');
-INSERT INTO encountertemplate VALUES ('CONGESTIVE HEART FAI','CONGESTIVE HEART FAI','1. Inquiry re at least two of following? \r\nshortness of breath \r\nswollen ankles \r\nparoxysmal nocturnal dyspnea \r\nexercise intolerance \r\n2. Current medication list? [HA2 ]> \r\n3. Chest exam? \r\n4. Weight recorded on at least 50% of visits? \r\n5. Blood pressure? \r\n6. Comment on ankles OR jugular venous pressure (J.V.P. or J.V.D.)? \r\n7. Heart rate AND rhythm? \r\n8. ECG within 1 year prior OR within 2 weeks after first diagnosis? \r\n9. IF on diuretics, electrolytes done on 50% of visits? \r\n10. BUN done on 50% of visits? \r\n11. Hemoglobin OR indices (hematocrit, MCV, MCHC) done on 50% of visits? \r\n12. Diuretics prescribed? \r\n13. IF on diuretics, amount and duration recorded? \r\n14. Rest recommended? \r\n15. Advice re diet (eg. low salt)? \r\n16. Follow-up weekly until physician notes \"improved\" or \"stable\"? \r\n17. Narcotics prescribed? ','Unknown');
-INSERT INTO encountertemplate VALUES ('CLUSTER HEADACHE','CLUSTER HEADACHE','1. History of attacks in clusters? \r\n2. Attacks acute AND short duration AND recurring several times in 24 hours? \r\n3. Description of headache including two of following? \r\nfacial flushing OR sweating \r\nunilateral lacrimation \r\nnasal congestion \r\n4. Blood pressure? \r\n5. Neurological exam, including note re cranial nerves? \r\n6. One follow-up within 6 months? \r\n7. IF on medication, one follow-up within one month? ','Unknown');
-INSERT INTO encountertemplate VALUES ('DYSPLASIA OF CERVIX','DYSPLASIA OF CERVIX','1. Pap smear at least yearly? \r\n2. IF uterus not removed, yearly follow-up? \r\n3. IF present less than one year, record of follow-up time? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HEADACHE NYD','HEADACHE NYD','1. Inquiry re at least 6 of the following? \r\nseverity \r\nfrequency \r\nlocation \r\nprecipitating factors \r\nmedication history \r\nduration \r\nassociated symptoms (eg. dizziness, blurred vision) \r\nprevious history of headaches \r\nhistory of head injury \r\nhistory of seizures \r\n2. Neurological exam? \r\n3. Blood pressure? \r\n4. One follow-up within 3 months OR referral? \r\n5. IF no definitive diagnosis within 3 months, referral? \r\n6. Inquiry re stress factors? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HERPETIC ULCER, VULV','HERPETIC ULCER, VULV','1. Inquiry re history of vaginal complaint? \r\n2. Description of lesion? \r\n3. Location of lesion? \r\n4. Viral culture (scraping)? \r\n5. IF initial culture negative AND patient pregnant OR lesion persists, repeat culture? \r\n6. Positive viral culture? \r\n7. IF present at labour, Caesarian section OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('THREATENED ABORTION','THREATENED ABORTION','1. Date of LMP noted? \r\n2. Amount of vaginal bleeding? \r\n3. Duration of vaginal bleeding? \r\n4. Uterine cramps? \r\n5. IF heavy bleeding OR continued spotting for one week, pelvic exam? \r\n6. Pregnancy test? \r\n7. Hemoglobin? \r\n8. Hematocrit? \r\n9. Rh factors? \r\n10. Blood type? \r\n11. Positive pregnancy test? \r\n12. Bedrest advised? \r\n13. Progesterone or estrogen used? \r\n14. Follow-up at least once weekly while bleeding? ','Unknown');
-INSERT INTO encountertemplate VALUES ('DERMATOPHYTOSIS - RI','DERMATOPHYTOSIS - RI','1. Site noted? \r\n2. Extent noted? \r\n3. IF griseofulvin prescribed, skin scraping for C & S? \r\n4. Topical antifungal agent used? \r\n5. IF griseofulvin used, were topical antifungal agents tried for 1 month first? \r\n6. One follow-up within 3 weeks? \r\n7. IF griseofulvin used, CBC within 3 months? ','Unknown');
-INSERT INTO encountertemplate VALUES ('AMMENORRHEA - PRIMAR','AMMENORRHEA - PRIMAR','1. Family history? \r\n2. Growth history? \r\n3. Sexual development history (secondary sexual characteristics)? \r\n4. No period by age 17? \r\n5. Description of breasts, pubic and axillary hair? \r\n6. Pelvic exam OR referral? \r\n7. Referral by age 18? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PARAPHIMOSIS','PARAPHIMOSIS','1. Inquiry re pain? \r\n2. Foreskin not reducible by patient? \r\n3. Description of penis? \r\n4. Reduction attempted by physician? \r\n5. Counselling on care of penis? \r\n6. IF physician unable to reduce, follow-up or referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('LOW BACK PAIN, NOS,','LOW BACK PAIN, NOS,','1. Inquiry re duration AND location of pain? \r\n2. Inquiry re presence/absence of one of following? \r\nparesthesia \r\nsensory aberrations \r\nradiation of pain \r\n3. Inquiry re presence/absence of trauma? \r\n4. Inquiry re previous episode(s)? \r\n5. Movement of back (flexion OR extension OR lateral flexion OR rotation) noted? \r\n6. Note on reflexes (one of knee OR ankle)? \r\n7. Note on straight leg raising? \r\n8. IF pain persists for more than 1 month, lumbar spine AP AND lateral X-rays? \r\n9. IF narcotic analgesic (except codeine compounds, 30 mg. codeine max.) used, justification statement? \r\n10. Back exercises AND/OR back care instructions? \r\n11. One follow-up? \r\n12. IF still continuously painful after 3 months, consultation OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('NOSEBLEED, ANTERIOR','NOSEBLEED, ANTERIOR','1. Inquiry re frequency? \r\n2. Inquiry re duration? \r\n3. Some estimate of blood loss noted? \r\n4. Examination of nose? \r\n5. IF active bleeding at time of visit, blood pressure recorded? \r\n6. IF > 60 years, hemoglobin? \r\n7. IF recurrent nose bleeder (2 episodes within 6 months), CBC AND platelet count AND PT AND PTT on chart? \r\n8. One of the following? \r\ngross bleeding \r\nphysical evidence of bleeding vessel on examination \r\n9. IF packing performed, follow-up within 2 days? \r\n10. IF Hg \r\n11. IF 3 nosebleeds within past 2 days AND not actively bleeding, cautery OR prescription of ointment? \r\n12. IF acute nosebleed, packing AND/OR cautery AND/OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('MUMPS','MUMPS','1. Inquiry re duration of symptoms? \r\n2. Swelling in parotid area noted? \r\n3. IF male > 11 years, testicular exam? \r\n4. IF analgesic used, was it ASA or acetaminophen? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HYPERLIPIDEMIA','HYPERLIPIDEMIA','1. Family history OR on chart (3 minute)? \r\n2. Cardiovascular exam? \r\n3. Weight recorded? \r\n4. Abdominal exam? \r\n5. Comment re xanthomas? \r\n6. Blood sugar OR glucose tolerance test? \r\n7. Lipids? \r\n8. Lipid level above lab normal? \r\n9. Discussion re diet? \r\n10. IF obesity noted, discussion re weight reduction? \r\n11. Discussion re alcohol AND/OR exercise? ','Unknown');
-INSERT INTO encountertemplate VALUES ('BRONCHITIS,ACUTE','BRONCHITIS,ACUTE','1. Comment re cough? \r\n2. Comment re sputum? \r\n3. Chest exam? \r\n4. Temperature recorded? \r\n5. IF antibiotics used, dose AND duration recorded (2/3 of the time)? \r\n6. IF smoker, advice re smoking? \r\n7. IF narcotic syrup used, was it prescribed more than once within 30 days? ','Unknown');
-INSERT INTO encountertemplate VALUES ('INFANTILE COLIC','INFANTILE COLIC','1. Inquiry re at least two of following? \r\nvomiting\r\nbowel movements\r\nburping\r\npassing gas\r\nfluid intake\r\n2. Inquiry re timing of crying? \r\n3. Weight recorded with initial diagnosis? \r\n4. Comment on appearance of baby? \r\n5. Evidence of evening crying after feeding? \r\n6. At least one follow-up with comment on colic status? \r\n7. Evidence of some support for parent(s) by one of following?\r\npublic health nurse\r\nreassurance and/or discussion by family doctor\r\ninvolvement of family members','Unknown');
-INSERT INTO encountertemplate VALUES ('DIABETES MELLITUS, J','DIABETES MELLITUS, J','1. At least every 6 months, comment re one of following? \r\npolyuria \r\npolydipsia \r\nweight loss \r\n2. Description of fundi at least once yearly OR evidence on chart (3 minute) that patient is followed by an opthalmologist? \r\n3. Yearly fasting blood sugar? \r\n4. Urinalysis on at least 75% of visits? \r\n5. Insulin dosage noted at least once yearly? \r\n6. Evidence that home monitoring of urine glucose OR blood glucose is occurring? \r\n7. Evidence of dietary counselling (CDA diet or diabetic education centre referral) on chart (3 minute)? \r\n8. Follow-up at least twice yearly? \r\n9. Evidence of discussion re effects on normal life (eg. family, friends, activities) at least once yearly? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PSORIASIS','PSORIASIS','1. Inquiry re duration of lesions OR on chart (3 minute)?\r\n2. Description of lesions (scaly, size, psoriatic etc.) OR on chart (3 minute)? \r\n3. Location of lesions noted OR on chart (3 minute)? \r\n4. IF systemic steroids used, consultant\'s note? \r\n5. IF antimitotic agents used, consultant\'s note? \r\n6. Counselling OR on chart (3 minute)? ','Unknown');
-INSERT INTO encountertemplate VALUES ('DEGENERATIVE ARTHRIT','DEGENERATIVE ARTHRIT','1. Were oral corticosteroids (steroids) used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ACNE VULGARIS','ACNE VULGARIS','1. IF on antibiotics (systemic or topical), duration noted on at least 50% of visits? \r\n2. IF on antibiotics (systemic or topical), type noted of visits? \r\n3. Radiation used in treatment by family physicians? \r\n4. Discussion re causes and treatment with patient? \r\n5. IF systemic antibiotics prescribed, follow-up within 6 weeks? \r\n6. IF \"controlled\", follow-up once per year? \r\n7. IF \"severe\" (failure to respond to treatment by family physician within 6 months), referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('GASTROENTERITIS AND','GASTROENTERITIS AND','1. Inquiry re presence/absence of vomiting? \r\n2. IF vomiting, frequency AND amount noted? \r\n3. Inquiry re frequency AND consistency AND mucus of stools? \r\n4. Inquiry re presence/absence of blood in stools? \r\n5. Inquiry re duration of symptoms? \r\n6. Inquiry re travel history? \r\n7. Abdominal exam? \r\n8. IF child \r\n9. Comment re presence/absence of dehydration? \r\n10. IF failure to respond in 2 days, CBC? \r\n11. IF failure to respond in 2 days, stool cultures? \r\n12. IF failure to respond in 2 days, electrolytes? \r\n13. IF failure to respond in 2 days, stool for occult blood? \r\n14. IF gastroenteritis, presence of diarrhea and vomiting recorded? \r\n15. Antispasmodics OR narcotic antidiarrheals OR antibiotics used? \r\n16. Discussion re avoidance of citrus juices and milk? ','Unknown');
-INSERT INTO encountertemplate VALUES ('EPICONDYLITIS','EPICONDYLITIS','1. Inquiry re duration? \r\n2. Inquiry re causes? \r\n3. Palpation, findings noted? \r\n4. Localized pain present? \r\n5. Tenderness on palpation of site present? \r\n6. Advice re avoidance of activity that caused or precipitated problem? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HYPERTENSION (ANY AG','HYPERTENSION (ANY AG','1. Inquiry re family history of stroke, M.I. OR on chart (3 minute)? \r\n2. Medications taken listed at least twice in 2 year period? \r\n3. One blood pressure per visit (at least 75%)? \r\n4. Yearly comment on heart AND lungs AND fundi AND weight?\r\n5. ECG, on chart (3 minute)? \r\n6. Urinalysis, on chart (3 minute)? \r\n7. IF smoker, advice re smoking? \r\n8. IF obesity noted, advice re weight loss? \r\n9. IF on medication, at least 2 visits per year? \r\n10. IF patient AND diastolic B.P. > 105 on three consecutive visits, referral? \r\n11. Inquiry re stress factors at least once? \r\n12. Inquiry re alcohol intake at least once? \r\n13. IF oral contraceptives used, was justification noted? \r\n14. IF sympathomimetics used, was justification noted?\r\n15. IF diastolic B.P. > 105 on two consecutive occasions, treated with medication? ','Unknown');
-INSERT INTO encountertemplate VALUES ('BREAST LUMP','BREAST LUMP','1. Inquiry duration? \r\n2. Inquiry re presence/absence of pain? \r\n3. Inquiry re changes relative to menstrual cycle? \r\n4. Size of lump noted? \r\n5. Location of lump noted, specific description OR diagram?\r\n6. Presence/absence of axillary nodes? \r\n7. Referral OR follow-up visit within 4 weeks? \r\n8. IF not previously referred AND lump has not changed OR is larger, one of following done? \r\nreferral \r\naspiration \r\nmammogram \r\nexcision ','Unknown');
-INSERT INTO encountertemplate VALUES ('IRON DEFICIENCY ANEM','IRON DEFICIENCY ANEM','** NOTE **\r\nNon-pregnant, new presentation \r\n1. Inquiry re bleeding from bowel? \r\n2. Inquiry re bleeding from other sources (eg. nose, vagina) \r\n3. Inquiry re diet? \r\n4. Hemoglobin OR hematocrit? \r\n5. Indices MCV AND MCHC OR smear? \r\n6. Two of following? \r\nSerum ferritin \r\nserum iron \r\ntotal iron binding capacity \r\n7. Stool for occult blood? \r\n8. Serum ferritin OR hemoglobin microcytic smear OR low indices (MCV and MCHC)? \r\n9. Oral iron prescribed? \r\n10. IF poor diet noted, diet counselling? \r\n11. One follow-up within 6 weeks? \r\n12. IF injectable iron used, justification statement?','Unknown');
-INSERT INTO encountertemplate VALUES ('SCARLET FEVER','SCARLET FEVER','','Unknown');
-INSERT INTO encountertemplate VALUES ('ATROPHIC VAGINITIS','ATROPHIC VAGINITIS','1. Inquiry re at least one of following? \r\ndyspareunia \r\ndysuria \r\nspotting \r\nvaginal itch \r\n2. Description of vulva AND/OR vagina? \r\n3. Pap smear for karyopyknotic index? \r\n4. IF dysuria, urinalysis AND micro? \r\n5. Vaginal C & S? \r\n6. IF topical agent used, was it Premarin/conjugated estrogen OR dienestrol cream? \r\n7. IF oral estrogen therapy used, follow-up within one year? \r\n8. IF sexual dysfunction OR dyspareunia identified, counselling? ','Unknown');
-INSERT INTO encountertemplate VALUES ('IRRITABLE BOWEL','IRRITABLE BOWEL','1. Inquiry re bowel activity OR cramps, once per 6 months? \r\n2. Abdominal exam once per year? \r\n3. Stool for occult blood once per year? \r\n4. Sigmoidoscopic exam OR on chart (3 minute)? \r\n5. UGI series with small bowel follow through OR on chart (3 minute)? \r\n6. Presence of constipation OR diarrhea OR cramps? \r\n7. Barium enema OR on chart (3 minute)? \r\n8. Follow-up at least once within 6 months? \r\n9. Discussion of stress factors? \r\n10. Narcotics used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ANKYLOSING SPONDYLIT','ANKYLOSING SPONDYLIT','1. Inquiry re presence/absence of pain? \r\n2. Inquiry re history of stiffness? \r\n3. Yearly comment re stiffness? \r\n4. Yearly comment re range of movement? \r\n5. Yearly comment re presence/absence of deformity? \r\n6. HLA-B27 positive AND X-ray report positive OR consultant\'s report positive? \r\n7. Oral corticosteroids started in primary care? \r\n8. IF on any medication, follow-up yearly? ','Unknown');
-INSERT INTO encountertemplate VALUES ('OTITIS MEDIA ACUTE','OTITIS MEDIA ACUTE','1. Description of symptoms? \r\n2. Duration of symptoms? \r\n3. Examination of ears? \r\n4. Comment re one of the following? \r\nred drum \r\nbulging drum \r\nloss of light reflex \r\n5. IF tetracycline or chloramphenicol used, was patient\r\n6. Antibiotics prescribed for at least 10 days? \r\n7. IF > 4 years AND antibiotic used, was it ampicillin, penicillin or erythromycin? \r\n8. IF AND antibiotic used, was it penicillin, amoxicillin, sulfa or erythromycin? \r\n9. One follow-up within 4 weeks of episode with statement of patient\'s condition? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ANIMAL BITES','ANIMAL BITES','1. Inquiry re what kind of animal? \r\n2. Inquiry re animal provoked or not? \r\n3. Description of wound? \r\n4. IF no tetanus toxoid within 10 years, injection given? \r\n5. IF animal unprovoked, comment re rabies risk? ','Unknown');
-INSERT INTO encountertemplate VALUES ('STY','STY','1. Painful or swollen eyelid? ','Unknown');
-INSERT INTO encountertemplate VALUES ('MYOCARDIAL INFARCTIO','MYOCARDIAL INFARCTIO','** NOTE **\r\nQUESTIONS 1 THROUGH 6 SHOULD BE PRESENT ON AT LEAST 75% OF VISITS. \r\n1. Inquiry re chest pain relating to activity? \r\n2. Inquiry re palpitations? \r\n3. Inquiry re dyspnea? \r\n4. Blood pressure? \r\n5. Chest auscultation? \r\n6. Cardiac auscultation (sounds AND rhythm AND murmurs)? \r\n7. Lipids (cholesterol AND triglycerides) within one year of hospital discharge? \r\n8. IF new abnormal rhythm noted, ECG within 2 days? \r\n9. Current medications recorded (name AND dosage)? \r\n10. Inquiry re risk factors (eg. diet, blood pressure, smoking, obesity)? \r\n11. One follow-up by family doctor or specialist within 4 weeks of discharge? \r\n12. Following initial visit after discharge, follow-up at least every 3 months for one year? ','Unknown');
-INSERT INTO encountertemplate VALUES ('RHEUMATIC HEAR DISEA','RHEUMATIC HEAR DISEA','1. Inquiry re at least one of following? \r\ndyspnea on exertion \r\neffort intolerance \r\nchest pain \r\nfatique \r\n2. Description of cardiac sounds, rhythm, murmurs? \r\n3. Blood pressure? \r\n4. IF available in the community, echocardiography? \r\n5. Chest X-ray on chart? \r\n6. IF prophylactic antibiotic used, was it one of the penicillins, cephalosporins, sulfonamides, erythromycins? \r\n7. Advice re antibiotic coverage for instrumentation procedures (eg. dental surgery, urology, gynecology)? ','Unknown');
-INSERT INTO encountertemplate VALUES ('FATIGUE, NYD (> 15 Y','FATIGUE, NYD (> 15 Y','1. Inquiry re duration? \r\n2. Inquiry re relation to physical activity? \r\n3. Inquiry re presence/absence of diurnal variation? \r\n4. Inquiry re personal habits (alcohol, drugs)? \r\n5. Inquiry re stress factors? \r\n6. Inquiry re symptoms of depression (early morning wakening, feeling of worthlessness, weight loss, suicidal thoughts)? \r\n7. IF no positive findings in questions 4, 5 and/or 6 above, general assessment within 6 months? \r\n8. Hemoglobin? \r\n9. Urinalysis and micro? \r\n10. IF mention of abnormal thyroid, T4 OR TSH done? \r\n11. IF patient is on diuretics, electrolyte levels recorded? \r\n12. Drug treatment started before definitive diagnosis? \r\n13. One follow-up within 6 weeks? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PROSTATITIS','PROSTATITIS','1. Inquiry re dysuria? \r\n2. Inquiry re pain? \r\n3. Prostate tender? \r\n4. Urinalysis? \r\n5. Urine C & S? \r\n6. Antibiotics used AND amount noted? \r\n7. Antibiotics used AND duration noted? \r\n8. Counselling re at least one of coffee, alcohol, smoking, spices? \r\n9. Follow-up within 2 weeks? ','Unknown');
-INSERT INTO encountertemplate VALUES ('KERATITIS, INFLAMMAT','KERATITIS, INFLAMMAT','1. Inquiry re at least one of following? \r\nphotophobia \r\npain in eye \r\nocular discharge \r\ntearing of eye \r\n2. Duration of symptoms? \r\n3. Description of cornea? \r\n4. Fluoroscein staining? \r\n5. Corticosteroid eye drops used? \r\n6. Follow-up within 48 hours? \r\n7. IF not improved within 48 hours, referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('MONOARTICULAR ARTHRI','MONOARTICULAR ARTHRI','** NOTE **\r\nOne large joint; ankle, knee, hip, wrist, elbow, shoulder. \r\n1. Inquiry re pain? \r\n2. Site noted? \r\n3. Inquiry re duration of symptoms? \r\n4. Inquiry re presence/absence of trauma? \r\n5. Description of joint? \r\n6. Temperature recorded OR history of fever? \r\n7. One large severely painful joint with abnormalities upon examination? \r\n8. Definitive diagnosis on chart within 3 days OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('DEGENERATIVE DISC DI','DEGENERATIVE DISC DI','1. Inquiry re low back pain, at least one of following? \r\nduration \r\nlocation \r\nradiation \r\n2. Comment on movement of back, at least one of following? \r\nflexion \r\nextension \r\nlateral flexion \r\nrotation \r\n3. Lumbar X-ray (3 views) on chart (3 minute)? \r\n4. Positive X-ray of lumbar spine on chart (3 minute)? \r\n5. IF narcotic analgesic used, justification statement? \r\n6. Back exercises AND/OR back care instructions? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PERFORATION TYMPANIC','PERFORATION TYMPANIC','1. Inquiry re cause? \r\n2. Inquiry re pain? \r\n3. Inquiry re discharge? \r\n4. Location of perforation? \r\n5. Size of perforation? \r\n6. Follow-up until resolved or referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ARTHRITIS, RHEUMATOI','ARTHRITIS, RHEUMATOI','** NOTE **\r\nThese questions apply only to PREVIOUSLY DIAGNOSED rheumatoid arthritis. \r\n1. Inquiry re pain? \r\n2. Inqiury re stiffness? \r\n3. Inquiry re fatigue? \r\n4. Yearly comment re swollen joints? \r\n5. Yearly comment re limitation of movement? \r\n6. Follow-up at least once per year? \r\n7. IF patient on NSAIDS OR chloroquine OR penicillamine OR methotrexate OR gold (myochrysine), follow-up at least 2 times per year? \r\n8. Note at least once yearly re how patient coping? \r\n9. Was methotrexate OR gold OR oral corticosteroids started by family doctor (search back 3 months only)? \r\n10. IF taking chloroquine, ophthamological consultation AND evidence of opthalmological follow-up yearly? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PINWORMS','PINWORMS','1. Inquiry re pruritis of anus or vulva? \r\n2. Examination for eggs AND/OR worms on anus? \r\n3. Pinworm test? \r\n4. Pyrvinium pamovate OR Vanquin used? \r\n5. Whole household treated simultaneously? \r\n6. Positive eggs OR positive worms OR positive pinworm test? ','Unknown');
-INSERT INTO encountertemplate VALUES ('RUBELLA','RUBELLA','1. Inquiry re at least one of following? \r\nfatigue enlarged glands \r\nmalaise rhinitis\r\nmyalgia conjunctivitis\r\nfever abdominal pain\r\nsore throat ear pain\r\n2. Inquiry re duration of symptom? \r\n3. Rash noted? \r\n4. Presence of posterior auricular nodes noted? ','Unknown');
-INSERT INTO encountertemplate VALUES ('CELLULITIS','CELLULITIS','1. Inquiry re duration? \r\n2. Site of lesion noted? \r\n3. Extent/size of lesion noted? \r\n4. Temperature recorded? \r\n*** NOTE *** \r\nIF the lesion is larger than 5 inches in diameter OR this is the third or more episode, then questions 5 through 8 apply. \r\n5. IF above, WBC on chart? \r\n6. IF above, urinalysis on chart? \r\n7. IF above, C & S of lesion? \r\n8. IF above, fasting blood sugar within one year? \r\n9. Antibiotics used for at least 7 days? \r\n10. IF antibiotic used, type recorded? \r\n11. IF antibiotic used, amount recorded? \r\n12. Follow-up within 7 days? ','Unknown');
-INSERT INTO encountertemplate VALUES ('LYMPHADENOPATHY NYD','LYMPHADENOPATHY NYD','1. Inquiry re location of enlarged glands? \r\n2. Inquiry re duration? \r\n3. Description of node(s)? \r\n4. IF in axilla OR groin, comment on extremity? \r\n5. IF in neck, ear and throat exam? \r\n6. IF non-neck node AND no obvious cause noted, CBC?\r\n7. IF neck node AND no obvious cause noted, infectious monocucleosis screen (Monospot)? \r\n8. IF lesion persists for one month or more at the same size, chest X-ray? \r\n9. IF lesion persists for two months or longer, biopsy of node OR referral? \r\n10. Antibiotic used AND it was one of the penicillins, erythromycins, sulfonamides, cephalosporins, OR tetracyclines? \r\n11. IF the patient was\r\n12. IF no infectious cause noted, one follow-up? ','Unknown');
-INSERT INTO encountertemplate VALUES ('BURSITIS','BURSITIS','1. Inquiry re pain OR swelling? \r\n2. Inquiry re location? \r\n3. Inquiry re duration? \r\n4. Description of site of lesion (eg. redness, swelling, fluctuation)? \r\n5. IF infected OR if aspirated OR if I&D done, specimen sent for C&S? \r\n6. IF NSAID prescribed, one follow-up within 1 month? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PREGNANCY, DELIVERY,','PREGNANCY, DELIVERY,','1. Ontario antenatal records I AND II? \r\n2. Urinalysis with each visit? \r\n3. Hemoglobin each trimester? \r\n4. IF urinalysis positive for glucose on 2 occasions, blood sugar OR glucose tolerance test OR referral? \r\n5. IF dipstick urinalysis positive, lab report of urinalysis and micro? \r\n6. IF hemoglobin\r\n7. IF any drugs used (except pencillins, vitamins, iron, or antinauseants), comment re teratogenicity? \r\n8. IF blood sugar elevated, discussion of diet with patient? \r\n9. Follow-up monthly for first 7 months, every 2 weeks during the 8th month, and then weekly until delivered? \r\n10. IF X-rays done, pregnancy related OR justification statement? ','Unknown');
-INSERT INTO encountertemplate VALUES ('RECTAL BLEEDING','RECTAL BLEEDING','1. Inquiry re at least 2 of following? \r\namount \r\ntype of bleeding \r\nduration of bleeding \r\n2. Inquiry re bowel habits? \r\n3. Abdominal exam? \r\n4. Rectal exam? \r\n5. Hemoglobin within 1 week? \r\n6. Proctoscopic exam within 1 week? \r\n7. Sigmoidoscopic exam OR referral within 2 weeks? \r\n8. IF > 30, barium enema AND air contrast within 1 month? \r\n9. IF 30 years old or less AND no cause found on sigmoidoscopic, barium enema AND air contrast within 1 month? \r\n10. Barium enema AND/OR sigmoidoscopic exam within 1 month? \r\n11. IF no diagnosis established after 1 month, referral/consultation OR statement of justification? \r\n12. IF not hemorrhoids, one follow-up? ','Unknown');
-INSERT INTO encountertemplate VALUES ('URTICARIA','URTICARIA','1. Inquiry re duration of rash? \r\n2. Inquiry re location of rash? \r\n3. Inquiry re possible cause (eg. diet, stress, medications)? \r\n4. Description of lesion? \r\n5. IF life threatening (eg. laryngeal edema, circulatory collapse), epinephrine used? \r\n6. IF systemic steroids used, duration \r\n7. IF recurrent (4 or more occasions), consultation OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('FOLLICULITIS','FOLLICULITIS','1. Inquiry re first or recurrent episode? \r\n2. Description of eruption? \r\n3. Location noted? \r\n4. IF recurrent (3 or more episodes in 1 year), C & S? \r\n5. IF recurrent (3 or more episodes in 1 year), serum glucose OR fasting blood sugar OR glucose tolerance test? \r\n6. IF oral antibiotics used, dosage AND duration recorded? \r\n7. IF folliculitis on face AND male > 16, advice re shaving? \r\n8. IF oral antibiotics used, one follow-up?','Unknown');
-INSERT INTO encountertemplate VALUES ('CHEST PAIN-NYD (>18','CHEST PAIN-NYD (>18','1. Location of pain noted? \r\n2. Duration of pain noted? \r\n3. Response to exercise OR posture noted? \r\n4. History of cough OR response to breathing noted? \r\n5. Response to time of eating OR type of food noted? \r\n6. Chest exam? \r\n7. Blood pressure? \r\n8. Heart rate AND rhythm? \r\n9. Presence/absence of chest wall tenderness noted? \r\n10. IF exercise related AND chest not tender, ECG done within 3 days? \r\n11. IF rales OR rhonchi OR dullness in chest, X-ray ordered within 3 days? \r\n12. Statement that there is no cardiac cause OR ECG normal, on this visit OR follow-up within one month? ','Unknown');
-INSERT INTO encountertemplate VALUES ('FOREIGN BODY IN NOSE','FOREIGN BODY IN NOSE','1. Inquiry re how foreign body got into nose? \r\n2. Inquiry re which side is affected? \r\n3. IF removed, description of foreign body? \r\n4. IF foreign body not removed, referral to ENT specialist within 24 hours? ','Unknown');
-INSERT INTO encountertemplate VALUES ('SKIN ABSCESS','SKIN ABSCESS','1. Inquiry re location? \r\n2. Inquiry re recurrent or first attack? \r\n3. Description of size? \r\n4. Presence/absence of fluctuation? \r\n5. Presence/absence of lymphangitis? \r\n6. C & S of pus? \r\n7. IF recurrent, fasting serum glucose? \r\n8. Demonstration of pus? \r\n9. I & D? \r\n10. One follow-up within 10 days? ','Unknown');
-INSERT INTO encountertemplate VALUES ('STOMATITIS, MONILIAL','STOMATITIS, MONILIAL','1. Inquiry re location AND duration of oral lesions? \r\n2. IF adult, inquiry re underlying cause (eg. antibiotics diabetes) OR this information on chart (3 minute)? \r\n3. Presence/absence of plaques in mouth noted? \r\n4. IF lesions unresolved within 2 weeks after therapy started, C & S of lesions for monilia? \r\n5. White plaques in mouth? \r\n6. Local antimonilial agent? \r\n7. Antibiotic used? \r\n8. Follow-up within 2 weeks? ','Unknown');
-INSERT INTO encountertemplate VALUES ('BRONCHITIS,CHRONIC','BRONCHITIS,CHRONIC','1. Occupation on chart (3 minute)? \r\n2. Smoking history on chart (3 minute)? \r\n3. Cough productive OR note re presence/absence of change in amount of sputum? \r\n4. Chest breath sounds? \r\n5. CPE at least every two years with detailed description of chest (3 of 6 respiratory signs)? \r\n6. Chest X-ray (2 views) within 3 years? \r\n7. IF patient fails to improve after 21 days continuous medication, chest X-ray? \r\n8. Does patient produce sputum 6 months of the year? \r\n9. IF antibiotics used, dose AND durtion recorded (2/3 of visits)? \r\n10. IF smoker, advice re smoking? \r\n11. Follow-up twice per year? \r\n12. Sedatives, hypnotics, narcotics or antihistamines used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HYPERTENSION, < 75 Y','HYPERTENSION, < 75 Y','1. Inquiry re family history of stroke AND/OR M.I., OR on chart (3 minute)? \r\n2. Right and left arm blood pressure at least once on chart? \r\n3. One blood pressure per visit (at least 75%)? \r\n4. Yearly comment on heart AND lungs AND fundi AND weight? \r\n5. ECG, on chart (3 minute)? \r\n6. Urinalysis, on chart (3 minute)? \r\n7. Were there at least two readings with diastolic greater than 90 OR one reading greater than 105 before drug therapy was started? \r\n8. IF diastolic B.P. > 105 or systolic > 200, first line antihypertensive used (thiazides AND/OR beta blockers)? \r\n9. IF second line antihypertensive were used, were first line antihypertensives tried for at least 3 months? \r\n10. IF smoker, advice re smoking? \r\n11. IF obesity noted, advice re weight loss (eg. diet or exercise)? \r\n12. IF patient on drugs, at least 2 visits per year? \r\n13. IF patient has persistant B.P. > 105, referral after 6 months? \r\n14. Inquiry re stress factors? \r\n15. IF oral contraceptives used, justification noted? \r\n16. IF sympathomimetics used, justification noted? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PROSTATE, BENIGN HYP','PROSTATE, BENIGN HYP','1. Inquiry re urinary symptoms, at least one of following?\r\nnocturia \r\nfrequency\r\nstream\r\nurgency \r\n2. Description of prostate? \r\n3. Urinalysis? \r\n4. C & S? \r\n5. IF bladder distended, drained slowly? \r\n6. IF catheterized or obstructed, referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PYELONEPHRITIS, CHRO','PYELONEPHRITIS, CHRO','1. Inquiry re 3 of following OR on chart (3 minute)? \r\nurinary frequency \r\nurinary urgency \r\nburning on urination (dysuria) \r\nlumbar back pain \r\nfever \r\nchills \r\n2. Blood pressure at least yearly? \r\n3. Urinalysis AND micro at least once in 2 years? \r\n4. Urine C&S at least once in 2 years? \r\n5. Urine C&S for acid-fast bacilli on chart (3 minute)? \r\n6. BUN OR creatinine at least once in 2 years? \r\n7. IVP on chart (3 minute)? \r\n8. Follow-up at least yearly? ','Unknown');
-INSERT INTO encountertemplate VALUES ('IRITIS','IRITIS','1. Inquiry re at least one of following; blurred vision, painful eye, red eye, photophobia? \r\n2. Description of eye? \r\n3. Referral OR phone consultation? ','Unknown');
-INSERT INTO encountertemplate VALUES ('REFLUX ESOPHAGITIS','REFLUX ESOPHAGITIS','1. Inquiry re duration of symptoms? \r\n2. At least two of following present? \r\nheartburn with bending over recumbency \r\nwater brash \r\nintolerance to rich or spicy foods \r\nintolerance to alcohol \r\ndysphagia \r\nbelching \r\n3. Abdominal exam? \r\n4. IF dysphagia present, endoscopy? \r\n5. IF UGI series performed, reflux demonstrated? \r\n6. Advice re elevation of head of bed? \r\n7. Advice re diet (eg. avoid rich foods, spices, alcohol, coffee, tea, late meals, large meals,)? \r\n8. IF obesity noted, advice re weight reduction? ','Unknown');
-INSERT INTO encountertemplate VALUES ('STOMATITIS, HERPETIC','STOMATITIS, HERPETIC','1. Inquiry re pain in mouth? \r\n2. Oral ulcerations noted? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ASTHMA','ASTHMA','1. Inquiry re previous episodes? \r\n2. Inquiry re family history OR on chart (3 minute)? \r\n3. Inquiry re occupational history OR on chart (3 minute)? \r\n4. Drugs used for asthma recorded? \r\n5. Amount and duration of asthma drugs recorded? \r\n6. Inquiry re allergies OR on chart (3 minute)? \r\n7. Inquiry re duration of current episode? \r\n8. Description of breathing (eg. wheezing, respiratory distress)? \r\n9. Description of breath sounds? \r\n10. IF steroids used in acute attack, was dosage decreased within 10 days? \r\n11. Wheezing present in history or physical exam? \r\n12. IF smoker, advice re smoking? \r\n13. Advice re avoidance of allergens? \r\n14. Advice re avoidance of precipitating factors? \r\n15. IF on medication for an acute episode, follow-up weekly? \r\n16. Was beta-blocker prescribed? \r\n17. Were parasympathomimetics prescribed? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PELVIC INFLAMMATORY','PELVIC INFLAMMATORY','1. Inquiry re pelvic pain AND vaginal discharge? \r\n2. Inquiry re previous PID OR venereal disease? \r\n3. Inquiry re menstrual history? \r\n4. Pelvic exam with comment re cervical discharge? \r\n5. Comment re adnexal examination? \r\n6. Comment re pelvic tenderness (cervical excitation)? \r\n7. Presence/absence of fever noted? \r\n8. WBC? \r\n9. Urinalysis? \r\n10. Micro? \r\n11. VDRL? \r\n12. Cervical/vaginal C & S? \r\n13. IF bleeding, pregnancy test? \r\n14. Antibiotic used? \r\n15. Follow-up within 10 days? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HERPES ZOSTER','HERPES ZOSTER','1. Description of lesions? \r\n2. Location of lesions noted? \r\n3. IF lesions on forehead OR physician notes \"ophthalmic distribution\", examination of cornea OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('THYROID NODULE','THYROID NODULE','1. Inquiry re location? \r\n2. Inquiry re duration? \r\n3. Inquiry re one of following? \r\npalpitations \r\ntremor \r\nweight loss \r\n4. Description of size of lesion? \r\n5. Comment on location (midline or lateral)? \r\n6. Referral OR thyroid function tests (T3 and T4 and TSH) AND I-131 uptake/thyroid scan OR ultrasound? \r\n7. Follow-up within 2 months, OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PERITONISILLAR ABSCE','PERITONISILLAR ABSCE','1. Inquiry re sore throat? \r\n2. Inquiry re swallowing difficulties? \r\n3. Throat exam? \r\n4. Description of mass? \r\n5. Referral or hospitalization? ','Unknown');
-INSERT INTO encountertemplate VALUES ('FEBRILE CONVULSION,','FEBRILE CONVULSION,','1. Description of convulsion? \r\n2. Total time for convulsion noted? \r\n3. Inquiry re previous history of convulsions? \r\n4. Inquiry re fever in preceding 24 hours? \r\n5. Inquiry re illness in preceding 24 hours? \r\n6. Temperature recorded? \r\n7. Presence/absence of neck stiffness noted? \r\n8. ENT exam? \r\n9. Chest exam? \r\n10. Fever within previous 24 hours? \r\n11. IF temperature > 38 C (100.4 F), antipyretics OR instructions re sponging? \r\n12. IF bacterial cause of fever identified, antibiotics used? \r\n13. Discussion re fever therapy (fluids OR sponging OR antipyretics)? \r\n14. Follow-up within two weeks? \r\n15. IF convulsion lasts more than 20 minutes, admission OR immediate referral? \r\n16. Tetracycline used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('NOCTURNAL ENURESIS','NOCTURNAL ENURESIS','** NOTE**\r\nAudit only for patients at least 4 years old. \r\n1. Inquiry re family history of enuresis? \r\n2. Inquiry re frequency of bedwetting? \r\n3. Inquiry re remissions and exacerbations? \r\n4. Genital exam, once on chart (3 minute)? \r\n5. Urinalysis, once on chart (3 minute)? \r\n6. Urine C & S, once on chart (3 minute)? \r\n7. IF urine culture positive, IVP OR ultrasound? \r\n8. IF recurrent positive urine culture, voiding cystogram OR referral? \r\n9. History of bedwetting on chart? \r\n10. Follow-up at least once? \r\n11. Family counselling, parents and child? \r\n12. Management plan on chart involving at least one of following? \r\nmedications \r\ncounselling \r\ndry-night record ','Unknown');
-INSERT INTO encountertemplate VALUES ('TENSION HEADACHE','TENSION HEADACHE','1. Inquiry re at least five of following? \r\nlocation of pain \r\nduration \r\ntime of onset \r\nfrequency \r\nassociated symptoms (nausea) \r\nfamily history \r\npsychosocial factors \r\n2. Blood pressure within last year? \r\n3. CPE, including neurological exam within last year? \r\n4. Headache is stress related? \r\n5. Stress factors identified AND counselling done? \r\n6. IF on medication, follow-up at least every 3 months? \r\n7. IF narcotic analgesic prescribed, dose AND duration recorded? ','Unknown');
-INSERT INTO encountertemplate VALUES ('FAMILY PLANNING - FE','FAMILY PLANNING - FE','1. Inquiry re 3 of following? \r\npregnancies \r\nabortions \r\nmenstrual history \r\ngynecological surgery \r\nhistory of PID \r\nsmoking history (# of cigarettes per day) \r\nthrombophlebitis \r\nheadaches (migraines) OR\r\nno risk factors statement? \r\n2. Blood pressure recorded? \r\n3. Pelvic exam? \r\n4. Pap smear within one year of starting birth control? \r\n5. IF on birth control pill or IUD, pap smear yearly? \r\n6. IF on birth control pill, OR justification statement? \r\n7. IF patient smokes more than 15 cigarettes per day OR is > 35 years old, oral contraceptives used? \r\n8. IF history of PID OR nulliparous, IUD used? \r\n9. IF smoker, advice re smoking? \r\n10. Breast self-examination (BSE) noted? \r\n11. Discussion of all methods of contraception on chart? ','Unknown');
-INSERT INTO encountertemplate VALUES ('INTERMITTENT CLAUDIC','INTERMITTENT CLAUDIC','1. Inquiry re duration of pain? \r\n2. Inquiry re current smoking status? \r\n3. Presence/absence of pulses in legs? \r\n4. Blood pressure? \r\n5. Comment on abdomen OR aneurysm? \r\n6. Comment on legs, warmth OR hair growth OR colour? \r\n7. CPE within 12 months before OR 6 months after presentation?\r\n8. Cholesterol OR triglycerides? \r\n9. Blood sugar? \r\n10. Pain in legs with exercise or walking, relieved by rest? \r\n11. IF smoker, advice re smoking? \r\n12. Discussion re foot care? ','Unknown');
-INSERT INTO encountertemplate VALUES ('CYSTITIS','CYSTITIS','1. Inquiry re urinary symptoms, one or more of following? \r\nurgency \r\nfrequency \r\ndysuria \r\nhematuria \r\n2. Inquiry re duration of symptoms? \r\n3. Urine dip for protein AND blood OR urinalysis OR urine culture? \r\n4. Positive culture OR two of following present? \r\nurgency \r\nfrequency \r\ndysuria \r\nhematuria \r\n5. Antibiotic used AND was it one of the sulfas, ampicillin, Septra/Bactrim, or tetracycline? \r\n6. One follow-up AND repeat urinalysis OR\r\nculture? \r\n7. Was a negative culture on chart at end of treatment? \r\n8. Was streptomycin or chloromycetin used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HYPOTHROIDISM','HYPOTHROIDISM','1. Inquiry re previous thyroid treatment? \r\n2. Inquiry re at least one of following? \r\nsensitivity to cold chronic fatigue \r\nmental dullness menses\r\ngeneralized weakness constipation\r\n3. Thyroid exam? \r\n4. Reflex exam? \r\n5. Comment re at least one of the following? \r\ndry skin voice change\r\nmyxedema lethargy\r\n6. T4 done? \r\n7. T4 repeat, every second dosage change? \r\n8. One of; low T4, low T3, or low uptake, or high TSH? \r\n9. IF newly diagnosed (within last two years), extracts used? \r\n10. IF lab test normal? \r\n11. IF >= 60, follow-up every 2 weeks until euthyroid or lab tests normal? \r\n12. Euthyroid within 6 months OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ABDOMINAL PAIN, NOS','ABDOMINAL PAIN, NOS','1. Inquiry re type of pain? \r\n2. Inquiry re duration of pain? \r\n3. Inquiry re location of pain? \r\n4. Inquiry re presence/absence of specific food intolerances? \r\n5. Inquiry re presence/absence of GI symptoms? \r\n6. Inquiry re presence/absence of fever? \r\n7. IF female, inquiry re menstrual history? \r\n8. Chest exam? \r\n9. Abdominal exam? \r\n10. Presence/absence of tenderness noted? \r\n11. IF female AND pelvic pain or lower left or right quadrant pain, pelvic exam? \r\n12. IF male AND pelvic pain or lower left or right quadrant pain, rectal exam? \r\n13. Urinalysis AND micro? \r\n14. IF abnormal urine, C & S? \r\n15. IF 2nd episode of abdominal pain NOS, C & S? ','Unknown');
-INSERT INTO encountertemplate VALUES ('NASOPHARYNGITIS, CHR','NASOPHARYNGITIS, CHR','1. History of one of following? \r\nnasal spray \r\nnasal stuffiness \r\npost-nasal drip \r\ncigarette smoking \r\nexposure to dust or fumes \r\n2. Description of nasal mucosa? \r\n3. Advice re irritants (stop smoking, avoid dust and fumes)? ','Unknown');
-INSERT INTO encountertemplate VALUES ('EPILEPSY','EPILEPSY','1. Type AND description of seizures? \r\n2. Frequency of seizures noted? \r\n3. Time of occurrence of seizures noted (eg. day, night, at work, at school, etc.)? \r\n4. Inquiry re precipitating factors on chart (3 minute)? \r\n5. Inquiry re family history of seizure disorder on chart (3 minute)? \r\n6. Neurological exam on chart (3 minute)? \r\n7. EEG on chart (3 minute)? \r\n8. IF neurological exam \"abnormal\", CAT scan on chart (3 minute) OR referral? \r\n9. Description of seizure by witness on chart (3 minute)? \r\n10. Names of drug(s) AND dosage? \r\n11. Discussion re dangerous activities (eg. driving car, working with machinery, etc.) on chart (3 minute)? \r\n12. Discussion re precipitating factors? \r\n13. IF seizures persist (more than one per week), referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('THERAPEUTIC ABORTION','THERAPEUTIC ABORTION','1. Obstetrical history? \r\n2. Date of LMP noted? \r\n3. Parity noted? \r\n4. Pelvic exam, findings noted OR referral? \r\n5. Estimate of size of uterus OR weeks of preqnancy OR referral? \r\n6. Rh factor? \r\n7. Pregnancy test done? \r\n8. Pregnancy test positive? \r\n9. IF indicated by Rh factors, RHOGAM/Rh immune globulin? \r\n10. Admit for D & C OR referral? \r\n11. Family planning OR birth control counselling? \r\n12. One follow-up within 6 weeks after abortion? ','Unknown');
-INSERT INTO encountertemplate VALUES ('MENOPAUSAL SYNDROME','MENOPAUSAL SYNDROME','1. Inquiry re menstrual history (all of: cycle, flow, LMP)? \r\n2. Inquiry re hot flashes/flushes? \r\n3. CPE within one year after initial diagnosis? \r\n4. Pap smear within one year after initial diagnosis? \r\n5. IF Premarin OR conjugated estrogens used, cyclical use OR progestational agent added (5 days per 3 months)? \r\n6. Discussion re post-menopausal sexual problems (i.e. lack of lubrication) on chart (3 minute)? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HYPERTHYROIDISM, TRE','HYPERTHYROIDISM, TRE','1. Inquiry re at least one of the following at each visit? \r\nenergy \r\nweight \r\nheat sensitivity \r\n2. If new patient to practice within past 2 years, inquiry re duration of disease? \r\n3. If new patient to practice within past 2 years, examination of thyroid and eyes noted? \r\n4. Heart rate OR pulse at each visit? \r\n5. T3 RIA OR TSH yearly? \r\n6. At least one abnormal thyroid test on chart (3 minute), TSH down OR T4 up? \r\n7. Follow-up yearly? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ANEMIA, NYD','ANEMIA, NYD','*** NOTE ***\r\nNon-pregnant \r\n1. Inquiry re blood loss? \r\n2. Inquiry re diet? \r\n3. CPE within 6 months? \r\n4. On presenting visit, at least three of following? \r\nblood pressure \r\npulse \r\nabdominal exam \r\nrectal exam \r\n5. Hb OR hematocrit? \r\n6. IF no history of blood loss as cause, blood smear for indices? \r\n7. IF black patient, sickle cell screen? \r\n8. IF male over 19, hemoglobin OR IF female over 17, hemoglobin \r\n9. IF macrocytic indices OR smear (pancytopenia, macro-ovalocytosis, hypersegmentation of neutrophils), folate AND B12 test? \r\n10. IF microcytic indices OR smear microcytic, hypochromic) AND no obvious cause for bleeding, stool for occult blood? \r\n11. IF melena stool OR occult blood positive, barium enema? \r\n12. IF GI symptoms OR upper GI bleeding, UGI series? \r\n13. IF vitamin B12 injections given, documented B12 deficiency?\r\n14. IF iron therapy used, documented iron deficiency? \r\nSerum ferritin OR hemoglobin microcytic smear OR low indices (MCV and MCHC)? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PYELONEPHRITIS, ACUT','PYELONEPHRITIS, ACUT','1. Inquiry re at least 3 of following? \r\nurinary frequency \r\nurinary urgency \r\nburning on urination (dysuria) \r\nlumbar back pain \r\nfever \r\nchills \r\n2. Presence/absence of fever noted? \r\n3. Presence/absence of lumbar (CVA) tenderness? \r\n4. Urinalysis AND micro? \r\n5. WBC? \r\n6. Urine C&S prior to treatment? \r\n7. Urine C&S positive? \r\n8. Antibiotic used AND was it one of penicillins, sulfonamides, Septra/Bactrim, cephalosporins, or tetracyclines? \r\n9. IF tetracycline used, was patient \r\n10. Was antibiotic used for 7 days or more initially? \r\n11. IF lab report indicates that organism not sensitive to initial antibiotic used, was antibiotic changed OR did physician indicate \"patient better\"? \r\n12. One follow-up within two weeks? \r\n13. Repeat urine C&S after treatment? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PITYRIASIS ROSEA','PITYRIASIS ROSEA','1. Inquiry re duration of rash? \r\n2. Inquiry re herald patch? \r\n3. Description of distribution? \r\n4. VDRL? \r\n5. Oral steroids used? \r\n6. Counselling re duration? ','Unknown');
-INSERT INTO encountertemplate VALUES ('VIRAL WARTS (VERRUCA','VIRAL WARTS (VERRUCA','1. Inquiry re duration of symptoms? \r\n2. Site(s) noted? \r\n3. Number noted? \r\n4. Electrodessication (cautery) of plantar warts on weight-bearing surfaces? \r\n5. Surgery on plantar warts? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HERPANGINA','HERPANGINA','1. Inquiry re duration of sore throat? \r\n2. Examination of throat? \r\n3. Antibiotics used?','Unknown');
-INSERT INTO encountertemplate VALUES ('GASTRITIS - HYPERACI','GASTRITIS - HYPERACI','1. Inquiry re location of abdominal pain? \r\n2. Inquiry re duration of abdominal pain? \r\n3. Inquiry re type of abdominal pain? \r\n4. Inquiry re aggravating causes (eg. food, smoking, alcohol, stress, drugs (ASA))? \r\n5. Inquiry re vomiting OR hematemesis? \r\n6. Abdominal exam? \r\n7. Advice re avoidance of aggravating factors (eg. smoking, spices, alcohol, etc.)? \r\n8. Discussion of stress factors? \r\n9. NSAIDs OR ASA OR cortisone used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('CONSTIPATION, RECURR','CONSTIPATION, RECURR','*** NOTE ***\r\nPatient over 30 years old with a prior history of constipation. \r\n1. Inquiry re change in bowel movement? \r\n2. Inquiry re diet? \r\n3. Inquiry re drugs? \r\n4. Abdominal exam? \r\n5. Rectal exam? \r\n6. Stool for occult blood? \r\n7. IF less than 3 months duration, barium enema? \r\n8. Infrequent AND/OR difficult bowel movements? \r\n9. Instructions re increase in roughage OR fibre OR bran? \r\n10. One follow-up OR specific diagnostic statement within 3 months? ','Unknown');
-INSERT INTO encountertemplate VALUES ('OBESITY','OBESITY','1. Inquiry re duration of obesity? \r\n2. Weight recorded? \r\n3. Height recorded? \r\n4. Height AND weight recorded? \r\n5. Anorexiants OR thyroid drugs (if hypothyroidism not diagnosed) OR diuretics used? \r\n6. Diet counselling OR nutritional counselling (physician or dietician)? \r\n7. IF treatment given, follow-up within 6 weeks? ','Unknown');
-INSERT INTO encountertemplate VALUES ('SPRAIN OR STRAIN, NY','SPRAIN OR STRAIN, NY','1. Inquiry re how injury happened? \r\n2. Inquiry re location of injury? \r\n3. Time of injury? \r\n4. Presence/absence of swelling? \r\n5. Presence/absence of tenderness? \r\n6. Presence/absence of hematoma? \r\n7. IF sports related, advice re prevention of further episodes? ','Unknown');
-INSERT INTO encountertemplate VALUES ('CEREBRAL CONCUSSION','CEREBRAL CONCUSSION','1. Type of trauma described? \r\n2. Comment re severity of injury? \r\n3. Time since injury? \r\n4. Presence/absence of change in sensorium since injury? \r\n5. History of loss of consciousness? \r\n6. Neurological exam? \r\n7. Examination of site of injury? \r\n8. Skull X-ray? \r\n9. IF patient not admitted, head injury routine sheet OR instructions? \r\n10. Narcotics or sedatives used? \r\n11. Admission to hospital OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('CHICKEN POX','CHICKEN POX','1. Inquiry re duration of symptoms? \r\n2. Description of rash? \r\n3. Blister OR papular OR vesicular rash? \r\n4. ASA used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PLEURISY','PLEURISY','1. Inquiry re duration of symptoms? \r\n2. Inquiry re location of pain? \r\n3. Presence/absence of fever noted? \r\n4. Presence/absence of cough noted? \r\n5. Inquiry whether chest pain worse with deep breathing (pleuritic)? \r\n6. Chest exam? \r\n7. Throat exam? \r\n8. CVS exam? \r\n9. Blood pressure? \r\n10. Temperature recorded? \r\n11. IF temperature elevated OR sputum, CBC? \r\n12. IF sputum, C & S? \r\n13. IF rales AND/OR rhonchi present, chest X-ray? \r\n14. IF antibiotics prescribed, C & S of sputum done before use of antibiotic? \r\n15. IF smoker, advice re smoking? \r\n16. Cause stated OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('LOBAR PNEUMONIA','LOBAR PNEUMONIA','1. Inquiry re at least one of following? \r\ncough \r\ndyspnea \r\nchest pain \r\nfever \r\n2. Description of breath sounds? \r\n3. Comment re dullness OR consolidation? \r\n4. Sputum C & S? \r\n5. WBC? \r\n6. Chest X-ray, 2 views? \r\n7. IF X-ray positive, follow-up X-ray within 30 days? \r\n8. Positive culture AND positive X-ray OR consolidation on examination? \r\n9. Oral penicillin or erythromycin or cephalosporin given? \r\n10. Dosage recorded? \r\n11. Amount recorded? \r\n12. Follow-up in 1 week? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PYODERMA (INC. IMPET','PYODERMA (INC. IMPET','1. Site noted? \r\n2. IF oral antibiotic used, was it one of penicillins, erythromycins, sulfonamides, tetracyclines, or cephalosporins? \r\n3. IF tetracycline used, was patient ','Unknown');
-INSERT INTO encountertemplate VALUES ('LACERATIONS OF SKIN','LACERATIONS OF SKIN','** NOTE **\r\nFOR QUESTIONS 1 THROUGH 7, PHYSICIAN MUST FULFILL CONDITION FOR EACH EPISODE OF LACERATION. \r\n1. Inquiry re how laceration occurred? \r\n2. Time between injury and visit? \r\n3. Description of wound? \r\n4. IF hand or wrist, comment on function? \r\n5. IF tendons severed, referral? \r\n6. Debridement (washing)? \r\n7. IF sutured, one follow-up? \r\n8. IF no tetanus toxoid within 10 years, injection given? ','Unknown');
-INSERT INTO encountertemplate VALUES ('SEROUS OTITIS MEDIA','SEROUS OTITIS MEDIA','1. Inquiry re at least two of following; hearing, pain, recurrent URI? \r\n2. Comment re fluid in middle ear OR retracted ear drum? \r\n3. Comment re nose AND throat? \r\n4. IF third episode or more, audiometry OR referral? \r\n5. IF physical findings OR hearing test are abnormal, follow-up until resolved OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('DIABETES MELLITUS, A','DIABETES MELLITUS, A','1. Inquiry re family history of diabetes on chart (3 minute)? \r\n2. Duration of disease OR starting date on chart (3 minute)? \r\n3. Inquiry re one of following on each visit? \r\nurine sugars \r\nblood sugars \r\ndietary management \r\npatient feels well or ill \r\n4. Weight recorded (at least 75% of visits)? \r\n5. Urine glucose each visit? \r\n6. Comment re cardiovascular system AND blood pressure yearly? \r\n7. Examination of fundi yearly? \r\n8. IF on oral hypoglycemics, at least one blood sugar recorded yearly? \r\n9. IF on insulin, at least two blood sugars recorded yearly? \r\n10. BUN OR creatinine on chart (3 minute)? \r\n11. IF diabetes first diagnosed within past 2 years, evidence of 2 fasting blood sugars > 8.8 mmol/L OR random sugar > 13.8 mmol/L prior to treatment? \r\n12. Diabetic diet - caloric intake noted on chart (3 minute)? \r\n13. Evidence of dietary counselling by a health professional on chart (3 minute)? \r\n14. IF newly diagnosed, follow-up within one month? \r\n15. IF on diet alone, follow-up at least once yearly? \r\n16. IF on oral hypoglycemic OR insulin, follow-up at least twice yearly? \r\n17. Inquiry re sexual dysfunction on chart (3 minute)? \r\n18. IF acetohexamide or chlorpropramide used (Glyburide and Diabeta are OK), was BUN > 9 mmol/L OR was creatinine > 140 mmol/L? \r\n19. IF no ketones in serum or urine, was dietary therapy tried prior to starting oral hypoglycemic? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PROSTATE, CANCER OF','PROSTATE, CANCER OF','1. Inquiry re urinary symptoms? \r\n2. Rectal exam at least yearly? \r\n3. Serum acid phosphatase yearly? \r\n4. IF new or changed urinary symptoms, C & S AND urinalysis?\r\n5. Pathology report positive? \r\n6. Follow-up every 6 months? ','Unknown');
-INSERT INTO encountertemplate VALUES ('WELL BABY CARE','WELL BABY CARE','1. Inquiry re food/diet? \r\n2. Inquiry re coping/parenting skills? \r\n3. Weight recorded at each visit? \r\n4. Comment re normal/abnormal developmental milestones? \r\n5. Length recorded 3 or more times per year? \r\n6. Head circumference recorded 3 or more times in first year of life? \r\n7. Three doses of DPTP by age 8 months OR justification of alternate course? \r\n8. IF age 1 to 2, MMR at 12-15 months, DPTP at 17-19 months OR justification of alternate course? \r\n9. IF > 1 year old, at least 3 visits in first year? \r\n10. IF > 2 years old, at least 3 visits in second year? \r\n11. IF parenting problems identified, counselling OR referral? \r\n12. MMR given before 12 months of age? ','Unknown');
-INSERT INTO encountertemplate VALUES ('ARTHRITIS, NYD OR NO','ARTHRITIS, NYD OR NO','** NOTE **\r\nless than one month - multiple joints \r\n1. Inquiry re duration of symptoms? \r\n2. Location of joint pains noted? \r\n3. Description of nature OR severity of pain? \r\n4. Inquiry re aggravating OR precipitating factors? \r\n5. Description of inflammation OR swelling? \r\n6. Description of range of movement? \r\n7. On OR before second visit for same problem, CBC? \r\n8. On OR before second visit for same problem, ESR? \r\n9. On OR before second visit for same problem, anti-nuclear factor (i.e. ANF, ANA)? \r\n10. On OR before second visit for same problem, rheumatoid arthritis factor (i.e. RF, RA)? \r\n11. Were systemic steroids prescribed? \r\n12. Advice re rest OR restrict movement of joint? \r\n13. Follow-up within 2 weeks? \r\n14. IF within 1 year of visit for peptic ulcer disease, were anti-inflammatory agents prescribed? ','Unknown');
-INSERT INTO encountertemplate VALUES ('HEMATOMA,SUBCUTANEOU','HEMATOMA,SUBCUTANEOU','1. Inquiry re history of trauma, type noted? \r\n2. Inquiry re spontaneous or traumatic? \r\n3. IF spontaneous, inquiry re previous episodes? \r\n4. IF spontaneous, inquiry re family history of bleeding? \r\n5. Description of size? \r\n6. Description of location? \r\n7. IF spontaneous, CBC, platelets, PT, PTT done? \r\n8. IF seen within 48 hours of onset, ice recommended? \r\n9. IF spontaneous OR recurrent, one follow-up? \r\n10. IF child (other recent or old trauma)? \r\n11. IF AND history of repeated trauma (3 or more within 2 years) skeletal survey? ','Unknown');
-INSERT INTO encountertemplate VALUES ('CONTACT DERMATITIS','CONTACT DERMATITIS','** NOTE **\r\nIncludes poison ivy. \r\n1. Inquiry re duration? \r\n2. Inquiry re itching? \r\n3. Inquiry re exposure to irritants? \r\n4. Location of rash noted? \r\n5. IF oral prednisone used, no more than 7 days? \r\n6. IF oral prednisone used, one follow-up visit or phone call? ','Unknown');
-INSERT INTO encountertemplate VALUES ('SECONDARY AMMENORRHE','SECONDARY AMMENORRHE','1. Menstrual history? \r\n2. Duration of problem? \r\n3. Description re onset of problem? \r\n4. History of medications (including oral contraceptives)? \r\n5. Inquiry re changes in diet? \r\n6. Inquiry re stress factors AND/OR athletics? \r\n7. Pelvic exam? \r\n8. Abdominal exam? \r\n9. Pregnancy test? \r\n10. CBC? \r\n11. Thyroid function (at least one of TSH,T3,T4)? \r\n12. Fasting blood sugar on chart (3 minute)? \r\n13. IF more than 3 months duration, prolactin? \r\n14. Pelvic ultrasound on chart (3 minute)? \r\n15. IF more than 3 months duration, X-ray of pituitary? \r\n16. Follow-up until cause found or referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('DIARRHEA, MULTIPLE V','DIARRHEA, MULTIPLE V','1. Inquiry re frequency? \r\n2. Inquiry re duration? \r\n3. Inquiry re diet? \r\n4. Inquiry re medications? \r\n5. Inquiry re travel? \r\n6. Inquiry re blood in stool? \r\n7. Inquiry re fever? \r\n8. Inquiry re weight loss? \r\n9. Inquiry re nausea OR abdominal cramps OR pain? \r\n10. Abdominal exam? \r\n11. Rectal exam? \r\n12. Weight noted at least once? \r\n13. Stool for C & S? \r\n14. Stool for ova and parasites? \r\n15. CBC? \r\n16. ESR? \r\n17. Sigmoidoscopy OR colonoscopy OR referral? \r\n18. Barium enema? \r\n19. IF barium enema negative, UGI series with small bowel follow through? \r\n20. IF not improved within 6 months OR specific diagnosis not noted on chart, referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('NASAL POLYP','NASAL POLYP','1. Inquiry re nasal symptoms? \r\n2. Inquiry re history of asthma or ASA allergy (or on chart) (3 minute)? \r\n3. Description of polyp? \r\n4. IF no improvement after 6 weeks, referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('SCOLIOSIS','SCOLIOSIS','** NOTE **\r\nAudit only presenting visit. \r\n1. Inquiry re how condition found? \r\n2. Description of location (eg. thoracic, lumbar)? \r\n3. Description of extent (degree of angulation)? \r\n4. X-ray of affected area(s) of spine within 3 months of initial diagnosis? \r\n5. X-ray confirms diagnosis of scoliosis? \r\n6. IF 9 to 16 years old AND severe (angulation greater than or equal to 15 degrees, consultation OR referral? \r\n7. IF not referred, follow-up within 3 months? ','Unknown');
-INSERT INTO encountertemplate VALUES ('MOUTH LESION','MOUTH LESION','1. Inquiry re location? \r\n2. Inquiry re duration? [HA2 ]> \r\n3. Description of lesion? \r\n4. IF lesion described as \"ulcer\" or \"plaque\" AND lesion not healed in 2 months, investigation OR referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('GLAUCOMA','GLAUCOMA','1. Inquiry re vision at each visit? \r\n** NOTE **\r\nIF patient is followed by an ophthalmologist, Questions 2 through 8 are NOT APPLICABLE. \r\n2. Inquiry re compliance with medications? \r\n3. Fundi, yearly statement re optic cup? \r\n4. Visual fields recorded yearly? \r\n5. Intraocular pressure yearly? \r\n6. Medications, dosage recorded? \r\n7. High intraocular pressure ( >30 mm Hg ) recorded on chart (3 minute)? \r\n8. Follow-up yearly? \r\n9. IF ocular pressures are not improved after one month of treatment, referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('TONSILLITIS, CHRONIC','TONSILLITIS, CHRONIC','1. Inquiry re recurrent sore throat? \r\n2. Description of tonsils? \r\n3. Presence/absence of cervical glands noted? \r\n4. IF antibiotic used, was it one of the penicillins, erythromycins, cephalosporins, or tetracyclines? \r\n5. IF tonsillectomy OR referral, were there 4 or more episodes within 2 years OR peritonsillar abscess (quinsy) OR unilateral emlargement OR demonstrated hearing loss? \r\n6. IF tetracycline used, was patient ','Unknown');
-INSERT INTO encountertemplate VALUES ('ECZEMA, CONTACT DERM','ECZEMA, CONTACT DERM','1. Inquiry re duration? \r\n2. Presence/absence of family history of eczema OR on chart (3 minute)? \r\n3. IF over 5 years, inquiry re stress factors? \r\n4. Description of lesion? \r\n5. Location and extent? \r\n6. Topical steroids used? \r\n7. Systemic steroids initiated by family doctor? \r\n8. Discussion re prognosis of disease? \r\n9. One follow-up? \r\n10. IF acute AND failure to respond within 6 weeks, referral?\r\n11. IF child, occulsive dressing for 8 hours or more per 24 hours? \r\n12. IF systemic corticosteroids used, was it for more than 3 months? \r\n13. Fluorinated steroids used on face? ','Unknown');
-INSERT INTO encountertemplate VALUES ('FIBROCYSTIC DISEASE','FIBROCYSTIC DISEASE','1. Inquiry re at least 2 of the following? \r\nbreast pain \r\nrelationship of lump to periods \r\nrecurrency of problem \r\nlocation of lump \r\n2. Description of both breasts? \r\n3. Statement of location and size of lumps? \r\n4. Axillary exam? \r\n5. IF lesion diagnosed as non-cystic, mammography? \r\n6. IF suspected cyst, aspiration OR referral? \r\n7. Yearly breast examination by physician following initial diagnosis? \r\n8. Cysts diagnosed by examination OR by mammography? \r\n9. BSE on chart every two years? \r\n10. IF discrete lump persists after aspiration, referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('PHARYNGITIS','PHARYNGITIS','1. Inquiry re sore throat? \r\n2. Inquiry re duration? \r\n3. Examination of pharynx? \r\n4. IF white membrane OR lot of exudate noted, mono test AND C & S? \r\n5. Red (inflamed, injected) throat? \r\n6. IF AND positive strep culture, amoxil or ampicillin or erythromycin given for at least 7 days? \r\n7. IF 5 years or older AND positive strep culture, penicillin or erythromycin for at least 7 days? ','Unknown');
-INSERT INTO encountertemplate VALUES ('SINUSITIS','SINUSITIS','1. Inquiry re pain in the face and/or head? \r\n2. Inquiry re nasal blockage? \r\n3. Presence/absence of fever noted? \r\n4. Presence/absence of tenderness over sinuses noted? \r\n5. IF recurrent (3 or more visits), X-ray of sinuses? \r\n6. Tenderness over sinuses OR positive X-ray of sinuses? \r\n7. IF antibiotic used, was it one of the penicillins, sulfonamides, erythromycins, cephalosporins, or tetracycline?\r\n8. IF tetracycline used, was patient ','Unknown');
-INSERT INTO encountertemplate VALUES ('GOUT','GOUT','1. Inquiry re at least one of following? \r\nsevere joint pain \r\nhistory of swelling \r\nhistory of inflammation \r\nmonoarticular joint \r\n2. List of drugs being used OR on chart (3 minute)? \r\n3. Presence/absence of swelling of involved joint? \r\n4. Presence/absence of inflammation of involved joint? \r\n5. IF joint aspiration done, report for uric acid crystals? \r\n6. Serum uric acid? \r\n7. One of the following? \r\nserum uric acid greater than lab normal \r\nuric acid crystals in joint aspirate \r\nX-ray diagnosis \r\n8. ASA used? \r\n9. NSAIDs OR Colchicine used? \r\n10. IF thiazides used, statement of justification? \r\n11. IF 3 or more episodes OR uric acid greater than lab normal, recommendation for prophylaxis treatment? \r\n12. Advice re avoidance of precipitating factors (eg. alcohol, high purine foods) \r\n13. IF flare-up occurs AND allopurinal OR uricosurics are being used, Colchicine used? ','Unknown');
-INSERT INTO encountertemplate VALUES ('NASAL INJURY','NASAL INJURY','1. Description of accident? \r\n2. Description of nose including 2 of following; swelling, amount of bleeding, deformity, lacerations? \r\n3. IF deformity found on examination, X-ray of nasal bones? \r\n4. IF deformity found on examination, referral to ENT specialist? \r\n5. IF unable to control bleeding, referral? ','Unknown');
-INSERT INTO encountertemplate VALUES ('VENEREAL WARTS (COND','VENEREAL WARTS (COND','1. Inquiry re duration of lesions? \r\n2. Description of size AND extent of lesions? \r\n3. VDRL OR syphilis screen? ','Unknown');
+--
+-- Dumping data for table 'FaxClientLog'
+--
 
 
+--
+-- Table structure for table 'allergies'
+--
 
-INSERT INTO consultationServices VALUES (1,'Cardiology','1');
-INSERT INTO consultationServices VALUES (2,'Radiology','02');
-INSERT INTO consultationServices VALUES (3,'Radiology','1');
-INSERT INTO consultationServices VALUES (4,'Liposuction','02');
-INSERT INTO consultationServices VALUES (5,'Allergy','1');
-INSERT INTO consultationServices VALUES (6,'OB/Gyn','1');
-INSERT INTO consultationServices VALUES (7,'Oncology','1');
-INSERT INTO consultationServices VALUES (8,'Pediatrics','1');
-INSERT INTO consultationServices VALUES (9,'Hematology','1');
-INSERT INTO consultationServices VALUES (10,'','02');
-INSERT INTO consultationServices VALUES (11,'Pediatric Orthopedics','1');
-INSERT INTO consultationServices VALUES (12,'Pediatric Urology','1');
-INSERT INTO consultationServices VALUES (13,'Physiatry','1');
-INSERT INTO consultationServices VALUES (14,'Psychiatry','1');
-INSERT INTO consultationServices VALUES (15,'Pulmonary Disease','1');
-INSERT INTO consultationServices VALUES (16,'Dermatology','1');
-INSERT INTO consultationServices VALUES (17,'Internal Medicine','1');
-INSERT INTO consultationServices VALUES (18,'Neuro Surgery','1');
-INSERT INTO consultationServices VALUES (19,'Endology','02');
-INSERT INTO consultationServices VALUES (20,'Endology','02');
-INSERT INTO consultationServices VALUES (21,'Infectious Diseases','1');
-INSERT INTO consultationServices VALUES (22,'Ophthalmology','1');
-INSERT INTO consultationServices VALUES (23,'Otorhinolaryngology','1');
-INSERT INTO consultationServices VALUES (24,'Respirology','1');
-INSERT INTO consultationServices VALUES (25,'Rheumatology','1');
-INSERT INTO consultationServices VALUES (26,'Sports Medicine','1');
-INSERT INTO consultationServices VALUES (27,'Surgery - Cardiovascular','1');
-INSERT INTO consultationServices VALUES (28,'Surgery - General','1');
-INSERT INTO consultationServices VALUES (29,'Surgery - Orthopedic','1');
-INSERT INTO consultationServices VALUES (30,'Surgery - Plastic','1');
-INSERT INTO consultationServices VALUES (31,'Surgery - Vascular','1');
-INSERT INTO consultationServices VALUES (32,'Urology','1');
-INSERT INTO consultationServices VALUES (33,'Hospitals','02');
-INSERT INTO consultationServices VALUES (34,'Hospitals/Clinics/Services','1');
-INSERT INTO consultationServices VALUES (35,'Rehab','1');
-INSERT INTO consultationServices VALUES (36,'SEE NOTES','1');
-INSERT INTO consultationServices VALUES (37,'test service','02');
-INSERT INTO consultationServices VALUES (38,'rrrr','02');
+CREATE TABLE allergies (
+  allergyid int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  entry_date date default NULL,
+  DESCRIPTION char(50) NOT NULL default '',
+  HICL_SEQNO int(6) default NULL,
+  HIC_SEQNO int(6) default NULL,
+  AGCSP int(6) default NULL,
+  AGCCS int(6) default NULL,
+  TYPECODE tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (allergyid)
+) TYPE=MyISAM;
 
-INSERT INTO mygroup VALUES ('Docs','174','Chan','David','a1');
-INSERT INTO mygroup VALUES ('IT Support','88888','Support','IT',NULL);
+--
+-- Dumping data for table 'allergies'
+--
 
 
+--
+-- Table structure for table 'appointment'
+--
 
-INSERT INTO scheduleholiday VALUES ('2002-03-29','Good Friday');
-INSERT INTO scheduleholiday VALUES ('2002-04-01','Easter Monday - Hospital');
-INSERT INTO scheduleholiday VALUES ('2002-07-01','Canada Day');
-INSERT INTO scheduleholiday VALUES ('2002-05-20','Victoria Day');
-INSERT INTO scheduleholiday VALUES ('2002-08-05','Civic Day');
-INSERT INTO scheduleholiday VALUES ('2002-09-02','Labour Day');
-INSERT INTO scheduleholiday VALUES ('2002-10-14','Thanksgiving Day');
-INSERT INTO scheduleholiday VALUES ('2002-11-11','2nd Monday in November - Hospital');
-INSERT INTO scheduleholiday VALUES ('2002-02-11','2nd Monday in February - Hospital');
-INSERT INTO scheduleholiday VALUES ('2002-01-01','New Year\'s Day');
-INSERT INTO scheduleholiday VALUES ('2002-12-25','Christmas Day');
-INSERT INTO scheduleholiday VALUES ('2002-12-26','Boxing Day');
-INSERT INTO scheduleholiday VALUES ('2003-01-01','New Year\'s Day');
-INSERT INTO scheduleholiday VALUES ('2003-02-10','2nd Monday in February - Hospital');
-INSERT INTO scheduleholiday VALUES ('2003-04-18','Good Friday');
-INSERT INTO scheduleholiday VALUES ('2003-04-21','Easter Monday - Hospital');
-INSERT INTO scheduleholiday VALUES ('2002-12-27','In Lieu of Day Before Christmas - University');
-INSERT INTO scheduleholiday VALUES ('2002-12-30','Floating Holiday - University');
-INSERT INTO scheduleholiday VALUES ('2002-12-31','Floating Holiday - University');
-INSERT INTO scheduleholiday VALUES ('2003-05-19','Victoria Day');
-INSERT INTO scheduleholiday VALUES ('2003-07-01','Canada Day');
-INSERT INTO scheduleholiday VALUES ('2003-08-04','Civic Day');
-INSERT INTO scheduleholiday VALUES ('2003-09-01','Labour Day');
-INSERT INTO scheduleholiday VALUES ('2003-10-13','Thanksgiving Day');
-INSERT INTO scheduleholiday VALUES ('2003-11-10','2nd Monday in November - Hospital');
-INSERT INTO scheduleholiday VALUES ('2003-12-25','Christmas Day');
-INSERT INTO scheduleholiday VALUES ('2003-12-26','Boxing Day');
-INSERT INTO scheduleholiday VALUES ('2004-01-01','New Year\'s Day');
+CREATE TABLE appointment (
+  appointment_no int(12) NOT NULL auto_increment,
+  provider_no varchar(6) NOT NULL default '',
+  appointment_date date NOT NULL default '0000-00-00',
+  start_time time NOT NULL default '00:00:00',
+  end_time time NOT NULL default '00:00:00',
+  name varchar(50) default NULL,
+  demographic_no int(10) default NULL,
+  notes varchar(80) default NULL,
+  reason varchar(80) default NULL,
+  location varchar(10) default NULL,
+  resources varchar(10) default NULL,
+  type varchar(10) default NULL,
+  style varchar(10) default NULL,
+  billing varchar(10) default NULL,
+  status char(2) default NULL,
+  createdatetime datetime default NULL,
+  creator varchar(50) default NULL,
+  remarks varchar(50) default NULL,
+  PRIMARY KEY  (appointment_no),
+  KEY appointment_date (appointment_date,start_time,demographic_no),
+  KEY demographic_no (demographic_no)
+) TYPE=MyISAM;
 
+--
+-- Table structure for table 'billactivity'
+--
 
+CREATE TABLE billactivity (
+  monthCode char(1) default NULL,
+  batchcount int(3) default NULL,
+  htmlfilename varchar(50) default NULL,
+  ohipfilename varchar(50) default NULL,
+  providerohipno varchar(6) default NULL,
+  groupno varchar(4) default NULL,
+  creator varchar(6) default NULL,
+  htmlcontext text,
+  ohipcontext text,
+  claimrecord varchar(10) default NULL,
+  updatedatetime datetime default NULL,
+  status char(1) default NULL,
+  total varchar(20) default NULL
+) TYPE=MyISAM;
 
-INSERT INTO scheduletemplatecode VALUES ('A','Academic','',NULL);
-INSERT INTO scheduletemplatecode VALUES ('B','Behavioral Science','15','#BFEFFF');
-INSERT INTO scheduletemplatecode VALUES ('2','30 Minute Appointment','30','#BFEFFF');
-INSERT INTO scheduletemplatecode VALUES ('3','45 Minute Appointment','45','#BFEFFF');
-INSERT INTO scheduletemplatecode VALUES ('P','Phone time','15','#BFEFFF');
-INSERT INTO scheduletemplatecode VALUES ('M','Monitoring','','EED2EE');
-INSERT INTO scheduletemplatecode VALUES ('6','60 Minute Appointment','60','#BFEFFF');
-INSERT INTO scheduletemplatecode VALUES ('C','Chart Audit Rounds','15',NULL);
-INSERT INTO scheduletemplatecode VALUES ('R','Rounds','15',NULL);
-INSERT INTO scheduletemplatecode VALUES ('E','Study Leave','15',NULL);
-INSERT INTO scheduletemplatecode VALUES ('V','Vacation','15','FFF68F');
-INSERT INTO scheduletemplatecode VALUES ('G','PBSG Rounds','15',NULL);
-INSERT INTO scheduletemplatecode VALUES ('H','Hospital Rounds','15',NULL);
-INSERT INTO scheduletemplatecode VALUES ('d','Drug Rep (Chief)','15',NULL);
-INSERT INTO scheduletemplatecode VALUES ('U','Urgent','15',NULL);
-INSERT INTO scheduletemplatecode VALUES ('a','Administrative Work','15','#BFEFFF');
-INSERT INTO scheduletemplatecode VALUES ('t','Travel','',NULL);
-INSERT INTO scheduletemplatecode VALUES ('m','Meeting','',NULL);
-INSERT INTO scheduletemplatecode VALUES ('1','15 Minute Appointment','15','#BFEFFF');
-INSERT INTO scheduletemplatecode VALUES ('s','Same Day','15','FFF68F');
-INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F');
+--
+-- Dumping data for table 'billactivity'
+--
 
 
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G010A','Procedure','Group2','A',29);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Z176A','Procedure','Group2','A',28);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G370A','Procedure','Group2','A',27);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Z160A','Procedure','Group2','A',26);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Z159A','Procedure','Group2','A',25);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G420A','Procedure','Group2','A',24);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G591A','Procedure','Group2','A',23);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G590A','Procedure','Group2','A',22);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G539A','Procedure','Group2','A',21);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G538A','Procedure','Group2','A',20);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G373A','Procedure','Group2','A',19);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G372A','Procedure','Group2','A',18);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G212A','Procedure','Group2','A',17);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G202A','Procedure','Group2','A',16);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G365A','Procedure','Group2','A',14);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','P005A','Service','Group1','A',19);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','P004A','Service','Group1','A',18);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','P003A','Service','Group1','A',17);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','H105A','Service','Group1','A',16);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','H001A','Service','Group1','A',15);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A008A','Service','Group1','A',14);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A903A','Service','Group1','A',13);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K007A','Service','Group1','A',12);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K005A','Service','Group1','A',11);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K013A','Service','Group1','A',10);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K017A','Service','Group1','A',9);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','E075A','Service','Group1','A',8);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K030A','Service','Group1','A',7);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K028A','Service','Group1','A',6);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A771A','Service','Group1','A',5);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A004A','Service','Group1','A',4);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A003A','Service','Group1','A',3);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A007A','Service','Group1','A',2);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A001A','Service','Group1','A',1);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','G010A','Clinic','Group3','A',1);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P004A','Clinic','Group3','A',2);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P003A','Clinic','Group3','A',3);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P008A','Clinic','Group3','A',4);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P005A','Clinic','Group3','A',5);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A001A','Clinic','Group3','A',6);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A007A','Clinic','Group3','A',7);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A003A','Clinic','Group3','A',8);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K005A','Clinic','Group3','A',9);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K013A','Clinic','Group3','A',10);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K033A','Clinic','Group3','A',11);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P030A','Clinic','Group3','A',12);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A001A','Hospital','Group1','A',1);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A007A','Hospital','Group1','A',2);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A003A','Hospital','Group1','A',3);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P025A','Hospital','Group1','A',4);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P022A','Hospital','Group1','A',5);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P023A','Hospital','Group1','A',6);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P006A','Hospital','Group1','A',7);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P009A','Hospital','Group1','A',8);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P020A','Hospital','Group1','A',9);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P038A','Hospital','Group1','A',10);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P028A','Hospital','Group1','A',11);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E502A','Hospital','Group1','A',12);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E409A','Hospital','Group1','A',13);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E410A','Hospital','Group1','A',14);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E411A','Hospital','Group1','A',15);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','H001A','Hospital','Group1','A',18);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C010A','Hospital','Group1','A',17);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P007A','Hospital','Group1','A',16);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C989A','Premium','Group2','A',14);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C990A','Premium','Group2','A',15);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C991A','Premium','Group2','A',16);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C992A','Premium','Group2','A',17);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C993A','Premium','Group2','A',18);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C994A','Premium','Group2','A',19);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C995A','Premium','Group2','A',20);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C996A','Premium','Group2','A',21);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C997A','Premium','Group2','A',22);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K990A','Premium','Group2','A',31);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K991A','Premium','Group2','A',32);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K992A','Premium','Group2','A',33);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K993A','Premium','Group2','A',34);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K994A','Premium','Group2','A',35);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K995A','Premium','Group2','A',36);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K996A','Premium','Group2','A',37);
-INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K997A','Premium','Group2','A',38);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z101A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z173A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z174A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z104A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z106A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z103A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z116A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z113A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','R549A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A994A','Premium','Group3','A',66);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','K994A','Premium','Group3','A',67);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','K995A','Premium','Group3','A',68);
-INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','K997A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z117A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z156A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z157A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z158A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z159A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z160A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z161A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z162A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z163A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z164A','Procedure','Group2','A',66);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z166A','Procedure','Group2','A',67);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z167A','Procedure','Group2','A',68);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z168A','Procedure','Group2','A',69);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A994A','Premium','Group3','A',70);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','K994A','Premium','Group3','A',71);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','K995A','Premium','Group3','A',72);
-INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','K997A','Premium','Group3','A',73);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z122A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z123A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z124A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z125A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z126A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z127A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z149A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z150A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z151A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z096A','Procedure','Group2','A',66);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z097A','Procedure','Group2','A',67);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A994A','Premium','Group3','A',68);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','K994A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','K995A','Premium','Group3','A',70);
-INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','K997A','Premium','Group3','A',71);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R048A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R049A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R050A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R094A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R040A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R041A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R018A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R019A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R020A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R031A','Procedure','Group2','A',66);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R032A','Procedure','Group2','A',67);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A994A','Premium','Group3','A',68);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','K994A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','K995A','Premium','Group3','A',70);
-INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','K997A','Premium','Group3','A',71);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','E530A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z176A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z154A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z175A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z177A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z179A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z190A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z191A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z192A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','R024A','Procedure','Group2','A',66);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A994A','Premium','Group3','A',67);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','K994A','Premium','Group3','A',68);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','K995A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','K997A','Premium','Group3','A',70);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z110A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z128A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z129A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z130A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z131A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z117A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z229A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z243A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A994A','Premium','Group3','A',66);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','K994A','Premium','Group3','A',67);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','K995A','Premium','Group3','A',68);
-INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','K997A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z140A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z141A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z139A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z118A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A994A','Premium','Group3','A',66);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','K994A','Premium','Group3','A',67);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','K995A','Premium','Group3','A',68);
-INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','K997A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z201A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z202A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z203A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z199A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z213A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z211A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z198A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z204A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A994A','Premium','Group3','A',66);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','K994A','Premium','Group3','A',67);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','K995A','Premium','Group3','A',68);
-INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','K997A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z114A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z311A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z851A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z847A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z848A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z874A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z854A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z501A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z502A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z506A','Procedure','Group2','A',66);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z510A','Procedure','Group2','A',67);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z524A','Procedure','Group2','A',68);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z111A','Procedure','Group2','A',69);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A994A','Premium','Group3','A',70);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','K994A','Premium','Group3','A',71);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','K995A','Premium','Group3','A',72);
-INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','K997A','Premium','Group3','A',73);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z541A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z756A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z543A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z544A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z545A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z757A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z575A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z576A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z548A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z549A','Procedure','Group2','A',66);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z550A','Procedure','Group2','A',67);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z117A','Procedure','Group2','A',68);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A994A','Premium','Group3','A',69);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','K994A','Premium','Group3','A',70);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','K995A','Premium','Group3','A',71);
-INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','K997A','Premium','Group3','A',72);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A007A','Surgical','Group1','A',38);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A001A','Surgical','Group1','A',39);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A003A','Surgical','Group1','A',40);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A004A','Surgical','Group1','A',41);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A005A','Surgical','Group1','A',42);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A006A','Surgical','Group1','A',43);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G264A','Surgical','Group1','A',44);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G265A','Surgical','Group1','A',45);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G225A','Surgical','Group1','A',46);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G219A','Surgical','Group1','A',47);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G220A','Surgical','Group1','A',48);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G221A','Surgical','Group1','A',49);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G258A','Surgical','Group1','A',50);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G235A','Surgical','Group1','A',51);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G231A','Surgical','Group1','A',52);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G223A','Surgical','Group1','A',53);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z804A','Surgical','Group1','A',54);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','E542A','Procedure','Group2','A',55);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z770A','Procedure','Group2','A',57);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S700A','Procedure','Group2','A',58);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z714A','Procedure','Group2','A',59);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z716A','Procedure','Group2','A',60);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z717A','Procedure','Group2','A',61);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z477A','Procedure','Group2','A',62);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z706A','Procedure','Group2','A',63);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z733A','Procedure','Group2','A',64);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z736A','Procedure','Group2','A',65);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S567A','Procedure','Group2','A',66);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S568A','Procedure','Group2','A',67);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S569A','Procedure','Group2','A',68);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S700A','Procedure','Group2','A',69);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S701A','Procedure','Group2','A',70);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A994A','Premium','Group3','A',71);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','K994A','Premium','Group3','A',72);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','K995A','Premium','Group3','A',73);
-INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','K997A','Premium','Group3','A',74);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q011A','Premium','Group3','A',1);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q503A','Premium','Group3','A',2);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q503A','Premium','Group3','A',3);
-INSERT INTO ctl_billingservice VALUES ('Service','TST','Q011A',' Description 2','Group2','A',2);
-INSERT INTO ctl_billingservice VALUES ('Service','TST','A007A',' Description 2','Group2','A',1);
-INSERT INTO ctl_billingservice VALUES ('Service','TST','A007A','Description 1','Group1','A',1);
-INSERT INTO ctl_billingservice VALUES ('Service','TST','P003A','Description 1','Group1','A',2);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q515A','Premium','Group3','A',4);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q516A','Premium','Group3','A',5);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q400A','Premium','Group3','A',6);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A994A','Premium','Group3','A',30);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','B990A','Premium','Group3','A',31);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K994A','Premium','Group3','A',32);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','B992A','Premium','Group3','A',33);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','W990A','Premium','Group3','A',34);
-INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','B994A','Premium','Group3','A',35);
-INSERT INTO ctl_billingservice VALUES ('Service','TST','A007A',' Description 3','Group3','A',1);
-INSERT INTO ctl_billingservice VALUES ('Service','TST','A008A',' Description 3','Group3','A',2);
+--
+-- Table structure for table 'billcenter'
+--
 
-INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P006A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P009A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P011A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P018A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P020A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P038A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P041A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C002A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C003A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C004A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C005A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C006A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C007A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C008A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C009A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C010A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C121A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C777A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C905A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C933A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','H001A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Hospital','A933A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','G420A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z103A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z106A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z104A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z114A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z118A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z116A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z113A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z156A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z157A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z158A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z159A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z160A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z161A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z162A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z163A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z164A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z166A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z167A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z168A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z169A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z170A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z171A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z122A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z123A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z124A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z125A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z126A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z127A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z096A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R048A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R049A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R050A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R094A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R040A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R041A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R018A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R019A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R020A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R031A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R032A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','R033A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z314A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z315A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z316A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','G370A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','G371A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F004A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F005A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F006A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F008A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F009A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F012A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F013A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F016A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F017A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','F018A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','D001A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','D004A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','D007A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','D012A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z200A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z201A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z202A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z203A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z204A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z211A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z213A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z154A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z175A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z177A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z179A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z190A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z191A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z192A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z110A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z128A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z129A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z130A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z131A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z117A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z141A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z139A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z140A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z515A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z567A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z527A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z547A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z528A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z580A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z555A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','E740A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','E741A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','E747A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','E705A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z535A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z536A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z714A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z733A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z736A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z847A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z848A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z849A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z854A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z874A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z915A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z904A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','G378A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','G361A','A','2002-08-30');
-INSERT INTO ctl_billingservice_premium VALUES ('Office','Z770A','A','2002-08-30');
+CREATE TABLE billcenter (
+  billcenter_code char(2) NOT NULL default '',
+  billcenter_desc varchar(20) default NULL
+) TYPE=MyISAM;
 
-INSERT INTO config_Immunization VALUES (1,'Routine Infants & Children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Routine Infants &amp; Children\"><columnList><column name=\"2 months\"/><column name=\"4 months\"/><column name=\"6 months\"/><column name=\"12 months\"/><column name=\"18 months\"/><column name=\"4-6 years\"/><column name=\"14-16 years\"/></columnList><rowList><row name=\"DTP+IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Hib\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/></row><row name=\"MMR\"><cell index=\"4\"/><cell index=\"6\"/></row><row name=\"Td\"><cell index=\"7\"/></row><row name=\"Hep B&#10;(3 doses)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"VariVax&#10;(chickenpox)\"><cell index=\"4\"/></row><row name=\"Prevnar&#10;(pneumococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"Menjuvate&#10;(menningococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"7\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
-INSERT INTO config_Immunization VALUES (2,'Late Infants & Children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Late Infants &amp; Children\"><columnList><column name=\"First visit\"/><column name=\"2 months later\"/><column name=\"2 months later\"/><column name=\"6-12 months later\"/><column name=\"4-6 years old\"/><column name=\"14-16 years old\"/></columnList><rowList><row name=\"DTP+IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/></row><row name=\"Hib\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"4\"/></row><row name=\"MMR\"><cell index=\"1\"/></row><row name=\"Td\"><cell index=\"6\"/></row><row name=\"Hep B&#10;(3 doses)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"4\"/></row><row name=\"Varivax&#10;(chickenpox)\"><cell index=\"1\"/></row><row name=\"Prevnar&#10;(pneumococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"4\"/></row><row name=\"Menjuvate&#10;(meningococcus)\"><cell index=\"1\"/><cell index=\"2\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
-INSERT INTO config_Immunization VALUES (3,'>7 year old children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"&gt;7 year old children\"><columnList><column name=\"First visit\"/><column name=\"2 months later\"/><column name=\"6-12 months later\"/><column name=\"10 years later\"/></columnList><rowList><row name=\"dTap\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"MMR\"><cell index=\"1\"/></row><row name=\"Hep B\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"Varicella\"><cell index=\"1\"/></row><row name=\"Meningococcal&#10;Vaccine\"><cell index=\"1\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
-INSERT INTO config_Immunization VALUES (4,'Adult','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Adult\"><columnList><column name=\"Td (Every 10 years)\"/><column name=\"Influenza (yearly)\"/><column name=\"Pneumococcal&#13;&lt;br&gt;(&gt;65 years + risks)\"/><column name=\"MMR(Adults born 1970 or later)\"/><column name=\"Other\"/><column name=\"Other\"/><column name=\"Other\"/></columnList><rowList><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
-INSERT INTO config_Immunization VALUES (5,'Routine Infants & Children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Routine Infants &amp; Children\"><columnList><column name=\"2 months\"/><column name=\"4 months\"/><column name=\"6 months\"/><column name=\"12 months\"/><column name=\"18 months\"/><column name=\"4-6 years\"/><column name=\"14-16 years\"/></columnList><rowList><row name=\"DTP+IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Hib\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/></row><row name=\"MMR\"><cell index=\"4\"/><cell index=\"6\"/></row><row name=\"Td\"><cell index=\"7\"/></row><row name=\"Hep B (first visit,&#10;1 month, 6 months)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"VariVax&#10;(chickenpox)\"><cell index=\"4\"/></row><row name=\"Prevnar&#10;(pneumococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"Menjugate or others&#10;(meningococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"7\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
-
-INSERT INTO ctl_diagcode VALUES ('MFP','413','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','493','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','300','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','895','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','491','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','388','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','428','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','372','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','250','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','009','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','780','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','536','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','691','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','487','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','307','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','305','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','346','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','401','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','272','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','896','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','741','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','627','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','626','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','278','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','715','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','382','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','785','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','781','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','460','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','463','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','599','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','616','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','079','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','078','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','917','A');
-INSERT INTO ctl_diagcode VALUES ('MFP','916','A');
-INSERT INTO ctl_diagcode VALUES ('MOB','633','A');
-INSERT INTO ctl_diagcode VALUES ('MOB','642','A');
-INSERT INTO ctl_diagcode VALUES ('MOB','646','A');
-INSERT INTO ctl_diagcode VALUES ('MOB','650','A');
-INSERT INTO ctl_diagcode VALUES ('MOB','669','A');
-INSERT INTO ctl_diagcode VALUES ('S01','998','A');
-INSERT INTO ctl_diagcode VALUES ('S01','078','A');
-INSERT INTO ctl_diagcode VALUES ('S01','216','A');
-INSERT INTO ctl_diagcode VALUES ('S01','228','A');
-INSERT INTO ctl_diagcode VALUES ('S01','879','A');
-INSERT INTO ctl_diagcode VALUES ('S01','884','A');
-INSERT INTO ctl_diagcode VALUES ('S01','894','A');
-INSERT INTO ctl_diagcode VALUES ('S01','706','A');
-INSERT INTO ctl_diagcode VALUES ('S01','686','A');
-INSERT INTO ctl_diagcode VALUES ('S01','895','A');
-INSERT INTO ctl_diagcode VALUES ('S01','703','A');
-INSERT INTO ctl_diagcode VALUES ('S01','727','A');
-INSERT INTO ctl_diagcode VALUES ('S02','998','A');
-INSERT INTO ctl_diagcode VALUES ('S02','078','A');
-INSERT INTO ctl_diagcode VALUES ('S02','216','A');
-INSERT INTO ctl_diagcode VALUES ('S02','228','A');
-INSERT INTO ctl_diagcode VALUES ('S02','879','A');
-INSERT INTO ctl_diagcode VALUES ('S02','884','A');
-INSERT INTO ctl_diagcode VALUES ('S02','894','A');
-INSERT INTO ctl_diagcode VALUES ('S02','706','A');
-INSERT INTO ctl_diagcode VALUES ('S02','686','A');
-INSERT INTO ctl_diagcode VALUES ('S02','895','A');
-INSERT INTO ctl_diagcode VALUES ('S02','703','A');
-INSERT INTO ctl_diagcode VALUES ('S02','727','A');
-INSERT INTO ctl_diagcode VALUES ('S03','998','A');
-INSERT INTO ctl_diagcode VALUES ('S03','078','A');
-INSERT INTO ctl_diagcode VALUES ('S03','216','A');
-INSERT INTO ctl_diagcode VALUES ('S03','228','A');
-INSERT INTO ctl_diagcode VALUES ('S03','879','A');
-INSERT INTO ctl_diagcode VALUES ('S03','884','A');
-INSERT INTO ctl_diagcode VALUES ('S03','894','A');
-INSERT INTO ctl_diagcode VALUES ('S03','706','A');
-INSERT INTO ctl_diagcode VALUES ('S03','686','A');
-INSERT INTO ctl_diagcode VALUES ('S03','895','A');
-INSERT INTO ctl_diagcode VALUES ('S03','703','A');
-INSERT INTO ctl_diagcode VALUES ('S03','727','A');
-INSERT INTO ctl_diagcode VALUES ('S04','998','A');
-INSERT INTO ctl_diagcode VALUES ('S04','078','A');
-INSERT INTO ctl_diagcode VALUES ('S04','216','A');
-INSERT INTO ctl_diagcode VALUES ('S04','228','A');
-INSERT INTO ctl_diagcode VALUES ('S04','879','A');
-INSERT INTO ctl_diagcode VALUES ('S04','884','A');
-INSERT INTO ctl_diagcode VALUES ('S04','894','A');
-INSERT INTO ctl_diagcode VALUES ('S04','706','A');
-INSERT INTO ctl_diagcode VALUES ('S04','686','A');
-INSERT INTO ctl_diagcode VALUES ('S04','895','A');
-INSERT INTO ctl_diagcode VALUES ('S04','703','A');
-INSERT INTO ctl_diagcode VALUES ('S04','727','A');
-INSERT INTO ctl_diagcode VALUES ('S05','998','A');
-INSERT INTO ctl_diagcode VALUES ('S05','078','A');
-INSERT INTO ctl_diagcode VALUES ('S05','216','A');
-INSERT INTO ctl_diagcode VALUES ('S05','228','A');
-INSERT INTO ctl_diagcode VALUES ('S05','879','A');
-INSERT INTO ctl_diagcode VALUES ('S05','884','A');
-INSERT INTO ctl_diagcode VALUES ('S05','894','A');
-INSERT INTO ctl_diagcode VALUES ('S05','706','A');
-INSERT INTO ctl_diagcode VALUES ('S05','686','A');
-INSERT INTO ctl_diagcode VALUES ('S05','895','A');
-INSERT INTO ctl_diagcode VALUES ('S05','703','A');
-INSERT INTO ctl_diagcode VALUES ('S05','727','A');
-INSERT INTO ctl_diagcode VALUES ('S06','998','A');
-INSERT INTO ctl_diagcode VALUES ('S06','078','A');
-INSERT INTO ctl_diagcode VALUES ('S06','216','A');
-INSERT INTO ctl_diagcode VALUES ('S06','228','A');
-INSERT INTO ctl_diagcode VALUES ('S06','879','A');
-INSERT INTO ctl_diagcode VALUES ('S06','884','A');
-INSERT INTO ctl_diagcode VALUES ('S06','894','A');
-INSERT INTO ctl_diagcode VALUES ('S06','706','A');
-INSERT INTO ctl_diagcode VALUES ('S06','686','A');
-INSERT INTO ctl_diagcode VALUES ('S06','895','A');
-INSERT INTO ctl_diagcode VALUES ('S06','703','A');
-INSERT INTO ctl_diagcode VALUES ('S06','727','A');
-INSERT INTO ctl_diagcode VALUES ('S07','998','A');
-INSERT INTO ctl_diagcode VALUES ('S07','078','A');
-INSERT INTO ctl_diagcode VALUES ('S07','216','A');
-INSERT INTO ctl_diagcode VALUES ('S07','228','A');
-INSERT INTO ctl_diagcode VALUES ('S07','879','A');
-INSERT INTO ctl_diagcode VALUES ('S07','884','A');
-INSERT INTO ctl_diagcode VALUES ('S07','894','A');
-INSERT INTO ctl_diagcode VALUES ('S07','706','A');
-INSERT INTO ctl_diagcode VALUES ('S07','686','A');
-INSERT INTO ctl_diagcode VALUES ('S07','895','A');
-INSERT INTO ctl_diagcode VALUES ('S07','703','A');
-INSERT INTO ctl_diagcode VALUES ('S07','727','A');
-INSERT INTO ctl_diagcode VALUES ('S08','998','A');
-INSERT INTO ctl_diagcode VALUES ('S08','078','A');
-INSERT INTO ctl_diagcode VALUES ('S08','216','A');
-INSERT INTO ctl_diagcode VALUES ('S08','228','A');
-INSERT INTO ctl_diagcode VALUES ('S08','879','A');
-INSERT INTO ctl_diagcode VALUES ('S08','884','A');
-INSERT INTO ctl_diagcode VALUES ('S08','894','A');
-INSERT INTO ctl_diagcode VALUES ('S08','706','A');
-INSERT INTO ctl_diagcode VALUES ('S08','686','A');
-INSERT INTO ctl_diagcode VALUES ('S08','895','A');
-INSERT INTO ctl_diagcode VALUES ('S08','703','A');
-INSERT INTO ctl_diagcode VALUES ('S08','727','A');
-INSERT INTO ctl_diagcode VALUES ('S09','998','A');
-INSERT INTO ctl_diagcode VALUES ('S09','078','A');
-INSERT INTO ctl_diagcode VALUES ('S09','216','A');
-INSERT INTO ctl_diagcode VALUES ('S09','228','A');
-INSERT INTO ctl_diagcode VALUES ('S09','879','A');
-INSERT INTO ctl_diagcode VALUES ('S09','884','A');
-INSERT INTO ctl_diagcode VALUES ('S09','894','A');
-INSERT INTO ctl_diagcode VALUES ('S09','706','A');
-INSERT INTO ctl_diagcode VALUES ('S09','686','A');
-INSERT INTO ctl_diagcode VALUES ('S09','895','A');
-INSERT INTO ctl_diagcode VALUES ('S09','703','A');
-INSERT INTO ctl_diagcode VALUES ('S09','727','A');
-INSERT INTO ctl_diagcode VALUES ('S10','998','A');
-INSERT INTO ctl_diagcode VALUES ('S10','078','A');
-INSERT INTO ctl_diagcode VALUES ('S10','216','A');
-INSERT INTO ctl_diagcode VALUES ('S10','228','A');
-INSERT INTO ctl_diagcode VALUES ('S10','879','A');
-INSERT INTO ctl_diagcode VALUES ('S10','884','A');
-INSERT INTO ctl_diagcode VALUES ('S10','894','A');
-INSERT INTO ctl_diagcode VALUES ('S10','706','A');
-INSERT INTO ctl_diagcode VALUES ('S10','686','A');
-INSERT INTO ctl_diagcode VALUES ('S10','895','A');
-INSERT INTO ctl_diagcode VALUES ('S10','703','A');
-INSERT INTO ctl_diagcode VALUES ('S10','727','A');
-INSERT INTO ctl_diagcode VALUES ('S11','998','A');
-INSERT INTO ctl_diagcode VALUES ('S11','078','A');
-INSERT INTO ctl_diagcode VALUES ('S11','216','A');
-INSERT INTO ctl_diagcode VALUES ('S11','228','A');
-INSERT INTO ctl_diagcode VALUES ('S11','879','A');
-INSERT INTO ctl_diagcode VALUES ('S11','884','A');
-INSERT INTO ctl_diagcode VALUES ('S11','894','A');
-INSERT INTO ctl_diagcode VALUES ('S11','706','A');
-INSERT INTO ctl_diagcode VALUES ('S11','686','A');
-INSERT INTO ctl_diagcode VALUES ('S11','895','A');
-INSERT INTO ctl_diagcode VALUES ('S11','703','A');
-INSERT INTO ctl_diagcode VALUES ('S11','727','A');
-INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
-INSERT INTO ctl_diagcode VALUES ('Service 2','000','A');
-INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
-INSERT INTO ctl_diagcode VALUES ('Service2','000','A');
-INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
-INSERT INTO ctl_diagcode VALUES ('Service1 T','000','A');
-INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
-INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
-INSERT INTO ctl_diagcode VALUES ('TST','000','A');
-
-INSERT INTO ctl_doctype VALUES ('demographic','lab','A');
-INSERT INTO ctl_doctype VALUES ('demographic','consult','A');
-INSERT INTO ctl_doctype VALUES ('demographic','insurance','A');
-INSERT INTO ctl_doctype VALUES ('demographic','legal','A');
-INSERT INTO ctl_doctype VALUES ('demographic','oldchart','A');
-INSERT INTO ctl_doctype VALUES ('demographic','others','A');
-INSERT INTO ctl_doctype VALUES ('provider','resource','A');
-INSERT INTO ctl_doctype VALUES ('provider','desktop','A');
-INSERT INTO ctl_doctype VALUES ('provider','handout','A');
-INSERT INTO ctl_doctype VALUES ('provider','forms','A');
-INSERT INTO ctl_doctype VALUES ('provider','others','A');
-INSERT INTO ctl_doctype VALUES ('provider','share','A');
-
-
-INSERT INTO clinic VALUES (1234,'McMaster Hospital','Hamilton, Ontario, Canada','1','A');
-
-INSERT INTO clinic_location VALUES ('3642',1,'The Wellington Lodge');
-INSERT INTO clinic_location VALUES ('3831',1,'Maternity Centre of Hamilton');
-INSERT INTO clinic_location VALUES ('1994',1,'McMaster University Medical Center');
-INSERT INTO clinic_location VALUES ('1983',1,'Henderson General');
-INSERT INTO clinic_location VALUES ('1985',1,'Hamilton General');
-INSERT INTO clinic_location VALUES ('2003',1,'St. Joseph\"s Hospital');
-INSERT INTO clinic_location VALUES ('0000',1,'Not Applicable');
-INSERT INTO clinic_location VALUES ('1972',1,'Chedoke Hospital');
-INSERT INTO clinic_location VALUES ('3866',1,'Stonechurch Family Health Center');
-INSERT INTO clinic_location VALUES ('3226',1,'Stonechurch Family Health PCN');
-INSERT INTO clinic_location VALUES ('9999',1,'Home Visit');
-
+--
+-- Dumping data for table 'billcenter'
+--
 
 INSERT INTO billcenter VALUES ('G','Hamilton');
 INSERT INTO billcenter VALUES ('J','Kingston');
@@ -1128,6 +122,112 @@ INSERT INTO billcenter VALUES ('R','Sudbury');
 INSERT INTO billcenter VALUES ('U','Thunder Bay');
 INSERT INTO billcenter VALUES ('N','Toronto');
 
+--
+-- Table structure for table 'billing'
+--
+
+CREATE TABLE billing (
+  billing_no int(10) NOT NULL auto_increment,
+  clinic_no int(10) NOT NULL default '0',
+  demographic_no int(10) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  appointment_no int(12) default NULL,
+  organization_spec_code varchar(6) default NULL,
+  demographic_name varchar(60) default NULL,
+  hin varchar(12) default NULL,
+  update_date date default NULL,
+  update_time time default NULL,
+  billing_date date default NULL,
+  billing_time time default NULL,
+  clinic_ref_code varchar(10) default NULL,
+  content text,
+  total varchar(6) default NULL,
+  status char(1) default NULL,
+  dob varchar(8) default NULL,
+  visitdate date default NULL,
+  visittype char(2) default NULL,
+  provider_ohip_no varchar(20) default NULL,
+  provider_rma_no varchar(20) default NULL,
+  apptProvider_no varchar(6) default NULL,
+  asstProvider_no varchar(6) default NULL,
+  creator varchar(6) default NULL,
+  PRIMARY KEY  (billing_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'billing'
+--
+
+
+--
+-- Table structure for table 'billingdetail'
+--
+
+CREATE TABLE billingdetail (
+  billing_dt_no int(10) NOT NULL auto_increment,
+  billing_no int(10) NOT NULL default '0',
+  service_code varchar(5) default NULL,
+  service_desc varchar(255) default NULL,
+  billing_amount varchar(6) default NULL,
+  diagnostic_code char(3) default NULL,
+  appointment_date date default NULL,
+  status char(1) default NULL,
+  billingunit char(1) default NULL,
+  PRIMARY KEY  (billing_dt_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'billingdetail'
+--
+
+
+--
+-- Table structure for table 'billinginr'
+--
+
+CREATE TABLE billinginr (
+  billinginr_no int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  demographic_name varchar(60) NOT NULL default '',
+  hin varchar(12) default NULL,
+  dob varchar(8) default NULL,
+  provider_no int(10) default NULL,
+  provider_ohip_no varchar(20) default NULL,
+  provider_rma_no varchar(20) default NULL,
+  creator varchar(6) default NULL,
+  diagnostic_code char(3) default NULL,
+  service_code varchar(6) default NULL,
+  service_desc varchar(255) default NULL,
+  billing_amount varchar(6) default NULL,
+  billing_unit char(1) default NULL,
+  createdatetime datetime NOT NULL default '0000-00-00 00:00:00',
+  status char(1) default NULL,
+  PRIMARY KEY  (billinginr_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'billinginr'
+--
+
+
+--
+-- Table structure for table 'billingservice'
+--
+
+CREATE TABLE billingservice (
+  billingservice_no int(10) NOT NULL auto_increment,
+  service_compositecode varchar(30) default NULL,
+  service_code varchar(10) default NULL,
+  description text,
+  value varchar(8) default NULL,
+  percentage varchar(8) default NULL,
+  billingservice_date date default NULL,
+  PRIMARY KEY  (billingservice_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'billingservice'
+--
 
 INSERT INTO billingservice VALUES (1,'','A001A','Minor assessment - gp','17.30','','2002-04-01');
 INSERT INTO billingservice VALUES (2,'','A003A','General assessment - annual health -16 yrs + - gp','54.10','','2002-04-01');
@@ -9805,6 +8905,1202 @@ INSERT INTO billingservice VALUES (8705,'','Q501A','attendance at consultation w
 INSERT INTO billingservice VALUES (8704,'','Q500A','attendance at consultation with nurse','47.35','','2002-04-01');
 INSERT INTO billingservice VALUES (8703,'','Q400A','Home Care supervision fee','24.80','','2002-04-01');
 
+--
+-- Table structure for table 'clinic'
+--
+
+CREATE TABLE clinic (
+  clinic_no int(10) NOT NULL auto_increment,
+  clinic_name varchar(50) default NULL,
+  clinic_address varchar(60) default '',
+  clinic_city varchar(40) default '',
+  clinic_postal varchar(15) default '',
+  clinic_phone varchar(50) default NULL,
+  clinic_fax varchar(20) default '',
+  clinic_location_code varchar(10) default NULL,
+  status char(1) default NULL,
+  clinic_province varchar(40) default NULL,
+  clinic_delim_phone text,
+  clinic_delim_fax text,
+  PRIMARY KEY  (clinic_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'clinic'
+--
+
+INSERT INTO clinic VALUES (1234,'McMaster Hospital','Hamilton','Hamilton','L0R 4K3','555-555-5555','555-555-5555','444','A','Ontario','','');
+
+--
+-- Table structure for table 'clinic_location'
+--
+
+CREATE TABLE clinic_location (
+  clinic_location_no varchar(15) NOT NULL default '',
+  clinic_no int(10) NOT NULL default '0',
+  clinic_location_name varchar(40) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'clinic_location'
+--
+
+INSERT INTO clinic_location VALUES ('3642',1,'The Wellington Lodge');
+INSERT INTO clinic_location VALUES ('3831',1,'Maternity Centre of Hamilton');
+INSERT INTO clinic_location VALUES ('1994',1,'McMaster University Medical Center');
+INSERT INTO clinic_location VALUES ('1983',1,'Henderson General');
+INSERT INTO clinic_location VALUES ('1985',1,'Hamilton General');
+INSERT INTO clinic_location VALUES ('2003',1,'St. Joseph\"s Hospital');
+INSERT INTO clinic_location VALUES ('0000',1,'Not Applicable');
+INSERT INTO clinic_location VALUES ('1972',1,'Chedoke Hospital');
+INSERT INTO clinic_location VALUES ('3866',1,'Stonechurch Family Health Center');
+INSERT INTO clinic_location VALUES ('3226',1,'Stonechurch Family Health PCN');
+INSERT INTO clinic_location VALUES ('9999',1,'Home Visit');
+
+--
+-- Table structure for table 'config_Immunization'
+--
+
+CREATE TABLE config_Immunization (
+  setId int(10) NOT NULL auto_increment,
+  setName varchar(255) default NULL,
+  setXmlDoc text,
+  createDate date default NULL,
+  providerNo varchar(6) default NULL,
+  archived tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (setId)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'config_Immunization'
+--
+
+INSERT INTO config_Immunization VALUES (1,'Routine Infants & Children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Routine Infants &amp; Children\"><columnList><column name=\"2 months\"/><column name=\"4 months\"/><column name=\"6 months\"/><column name=\"12 months\"/><column name=\"18 months\"/><column name=\"4-6 years\"/><column name=\"14-16 years\"/></columnList><rowList><row name=\"DTP+IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Hib\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/></row><row name=\"MMR\"><cell index=\"4\"/><cell index=\"6\"/></row><row name=\"Td\"><cell index=\"7\"/></row><row name=\"Hep B&#10;(3 doses)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"VariVax&#10;(chickenpox)\"><cell index=\"4\"/></row><row name=\"Prevnar&#10;(pneumococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"Menjuvate&#10;(menningococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"7\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
+INSERT INTO config_Immunization VALUES (2,'Late Infants & Children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Late Infants &amp; Children\"><columnList><column name=\"First visit\"/><column name=\"2 months later\"/><column name=\"2 months later\"/><column name=\"6-12 months later\"/><column name=\"4-6 years old\"/><column name=\"14-16 years old\"/></columnList><rowList><row name=\"DTP+IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/></row><row name=\"Hib\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"4\"/></row><row name=\"MMR\"><cell index=\"1\"/></row><row name=\"Td\"><cell index=\"6\"/></row><row name=\"Hep B&#10;(3 doses)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"4\"/></row><row name=\"Varivax&#10;(chickenpox)\"><cell index=\"1\"/></row><row name=\"Prevnar&#10;(pneumococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"4\"/></row><row name=\"Menjuvate&#10;(meningococcus)\"><cell index=\"1\"/><cell index=\"2\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
+INSERT INTO config_Immunization VALUES (3,'>7 year old children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"&gt;7 year old children\"><columnList><column name=\"First visit\"/><column name=\"2 months later\"/><column name=\"6-12 months later\"/><column name=\"10 years later\"/></columnList><rowList><row name=\"dTap\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"MMR\"><cell index=\"1\"/></row><row name=\"Hep B\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"Varicella\"><cell index=\"1\"/></row><row name=\"Meningococcal&#10;Vaccine\"><cell index=\"1\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
+INSERT INTO config_Immunization VALUES (4,'Adult','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Adult\"><columnList><column name=\"Td (Every 10 years)\"/><column name=\"Influenza (yearly)\"/><column name=\"Pneumococcal&#13;&lt;br&gt;(&gt;65 years + risks)\"/><column name=\"MMR(Adults born 1970 or later)\"/><column name=\"Other\"/><column name=\"Other\"/><column name=\"Other\"/></columnList><rowList><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
+INSERT INTO config_Immunization VALUES (5,'Routine Infants & Children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Routine Infants &amp; Children\"><columnList><column name=\"2 months\"/><column name=\"4 months\"/><column name=\"6 months\"/><column name=\"12 months\"/><column name=\"18 months\"/><column name=\"4-6 years\"/><column name=\"14-16 years\"/></columnList><rowList><row name=\"DTP+IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Hib\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/></row><row name=\"MMR\"><cell index=\"4\"/><cell index=\"6\"/></row><row name=\"Td\"><cell index=\"7\"/></row><row name=\"Hep B (first visit,&#10;1 month, 6 months)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"VariVax&#10;(chickenpox)\"><cell index=\"4\"/></row><row name=\"Prevnar&#10;(pneumococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"Menjugate or others&#10;(meningococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"7\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
+
+--
+-- Table structure for table 'consultationRequests'
+--
+
+CREATE TABLE consultationRequests (
+  referalDate date default NULL,
+  serviceId int(10) default NULL,
+  specId int(10) default NULL,
+  appointmentDate date default NULL,
+  appointmentTime time default NULL,
+  reason text,
+  clinicalInfo text,
+  currentMeds text,
+  allergies text,
+  providerNo varchar(6) default NULL,
+  demographicNo int(10) default NULL,
+  status char(2) default NULL,
+  statusText text,
+  sendTo varchar(20) default NULL,
+  requestId int(10) NOT NULL auto_increment,
+  concurrentProblems text,
+  urgency char(2) default NULL,
+  PRIMARY KEY  (requestId)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'consultationRequests'
+--
+
+
+
+--
+-- Table structure for table 'consultationServices'
+--
+
+CREATE TABLE consultationServices (
+  serviceId int(10) NOT NULL auto_increment,
+  serviceDesc varchar(255) default NULL,
+  active char(2) default NULL,
+  PRIMARY KEY  (serviceId)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'consultationServices'
+--
+
+INSERT INTO consultationServices VALUES (53,'Cardiology','1');
+INSERT INTO consultationServices VALUES (54,'Dermatology','1');
+INSERT INTO consultationServices VALUES (55,'Neurology','1');
+INSERT INTO consultationServices VALUES (56,'Radiology','1');
+INSERT INTO consultationServices VALUES (57,'SEE NOTES','1');
+
+--
+-- Table structure for table 'ctl_billingservice'
+--
+
+CREATE TABLE ctl_billingservice (
+  servicetype_name varchar(150) default NULL,
+  servicetype varchar(10) default NULL,
+  service_code varchar(10) default NULL,
+  service_group_name varchar(20) default NULL,
+  service_group varchar(20) default NULL,
+  status char(1) default NULL,
+  service_order int(4) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_billingservice'
+--
+
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G010A','Procedure','Group2','A',29);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Z176A','Procedure','Group2','A',28);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G370A','Procedure','Group2','A',27);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Z160A','Procedure','Group2','A',26);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Z159A','Procedure','Group2','A',25);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G420A','Procedure','Group2','A',24);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G591A','Procedure','Group2','A',23);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G590A','Procedure','Group2','A',22);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G539A','Procedure','Group2','A',21);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G538A','Procedure','Group2','A',20);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G373A','Procedure','Group2','A',19);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G372A','Procedure','Group2','A',18);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G212A','Procedure','Group2','A',17);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G202A','Procedure','Group2','A',16);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','G365A','Procedure','Group2','A',14);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','P005A','Service','Group1','A',19);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','P004A','Service','Group1','A',18);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','P003A','Service','Group1','A',17);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','H105A','Service','Group1','A',16);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','H001A','Service','Group1','A',15);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A008A','Service','Group1','A',14);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A903A','Service','Group1','A',13);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K007A','Service','Group1','A',12);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K005A','Service','Group1','A',11);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K013A','Service','Group1','A',10);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K017A','Service','Group1','A',9);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','E075A','Service','Group1','A',8);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K030A','Service','Group1','A',7);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K028A','Service','Group1','A',6);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A771A','Service','Group1','A',5);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A004A','Service','Group1','A',4);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A003A','Service','Group1','A',3);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A007A','Service','Group1','A',2);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A001A','Service','Group1','A',1);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','G010A','Clinic','Group3','A',1);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P004A','Clinic','Group3','A',2);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P003A','Clinic','Group3','A',3);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P008A','Clinic','Group3','A',4);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P005A','Clinic','Group3','A',5);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A001A','Clinic','Group3','A',6);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A007A','Clinic','Group3','A',7);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A003A','Clinic','Group3','A',8);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K005A','Clinic','Group3','A',9);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K013A','Clinic','Group3','A',10);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K033A','Clinic','Group3','A',11);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P030A','Clinic','Group3','A',12);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A001A','Hospital','Group1','A',1);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A007A','Hospital','Group1','A',2);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','A003A','Hospital','Group1','A',3);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P025A','Hospital','Group1','A',4);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P022A','Hospital','Group1','A',5);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P023A','Hospital','Group1','A',6);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P006A','Hospital','Group1','A',7);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P009A','Hospital','Group1','A',8);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P020A','Hospital','Group1','A',9);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P038A','Hospital','Group1','A',10);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P028A','Hospital','Group1','A',11);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E502A','Hospital','Group1','A',12);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E409A','Hospital','Group1','A',13);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E410A','Hospital','Group1','A',14);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','E411A','Hospital','Group1','A',15);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','H001A','Hospital','Group1','A',18);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C010A','Hospital','Group1','A',17);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','P007A','Hospital','Group1','A',16);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C989A','Premium','Group2','A',14);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C990A','Premium','Group2','A',15);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C991A','Premium','Group2','A',16);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C992A','Premium','Group2','A',17);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C993A','Premium','Group2','A',18);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C994A','Premium','Group2','A',19);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C995A','Premium','Group2','A',20);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C996A','Premium','Group2','A',21);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','C997A','Premium','Group2','A',22);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K990A','Premium','Group2','A',31);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K991A','Premium','Group2','A',32);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K992A','Premium','Group2','A',33);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K993A','Premium','Group2','A',34);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K994A','Premium','Group2','A',35);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K995A','Premium','Group2','A',36);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K996A','Premium','Group2','A',37);
+INSERT INTO ctl_billingservice VALUES ('Obstetric','MOB','K997A','Premium','Group2','A',38);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z101A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z173A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z174A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z104A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z106A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z103A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z116A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','Z113A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','R549A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','A994A','Premium','Group3','A',66);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','K994A','Premium','Group3','A',67);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','K995A','Premium','Group3','A',68);
+INSERT INTO ctl_billingservice VALUES ('Abscess-Haematoma-Ganglion-Biopsy','S01','K997A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z117A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z156A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z157A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z158A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z159A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z160A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z161A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z162A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z163A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z164A','Procedure','Group2','A',66);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z166A','Procedure','Group2','A',67);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z167A','Procedure','Group2','A',68);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','Z168A','Procedure','Group2','A',69);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','A994A','Premium','Group3','A',70);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','K994A','Premium','Group3','A',71);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','K995A','Premium','Group3','A',72);
+INSERT INTO ctl_billingservice VALUES ('Verru-Keratos-Pyogenic granul.-Mollusc-Naevus-Plantar','S02','K997A','Premium','Group3','A',73);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z122A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z123A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z124A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z125A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z126A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z127A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z149A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z150A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z151A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z096A','Procedure','Group2','A',66);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','Z097A','Procedure','Group2','A',67);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','A994A','Premium','Group3','A',68);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','K994A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','K995A','Premium','Group3','A',70);
+INSERT INTO ctl_billingservice VALUES ('Cyst-Haemangioma-Lipoma-Xanthelasma','S03','K997A','Premium','Group3','A',71);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R048A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R049A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R050A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R094A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R040A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R041A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R018A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R019A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R020A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R031A','Procedure','Group2','A',66);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','R032A','Procedure','Group2','A',67);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','A994A','Premium','Group3','A',68);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','K994A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','K995A','Premium','Group3','A',70);
+INSERT INTO ctl_billingservice VALUES ('Malignant Lesions','S04','K997A','Premium','Group3','A',71);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','E530A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z176A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z154A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z175A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z177A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z179A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z190A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z191A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','Z192A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','R024A','Procedure','Group2','A',66);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','A994A','Premium','Group3','A',67);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','K994A','Premium','Group3','A',68);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','K995A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Suture of Lacerations','S05','K997A','Premium','Group3','A',70);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z110A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z128A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z129A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z130A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z131A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z117A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z229A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','Z243A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','A994A','Premium','Group3','A',66);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','K994A','Premium','Group3','A',67);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','K995A','Premium','Group3','A',68);
+INSERT INTO ctl_billingservice VALUES ('Fingers/Toe-nails and Release of Hammertoe','S06','K997A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z140A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z141A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z139A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','Z118A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','A994A','Premium','Group3','A',66);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','K994A','Premium','Group3','A',67);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','K995A','Premium','Group3','A',68);
+INSERT INTO ctl_billingservice VALUES ('Breast Operation','S07','K997A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z201A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z202A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z203A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z199A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z213A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z211A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z198A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','Z204A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','A994A','Premium','Group3','A',66);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','K994A','Premium','Group3','A',67);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','K995A','Premium','Group3','A',68);
+INSERT INTO ctl_billingservice VALUES ('Casts (I.O.P)','S08','K997A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z114A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z311A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z851A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z847A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z848A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z874A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z854A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z501A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z502A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z506A','Procedure','Group2','A',66);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z510A','Procedure','Group2','A',67);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z524A','Procedure','Group2','A',68);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','Z111A','Procedure','Group2','A',69);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','A994A','Premium','Group3','A',70);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','K994A','Premium','Group3','A',71);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','K995A','Premium','Group3','A',72);
+INSERT INTO ctl_billingservice VALUES ('Removal of Foreign Body/Eyes/Oral/Pharynx','S09','K997A','Premium','Group3','A',73);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z541A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z756A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z543A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z544A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z545A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z757A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z575A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z576A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z548A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z549A','Procedure','Group2','A',66);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z550A','Procedure','Group2','A',67);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','Z117A','Procedure','Group2','A',68);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','A994A','Premium','Group3','A',69);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','K994A','Premium','Group3','A',70);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','K995A','Premium','Group3','A',71);
+INSERT INTO ctl_billingservice VALUES ('Rectum/Anus','S10','K997A','Premium','Group3','A',72);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A007A','Surgical','Group1','A',38);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A001A','Surgical','Group1','A',39);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A003A','Surgical','Group1','A',40);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A004A','Surgical','Group1','A',41);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A005A','Surgical','Group1','A',42);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A006A','Surgical','Group1','A',43);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G264A','Surgical','Group1','A',44);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G265A','Surgical','Group1','A',45);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G225A','Surgical','Group1','A',46);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G219A','Surgical','Group1','A',47);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G220A','Surgical','Group1','A',48);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G221A','Surgical','Group1','A',49);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G258A','Surgical','Group1','A',50);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G235A','Surgical','Group1','A',51);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G231A','Surgical','Group1','A',52);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','G223A','Surgical','Group1','A',53);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z804A','Surgical','Group1','A',54);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','E542A','Procedure','Group2','A',55);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z770A','Procedure','Group2','A',57);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S700A','Procedure','Group2','A',58);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z714A','Procedure','Group2','A',59);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z716A','Procedure','Group2','A',60);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z717A','Procedure','Group2','A',61);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z477A','Procedure','Group2','A',62);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z706A','Procedure','Group2','A',63);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z733A','Procedure','Group2','A',64);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','Z736A','Procedure','Group2','A',65);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S567A','Procedure','Group2','A',66);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S568A','Procedure','Group2','A',67);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S569A','Procedure','Group2','A',68);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S700A','Procedure','Group2','A',69);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','S701A','Procedure','Group2','A',70);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','A994A','Premium','Group3','A',71);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','K994A','Premium','Group3','A',72);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','K995A','Premium','Group3','A',73);
+INSERT INTO ctl_billingservice VALUES ('Male/Femal Genital System','S11','K997A','Premium','Group3','A',74);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q011A','Premium','Group3','A',1);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q503A','Premium','Group3','A',2);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q503A','Premium','Group3','A',3);
+INSERT INTO ctl_billingservice VALUES ('Service','TST','Q011A',' Description 2','Group2','A',2);
+INSERT INTO ctl_billingservice VALUES ('Service','TST','A007A',' Description 2','Group2','A',1);
+INSERT INTO ctl_billingservice VALUES ('Service','TST','A007A','Description 1','Group1','A',1);
+INSERT INTO ctl_billingservice VALUES ('Service','TST','P003A','Description 1','Group1','A',2);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q515A','Premium','Group3','A',4);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q516A','Premium','Group3','A',5);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','Q400A','Premium','Group3','A',6);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','A994A','Premium','Group3','A',30);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','B990A','Premium','Group3','A',31);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','K994A','Premium','Group3','A',32);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','B992A','Premium','Group3','A',33);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','W990A','Premium','Group3','A',34);
+INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','B994A','Premium','Group3','A',35);
+INSERT INTO ctl_billingservice VALUES ('Service','TST','A007A',' Description 3','Group3','A',1);
+INSERT INTO ctl_billingservice VALUES ('Service','TST','A008A',' Description 3','Group3','A',2);
+
+--
+-- Table structure for table 'ctl_billingservice_premium'
+--
+
+CREATE TABLE ctl_billingservice_premium (
+  servicetype_name varchar(150) default '',
+  service_code varchar(10) default '',
+  status char(1) default '',
+  update_date date default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_billingservice_premium'
+--
+
+INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P006A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P009A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P011A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P018A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P020A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P038A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Obstetric','P041A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C002A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C003A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C004A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C005A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C006A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C007A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C008A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C009A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C010A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C121A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C777A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C905A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','C933A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','H001A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Hospital','A933A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','G420A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z103A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z106A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z104A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z114A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z118A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z116A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z113A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z156A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z157A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z158A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z159A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z160A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z161A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z162A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z163A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z164A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z166A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z167A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z168A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z169A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z170A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z171A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z122A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z123A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z124A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z125A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z126A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z127A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z096A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R048A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R049A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R050A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R094A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R040A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R041A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R018A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R019A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R020A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R031A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R032A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','R033A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z314A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z315A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z316A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','G370A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','G371A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F004A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F005A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F006A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F008A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F009A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F012A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F013A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F016A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F017A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','F018A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','D001A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','D004A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','D007A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','D012A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z200A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z201A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z202A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z203A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z204A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z211A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z213A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z154A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z175A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z177A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z179A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z190A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z191A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z192A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z110A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z128A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z129A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z130A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z131A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z117A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z141A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z139A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z140A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z515A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z567A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z527A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z547A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z528A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z580A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z555A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','E740A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','E741A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','E747A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','E705A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z535A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z536A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z714A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z733A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z736A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z847A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z848A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z849A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z854A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z874A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z915A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z904A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','G378A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','G361A','A','2002-08-30');
+INSERT INTO ctl_billingservice_premium VALUES ('Office','Z770A','A','2002-08-30');
+
+--
+-- Table structure for table 'ctl_diagcode'
+--
+
+CREATE TABLE ctl_diagcode (
+  servicetype varchar(10) default NULL,
+  diagnostic_code varchar(5) default NULL,
+  status char(1) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_diagcode'
+--
+
+INSERT INTO ctl_diagcode VALUES ('MFP','413','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','493','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','300','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','895','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','491','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','388','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','428','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','372','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','250','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','009','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','780','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','536','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','691','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','487','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','307','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','305','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','346','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','401','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','272','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','896','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','741','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','627','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','626','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','278','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','715','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','382','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','785','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','781','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','460','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','463','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','599','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','616','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','079','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','078','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','917','A');
+INSERT INTO ctl_diagcode VALUES ('MFP','916','A');
+INSERT INTO ctl_diagcode VALUES ('MOB','633','A');
+INSERT INTO ctl_diagcode VALUES ('MOB','642','A');
+INSERT INTO ctl_diagcode VALUES ('MOB','646','A');
+INSERT INTO ctl_diagcode VALUES ('MOB','650','A');
+INSERT INTO ctl_diagcode VALUES ('MOB','669','A');
+INSERT INTO ctl_diagcode VALUES ('S01','998','A');
+INSERT INTO ctl_diagcode VALUES ('S01','078','A');
+INSERT INTO ctl_diagcode VALUES ('S01','216','A');
+INSERT INTO ctl_diagcode VALUES ('S01','228','A');
+INSERT INTO ctl_diagcode VALUES ('S01','879','A');
+INSERT INTO ctl_diagcode VALUES ('S01','884','A');
+INSERT INTO ctl_diagcode VALUES ('S01','894','A');
+INSERT INTO ctl_diagcode VALUES ('S01','706','A');
+INSERT INTO ctl_diagcode VALUES ('S01','686','A');
+INSERT INTO ctl_diagcode VALUES ('S01','895','A');
+INSERT INTO ctl_diagcode VALUES ('S01','703','A');
+INSERT INTO ctl_diagcode VALUES ('S01','727','A');
+INSERT INTO ctl_diagcode VALUES ('S02','998','A');
+INSERT INTO ctl_diagcode VALUES ('S02','078','A');
+INSERT INTO ctl_diagcode VALUES ('S02','216','A');
+INSERT INTO ctl_diagcode VALUES ('S02','228','A');
+INSERT INTO ctl_diagcode VALUES ('S02','879','A');
+INSERT INTO ctl_diagcode VALUES ('S02','884','A');
+INSERT INTO ctl_diagcode VALUES ('S02','894','A');
+INSERT INTO ctl_diagcode VALUES ('S02','706','A');
+INSERT INTO ctl_diagcode VALUES ('S02','686','A');
+INSERT INTO ctl_diagcode VALUES ('S02','895','A');
+INSERT INTO ctl_diagcode VALUES ('S02','703','A');
+INSERT INTO ctl_diagcode VALUES ('S02','727','A');
+INSERT INTO ctl_diagcode VALUES ('S03','998','A');
+INSERT INTO ctl_diagcode VALUES ('S03','078','A');
+INSERT INTO ctl_diagcode VALUES ('S03','216','A');
+INSERT INTO ctl_diagcode VALUES ('S03','228','A');
+INSERT INTO ctl_diagcode VALUES ('S03','879','A');
+INSERT INTO ctl_diagcode VALUES ('S03','884','A');
+INSERT INTO ctl_diagcode VALUES ('S03','894','A');
+INSERT INTO ctl_diagcode VALUES ('S03','706','A');
+INSERT INTO ctl_diagcode VALUES ('S03','686','A');
+INSERT INTO ctl_diagcode VALUES ('S03','895','A');
+INSERT INTO ctl_diagcode VALUES ('S03','703','A');
+INSERT INTO ctl_diagcode VALUES ('S03','727','A');
+INSERT INTO ctl_diagcode VALUES ('S04','998','A');
+INSERT INTO ctl_diagcode VALUES ('S04','078','A');
+INSERT INTO ctl_diagcode VALUES ('S04','216','A');
+INSERT INTO ctl_diagcode VALUES ('S04','228','A');
+INSERT INTO ctl_diagcode VALUES ('S04','879','A');
+INSERT INTO ctl_diagcode VALUES ('S04','884','A');
+INSERT INTO ctl_diagcode VALUES ('S04','894','A');
+INSERT INTO ctl_diagcode VALUES ('S04','706','A');
+INSERT INTO ctl_diagcode VALUES ('S04','686','A');
+INSERT INTO ctl_diagcode VALUES ('S04','895','A');
+INSERT INTO ctl_diagcode VALUES ('S04','703','A');
+INSERT INTO ctl_diagcode VALUES ('S04','727','A');
+INSERT INTO ctl_diagcode VALUES ('S05','998','A');
+INSERT INTO ctl_diagcode VALUES ('S05','078','A');
+INSERT INTO ctl_diagcode VALUES ('S05','216','A');
+INSERT INTO ctl_diagcode VALUES ('S05','228','A');
+INSERT INTO ctl_diagcode VALUES ('S05','879','A');
+INSERT INTO ctl_diagcode VALUES ('S05','884','A');
+INSERT INTO ctl_diagcode VALUES ('S05','894','A');
+INSERT INTO ctl_diagcode VALUES ('S05','706','A');
+INSERT INTO ctl_diagcode VALUES ('S05','686','A');
+INSERT INTO ctl_diagcode VALUES ('S05','895','A');
+INSERT INTO ctl_diagcode VALUES ('S05','703','A');
+INSERT INTO ctl_diagcode VALUES ('S05','727','A');
+INSERT INTO ctl_diagcode VALUES ('S06','998','A');
+INSERT INTO ctl_diagcode VALUES ('S06','078','A');
+INSERT INTO ctl_diagcode VALUES ('S06','216','A');
+INSERT INTO ctl_diagcode VALUES ('S06','228','A');
+INSERT INTO ctl_diagcode VALUES ('S06','879','A');
+INSERT INTO ctl_diagcode VALUES ('S06','884','A');
+INSERT INTO ctl_diagcode VALUES ('S06','894','A');
+INSERT INTO ctl_diagcode VALUES ('S06','706','A');
+INSERT INTO ctl_diagcode VALUES ('S06','686','A');
+INSERT INTO ctl_diagcode VALUES ('S06','895','A');
+INSERT INTO ctl_diagcode VALUES ('S06','703','A');
+INSERT INTO ctl_diagcode VALUES ('S06','727','A');
+INSERT INTO ctl_diagcode VALUES ('S07','998','A');
+INSERT INTO ctl_diagcode VALUES ('S07','078','A');
+INSERT INTO ctl_diagcode VALUES ('S07','216','A');
+INSERT INTO ctl_diagcode VALUES ('S07','228','A');
+INSERT INTO ctl_diagcode VALUES ('S07','879','A');
+INSERT INTO ctl_diagcode VALUES ('S07','884','A');
+INSERT INTO ctl_diagcode VALUES ('S07','894','A');
+INSERT INTO ctl_diagcode VALUES ('S07','706','A');
+INSERT INTO ctl_diagcode VALUES ('S07','686','A');
+INSERT INTO ctl_diagcode VALUES ('S07','895','A');
+INSERT INTO ctl_diagcode VALUES ('S07','703','A');
+INSERT INTO ctl_diagcode VALUES ('S07','727','A');
+INSERT INTO ctl_diagcode VALUES ('S08','998','A');
+INSERT INTO ctl_diagcode VALUES ('S08','078','A');
+INSERT INTO ctl_diagcode VALUES ('S08','216','A');
+INSERT INTO ctl_diagcode VALUES ('S08','228','A');
+INSERT INTO ctl_diagcode VALUES ('S08','879','A');
+INSERT INTO ctl_diagcode VALUES ('S08','884','A');
+INSERT INTO ctl_diagcode VALUES ('S08','894','A');
+INSERT INTO ctl_diagcode VALUES ('S08','706','A');
+INSERT INTO ctl_diagcode VALUES ('S08','686','A');
+INSERT INTO ctl_diagcode VALUES ('S08','895','A');
+INSERT INTO ctl_diagcode VALUES ('S08','703','A');
+INSERT INTO ctl_diagcode VALUES ('S08','727','A');
+INSERT INTO ctl_diagcode VALUES ('S09','998','A');
+INSERT INTO ctl_diagcode VALUES ('S09','078','A');
+INSERT INTO ctl_diagcode VALUES ('S09','216','A');
+INSERT INTO ctl_diagcode VALUES ('S09','228','A');
+INSERT INTO ctl_diagcode VALUES ('S09','879','A');
+INSERT INTO ctl_diagcode VALUES ('S09','884','A');
+INSERT INTO ctl_diagcode VALUES ('S09','894','A');
+INSERT INTO ctl_diagcode VALUES ('S09','706','A');
+INSERT INTO ctl_diagcode VALUES ('S09','686','A');
+INSERT INTO ctl_diagcode VALUES ('S09','895','A');
+INSERT INTO ctl_diagcode VALUES ('S09','703','A');
+INSERT INTO ctl_diagcode VALUES ('S09','727','A');
+INSERT INTO ctl_diagcode VALUES ('S10','998','A');
+INSERT INTO ctl_diagcode VALUES ('S10','078','A');
+INSERT INTO ctl_diagcode VALUES ('S10','216','A');
+INSERT INTO ctl_diagcode VALUES ('S10','228','A');
+INSERT INTO ctl_diagcode VALUES ('S10','879','A');
+INSERT INTO ctl_diagcode VALUES ('S10','884','A');
+INSERT INTO ctl_diagcode VALUES ('S10','894','A');
+INSERT INTO ctl_diagcode VALUES ('S10','706','A');
+INSERT INTO ctl_diagcode VALUES ('S10','686','A');
+INSERT INTO ctl_diagcode VALUES ('S10','895','A');
+INSERT INTO ctl_diagcode VALUES ('S10','703','A');
+INSERT INTO ctl_diagcode VALUES ('S10','727','A');
+INSERT INTO ctl_diagcode VALUES ('S11','998','A');
+INSERT INTO ctl_diagcode VALUES ('S11','078','A');
+INSERT INTO ctl_diagcode VALUES ('S11','216','A');
+INSERT INTO ctl_diagcode VALUES ('S11','228','A');
+INSERT INTO ctl_diagcode VALUES ('S11','879','A');
+INSERT INTO ctl_diagcode VALUES ('S11','884','A');
+INSERT INTO ctl_diagcode VALUES ('S11','894','A');
+INSERT INTO ctl_diagcode VALUES ('S11','706','A');
+INSERT INTO ctl_diagcode VALUES ('S11','686','A');
+INSERT INTO ctl_diagcode VALUES ('S11','895','A');
+INSERT INTO ctl_diagcode VALUES ('S11','703','A');
+INSERT INTO ctl_diagcode VALUES ('S11','727','A');
+INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
+INSERT INTO ctl_diagcode VALUES ('Service 2','000','A');
+INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
+INSERT INTO ctl_diagcode VALUES ('Service2','000','A');
+INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
+INSERT INTO ctl_diagcode VALUES ('Service1 T','000','A');
+INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
+INSERT INTO ctl_diagcode VALUES ('Service Ty','000','A');
+INSERT INTO ctl_diagcode VALUES ('TST','000','A');
+
+--
+-- Table structure for table 'ctl_doctype'
+--
+
+CREATE TABLE ctl_doctype (
+  module varchar(30) NOT NULL default '',
+  doctype varchar(60) NOT NULL default '',
+  status char(1) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_doctype'
+--
+
+INSERT INTO ctl_doctype VALUES ('demographic','lab','A');
+INSERT INTO ctl_doctype VALUES ('demographic','consult','A');
+INSERT INTO ctl_doctype VALUES ('demographic','insurance','A');
+INSERT INTO ctl_doctype VALUES ('demographic','legal','A');
+INSERT INTO ctl_doctype VALUES ('demographic','oldchart','A');
+INSERT INTO ctl_doctype VALUES ('demographic','others','A');
+INSERT INTO ctl_doctype VALUES ('provider','resource','A');
+INSERT INTO ctl_doctype VALUES ('provider','desktop','A');
+INSERT INTO ctl_doctype VALUES ('provider','handout','A');
+INSERT INTO ctl_doctype VALUES ('provider','forms','A');
+INSERT INTO ctl_doctype VALUES ('provider','others','A');
+INSERT INTO ctl_doctype VALUES ('provider','share','A');
+
+--
+-- Table structure for table 'ctl_document'
+--
+
+CREATE TABLE ctl_document (
+  module varchar(30) NOT NULL default '',
+  module_id int(6) NOT NULL default '0',
+  document_no int(6) NOT NULL default '0',
+  status char(1) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_document'
+--
+
+INSERT INTO ctl_document VALUES ('provider',999998,4953,'A');
+INSERT INTO ctl_document VALUES ('provider',999998,4954,'H');
+INSERT INTO ctl_document VALUES ('demographic',2147483647,4955,'A');
+
+--
+-- Table structure for table 'ctl_frequency'
+--
+
+CREATE TABLE ctl_frequency (
+  freqid tinyint(4) NOT NULL auto_increment,
+  freqcode char(6) NOT NULL default '',
+  dailymin tinyint(4) NOT NULL default '0',
+  dailymax tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (freqid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_frequency'
+--
+
+
+--
+-- Table structure for table 'ctl_provider'
+--
+
+CREATE TABLE ctl_provider (
+  clinic_no int(10) NOT NULL default '0',
+  provider_no int(10) NOT NULL default '0',
+  status char(1) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_provider'
+--
+
+
+--
+-- Table structure for table 'ctl_specialinstructions'
+--
+
+CREATE TABLE ctl_specialinstructions (
+  id tinyint(4) NOT NULL auto_increment,
+  description varchar(50) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ctl_specialinstructions'
+--
+
+
+--
+-- Table structure for table 'demographic'
+--
+
+CREATE TABLE demographic (
+  demographic_no int(10) NOT NULL auto_increment,
+  last_name varchar(30) NOT NULL default '',
+  first_name varchar(30) NOT NULL default '',
+  address varchar(60) default NULL,
+  city varchar(20) default NULL,
+  province varchar(20) default NULL,
+  postal varchar(7) default NULL,
+  phone varchar(20) default NULL,
+  phone2 varchar(20) default NULL,
+  email varchar(100) default NULL,
+  pin varchar(10) default NULL,
+  year_of_birth varchar(4) default NULL,
+  month_of_birth char(2) default NULL,
+  date_of_birth char(2) default NULL,
+  hin varchar(10) default NULL,
+  ver char(3) default NULL,
+  roster_status varchar(20) default NULL,
+  patient_status varchar(20) default NULL,
+  date_joined date default NULL,
+  chart_no varchar(10) default NULL,
+  provider_no varchar(250) default NULL,
+  sex char(1) NOT NULL default '',
+  end_date date default NULL,
+  eff_date date default NULL,
+  pcn_indicator varchar(20) default NULL,
+  hc_type varchar(20) default NULL,
+  hc_renew_date date default NULL,
+  family_doctor varchar(80) default NULL,
+  PRIMARY KEY  (demographic_no),
+  KEY hin (hin),
+  KEY name (last_name,first_name)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'demographic'
+--
+
+INSERT INTO demographic VALUES (2147483647,'TEST','PATIENT','','','ON','','905-','','','','1998','06','15','','','','AC','2003-06-04','','999998','M','0000-00-00','0000-00-00',NULL,'ON','0000-00-00','<rdohip></rdohip><rd></rd>');
+
+--
+-- Table structure for table 'demographicaccessory'
+--
+
+CREATE TABLE demographicaccessory (
+  demographic_no int(10) NOT NULL default '0',
+  content text,
+  PRIMARY KEY  (demographic_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'demographicaccessory'
+--
+
+
+--
+-- Table structure for table 'demographiccust'
+--
+
+CREATE TABLE demographiccust (
+  demographic_no int(10) NOT NULL default '0',
+  cust1 varchar(255) default NULL,
+  cust2 varchar(255) default NULL,
+  cust3 varchar(255) default NULL,
+  cust4 varchar(255) default NULL,
+  content text,
+  PRIMARY KEY  (demographic_no),
+  KEY cust1 (cust1),
+  KEY cust2 (cust2),
+  KEY cust3 (cust3),
+  KEY cust4 (cust4)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'demographiccust'
+--
+
+
+--
+-- Table structure for table 'demographicstudy'
+--
+
+CREATE TABLE demographicstudy (
+  demographic_no int(10) NOT NULL default '0',
+  study_no int(3) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (demographic_no,study_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'demographicstudy'
+--
+
+
+--
+-- Table structure for table 'desannualreviewplan'
+--
+
+CREATE TABLE desannualreviewplan (
+  des_no int(10) NOT NULL auto_increment,
+  des_date date NOT NULL default '0000-00-00',
+  des_time time NOT NULL default '00:00:00',
+  demographic_no int(10) default '0',
+  form_no int(10) default '0',
+  provider_no varchar(6) NOT NULL default '',
+  risk_content text,
+  checklist_content text,
+  PRIMARY KEY  (des_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'desannualreviewplan'
+--
+
+
+--
+-- Table structure for table 'desaprisk'
+--
+
+CREATE TABLE desaprisk (
+  desaprisk_no int(10) NOT NULL auto_increment,
+  desaprisk_date date NOT NULL default '0000-00-00',
+  desaprisk_time time NOT NULL default '00:00:00',
+  demographic_no int(10) default '0',
+  form_no int(10) default '0',
+  provider_no varchar(6) NOT NULL default '',
+  risk_content text,
+  checklist_content text,
+  PRIMARY KEY  (desaprisk_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'desaprisk'
+--
+
+
+--
+-- Table structure for table 'diagnosticcode'
+--
+
+CREATE TABLE diagnosticcode (
+  diagnosticcode_no int(5) NOT NULL auto_increment,
+  diagnostic_code varchar(5) NOT NULL default '',
+  description text,
+  status char(1) default NULL,
+  PRIMARY KEY  (diagnosticcode_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'diagnosticcode'
+--
+
 INSERT INTO diagnosticcode VALUES (1,'002','Typhoid and paratyphoid fevers                                                                      ','A');
 INSERT INTO diagnosticcode VALUES (2,'003','Other salmonella infections                                                                         ','A');
 INSERT INTO diagnosticcode VALUES (3,'005','Food poisoning                                                                                      ','A');
@@ -10335,6 +10631,2578 @@ INSERT INTO diagnosticcode VALUES (526,'989','Of other chemicals, e.g., lead, pe
 INSERT INTO diagnosticcode VALUES (527,'994','Of physical factors, e.g., heat, cold, frostbite, pressure                                          ','A');
 INSERT INTO diagnosticcode VALUES (528,'998','Of surgical and medical care, e.g., wound infection, wound disruption, other iatrogenic disease     ','A');
 
+--
+-- Table structure for table 'diseases'
+--
+
+CREATE TABLE diseases (
+  diseaseid int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  ICD9_E char(6) NOT NULL default '',
+  entry_date date default NULL,
+  PRIMARY KEY  (diseaseid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'diseases'
+--
+
+
+--
+-- Table structure for table 'document'
+--
+
+CREATE TABLE document (
+  document_no int(6) NOT NULL auto_increment,
+  doctype varchar(20) default NULL,
+  docdesc varchar(50) NOT NULL default '',
+  docxml text,
+  docfilename varchar(50) NOT NULL default '',
+  doccreator varchar(30) NOT NULL default '',
+  updatedatetime datetime default NULL,
+  status char(1) NOT NULL default '',
+  PRIMARY KEY  (document_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'document'
+--
+
+--
+-- Table structure for table 'drugs'
+--
+
+CREATE TABLE drugs (
+  drugid int(10) NOT NULL auto_increment,
+  provider_no varchar(6) NOT NULL default '',
+  demographic_no int(10) NOT NULL default '0',
+  rx_date date NOT NULL default '0000-00-00',
+  end_date date NOT NULL default '0000-00-00',
+  BN varchar(30) default NULL,
+  GCN_SEQNO decimal(10,0) NOT NULL default '0',
+  customName varchar(60) default NULL,
+  takemin float default NULL,
+  takemax float default NULL,
+  freqcode varchar(6) default NULL,
+  duration varchar(4) default NULL,
+  durunit char(1) default NULL,
+  quantity varchar(20) default NULL,
+  repeat tinyint(4) default NULL,
+  nosubs tinyint(1) NOT NULL default '0',
+  prn tinyint(1) NOT NULL default '0',
+  special varchar(255) NOT NULL default '',
+  archived tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (drugid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'drugs'
+--
+
+
+--
+-- Table structure for table 'dxresearch'
+--
+
+CREATE TABLE dxresearch (
+  dxresearch_no int(10) NOT NULL auto_increment,
+  demographic_no int(10) default '0',
+  start_date date default '0000-00-00',
+  update_date date default '0000-00-00',
+  status char(1) default 'A',
+  dxresearch_code varchar(10) default '',
+  PRIMARY KEY  (dxresearch_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'dxresearch'
+--
+
+
+--
+-- Table structure for table 'eChart'
+--
+
+CREATE TABLE eChart (
+  eChartId int(15) NOT NULL auto_increment,
+  timeStamp timestamp(14) NOT NULL,
+  demographicNo int(10) NOT NULL default '0',
+  providerNo varchar(6) NOT NULL default '',
+  subject varchar(128) default NULL,
+  socialHistory text,
+  familyHistory text,
+  medicalHistory text,
+  ongoingConcerns text,
+  reminders text,
+  encounter text,
+  PRIMARY KEY  (eChartId)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'eChart'
+--
+
+
+--
+-- Table structure for table 'eform'
+--
+
+CREATE TABLE eform (
+  fid int(8) NOT NULL auto_increment,
+  form_name varchar(255) default NULL,
+  file_name varchar(255) default NULL,
+  subject varchar(255) default NULL,
+  form_date date default NULL,
+  form_time time default NULL,
+  form_creator varchar(255) default NULL,
+  status tinyint(1) NOT NULL default '1',
+  form_html text,
+  PRIMARY KEY  (fid),
+  UNIQUE KEY id (fid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'eform'
+--
+
+
+--
+-- Table structure for table 'eform_data'
+--
+
+CREATE TABLE eform_data (
+  fdid int(8) NOT NULL auto_increment,
+  fid int(8) NOT NULL default '0',
+  form_name varchar(255) default NULL,
+  subject varchar(255) default NULL,
+  demographic_no int(10) NOT NULL default '0',
+  status tinyint(1) NOT NULL default '1',
+  form_date date default NULL,
+  form_time time default NULL,
+  form_provider varchar(255) default NULL,
+  form_data text,
+  PRIMARY KEY  (fdid),
+  UNIQUE KEY id (fdid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'eform_data'
+--
+
+
+--
+-- Table structure for table 'eforms'
+--
+
+CREATE TABLE eforms (
+  fid int(8) NOT NULL auto_increment,
+  form_name text,
+  file_name text,
+  subject text,
+  form_date date default NULL,
+  form_time time default NULL,
+  form_creator text,
+  status int(1) NOT NULL default '0',
+  form_html mediumtext,
+  PRIMARY KEY  (fid),
+  UNIQUE KEY id (fid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'eforms'
+--
+
+
+--
+-- Table structure for table 'eforms_data'
+--
+
+CREATE TABLE eforms_data (
+  fdid int(8) NOT NULL auto_increment,
+  fid int(8) NOT NULL default '0',
+  form_name text,
+  subject text,
+  demographic_no int(8) NOT NULL default '0',
+  status int(1) NOT NULL default '0',
+  form_date date default NULL,
+  form_time time default NULL,
+  form_provider text,
+  form_data mediumtext,
+  form_fields mediumtext,
+  PRIMARY KEY  (fdid),
+  UNIQUE KEY id (fdid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'eforms_data'
+--
+
+
+--
+-- Table structure for table 'encounter'
+--
+
+CREATE TABLE encounter (
+  encounter_no int(12) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  encounter_date date NOT NULL default '0000-00-00',
+  encounter_time time NOT NULL default '00:00:00',
+  provider_no varchar(6) NOT NULL default '',
+  subject varchar(100) default NULL,
+  content text,
+  encounterattachment text,
+  PRIMARY KEY  (encounter_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'encounter'
+--
+
+
+--
+-- Table structure for table 'encounterForm'
+--
+
+CREATE TABLE encounterForm (
+  form_name varchar(30) NOT NULL default '',
+  form_value varchar(255) NOT NULL default '',
+  form_table varchar(50) NOT NULL default '',
+  PRIMARY KEY  (form_value)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'encounterForm'
+--
+
+INSERT INTO encounterForm VALUES ('Annual','formAnnual.jsp?demographic_no=','formAnnual');
+INSERT INTO encounterForm VALUES ('ALPHA','formAlpha.jsp?demographic_no=','formAlpha');
+INSERT INTO encounterForm VALUES ('Rourke','formRourke.jsp?demographic_no=','formRourke');
+INSERT INTO encounterForm VALUES ('T2Diabetes','formType2Diabetes.jsp?demographic_no=','formType2Diabetes');
+INSERT INTO encounterForm VALUES ('Mental Health','formMentalHealth.jsp?demographic_no=','formMentalHealth');
+INSERT INTO encounterForm VALUES ('PeriMenopausal','formPeriMenopausal.jsp?demographic_no=','formPeriMenopausal');
+INSERT INTO encounterForm VALUES ('Lab Req','formLabReq.jsp?demographic_no=','formLabReq');
+INSERT INTO encounterForm VALUES ('MMSE','formMMSE.jsp?demographic_no=','formMMSE');
+INSERT INTO encounterForm VALUES ('Pall. Care','formPalliativeCare.jsp?demographic_no=','formPalliativeCare');
+INSERT INTO encounterForm VALUES ('AR','formAR.jsp?demographic_no=','formAR');
+
+--
+-- Table structure for table 'encountertemplate'
+--
+
+CREATE TABLE encountertemplate (
+  encountertemplate_name varchar(50) NOT NULL default '',
+  createdatetime datetime default NULL,
+  encountertemplate_value text,
+  creator varchar(6) default NULL,
+  PRIMARY KEY  (encountertemplate_name),
+  KEY encountertemplate_url (createdatetime)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'encountertemplate'
+--
+
+INSERT INTO encountertemplate VALUES ('SOAP','0000-00-00 00:00:00','Subject:\n\nObject: \n\nAssessment: \n\nPlan:\n','<table');
+INSERT INTO encountertemplate VALUES ('BILIARY COLIC','0000-00-00 00:00:00','1. Inquiry re at least three of following?\r\npain, description\r\nAND\r\nlocation\r\nfood intolerance\r\nrecurrence\r\nfever\r\n2. Abdominal exam?\r\n3. Chest exam?\r\n4. Heart rate AND rhythm?\r\n5. Blood pressure?\r\n6. CBC?\r\n7. SGOT, serum bilirubin, alkaline phosphatase?\r\n8. Gall bladder X-ray OR ultrasound?\r\n9. Advice re low-fat diet?\r\n10. One follow-up within 1 month?\r\n11. IF recurrent (2nd or greater episode), referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('PULMONARY EMPHYSEMA','0000-00-00 00:00:00','1. Inquiry re chest symptoms each visit, at least two of the following?\r\ncough\r\nsputum\r\nwheezing\r\ndyspnea\r\n2. CPE at least once in 2 years?\r\n3. ECG on chart (3 minute)? \r\n4. Chest X-ray at least once in 2 years?\r\n5. IF smoker, advice re smoking?\r\n6. Follow-up at least once yearly?','Unknow');
+INSERT INTO encountertemplate VALUES ('OTITIS EXTERNA','0000-00-00 00:00:00','1. Inquiry re symptoms?\r\n2. Ear exam?\r\n3. Evidence of \"normal drum\"?','Unknow');
+INSERT INTO encountertemplate VALUES ('URI','0000-00-00 00:00:00','1. Complaint of at least one of the following?\r\nnasal discharge\r\nsore throat\r\nmalaise\r\ncold\r\n2. Duration of symptoms noted?\r\n3. IF cough in history, chest exam?\r\n4. IF patient\r\n5. IF sore throat in history, throat exam?\r\n6. IF narcotic antitussives prescribed, cough in history?\r\n7. IF antibiotics prescribed, was there history of secondary infection (coloured phlegm, or fever > 38 for 3 days or more)\r\nOR\r\nhigh risk (cardiac valvular disease or chronic pulmonary disease)?','Unknow');
+INSERT INTO encountertemplate VALUES ('HERPETIC ULCER (EYE)','0000-00-00 00:00:00','1. Inquiry re pain in eye?\r\n2. Red eye noted?\r\n3. Dendrite shaped ulceration noted?\r\n4. Fluorescein staining positive?\r\n5. Referral to ophthalmologist?\r\n6. Steroids used locally?','Unknow');
+INSERT INTO encountertemplate VALUES ('INFLUENZA','0000-00-00 00:00:00','1. Inquiry re three of the following?\r\nmyalgia\r\nfever\r\ncough\r\nphlegm type\r\nmalaise\r\n2. Inquiry re duration of symptoms?\r\n3. ENT exam?\r\n4. IF coughing, chest exam?\r\n5. IF antibiotics prescribed, was there history of secondary infection (coloured phlegm, or fever > 38 for 3 days or more)\r\nOR\r\nhigh risk (cardiac valvular disease or chronic pulmonary disease)?','Unknow');
+INSERT INTO encountertemplate VALUES ('PEPTIC ULCER','0000-00-00 00:00:00','1. Inquiry re epigastric pain?\r\n2. Inquiry re past history of similar symptoms?\r\n3. Inquiry re relief from antacid or milk?\r\n4. Abdominal exam?\r\n5. UGI series\r\nOR\r\ngastroscopy done?\r\n6. UGI series\r\nOR\r\ngastroscopy demonstrates ulcer crater\r\nAND/OR scarring?\r\n7. IF GASTRIC ulcer demonstrated by UGI series\r\nOR\r\ngastroscopy, procedure repeated within 6 weeks?\r\n8. Instruction re diet?\r\n9. IF smoker, advice re smoking?\r\n10. Instruction re alcohol?\r\n11. Counselling re stress factors?\r\n12. Were any of the following drugs used?\r\noral steroids\r\nnonsteroidal anti-inflammatories\r\nASA\r\ncolchicine\r\n13. Follow-up at least every 6 weeks until asymptomatic\r\nOR\r\nhealing demonstrated by UGI series\r\nOR\r\ngastroscopy?','Unknow');
+INSERT INTO encountertemplate VALUES ('ALLERGIC REACTION','0000-00-00 00:00:00','1. Inquiry re type OR description of reaction?\r\n2. Inquiry re site of reaction?\r\n3. Inquiry re severity of reaction?\r\n4. Inquiry re possible causes (eg. food, medications, bites, inhalation)?\r\n5. Examination of affected area(s)?\r\n6. IF \"severe\" reaction, heart rate AND rymthm?\r\n7. Blood pressure?\r\n8. Chest exam?\r\n9. Discussion re allergies OR on chart (3 minute)?\r\n10. IF patient has specific drug allergy, bracelet?\r\n11. IF patient has specific drug allergy, is this recorded in a\r\nconsistent area of the chart?','Unknow');
+INSERT INTO encountertemplate VALUES ('HEAD INJURY','0000-00-00 00:00:00','These questions apply only to the INITIAL\r\nPRESENTATION of a head injury.\r\n1. Description of injury?\r\n2. Level of consciousness since injury noted?\r\n3. Cause of injury noted?\r\n4. Mechanism of injury noted?\r\n5. Head and neck exam?\r\n6. ENT exam?\r\n7. Cranial nerves?\r\n8. Neurological exam?\r\n9. Pulse and blood pressure?\r\n10. Level of consciousness and orientation at time of exam?\r\n11. IF depressed consciousness, skull X-ray\r\nOR CAT scan OR referral?\r\n12. IF neck pain\r\nOR tenderness, cervical spine X-ray?\r\n13. Narcotics prescribed (including codeine)?\r\n14. IF sent home, instructions to family or friend re\r\nobservation for change in level of consciousness (i.e.\r\nhead injury sheet)?\r\n15. IF penetrating wound\r\nOR\r\ndeteriorating (i.e. change in sensorium), immediate referral?\r\n16. IF recurrent, discussion re safety measures (eg. helmets)?\r\n17. IF recurrent in child -abuse considered?','Unknow');
+INSERT INTO encountertemplate VALUES ('ORCHITIS AND EPIDIDY','0000-00-00 00:00:00','1. Inquiry re location of pain?\r\n2. Inquiry re swelling of testes?\r\n3. Examination of testicles?\r\n4. Comment re tenderness?\r\n5. WBC?\r\n6. Urinalysis?\r\n7. Urine C & S?\r\n8. Support to scrotum?\r\n9. IF epididymitis, antibiotics used?\r\n10. IF antibiotics used, amount AND duration noted?\r\n11. Follow-up within one week?','Unknow');
+INSERT INTO encountertemplate VALUES ('DIAPER RASH','0000-00-00 00:00:00','1. Inquiry re duration?\r\n2. Description of rash?\r\n3. IF monilia, comment on mouth?\r\n4. IF monilia, topical antifungal used?\r\n5. Discussion re cleaning at diaper changing?\r\n6. IF \"severe\", follow-up within 1 month?\r\n7. Were fluorinated steroids used?\r\n8. IF thrush also present, oral mycostatin used?','Unknow');
+INSERT INTO encountertemplate VALUES ('PROSTATITIS CHRONIC','0000-00-00 00:00:00','1. Inquiry re at least 3 of following?\r\ndysuria\r\nfrequency\r\nperineal pain\r\npainful sexual activity\r\nurethral discharge\r\nlow back pain\r\nnocturia\r\n2. Abdominal exam?\r\n3. Rectal exam?\r\n4. Description of prostate (size and consistency)?\r\n5. Urine C & S?\r\n6. Septra\r\nOR\r\ntetracycline\r\nOR\r\nampicillin\r\nOR\r\nerythromycin used?\r\n7. Antibiotic used for at least 2 weeks?\r\n8. One follow-up?\r\n9. IF symptoms continue beyond one month\r\nOR\r\npyuria for more than one month\r\nOR\r\nbacteriuria for more than one month, consultation and/or referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('DYSMENORRHEA','0000-00-00 00:00:00','1. Menstrual history?\r\n2. Inquiry re urinary symptoms?\r\n3. Inquiry re painful periods?\r\n4. IF sexually active, pelvic exam with comment on cervix?\r\n5. Abdominal exam?\r\n6. IF vaginal discharge present, C & S?\r\n7. Follow-up once within 4 months?','Unknow');
+INSERT INTO encountertemplate VALUES ('UTI','0000-00-00 00:00:00','1. Inquiry re duration of symptoms?\r\n2. Inquiry re first or recurring episode?\r\n3. Inquiry re at least two of following?\r\nfrequency\r\ndysuria\r\nhematuria\r\nfever\r\n4. Abdominal exam?\r\n5. Presence/absence of flank OR CVA tenderness noted?\r\n6. IF more than 2 infections within one year in female, vaginal exam?\r\n7. Urinalysis AND micro?\r\n8. Urine C & S?\r\n9. IF 3rd or more occurrence (3 minute) in female, IVP?\r\n10. IF 2nd or more occurrence (3 minute) in males, IVP?\r\n11. IF child AND 2nd or more occurrence in chart, voiding cysto-urethrogram?\r\n12. IF antibiotic used, was it one of penicillins, erythromycins, sulfonamides, cephalosporins, Septra/Bactrim, or tetracyclines?\r\n13. IF tetracycline used, was patient\r\n14. IF child\r\nOR\r\ndiscussion re causes of UTI\'s?\r\n15. IF condition persists without definitive diagnosis for more than 3 months, referral?\r\n16. One follow-up within one month?','Unknow');
+INSERT INTO encountertemplate VALUES ('KNEE INJURIES','0000-00-00 00:00:00','1. Description of how injury happened?\r\n2. Duration of discomfort?\r\n3. Presence/absence of locking or collapse?\r\n4. Presence/absence of swelling?\r\n5. Comment on function?\r\n6. Comment on stability of ligaments?\r\n7. IF effusion persists for more than 72 hours, joint aspiration OR referral?\r\n8. IF locking OR instability, referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('DEAFNESS','0000-00-00 00:00:00','1. Inquiry re duration of hearing loss?\r\n2. Inquiry re trauma OR infection OR industrial exposure, on chart (3 minute)?\r\n3. Comment on ear drums at least once per year?\r\n4. Audiogram OR referral to ENT on chart (3 minute)?','Unknow');
+INSERT INTO encountertemplate VALUES ('SYPHILIS','0000-00-00 00:00:00','1. Inquiry re exposure?\r\n2. IF skin lesion present, inquiry re duration?\r\n3. IF primary syphilis, presence/absence of chancre noted?\r\n4. IF secondary syphilis, presence/absence of rash noted?\r\n5. Presence/absence of lymphadenopathy noted?\r\n6. VDRL OR STS?\r\n7. IF VDRL OR STS negative, repeated within 2 months?\r\n8. Swab for C & S for gonorrhea?\r\n9. IF antibiotic used, was it one of the penicillins, erythromycins, tetracyclines or spectinomycin?\r\n10. Notification of public health authorities?\r\n11. One follow-up within 2 months?','Unknow');
+INSERT INTO encountertemplate VALUES ('INGUINAL HERNIA','0000-00-00 00:00:00','1. Inquiry re presence/absence of vomiting?\r\n2. Inquiry re at least two of following?\r\ninguinal bulge\r\nduration\r\npain\r\n3. Description of inguinal mass including side?\r\n4. Reducible or not noted?\r\n5. IF not reducible AND painful, referral to surgeon within 24 hours?','Unknow');
+INSERT INTO encountertemplate VALUES ('DEPRESSION','0000-00-00 00:00:00','1. Inquiry re medications/drugs taken?\r\n2. Inquiry re duration of problem?\r\n3. Inquiry re suicidal thoughts OR statement that depression is mild or minor?\r\n4. IF physical complaints noted, evidence of examination of affected area?\r\n5. CPE within 2 years?\r\n6. Comment on mood OR appearance OR affect?\r\n7. IF antidepressant given, follow-up within 2 weeks?\r\n8. IF first prescription for antidepressant, was duration noted AND was duration\r\n9. IF no antidepressants given, follow-up within 1 month?\r\n10. IF \"suicidal\", referral OR hospitalization?\r\n11. Discussion re stress factors?\r\n12. Were barbiturates prescribed?','Unknow');
+INSERT INTO encountertemplate VALUES ('LARYNGITIS OR TRACHE','0000-00-00 00:00:00','1. Duration of symptoms?\r\n2. Presence/absence of cough noted?\r\n3. Throat exam?\r\n4. Chest exam?','Unknow');
+INSERT INTO encountertemplate VALUES ('GONORRHEA','0000-00-00 00:00:00','1. Inquiry re time since exposure?\r\n2. Inquiry re sexual contacts?\r\n3. Inquiry re symptoms (discharge, dysuria)?\r\n4. Inquiry re sexual preferences and habits?\r\n5. Genital exam?\r\n6. IF oral sex noted, throat exam?\r\n7. IF anal sex noted, rectal exam?\r\n8. C & S, genital?\r\n9. IF indicated by history, C & S oral AND/OR rectal?\r\n10. Positive culture AND/OR gramstain?\r\n11. Antibiotics according to recommendations of Dept of Health (see list)?\r\n12. One follow-up with repeat cultures within 1 month?\r\n13. Counselling re prevention?\r\n14. Presence/absence of penicillin allergy noted on chart (3 minute)?\r\n15. Refer to Public Health Dept. OR insure follow-up of sexual contacts?\r\n16. VDRL in 6 weeks and 3 months?','Unknow');
+INSERT INTO encountertemplate VALUES ('CORONARY ARTERY DISE','0000-00-00 00:00:00','1. Comment on one of the following with each visit?\r\nangina\r\nshortness of breath\r\nankle edema\r\n2. Yearly comment on pain OR nitroglycerines taken?\r\n3. Yearly comment on exercise tolerance?\r\n4. Blood pressure of each visit for this diagnosis (at least 75%)?\r\n5. One CPE by family physician in 2 years?\r\n6. ECG on chart within 2 years?\r\n7. Drug list every 12 months?\r\n8. Dosage of prescribed drugs every 12 months (at least 75%)?\r\n9. IF obesity noted, advice re weight loss?\r\n10. Follow-up at least twice per year?\r\n11. IF congestive heart failure AND use of non-steroidal anti-inflammatory agents OR beta-blockers OR calcium channel blockers, was there a justification statement?','Unknow');
+INSERT INTO encountertemplate VALUES ('OSTEOPOROSIS','0000-00-00 00:00:00','\r\n1. Inquiry re presence/absence of pain?\r\n2. Inquiry re dietary history?\r\n3. Inquiry re menopause date?\r\n4. IF pain present, examination of area?\r\n5. Comment re kyphosis?\r\n6. X-ray OR bone density OR cortical thickness?\r\n7. Confirmation of osteoporosis by any of tests in question 6?\r\n8. Increased calcium intake (supplements or dietary)?','Unknow');
+INSERT INTO encountertemplate VALUES ('ALCOHOLISM','0000-00-00 00:00:00','1. Alcohol intake, amount per day (when drinking)?\r\n2. Duration of problem?\r\n3. Inquiry re time missed from work?\r\n4. Blood pressure yearly?\r\n5. Chest exam yearly?\r\n6. Yearly comment re condition of skin?\r\n7. Abdominal exam yearly?\r\n8. CPE OR CNS examination within past two years?\r\n9. CBC yearly?\r\n10. Three of following done AT LEAST ONCE; serum protein(AG AND total), SGOT, SGPT, alkaline phosphatase,\r\nprothrombin time, bilirubin?\r\n11. Time since last drink before this office visit noted?\r\n12. Initiate education of patient (AA, Alanon, OR note that counselling was done)?\r\n13. Counselling OR referral to alcohol treatment agency for family member(s)?\r\n14. IF first diagnosis within past 2 years, follow-up within one month?','Unknow');
+INSERT INTO encountertemplate VALUES ('LACERATIONS','0000-00-00 00:00:00','1. Inquiry re how laceration occurred?\r\n2. Time between injury and visit?\r\n3. Description of wound?\r\n4. IF hand or wrist, comment on function?\r\n5. IF tendons severed, referral?\r\n6. Debridement (washing)?\r\n7. IF sutured, one follow-up?\r\n8. IF no tetanus toxoid within 10 years, injection given?','Unknow');
+INSERT INTO encountertemplate VALUES ('STREP THROAT','0000-00-00 00:00:00','1. Inquiry re sore throat?\r\n2. Inquiry re presence/absence of fever?\r\n3. Inquiry re cough?\r\n4. Throat exam?\r\n5. Presence/absence of cervical lymphadenopathy noted?\r\n6. Presence/absence of pharyngeal exudate noted?\r\n7. IF fever OR lymphadenopathy OR exudate OR enlarged tonsils, throat swab C & S?\r\n8. Antibiotic used AND was it one of the penicillins, erythromycins, or cephalosporins?\r\n9. IF antibiotic used AND patient antibiotic used for at least 7 days?\r\n10. One follow-up within two weeks?\r\n11. IF positive strep culture, antibiotics used?','Unknow');
+INSERT INTO encountertemplate VALUES ('OTITIS MEDIA -SEROUS','0000-00-00 00:00:00','1. Inquiry re at least two of following; hearing, pain, recurrent URI?\r\n2. Comment re fluid in middle ear OR retracted ear drum?\r\n3. Comment re nose AND throat?\r\n4. IF third episode or more, audiometry OR referral?\r\n5. IF physical findings OR hearing test are abnormal, follow-up until resolved OR referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('HEMORRHOIDS','0000-00-00 00:00:00','1. Inquiry re pain?\r\n2. Inquiry re bleeding?\r\n3. Rectal exam?\r\n4. IF rectal bleeding, sigmoidoscopic exam on chart (3 minute)?\r\n5. IF patient >40 and no definitive diagnosis for rectal bleeding found on sigmoidoscopic, barium enema?\r\n6. Description of site and location of hemorrhoids?\r\n7. One or more of the following used? dietary (high fibre, avoid constipation) suppositories sitz baths surgical ligation and banding I & D if acute thrombosed hemorrhoids\r\n8. IF symptoms unchanged for more than 3 months, referral?\r\n9. Discussion re high fibre diet and stool softeners?\r\n10. One follow-up within one month?','Unknow');
+INSERT INTO encountertemplate VALUES ('INFECTIOUS NOMONUCLE','0000-00-00 00:00:00','1. Inquiry re at least two of following?\r\nsore throat\r\nfever\r\nmalaise\r\nlymphadenopathy\r\nabdominal pain\r\n2. Presence/absence of fever noted?\r\n3. Throat exam?\r\n4. Presence/absence of lymphadenopathy noted?\r\n5. Presence/absence of hepatosplenomegaly noted?\r\n6. WBC AND diff.?\r\n7. Mono screen?\r\n8. Positive mono test OR abnormal WBC\'s?\r\n9. Advice re reduced activity?\r\n10. Ampicillin used?\r\n11. IF splenomegaly present, follow-up within 2 weeks?\r\n12. IF splenomegaly not present, follow-up within 4 weeks?\r\n13. IF splenomegaly present, advice re avoidance of contact sports or activities?','Unknow');
+INSERT INTO encountertemplate VALUES ('HYPERTHYROIDISM, NEW','0000-00-00 00:00:00','1. Inquiry re one or more of following?\r\nweight loss palpitations\r\ntremulousness restlessness\r\nmuscular weakness\r\nfatigue\r\n2. Thyroid exam?\r\n3. Pulse?\r\n4. Examination of eyes?\r\n5. T4 OR T3 OR resin uptake OR other thyroid tests?\r\n6. T4 AND T3 AND uptake elevated?\r\n7. Follow-up every 6 months?\r\n8. Euthyroid within 6 months OR referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('TRANSIENT CEREBRAL I','0000-00-00 00:00:00','1. Inquiry re frequency?\r\n2. Inquiry re duration of each episode?\r\n3. Description of symptoms?\r\n4. Neurological exam with description of deficit?\r\n5. Blood pressure?\r\n6. Cardiovascular examination?\r\n7. Presence/absence of bruits in neck?\r\n8. ECG?\r\n9. IF male > 55 years, ASA prescribed as initial medication OR justification noted?\r\n10. IF ASA used, duration AND dosage recorded?\r\n11. IF two or more episodes, referral OR admission to hospital?\r\n12. IF smoker, advice re smoking?\r\n13. One follow-up within one month?\r\n14. Cause (eg. embolus, thrombosis) noted within one month OR referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('IMPETIGO or PYODERMA','0000-00-00 00:00:00','1. Site noted?\r\n2. IF oral antibiotic used, was it one of penicillins, erythromycins, sulfonamides, tetracyclines, or cephalosporins?\r\n3. IF tetracycline used, was patient','Unknow');
+INSERT INTO encountertemplate VALUES ('BASAL AND SQUAMOUS C','0000-00-00 00:00:00','1. Inquiry re duration of lesion?\r\n2. Location of lesion noted?\r\n3. Size of lesion noted?\r\n4. Surgical pathology biopsy OR referral?\r\n5. IF not referred, pathology report positive?\r\n6. Excision OR dessication OR cryosurgery OR referral?\r\n7. IF not referred, follow-up within 1 month?','Unknow');
+INSERT INTO encountertemplate VALUES ('CONJUNCTIVITIS','0000-00-00 00:00:00','1. Inquiry re itching OR discharge?\r\n2. Inquiry re duration?\r\n3. Description of conjunctiva?\r\n4. IF ophthalmic steroids used, was cornea stained with fluorescein?','Unknow');
+INSERT INTO encountertemplate VALUES ('TRIGEMINAL NEURALGIA','0000-00-00 00:00:00','1. Inquiry re severity of pain?\r\n2. Inquiry re duration of pain?\r\n3. Inquiry re facial pain?\r\n4. Inquiry re initiating stimuli?\r\n5. Neurological exam?\r\n6. IF Tegretol given, liver function tests within 6 weeks?\r\n7. Discussion re natural history of disease OR reassurance?\r\n8. One follow-up within 3 months?','Unknow');
+INSERT INTO encountertemplate VALUES ('GLOMERULONEPHRITIS','0000-00-00 00:00:00','1. Inquiry re urination on each visit?\r\n2. Blood pressure?\r\n3. Weight?\r\n4. Urinalysis, routine AND micro yearly?\r\n5. Creatinine yearly?\r\n6. BUN yearly?\r\n7. Creatinine clearance yearly?\r\n8. Serum proteins yearly?\r\n9. Hemoglobin yearly?\r\n10. One of following?\r\nproteinemia reports on chart\r\ngranular casts\r\nrenal biopsy report on chart\r\n11. Follow-up at least yearly?','Unknow');
+INSERT INTO encountertemplate VALUES ('SPONTANEOUS ABORTION','0000-00-00 00:00:00','1. Date of LMP noted?\r\n2. Duration of LMP noted?\r\n3. Uterine cramps noted?\r\n4. Amount AND duration of vaginal bleeding?\r\n5. Passage of tissue?\r\n6. Pelvic exam with comment re cervix open or closed?\r\n7. Blood pressure?\r\n8. Pulse?\r\n9. Presence/absence of fever?\r\n10. Pregnancy test?\r\n11. Hemoglobin?\r\n12. Hematocrit?\r\n13. Rh factors?\r\n14. IF tissue available, specimen sent to lab?\r\n15. IF indicated by Rh factors, RHOGAM/Rh immune globulin?\r\n16. One follow-up within one month?','Unknow');
+INSERT INTO encountertemplate VALUES ('CERVIX, CARCINOMA IN','0000-00-00 00:00:00','1. Inquiry re vaginal discharge, within one month?\r\n2. Inquiry re presence/absence of vaginal spotting, within one month?\r\n3. Description of cervix, within one month?\r\n4. Positive Pap smear?\r\n5. IF class IV smear or worse, referral within one month?','Unknow');
+INSERT INTO encountertemplate VALUES ('ECTOPIC PREGNANCY','0000-00-00 00:00:00','1. Inquiry re presence/absence of lower abdominal pain?\r\n2. Inquiry re date of last menstrual period?\r\n3. Inquiry re presence/absence of vaginal bleeding?\r\n4. Pelvic exam?\r\n5. Blood pressure AND pulse?\r\n6. IF purulent vaginal discharge, C & S?\r\n7. Abdominal exam?\r\n8. Pregnancy test?\r\n9. IF pregnancy test negative, Beta-HCG?\r\n10. IF not referred or admitted, pelvic ultrasound?\r\n11. Positive pregnancy test OR positive Beta-HCG?\r\n12. Referral OR admission?','Unknow');
+INSERT INTO encountertemplate VALUES ('DIZZINESS, NYD','0000-00-00 00:00:00','1. Inquiry re details of episode?\r\n2. Inquiry re duration of episode?\r\n3. Inquiry re presence/absence of precipitating factors?\r\n4. Inquiry re presence/absence of medications?\r\n5. Blood pressure?\r\n6. Heart rate AND rhythm?\r\n7. Ear exam?\r\n8. Comment on Rhomberg OR reflexes OR nystagmus?\r\n9. IF on diuretics, electrolytes tested?\r\n10. IF problem persists, on second visit blood sugar AND CBC?\r\n11. IF heart irregular, ECG OR Holter monitor?\r\n12. IF condition persists for more than 3 months AND specific diagnosis is made, referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('UMBILICAL HERNIA','0000-00-00 00:00:00','*** Patient under 1 year old\r\n1. Well baby care visits?\r\n2. IF surgery done, was justification noted (eg. thin skin, too large, pain, ulceration)?','Unknow');
+INSERT INTO encountertemplate VALUES ('DIABETES MELLITUS, T','0000-00-00 00:00:00','1. Inquiry re family history of diabetes on chart (3 minute)?\r\n2. Duration of disease OR starting date on chart (3 minute)?\r\n3. Inquiry re one of following on each visit? \r\nurine sugars blood sugars dietary management patient feels well or ill\r\n4. Weight recorded (at least 75% of visits)?\r\n5. Urine glucose each visit?\r\n6. Comment re cardiovascular system AND blood pressure yearly?\r\n7. Examination of fundi yearly?\r\n8. IF on oral hypoglycemics, at least one blood sugar recorded yearly?\r\n9. IF on insulin, at least two blood sugars recorded yearly?\r\n10. BUN OR creatinine on chart (3 minute)?\r\n11. IF diabetes first diagnosed within past 2 years, evidence of 2 fasting blood sugars > 8.8 mmol/L OR random sugar > 13.8 mmol/L prior to treatment?\r\n12. Diabetic diet - caloric intake noted on chart (3 minute)?\r\n13. Evidence of dietary counselling by a health professional on chart (3 minute)?\r\n14. IF newly diagnosed, follow-up within one month?\r\n15. IF on diet alone, follow-up at least once yearly?\r\n16. IF on oral hypoglycemic OR insulin, follow-up at least twice yearly?\r\n17. Inquiry re sexual dysfunction on chart (3 minute)?\r\n18. IF acetohexamide or chlorpropramide used (Glyburide and Diabeta are OK), was BUN > 9 mmol/L OR was creatinine > 140 mmol/L?\r\n19. IF no ketones in serum or urine, was dietary therapy tried prior to starting oral hypoglycemic?','Unknow');
+INSERT INTO encountertemplate VALUES ('HAY FEVER','0000-00-00 00:00:00','1. Inquiry re seasonal complaint?\r\n2. Inquiry re precipitating factors (e.g. ragweed, grass etc.)?\r\n3. One of following present; sneezing, rhinorrhea, nasal congestion?\r\n4. Examination of nose?\r\n5. Seasonal occurrence of nasal congestion?\r\n6. Discussion re air conditioning OR air filters?\r\n7. Discussion re avoidance of plants and pollen specific to patient?','Unknow');
+INSERT INTO encountertemplate VALUES ('FIBROMYOSITIS','0000-00-00 00:00:00','1. Inquiry re pain, description AND location?\r\n2. Inquiry re aggrravating AND/OR relieving factors?\r\n3. Inquiry re duration?\r\n4. Inquiry re sleep patterns?\r\n5. Inquiry re symptoms of fatigue AND/OR possible depression?\r\n6. Description of areas of pain?\r\n7. IF trigger point(s) noted, location(s)\r\n8. Hemoglobin AND sed rate within 6 months?\r\n9. Oral steroids used?\r\n10. Discussion re stress factors OR on chart (3 minute)?','Unknow');
+INSERT INTO encountertemplate VALUES ('DIVERTICULITIS','0000-00-00 00:00:00','1. Inquiry re abdominal pain?\r\n2. Inquiry re at least one of following?\r\nconstipation\r\ndiarrhea\r\nrectal bleeding\r\nregularity\r\n3. Inquiry re food intolerances?\r\n4. Abdominal exam?\r\n5. Rectal exam?\r\n6. Stool for occult blood OR within 1 year?\r\n7. Barium enema on chart (3 minute)?','Unknow');
+INSERT INTO encountertemplate VALUES ('SYNCOPE, NYD','0000-00-00 00:00:00','1. Inquiry re three of the following?\r\nrecurrent or initial episode predisposing factors (stress, pain, hyperventilation) description of event medications taken any associated injuries\r\n2. Inquiry re duration of unconsciousness? \r\n3. Neurological comments (eg. reflexes, pupils, movements)?\r\n4. Blood pressure?\r\n5. Presence/absence of hyperventilation noted?\r\n6. IF > 55 years, ECG?\r\n7. IF 2nd or more episode, blood sugar?\r\n8. IF 2nd or more episode, CBC?\r\n9. IF 2nd or more episode, EEG?\r\n10. IF 2nd or more episode, follow-up within 1 month OR referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('IMPOTENCE','0000-00-00 00:00:00','1. Inquiry re impotence, constant or intermittant?\r\n2. Inquiry re alcohol use?\r\n3. Inquiry re D.M., or systemic disease?\r\n4. Inquiry re emotional problems?\r\n5. Inquiry re nocturnal erections?\r\n6. Inquiry re medications?\r\n7. Genital exam?\r\n8. Blood pressure?\r\n9. Abdominal exam?\r\n10. Neurological exam?\r\n11. Exam of pulses?\r\n12. Urinalysis?\r\n13. Fasting blood sugar?\r\n14. One follow-up?\r\n15. IF problem persists for > 3 months, referral?\r\n16. Sexual counselling with partner?','Unknow');
+INSERT INTO encountertemplate VALUES ('ANXIETY','0000-00-00 00:00:00','1. Statement re symptoms?\r\n2. Inquiry re duration of symptoms?\r\n3. Inquiry re precipitating factors?\r\n4. IF physical complaints noted, evidence of examination of affected area?\r\n5. IF anxiolytic agents used, amount and duration recorded?\r\n6. IF first prescription for medication, follow-up within 2 weeks?\r\n7. Counselling OR referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('HEMATURIA','0000-00-00 00:00:00','1. Inquiry re first or recurrent episode?\r\n2. Inquiry re frequency of hematuria?\r\n3. Presence/absence of flank pain noted?\r\n4. Presence/absence of dysuria OR frequency noted?\r\n5. Microscopic or gross hematuria noted?\r\n6. Presence/absence of colicky pain noted?\r\n7. Abdominal exam?\r\n8. Flank percussion, findings noted?\r\n9. IF male, rectal AND genital exam?\r\n10. IF female AND 2nd or more episode within 1 year, pelvic exam?\r\n11. Urinalysis AND micro?\r\n12. Urine C & S?\r\n13. BUN AND/OR Creatinine?\r\n14. IF 2nd episode within 2 years, IVP OR referral?\r\n15. IF > 60 years AND source not identified, referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('MENORRHAGIA','0000-00-00 00:00:00','1. Inquiry re bleeding pattern, duration AND amount?\r\n2. IF\r\n3. Pelvic exam on initial visit OR when bleeding stops?\r\n4. Hb?\r\n5. Pap smear on initial visit OR when bleeding stops?\r\n6. Cause established OR referral within 3 months of initial visit for problem?','Unknow');
+INSERT INTO encountertemplate VALUES ('PROSTATE CANCER','0000-00-00 00:00:00','1. Inquiry re urinary symptoms?\r\n2. Rectal exam at least yearly?\r\n3. Serum acid phosphatase yearly?\r\n4. IF new or changed urinary symptoms, C & S AND urinalysis?\r\n5. Pathology report positive?\r\n6. Follow-up every 6 months?','Unknow');
+INSERT INTO encountertemplate VALUES ('VAGINITIS, VULVITIS','0000-00-00 00:00:00','1. Inquiry re at least one of following; vaginal itch (pruritis) vulvar irritation, vaginal odour?\r\n2. Presence/absence of vaginal discharge?\r\n3. Vaginal exam?\r\n4. Vaginal AND/OR cervical C & S OR office examination of discharge in saline or KOH?\r\n5. IF Monilia (Candida) AND topical agent used, was it mystatin OR miconazole OR cotrimoxazole?\r\n6. IF Trichomonas AND systemic or topical agent used, was it metronidazole?\r\n7. IF Gardnerella AND systemic or topical agent used, was it metronidazole OR sulfonamide OR tetracycline?\r\n8. IF Trichomonas, discussion re simultaneous treatment of sexual partner?','Unknow');
+INSERT INTO encountertemplate VALUES ('INFERTILITY, FEMALE','0000-00-00 00:00:00','1. Parity noted?\r\n2. Infertility for more than 2 years?\r\n3. Inquiry re medication history?\r\n4. Inquiry re menstrual history?\r\n5. Pelvic exam?\r\n6. Examination of breasts?\r\n7. CPE within 2 years after initial diagnosis?\r\n8. Pap smear AND/OR referral?\r\n9. Semen analysis (sexual partner/husband) \r\nOR referral?\r\n10. BS within 6 months after initial diagnosis OR referral?\r\n11. T3 AND/OR T4 within 6 months after initial diagnosis OR referral?\r\n12. Plan of action noted OR referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('LARYNGITIS','0000-00-00 00:00:00','1. Inquiry re duration?\r\n2. Inquiry re smoking (or on chart) (3 minute)?\r\n3. Inquiry re specific cause (eg. shouting, occupation)?\r\n4. Exam of pharynx?\r\n5. IF persistant for more than 6 weeks, laryngoscopic exam OR referral?\r\n6. IF smoker, advice re smoking?','Unknow');
+INSERT INTO encountertemplate VALUES ('DDD, CERVICAL','0000-00-00 00:00:00','1. Inquiry re neck pain?\r\n2. Inquiry re presence/absence of trauma?\r\n3. Inquiry re one of following?\r\npain referred to shoulder and arm muscle weakness of forearm paresthesia\r\n4. Comment on reflexes in arms?\r\n5. Comment on presence/absence of weakness in upper extremity muscles?\r\n6. Comment re range of movement of neck OR within 1 year?\r\n7. Cervical spine X-ray on chart (3 minute)?\r\n8. Positive X-ray diagnosis?\r\n9. IF first visit for this episode, follow-up within 6 weeks?\r\n10. Cervical collar used continuously for more than 1 month?','Unknow');
+INSERT INTO encountertemplate VALUES ('FRACTURES','0000-00-00 00:00:00','1. Description of accident?\r\n2. Time since accident noted?\r\n3. Place of accident (eg. work related)?\r\n4. Description of fracture including presence/absence of deformity?\r\n5. Presence/absence of swelling?\r\n6. Comment re involvement of neurovascular structures?\r\n7. X-ray of fracture site?\r\n8. IF displaced, evidence of reduction OR referral?\r\n9. Immobilization?\r\n10. IF cast applied to extremity, follow-up within 48 hours?\r\n11. One follow-up?','Unknow');
+INSERT INTO encountertemplate VALUES ('ARTHRITIS','0000-00-00 00:00:00','(less than one month - multiple joints)\r\n1. Inquiry re duration of symptoms?\r\n2. Location of joint pains noted?\r\n3. Description of nature OR severity of pain?\r\n4. Inquiry re aggravating OR precipitating factors?\r\n5. Description of inflammation OR swelling?\r\n6. Description of range of movement?\r\n7. On OR before second visit for same problem, CBC?\r\n8. On OR before second visit for same problem, ESR?\r\n9. On OR before second visit for same problem, anti-nuclear factor (i.e. ANF, ANA)?\r\n10. On OR before second visit for same problem, rheumatoid arthritis factor (i.e. RF, RA)?\r\n11. Were systemic steroids prescribed?\r\n12. Advice re rest OR restrict movement of joint?\r\n13. Follow-up within 2 weeks?\r\n14. IF within 1 year of visit for peptic ulcer disease, were anti-inflammatory agents prescribed?','Unknow');
+INSERT INTO encountertemplate VALUES ('STASIS DERMATITIS','0000-00-00 00:00:00','1. Comment on location?\r\n2. Inquiry re duration?\r\n3. Presence/absence of varicose veins noted?\r\n4. Description of lesions?\r\n5. One follow-up within one month?','Unknow');
+INSERT INTO encountertemplate VALUES ('LICE AND SCABIES','0000-00-00 00:00:00','1. Inquiry re itching or pruritis?\r\n2. Location noted?\r\n3. IF scabies, description of skin lesion(s)?\r\n4. Gamma Benzene Hexachloride Lotion OR Shampoo?\r\n5. IF used?\r\n6. Instructions re washing clothing and bed linen?\r\n7. IF scabies, entire family treated?','Unknow');
+INSERT INTO encountertemplate VALUES ('BLEPHARITIS','0000-00-00 00:00:00','1. Inquiry re symptoms?\r\n2. Duration of symptoms noted?\r\n3. Fluorinated steroids used?\r\n4. Advice re eye care?','Unknow');
+INSERT INTO encountertemplate VALUES ('URETHRITIS, NYD','0000-00-00 00:00:00','1. Inquiry re urinary symptoms?\r\n2. Inquiry re sexual contacts OR injury?\r\n3. Comment re presence/absence of urethral discharge?\r\n4. Genital exam?\r\n5. Urinalysis AND micro?\r\n6. Urine C & S?\r\n7. IF discharge present, urethral swab C & S?\r\n8. VDRL OR STS?\r\n9. IF antibiotic used, was it one of the penicillins, erythromycins, sulfonamides, Septra/Bactrim, cephalosporins, or tetracyclines?\r\n10. One follow-up within 2 weeks?\r\n11. IF urine C & S OR urethral swab C & S still positive after antibiotic treatment, antibiotic changed?\r\n12. IF urine C & S OR urethral swab C & S positive, discussion re notification of sexual partner(s)?\r\n13. IF urethral swab C & S positive for gonorrhea or chlamydia, notification of public health authorities?','Unknow');
+INSERT INTO encountertemplate VALUES ('TONSILLITIS, ACUTE','0000-00-00 00:00:00','1. Inquiry re sore throat?\r\n2. Description of tonsils?\r\n3. IF erythromycin, cephalosporin or sulfa used?\r\n4. IF > 4 years and cephalosporin, or sulfa used?\r\n5. IF >= 13 years, was penicillin, erythromycin,\r\ncephalosporin, sulfa, or tetracycline used?\r\n6. IF tetracycline used, was patient','Unknow');
+INSERT INTO encountertemplate VALUES ('CYSTITIS, RECURRENT','0000-00-00 00:00:00','1. Comment re any urinary symptoms?\r\n2. Urinalysis or dipstick?\r\n3. Urine for C & S?\r\n4. BUN on chart (3 minute)?\r\n5. IF 3 or more episodes within 3 months, urine culture for TB (acid-fast bacilli)?\r\n6. At least one urinary symptom present OR positive culture?\r\n7. IF culture done, do antibiotics reflect culture \r\nsensitivities?\r\n8. IF child with 2 or more UTI, IVP AND voiding cystogram, OR referral?\r\n9. IF adult female with 3 or more culture proven UTI within\r\n2 years, IVP AND (BUN or Creatinine) OR referral?\r\n10. IF abnormal IVP OR (BUN or Creatinine), referral?','Unknow');
+INSERT INTO encountertemplate VALUES ('BRONCHOPNEUMONIA','0000-00-00 00:00:00','1. One of more of following?\r\ncough\r\ndyspnea (shortness of breath)\r\nfever\r\n2. Duration of symptoms noted?\r\n3. Chest exam?\r\n4. Rales in chest?\r\n5. Chest X-ray within one day of diagnosis?\r\n6. IF patient has not improved within 7 days, chest X-ray?\r\n7. IF initial X-ray is positive, repeat within 30 days?\r\n8. Positive X-ray OR rales on examination?\r\n9. IF antibiotics used, dose AND duration recorded, (2/3 of visits)?\r\n10. IF X-ray indicates mycopolasma pneumonia, tetracycline or erythromycin used?\r\n11. Follow-up within one week?','Unknow');
+INSERT INTO encountertemplate VALUES ('HEMATOMA,','0000-00-00 00:00:00','1. Inquiry re history of trauma, type noted?\r\n2. Inquiry re spontaneous or traumatic?\r\n3. IF spontaneous, inquiry re previous episodes?\r\n4. IF spontaneous, inquiry re family history of bleeding?\r\n5. Description of size?\r\n6. Description of location?\r\n7. IF spontaneous, CBC, platelets, PT, PTT done?\r\n8. IF seen within 48 hours of onset, ice recommended?\r\n9. IF spontaneous OR recurrent, one follow-up?\r\n10. IF child (other recent or old trauma)?\r\n11. IF AND history of repeated trauma (3 or more within 2 years) skeletal survey?','Unknow');
+INSERT INTO encountertemplate VALUES ('KIDNEY OBSTRUCTION','0000-00-00 00:00:00','1. Inquiry re pain? \r\n2. Abdominal exam? \r\n3. Blood pressure? \r\n4. BUN OR creatinine? \r\n5. Urinalysis AND C & S? \r\n6. IVP shows blockage? \r\n7. Referral within 1 week?','Unknow');
+INSERT INTO encountertemplate VALUES ('ARRHYTHMIA (CARDIAC)','0000-00-00 00:00:00','1. Inquiry re frequency of chest discomfort or pain? \r\n2. Inquiry re duration of chest discomfort or pain? \r\n3. Inquiry re frequency of palpitations? \r\n4. Inquiry re duration of palpitations? \r\n5. Inquiry re precipitating factors (coffee, tea, alcohol)? \r\n6. Inquiry re medications taken prior to occurrence? \r\n7. Blood pressure? \r\n8. Cardiac rate AND rhythm? \r\n9. Chest exam? \r\n10. ECG on first visit for this problem? \r\n11. IF on digoxin OR diuretics, electrolytes? \r\n12. IF on digoxin AND new arrhythmia present, digoxin level? \r\n13. ECG OR description of irregularity on chart? \r\n14. IF arrhythmia present at time of examination, treatment with medication OR reassurance OR referral? \r\n15. Advice re precipitating factors (eg. coffee, tea, alcohol, stress factors)? \r\n16. IF paroxysmal atrial tachycardia, inquiry re stress factors? \r\n17. Follow-up until specific diagnosis made OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('NASOPHARYNGITIS OR U','0000-00-00 00:00:00','1. Complaint of at least one of the following? \r\nnasal discharge\r\nsore throat\r\nmalaise \r\ncold \r\n2. Duration of symptoms noted? \r\n3. IF cough in history, chest exam?\r\n4. IF patient \r\n5. IF sore throat in history, throat exam?\r\n6. IF narcotic antitussives prescribed, cough in history? \r\n7. IF antibiotics prescribed, was there history of secondary infection (coloured phlegm, or fever > 38 for 3 days or more)OR\r\nhigh risk (cardiac valvular disease or chronic pulmonary disease)? ','Unknow');
+INSERT INTO encountertemplate VALUES ('MIGRAINE EQUIVALENTS','0000-00-00 00:00:00','1. Inquiry re presence/absence of aura? \r\n2. IF aura present, inquiry re type of aura? \r\n3. Inquiry re location of pain? \r\n4. Inquiry re change in headaches?\r\n5. Neurological exam within last year? \r\n6. Blood pressure within last year? \r\n7. IF medication prescribed, dosage noted? \r\n8. IF medication prescribed, duration noted?','Unknow');
+INSERT INTO encountertemplate VALUES ('CHRONIC PROSTATITIS','0000-00-00 00:00:00','1. Inquiry re at least 3 of following? \r\ndysuria\r\nfrequency\r\nperineal pain\r\npainful sexual activity\r\nurethral discharge \r\nlow back pain\r\nnocturia \r\n2. Abdominal exam? \r\n3. Rectal exam?\r\n4. Description of prostate (size and consistency)? \r\n5. Urine C & S? \r\n6. Septra OR tetracycline OR ampicillin OR\r\nerythromycin used? \r\n7. Antibiotic used for at least 2 weeks?\r\n8. One follow-up? \r\n9. IF symptoms continue beyond one month OR\r\npyuria for more than one month OR  bacteriuria for more than one month, consultation and/or referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('URINARY TRACT INFECT','0000-00-00 00:00:00','1. Inquiry re duration of symptoms? \r\n2. Inquiry re first or recurring episode? \r\n3. Inquiry re at least two of following?\r\nfrequency \r\ndysuria \r\nhematuria\r\nfever \r\n4. Abdominal exam?\r\n5. Presence/absence of flank OR CVA tenderness noted? \r\n6. IF more than 2 infections within one year in female, vaginal exam? \r\n7. Urinalysis AND micro? \r\n8. Urine C & S? \r\n9. IF 3rd or more occurrence (3 minute) in female, IVP? \r\n10. IF 2nd or more occurrence (3 minute) in males, IVP? \r\n11. IF child AND 2nd or more occurrence in chart, voiding cysto-urethrogram? \r\n12. IF antibiotic used, was it one of penicillins, erythromycins, sulfonamides, cephalosporins, Septra/Bactrim, or tetracyclines? \r\n13. IF tetracycline used, was patient\r\n14. IF child OR discussion re causes of UTI\'s? \r\n15. IF condition persists without definitive diagnosis for more than 3 months, referral? \r\n16. One follow-up within one month?','Unknow');
+INSERT INTO encountertemplate VALUES ('CONGESTIVE HEART FAI','0000-00-00 00:00:00','1. Inquiry re at least two of following? \r\nshortness of breath \r\nswollen ankles \r\nparoxysmal nocturnal dyspnea \r\nexercise intolerance \r\n2. Current medication list? [HA2 ]> \r\n3. Chest exam? \r\n4. Weight recorded on at least 50% of visits? \r\n5. Blood pressure? \r\n6. Comment on ankles OR jugular venous pressure (J.V.P. or J.V.D.)? \r\n7. Heart rate AND rhythm? \r\n8. ECG within 1 year prior OR within 2 weeks after first diagnosis? \r\n9. IF on diuretics, electrolytes done on 50% of visits? \r\n10. BUN done on 50% of visits? \r\n11. Hemoglobin OR indices (hematocrit, MCV, MCHC) done on 50% of visits? \r\n12. Diuretics prescribed? \r\n13. IF on diuretics, amount and duration recorded? \r\n14. Rest recommended? \r\n15. Advice re diet (eg. low salt)? \r\n16. Follow-up weekly until physician notes \"improved\" or \"stable\"? \r\n17. Narcotics prescribed? ','Unknow');
+INSERT INTO encountertemplate VALUES ('CLUSTER HEADACHE','0000-00-00 00:00:00','1. History of attacks in clusters? \r\n2. Attacks acute AND short duration AND recurring several times in 24 hours? \r\n3. Description of headache including two of following? \r\nfacial flushing OR sweating \r\nunilateral lacrimation \r\nnasal congestion \r\n4. Blood pressure? \r\n5. Neurological exam, including note re cranial nerves? \r\n6. One follow-up within 6 months? \r\n7. IF on medication, one follow-up within one month? ','Unknow');
+INSERT INTO encountertemplate VALUES ('DYSPLASIA OF CERVIX','0000-00-00 00:00:00','1. Pap smear at least yearly? \r\n2. IF uterus not removed, yearly follow-up? \r\n3. IF present less than one year, record of follow-up time? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HEADACHE NYD','0000-00-00 00:00:00','1. Inquiry re at least 6 of the following? \r\nseverity \r\nfrequency \r\nlocation \r\nprecipitating factors \r\nmedication history \r\nduration \r\nassociated symptoms (eg. dizziness, blurred vision) \r\nprevious history of headaches \r\nhistory of head injury \r\nhistory of seizures \r\n2. Neurological exam? \r\n3. Blood pressure? \r\n4. One follow-up within 3 months OR referral? \r\n5. IF no definitive diagnosis within 3 months, referral? \r\n6. Inquiry re stress factors? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HERPETIC ULCER, VULV','0000-00-00 00:00:00','1. Inquiry re history of vaginal complaint? \r\n2. Description of lesion? \r\n3. Location of lesion? \r\n4. Viral culture (scraping)? \r\n5. IF initial culture negative AND patient pregnant OR lesion persists, repeat culture? \r\n6. Positive viral culture? \r\n7. IF present at labour, Caesarian section OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('THREATENED ABORTION','0000-00-00 00:00:00','1. Date of LMP noted? \r\n2. Amount of vaginal bleeding? \r\n3. Duration of vaginal bleeding? \r\n4. Uterine cramps? \r\n5. IF heavy bleeding OR continued spotting for one week, pelvic exam? \r\n6. Pregnancy test? \r\n7. Hemoglobin? \r\n8. Hematocrit? \r\n9. Rh factors? \r\n10. Blood type? \r\n11. Positive pregnancy test? \r\n12. Bedrest advised? \r\n13. Progesterone or estrogen used? \r\n14. Follow-up at least once weekly while bleeding? ','Unknow');
+INSERT INTO encountertemplate VALUES ('DERMATOPHYTOSIS - RI','0000-00-00 00:00:00','1. Site noted? \r\n2. Extent noted? \r\n3. IF griseofulvin prescribed, skin scraping for C & S? \r\n4. Topical antifungal agent used? \r\n5. IF griseofulvin used, were topical antifungal agents tried for 1 month first? \r\n6. One follow-up within 3 weeks? \r\n7. IF griseofulvin used, CBC within 3 months? ','Unknow');
+INSERT INTO encountertemplate VALUES ('AMMENORRHEA - PRIMAR','0000-00-00 00:00:00','1. Family history? \r\n2. Growth history? \r\n3. Sexual development history (secondary sexual characteristics)? \r\n4. No period by age 17? \r\n5. Description of breasts, pubic and axillary hair? \r\n6. Pelvic exam OR referral? \r\n7. Referral by age 18? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PARAPHIMOSIS','0000-00-00 00:00:00','1. Inquiry re pain? \r\n2. Foreskin not reducible by patient? \r\n3. Description of penis? \r\n4. Reduction attempted by physician? \r\n5. Counselling on care of penis? \r\n6. IF physician unable to reduce, follow-up or referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('LOW BACK PAIN, NOS,','0000-00-00 00:00:00','1. Inquiry re duration AND location of pain? \r\n2. Inquiry re presence/absence of one of following? \r\nparesthesia \r\nsensory aberrations \r\nradiation of pain \r\n3. Inquiry re presence/absence of trauma? \r\n4. Inquiry re previous episode(s)? \r\n5. Movement of back (flexion OR extension OR lateral flexion OR rotation) noted? \r\n6. Note on reflexes (one of knee OR ankle)? \r\n7. Note on straight leg raising? \r\n8. IF pain persists for more than 1 month, lumbar spine AP AND lateral X-rays? \r\n9. IF narcotic analgesic (except codeine compounds, 30 mg. codeine max.) used, justification statement? \r\n10. Back exercises AND/OR back care instructions? \r\n11. One follow-up? \r\n12. IF still continuously painful after 3 months, consultation OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('NOSEBLEED, ANTERIOR','0000-00-00 00:00:00','1. Inquiry re frequency? \r\n2. Inquiry re duration? \r\n3. Some estimate of blood loss noted? \r\n4. Examination of nose? \r\n5. IF active bleeding at time of visit, blood pressure recorded? \r\n6. IF > 60 years, hemoglobin? \r\n7. IF recurrent nose bleeder (2 episodes within 6 months), CBC AND platelet count AND PT AND PTT on chart? \r\n8. One of the following? \r\ngross bleeding \r\nphysical evidence of bleeding vessel on examination \r\n9. IF packing performed, follow-up within 2 days? \r\n10. IF Hg \r\n11. IF 3 nosebleeds within past 2 days AND not actively bleeding, cautery OR prescription of ointment? \r\n12. IF acute nosebleed, packing AND/OR cautery AND/OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('MUMPS','0000-00-00 00:00:00','1. Inquiry re duration of symptoms? \r\n2. Swelling in parotid area noted? \r\n3. IF male > 11 years, testicular exam? \r\n4. IF analgesic used, was it ASA or acetaminophen? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HYPERLIPIDEMIA','0000-00-00 00:00:00','1. Family history OR on chart (3 minute)? \r\n2. Cardiovascular exam? \r\n3. Weight recorded? \r\n4. Abdominal exam? \r\n5. Comment re xanthomas? \r\n6. Blood sugar OR glucose tolerance test? \r\n7. Lipids? \r\n8. Lipid level above lab normal? \r\n9. Discussion re diet? \r\n10. IF obesity noted, discussion re weight reduction? \r\n11. Discussion re alcohol AND/OR exercise? ','Unknow');
+INSERT INTO encountertemplate VALUES ('BRONCHITIS,ACUTE','0000-00-00 00:00:00','1. Comment re cough? \r\n2. Comment re sputum? \r\n3. Chest exam? \r\n4. Temperature recorded? \r\n5. IF antibiotics used, dose AND duration recorded (2/3 of the time)? \r\n6. IF smoker, advice re smoking? \r\n7. IF narcotic syrup used, was it prescribed more than once within 30 days? ','Unknow');
+INSERT INTO encountertemplate VALUES ('INFANTILE COLIC','0000-00-00 00:00:00','1. Inquiry re at least two of following? \r\nvomiting\r\nbowel movements\r\nburping\r\npassing gas\r\nfluid intake\r\n2. Inquiry re timing of crying? \r\n3. Weight recorded with initial diagnosis? \r\n4. Comment on appearance of baby? \r\n5. Evidence of evening crying after feeding? \r\n6. At least one follow-up with comment on colic status? \r\n7. Evidence of some support for parent(s) by one of following?\r\npublic health nurse\r\nreassurance and/or discussion by family doctor\r\ninvolvement of family members','Unknow');
+INSERT INTO encountertemplate VALUES ('DIABETES MELLITUS, J','0000-00-00 00:00:00','1. At least every 6 months, comment re one of following? \r\npolyuria \r\npolydipsia \r\nweight loss \r\n2. Description of fundi at least once yearly OR evidence on chart (3 minute) that patient is followed by an opthalmologist? \r\n3. Yearly fasting blood sugar? \r\n4. Urinalysis on at least 75% of visits? \r\n5. Insulin dosage noted at least once yearly? \r\n6. Evidence that home monitoring of urine glucose OR blood glucose is occurring? \r\n7. Evidence of dietary counselling (CDA diet or diabetic education centre referral) on chart (3 minute)? \r\n8. Follow-up at least twice yearly? \r\n9. Evidence of discussion re effects on normal life (eg. family, friends, activities) at least once yearly? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PSORIASIS','0000-00-00 00:00:00','1. Inquiry re duration of lesions OR on chart (3 minute)?\r\n2. Description of lesions (scaly, size, psoriatic etc.) OR on chart (3 minute)? \r\n3. Location of lesions noted OR on chart (3 minute)? \r\n4. IF systemic steroids used, consultant\'s note? \r\n5. IF antimitotic agents used, consultant\'s note? \r\n6. Counselling OR on chart (3 minute)? ','Unknow');
+INSERT INTO encountertemplate VALUES ('DEGENERATIVE ARTHRIT','0000-00-00 00:00:00','1. Were oral corticosteroids (steroids) used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ACNE VULGARIS','0000-00-00 00:00:00','1. IF on antibiotics (systemic or topical), duration noted on at least 50% of visits? \r\n2. IF on antibiotics (systemic or topical), type noted of visits? \r\n3. Radiation used in treatment by family physicians? \r\n4. Discussion re causes and treatment with patient? \r\n5. IF systemic antibiotics prescribed, follow-up within 6 weeks? \r\n6. IF \"controlled\", follow-up once per year? \r\n7. IF \"severe\" (failure to respond to treatment by family physician within 6 months), referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('GASTROENTERITIS AND','0000-00-00 00:00:00','1. Inquiry re presence/absence of vomiting? \r\n2. IF vomiting, frequency AND amount noted? \r\n3. Inquiry re frequency AND consistency AND mucus of stools? \r\n4. Inquiry re presence/absence of blood in stools? \r\n5. Inquiry re duration of symptoms? \r\n6. Inquiry re travel history? \r\n7. Abdominal exam? \r\n8. IF child \r\n9. Comment re presence/absence of dehydration? \r\n10. IF failure to respond in 2 days, CBC? \r\n11. IF failure to respond in 2 days, stool cultures? \r\n12. IF failure to respond in 2 days, electrolytes? \r\n13. IF failure to respond in 2 days, stool for occult blood? \r\n14. IF gastroenteritis, presence of diarrhea and vomiting recorded? \r\n15. Antispasmodics OR narcotic antidiarrheals OR antibiotics used? \r\n16. Discussion re avoidance of citrus juices and milk? ','Unknow');
+INSERT INTO encountertemplate VALUES ('EPICONDYLITIS','0000-00-00 00:00:00','1. Inquiry re duration? \r\n2. Inquiry re causes? \r\n3. Palpation, findings noted? \r\n4. Localized pain present? \r\n5. Tenderness on palpation of site present? \r\n6. Advice re avoidance of activity that caused or precipitated problem? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HYPERTENSION (ANY AG','0000-00-00 00:00:00','1. Inquiry re family history of stroke, M.I. OR on chart (3 minute)? \r\n2. Medications taken listed at least twice in 2 year period? \r\n3. One blood pressure per visit (at least 75%)? \r\n4. Yearly comment on heart AND lungs AND fundi AND weight?\r\n5. ECG, on chart (3 minute)? \r\n6. Urinalysis, on chart (3 minute)? \r\n7. IF smoker, advice re smoking? \r\n8. IF obesity noted, advice re weight loss? \r\n9. IF on medication, at least 2 visits per year? \r\n10. IF patient AND diastolic B.P. > 105 on three consecutive visits, referral? \r\n11. Inquiry re stress factors at least once? \r\n12. Inquiry re alcohol intake at least once? \r\n13. IF oral contraceptives used, was justification noted? \r\n14. IF sympathomimetics used, was justification noted?\r\n15. IF diastolic B.P. > 105 on two consecutive occasions, treated with medication? ','Unknow');
+INSERT INTO encountertemplate VALUES ('BREAST LUMP','0000-00-00 00:00:00','1. Inquiry duration? \r\n2. Inquiry re presence/absence of pain? \r\n3. Inquiry re changes relative to menstrual cycle? \r\n4. Size of lump noted? \r\n5. Location of lump noted, specific description OR diagram?\r\n6. Presence/absence of axillary nodes? \r\n7. Referral OR follow-up visit within 4 weeks? \r\n8. IF not previously referred AND lump has not changed OR is larger, one of following done? \r\nreferral \r\naspiration \r\nmammogram \r\nexcision ','Unknow');
+INSERT INTO encountertemplate VALUES ('IRON DEFICIENCY ANEM','0000-00-00 00:00:00','** NOTE **\r\nNon-pregnant, new presentation \r\n1. Inquiry re bleeding from bowel? \r\n2. Inquiry re bleeding from other sources (eg. nose, vagina) \r\n3. Inquiry re diet? \r\n4. Hemoglobin OR hematocrit? \r\n5. Indices MCV AND MCHC OR smear? \r\n6. Two of following? \r\nSerum ferritin \r\nserum iron \r\ntotal iron binding capacity \r\n7. Stool for occult blood? \r\n8. Serum ferritin OR hemoglobin microcytic smear OR low indices (MCV and MCHC)? \r\n9. Oral iron prescribed? \r\n10. IF poor diet noted, diet counselling? \r\n11. One follow-up within 6 weeks? \r\n12. IF injectable iron used, justification statement?','Unknow');
+INSERT INTO encountertemplate VALUES ('SCARLET FEVER','0000-00-00 00:00:00','','Unknow');
+INSERT INTO encountertemplate VALUES ('ATROPHIC VAGINITIS','0000-00-00 00:00:00','1. Inquiry re at least one of following? \r\ndyspareunia \r\ndysuria \r\nspotting \r\nvaginal itch \r\n2. Description of vulva AND/OR vagina? \r\n3. Pap smear for karyopyknotic index? \r\n4. IF dysuria, urinalysis AND micro? \r\n5. Vaginal C & S? \r\n6. IF topical agent used, was it Premarin/conjugated estrogen OR dienestrol cream? \r\n7. IF oral estrogen therapy used, follow-up within one year? \r\n8. IF sexual dysfunction OR dyspareunia identified, counselling? ','Unknow');
+INSERT INTO encountertemplate VALUES ('IRRITABLE BOWEL','0000-00-00 00:00:00','1. Inquiry re bowel activity OR cramps, once per 6 months? \r\n2. Abdominal exam once per year? \r\n3. Stool for occult blood once per year? \r\n4. Sigmoidoscopic exam OR on chart (3 minute)? \r\n5. UGI series with small bowel follow through OR on chart (3 minute)? \r\n6. Presence of constipation OR diarrhea OR cramps? \r\n7. Barium enema OR on chart (3 minute)? \r\n8. Follow-up at least once within 6 months? \r\n9. Discussion of stress factors? \r\n10. Narcotics used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ANKYLOSING SPONDYLIT','0000-00-00 00:00:00','1. Inquiry re presence/absence of pain? \r\n2. Inquiry re history of stiffness? \r\n3. Yearly comment re stiffness? \r\n4. Yearly comment re range of movement? \r\n5. Yearly comment re presence/absence of deformity? \r\n6. HLA-B27 positive AND X-ray report positive OR consultant\'s report positive? \r\n7. Oral corticosteroids started in primary care? \r\n8. IF on any medication, follow-up yearly? ','Unknow');
+INSERT INTO encountertemplate VALUES ('OTITIS MEDIA ACUTE','0000-00-00 00:00:00','1. Description of symptoms? \r\n2. Duration of symptoms? \r\n3. Examination of ears? \r\n4. Comment re one of the following? \r\nred drum \r\nbulging drum \r\nloss of light reflex \r\n5. IF tetracycline or chloramphenicol used, was patient\r\n6. Antibiotics prescribed for at least 10 days? \r\n7. IF > 4 years AND antibiotic used, was it ampicillin, penicillin or erythromycin? \r\n8. IF AND antibiotic used, was it penicillin, amoxicillin, sulfa or erythromycin? \r\n9. One follow-up within 4 weeks of episode with statement of patient\'s condition? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ANIMAL BITES','0000-00-00 00:00:00','1. Inquiry re what kind of animal? \r\n2. Inquiry re animal provoked or not? \r\n3. Description of wound? \r\n4. IF no tetanus toxoid within 10 years, injection given? \r\n5. IF animal unprovoked, comment re rabies risk? ','Unknow');
+INSERT INTO encountertemplate VALUES ('STY','0000-00-00 00:00:00','1. Painful or swollen eyelid? ','Unknow');
+INSERT INTO encountertemplate VALUES ('MYOCARDIAL INFARCTIO','0000-00-00 00:00:00','** NOTE **\r\nQUESTIONS 1 THROUGH 6 SHOULD BE PRESENT ON AT LEAST 75% OF VISITS. \r\n1. Inquiry re chest pain relating to activity? \r\n2. Inquiry re palpitations? \r\n3. Inquiry re dyspnea? \r\n4. Blood pressure? \r\n5. Chest auscultation? \r\n6. Cardiac auscultation (sounds AND rhythm AND murmurs)? \r\n7. Lipids (cholesterol AND triglycerides) within one year of hospital discharge? \r\n8. IF new abnormal rhythm noted, ECG within 2 days? \r\n9. Current medications recorded (name AND dosage)? \r\n10. Inquiry re risk factors (eg. diet, blood pressure, smoking, obesity)? \r\n11. One follow-up by family doctor or specialist within 4 weeks of discharge? \r\n12. Following initial visit after discharge, follow-up at least every 3 months for one year? ','Unknow');
+INSERT INTO encountertemplate VALUES ('RHEUMATIC HEAR DISEA','0000-00-00 00:00:00','1. Inquiry re at least one of following? \r\ndyspnea on exertion \r\neffort intolerance \r\nchest pain \r\nfatique \r\n2. Description of cardiac sounds, rhythm, murmurs? \r\n3. Blood pressure? \r\n4. IF available in the community, echocardiography? \r\n5. Chest X-ray on chart? \r\n6. IF prophylactic antibiotic used, was it one of the penicillins, cephalosporins, sulfonamides, erythromycins? \r\n7. Advice re antibiotic coverage for instrumentation procedures (eg. dental surgery, urology, gynecology)? ','Unknow');
+INSERT INTO encountertemplate VALUES ('FATIGUE, NYD (> 15 Y','0000-00-00 00:00:00','1. Inquiry re duration? \r\n2. Inquiry re relation to physical activity? \r\n3. Inquiry re presence/absence of diurnal variation? \r\n4. Inquiry re personal habits (alcohol, drugs)? \r\n5. Inquiry re stress factors? \r\n6. Inquiry re symptoms of depression (early morning wakening, feeling of worthlessness, weight loss, suicidal thoughts)? \r\n7. IF no positive findings in questions 4, 5 and/or 6 above, general assessment within 6 months? \r\n8. Hemoglobin? \r\n9. Urinalysis and micro? \r\n10. IF mention of abnormal thyroid, T4 OR TSH done? \r\n11. IF patient is on diuretics, electrolyte levels recorded? \r\n12. Drug treatment started before definitive diagnosis? \r\n13. One follow-up within 6 weeks? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PROSTATITIS','0000-00-00 00:00:00','1. Inquiry re dysuria? \r\n2. Inquiry re pain? \r\n3. Prostate tender? \r\n4. Urinalysis? \r\n5. Urine C & S? \r\n6. Antibiotics used AND amount noted? \r\n7. Antibiotics used AND duration noted? \r\n8. Counselling re at least one of coffee, alcohol, smoking, spices? \r\n9. Follow-up within 2 weeks? ','Unknow');
+INSERT INTO encountertemplate VALUES ('KERATITIS, INFLAMMAT','0000-00-00 00:00:00','1. Inquiry re at least one of following? \r\nphotophobia \r\npain in eye \r\nocular discharge \r\ntearing of eye \r\n2. Duration of symptoms? \r\n3. Description of cornea? \r\n4. Fluoroscein staining? \r\n5. Corticosteroid eye drops used? \r\n6. Follow-up within 48 hours? \r\n7. IF not improved within 48 hours, referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('MONOARTICULAR ARTHRI','0000-00-00 00:00:00','** NOTE **\r\nOne large joint; ankle, knee, hip, wrist, elbow, shoulder. \r\n1. Inquiry re pain? \r\n2. Site noted? \r\n3. Inquiry re duration of symptoms? \r\n4. Inquiry re presence/absence of trauma? \r\n5. Description of joint? \r\n6. Temperature recorded OR history of fever? \r\n7. One large severely painful joint with abnormalities upon examination? \r\n8. Definitive diagnosis on chart within 3 days OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('DEGENERATIVE DISC DI','0000-00-00 00:00:00','1. Inquiry re low back pain, at least one of following? \r\nduration \r\nlocation \r\nradiation \r\n2. Comment on movement of back, at least one of following? \r\nflexion \r\nextension \r\nlateral flexion \r\nrotation \r\n3. Lumbar X-ray (3 views) on chart (3 minute)? \r\n4. Positive X-ray of lumbar spine on chart (3 minute)? \r\n5. IF narcotic analgesic used, justification statement? \r\n6. Back exercises AND/OR back care instructions? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PERFORATION TYMPANIC','0000-00-00 00:00:00','1. Inquiry re cause? \r\n2. Inquiry re pain? \r\n3. Inquiry re discharge? \r\n4. Location of perforation? \r\n5. Size of perforation? \r\n6. Follow-up until resolved or referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ARTHRITIS, RHEUMATOI','0000-00-00 00:00:00','** NOTE **\r\nThese questions apply only to PREVIOUSLY DIAGNOSED rheumatoid arthritis. \r\n1. Inquiry re pain? \r\n2. Inqiury re stiffness? \r\n3. Inquiry re fatigue? \r\n4. Yearly comment re swollen joints? \r\n5. Yearly comment re limitation of movement? \r\n6. Follow-up at least once per year? \r\n7. IF patient on NSAIDS OR chloroquine OR penicillamine OR methotrexate OR gold (myochrysine), follow-up at least 2 times per year? \r\n8. Note at least once yearly re how patient coping? \r\n9. Was methotrexate OR gold OR oral corticosteroids started by family doctor (search back 3 months only)? \r\n10. IF taking chloroquine, ophthamological consultation AND evidence of opthalmological follow-up yearly? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PINWORMS','0000-00-00 00:00:00','1. Inquiry re pruritis of anus or vulva? \r\n2. Examination for eggs AND/OR worms on anus? \r\n3. Pinworm test? \r\n4. Pyrvinium pamovate OR Vanquin used? \r\n5. Whole household treated simultaneously? \r\n6. Positive eggs OR positive worms OR positive pinworm test? ','Unknow');
+INSERT INTO encountertemplate VALUES ('RUBELLA','0000-00-00 00:00:00','1. Inquiry re at least one of following? \r\nfatigue enlarged glands \r\nmalaise rhinitis\r\nmyalgia conjunctivitis\r\nfever abdominal pain\r\nsore throat ear pain\r\n2. Inquiry re duration of symptom? \r\n3. Rash noted? \r\n4. Presence of posterior auricular nodes noted? ','Unknow');
+INSERT INTO encountertemplate VALUES ('CELLULITIS','0000-00-00 00:00:00','1. Inquiry re duration? \r\n2. Site of lesion noted? \r\n3. Extent/size of lesion noted? \r\n4. Temperature recorded? \r\n*** NOTE *** \r\nIF the lesion is larger than 5 inches in diameter OR this is the third or more episode, then questions 5 through 8 apply. \r\n5. IF above, WBC on chart? \r\n6. IF above, urinalysis on chart? \r\n7. IF above, C & S of lesion? \r\n8. IF above, fasting blood sugar within one year? \r\n9. Antibiotics used for at least 7 days? \r\n10. IF antibiotic used, type recorded? \r\n11. IF antibiotic used, amount recorded? \r\n12. Follow-up within 7 days? ','Unknow');
+INSERT INTO encountertemplate VALUES ('LYMPHADENOPATHY NYD','0000-00-00 00:00:00','1. Inquiry re location of enlarged glands? \r\n2. Inquiry re duration? \r\n3. Description of node(s)? \r\n4. IF in axilla OR groin, comment on extremity? \r\n5. IF in neck, ear and throat exam? \r\n6. IF non-neck node AND no obvious cause noted, CBC?\r\n7. IF neck node AND no obvious cause noted, infectious monocucleosis screen (Monospot)? \r\n8. IF lesion persists for one month or more at the same size, chest X-ray? \r\n9. IF lesion persists for two months or longer, biopsy of node OR referral? \r\n10. Antibiotic used AND it was one of the penicillins, erythromycins, sulfonamides, cephalosporins, OR tetracyclines? \r\n11. IF the patient was\r\n12. IF no infectious cause noted, one follow-up? ','Unknow');
+INSERT INTO encountertemplate VALUES ('BURSITIS','0000-00-00 00:00:00','1. Inquiry re pain OR swelling? \r\n2. Inquiry re location? \r\n3. Inquiry re duration? \r\n4. Description of site of lesion (eg. redness, swelling, fluctuation)? \r\n5. IF infected OR if aspirated OR if I&D done, specimen sent for C&S? \r\n6. IF NSAID prescribed, one follow-up within 1 month? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PREGNANCY, DELIVERY,','0000-00-00 00:00:00','1. Ontario antenatal records I AND II? \r\n2. Urinalysis with each visit? \r\n3. Hemoglobin each trimester? \r\n4. IF urinalysis positive for glucose on 2 occasions, blood sugar OR glucose tolerance test OR referral? \r\n5. IF dipstick urinalysis positive, lab report of urinalysis and micro? \r\n6. IF hemoglobin\r\n7. IF any drugs used (except pencillins, vitamins, iron, or antinauseants), comment re teratogenicity? \r\n8. IF blood sugar elevated, discussion of diet with patient? \r\n9. Follow-up monthly for first 7 months, every 2 weeks during the 8th month, and then weekly until delivered? \r\n10. IF X-rays done, pregnancy related OR justification statement? ','Unknow');
+INSERT INTO encountertemplate VALUES ('RECTAL BLEEDING','0000-00-00 00:00:00','1. Inquiry re at least 2 of following? \r\namount \r\ntype of bleeding \r\nduration of bleeding \r\n2. Inquiry re bowel habits? \r\n3. Abdominal exam? \r\n4. Rectal exam? \r\n5. Hemoglobin within 1 week? \r\n6. Proctoscopic exam within 1 week? \r\n7. Sigmoidoscopic exam OR referral within 2 weeks? \r\n8. IF > 30, barium enema AND air contrast within 1 month? \r\n9. IF 30 years old or less AND no cause found on sigmoidoscopic, barium enema AND air contrast within 1 month? \r\n10. Barium enema AND/OR sigmoidoscopic exam within 1 month? \r\n11. IF no diagnosis established after 1 month, referral/consultation OR statement of justification? \r\n12. IF not hemorrhoids, one follow-up? ','Unknow');
+INSERT INTO encountertemplate VALUES ('URTICARIA','0000-00-00 00:00:00','1. Inquiry re duration of rash? \r\n2. Inquiry re location of rash? \r\n3. Inquiry re possible cause (eg. diet, stress, medications)? \r\n4. Description of lesion? \r\n5. IF life threatening (eg. laryngeal edema, circulatory collapse), epinephrine used? \r\n6. IF systemic steroids used, duration \r\n7. IF recurrent (4 or more occasions), consultation OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('FOLLICULITIS','0000-00-00 00:00:00','1. Inquiry re first or recurrent episode? \r\n2. Description of eruption? \r\n3. Location noted? \r\n4. IF recurrent (3 or more episodes in 1 year), C & S? \r\n5. IF recurrent (3 or more episodes in 1 year), serum glucose OR fasting blood sugar OR glucose tolerance test? \r\n6. IF oral antibiotics used, dosage AND duration recorded? \r\n7. IF folliculitis on face AND male > 16, advice re shaving? \r\n8. IF oral antibiotics used, one follow-up?','Unknow');
+INSERT INTO encountertemplate VALUES ('CHEST PAIN-NYD (>18','0000-00-00 00:00:00','1. Location of pain noted? \r\n2. Duration of pain noted? \r\n3. Response to exercise OR posture noted? \r\n4. History of cough OR response to breathing noted? \r\n5. Response to time of eating OR type of food noted? \r\n6. Chest exam? \r\n7. Blood pressure? \r\n8. Heart rate AND rhythm? \r\n9. Presence/absence of chest wall tenderness noted? \r\n10. IF exercise related AND chest not tender, ECG done within 3 days? \r\n11. IF rales OR rhonchi OR dullness in chest, X-ray ordered within 3 days? \r\n12. Statement that there is no cardiac cause OR ECG normal, on this visit OR follow-up within one month? ','Unknow');
+INSERT INTO encountertemplate VALUES ('FOREIGN BODY IN NOSE','0000-00-00 00:00:00','1. Inquiry re how foreign body got into nose? \r\n2. Inquiry re which side is affected? \r\n3. IF removed, description of foreign body? \r\n4. IF foreign body not removed, referral to ENT specialist within 24 hours? ','Unknow');
+INSERT INTO encountertemplate VALUES ('SKIN ABSCESS','0000-00-00 00:00:00','1. Inquiry re location? \r\n2. Inquiry re recurrent or first attack? \r\n3. Description of size? \r\n4. Presence/absence of fluctuation? \r\n5. Presence/absence of lymphangitis? \r\n6. C & S of pus? \r\n7. IF recurrent, fasting serum glucose? \r\n8. Demonstration of pus? \r\n9. I & D? \r\n10. One follow-up within 10 days? ','Unknow');
+INSERT INTO encountertemplate VALUES ('STOMATITIS, MONILIAL','0000-00-00 00:00:00','1. Inquiry re location AND duration of oral lesions? \r\n2. IF adult, inquiry re underlying cause (eg. antibiotics diabetes) OR this information on chart (3 minute)? \r\n3. Presence/absence of plaques in mouth noted? \r\n4. IF lesions unresolved within 2 weeks after therapy started, C & S of lesions for monilia? \r\n5. White plaques in mouth? \r\n6. Local antimonilial agent? \r\n7. Antibiotic used? \r\n8. Follow-up within 2 weeks? ','Unknow');
+INSERT INTO encountertemplate VALUES ('BRONCHITIS,CHRONIC','0000-00-00 00:00:00','1. Occupation on chart (3 minute)? \r\n2. Smoking history on chart (3 minute)? \r\n3. Cough productive OR note re presence/absence of change in amount of sputum? \r\n4. Chest breath sounds? \r\n5. CPE at least every two years with detailed description of chest (3 of 6 respiratory signs)? \r\n6. Chest X-ray (2 views) within 3 years? \r\n7. IF patient fails to improve after 21 days continuous medication, chest X-ray? \r\n8. Does patient produce sputum 6 months of the year? \r\n9. IF antibiotics used, dose AND durtion recorded (2/3 of visits)? \r\n10. IF smoker, advice re smoking? \r\n11. Follow-up twice per year? \r\n12. Sedatives, hypnotics, narcotics or antihistamines used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HYPERTENSION, < 75 Y','0000-00-00 00:00:00','1. Inquiry re family history of stroke AND/OR M.I., OR on chart (3 minute)? \r\n2. Right and left arm blood pressure at least once on chart? \r\n3. One blood pressure per visit (at least 75%)? \r\n4. Yearly comment on heart AND lungs AND fundi AND weight? \r\n5. ECG, on chart (3 minute)? \r\n6. Urinalysis, on chart (3 minute)? \r\n7. Were there at least two readings with diastolic greater than 90 OR one reading greater than 105 before drug therapy was started? \r\n8. IF diastolic B.P. > 105 or systolic > 200, first line antihypertensive used (thiazides AND/OR beta blockers)? \r\n9. IF second line antihypertensive were used, were first line antihypertensives tried for at least 3 months? \r\n10. IF smoker, advice re smoking? \r\n11. IF obesity noted, advice re weight loss (eg. diet or exercise)? \r\n12. IF patient on drugs, at least 2 visits per year? \r\n13. IF patient has persistant B.P. > 105, referral after 6 months? \r\n14. Inquiry re stress factors? \r\n15. IF oral contraceptives used, justification noted? \r\n16. IF sympathomimetics used, justification noted? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PROSTATE, BENIGN HYP','0000-00-00 00:00:00','1. Inquiry re urinary symptoms, at least one of following?\r\nnocturia \r\nfrequency\r\nstream\r\nurgency \r\n2. Description of prostate? \r\n3. Urinalysis? \r\n4. C & S? \r\n5. IF bladder distended, drained slowly? \r\n6. IF catheterized or obstructed, referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PYELONEPHRITIS, CHRO','0000-00-00 00:00:00','1. Inquiry re 3 of following OR on chart (3 minute)? \r\nurinary frequency \r\nurinary urgency \r\nburning on urination (dysuria) \r\nlumbar back pain \r\nfever \r\nchills \r\n2. Blood pressure at least yearly? \r\n3. Urinalysis AND micro at least once in 2 years? \r\n4. Urine C&S at least once in 2 years? \r\n5. Urine C&S for acid-fast bacilli on chart (3 minute)? \r\n6. BUN OR creatinine at least once in 2 years? \r\n7. IVP on chart (3 minute)? \r\n8. Follow-up at least yearly? ','Unknow');
+INSERT INTO encountertemplate VALUES ('IRITIS','0000-00-00 00:00:00','1. Inquiry re at least one of following; blurred vision, painful eye, red eye, photophobia? \r\n2. Description of eye? \r\n3. Referral OR phone consultation? ','Unknow');
+INSERT INTO encountertemplate VALUES ('REFLUX ESOPHAGITIS','0000-00-00 00:00:00','1. Inquiry re duration of symptoms? \r\n2. At least two of following present? \r\nheartburn with bending over recumbency \r\nwater brash \r\nintolerance to rich or spicy foods \r\nintolerance to alcohol \r\ndysphagia \r\nbelching \r\n3. Abdominal exam? \r\n4. IF dysphagia present, endoscopy? \r\n5. IF UGI series performed, reflux demonstrated? \r\n6. Advice re elevation of head of bed? \r\n7. Advice re diet (eg. avoid rich foods, spices, alcohol, coffee, tea, late meals, large meals,)? \r\n8. IF obesity noted, advice re weight reduction? ','Unknow');
+INSERT INTO encountertemplate VALUES ('STOMATITIS, HERPETIC','0000-00-00 00:00:00','1. Inquiry re pain in mouth? \r\n2. Oral ulcerations noted? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ASTHMA','0000-00-00 00:00:00','1. Inquiry re previous episodes? \r\n2. Inquiry re family history OR on chart (3 minute)? \r\n3. Inquiry re occupational history OR on chart (3 minute)? \r\n4. Drugs used for asthma recorded? \r\n5. Amount and duration of asthma drugs recorded? \r\n6. Inquiry re allergies OR on chart (3 minute)? \r\n7. Inquiry re duration of current episode? \r\n8. Description of breathing (eg. wheezing, respiratory distress)? \r\n9. Description of breath sounds? \r\n10. IF steroids used in acute attack, was dosage decreased within 10 days? \r\n11. Wheezing present in history or physical exam? \r\n12. IF smoker, advice re smoking? \r\n13. Advice re avoidance of allergens? \r\n14. Advice re avoidance of precipitating factors? \r\n15. IF on medication for an acute episode, follow-up weekly? \r\n16. Was beta-blocker prescribed? \r\n17. Were parasympathomimetics prescribed? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PELVIC INFLAMMATORY','0000-00-00 00:00:00','1. Inquiry re pelvic pain AND vaginal discharge? \r\n2. Inquiry re previous PID OR venereal disease? \r\n3. Inquiry re menstrual history? \r\n4. Pelvic exam with comment re cervical discharge? \r\n5. Comment re adnexal examination? \r\n6. Comment re pelvic tenderness (cervical excitation)? \r\n7. Presence/absence of fever noted? \r\n8. WBC? \r\n9. Urinalysis? \r\n10. Micro? \r\n11. VDRL? \r\n12. Cervical/vaginal C & S? \r\n13. IF bleeding, pregnancy test? \r\n14. Antibiotic used? \r\n15. Follow-up within 10 days? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HERPES ZOSTER','0000-00-00 00:00:00','1. Description of lesions? \r\n2. Location of lesions noted? \r\n3. IF lesions on forehead OR physician notes \"ophthalmic distribution\", examination of cornea OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('THYROID NODULE','0000-00-00 00:00:00','1. Inquiry re location? \r\n2. Inquiry re duration? \r\n3. Inquiry re one of following? \r\npalpitations \r\ntremor \r\nweight loss \r\n4. Description of size of lesion? \r\n5. Comment on location (midline or lateral)? \r\n6. Referral OR thyroid function tests (T3 and T4 and TSH) AND I-131 uptake/thyroid scan OR ultrasound? \r\n7. Follow-up within 2 months, OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PERITONISILLAR ABSCE','0000-00-00 00:00:00','1. Inquiry re sore throat? \r\n2. Inquiry re swallowing difficulties? \r\n3. Throat exam? \r\n4. Description of mass? \r\n5. Referral or hospitalization? ','Unknow');
+INSERT INTO encountertemplate VALUES ('FEBRILE CONVULSION,','0000-00-00 00:00:00','1. Description of convulsion? \r\n2. Total time for convulsion noted? \r\n3. Inquiry re previous history of convulsions? \r\n4. Inquiry re fever in preceding 24 hours? \r\n5. Inquiry re illness in preceding 24 hours? \r\n6. Temperature recorded? \r\n7. Presence/absence of neck stiffness noted? \r\n8. ENT exam? \r\n9. Chest exam? \r\n10. Fever within previous 24 hours? \r\n11. IF temperature > 38 C (100.4 F), antipyretics OR instructions re sponging? \r\n12. IF bacterial cause of fever identified, antibiotics used? \r\n13. Discussion re fever therapy (fluids OR sponging OR antipyretics)? \r\n14. Follow-up within two weeks? \r\n15. IF convulsion lasts more than 20 minutes, admission OR immediate referral? \r\n16. Tetracycline used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('NOCTURNAL ENURESIS','0000-00-00 00:00:00','** NOTE**\r\nAudit only for patients at least 4 years old. \r\n1. Inquiry re family history of enuresis? \r\n2. Inquiry re frequency of bedwetting? \r\n3. Inquiry re remissions and exacerbations? \r\n4. Genital exam, once on chart (3 minute)? \r\n5. Urinalysis, once on chart (3 minute)? \r\n6. Urine C & S, once on chart (3 minute)? \r\n7. IF urine culture positive, IVP OR ultrasound? \r\n8. IF recurrent positive urine culture, voiding cystogram OR referral? \r\n9. History of bedwetting on chart? \r\n10. Follow-up at least once? \r\n11. Family counselling, parents and child? \r\n12. Management plan on chart involving at least one of following? \r\nmedications \r\ncounselling \r\ndry-night record ','Unknow');
+INSERT INTO encountertemplate VALUES ('TENSION HEADACHE','0000-00-00 00:00:00','1. Inquiry re at least five of following? \r\nlocation of pain \r\nduration \r\ntime of onset \r\nfrequency \r\nassociated symptoms (nausea) \r\nfamily history \r\npsychosocial factors \r\n2. Blood pressure within last year? \r\n3. CPE, including neurological exam within last year? \r\n4. Headache is stress related? \r\n5. Stress factors identified AND counselling done? \r\n6. IF on medication, follow-up at least every 3 months? \r\n7. IF narcotic analgesic prescribed, dose AND duration recorded? ','Unknow');
+INSERT INTO encountertemplate VALUES ('FAMILY PLANNING - FE','0000-00-00 00:00:00','1. Inquiry re 3 of following? \r\npregnancies \r\nabortions \r\nmenstrual history \r\ngynecological surgery \r\nhistory of PID \r\nsmoking history (# of cigarettes per day) \r\nthrombophlebitis \r\nheadaches (migraines) OR\r\nno risk factors statement? \r\n2. Blood pressure recorded? \r\n3. Pelvic exam? \r\n4. Pap smear within one year of starting birth control? \r\n5. IF on birth control pill or IUD, pap smear yearly? \r\n6. IF on birth control pill, OR justification statement? \r\n7. IF patient smokes more than 15 cigarettes per day OR is > 35 years old, oral contraceptives used? \r\n8. IF history of PID OR nulliparous, IUD used? \r\n9. IF smoker, advice re smoking? \r\n10. Breast self-examination (BSE) noted? \r\n11. Discussion of all methods of contraception on chart? ','Unknow');
+INSERT INTO encountertemplate VALUES ('INTERMITTENT CLAUDIC','0000-00-00 00:00:00','1. Inquiry re duration of pain? \r\n2. Inquiry re current smoking status? \r\n3. Presence/absence of pulses in legs? \r\n4. Blood pressure? \r\n5. Comment on abdomen OR aneurysm? \r\n6. Comment on legs, warmth OR hair growth OR colour? \r\n7. CPE within 12 months before OR 6 months after presentation?\r\n8. Cholesterol OR triglycerides? \r\n9. Blood sugar? \r\n10. Pain in legs with exercise or walking, relieved by rest? \r\n11. IF smoker, advice re smoking? \r\n12. Discussion re foot care? ','Unknow');
+INSERT INTO encountertemplate VALUES ('CYSTITIS','0000-00-00 00:00:00','1. Inquiry re urinary symptoms, one or more of following? \r\nurgency \r\nfrequency \r\ndysuria \r\nhematuria \r\n2. Inquiry re duration of symptoms? \r\n3. Urine dip for protein AND blood OR urinalysis OR urine culture? \r\n4. Positive culture OR two of following present? \r\nurgency \r\nfrequency \r\ndysuria \r\nhematuria \r\n5. Antibiotic used AND was it one of the sulfas, ampicillin, Septra/Bactrim, or tetracycline? \r\n6. One follow-up AND repeat urinalysis OR\r\nculture? \r\n7. Was a negative culture on chart at end of treatment? \r\n8. Was streptomycin or chloromycetin used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HYPOTHROIDISM','0000-00-00 00:00:00','1. Inquiry re previous thyroid treatment? \r\n2. Inquiry re at least one of following? \r\nsensitivity to cold chronic fatigue \r\nmental dullness menses\r\ngeneralized weakness constipation\r\n3. Thyroid exam? \r\n4. Reflex exam? \r\n5. Comment re at least one of the following? \r\ndry skin voice change\r\nmyxedema lethargy\r\n6. T4 done? \r\n7. T4 repeat, every second dosage change? \r\n8. One of; low T4, low T3, or low uptake, or high TSH? \r\n9. IF newly diagnosed (within last two years), extracts used? \r\n10. IF lab test normal? \r\n11. IF >= 60, follow-up every 2 weeks until euthyroid or lab tests normal? \r\n12. Euthyroid within 6 months OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ABDOMINAL PAIN, NOS','0000-00-00 00:00:00','1. Inquiry re type of pain? \r\n2. Inquiry re duration of pain? \r\n3. Inquiry re location of pain? \r\n4. Inquiry re presence/absence of specific food intolerances? \r\n5. Inquiry re presence/absence of GI symptoms? \r\n6. Inquiry re presence/absence of fever? \r\n7. IF female, inquiry re menstrual history? \r\n8. Chest exam? \r\n9. Abdominal exam? \r\n10. Presence/absence of tenderness noted? \r\n11. IF female AND pelvic pain or lower left or right quadrant pain, pelvic exam? \r\n12. IF male AND pelvic pain or lower left or right quadrant pain, rectal exam? \r\n13. Urinalysis AND micro? \r\n14. IF abnormal urine, C & S? \r\n15. IF 2nd episode of abdominal pain NOS, C & S? ','Unknow');
+INSERT INTO encountertemplate VALUES ('NASOPHARYNGITIS, CHR','0000-00-00 00:00:00','1. History of one of following? \r\nnasal spray \r\nnasal stuffiness \r\npost-nasal drip \r\ncigarette smoking \r\nexposure to dust or fumes \r\n2. Description of nasal mucosa? \r\n3. Advice re irritants (stop smoking, avoid dust and fumes)? ','Unknow');
+INSERT INTO encountertemplate VALUES ('EPILEPSY','0000-00-00 00:00:00','1. Type AND description of seizures? \r\n2. Frequency of seizures noted? \r\n3. Time of occurrence of seizures noted (eg. day, night, at work, at school, etc.)? \r\n4. Inquiry re precipitating factors on chart (3 minute)? \r\n5. Inquiry re family history of seizure disorder on chart (3 minute)? \r\n6. Neurological exam on chart (3 minute)? \r\n7. EEG on chart (3 minute)? \r\n8. IF neurological exam \"abnormal\", CAT scan on chart (3 minute) OR referral? \r\n9. Description of seizure by witness on chart (3 minute)? \r\n10. Names of drug(s) AND dosage? \r\n11. Discussion re dangerous activities (eg. driving car, working with machinery, etc.) on chart (3 minute)? \r\n12. Discussion re precipitating factors? \r\n13. IF seizures persist (more than one per week), referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('THERAPEUTIC ABORTION','0000-00-00 00:00:00','1. Obstetrical history? \r\n2. Date of LMP noted? \r\n3. Parity noted? \r\n4. Pelvic exam, findings noted OR referral? \r\n5. Estimate of size of uterus OR weeks of preqnancy OR referral? \r\n6. Rh factor? \r\n7. Pregnancy test done? \r\n8. Pregnancy test positive? \r\n9. IF indicated by Rh factors, RHOGAM/Rh immune globulin? \r\n10. Admit for D & C OR referral? \r\n11. Family planning OR birth control counselling? \r\n12. One follow-up within 6 weeks after abortion? ','Unknow');
+INSERT INTO encountertemplate VALUES ('MENOPAUSAL SYNDROME','0000-00-00 00:00:00','1. Inquiry re menstrual history (all of: cycle, flow, LMP)? \r\n2. Inquiry re hot flashes/flushes? \r\n3. CPE within one year after initial diagnosis? \r\n4. Pap smear within one year after initial diagnosis? \r\n5. IF Premarin OR conjugated estrogens used, cyclical use OR progestational agent added (5 days per 3 months)? \r\n6. Discussion re post-menopausal sexual problems (i.e. lack of lubrication) on chart (3 minute)? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HYPERTHYROIDISM, TRE','0000-00-00 00:00:00','1. Inquiry re at least one of the following at each visit? \r\nenergy \r\nweight \r\nheat sensitivity \r\n2. If new patient to practice within past 2 years, inquiry re duration of disease? \r\n3. If new patient to practice within past 2 years, examination of thyroid and eyes noted? \r\n4. Heart rate OR pulse at each visit? \r\n5. T3 RIA OR TSH yearly? \r\n6. At least one abnormal thyroid test on chart (3 minute), TSH down OR T4 up? \r\n7. Follow-up yearly? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ANEMIA, NYD','0000-00-00 00:00:00','*** NOTE ***\r\nNon-pregnant \r\n1. Inquiry re blood loss? \r\n2. Inquiry re diet? \r\n3. CPE within 6 months? \r\n4. On presenting visit, at least three of following? \r\nblood pressure \r\npulse \r\nabdominal exam \r\nrectal exam \r\n5. Hb OR hematocrit? \r\n6. IF no history of blood loss as cause, blood smear for indices? \r\n7. IF black patient, sickle cell screen? \r\n8. IF male over 19, hemoglobin OR IF female over 17, hemoglobin \r\n9. IF macrocytic indices OR smear (pancytopenia, macro-ovalocytosis, hypersegmentation of neutrophils), folate AND B12 test? \r\n10. IF microcytic indices OR smear microcytic, hypochromic) AND no obvious cause for bleeding, stool for occult blood? \r\n11. IF melena stool OR occult blood positive, barium enema? \r\n12. IF GI symptoms OR upper GI bleeding, UGI series? \r\n13. IF vitamin B12 injections given, documented B12 deficiency?\r\n14. IF iron therapy used, documented iron deficiency? \r\nSerum ferritin OR hemoglobin microcytic smear OR low indices (MCV and MCHC)? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PYELONEPHRITIS, ACUT','0000-00-00 00:00:00','1. Inquiry re at least 3 of following? \r\nurinary frequency \r\nurinary urgency \r\nburning on urination (dysuria) \r\nlumbar back pain \r\nfever \r\nchills \r\n2. Presence/absence of fever noted? \r\n3. Presence/absence of lumbar (CVA) tenderness? \r\n4. Urinalysis AND micro? \r\n5. WBC? \r\n6. Urine C&S prior to treatment? \r\n7. Urine C&S positive? \r\n8. Antibiotic used AND was it one of penicillins, sulfonamides, Septra/Bactrim, cephalosporins, or tetracyclines? \r\n9. IF tetracycline used, was patient \r\n10. Was antibiotic used for 7 days or more initially? \r\n11. IF lab report indicates that organism not sensitive to initial antibiotic used, was antibiotic changed OR did physician indicate \"patient better\"? \r\n12. One follow-up within two weeks? \r\n13. Repeat urine C&S after treatment? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PITYRIASIS ROSEA','0000-00-00 00:00:00','1. Inquiry re duration of rash? \r\n2. Inquiry re herald patch? \r\n3. Description of distribution? \r\n4. VDRL? \r\n5. Oral steroids used? \r\n6. Counselling re duration? ','Unknow');
+INSERT INTO encountertemplate VALUES ('VIRAL WARTS (VERRUCA','0000-00-00 00:00:00','1. Inquiry re duration of symptoms? \r\n2. Site(s) noted? \r\n3. Number noted? \r\n4. Electrodessication (cautery) of plantar warts on weight-bearing surfaces? \r\n5. Surgery on plantar warts? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HERPANGINA','0000-00-00 00:00:00','1. Inquiry re duration of sore throat? \r\n2. Examination of throat? \r\n3. Antibiotics used?','Unknow');
+INSERT INTO encountertemplate VALUES ('GASTRITIS - HYPERACI','0000-00-00 00:00:00','1. Inquiry re location of abdominal pain? \r\n2. Inquiry re duration of abdominal pain? \r\n3. Inquiry re type of abdominal pain? \r\n4. Inquiry re aggravating causes (eg. food, smoking, alcohol, stress, drugs (ASA))? \r\n5. Inquiry re vomiting OR hematemesis? \r\n6. Abdominal exam? \r\n7. Advice re avoidance of aggravating factors (eg. smoking, spices, alcohol, etc.)? \r\n8. Discussion of stress factors? \r\n9. NSAIDs OR ASA OR cortisone used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('CONSTIPATION, RECURR','0000-00-00 00:00:00','*** NOTE ***\r\nPatient over 30 years old with a prior history of constipation. \r\n1. Inquiry re change in bowel movement? \r\n2. Inquiry re diet? \r\n3. Inquiry re drugs? \r\n4. Abdominal exam? \r\n5. Rectal exam? \r\n6. Stool for occult blood? \r\n7. IF less than 3 months duration, barium enema? \r\n8. Infrequent AND/OR difficult bowel movements? \r\n9. Instructions re increase in roughage OR fibre OR bran? \r\n10. One follow-up OR specific diagnostic statement within 3 months? ','Unknow');
+INSERT INTO encountertemplate VALUES ('OBESITY','0000-00-00 00:00:00','1. Inquiry re duration of obesity? \r\n2. Weight recorded? \r\n3. Height recorded? \r\n4. Height AND weight recorded? \r\n5. Anorexiants OR thyroid drugs (if hypothyroidism not diagnosed) OR diuretics used? \r\n6. Diet counselling OR nutritional counselling (physician or dietician)? \r\n7. IF treatment given, follow-up within 6 weeks? ','Unknow');
+INSERT INTO encountertemplate VALUES ('SPRAIN OR STRAIN, NY','0000-00-00 00:00:00','1. Inquiry re how injury happened? \r\n2. Inquiry re location of injury? \r\n3. Time of injury? \r\n4. Presence/absence of swelling? \r\n5. Presence/absence of tenderness? \r\n6. Presence/absence of hematoma? \r\n7. IF sports related, advice re prevention of further episodes? ','Unknow');
+INSERT INTO encountertemplate VALUES ('CEREBRAL CONCUSSION','0000-00-00 00:00:00','1. Type of trauma described? \r\n2. Comment re severity of injury? \r\n3. Time since injury? \r\n4. Presence/absence of change in sensorium since injury? \r\n5. History of loss of consciousness? \r\n6. Neurological exam? \r\n7. Examination of site of injury? \r\n8. Skull X-ray? \r\n9. IF patient not admitted, head injury routine sheet OR instructions? \r\n10. Narcotics or sedatives used? \r\n11. Admission to hospital OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('CHICKEN POX','0000-00-00 00:00:00','1. Inquiry re duration of symptoms? \r\n2. Description of rash? \r\n3. Blister OR papular OR vesicular rash? \r\n4. ASA used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PLEURISY','0000-00-00 00:00:00','1. Inquiry re duration of symptoms? \r\n2. Inquiry re location of pain? \r\n3. Presence/absence of fever noted? \r\n4. Presence/absence of cough noted? \r\n5. Inquiry whether chest pain worse with deep breathing (pleuritic)? \r\n6. Chest exam? \r\n7. Throat exam? \r\n8. CVS exam? \r\n9. Blood pressure? \r\n10. Temperature recorded? \r\n11. IF temperature elevated OR sputum, CBC? \r\n12. IF sputum, C & S? \r\n13. IF rales AND/OR rhonchi present, chest X-ray? \r\n14. IF antibiotics prescribed, C & S of sputum done before use of antibiotic? \r\n15. IF smoker, advice re smoking? \r\n16. Cause stated OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('LOBAR PNEUMONIA','0000-00-00 00:00:00','1. Inquiry re at least one of following? \r\ncough \r\ndyspnea \r\nchest pain \r\nfever \r\n2. Description of breath sounds? \r\n3. Comment re dullness OR consolidation? \r\n4. Sputum C & S? \r\n5. WBC? \r\n6. Chest X-ray, 2 views? \r\n7. IF X-ray positive, follow-up X-ray within 30 days? \r\n8. Positive culture AND positive X-ray OR consolidation on examination? \r\n9. Oral penicillin or erythromycin or cephalosporin given? \r\n10. Dosage recorded? \r\n11. Amount recorded? \r\n12. Follow-up in 1 week? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PYODERMA (INC. IMPET','0000-00-00 00:00:00','1. Site noted? \r\n2. IF oral antibiotic used, was it one of penicillins, erythromycins, sulfonamides, tetracyclines, or cephalosporins? \r\n3. IF tetracycline used, was patient ','Unknow');
+INSERT INTO encountertemplate VALUES ('LACERATIONS OF SKIN','0000-00-00 00:00:00','** NOTE **\r\nFOR QUESTIONS 1 THROUGH 7, PHYSICIAN MUST FULFILL CONDITION FOR EACH EPISODE OF LACERATION. \r\n1. Inquiry re how laceration occurred? \r\n2. Time between injury and visit? \r\n3. Description of wound? \r\n4. IF hand or wrist, comment on function? \r\n5. IF tendons severed, referral? \r\n6. Debridement (washing)? \r\n7. IF sutured, one follow-up? \r\n8. IF no tetanus toxoid within 10 years, injection given? ','Unknow');
+INSERT INTO encountertemplate VALUES ('SEROUS OTITIS MEDIA','0000-00-00 00:00:00','1. Inquiry re at least two of following; hearing, pain, recurrent URI? \r\n2. Comment re fluid in middle ear OR retracted ear drum? \r\n3. Comment re nose AND throat? \r\n4. IF third episode or more, audiometry OR referral? \r\n5. IF physical findings OR hearing test are abnormal, follow-up until resolved OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('DIABETES MELLITUS, A','0000-00-00 00:00:00','1. Inquiry re family history of diabetes on chart (3 minute)? \r\n2. Duration of disease OR starting date on chart (3 minute)? \r\n3. Inquiry re one of following on each visit? \r\nurine sugars \r\nblood sugars \r\ndietary management \r\npatient feels well or ill \r\n4. Weight recorded (at least 75% of visits)? \r\n5. Urine glucose each visit? \r\n6. Comment re cardiovascular system AND blood pressure yearly? \r\n7. Examination of fundi yearly? \r\n8. IF on oral hypoglycemics, at least one blood sugar recorded yearly? \r\n9. IF on insulin, at least two blood sugars recorded yearly? \r\n10. BUN OR creatinine on chart (3 minute)? \r\n11. IF diabetes first diagnosed within past 2 years, evidence of 2 fasting blood sugars > 8.8 mmol/L OR random sugar > 13.8 mmol/L prior to treatment? \r\n12. Diabetic diet - caloric intake noted on chart (3 minute)? \r\n13. Evidence of dietary counselling by a health professional on chart (3 minute)? \r\n14. IF newly diagnosed, follow-up within one month? \r\n15. IF on diet alone, follow-up at least once yearly? \r\n16. IF on oral hypoglycemic OR insulin, follow-up at least twice yearly? \r\n17. Inquiry re sexual dysfunction on chart (3 minute)? \r\n18. IF acetohexamide or chlorpropramide used (Glyburide and Diabeta are OK), was BUN > 9 mmol/L OR was creatinine > 140 mmol/L? \r\n19. IF no ketones in serum or urine, was dietary therapy tried prior to starting oral hypoglycemic? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PROSTATE, CANCER OF','0000-00-00 00:00:00','1. Inquiry re urinary symptoms? \r\n2. Rectal exam at least yearly? \r\n3. Serum acid phosphatase yearly? \r\n4. IF new or changed urinary symptoms, C & S AND urinalysis?\r\n5. Pathology report positive? \r\n6. Follow-up every 6 months? ','Unknow');
+INSERT INTO encountertemplate VALUES ('WELL BABY CARE','0000-00-00 00:00:00','1. Inquiry re food/diet? \r\n2. Inquiry re coping/parenting skills? \r\n3. Weight recorded at each visit? \r\n4. Comment re normal/abnormal developmental milestones? \r\n5. Length recorded 3 or more times per year? \r\n6. Head circumference recorded 3 or more times in first year of life? \r\n7. Three doses of DPTP by age 8 months OR justification of alternate course? \r\n8. IF age 1 to 2, MMR at 12-15 months, DPTP at 17-19 months OR justification of alternate course? \r\n9. IF > 1 year old, at least 3 visits in first year? \r\n10. IF > 2 years old, at least 3 visits in second year? \r\n11. IF parenting problems identified, counselling OR referral? \r\n12. MMR given before 12 months of age? ','Unknow');
+INSERT INTO encountertemplate VALUES ('ARTHRITIS, NYD OR NO','0000-00-00 00:00:00','** NOTE **\r\nless than one month - multiple joints \r\n1. Inquiry re duration of symptoms? \r\n2. Location of joint pains noted? \r\n3. Description of nature OR severity of pain? \r\n4. Inquiry re aggravating OR precipitating factors? \r\n5. Description of inflammation OR swelling? \r\n6. Description of range of movement? \r\n7. On OR before second visit for same problem, CBC? \r\n8. On OR before second visit for same problem, ESR? \r\n9. On OR before second visit for same problem, anti-nuclear factor (i.e. ANF, ANA)? \r\n10. On OR before second visit for same problem, rheumatoid arthritis factor (i.e. RF, RA)? \r\n11. Were systemic steroids prescribed? \r\n12. Advice re rest OR restrict movement of joint? \r\n13. Follow-up within 2 weeks? \r\n14. IF within 1 year of visit for peptic ulcer disease, were anti-inflammatory agents prescribed? ','Unknow');
+INSERT INTO encountertemplate VALUES ('HEMATOMA,SUBCUTANEOU','0000-00-00 00:00:00','1. Inquiry re history of trauma, type noted? \r\n2. Inquiry re spontaneous or traumatic? \r\n3. IF spontaneous, inquiry re previous episodes? \r\n4. IF spontaneous, inquiry re family history of bleeding? \r\n5. Description of size? \r\n6. Description of location? \r\n7. IF spontaneous, CBC, platelets, PT, PTT done? \r\n8. IF seen within 48 hours of onset, ice recommended? \r\n9. IF spontaneous OR recurrent, one follow-up? \r\n10. IF child (other recent or old trauma)? \r\n11. IF AND history of repeated trauma (3 or more within 2 years) skeletal survey? ','Unknow');
+INSERT INTO encountertemplate VALUES ('CONTACT DERMATITIS','0000-00-00 00:00:00','** NOTE **\r\nIncludes poison ivy. \r\n1. Inquiry re duration? \r\n2. Inquiry re itching? \r\n3. Inquiry re exposure to irritants? \r\n4. Location of rash noted? \r\n5. IF oral prednisone used, no more than 7 days? \r\n6. IF oral prednisone used, one follow-up visit or phone call? ','Unknow');
+INSERT INTO encountertemplate VALUES ('SECONDARY AMMENORRHE','0000-00-00 00:00:00','1. Menstrual history? \r\n2. Duration of problem? \r\n3. Description re onset of problem? \r\n4. History of medications (including oral contraceptives)? \r\n5. Inquiry re changes in diet? \r\n6. Inquiry re stress factors AND/OR athletics? \r\n7. Pelvic exam? \r\n8. Abdominal exam? \r\n9. Pregnancy test? \r\n10. CBC? \r\n11. Thyroid function (at least one of TSH,T3,T4)? \r\n12. Fasting blood sugar on chart (3 minute)? \r\n13. IF more than 3 months duration, prolactin? \r\n14. Pelvic ultrasound on chart (3 minute)? \r\n15. IF more than 3 months duration, X-ray of pituitary? \r\n16. Follow-up until cause found or referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('DIARRHEA, MULTIPLE V','0000-00-00 00:00:00','1. Inquiry re frequency? \r\n2. Inquiry re duration? \r\n3. Inquiry re diet? \r\n4. Inquiry re medications? \r\n5. Inquiry re travel? \r\n6. Inquiry re blood in stool? \r\n7. Inquiry re fever? \r\n8. Inquiry re weight loss? \r\n9. Inquiry re nausea OR abdominal cramps OR pain? \r\n10. Abdominal exam? \r\n11. Rectal exam? \r\n12. Weight noted at least once? \r\n13. Stool for C & S? \r\n14. Stool for ova and parasites? \r\n15. CBC? \r\n16. ESR? \r\n17. Sigmoidoscopy OR colonoscopy OR referral? \r\n18. Barium enema? \r\n19. IF barium enema negative, UGI series with small bowel follow through? \r\n20. IF not improved within 6 months OR specific diagnosis not noted on chart, referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('NASAL POLYP','0000-00-00 00:00:00','1. Inquiry re nasal symptoms? \r\n2. Inquiry re history of asthma or ASA allergy (or on chart) (3 minute)? \r\n3. Description of polyp? \r\n4. IF no improvement after 6 weeks, referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('SCOLIOSIS','0000-00-00 00:00:00','** NOTE **\r\nAudit only presenting visit. \r\n1. Inquiry re how condition found? \r\n2. Description of location (eg. thoracic, lumbar)? \r\n3. Description of extent (degree of angulation)? \r\n4. X-ray of affected area(s) of spine within 3 months of initial diagnosis? \r\n5. X-ray confirms diagnosis of scoliosis? \r\n6. IF 9 to 16 years old AND severe (angulation greater than or equal to 15 degrees, consultation OR referral? \r\n7. IF not referred, follow-up within 3 months? ','Unknow');
+INSERT INTO encountertemplate VALUES ('MOUTH LESION','0000-00-00 00:00:00','1. Inquiry re location? \r\n2. Inquiry re duration? [HA2 ]> \r\n3. Description of lesion? \r\n4. IF lesion described as \"ulcer\" or \"plaque\" AND lesion not healed in 2 months, investigation OR referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('GLAUCOMA','0000-00-00 00:00:00','1. Inquiry re vision at each visit? \r\n** NOTE **\r\nIF patient is followed by an ophthalmologist, Questions 2 through 8 are NOT APPLICABLE. \r\n2. Inquiry re compliance with medications? \r\n3. Fundi, yearly statement re optic cup? \r\n4. Visual fields recorded yearly? \r\n5. Intraocular pressure yearly? \r\n6. Medications, dosage recorded? \r\n7. High intraocular pressure ( >30 mm Hg ) recorded on chart (3 minute)? \r\n8. Follow-up yearly? \r\n9. IF ocular pressures are not improved after one month of treatment, referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('TONSILLITIS, CHRONIC','0000-00-00 00:00:00','1. Inquiry re recurrent sore throat? \r\n2. Description of tonsils? \r\n3. Presence/absence of cervical glands noted? \r\n4. IF antibiotic used, was it one of the penicillins, erythromycins, cephalosporins, or tetracyclines? \r\n5. IF tonsillectomy OR referral, were there 4 or more episodes within 2 years OR peritonsillar abscess (quinsy) OR unilateral emlargement OR demonstrated hearing loss? \r\n6. IF tetracycline used, was patient ','Unknow');
+INSERT INTO encountertemplate VALUES ('ECZEMA, CONTACT DERM','0000-00-00 00:00:00','1. Inquiry re duration? \r\n2. Presence/absence of family history of eczema OR on chart (3 minute)? \r\n3. IF over 5 years, inquiry re stress factors? \r\n4. Description of lesion? \r\n5. Location and extent? \r\n6. Topical steroids used? \r\n7. Systemic steroids initiated by family doctor? \r\n8. Discussion re prognosis of disease? \r\n9. One follow-up? \r\n10. IF acute AND failure to respond within 6 weeks, referral?\r\n11. IF child, occulsive dressing for 8 hours or more per 24 hours? \r\n12. IF systemic corticosteroids used, was it for more than 3 months? \r\n13. Fluorinated steroids used on face? ','Unknow');
+INSERT INTO encountertemplate VALUES ('FIBROCYSTIC DISEASE','0000-00-00 00:00:00','1. Inquiry re at least 2 of the following? \r\nbreast pain \r\nrelationship of lump to periods \r\nrecurrency of problem \r\nlocation of lump \r\n2. Description of both breasts? \r\n3. Statement of location and size of lumps? \r\n4. Axillary exam? \r\n5. IF lesion diagnosed as non-cystic, mammography? \r\n6. IF suspected cyst, aspiration OR referral? \r\n7. Yearly breast examination by physician following initial diagnosis? \r\n8. Cysts diagnosed by examination OR by mammography? \r\n9. BSE on chart every two years? \r\n10. IF discrete lump persists after aspiration, referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('PHARYNGITIS','0000-00-00 00:00:00','1. Inquiry re sore throat? \r\n2. Inquiry re duration? \r\n3. Examination of pharynx? \r\n4. IF white membrane OR lot of exudate noted, mono test AND C & S? \r\n5. Red (inflamed, injected) throat? \r\n6. IF AND positive strep culture, amoxil or ampicillin or erythromycin given for at least 7 days? \r\n7. IF 5 years or older AND positive strep culture, penicillin or erythromycin for at least 7 days? ','Unknow');
+INSERT INTO encountertemplate VALUES ('SINUSITIS','0000-00-00 00:00:00','1. Inquiry re pain in the face and/or head? \r\n2. Inquiry re nasal blockage? \r\n3. Presence/absence of fever noted? \r\n4. Presence/absence of tenderness over sinuses noted? \r\n5. IF recurrent (3 or more visits), X-ray of sinuses? \r\n6. Tenderness over sinuses OR positive X-ray of sinuses? \r\n7. IF antibiotic used, was it one of the penicillins, sulfonamides, erythromycins, cephalosporins, or tetracycline?\r\n8. IF tetracycline used, was patient ','Unknow');
+INSERT INTO encountertemplate VALUES ('GOUT','0000-00-00 00:00:00','1. Inquiry re at least one of following? \r\nsevere joint pain \r\nhistory of swelling \r\nhistory of inflammation \r\nmonoarticular joint \r\n2. List of drugs being used OR on chart (3 minute)? \r\n3. Presence/absence of swelling of involved joint? \r\n4. Presence/absence of inflammation of involved joint? \r\n5. IF joint aspiration done, report for uric acid crystals? \r\n6. Serum uric acid? \r\n7. One of the following? \r\nserum uric acid greater than lab normal \r\nuric acid crystals in joint aspirate \r\nX-ray diagnosis \r\n8. ASA used? \r\n9. NSAIDs OR Colchicine used? \r\n10. IF thiazides used, statement of justification? \r\n11. IF 3 or more episodes OR uric acid greater than lab normal, recommendation for prophylaxis treatment? \r\n12. Advice re avoidance of precipitating factors (eg. alcohol, high purine foods) \r\n13. IF flare-up occurs AND allopurinal OR uricosurics are being used, Colchicine used? ','Unknow');
+INSERT INTO encountertemplate VALUES ('NASAL INJURY','0000-00-00 00:00:00','1. Description of accident? \r\n2. Description of nose including 2 of following; swelling, amount of bleeding, deformity, lacerations? \r\n3. IF deformity found on examination, X-ray of nasal bones? \r\n4. IF deformity found on examination, referral to ENT specialist? \r\n5. IF unable to control bleeding, referral? ','Unknow');
+INSERT INTO encountertemplate VALUES ('VENEREAL WARTS (COND','0000-00-00 00:00:00','1. Inquiry re duration of lesions? \r\n2. Description of size AND extent of lesions? \r\n3. VDRL OR syphilis screen? ','Unknow');
+
+--
+-- Table structure for table 'favorites'
+--
+
+CREATE TABLE favorites (
+  favoriteid int(10) NOT NULL auto_increment,
+  provider_no varchar(6) NOT NULL default '',
+  favoritename varchar(50) NOT NULL default '',
+  BN varchar(30) default NULL,
+  GCN_SEQNO decimal(10,0) NOT NULL default '0',
+  customName varchar(60) default NULL,
+  takemin float default NULL,
+  takemax float default NULL,
+  freqcode varchar(6) default NULL,
+  duration varchar(4) default NULL,
+  durunit char(1) default NULL,
+  quantity varchar(20) default NULL,
+  repeat tinyint(4) default NULL,
+  nosubs tinyint(1) NOT NULL default '0',
+  prn tinyint(1) NOT NULL default '0',
+  special varchar(255) NOT NULL default '',
+  PRIMARY KEY  (favoriteid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'favorites'
+--
+
+
+--
+-- Table structure for table 'form'
+--
+
+CREATE TABLE form (
+  form_no int(12) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  form_date date NOT NULL default '0000-00-00',
+  form_time time NOT NULL default '00:00:00',
+  form_name varchar(50) default NULL,
+  content text,
+  PRIMARY KEY  (form_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'form'
+--
+
+
+--
+-- Table structure for table 'formAR'
+--
+
+CREATE TABLE formAR (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  c_lastVisited char(3) default NULL,
+  c_pName varchar(60) default NULL,
+  c_address varchar(80) default NULL,
+  pg1_dateOfBirth date default NULL,
+  pg1_age char(2) default NULL,
+  pg1_msSingle tinyint(1) default NULL,
+  pg1_msCommonLaw tinyint(1) default NULL,
+  pg1_msMarried tinyint(1) default NULL,
+  pg1_eduLevel varchar(25) default NULL,
+  pg1_occupation varchar(25) default NULL,
+  pg1_language varchar(25) default NULL,
+  pg1_homePhone varchar(20) default NULL,
+  pg1_workPhone varchar(20) default NULL,
+  pg1_partnerName varchar(50) default NULL,
+  pg1_partnerAge char(2) default NULL,
+  pg1_partnerOccupation varchar(25) default NULL,
+  pg1_baObs tinyint(1) default NULL,
+  pg1_baFP tinyint(1) default NULL,
+  pg1_baMidwife tinyint(1) default NULL,
+  c_ba varchar(25) default NULL,
+  pg1_famPhys varchar(100) default NULL,
+  pg1_ncPed tinyint(1) default NULL,
+  pg1_ncFP tinyint(1) default NULL,
+  pg1_ncMidwife tinyint(1) default NULL,
+  c_nc varchar(25) default NULL,
+  pg1_ethnicBg varchar(100) default NULL,
+  pg1_vbac tinyint(1) default NULL,
+  pg1_repeatCS tinyint(1) default NULL,
+  c_allergies text,
+  c_meds text,
+  pg1_menLMP varchar(10) default NULL,
+  pg1_menCycle varchar(7) default NULL,
+  pg1_menReg tinyint(1) default NULL,
+  pg1_menEDB varchar(10) default NULL,
+  pg1_iud tinyint(1) default NULL,
+  pg1_hormone tinyint(1) default NULL,
+  pg1_hormoneType varchar(25) default NULL,
+  pg1_otherAR1 tinyint(1) default NULL,
+  pg1_otherAR1Name varchar(25) default NULL,
+  pg1_lastUsed varchar(10) default NULL,
+  c_finalEDB date default NULL,
+  c_gravida varchar(5) default NULL,
+  c_term varchar(5) default NULL,
+  c_prem varchar(5) default NULL,
+  pg1_ectopic tinyint(1) default NULL,
+  pg1_ectopicBox char(2) default NULL,
+  pg1_termination tinyint(1) default NULL,
+  pg1_terminationBox char(2) default NULL,
+  pg1_spontaneous tinyint(1) default NULL,
+  pg1_spontaneousBox char(2) default NULL,
+  pg1_stillborn tinyint(1) default NULL,
+  pg1_stillbornBox char(2) default NULL,
+  c_living varchar(10) default NULL,
+  pg1_multi varchar(10) default NULL,
+  pg1_year1 varchar(10) default NULL,
+  pg1_sex1 char(1) default NULL,
+  pg1_oh_gest1 varchar(5) default NULL,
+  pg1_weight1 varchar(6) default NULL,
+  pg1_length1 varchar(6) default NULL,
+  pg1_place1 varchar(20) default NULL,
+  pg1_svb1 tinyint(1) default NULL,
+  pg1_cs1 tinyint(1) default NULL,
+  pg1_ass1 tinyint(1) default NULL,
+  pg1_oh_comments1 varchar(80) default NULL,
+  pg1_year2 varchar(10) default NULL,
+  pg1_sex2 char(1) default NULL,
+  pg1_oh_gest2 varchar(5) default NULL,
+  pg1_weight2 varchar(6) default NULL,
+  pg1_length2 varchar(6) default NULL,
+  pg1_place2 varchar(20) default NULL,
+  pg1_svb2 tinyint(1) default NULL,
+  pg1_cs2 tinyint(1) default NULL,
+  pg1_ass2 tinyint(1) default NULL,
+  pg1_oh_comments2 varchar(80) default NULL,
+  pg1_year3 varchar(10) default NULL,
+  pg1_sex3 char(1) default NULL,
+  pg1_oh_gest3 varchar(5) default NULL,
+  pg1_weight3 varchar(6) default NULL,
+  pg1_length3 varchar(6) default NULL,
+  pg1_place3 varchar(20) default NULL,
+  pg1_svb3 tinyint(1) default NULL,
+  pg1_cs3 tinyint(1) default NULL,
+  pg1_ass3 tinyint(1) default NULL,
+  pg1_oh_comments3 varchar(80) default NULL,
+  pg1_year4 varchar(10) default NULL,
+  pg1_sex4 char(1) default NULL,
+  pg1_oh_gest4 varchar(5) default NULL,
+  pg1_weight4 varchar(6) default NULL,
+  pg1_length4 varchar(6) default NULL,
+  pg1_place4 varchar(20) default NULL,
+  pg1_svb4 tinyint(1) default NULL,
+  pg1_cs4 tinyint(1) default NULL,
+  pg1_ass4 tinyint(1) default NULL,
+  pg1_oh_comments4 varchar(80) default NULL,
+  pg1_year5 varchar(10) default NULL,
+  pg1_sex5 char(1) default NULL,
+  pg1_oh_gest5 varchar(5) default NULL,
+  pg1_weight5 varchar(6) default NULL,
+  pg1_length5 varchar(6) default NULL,
+  pg1_place5 varchar(20) default NULL,
+  pg1_svb5 tinyint(1) default NULL,
+  pg1_cs5 tinyint(1) default NULL,
+  pg1_ass5 tinyint(1) default NULL,
+  pg1_oh_comments5 varchar(80) default NULL,
+  pg1_year6 varchar(10) default NULL,
+  pg1_sex6 char(1) default NULL,
+  pg1_oh_gest6 varchar(5) default NULL,
+  pg1_weight6 varchar(6) default NULL,
+  pg1_length6 varchar(6) default NULL,
+  pg1_place6 varchar(20) default NULL,
+  pg1_svb6 tinyint(1) default NULL,
+  pg1_cs6 tinyint(1) default NULL,
+  pg1_ass6 tinyint(1) default NULL,
+  pg1_oh_comments6 varchar(80) default NULL,
+  pg1_cp1 tinyint(1) default NULL,
+  pg1_cp2 tinyint(1) default NULL,
+  pg1_cp3 tinyint(1) default NULL,
+  pg1_box3 char(3) default NULL,
+  pg1_cp4 tinyint(1) default NULL,
+  pg1_cp5 tinyint(1) default NULL,
+  pg1_box5 char(3) default NULL,
+  pg1_cp6 tinyint(1) default NULL,
+  pg1_cp7 tinyint(1) default NULL,
+  pg1_cp8 tinyint(1) default NULL,
+  pg1_naFolic tinyint(1) default NULL,
+  pg1_naMilk tinyint(1) default NULL,
+  pg1_naDietBal tinyint(1) default NULL,
+  pg1_naDietRes tinyint(1) default NULL,
+  pg1_naRef tinyint(1) default NULL,
+  pg1_yes9 tinyint(1) default NULL,
+  pg1_no9 tinyint(1) default NULL,
+  pg1_yes10 tinyint(1) default NULL,
+  pg1_no10 tinyint(1) default NULL,
+  pg1_yes11 tinyint(1) default NULL,
+  pg1_no11 tinyint(1) default NULL,
+  pg1_yes12 tinyint(1) default NULL,
+  pg1_no12 tinyint(1) default NULL,
+  pg1_yes13 tinyint(1) default NULL,
+  pg1_no13 tinyint(1) default NULL,
+  pg1_yes14 tinyint(1) default NULL,
+  pg1_no14 tinyint(1) default NULL,
+  pg1_yes15 tinyint(1) default NULL,
+  pg1_no15 tinyint(1) default NULL,
+  pg1_yes16 tinyint(1) default NULL,
+  pg1_no16 tinyint(1) default NULL,
+  pg1_yes17 tinyint(1) default NULL,
+  pg1_no17 tinyint(1) default NULL,
+  pg1_yes18 tinyint(1) default NULL,
+  pg1_no18 tinyint(1) default NULL,
+  pg1_yes19 tinyint(1) default NULL,
+  pg1_no19 tinyint(1) default NULL,
+  pg1_yes20 tinyint(1) default NULL,
+  pg1_no20 tinyint(1) default NULL,
+  pg1_yes21 tinyint(1) default NULL,
+  pg1_no21 tinyint(1) default NULL,
+  pg1_yes22 tinyint(1) default NULL,
+  pg1_no22 tinyint(1) default NULL,
+  pg1_yes23 tinyint(1) default NULL,
+  pg1_no23 tinyint(1) default NULL,
+  pg1_yes24 tinyint(1) default NULL,
+  pg1_no24 tinyint(1) default NULL,
+  pg1_yes25 tinyint(1) default NULL,
+  pg1_no25 tinyint(1) default NULL,
+  pg1_box25 varchar(25) default NULL,
+  pg1_yes26 tinyint(1) default NULL,
+  pg1_no26 tinyint(1) default NULL,
+  pg1_yes27 tinyint(1) default NULL,
+  pg1_no27 tinyint(1) default NULL,
+  pg1_yes28 tinyint(1) default NULL,
+  pg1_no28 tinyint(1) default NULL,
+  pg1_yes29 tinyint(1) default NULL,
+  pg1_no29 tinyint(1) default NULL,
+  pg1_yes30 tinyint(1) default NULL,
+  pg1_no30 tinyint(1) default NULL,
+  pg1_yes31 tinyint(1) default NULL,
+  pg1_no31 tinyint(1) default NULL,
+  pg1_yes32 tinyint(1) default NULL,
+  pg1_no32 tinyint(1) default NULL,
+  pg1_yes33 tinyint(1) default NULL,
+  pg1_no33 tinyint(1) default NULL,
+  pg1_yes34 tinyint(1) default NULL,
+  pg1_no34 tinyint(1) default NULL,
+  pg1_yes35 tinyint(1) default NULL,
+  pg1_no35 tinyint(1) default NULL,
+  pg1_yes36 tinyint(1) default NULL,
+  pg1_no36 tinyint(1) default NULL,
+  pg1_yes37off tinyint(1) default NULL,
+  pg1_no37off tinyint(1) default NULL,
+  pg1_yes37acc tinyint(1) default NULL,
+  pg1_no37acc tinyint(1) default NULL,
+  pg1_idt38 tinyint(1) default NULL,
+  pg1_idt39 tinyint(1) default NULL,
+  pg1_idt40 tinyint(1) default NULL,
+  pg1_idt41 tinyint(1) default NULL,
+  pg1_idt42 tinyint(1) default NULL,
+  pg1_box42 varchar(20) default NULL,
+  pg1_pdt43 tinyint(1) default NULL,
+  pg1_pdt44 tinyint(1) default NULL,
+  pg1_pdt45 tinyint(1) default NULL,
+  pg1_pdt46 tinyint(1) default NULL,
+  pg1_pdt47 tinyint(1) default NULL,
+  pg1_pdt48 tinyint(1) default NULL,
+  c_riskFactors text,
+  pg1_ht varchar(6) default NULL,
+  pg1_wt varchar(6) default NULL,
+  c_ppWt varchar(6) default NULL,
+  pg1_BP varchar(10) default NULL,
+  pg1_head tinyint(1) default NULL,
+  pg1_thyroid tinyint(1) default NULL,
+  pg1_chest tinyint(1) default NULL,
+  pg1_breasts tinyint(1) default NULL,
+  pg1_cardio tinyint(1) default NULL,
+  pg1_abdomen tinyint(1) default NULL,
+  pg1_vari tinyint(1) default NULL,
+  pg1_neuro tinyint(1) default NULL,
+  pg1_pelvic tinyint(1) default NULL,
+  pg1_extGen tinyint(1) default NULL,
+  pg1_cervix tinyint(1) default NULL,
+  pg1_uterus tinyint(1) default NULL,
+  pg1_uterusBox char(3) default NULL,
+  pg1_adnexa tinyint(1) default NULL,
+  pg1_commentsAR1 text,
+  ar2_etss varchar(10) default NULL,
+  ar2_hb varchar(10) default NULL,
+  ar2_mcv varchar(10) default NULL,
+  ar2_mss varchar(10) default NULL,
+  ar2_rubella varchar(5) default NULL,
+  ar2_hbs varchar(6) default NULL,
+  ar2_vdrl varchar(6) default NULL,
+  ar2_bloodGroup varchar(6) default NULL,
+  ar2_rh varchar(6) default NULL,
+  ar2_antibodies varchar(6) default NULL,
+  ar2_rhIG varchar(6) default NULL,
+  pg2_date1 date default NULL,
+  pg2_gest1 varchar(6) default NULL,
+  pg2_ht1 varchar(6) default NULL,
+  pg2_wt1 varchar(6) default NULL,
+  pg2_presn1 varchar(6) default NULL,
+  pg2_FHR1 varchar(6) default NULL,
+  pg2_urinePr1 char(3) default NULL,
+  pg2_urineGl1 char(3) default NULL,
+  pg2_BP1 varchar(8) default NULL,
+  pg2_comments1 varchar(255) default NULL,
+  pg2_cig1 char(3) default NULL,
+  pg2_date2 date default NULL,
+  pg2_gest2 varchar(6) default NULL,
+  pg2_ht2 varchar(6) default NULL,
+  pg2_wt2 varchar(6) default NULL,
+  pg2_presn2 varchar(6) default NULL,
+  pg2_FHR2 varchar(6) default NULL,
+  pg2_urinePr2 char(3) default NULL,
+  pg2_urineGl2 char(3) default NULL,
+  pg2_BP2 varchar(8) default NULL,
+  pg2_comments2 varchar(255) default NULL,
+  pg2_cig2 char(3) default NULL,
+  pg2_date3 date default NULL,
+  pg2_gest3 varchar(6) default NULL,
+  pg2_ht3 varchar(6) default NULL,
+  pg2_wt3 varchar(6) default NULL,
+  pg2_presn3 varchar(6) default NULL,
+  pg2_FHR3 varchar(6) default NULL,
+  pg2_urinePr3 char(3) default NULL,
+  pg2_urineGl3 char(3) default NULL,
+  pg2_BP3 varchar(8) default NULL,
+  pg2_comments3 varchar(255) default NULL,
+  pg2_cig3 char(3) default NULL,
+  pg2_date4 date default NULL,
+  pg2_gest4 varchar(6) default NULL,
+  pg2_ht4 varchar(6) default NULL,
+  pg2_wt4 varchar(6) default NULL,
+  pg2_presn4 varchar(6) default NULL,
+  pg2_FHR4 varchar(6) default NULL,
+  pg2_urinePr4 char(3) default NULL,
+  pg2_urineGl4 char(3) default NULL,
+  pg2_BP4 varchar(8) default NULL,
+  pg2_comments4 varchar(255) default NULL,
+  pg2_cig4 char(3) default NULL,
+  pg2_date5 date default NULL,
+  pg2_gest5 varchar(6) default NULL,
+  pg2_ht5 varchar(6) default NULL,
+  pg2_wt5 varchar(6) default NULL,
+  pg2_presn5 varchar(6) default NULL,
+  pg2_FHR5 varchar(6) default NULL,
+  pg2_urinePr5 char(3) default NULL,
+  pg2_urineGl5 char(3) default NULL,
+  pg2_BP5 varchar(8) default NULL,
+  pg2_comments5 varchar(255) default NULL,
+  pg2_cig5 char(3) default NULL,
+  pg2_date6 date default NULL,
+  pg2_gest6 varchar(6) default NULL,
+  pg2_ht6 varchar(6) default NULL,
+  pg2_wt6 varchar(6) default NULL,
+  pg2_presn6 varchar(6) default NULL,
+  pg2_FHR6 varchar(6) default NULL,
+  pg2_urinePr6 char(3) default NULL,
+  pg2_urineGl6 char(3) default NULL,
+  pg2_BP6 varchar(8) default NULL,
+  pg2_comments6 varchar(255) default NULL,
+  pg2_cig6 char(3) default NULL,
+  pg2_date7 date default NULL,
+  pg2_gest7 varchar(6) default NULL,
+  pg2_ht7 varchar(6) default NULL,
+  pg2_wt7 varchar(6) default NULL,
+  pg2_presn7 varchar(6) default NULL,
+  pg2_FHR7 varchar(6) default NULL,
+  pg2_urinePr7 char(3) default NULL,
+  pg2_urineGl7 char(3) default NULL,
+  pg2_BP7 varchar(8) default NULL,
+  pg2_comments7 varchar(255) default NULL,
+  pg2_cig7 char(3) default NULL,
+  pg2_date8 date default NULL,
+  pg2_gest8 varchar(6) default NULL,
+  pg2_ht8 varchar(6) default NULL,
+  pg2_wt8 varchar(6) default NULL,
+  pg2_presn8 varchar(6) default NULL,
+  pg2_FHR8 varchar(6) default NULL,
+  pg2_urinePr8 char(3) default NULL,
+  pg2_urineGl8 char(3) default NULL,
+  pg2_BP8 varchar(8) default NULL,
+  pg2_comments8 varchar(255) default NULL,
+  pg2_cig8 char(3) default NULL,
+  pg2_date9 date default NULL,
+  pg2_gest9 varchar(6) default NULL,
+  pg2_ht9 varchar(6) default NULL,
+  pg2_wt9 varchar(6) default NULL,
+  pg2_presn9 varchar(6) default NULL,
+  pg2_FHR9 varchar(6) default NULL,
+  pg2_urinePr9 char(3) default NULL,
+  pg2_urineGl9 char(3) default NULL,
+  pg2_BP9 varchar(8) default NULL,
+  pg2_comments9 varchar(255) default NULL,
+  pg2_cig9 char(3) default NULL,
+  pg2_date10 date default NULL,
+  pg2_gest10 varchar(6) default NULL,
+  pg2_ht10 varchar(6) default NULL,
+  pg2_wt10 varchar(6) default NULL,
+  pg2_presn10 varchar(6) default NULL,
+  pg2_FHR10 varchar(6) default NULL,
+  pg2_urinePr10 char(3) default NULL,
+  pg2_urineGl10 char(3) default NULL,
+  pg2_BP10 varchar(8) default NULL,
+  pg2_comments10 varchar(255) default NULL,
+  pg2_cig10 char(3) default NULL,
+  pg2_date11 date default NULL,
+  pg2_gest11 varchar(6) default NULL,
+  pg2_ht11 varchar(6) default NULL,
+  pg2_wt11 varchar(6) default NULL,
+  pg2_presn11 varchar(6) default NULL,
+  pg2_FHR11 varchar(6) default NULL,
+  pg2_urinePr11 char(3) default NULL,
+  pg2_urineGl11 char(3) default NULL,
+  pg2_BP11 varchar(8) default NULL,
+  pg2_comments11 varchar(255) default NULL,
+  pg2_cig11 char(3) default NULL,
+  pg2_date12 date default NULL,
+  pg2_gest12 varchar(6) default NULL,
+  pg2_ht12 varchar(6) default NULL,
+  pg2_wt12 varchar(6) default NULL,
+  pg2_presn12 varchar(6) default NULL,
+  pg2_FHR12 varchar(6) default NULL,
+  pg2_urinePr12 char(3) default NULL,
+  pg2_urineGl12 char(3) default NULL,
+  pg2_BP12 varchar(8) default NULL,
+  pg2_comments12 varchar(255) default NULL,
+  pg2_cig12 char(3) default NULL,
+  pg2_date13 date default NULL,
+  pg2_gest13 varchar(6) default NULL,
+  pg2_ht13 varchar(6) default NULL,
+  pg2_wt13 varchar(6) default NULL,
+  pg2_presn13 varchar(6) default NULL,
+  pg2_FHR13 varchar(6) default NULL,
+  pg2_urinePr13 char(3) default NULL,
+  pg2_urineGl13 char(3) default NULL,
+  pg2_BP13 varchar(8) default NULL,
+  pg2_comments13 varchar(255) default NULL,
+  pg2_cig13 char(3) default NULL,
+  pg2_date14 date default NULL,
+  pg2_gest14 varchar(6) default NULL,
+  pg2_ht14 varchar(6) default NULL,
+  pg2_wt14 varchar(6) default NULL,
+  pg2_presn14 varchar(6) default NULL,
+  pg2_FHR14 varchar(6) default NULL,
+  pg2_urinePr14 char(3) default NULL,
+  pg2_urineGl14 char(3) default NULL,
+  pg2_BP14 varchar(8) default NULL,
+  pg2_comments14 varchar(255) default NULL,
+  pg2_cig14 char(3) default NULL,
+  pg2_date15 date default NULL,
+  pg2_gest15 varchar(6) default NULL,
+  pg2_ht15 varchar(6) default NULL,
+  pg2_wt15 varchar(6) default NULL,
+  pg2_presn15 varchar(6) default NULL,
+  pg2_FHR15 varchar(6) default NULL,
+  pg2_urinePr15 char(3) default NULL,
+  pg2_urineGl15 char(3) default NULL,
+  pg2_BP15 varchar(8) default NULL,
+  pg2_comments15 varchar(255) default NULL,
+  pg2_cig15 char(3) default NULL,
+  pg2_date16 date default NULL,
+  pg2_gest16 varchar(6) default NULL,
+  pg2_ht16 varchar(6) default NULL,
+  pg2_wt16 varchar(6) default NULL,
+  pg2_presn16 varchar(6) default NULL,
+  pg2_FHR16 varchar(6) default NULL,
+  pg2_urinePr16 char(3) default NULL,
+  pg2_urineGl16 char(3) default NULL,
+  pg2_BP16 varchar(8) default NULL,
+  pg2_comments16 varchar(255) default NULL,
+  pg2_cig16 char(3) default NULL,
+  pg2_date17 date default NULL,
+  pg2_gest17 varchar(6) default NULL,
+  pg2_ht17 varchar(6) default NULL,
+  pg2_wt17 varchar(6) default NULL,
+  pg2_presn17 varchar(6) default NULL,
+  pg2_FHR17 varchar(6) default NULL,
+  pg2_urinePr17 char(3) default NULL,
+  pg2_urineGl17 char(3) default NULL,
+  pg2_BP17 varchar(8) default NULL,
+  pg2_comments17 varchar(255) default NULL,
+  pg2_cig17 char(3) default NULL,
+  pg3_date18 date default NULL,
+  pg3_gest18 varchar(6) default NULL,
+  pg3_ht18 varchar(6) default NULL,
+  pg3_wt18 varchar(6) default NULL,
+  pg3_presn18 varchar(6) default NULL,
+  pg3_FHR18 varchar(6) default NULL,
+  pg3_urinePr18 char(3) default NULL,
+  pg3_urineGl18 char(3) default NULL,
+  pg3_BP18 varchar(8) default NULL,
+  pg3_comments18 varchar(255) default NULL,
+  pg3_cig18 char(3) default NULL,
+  pg3_date19 date default NULL,
+  pg3_gest19 varchar(6) default NULL,
+  pg3_ht19 varchar(6) default NULL,
+  pg3_wt19 varchar(6) default NULL,
+  pg3_presn19 varchar(6) default NULL,
+  pg3_FHR19 varchar(6) default NULL,
+  pg3_urinePr19 char(3) default NULL,
+  pg3_urineGl19 char(3) default NULL,
+  pg3_BP19 varchar(8) default NULL,
+  pg3_comments19 varchar(255) default NULL,
+  pg3_cig19 char(3) default NULL,
+  pg3_date20 date default NULL,
+  pg3_gest20 varchar(6) default NULL,
+  pg3_ht20 varchar(6) default NULL,
+  pg3_wt20 varchar(6) default NULL,
+  pg3_presn20 varchar(6) default NULL,
+  pg3_FHR20 varchar(6) default NULL,
+  pg3_urinePr20 char(3) default NULL,
+  pg3_urineGl20 char(3) default NULL,
+  pg3_BP20 varchar(8) default NULL,
+  pg3_comments20 varchar(255) default NULL,
+  pg3_cig20 char(3) default NULL,
+  pg3_date21 date default NULL,
+  pg3_gest21 varchar(6) default NULL,
+  pg3_ht21 varchar(6) default NULL,
+  pg3_wt21 varchar(6) default NULL,
+  pg3_presn21 varchar(6) default NULL,
+  pg3_FHR21 varchar(6) default NULL,
+  pg3_urinePr21 char(3) default NULL,
+  pg3_urineGl21 char(3) default NULL,
+  pg3_BP21 varchar(8) default NULL,
+  pg3_comments21 varchar(255) default NULL,
+  pg3_cig21 char(3) default NULL,
+  pg3_date22 date default NULL,
+  pg3_gest22 varchar(6) default NULL,
+  pg3_ht22 varchar(6) default NULL,
+  pg3_wt22 varchar(6) default NULL,
+  pg3_presn22 varchar(6) default NULL,
+  pg3_FHR22 varchar(6) default NULL,
+  pg3_urinePr22 char(3) default NULL,
+  pg3_urineGl22 char(3) default NULL,
+  pg3_BP22 varchar(8) default NULL,
+  pg3_comments22 varchar(255) default NULL,
+  pg3_cig22 char(3) default NULL,
+  pg3_date23 date default NULL,
+  pg3_gest23 varchar(6) default NULL,
+  pg3_ht23 varchar(6) default NULL,
+  pg3_wt23 varchar(6) default NULL,
+  pg3_presn23 varchar(6) default NULL,
+  pg3_FHR23 varchar(6) default NULL,
+  pg3_urinePr23 char(3) default NULL,
+  pg3_urineGl23 char(3) default NULL,
+  pg3_BP23 varchar(8) default NULL,
+  pg3_comments23 varchar(255) default NULL,
+  pg3_cig23 char(3) default NULL,
+  pg3_date24 date default NULL,
+  pg3_gest24 varchar(6) default NULL,
+  pg3_ht24 varchar(6) default NULL,
+  pg3_wt24 varchar(6) default NULL,
+  pg3_presn24 varchar(6) default NULL,
+  pg3_FHR24 varchar(6) default NULL,
+  pg3_urinePr24 char(3) default NULL,
+  pg3_urineGl24 char(3) default NULL,
+  pg3_BP24 varchar(8) default NULL,
+  pg3_comments24 varchar(255) default NULL,
+  pg3_cig24 char(3) default NULL,
+  pg3_date25 date default NULL,
+  pg3_gest25 varchar(6) default NULL,
+  pg3_ht25 varchar(6) default NULL,
+  pg3_wt25 varchar(6) default NULL,
+  pg3_presn25 varchar(6) default NULL,
+  pg3_FHR25 varchar(6) default NULL,
+  pg3_urinePr25 char(3) default NULL,
+  pg3_urineGl25 char(3) default NULL,
+  pg3_BP25 varchar(8) default NULL,
+  pg3_comments25 varchar(255) default NULL,
+  pg3_cig25 char(3) default NULL,
+  pg3_date26 date default NULL,
+  pg3_gest26 varchar(6) default NULL,
+  pg3_ht26 varchar(6) default NULL,
+  pg3_wt26 varchar(6) default NULL,
+  pg3_presn26 varchar(6) default NULL,
+  pg3_FHR26 varchar(6) default NULL,
+  pg3_urinePr26 char(3) default NULL,
+  pg3_urineGl26 char(3) default NULL,
+  pg3_BP26 varchar(8) default NULL,
+  pg3_comments26 varchar(255) default NULL,
+  pg3_cig26 char(3) default NULL,
+  pg3_date27 date default NULL,
+  pg3_gest27 varchar(6) default NULL,
+  pg3_ht27 varchar(6) default NULL,
+  pg3_wt27 varchar(6) default NULL,
+  pg3_presn27 varchar(6) default NULL,
+  pg3_FHR27 varchar(6) default NULL,
+  pg3_urinePr27 char(3) default NULL,
+  pg3_urineGl27 char(3) default NULL,
+  pg3_BP27 varchar(8) default NULL,
+  pg3_comments27 varchar(255) default NULL,
+  pg3_cig27 char(3) default NULL,
+  pg3_date28 date default NULL,
+  pg3_gest28 varchar(6) default NULL,
+  pg3_ht28 varchar(6) default NULL,
+  pg3_wt28 varchar(6) default NULL,
+  pg3_presn28 varchar(6) default NULL,
+  pg3_FHR28 varchar(6) default NULL,
+  pg3_urinePr28 char(3) default NULL,
+  pg3_urineGl28 char(3) default NULL,
+  pg3_BP28 varchar(8) default NULL,
+  pg3_comments28 varchar(255) default NULL,
+  pg3_cig28 char(3) default NULL,
+  pg3_date29 date default NULL,
+  pg3_gest29 varchar(6) default NULL,
+  pg3_ht29 varchar(6) default NULL,
+  pg3_wt29 varchar(6) default NULL,
+  pg3_presn29 varchar(6) default NULL,
+  pg3_FHR29 varchar(6) default NULL,
+  pg3_urinePr29 char(3) default NULL,
+  pg3_urineGl29 char(3) default NULL,
+  pg3_BP29 varchar(8) default NULL,
+  pg3_comments29 varchar(255) default NULL,
+  pg3_cig29 char(3) default NULL,
+  pg3_date30 date default NULL,
+  pg3_gest30 varchar(6) default NULL,
+  pg3_ht30 varchar(6) default NULL,
+  pg3_wt30 varchar(6) default NULL,
+  pg3_presn30 varchar(6) default NULL,
+  pg3_FHR30 varchar(6) default NULL,
+  pg3_urinePr30 char(3) default NULL,
+  pg3_urineGl30 char(3) default NULL,
+  pg3_BP30 varchar(8) default NULL,
+  pg3_comments30 varchar(255) default NULL,
+  pg3_cig30 char(3) default NULL,
+  pg3_date31 date default NULL,
+  pg3_gest31 varchar(6) default NULL,
+  pg3_ht31 varchar(6) default NULL,
+  pg3_wt31 varchar(6) default NULL,
+  pg3_presn31 varchar(6) default NULL,
+  pg3_FHR31 varchar(6) default NULL,
+  pg3_urinePr31 char(3) default NULL,
+  pg3_urineGl31 char(3) default NULL,
+  pg3_BP31 varchar(8) default NULL,
+  pg3_comments31 varchar(255) default NULL,
+  pg3_cig31 char(3) default NULL,
+  pg3_date32 date default NULL,
+  pg3_gest32 varchar(6) default NULL,
+  pg3_ht32 varchar(6) default NULL,
+  pg3_wt32 varchar(6) default NULL,
+  pg3_presn32 varchar(6) default NULL,
+  pg3_FHR32 varchar(6) default NULL,
+  pg3_urinePr32 char(3) default NULL,
+  pg3_urineGl32 char(3) default NULL,
+  pg3_BP32 varchar(8) default NULL,
+  pg3_comments32 varchar(255) default NULL,
+  pg3_cig32 char(3) default NULL,
+  pg3_date33 date default NULL,
+  pg3_gest33 varchar(6) default NULL,
+  pg3_ht33 varchar(6) default NULL,
+  pg3_wt33 varchar(6) default NULL,
+  pg3_presn33 varchar(6) default NULL,
+  pg3_FHR33 varchar(6) default NULL,
+  pg3_urinePr33 char(3) default NULL,
+  pg3_urineGl33 char(3) default NULL,
+  pg3_BP33 varchar(8) default NULL,
+  pg3_comments33 varchar(255) default NULL,
+  pg3_cig33 char(3) default NULL,
+  pg3_date34 date default NULL,
+  pg3_gest34 varchar(6) default NULL,
+  pg3_ht34 varchar(6) default NULL,
+  pg3_wt34 varchar(6) default NULL,
+  pg3_presn34 varchar(6) default NULL,
+  pg3_FHR34 varchar(6) default NULL,
+  pg3_urinePr34 char(3) default NULL,
+  pg3_urineGl34 char(3) default NULL,
+  pg3_BP34 varchar(8) default NULL,
+  pg3_comments34 varchar(255) default NULL,
+  pg3_cig34 char(3) default NULL,
+  ar2_obstetrician tinyint(1) default NULL,
+  ar2_pediatrician tinyint(1) default NULL,
+  ar2_anesthesiologist tinyint(1) default NULL,
+  ar2_socialWorker tinyint(1) default NULL,
+  ar2_dietician tinyint(1) default NULL,
+  ar2_otherAR2 tinyint(1) default NULL,
+  ar2_otherBox varchar(35) default NULL,
+  ar2_drugUse tinyint(1) default NULL,
+  ar2_smoking tinyint(1) default NULL,
+  ar2_alcohol tinyint(1) default NULL,
+  ar2_exercise tinyint(1) default NULL,
+  ar2_workPlan tinyint(1) default NULL,
+  ar2_intercourse tinyint(1) default NULL,
+  ar2_dental tinyint(1) default NULL,
+  ar2_travel tinyint(1) default NULL,
+  ar2_prenatal tinyint(1) default NULL,
+  ar2_breast tinyint(1) default NULL,
+  ar2_birth tinyint(1) default NULL,
+  ar2_preterm tinyint(1) default NULL,
+  ar2_prom tinyint(1) default NULL,
+  ar2_fetal tinyint(1) default NULL,
+  ar2_admission tinyint(1) default NULL,
+  ar2_labour tinyint(1) default NULL,
+  ar2_pain tinyint(1) default NULL,
+  ar2_depression tinyint(1) default NULL,
+  ar2_circumcision tinyint(1) default NULL,
+  ar2_car tinyint(1) default NULL,
+  ar2_contraception tinyint(1) default NULL,
+  ar2_onCall tinyint(1) default NULL,
+  ar2_uDate1 varchar(10) default NULL,
+  ar2_uGA1 varchar(10) default NULL,
+  ar2_uResults1 varchar(25) default NULL,
+  ar2_uDate2 varchar(10) default NULL,
+  ar2_uGA2 varchar(10) default NULL,
+  ar2_uResults2 varchar(25) default NULL,
+  ar2_uDate3 varchar(10) default NULL,
+  ar2_uGA3 varchar(10) default NULL,
+  ar2_uResults3 varchar(25) default NULL,
+  ar2_uDate4 varchar(10) default NULL,
+  ar2_uGA4 varchar(10) default NULL,
+  ar2_uResults4 varchar(25) default NULL,
+  ar2_pap varchar(20) default NULL,
+  ar2_commentsAR2 text,
+  ar2_chlamydia varchar(10) default NULL,
+  ar2_hiv varchar(10) default NULL,
+  ar2_vaginosis varchar(10) default NULL,
+  ar2_strep varchar(10) default NULL,
+  ar2_urineCulture varchar(10) default NULL,
+  ar2_sickleDex varchar(10) default NULL,
+  ar2_electro varchar(10) default NULL,
+  ar2_amnio varchar(10) default NULL,
+  ar2_glucose varchar(10) default NULL,
+  ar2_otherAR2Name varchar(20) default NULL,
+  ar2_otherResult varchar(10) default NULL,
+  ar2_psych varchar(25) default NULL,
+  pg1_signature varchar(50) default NULL,
+  pg2_signature varchar(50) default NULL,
+  pg3_signature varchar(50) default NULL,
+  pg1_formDate date default NULL,
+  pg2_formDate date default NULL,
+  pg3_formDate date default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formAR'
+--
+
+
+--
+-- Table structure for table 'formAlpha'
+--
+
+CREATE TABLE formAlpha (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  pName varchar(60) default NULL,
+  socialSupport text,
+  lifeEvents text,
+  coupleRelationship text,
+  prenatalCare text,
+  prenatalEducation text,
+  feelingsRePregnancy text,
+  relationshipParents text,
+  selfEsteem text,
+  psychHistory text,
+  depression text,
+  alcoholDrugAbuse text,
+  abuse text,
+  womanAbuse text,
+  childAbuse text,
+  childDiscipline text,
+  provCounselling tinyint(1) default NULL,
+  homecare tinyint(1) default NULL,
+  assaultedWomen tinyint(1) default NULL,
+  addAppts tinyint(1) default NULL,
+  parentingClasses tinyint(1) default NULL,
+  legalAdvice tinyint(1) default NULL,
+  postpartumAppts tinyint(1) default NULL,
+  addictPrograms tinyint(1) default NULL,
+  cas tinyint(1) default NULL,
+  babyVisits tinyint(1) default NULL,
+  quitSmoking tinyint(1) default NULL,
+  other1 tinyint(1) default NULL,
+  other1Name varchar(30) default NULL,
+  publicHealth tinyint(1) default NULL,
+  socialWorker tinyint(1) default NULL,
+  other2 tinyint(1) default NULL,
+  other2Name varchar(30) default NULL,
+  prenatalEdu tinyint(1) default NULL,
+  psych tinyint(1) default NULL,
+  other3 tinyint(1) default NULL,
+  other3Name varchar(30) default NULL,
+  nutritionist tinyint(1) default NULL,
+  therapist tinyint(1) default NULL,
+  other4 tinyint(1) default NULL,
+  other4Name varchar(30) default NULL,
+  resources tinyint(1) default NULL,
+  comments text,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formAlpha'
+--
+
+
+--
+-- Table structure for table 'formAnnual'
+--
+
+CREATE TABLE formAnnual (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) default NULL,
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  pName varchar(60) default NULL,
+  age char(3) default NULL,
+  formDate date default NULL,
+  currentConcerns text,
+  currentConcernsNo tinyint(1) default NULL,
+  currentConcernsYes tinyint(1) default NULL,
+  headN tinyint(1) default NULL,
+  headAbN tinyint(1) default NULL,
+  head varchar(30) default NULL,
+  respN tinyint(1) default NULL,
+  respAbN tinyint(1) default NULL,
+  resp varchar(30) default NULL,
+  cardioN tinyint(1) default NULL,
+  cardioAbN tinyint(1) default NULL,
+  cardio varchar(30) default NULL,
+  giN tinyint(1) default NULL,
+  giAbN tinyint(1) default NULL,
+  gi varchar(30) default NULL,
+  guN tinyint(1) default NULL,
+  guAbN tinyint(1) default NULL,
+  gu varchar(30) default NULL,
+  noGtpalRevisions tinyint(1) default NULL,
+  yesGtpalRevisions tinyint(1) default NULL,
+  frontSheet tinyint(1) default NULL,
+  lmp date default NULL,
+  menopause char(3) default NULL,
+  papSmearsN tinyint(1) default NULL,
+  papSmearsAbN tinyint(1) default NULL,
+  papSmears varchar(30) default NULL,
+  skinN tinyint(1) default NULL,
+  skinAbN tinyint(1) default NULL,
+  skin varchar(30) default NULL,
+  mskN tinyint(1) default NULL,
+  mskAbN tinyint(1) default NULL,
+  msk varchar(30) default NULL,
+  endocrinN tinyint(1) default NULL,
+  endocrinAbN tinyint(1) default NULL,
+  endocrin varchar(30) default NULL,
+  otherN tinyint(1) default NULL,
+  otherAbN tinyint(1) default NULL,
+  other varchar(255) default NULL,
+  drugs tinyint(1) default NULL,
+  medSheet tinyint(1) default NULL,
+  allergies tinyint(1) default NULL,
+  frontSheet1 tinyint(1) default NULL,
+  familyHistory tinyint(1) default NULL,
+  frontSheet2 tinyint(1) default NULL,
+  smokingNo tinyint(1) default NULL,
+  smokingYes tinyint(1) default NULL,
+  smoking varchar(30) default NULL,
+  sexualityNo tinyint(1) default NULL,
+  sexualityYes tinyint(1) default NULL,
+  sexuality varchar(30) default NULL,
+  alcoholNo tinyint(1) default NULL,
+  alcoholYes tinyint(1) default NULL,
+  alcohol varchar(30) default NULL,
+  occupationalNo tinyint(1) default NULL,
+  occupationalYes tinyint(1) default NULL,
+  occupational varchar(30) default NULL,
+  otcNo tinyint(1) default NULL,
+  otcYes tinyint(1) default NULL,
+  otc varchar(30) default NULL,
+  drivingNo tinyint(1) default NULL,
+  drivingYes tinyint(1) default NULL,
+  driving varchar(30) default NULL,
+  exerciseNo tinyint(1) default NULL,
+  exerciseYes tinyint(1) default NULL,
+  exercise varchar(30) default NULL,
+  travelNo tinyint(1) default NULL,
+  travelYes tinyint(1) default NULL,
+  travel varchar(30) default NULL,
+  nutritionNo tinyint(1) default NULL,
+  nutritionYes tinyint(1) default NULL,
+  nutrition varchar(30) default NULL,
+  otherNo tinyint(1) default NULL,
+  otherYes tinyint(1) default NULL,
+  otherLifestyle varchar(255) default NULL,
+  dentalNo tinyint(1) default NULL,
+  dentalYes tinyint(1) default NULL,
+  dental varchar(30) default NULL,
+  relationshipNo tinyint(1) default NULL,
+  relationshipYes tinyint(1) default NULL,
+  relationship varchar(150) default NULL,
+  mammogram tinyint(1) default NULL,
+  rectal tinyint(1) default NULL,
+  breast tinyint(1) default NULL,
+  maleCardiac tinyint(1) default NULL,
+  pap tinyint(1) default NULL,
+  maleImmunization tinyint(1) default NULL,
+  femaleImmunization tinyint(1) default NULL,
+  maleOther1c tinyint(1) default NULL,
+  maleOther1 varchar(30) default NULL,
+  precontraceptive tinyint(1) default NULL,
+  maleOther2c tinyint(1) default NULL,
+  maleOther2 varchar(30) default NULL,
+  femaleCardiac tinyint(1) default NULL,
+  osteoporosis tinyint(1) default NULL,
+  femaleOther1c tinyint(1) default NULL,
+  femaleOther1 varchar(30) default NULL,
+  femaleOther2c tinyint(1) default NULL,
+  femaleOther2 varchar(30) default NULL,
+  bprTop char(3) default NULL,
+  bprBottom char(3) default NULL,
+  pulse varchar(10) default NULL,
+  height varchar(4) default NULL,
+  weight varchar(4) default NULL,
+  bplTop char(3) default NULL,
+  bplBottom char(3) default NULL,
+  rhythm varchar(10) default NULL,
+  urine varchar(30) default NULL,
+  physicalSigns text,
+  assessment text,
+  plan text,
+  signature varchar(60) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formAnnual'
+--
+
+
+--
+-- Table structure for table 'formLabReq'
+--
+
+CREATE TABLE formLabReq (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) default NULL,
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  provName varchar(60) default NULL,
+  clinicAddress varchar(30) default NULL,
+  clinicCity varchar(20) default NULL,
+  clinicPC varchar(7) default NULL,
+  practitionerNo varchar(14) default NULL,
+  ohip tinyint(1) default NULL,
+  thirdParty tinyint(1) default NULL,
+  wcb tinyint(1) default NULL,
+  aci text,
+  healthNumber varchar(10) default NULL,
+  version char(2) default NULL,
+  birthDate date default NULL,
+  paymentProgram varchar(4) default NULL,
+  province varchar(15) default NULL,
+  orn varchar(12) default NULL,
+  phoneNumber varchar(12) default NULL,
+  patientName varchar(40) default NULL,
+  sex varchar(6) default NULL,
+  patientAddress varchar(20) default NULL,
+  patientCity varchar(20) default NULL,
+  patientPC varchar(7) default NULL,
+  b_glucose tinyint(1) default NULL,
+  b_creatine tinyint(1) default NULL,
+  b_uricAcid tinyint(1) default NULL,
+  b_sodium tinyint(1) default NULL,
+  b_potassium tinyint(1) default NULL,
+  b_chloride tinyint(1) default NULL,
+  b_ast tinyint(1) default NULL,
+  b_alkPhosphate tinyint(1) default NULL,
+  b_bilirubin tinyint(1) default NULL,
+  b_cholesterol tinyint(1) default NULL,
+  b_triglyceride tinyint(1) default NULL,
+  b_urinalysis tinyint(1) default NULL,
+  v_acuteHepatitis tinyint(1) default NULL,
+  v_chronicHepatitis tinyint(1) default NULL,
+  v_immune tinyint(1) default NULL,
+  v_hepA varchar(20) default NULL,
+  v_hepB varchar(20) default NULL,
+  h_bloodFilmExam tinyint(1) default NULL,
+  h_hemoglobin tinyint(1) default NULL,
+  h_wcbCount tinyint(1) default NULL,
+  h_hematocrit tinyint(1) default NULL,
+  h_prothrombTime tinyint(1) default NULL,
+  i_pregnancyTest tinyint(1) default NULL,
+  i_heterophile tinyint(1) default NULL,
+  i_rubella tinyint(1) default NULL,
+  i_prenatal tinyint(1) default NULL,
+  i_repeatPrenatal tinyint(1) default NULL,
+  i_prenatalHepatitisB tinyint(1) default NULL,
+  i_vdrl tinyint(1) default NULL,
+  m_cervicalVaginal tinyint(1) default NULL,
+  m_sputum tinyint(1) default NULL,
+  m_throat tinyint(1) default NULL,
+  m_urine tinyint(1) default NULL,
+  m_stoolCulture tinyint(1) default NULL,
+  m_other varchar(20) default NULL,
+  otherTest text,
+  formDate date default NULL,
+  signature varchar(60) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formLabReq'
+--
+
+
+--
+-- Table structure for table 'formMMSE'
+--
+
+CREATE TABLE formMMSE (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) default NULL,
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  pName varchar(50) default NULL,
+  age char(3) default NULL,
+  sex char(1) default NULL,
+  formDate date default NULL,
+  diagnosis text,
+  meds text,
+  o_date char(1) default NULL,
+  o_place char(1) default NULL,
+  r_objects char(1) default NULL,
+  a_serial char(1) default NULL,
+  re_name char(1) default NULL,
+  l_name char(1) default NULL,
+  l_repeat char(1) default NULL,
+  l_follow char(1) default NULL,
+  l_read char(1) default NULL,
+  l_write char(1) default NULL,
+  l_copy char(1) default NULL,
+  total char(2) default NULL,
+  lc_alert tinyint(1) default NULL,
+  lc_drowsy tinyint(1) default NULL,
+  lc_stupor tinyint(1) default NULL,
+  lc_coma tinyint(1) default NULL,
+  i_dementia tinyint(1) default NULL,
+  i_depression tinyint(1) default NULL,
+  i_normal tinyint(1) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formMMSE'
+--
+
+
+--
+-- Table structure for table 'formMentalHealth'
+--
+
+CREATE TABLE formMentalHealth (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  c_lastVisited varchar(15) default NULL,
+  c_pName varchar(60) default NULL,
+  c_address varchar(80) default NULL,
+  c_birthDate date default NULL,
+  c_sex varchar(6) default NULL,
+  c_homePhone varchar(10) default NULL,
+  c_referralDate date default NULL,
+  c_referredBy varchar(30) default NULL,
+  r_rps1 char(2) default NULL,
+  r_rps2 char(2) default NULL,
+  r_rps3 char(2) default NULL,
+  r_rpsOther varchar(30) default NULL,
+  r_rpi1 char(2) default NULL,
+  r_rpi2 char(2) default NULL,
+  r_rpi3 char(2) default NULL,
+  r_rpiOther varchar(30) default NULL,
+  r_rmpi1 char(2) default NULL,
+  r_rmpi2 char(2) default NULL,
+  r_rmpi3 char(2) default NULL,
+  r_rmpiOther varchar(30) default NULL,
+  r_ir1 char(2) default NULL,
+  r_ir2 char(2) default NULL,
+  r_ir3 char(2) default NULL,
+  r_irOther varchar(30) default NULL,
+  r_arm1 char(2) default NULL,
+  r_arm2 char(2) default NULL,
+  r_arm3 char(2) default NULL,
+  r_armOther varchar(30) default NULL,
+  r_refComments text,
+  a_specialist varchar(30) default NULL,
+  a_aps1 char(2) default NULL,
+  a_aps2 char(2) default NULL,
+  a_aps3 char(2) default NULL,
+  a_apsOther varchar(30) default NULL,
+  a_api1 char(2) default NULL,
+  a_api2 char(2) default NULL,
+  a_api3 char(2) default NULL,
+  a_apiOther varchar(30) default NULL,
+  a_ampi1 char(2) default NULL,
+  a_ampi2 char(2) default NULL,
+  a_ampi3 char(2) default NULL,
+  a_ampiOther varchar(50) default NULL,
+  a_assComments text,
+  a_tp1 char(2) default NULL,
+  a_tp2 char(2) default NULL,
+  a_tp3 char(2) default NULL,
+  a_tpOther varchar(30) default NULL,
+  o_specialist varchar(30) default NULL,
+  o_numVisits varchar(5) default NULL,
+  o_formDate date default NULL,
+  o_sp1 char(2) default NULL,
+  o_sp2 char(2) default NULL,
+  o_sp3 char(2) default NULL,
+  o_spOther varchar(30) default NULL,
+  o_pe1 char(2) default NULL,
+  o_pe2 char(2) default NULL,
+  o_pe3 char(2) default NULL,
+  o_peOther varchar(30) default NULL,
+  o_d1 char(2) default NULL,
+  o_d2 char(2) default NULL,
+  o_d3 char(2) default NULL,
+  o_dOther varchar(30) default NULL,
+  o_pns1 char(2) default NULL,
+  o_pns2 char(2) default NULL,
+  o_pns3 char(2) default NULL,
+  o_pnsOther varchar(30) default NULL,
+  o_outComments text,
+  a_formDate date default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formMentalHealth'
+--
+
+
+--
+-- Table structure for table 'formPalliativeCare'
+--
+
+CREATE TABLE formPalliativeCare (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) default NULL,
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  pName varchar(60) default NULL,
+  diagnosis varchar(60) default NULL,
+  date1 date default NULL,
+  date2 date default NULL,
+  date3 date default NULL,
+  date4 date default NULL,
+  pain1 varchar(255) default NULL,
+  pain2 varchar(255) default NULL,
+  pain3 varchar(255) default NULL,
+  pain4 varchar(255) default NULL,
+  giBowels1 varchar(255) default NULL,
+  giBowels2 varchar(255) default NULL,
+  giBowels3 varchar(255) default NULL,
+  giBowels4 varchar(255) default NULL,
+  giNausea1 varchar(255) default NULL,
+  giNausea2 varchar(255) default NULL,
+  giNausea3 varchar(255) default NULL,
+  giNausea4 varchar(255) default NULL,
+  giDysphagia1 varchar(255) default NULL,
+  giDysphagia2 varchar(255) default NULL,
+  giDysphagia3 varchar(255) default NULL,
+  giDysphagia4 varchar(255) default NULL,
+  giHiccups1 varchar(255) default NULL,
+  giHiccups2 varchar(255) default NULL,
+  giHiccups3 varchar(255) default NULL,
+  giHiccups4 varchar(255) default NULL,
+  giMouth1 varchar(255) default NULL,
+  giMouth2 varchar(255) default NULL,
+  giMouth3 varchar(255) default NULL,
+  giMouth4 varchar(255) default NULL,
+  gu1 varchar(255) default NULL,
+  gu2 varchar(255) default NULL,
+  gu3 varchar(255) default NULL,
+  gu4 varchar(255) default NULL,
+  skinUlcers1 varchar(255) default NULL,
+  skinUlcers2 varchar(255) default NULL,
+  skinUlcers3 varchar(255) default NULL,
+  skinUlcers4 varchar(255) default NULL,
+  skinPruritis1 varchar(255) default NULL,
+  skinPruritis2 varchar(255) default NULL,
+  skinPruritis3 varchar(255) default NULL,
+  skinPruritis4 varchar(255) default NULL,
+  psychAgitation1 varchar(255) default NULL,
+  psychAgitation2 varchar(255) default NULL,
+  psychAgitation3 varchar(255) default NULL,
+  psychAgitation4 varchar(255) default NULL,
+  psychAnorexia1 varchar(255) default NULL,
+  psychAnorexia2 varchar(255) default NULL,
+  psychAnorexia3 varchar(255) default NULL,
+  psychAnorexia4 varchar(255) default NULL,
+  psychAnxiety1 varchar(255) default NULL,
+  psychAnxiety2 varchar(255) default NULL,
+  psychAnxiety3 varchar(255) default NULL,
+  psychAnxiety4 varchar(255) default NULL,
+  psychDepression1 varchar(255) default NULL,
+  psychDepression2 varchar(255) default NULL,
+  psychDepression3 varchar(255) default NULL,
+  psychDepression4 varchar(255) default NULL,
+  psychFatigue1 varchar(255) default NULL,
+  psychFatigue2 varchar(255) default NULL,
+  psychFatigue3 varchar(255) default NULL,
+  psychFatigue4 varchar(255) default NULL,
+  psychSomnolence1 varchar(255) default NULL,
+  psychSomnolence2 varchar(255) default NULL,
+  psychSomnolence3 varchar(255) default NULL,
+  psychSomnolence4 varchar(255) default NULL,
+  respCough1 varchar(255) default NULL,
+  respCough2 varchar(255) default NULL,
+  respCough3 varchar(255) default NULL,
+  respCough4 varchar(255) default NULL,
+  respDyspnea1 varchar(255) default NULL,
+  respDyspnea2 varchar(255) default NULL,
+  respDyspnea3 varchar(255) default NULL,
+  respDyspnea4 varchar(255) default NULL,
+  respFever1 varchar(255) default NULL,
+  respFever2 varchar(255) default NULL,
+  respFever3 varchar(255) default NULL,
+  respFever4 varchar(255) default NULL,
+  respCaregiver1 varchar(255) default NULL,
+  respCaregiver2 varchar(255) default NULL,
+  respCaregiver3 varchar(255) default NULL,
+  respCaregiver4 varchar(255) default NULL,
+  other1 varchar(255) default NULL,
+  other2 varchar(255) default NULL,
+  other3 varchar(255) default NULL,
+  other4 varchar(255) default NULL,
+  signature1 varchar(50) default NULL,
+  signature2 varchar(50) default NULL,
+  signature3 varchar(50) default NULL,
+  signature4 varchar(50) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formPalliativeCare'
+--
+
+
+--
+-- Table structure for table 'formPeriMenopausal'
+--
+
+CREATE TABLE formPeriMenopausal (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  lastVisited char(1) default NULL,
+  pName varchar(60) default NULL,
+  ageMenopause char(2) default NULL,
+  age char(3) default NULL,
+  orf_emYes tinyint(1) default NULL,
+  orf_emNo tinyint(1) default NULL,
+  orf_fhoYes tinyint(1) default NULL,
+  orf_fhoNo tinyint(1) default NULL,
+  orf_fhofYes tinyint(1) default NULL,
+  orf_fhofNo tinyint(1) default NULL,
+  orf_lhYes tinyint(1) default NULL,
+  orf_lhNo tinyint(1) default NULL,
+  orf_phfYes tinyint(1) default NULL,
+  orf_phfNo tinyint(1) default NULL,
+  orf_warYes tinyint(1) default NULL,
+  orf_warNo tinyint(1) default NULL,
+  orf_tsbYes tinyint(1) default NULL,
+  orf_tsbNo tinyint(1) default NULL,
+  orf_hipYes tinyint(1) default NULL,
+  orf_hipNo tinyint(1) default NULL,
+  orf_ieYes tinyint(1) default NULL,
+  orf_ieNo tinyint(1) default NULL,
+  orf_llciYes tinyint(1) default NULL,
+  orf_llciNo tinyint(1) default NULL,
+  orf_csYes tinyint(1) default NULL,
+  orf_csNo tinyint(1) default NULL,
+  orf_cYes tinyint(1) default NULL,
+  orf_cNo tinyint(1) default NULL,
+  orf_aYes tinyint(1) default NULL,
+  orf_aNo tinyint(1) default NULL,
+  orf_cptdYes tinyint(1) default NULL,
+  orf_cptdNo tinyint(1) default NULL,
+  orf_dcYes tinyint(1) default NULL,
+  orf_dcNo tinyint(1) default NULL,
+  orf_adYes tinyint(1) default NULL,
+  orf_adNo tinyint(1) default NULL,
+  orf_tmYes tinyint(1) default NULL,
+  orf_tmNo tinyint(1) default NULL,
+  orf_comments varchar(255) default NULL,
+  cs_mcYes tinyint(1) default NULL,
+  cs_mcNo tinyint(1) default NULL,
+  cs_mpYes tinyint(1) default NULL,
+  cs_mpNo tinyint(1) default NULL,
+  cs_hfYes tinyint(1) default NULL,
+  cs_hfNo tinyint(1) default NULL,
+  cs_vdYes tinyint(1) default NULL,
+  cs_vdNo tinyint(1) default NULL,
+  cs_dsiYes tinyint(1) default NULL,
+  cs_dsiNo tinyint(1) default NULL,
+  cs_lisaYes tinyint(1) default NULL,
+  cs_lisaNo tinyint(1) default NULL,
+  cs_lbcYes tinyint(1) default NULL,
+  cs_lbcNo tinyint(1) default NULL,
+  cs_hbiYes tinyint(1) default NULL,
+  cs_hbiNo tinyint(1) default NULL,
+  cs_comments varchar(255) default NULL,
+  crf_fhhdYes tinyint(1) default NULL,
+  crf_fhhdNo tinyint(1) default NULL,
+  crf_haYes tinyint(1) default NULL,
+  crf_haNo tinyint(1) default NULL,
+  crf_hchfYes tinyint(1) default NULL,
+  crf_hchfNo tinyint(1) default NULL,
+  crf_hhaYes tinyint(1) default NULL,
+  crf_hhaNo tinyint(1) default NULL,
+  crf_hdYes tinyint(1) default NULL,
+  crf_hdNo tinyint(1) default NULL,
+  crf_csYes tinyint(1) default NULL,
+  crf_csNo tinyint(1) default NULL,
+  crf_hbpYes tinyint(1) default NULL,
+  crf_hbpNo tinyint(1) default NULL,
+  crf_lhcYes tinyint(1) default NULL,
+  crf_lhcNo tinyint(1) default NULL,
+  crf_htYes tinyint(1) default NULL,
+  crf_htNo tinyint(1) default NULL,
+  crf_hlcYes tinyint(1) default NULL,
+  crf_hlcNo tinyint(1) default NULL,
+  crf_oYes tinyint(1) default NULL,
+  crf_oNo tinyint(1) default NULL,
+  crf_slYes tinyint(1) default NULL,
+  crf_slNo tinyint(1) default NULL,
+  crf_comments varchar(255) default NULL,
+  rh_fhbcYes tinyint(1) default NULL,
+  rh_fhbcNo tinyint(1) default NULL,
+  rh_phbcYes tinyint(1) default NULL,
+  rh_phbcNo tinyint(1) default NULL,
+  rh_phocYes tinyint(1) default NULL,
+  rh_phocNo tinyint(1) default NULL,
+  ageHysterectomy char(2) default NULL,
+  rh_hYes tinyint(1) default NULL,
+  rh_hNo tinyint(1) default NULL,
+  rh_hwroYes tinyint(1) default NULL,
+  rh_hwroNo tinyint(1) default NULL,
+  rh_hpcbYes tinyint(1) default NULL,
+  rh_hpcbNo tinyint(1) default NULL,
+  rh_fhadYes tinyint(1) default NULL,
+  rh_fhadNo tinyint(1) default NULL,
+  rh_fhccYes tinyint(1) default NULL,
+  rh_fhccNo tinyint(1) default NULL,
+  rh_other varchar(60) default NULL,
+  rh_oYes tinyint(1) default NULL,
+  rh_oNo tinyint(1) default NULL,
+  rh_comments varchar(255) default NULL,
+  cm_cs varchar(30) default NULL,
+  cm_vds varchar(30) default NULL,
+  cm_other1 varchar(30) default NULL,
+  cm_o1 varchar(30) default NULL,
+  cm_other2 varchar(30) default NULL,
+  cm_o2 varchar(30) default NULL,
+  cm_comments varchar(255) default NULL,
+  phrtYes tinyint(1) default NULL,
+  phrtNo tinyint(1) default NULL,
+  estrogenYes tinyint(1) default NULL,
+  estrogenNo tinyint(1) default NULL,
+  progesteroneYes tinyint(1) default NULL,
+  progesteroneNo tinyint(1) default NULL,
+  hrtYes tinyint(1) default NULL,
+  hrtNo tinyint(1) default NULL,
+  whenHrt varchar(20) default NULL,
+  reasonDiscontinued varchar(100) default NULL,
+  date1 date default NULL,
+  date2 date default NULL,
+  date3 date default NULL,
+  date4 date default NULL,
+  date5 date default NULL,
+  date6 date default NULL,
+  date7 date default NULL,
+  date8 date default NULL,
+  etohUse1 varchar(100) default NULL,
+  etohUse2 varchar(100) default NULL,
+  etohUse3 varchar(100) default NULL,
+  etohUse4 varchar(100) default NULL,
+  smokingCessation1 varchar(100) default NULL,
+  smokingCessation2 varchar(100) default NULL,
+  smokingCessation3 varchar(100) default NULL,
+  smokingCessation4 varchar(100) default NULL,
+  exercise1 varchar(100) default NULL,
+  exercise2 varchar(100) default NULL,
+  exercise3 varchar(100) default NULL,
+  exercise4 varchar(100) default NULL,
+  vision1 varchar(100) default NULL,
+  vision2 varchar(100) default NULL,
+  vision3 varchar(100) default NULL,
+  vision4 varchar(100) default NULL,
+  lowFat1 varchar(100) default NULL,
+  lowFat2 varchar(100) default NULL,
+  lowFat3 varchar(100) default NULL,
+  lowFat4 varchar(100) default NULL,
+  tdLast1 varchar(100) default NULL,
+  tdLast2 varchar(100) default NULL,
+  tdLast3 varchar(100) default NULL,
+  tdLast4 varchar(100) default NULL,
+  calcium1 varchar(100) default NULL,
+  calcium2 varchar(100) default NULL,
+  calcium3 varchar(100) default NULL,
+  calcium4 varchar(100) default NULL,
+  flu1 varchar(100) default NULL,
+  flu2 varchar(100) default NULL,
+  flu3 varchar(100) default NULL,
+  flu4 varchar(100) default NULL,
+  vitaminD1 varchar(100) default NULL,
+  vitaminD2 varchar(100) default NULL,
+  vitaminD3 varchar(100) default NULL,
+  vitaminD4 varchar(100) default NULL,
+  pneumovaxDate date default NULL,
+  pneumovax1 varchar(100) default NULL,
+  pneumovax2 varchar(100) default NULL,
+  pneumovax3 varchar(100) default NULL,
+  pneumovax4 varchar(100) default NULL,
+  papSmear1 varchar(100) default NULL,
+  papSmear2 varchar(100) default NULL,
+  papSmear3 varchar(100) default NULL,
+  papSmear4 varchar(100) default NULL,
+  height1 varchar(100) default NULL,
+  height2 varchar(100) default NULL,
+  height3 varchar(100) default NULL,
+  height4 varchar(100) default NULL,
+  bloodPressure1 varchar(100) default NULL,
+  bloodPressure2 varchar(100) default NULL,
+  bloodPressure3 varchar(100) default NULL,
+  bloodPressure4 varchar(100) default NULL,
+  weight1 varchar(100) default NULL,
+  weight2 varchar(100) default NULL,
+  weight3 varchar(100) default NULL,
+  weight4 varchar(100) default NULL,
+  cbe1 varchar(100) default NULL,
+  cbe2 varchar(100) default NULL,
+  cbe3 varchar(100) default NULL,
+  cbe4 varchar(100) default NULL,
+  bmd1 varchar(100) default NULL,
+  bmd2 varchar(100) default NULL,
+  bmd3 varchar(100) default NULL,
+  bmd4 varchar(100) default NULL,
+  mammography1 varchar(100) default NULL,
+  mammography2 varchar(100) default NULL,
+  mammography3 varchar(100) default NULL,
+  mammography4 varchar(100) default NULL,
+  other1 varchar(30) default NULL,
+  other11 varchar(100) default NULL,
+  other12 varchar(100) default NULL,
+  other13 varchar(100) default NULL,
+  other14 varchar(100) default NULL,
+  other2 varchar(30) default NULL,
+  other21 varchar(100) default NULL,
+  other22 varchar(100) default NULL,
+  other23 varchar(100) default NULL,
+  other24 varchar(100) default NULL,
+  other3 varchar(30) default NULL,
+  other31 varchar(100) default NULL,
+  other32 varchar(100) default NULL,
+  other33 varchar(100) default NULL,
+  other34 varchar(100) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formPeriMenopausal'
+--
+
+
+--
+-- Table structure for table 'formRourke'
+--
+
+CREATE TABLE formRourke (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) default NULL,
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  c_lastVisited char(1) default NULL,
+  c_birthRemarks text,
+  c_riskFactors text,
+  c_pName varchar(60) default NULL,
+  c_birthDate date default NULL,
+  c_length varchar(6) default NULL,
+  c_headCirc varchar(6) default NULL,
+  c_birthWeight varchar(7) default NULL,
+  c_dischargeWeight varchar(7) default NULL,
+  p1_date1w date default NULL,
+  p1_date2w date default NULL,
+  p1_date1m date default NULL,
+  p1_date2m date default NULL,
+  p1_ht1w varchar(5) default NULL,
+  p1_wt1w varchar(5) default NULL,
+  p1_hc1w varchar(5) default NULL,
+  p1_ht2w varchar(5) default NULL,
+  p1_wt2w varchar(5) default NULL,
+  p1_hc2w varchar(5) default NULL,
+  p1_ht1m varchar(5) default NULL,
+  p1_wt1m varchar(5) default NULL,
+  p1_hc1m varchar(5) default NULL,
+  p1_ht2m varchar(5) default NULL,
+  p1_wt2m varchar(5) default NULL,
+  p1_hc2m varchar(5) default NULL,
+  p1_pConcern1w text,
+  p1_pConcern2w text,
+  p1_pConcern1m text,
+  p1_pConcern2m text,
+  p1_breastFeeding1w tinyint(1) default NULL,
+  p1_formulaFeeding1w tinyint(1) default NULL,
+  p1_stoolUrine1w tinyint(1) default NULL,
+  p1_nutrition1w varchar(50) default NULL,
+  p1_breastFeeding2w tinyint(1) default NULL,
+  p1_formulaFeeding2w tinyint(1) default NULL,
+  p1_stoolUrine2w tinyint(1) default NULL,
+  p1_nutrition2w varchar(50) default NULL,
+  p1_breastFeeding1m tinyint(1) default NULL,
+  p1_formulaFeeding1m tinyint(1) default NULL,
+  p1_stoolUrine1m tinyint(1) default NULL,
+  p1_nutrition1m varchar(50) default NULL,
+  p1_breastFeeding2m tinyint(1) default NULL,
+  p1_formulaFeeding2m tinyint(1) default NULL,
+  p1_nutrition2m varchar(50) default NULL,
+  p1_carSeat1w tinyint(1) default NULL,
+  p1_cribSafety1w tinyint(1) default NULL,
+  p1_sleeping1w tinyint(1) default NULL,
+  p1_sooth1w tinyint(1) default NULL,
+  p1_bonding1w tinyint(1) default NULL,
+  p1_fatigue1w tinyint(1) default NULL,
+  p1_siblings1w tinyint(1) default NULL,
+  p1_family1w tinyint(1) default NULL,
+  p1_homeVisit1w tinyint(1) default NULL,
+  p1_sleepPos1w tinyint(1) default NULL,
+  p1_temp1w tinyint(1) default NULL,
+  p1_smoke1w tinyint(1) default NULL,
+  p1_educationAdvice1w varchar(50) default NULL,
+  p1_carSeat2w tinyint(1) default NULL,
+  p1_cribSafety2w tinyint(1) default NULL,
+  p1_sleeping2w tinyint(1) default NULL,
+  p1_sooth2w tinyint(1) default NULL,
+  p1_bonding2w tinyint(1) default NULL,
+  p1_fatigue2w tinyint(1) default NULL,
+  p1_family2w tinyint(1) default NULL,
+  p1_siblings2w tinyint(1) default NULL,
+  p1_homeVisit2w tinyint(1) default NULL,
+  p1_sleepPos2w tinyint(1) default NULL,
+  p1_temp2w tinyint(1) default NULL,
+  p1_smoke2w tinyint(1) default NULL,
+  p1_educationAdvice2w varchar(50) default NULL,
+  p1_carbonMonoxide1m tinyint(1) default NULL,
+  p1_sleepwear1m tinyint(1) default NULL,
+  p1_hotWater1m tinyint(1) default NULL,
+  p1_toys1m tinyint(1) default NULL,
+  p1_crying1m tinyint(1) default NULL,
+  p1_sooth1m tinyint(1) default NULL,
+  p1_interaction1m tinyint(1) default NULL,
+  p1_supports1m tinyint(1) default NULL,
+  p1_educationAdvice1m varchar(50) default NULL,
+  p1_falls2m tinyint(1) default NULL,
+  p1_toys2m tinyint(1) default NULL,
+  p1_crying2m tinyint(1) default NULL,
+  p1_sooth2m tinyint(1) default NULL,
+  p1_interaction2m tinyint(1) default NULL,
+  p1_stress2m tinyint(1) default NULL,
+  p1_fever2m tinyint(1) default NULL,
+  p1_educationAdvice2m varchar(50) default NULL,
+  p1_development1w varchar(50) default NULL,
+  p1_development2w varchar(50) default NULL,
+  p1_focusGaze1m tinyint(1) default NULL,
+  p1_startles1m tinyint(1) default NULL,
+  p1_sucks1m tinyint(1) default NULL,
+  p1_noParentsConcerns1m tinyint(1) default NULL,
+  p1_development1m varchar(50) default NULL,
+  p1_followMoves2m tinyint(1) default NULL,
+  p1_sounds2m tinyint(1) default NULL,
+  p1_headUp2m tinyint(1) default NULL,
+  p1_cuddled2m tinyint(1) default NULL,
+  p1_noParentConcerns2m tinyint(1) default NULL,
+  p1_development2m varchar(50) default NULL,
+  p1_skin1w tinyint(1) default NULL,
+  p1_fontanelles1w tinyint(1) default NULL,
+  p1_eyes1w tinyint(1) default NULL,
+  p1_ears1w tinyint(1) default NULL,
+  p1_heartLungs1w tinyint(1) default NULL,
+  p1_umbilicus1w tinyint(1) default NULL,
+  p1_femoralPulses1w tinyint(1) default NULL,
+  p1_hips1w tinyint(1) default NULL,
+  p1_testicles1w tinyint(1) default NULL,
+  p1_maleUrinary1w tinyint(1) default NULL,
+  p1_physical1w varchar(50) default NULL,
+  p1_skin2w tinyint(1) default NULL,
+  p1_fontanelles2w tinyint(1) default NULL,
+  p1_eyes2w tinyint(1) default NULL,
+  p1_ears2w tinyint(1) default NULL,
+  p1_heartLungs2w tinyint(1) default NULL,
+  p1_umbilicus2w tinyint(1) default NULL,
+  p1_femoralPulses2w tinyint(1) default NULL,
+  p1_hips2w tinyint(1) default NULL,
+  p1_testicles2w tinyint(1) default NULL,
+  p1_maleUrinary2w tinyint(1) default NULL,
+  p1_physical2w varchar(50) default NULL,
+  p1_fontanelles1m tinyint(1) default NULL,
+  p1_eyes1m tinyint(1) default NULL,
+  p1_cover1m tinyint(1) default NULL,
+  p1_hearing1m tinyint(1) default NULL,
+  p1_heart1m tinyint(1) default NULL,
+  p1_hips1m tinyint(1) default NULL,
+  p1_physical1m varchar(50) default NULL,
+  p1_fontanelles2m tinyint(1) default NULL,
+  p1_eyes2m tinyint(1) default NULL,
+  p1_cover2m tinyint(1) default NULL,
+  p1_hearing2m tinyint(1) default NULL,
+  p1_heart2m tinyint(1) default NULL,
+  p1_hips2m tinyint(1) default NULL,
+  p1_physical2m varchar(50) default NULL,
+  p1_pkuThyroid1w tinyint(1) default NULL,
+  p1_hemoScreen1w tinyint(1) default NULL,
+  p1_problems1w varchar(50) default NULL,
+  p1_problems2w varchar(50) default NULL,
+  p1_problems1m varchar(50) default NULL,
+  p1_problems2m varchar(50) default NULL,
+  p1_hepB1w tinyint(1) default NULL,
+  p1_immunization1w varchar(50) default NULL,
+  p1_immunization2w varchar(50) default NULL,
+  p1_immuniz1m tinyint(1) default NULL,
+  p1_acetaminophen1m tinyint(1) default NULL,
+  p1_hepB1m tinyint(1) default NULL,
+  p1_immunization1m varchar(50) default NULL,
+  p1_acetaminophen2m tinyint(1) default NULL,
+  p1_hib2m tinyint(1) default NULL,
+  p1_polio2m tinyint(1) default NULL,
+  p1_immunization2m varchar(50) default NULL,
+  p1_signature1w varchar(50) default NULL,
+  p1_signature2w varchar(50) default NULL,
+  p1_signature1m varchar(50) default NULL,
+  p1_signature2m varchar(50) default NULL,
+  p2_date4m date default NULL,
+  p2_date6m date default NULL,
+  p2_date9m date default NULL,
+  p2_date12m date default NULL,
+  p2_ht4m varchar(5) default NULL,
+  p2_wt4m varchar(5) default NULL,
+  p2_hc4m varchar(5) default NULL,
+  p2_ht6m varchar(5) default NULL,
+  p2_wt6m varchar(5) default NULL,
+  p2_hc6m varchar(5) default NULL,
+  p2_ht9m varchar(5) default NULL,
+  p2_wt9m varchar(5) default NULL,
+  p2_hc9m varchar(5) default NULL,
+  p2_ht12m varchar(5) default NULL,
+  p2_wt12m varchar(5) default NULL,
+  p2_hc12m varchar(5) default NULL,
+  p2_pConcern4m text,
+  p2_pConcern6m text,
+  p2_pConcern9m text,
+  p2_pConcern12m text,
+  p2_breastFeeding4m tinyint(1) default NULL,
+  p2_formulaFeeding4m tinyint(1) default NULL,
+  p2_cereal4m tinyint(1) default NULL,
+  p2_nutrition4m varchar(50) default NULL,
+  p2_breastFeeding6m tinyint(1) default NULL,
+  p2_formulaFeeding6m tinyint(1) default NULL,
+  p2_bottle6m tinyint(1) default NULL,
+  p2_vegFruit6m tinyint(1) default NULL,
+  p2_egg6m tinyint(1) default NULL,
+  p2_choking6m tinyint(1) default NULL,
+  p2_nutrition6m varchar(50) default NULL,
+  p2_breastFeeding9m tinyint(1) default NULL,
+  p2_formulaFeeding9m tinyint(1) default NULL,
+  p2_bottle9m tinyint(1) default NULL,
+  p2_meat9m tinyint(1) default NULL,
+  p2_milk9m tinyint(1) default NULL,
+  p2_egg9m tinyint(1) default NULL,
+  p2_choking9m tinyint(1) default NULL,
+  p2_nutrition9m varchar(50) default NULL,
+  p2_milk12m tinyint(1) default NULL,
+  p2_bottle12m tinyint(1) default NULL,
+  p2_appetite12m tinyint(1) default NULL,
+  p2_nutrition12m varchar(50) default NULL,
+  p2_carSeat4m tinyint(1) default NULL,
+  p2_stairs4m tinyint(1) default NULL,
+  p2_bath4m tinyint(1) default NULL,
+  p2_sleeping4m tinyint(1) default NULL,
+  p2_parent4m tinyint(1) default NULL,
+  p2_childCare4m tinyint(1) default NULL,
+  p2_family4m tinyint(1) default NULL,
+  p2_teething4m tinyint(1) default NULL,
+  p2_educationAdvice4m varchar(50) default NULL,
+  p2_poison6m tinyint(1) default NULL,
+  p2_electric6m tinyint(1) default NULL,
+  p2_sleeping6m tinyint(1) default NULL,
+  p2_parent6m tinyint(1) default NULL,
+  p2_childCare6m tinyint(1) default NULL,
+  p2_educationAdvice6m varchar(50) default NULL,
+  p2_childProof9m tinyint(1) default NULL,
+  p2_separation9m tinyint(1) default NULL,
+  p2_sleeping9m tinyint(1) default NULL,
+  p2_dayCare9m tinyint(1) default NULL,
+  p2_homeVisit9m tinyint(1) default NULL,
+  p2_smoke9m tinyint(1) default NULL,
+  p2_educationAdvice9m varchar(50) default NULL,
+  p2_poison12m tinyint(1) default NULL,
+  p2_electric12m tinyint(1) default NULL,
+  p2_carbon12m tinyint(1) default NULL,
+  p2_hotWater12m tinyint(1) default NULL,
+  p2_sleeping12m tinyint(1) default NULL,
+  p2_parent12m tinyint(1) default NULL,
+  p2_teething12m tinyint(1) default NULL,
+  p2_educationAdvice12m varchar(50) default NULL,
+  p2_turnHead4m tinyint(1) default NULL,
+  p2_laugh4m tinyint(1) default NULL,
+  p2_headSteady4m tinyint(1) default NULL,
+  p2_grasp4m tinyint(1) default NULL,
+  p2_concern4m tinyint(1) default NULL,
+  p2_development4m varchar(50) default NULL,
+  p2_follow6m tinyint(1) default NULL,
+  p2_respond6m tinyint(1) default NULL,
+  p2_babbles6m tinyint(1) default NULL,
+  p2_rolls6m tinyint(1) default NULL,
+  p2_sits6m tinyint(1) default NULL,
+  p2_mouth6m tinyint(1) default NULL,
+  p2_concern6m tinyint(1) default NULL,
+  p2_development6m varchar(50) default NULL,
+  p2_looks9m tinyint(1) default NULL,
+  p2_babbles9m tinyint(1) default NULL,
+  p2_sits9m tinyint(1) default NULL,
+  p2_stands9m tinyint(1) default NULL,
+  p2_opposes9m tinyint(1) default NULL,
+  p2_reaches9m tinyint(1) default NULL,
+  p2_noParentsConcerns9m tinyint(1) default NULL,
+  p2_development9m varchar(50) default NULL,
+  p2_understands12m tinyint(1) default NULL,
+  p2_chatters12m tinyint(1) default NULL,
+  p2_crawls12m tinyint(1) default NULL,
+  p2_pulls12m tinyint(1) default NULL,
+  p2_emotions12m tinyint(1) default NULL,
+  p2_noParentConcerns12m tinyint(1) default NULL,
+  p2_development12m varchar(50) default NULL,
+  p2_eyes4m tinyint(1) default NULL,
+  p2_cover4m tinyint(1) default NULL,
+  p2_hearing4m tinyint(1) default NULL,
+  p2_babbling4m tinyint(1) default NULL,
+  p2_hips4m tinyint(1) default NULL,
+  p2_physical4m varchar(50) default NULL,
+  p2_fontanelles6m tinyint(1) default NULL,
+  p2_eyes6m tinyint(1) default NULL,
+  p2_cover6m tinyint(1) default NULL,
+  p2_hearing6m tinyint(1) default NULL,
+  p2_hips6m tinyint(1) default NULL,
+  p2_physical6m varchar(50) default NULL,
+  p2_eyes9m tinyint(1) default NULL,
+  p2_cover9m tinyint(1) default NULL,
+  p2_hearing9m tinyint(1) default NULL,
+  p2_physical9m varchar(50) default NULL,
+  p2_eyes12m tinyint(1) default NULL,
+  p2_cover12m tinyint(1) default NULL,
+  p2_hearing12m tinyint(1) default NULL,
+  p2_hips12m tinyint(1) default NULL,
+  p2_physical12m varchar(50) default NULL,
+  p2_problems4m varchar(50) default NULL,
+  p2_tb6m tinyint(1) default NULL,
+  p2_problems6m varchar(50) default NULL,
+  p2_antiHbs9m tinyint(1) default NULL,
+  p2_hgb9m tinyint(1) default NULL,
+  p2_problems9m varchar(50) default NULL,
+  p2_hgb12m tinyint(1) default NULL,
+  p2_serum12m tinyint(1) default NULL,
+  p2_problems12m varchar(50) default NULL,
+  p2_hib4m tinyint(1) default NULL,
+  p2_polio4m tinyint(1) default NULL,
+  p2_immunization4m varchar(50) default NULL,
+  p2_hib6m tinyint(1) default NULL,
+  p2_polio6m tinyint(1) default NULL,
+  p2_hepB6m tinyint(1) default NULL,
+  p2_immunization6m varchar(50) default NULL,
+  p2_tbSkin9m tinyint(1) default NULL,
+  p2_immunization9m varchar(50) default NULL,
+  p2_mmr12m tinyint(1) default NULL,
+  p2_varicella12m tinyint(1) default NULL,
+  p2_immunization12m varchar(50) default NULL,
+  p2_signature4m varchar(50) default NULL,
+  p2_signature6m varchar(50) default NULL,
+  p2_signature9m varchar(50) default NULL,
+  p2_signature12m varchar(50) default NULL,
+  p3_date18m date default NULL,
+  p3_date2y date default NULL,
+  p3_date4y date default NULL,
+  p3_ht18m varchar(5) default NULL,
+  p3_wt18m varchar(5) default NULL,
+  p3_hc18m varchar(5) default NULL,
+  p3_ht2y varchar(5) default NULL,
+  p3_wt2y varchar(5) default NULL,
+  p3_ht4y varchar(5) default NULL,
+  p3_wt4y varchar(5) default NULL,
+  p3_pConcern18m text,
+  p3_pConcern2y text,
+  p3_pConcern4y text,
+  p3_bottle18m tinyint(1) default NULL,
+  p3_nutrition18m varchar(50) default NULL,
+  p3_milk2y tinyint(1) default NULL,
+  p3_food2y tinyint(1) default NULL,
+  p3_nutrition2y varchar(50) default NULL,
+  p3_milk4y tinyint(1) default NULL,
+  p3_food4y tinyint(1) default NULL,
+  p3_nutrition4y varchar(50) default NULL,
+  p3_bath18m tinyint(1) default NULL,
+  p3_choking18m tinyint(1) default NULL,
+  p3_temperment18m tinyint(1) default NULL,
+  p3_limit18m tinyint(1) default NULL,
+  p3_social18m tinyint(1) default NULL,
+  p3_dental18m tinyint(1) default NULL,
+  p3_toilet18m tinyint(1) default NULL,
+  p3_educationAdvice18m varchar(50) default NULL,
+  p3_bike2y tinyint(1) default NULL,
+  p3_matches2y tinyint(1) default NULL,
+  p3_carbon2y tinyint(1) default NULL,
+  p3_parent2y tinyint(1) default NULL,
+  p3_social2y tinyint(1) default NULL,
+  p3_dayCare2y tinyint(1) default NULL,
+  p3_dental2y tinyint(1) default NULL,
+  p3_toilet2y tinyint(1) default NULL,
+  p3_educationAdvice2y varchar(50) default NULL,
+  p3_bike4y tinyint(1) default NULL,
+  p3_matches4y tinyint(1) default NULL,
+  p3_carbon4y tinyint(1) default NULL,
+  p3_water4y tinyint(1) default NULL,
+  p3_social4y tinyint(1) default NULL,
+  p3_dental4y tinyint(1) default NULL,
+  p3_school4y tinyint(1) default NULL,
+  p3_educationAdvice4y varchar(50) default NULL,
+  p3_points18m tinyint(1) default NULL,
+  p3_words18m tinyint(1) default NULL,
+  p3_picks18m tinyint(1) default NULL,
+  p3_walks18m tinyint(1) default NULL,
+  p3_stacks18m tinyint(1) default NULL,
+  p3_affection18m tinyint(1) default NULL,
+  p3_showParents18m tinyint(1) default NULL,
+  p3_looks18m tinyint(1) default NULL,
+  p3_noParentsConcerns18m tinyint(1) default NULL,
+  p3_development18m varchar(50) default NULL,
+  p3_word2y tinyint(1) default NULL,
+  p3_sentence2y tinyint(1) default NULL,
+  p3_run2y tinyint(1) default NULL,
+  p3_container2y tinyint(1) default NULL,
+  p3_copies2y tinyint(1) default NULL,
+  p3_skills2y tinyint(1) default NULL,
+  p3_noParentsConcerns2y tinyint(1) default NULL,
+  p3_development2y varchar(50) default NULL,
+  p3_understands3y tinyint(1) default NULL,
+  p3_twists3y tinyint(1) default NULL,
+  p3_turnPages3y tinyint(1) default NULL,
+  p3_share3y tinyint(1) default NULL,
+  p3_listens3y tinyint(1) default NULL,
+  p3_noParentsConcerns3y tinyint(1) default NULL,
+  p3_development3y varchar(50) default NULL,
+  p3_understands4y tinyint(1) default NULL,
+  p3_questions4y tinyint(1) default NULL,
+  p3_oneFoot4y tinyint(1) default NULL,
+  p3_draws4y tinyint(1) default NULL,
+  p3_toilet4y tinyint(1) default NULL,
+  p3_comfort4y tinyint(1) default NULL,
+  p3_noParentsConcerns4y tinyint(1) default NULL,
+  p3_development4y varchar(50) default NULL,
+  p3_counts5y tinyint(1) default NULL,
+  p3_speaks5y tinyint(1) default NULL,
+  p3_ball5y tinyint(1) default NULL,
+  p3_hops5y tinyint(1) default NULL,
+  p3_shares5y tinyint(1) default NULL,
+  p3_alone5y tinyint(1) default NULL,
+  p3_separate5y tinyint(1) default NULL,
+  p3_noParentsConcerns5y tinyint(1) default NULL,
+  p3_development5y varchar(50) default NULL,
+  p3_eyes18m tinyint(1) default NULL,
+  p3_cover18m tinyint(1) default NULL,
+  p3_hearing18m tinyint(1) default NULL,
+  p3_physical18m varchar(50) default NULL,
+  p3_visual2y tinyint(1) default NULL,
+  p3_cover2y tinyint(1) default NULL,
+  p3_hearing2y tinyint(1) default NULL,
+  p3_physical2y varchar(50) default NULL,
+  p3_visual4y tinyint(1) default NULL,
+  p3_cover4y tinyint(1) default NULL,
+  p3_hearing4y tinyint(1) default NULL,
+  p3_blood4y tinyint(1) default NULL,
+  p3_physical4y varchar(50) default NULL,
+  p3_problems18m varchar(50) default NULL,
+  p3_serum2y tinyint(1) default NULL,
+  p3_problems2y varchar(50) default NULL,
+  p3_problems4y varchar(50) default NULL,
+  p3_hib18m tinyint(1) default NULL,
+  p3_polio18m tinyint(1) default NULL,
+  p3_immunization18m varchar(50) default NULL,
+  p3_immunization2y varchar(50) default NULL,
+  p3_mmr4y tinyint(1) default NULL,
+  p3_polio4y tinyint(1) default NULL,
+  p3_immunization4y varchar(50) default NULL,
+  p3_signature18m varchar(50) default NULL,
+  p3_signature2y varchar(50) default NULL,
+  p3_signature4y varchar(50) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formRourke'
+--
+
+
+--
+-- Table structure for table 'formType2Diabetes'
+--
+
+CREATE TABLE formType2Diabetes (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) default NULL,
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  pName varchar(60) default NULL,
+  birthDate date default NULL,
+  dateDx date default NULL,
+  height varchar(10) default NULL,
+  date1 date default NULL,
+  date2 date default NULL,
+  date3 date default NULL,
+  date4 date default NULL,
+  date5 date default NULL,
+  weight1 varchar(20) default NULL,
+  weight2 varchar(20) default NULL,
+  weight3 varchar(20) default NULL,
+  weight4 varchar(20) default NULL,
+  weight5 varchar(20) default NULL,
+  bp1 varchar(20) default NULL,
+  bp2 varchar(20) default NULL,
+  bp3 varchar(20) default NULL,
+  bp4 varchar(20) default NULL,
+  bp5 varchar(20) default NULL,
+  glucoseA1 varchar(50) default NULL,
+  glucoseA2 varchar(50) default NULL,
+  glucoseA3 varchar(50) default NULL,
+  glucoseA4 varchar(50) default NULL,
+  glucoseA5 varchar(50) default NULL,
+  glucoseB1 varchar(50) default NULL,
+  glucoseB2 varchar(50) default NULL,
+  glucoseB3 varchar(50) default NULL,
+  glucoseB4 varchar(50) default NULL,
+  glucoseB5 varchar(50) default NULL,
+  glucoseC1 varchar(50) default NULL,
+  glucoseC2 varchar(50) default NULL,
+  glucoseC3 varchar(50) default NULL,
+  glucoseC4 varchar(50) default NULL,
+  glucoseC5 varchar(50) default NULL,
+  renal1 varchar(50) default NULL,
+  renal2 varchar(50) default NULL,
+  renal3 varchar(50) default NULL,
+  renal4 varchar(50) default NULL,
+  renal5 varchar(50) default NULL,
+  urineRatio1 varchar(50) default NULL,
+  urineRatio2 varchar(50) default NULL,
+  urineRatio3 varchar(50) default NULL,
+  urineRatio4 varchar(50) default NULL,
+  urineRatio5 varchar(50) default NULL,
+  urineClearance1 varchar(100) default NULL,
+  urineClearance2 varchar(100) default NULL,
+  urineClearance3 varchar(100) default NULL,
+  urineClearance4 varchar(100) default NULL,
+  urineClearance5 varchar(100) default NULL,
+  lipidsA1 varchar(30) default NULL,
+  lipidsA2 varchar(30) default NULL,
+  lipidsA3 varchar(30) default NULL,
+  lipidsA4 varchar(30) default NULL,
+  lipidsA5 varchar(30) default NULL,
+  lipidsB1 varchar(30) default NULL,
+  lipidsB2 varchar(30) default NULL,
+  lipidsB3 varchar(30) default NULL,
+  lipidsB4 varchar(30) default NULL,
+  lipidsB5 varchar(30) default NULL,
+  lipidsC1 varchar(30) default NULL,
+  lipidsC2 varchar(30) default NULL,
+  lipidsC3 varchar(30) default NULL,
+  lipidsC4 varchar(30) default NULL,
+  lipidsC5 varchar(30) default NULL,
+  ophthamologist varchar(50) default NULL,
+  eyes1 varchar(50) default NULL,
+  eyes2 varchar(50) default NULL,
+  eyes3 varchar(50) default NULL,
+  eyes4 varchar(50) default NULL,
+  eyes5 varchar(50) default NULL,
+  feet1 varchar(100) default NULL,
+  feet2 varchar(100) default NULL,
+  feet3 varchar(100) default NULL,
+  feet4 varchar(100) default NULL,
+  feet5 varchar(100) default NULL,
+  metformin tinyint(1) default NULL,
+  aceInhibitor tinyint(1) default NULL,
+  glyburide tinyint(1) default NULL,
+  asa tinyint(1) default NULL,
+  otherOha tinyint(1) default NULL,
+  otherBox7 varchar(20) default NULL,
+  insulin tinyint(1) default NULL,
+  otherBox8 varchar(20) default NULL,
+  meds1 varchar(100) default NULL,
+  meds2 varchar(100) default NULL,
+  meds3 varchar(100) default NULL,
+  meds4 varchar(100) default NULL,
+  meds5 varchar(100) default NULL,
+  lifestyle1 varchar(50) default NULL,
+  lifestyle2 varchar(50) default NULL,
+  lifestyle3 varchar(50) default NULL,
+  lifestyle4 varchar(50) default NULL,
+  lifestyle5 varchar(50) default NULL,
+  exercise1 varchar(50) default NULL,
+  exercise2 varchar(50) default NULL,
+  exercise3 varchar(50) default NULL,
+  exercise4 varchar(50) default NULL,
+  exercise5 varchar(50) default NULL,
+  alcohol1 varchar(50) default NULL,
+  alcohol2 varchar(50) default NULL,
+  alcohol3 varchar(50) default NULL,
+  alcohol4 varchar(50) default NULL,
+  alcohol5 varchar(50) default NULL,
+  sexualFunction1 varchar(50) default NULL,
+  sexualFunction2 varchar(50) default NULL,
+  sexualFunction3 varchar(50) default NULL,
+  sexualFunction4 varchar(50) default NULL,
+  sexualFunction5 varchar(50) default NULL,
+  diet1 varchar(50) default NULL,
+  diet2 varchar(50) default NULL,
+  diet3 varchar(50) default NULL,
+  diet4 varchar(50) default NULL,
+  diet5 varchar(50) default NULL,
+  otherPlan1 varchar(100) default NULL,
+  otherPlan2 varchar(100) default NULL,
+  otherPlan3 varchar(100) default NULL,
+  otherPlan4 varchar(100) default NULL,
+  otherPlan5 varchar(100) default NULL,
+  consultant varchar(30) default NULL,
+  educator varchar(30) default NULL,
+  nutritionist varchar(30) default NULL,
+  cdn1 varchar(100) default NULL,
+  cdn2 varchar(100) default NULL,
+  cdn3 varchar(100) default NULL,
+  cdn4 varchar(100) default NULL,
+  cdn5 varchar(100) default NULL,
+  initials1 varchar(30) default NULL,
+  initials2 varchar(30) default NULL,
+  initials3 varchar(30) default NULL,
+  initials4 varchar(30) default NULL,
+  initials5 varchar(30) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'formType2Diabetes'
+--
+
+
+--
+-- Table structure for table 'groupMembers_tbl'
+--
+
+CREATE TABLE groupMembers_tbl (
+  groupID int(10) default NULL,
+  provider_No varchar(6) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'groupMembers_tbl'
+--
+
+INSERT INTO groupMembers_tbl VALUES (0,'88888');
+INSERT INTO groupMembers_tbl VALUES (0,'999999');
+INSERT INTO groupMembers_tbl VALUES (0,'999998');
+INSERT INTO groupMembers_tbl VALUES (0,'999997');
+INSERT INTO groupMembers_tbl VALUES (0,'174');
+INSERT INTO groupMembers_tbl VALUES (17,'174');
+INSERT INTO groupMembers_tbl VALUES (17,'999998');
+INSERT INTO groupMembers_tbl VALUES (19,'999997');
+INSERT INTO groupMembers_tbl VALUES (18,'999999');
+INSERT INTO groupMembers_tbl VALUES (18,'88888');
+
+--
+-- Table structure for table 'groups_tbl'
+--
+
+CREATE TABLE groups_tbl (
+  groupID int(10) NOT NULL auto_increment,
+  parentID int(10) default NULL,
+  groupDesc varchar(50) default NULL,
+  PRIMARY KEY  (groupID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'groups_tbl'
+--
+
+INSERT INTO groups_tbl VALUES (17,0,'doc');
+INSERT INTO groups_tbl VALUES (18,0,'receptionist');
+INSERT INTO groups_tbl VALUES (19,0,'admin');
+
+--
+-- Table structure for table 'ichppccode'
+--
+
+CREATE TABLE ichppccode (
+  ichppccode varchar(10) default NULL,
+  diagnostic_code varchar(10) default NULL,
+  description varchar(255) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'ichppccode'
+--
 
 INSERT INTO ichppccode VALUES ('000','831','Dislocated Shoulder');
 INSERT INTO ichppccode VALUES ('204','669','Complicated Delivery');
@@ -10776,4 +13644,676 @@ INSERT INTO ichppccode VALUES ('073','300','(DO NOT USE) Neurosis, Other/Unspeci
 INSERT INTO ichppccode VALUES ('077.2','309','Coping with physical illness');
 INSERT INTO ichppccode VALUES ('086.5','300','Self mutilation');
 INSERT INTO ichppccode VALUES ('203','650','Uncomplicated Pregnancy, normal delivery');
+
+--
+-- Table structure for table 'immunizations'
+--
+
+CREATE TABLE immunizations (
+  ID int(11) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  immunizations text,
+  save_date date NOT NULL default '0000-00-00',
+  archived tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'immunizations'
+--
+
+
+
+--
+-- Table structure for table 'messagelisttbl'
+--
+
+CREATE TABLE messagelisttbl (
+  message mediumint(9) default NULL,
+  provider_no varchar(6) default NULL,
+  status varchar(10) default NULL,
+  remoteLocation int(10) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'messagelisttbl'
+--
+
+
+
+--
+-- Table structure for table 'messagetbl'
+--
+
+CREATE TABLE messagetbl (
+  messageid mediumint(9) NOT NULL auto_increment,
+  thedate date default NULL,
+  theime time default NULL,
+  themessage text,
+  thesubject varchar(128) default NULL,
+  sentby varchar(62) default NULL,
+  sentto varchar(255) default NULL,
+  sentbyNo varchar(6) default NULL,
+  sentByLocation int(10) default NULL,
+  attachment text,
+  actionstatus char(2) default NULL,
+  PRIMARY KEY  (messageid)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'messagetbl'
+--
+
+
+--
+-- Table structure for table 'mygroup'
+--
+
+CREATE TABLE mygroup (
+  mygroup_no varchar(10) NOT NULL default '',
+  provider_no varchar(6) NOT NULL default '',
+  last_name varchar(30) NOT NULL default '',
+  first_name varchar(30) NOT NULL default '',
+  vieworder char(2) default NULL,
+  PRIMARY KEY  (mygroup_no,provider_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'mygroup'
+--
+
+INSERT INTO mygroup VALUES ('Docs','174','Chan','David','a1');
+INSERT INTO mygroup VALUES ('IT Support','88888','Support','IT',NULL);
+
+--
+-- Table structure for table 'oscarcommlocations'
+--
+
+CREATE TABLE oscarcommlocations (
+  locationId int(10) NOT NULL default '0',
+  locationDesc varchar(50) NOT NULL default '',
+  locationAuth varchar(30) default NULL,
+  current tinyint(1) NOT NULL default '0',
+  addressBook text,
+  remoteServerURL varchar(30) default NULL,
+  PRIMARY KEY  (locationId)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'oscarcommlocations'
+--
+
+INSERT INTO oscarcommlocations VALUES (145,'Oscar Users',NULL,1,'<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<addressBook><group><group desc=\"doc\" id=\"17\"><address desc=\"Chan, David\" id=\"174\"/><address desc=\"oscardoc, doctor\" id=\"999998\"/></group><group desc=\"receptionist\" id=\"18\"><address desc=\"oscarrep, receptionist\" id=\"999999\"/><address desc=\"Support, IT\" id=\"88888\"/></group><group desc=\"admin\" id=\"19\"><address desc=\"oscaradmin, admin\" id=\"999997\"/></group><address desc=\"Chan, David\" id=\"174\"/><address desc=\"oscaradmin, admin\" id=\"999997\"/><address desc=\"oscardoc, doctor\" id=\"999998\"/><address desc=\"oscarrep, receptionist\" id=\"999999\"/><address desc=\"Support, IT\" id=\"88888\"/></group></addressBook>',NULL);
+
+--
+-- Table structure for table 'preference'
+--
+
+CREATE TABLE preference (
+  preference_no int(6) NOT NULL auto_increment,
+  provider_no varchar(6) NOT NULL default '',
+  start_hour char(2) default NULL,
+  end_hour char(2) default NULL,
+  every_min char(3) default NULL,
+  mygroup_no varchar(10) default NULL,
+  color_template varchar(10) default NULL,
+  PRIMARY KEY  (preference_no),
+  KEY provider_no (provider_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'preference'
+--
+
+INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue');
+
+--
+-- Table structure for table 'prescribe'
+--
+
+CREATE TABLE prescribe (
+  prescribe_no int(12) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  prescribe_date date NOT NULL default '0000-00-00',
+  prescribe_time time NOT NULL default '00:00:00',
+  content text,
+  PRIMARY KEY  (prescribe_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'prescribe'
+--
+
+
+--
+-- Table structure for table 'professionalSpecialists'
+--
+
+CREATE TABLE professionalSpecialists (
+  specId int(10) NOT NULL auto_increment,
+  fName varchar(32) default NULL,
+  lName varchar(32) default NULL,
+  proLetters varchar(20) default NULL,
+  address varchar(255) default NULL,
+  phone varchar(30) default NULL,
+  fax varchar(30) default NULL,
+  website varchar(128) default NULL,
+  email varchar(128) default NULL,
+  specType varchar(128) default NULL,
+  PRIMARY KEY  (specId)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'professionalSpecialists'
+--
+
+
+--
+-- Table structure for table 'property'
+--
+
+CREATE TABLE property (
+  name varchar(255) NOT NULL default '',
+  value varchar(255) default NULL,
+  PRIMARY KEY  (name)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'property'
+--
+
+
+--
+-- Table structure for table 'provider'
+--
+
+CREATE TABLE provider (
+  provider_no varchar(6) NOT NULL default '',
+  last_name varchar(30) NOT NULL default '',
+  first_name varchar(30) NOT NULL default '',
+  provider_type varchar(15) NOT NULL default '',
+  specialty varchar(20) NOT NULL default '',
+  team varchar(20) default NULL,
+  sex char(1) NOT NULL default '',
+  dob date default NULL,
+  address varchar(40) default NULL,
+  phone varchar(20) default NULL,
+  work_phone varchar(50) default NULL,
+  ohip_no varchar(20) default NULL,
+  rma_no varchar(20) default NULL,
+  billing_no varchar(20) default NULL,
+  hso_no varchar(10) default NULL,
+  status char(1) default NULL,
+  comments text,
+  PRIMARY KEY  (provider_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'provider'
+--
+
+INSERT INTO provider VALUES ('999997','oscaradmin','admin','admin','','','','0000-00-00','','','','','','','','','');
+INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0000-00-00','','','','','','','','','');
+INSERT INTO provider VALUES ('999999','oscarrep','receptionist','receptionist','','','','0000-00-00','','','','','','','','','');
+INSERT INTO provider VALUES ('88888','Support','IT','receptionist','','Admin','','0000-00-00','','','','','','','','','');
+INSERT INTO provider VALUES ('174','Chan','David','doctor','Family Medicine','TEAM A','M','0000-00-00','','H 905-','058081','','','BAAP','1','<','');
+
+--
+-- Table structure for table 'providerExt'
+--
+
+CREATE TABLE providerExt (
+  provider_no varchar(6) default NULL,
+  signature varchar(255) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'providerExt'
+--
+
+
+--
+-- Table structure for table 'radetail'
+--
+
+CREATE TABLE radetail (
+  radetail_no int(6) NOT NULL auto_increment,
+  raheader_no int(6) NOT NULL default '0',
+  providerohip_no varchar(12) NOT NULL default '',
+  billing_no int(6) NOT NULL default '0',
+  service_code varchar(5) NOT NULL default '',
+  service_count char(2) NOT NULL default '',
+  hin varchar(12) NOT NULL default '',
+  amountclaim varchar(8) NOT NULL default '',
+  amountpay varchar(8) NOT NULL default '',
+  service_date varchar(12) NOT NULL default '',
+  error_code char(2) NOT NULL default '',
+  billtype char(3) NOT NULL default '',
+  PRIMARY KEY  (radetail_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'radetail'
+--
+
+
+--
+-- Table structure for table 'raheader'
+--
+
+CREATE TABLE raheader (
+  raheader_no int(6) NOT NULL auto_increment,
+  filename varchar(12) NOT NULL default '',
+  paymentdate varchar(8) NOT NULL default '',
+  payable varchar(30) NOT NULL default '',
+  totalamount varchar(10) NOT NULL default '',
+  records varchar(5) NOT NULL default '',
+  claims varchar(5) NOT NULL default '',
+  status char(1) NOT NULL default '',
+  readdate varchar(12) NOT NULL default '',
+  content text,
+  PRIMARY KEY  (raheader_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'raheader'
+--
+
+
+--
+-- Table structure for table 'recycle_bin'
+--
+
+CREATE TABLE recycle_bin (
+  provider_no varchar(6) NOT NULL default '',
+  table_name varchar(30) NOT NULL default '',
+  table_content text,
+  updatedatetime datetime default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'recycle_bin'
+--
+
+
+--
+-- Table structure for table 'recyclebin'
+--
+
+CREATE TABLE recyclebin (
+  recyclebin_no int(12) NOT NULL auto_increment,
+  provider_no varchar(6) default NULL,
+  updatedatetime datetime default NULL,
+  table_name varchar(30) default NULL,
+  keyword varchar(50) default NULL,
+  table_content text,
+  PRIMARY KEY  (recyclebin_no),
+  KEY keyword (keyword)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'recyclebin'
+--
+
+
+--
+-- Table structure for table 'remoteAttachments'
+--
+
+CREATE TABLE remoteAttachments (
+  demographic_no int(10) default NULL,
+  messageid mediumint(9) default NULL,
+  savedBy varchar(255) default NULL,
+  date date default NULL,
+  time time default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'remoteAttachments'
+--
+
+
+--
+-- Table structure for table 'reportagesex'
+--
+
+CREATE TABLE reportagesex (
+  demographic_no int(10) default NULL,
+  age int(4) default '0',
+  roster varchar(4) default '',
+  sex char(2) default '',
+  provider_no varchar(6) default NULL,
+  reportdate date default NULL,
+  status char(2) default '',
+  date_joined date default '0000-00-00'
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'reportagesex'
+--
+
+
+--
+-- Table structure for table 'reportprovider'
+--
+
+CREATE TABLE reportprovider (
+  provider_no varchar(10) default '',
+  team varchar(10) default '',
+  action varchar(20) default '',
+  status char(1) default ''
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'reportprovider'
+--
+
+INSERT INTO reportprovider VALUES ('174','Docs','billingreport','A');
+
+--
+-- Table structure for table 'reporttemp'
+--
+
+CREATE TABLE reporttemp (
+  demographic_no int(10) NOT NULL default '0',
+  edb date NOT NULL default '0000-00-00',
+  demo_name varchar(60) NOT NULL default '',
+  provider_no varchar(6) default NULL,
+  address text,
+  creator varchar(10) default NULL,
+  PRIMARY KEY  (demographic_no,edb)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'reporttemp'
+--
+
+
+--
+-- Table structure for table 'rschedule'
+--
+
+CREATE TABLE rschedule (
+  provider_no varchar(6) NOT NULL default '',
+  sdate date NOT NULL default '0000-00-00',
+  edate date default NULL,
+  available char(1) NOT NULL default '',
+  day_of_week varchar(30) default NULL,
+  avail_hourB varchar(255) default NULL,
+  avail_hour varchar(230) default NULL,
+  creator varchar(50) default NULL,
+  PRIMARY KEY  (provider_no,sdate,available)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'rschedule'
+--
+
+
+--
+-- Table structure for table 'scheduledate'
+--
+
+CREATE TABLE scheduledate (
+  sdate date NOT NULL default '0000-00-00',
+  provider_no varchar(6) NOT NULL default '',
+  available char(1) NOT NULL default '',
+  priority char(1) default NULL,
+  reason varchar(255) default NULL,
+  hour varchar(255) default NULL,
+  creator varchar(50) default NULL,
+  PRIMARY KEY  (sdate,provider_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'scheduledate'
+--
+
+
+--
+-- Table structure for table 'scheduledaytemplate'
+--
+
+CREATE TABLE scheduledaytemplate (
+  provider_no varchar(6) NOT NULL default '',
+  day date NOT NULL default '0000-00-00',
+  template_name varchar(20) default NULL,
+  PRIMARY KEY  (provider_no,day)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'scheduledaytemplate'
+--
+
+
+--
+-- Table structure for table 'scheduleholiday'
+--
+
+CREATE TABLE scheduleholiday (
+  sdate date NOT NULL default '0000-00-00',
+  holiday_name varchar(100) NOT NULL default '',
+  PRIMARY KEY  (sdate)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'scheduleholiday'
+--
+
+INSERT INTO scheduleholiday VALUES ('2002-03-29','Good Friday');
+INSERT INTO scheduleholiday VALUES ('2002-04-01','Easter Monday - Hospital');
+INSERT INTO scheduleholiday VALUES ('2002-07-01','Canada Day');
+INSERT INTO scheduleholiday VALUES ('2002-05-20','Victoria Day');
+INSERT INTO scheduleholiday VALUES ('2002-08-05','Civic Day');
+INSERT INTO scheduleholiday VALUES ('2002-09-02','Labour Day');
+INSERT INTO scheduleholiday VALUES ('2002-10-14','Thanksgiving Day');
+INSERT INTO scheduleholiday VALUES ('2002-11-11','2nd Monday in November - Hospital');
+INSERT INTO scheduleholiday VALUES ('2002-02-11','2nd Monday in February - Hospital');
+INSERT INTO scheduleholiday VALUES ('2002-01-01','New Year\'s Day');
+INSERT INTO scheduleholiday VALUES ('2002-12-25','Christmas Day');
+INSERT INTO scheduleholiday VALUES ('2002-12-26','Boxing Day');
+INSERT INTO scheduleholiday VALUES ('2003-01-01','New Year\'s Day');
+INSERT INTO scheduleholiday VALUES ('2003-02-10','2nd Monday in February - Hospital');
+INSERT INTO scheduleholiday VALUES ('2003-04-18','Good Friday');
+INSERT INTO scheduleholiday VALUES ('2003-04-21','Easter Monday - Hospital');
+INSERT INTO scheduleholiday VALUES ('2002-12-27','In Lieu of Day Before Christmas - University');
+INSERT INTO scheduleholiday VALUES ('2002-12-30','Floating Holiday - University');
+INSERT INTO scheduleholiday VALUES ('2002-12-31','Floating Holiday - University');
+INSERT INTO scheduleholiday VALUES ('2003-05-19','Victoria Day');
+INSERT INTO scheduleholiday VALUES ('2003-07-01','Canada Day');
+INSERT INTO scheduleholiday VALUES ('2003-08-04','Civic Day');
+INSERT INTO scheduleholiday VALUES ('2003-09-01','Labour Day');
+INSERT INTO scheduleholiday VALUES ('2003-10-13','Thanksgiving Day');
+INSERT INTO scheduleholiday VALUES ('2003-11-10','2nd Monday in November - Hospital');
+INSERT INTO scheduleholiday VALUES ('2003-12-25','Christmas Day');
+INSERT INTO scheduleholiday VALUES ('2003-12-26','Boxing Day');
+INSERT INTO scheduleholiday VALUES ('2004-01-01','New Year\'s Day');
+
+--
+-- Table structure for table 'scheduletemplate'
+--
+
+CREATE TABLE scheduletemplate (
+  provider_no varchar(6) NOT NULL default '',
+  name varchar(20) NOT NULL default '',
+  summary varchar(80) default NULL,
+  timecode varchar(255) default NULL,
+  PRIMARY KEY  (provider_no,name)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'scheduletemplate'
+--
+
+
+--
+-- Table structure for table 'scheduletemplatecode'
+--
+
+CREATE TABLE scheduletemplatecode (
+  code char(1) NOT NULL default '',
+  description varchar(80) default NULL,
+  duration char(3) default '',
+  color varchar(10) default NULL,
+  KEY code (code)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'scheduletemplatecode'
+--
+
+INSERT INTO scheduletemplatecode VALUES ('A','Academic','',NULL);
+INSERT INTO scheduletemplatecode VALUES ('B','Behavioral Science','15','#BFEFFF');
+INSERT INTO scheduletemplatecode VALUES ('2','30 Minute Appointment','30','#BFEFFF');
+INSERT INTO scheduletemplatecode VALUES ('3','45 Minute Appointment','45','#BFEFFF');
+INSERT INTO scheduletemplatecode VALUES ('P','Phone time','15','#BFEFFF');
+INSERT INTO scheduletemplatecode VALUES ('M','Monitoring','','EED2EE');
+INSERT INTO scheduletemplatecode VALUES ('6','60 Minute Appointment','60','#BFEFFF');
+INSERT INTO scheduletemplatecode VALUES ('C','Chart Audit Rounds','15',NULL);
+INSERT INTO scheduletemplatecode VALUES ('R','Rounds','15',NULL);
+INSERT INTO scheduletemplatecode VALUES ('E','Study Leave','15',NULL);
+INSERT INTO scheduletemplatecode VALUES ('V','Vacation','15','FFF68F');
+INSERT INTO scheduletemplatecode VALUES ('G','PBSG Rounds','15',NULL);
+INSERT INTO scheduletemplatecode VALUES ('H','Hospital Rounds','15',NULL);
+INSERT INTO scheduletemplatecode VALUES ('d','Drug Rep (Chief)','15',NULL);
+INSERT INTO scheduletemplatecode VALUES ('U','Urgent','15',NULL);
+INSERT INTO scheduletemplatecode VALUES ('a','Administrative Work','15','#BFEFFF');
+INSERT INTO scheduletemplatecode VALUES ('t','Travel','',NULL);
+INSERT INTO scheduletemplatecode VALUES ('m','Meeting','',NULL);
+INSERT INTO scheduletemplatecode VALUES ('1','15 Minute Appointment','15','#BFEFFF');
+INSERT INTO scheduletemplatecode VALUES ('s','Same Day','15','FFF68F');
+INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F');
+
+--
+-- Table structure for table 'security'
+--
+
+CREATE TABLE security (
+  security_no int(6) NOT NULL auto_increment,
+  user_name varchar(30) NOT NULL default '',
+  password varchar(80) NOT NULL default '',
+  provider_no varchar(6) default NULL,
+  pin varchar(6) default NULL,
+  PRIMARY KEY  (security_no),
+  KEY user_name (user_name)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'security'
+--
+
+INSERT INTO security VALUES (127,'oscarrep','-87-1036254716-127106-70623711312080-62108-100-48-40-99','999999','2002');
+INSERT INTO security VALUES (128,'oscardoc','-87-1036254716-127106-70623711312080-62108-100-48-40-99','999998','2002');
+INSERT INTO security VALUES (129,'oscaradmin','-87-1036254716-127106-70623711312080-62108-100-48-40-99','999997','2002');
+
+--
+-- Table structure for table 'serviceSpecialists'
+--
+
+CREATE TABLE serviceSpecialists (
+  serviceId int(10) default NULL,
+  specId int(10) default NULL
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'serviceSpecialists'
+--
+
+INSERT INTO serviceSpecialists VALUES (53,297);
+
+--
+-- Table structure for table 'specialistsJavascript'
+--
+
+CREATE TABLE specialistsJavascript (
+  setId char(1) default NULL,
+  javascriptString text
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'specialistsJavascript'
+--
+
+INSERT INTO specialistsJavascript VALUES ('1','function makeSpecialistslist(dec){\n if(dec==\'1\') \n{K(-1,\"----Choose a Service-------\");D(-1,\"--------Choose a Specialist-----\");}\nelse\n{K(-1,\"----All Services-------\");D(-1,\"--------All Specialists-----\");}\nK(53,\"Cardiology\");\nD(53,\"297\",\"ss4444\",\"ssss, sss ssss\",\"sss\",\"sssss\");\n\nK(54,\"Dermatology\");\n\nK(55,\"Neurology\");\n\nK(56,\"Radiology\");\n\nK(57,\"SEE NOTES\");\n\n\n}\n');
+
+--
+-- Table structure for table 'study'
+--
+
+CREATE TABLE study (
+  study_no int(3) NOT NULL auto_increment,
+  study_name varchar(20) NOT NULL default '',
+  study_link varchar(255) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
+  form_name varchar(30) default NULL,
+  current tinyint(1) default '0',
+  remote_serverurl varchar(50) default NULL,
+  provider_no varchar(6) NOT NULL default '',
+  timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (study_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'study'
+--
+
+
+--
+-- Table structure for table 'studydata'
+--
+
+CREATE TABLE studydata (
+  studydata_no int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  study_no int(3) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  timestamp timestamp(14) NOT NULL,
+  status varchar(30) default NULL,
+  content text,
+  PRIMARY KEY  (studydata_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'studydata'
+--
+
+
+--
+-- Table structure for table 'tickler'
+--
+
+CREATE TABLE tickler (
+  tickler_no int(10) NOT NULL auto_increment,
+  demographic_no int(10) default '0',
+  message text,
+  status char(1) default NULL,
+  update_date datetime default '0000-00-00 00:00:00',
+  service_date date default NULL,
+  creator varchar(6) default NULL,
+  PRIMARY KEY  (tickler_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'tickler'
+--
+
+
+--
+-- Table structure for table 'tmpdiagnosticcode'
+--
+
+CREATE TABLE tmpdiagnosticcode (
+  diagnosticcode_no int(5) NOT NULL auto_increment,
+  diagnostic_code varchar(5) NOT NULL default '',
+  description text,
+  status char(1) default NULL,
+  PRIMARY KEY  (diagnosticcode_no)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'tmpdiagnosticcode'
+--
+
 
