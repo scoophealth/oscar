@@ -1,6 +1,6 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
+<%@ page import=" oscar.form.*, oscar.form.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -36,7 +36,43 @@
     <title>Antenatal Record 1</title>
     <link rel="stylesheet" type="text/css" href="<%=bView?"bcArStyleView.css" : "bcArStyle.css"%>">
     <html:base/>
+<style type="text/css">
+<!--
+.demo  {color:#000033; background-color:#cccccc; layer-background-color:#cccccc;
+        position:absolute; top:150px; left:270px; width:120px; height:230px;
+        z-index:99;  visibility:hidden;}
+-->
+</style>
 </head>
+<script type="text/javascript">
+<!--
+function showHideBox(layerName, iState) { // 1 visible, 0 hidden
+    if(document.layers)	   //NN4+
+    {
+       document.layers[layerName].visibility = iState ? "show" : "hide";
+    } else if(document.getElementById)	  //gecko(NN6) + IE 5+
+    {
+        var obj = document.getElementById(layerName);
+        obj.style.visibility = iState ? "visible" : "hidden";
+    } else if(document.all)	// IE 4
+    {
+        document.all[layerName].style.visibility = iState ? "visible" : "hidden";
+    }
+}
+function insertBox(str, field, layerName) { // 1 visible, 0 hidden
+    if(document.getElementById)	{
+        var obj = document.getElementById(field);
+        obj.value = str;
+    }
+    showHideBox(layerName, 0);
+}
+function showDef(str, field) { 
+    if(document.getElementById)	{
+        field.value = str;
+    }
+}
+// -->
+</script>
 
 <script type="text/javascript" language="Javascript">
 
@@ -236,8 +272,6 @@ var maxYear=9900;
             b = false;
         } else if(valDate(document.forms[0].pg1_lmp)==false){
             b = false;
-        } else if(valDate(document.forms[0].pg1_stopDate)==false){
-            b = false;
         } else if(valDate(document.forms[0].pg1_quitDate)==false){
             b = false;
         } else if(valDate(document.forms[0].pg1_examination)==false){
@@ -265,6 +299,21 @@ function calByLMP() {
 </script>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+<div ID="Langdiv" class="demo">
+   <table bgcolor='silver' width='100%'>
+     <tr><td align='right'><a href=# onclick="showHideBox('Langdiv',0); return false;">X</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('English','pg1_langPref', 'Langdiv'); return false;">English</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('French','pg1_langPref', 'Langdiv'); return false;">French</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Mandarin','pg1_langPref', 'Langdiv'); return false;">Mandarin</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Cantonese','pg1_langPref', 'Langdiv'); return false;">Cantonese</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Hindu','pg1_langPref', 'Langdiv'); return false;">Hindu</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Pushtu','pg1_langPref', 'Langdiv'); return false;">Pushtu</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Spanish','pg1_langPref', 'Langdiv'); return false;">Spanish</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Tagalog','pg1_langPref', 'Langdiv'); return false;">Tagalog</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Urdu','pg1_langPref', 'Langdiv'); return false;">Urdu</a></td></tr>
+   </table>
+</div>
+
 <!--
 @oscar.formDB Table="formBCAR" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -328,7 +377,7 @@ function calByLMP() {
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
     <tr>
     <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
-	  British Columbia Antenatal Record Part 1</th>
+	  British Columbia Antenatal Record Part 1 <font size="-2">HLTH-1582-1 Rev.02/03</font></th>
     </tr>
   </table>
 
@@ -363,8 +412,9 @@ function calByLMP() {
 	  <td width="33%">ETHNIC ORIGIN<br>
       <input type="text" name="pg1_ethOrig" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_ethOrig", "") %>" @oscar.formDB  />
 	  </td>
+	  
 	  <td><span class="small9">LANGUAGE PREFERRED</span><br>
-      <input type="text" name="pg1_langPref" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_langPref", "") %>" @oscar.formDB  />
+      <input type="text" name="pg1_langPref" onDblClick="showHideBox('Langdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_langPref", "") %>" @oscar.formDB  />
 	  </td>
     </tr>
   </table>
@@ -492,7 +542,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit1" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth1" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth1", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth1" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth1", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -521,7 +571,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit2" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth2" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth2", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth2" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth2", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -550,7 +600,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit3" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth3" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth3", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth3" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth3", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -579,7 +629,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit4" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit4", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth4" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth4", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth4" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth4", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -608,7 +658,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit5" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth5" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth5", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth5" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth5", "") %>" @oscar.formDB />
   </td>
 </tr>
 </table>
@@ -634,10 +684,18 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
       <table width="100%" border="0"  cellspacing="0" cellpadding="0">
       <tr><td width="30%"><span class="small8">CONTRACEPTION</font> <br>
 	    METHOD:<br>
-        <input type="text" name="pg1_contrMethod" style="width:100%" size="12" maxlength="15" value="<%= props.getProperty("pg1_contrMethod", "") %>" @oscar.formDB />
+        <!--input type="text" name="pg1_contrMethod" style="width:100%" size="12" maxlength="15" value="<%--= props.getProperty("pg1_contrMethod", "") --%>" @oscar.formDB /-->
+        <select name="pg1_contrMethod">
+        <%
+        String[] opt = {"nothing", "condom", "OCP", "diaphragm", "IUD"};
+        for (int i=0; i<opt.length; i++) {
+        %>
+          <option value="<%=opt[i]%>" <%=props.getProperty("pg1_contrMethod", "").equals(opt[i])?"selected":""%> ><%=opt[i]%></option>
+        <%}%>
+        </select>
 		</td><td width="30%"><span class="small8">WHEN STOPPED:</font><br>
 		dd/mm/yyyy<br>
-        <input type="text" name="pg1_stopDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_stopDate", "") %>" @oscar.formDB dbType="date"/>
+        <input type="text" name="pg1_stopDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_stopDate", "") %>" @oscar.formDB />
 		</td>
 	  </tr>
 	  </table>

@@ -34,7 +34,61 @@
     <title>Antenatal Record 2</title>
     <html:base/>
     <link rel="stylesheet" type="text/css" href="<%=bView?"bcArStyleView.css" : "bcArStyle.css"%>">
+<style type="text/css">
+<!--
+.demo  {color:#000033; background-color:#cccccc; layer-background-color:#cccccc;
+        position:absolute; top:150px; left:270px; width:80px; height:120px;
+        z-index:99;  visibility:hidden;}
+-->
+</style>
 </head>
+<script type="text/javascript">
+<!--
+var fieldObj;
+function showHideBox(layerName, iState, field) { // 1 visible, 0 hidden
+    if(document.layers)	   //NN4+
+    {
+       document.layers[layerName].visibility = iState ? "show" : "hide";
+    } else if(document.getElementById)	  //gecko(NN6) + IE 5+
+    {
+        var obj = document.getElementById(layerName);
+        obj.style.top = "400px";
+        obj.style.left = "370px";
+        obj.style.visibility = iState ? "visible" : "hidden";
+    } else if(document.all)	// IE 4
+    {
+        document.all[layerName].style.visibility = iState ? "visible" : "hidden";
+    }
+    fieldObj = field;
+}
+function showBox(layerName, iState, field, e) { // 1 visible, 0 hidden
+    fieldObj = field;
+    //get the number of the field
+    fieldName = fieldObj.name;
+    fieldName = fieldName.substring("pg2_pos".length);
+
+    if(document.layers)	{   //NN4+
+       document.layers[layerName].visibility = iState ? "show" : "hide";
+    } else if(document.getElementById) {	  //gecko(NN6) + IE 5+
+        var obj = document.getElementById(layerName);
+        obj.style.top = e.screenY + (481-e.screenY + 26*fieldName);
+        obj.style.left = "390px";
+        obj.style.visibility = iState ? "visible" : "hidden";
+    } else if(document.all)	// IE 4
+    {
+        document.all[layerName].style.visibility = iState ? "visible" : "hidden";
+    }
+    fieldObj = field;
+}
+function insertBox(str, layerName) { // 1 visible, 0 hidden
+    if(document.getElementById)	{
+        //var obj = document.getElementById(field);
+        fieldObj.value = str;
+    }
+    showHideBox(layerName, 0, null);
+}
+// -->
+</script>
 
 <script type="text/javascript" language="Javascript">
     function reset() {
@@ -548,6 +602,15 @@ function calToday(field) {
 
 
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<div ID="Langdiv" class="demo">
+   <table bgcolor='silver' width='100%'>
+     <tr><td align='right'><a href=# onclick="showHideBox('Langdiv',0, null); return false;">X</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('ceph', 'Langdiv'); return false;">ceph</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('breech', 'Langdiv'); return false;">breech</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('transv', 'Langdiv'); return false;">transv</a></td></tr>
+   </table>
+</div>
+
 <html:form action="/form/formname">
 
 <input type="hidden" name="commonField" value="ar2_" />
@@ -606,13 +669,13 @@ function calToday(field) {
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
     <tr>
     <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
-	  British Columbia Antenatal Record Part 2</th>
+	  British Columbia Antenatal Record Part 2 <font size="-2">HLTH-1582-2 Rev.02/03</font></th>
     </tr>
   </table>
 
   <table width="100%" border="1"  cellspacing="0" cellpadding="0">
     <tr>
-      <td width="50%"><b>1.</b> HOSPITAL<br>
+      <td width="50%"><b>14.</b> HOSPITAL<br>
       <input type="text" name="c_hospital" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_hospital", "") %>" />
       </td>
 	  <td width="50%">INTENDED PLACE OF BIRTH<br>
@@ -631,17 +694,35 @@ function calToday(field) {
           <th colspan="2" align="left">15. LABORATORY</th>
 		</tr><tr>
 		  <td>BLOOD GROUP<br>
-          <input type="text" name="ar2_labBlood" style="width:100%" size="10" maxlength="12" value="<%= props.getProperty("ar2_labBlood", "") %>" @oscar.formDB />
+          <!--input type="text" name="ar2_labBlood" style="width:100%" size="10" maxlength="12" value="<%--= props.getProperty("ar2_labBlood", "") --%>" @oscar.formDB /-->
+          <select name="ar2_labBlood">
+          <%
+          String[] optBG = {"", "O", "A", "B", "AB"};
+          for (int i=0; i<optBG.length; i++) {
+          %>
+            <option value="<%=optBG[i]%>" <%=props.getProperty("ar2_labBlood", "").equals(optBG[i])?"selected":""%> ><%=optBG[i]%></option>
+          <%}%>
+          </select>
 		  </td>
 		  <td>Rh FACTOR<br>
-          <input type="text" name="ar2_labRh" style="width:100%" size="10" maxlength="12" value="<%= props.getProperty("ar2_labRh", "") %>" @oscar.formDB />
+          <!--input type="text" name="ar2_labRh" style="width:100%" size="10" maxlength="12" value="<%--= props.getProperty("ar2_labRh", "") --%>" @oscar.formDB /-->
+          <select name="ar2_labRh">
+            <option value="" <%=props.getProperty("ar2_labRh", "").equals("")?"selected":""%> ></option>
+            <option value="+ve" <%=props.getProperty("ar2_labRh", "").equals("+ve")?"selected":""%> >+ve</option>
+            <option value="-ve" <%=props.getProperty("ar2_labRh", "").equals("-ve")?"selected":""%> >-ve</option>
+          </select>
 		  </td>
 		</tr><tr>
 		  <td>RUBELLA TITRE<br>
           <input type="text" name="ar2_labRubella" style="width:100%" size="10" maxlength="12" value="<%= props.getProperty("ar2_labRubella", "") %>" @oscar.formDB />
 		  </td>
 		  <td>HBsAg.<br>
-          <input type="text" name="ar2_labHBsAg" style="width:100%" size="10" maxlength="12" value="<%= props.getProperty("ar2_labHBsAg", "") %>" @oscar.formDB />
+          <!--input type="text" name="ar2_labHBsAg" style="width:100%" size="10" maxlength="12" value="<%--= props.getProperty("ar2_labHBsAg", "") --%>" @oscar.formDB /-->
+		  <select name="ar2_labHBsAg">
+		    <option value="" <%= props.getProperty("ar2_labHBsAg", "").equals("")?"selected":""%> ></option>
+		    <option value="NR" <%= props.getProperty("ar2_labHBsAg", "").equals("NR")?"selected":""%> >NR</option>
+		    <option value="R" <%= props.getProperty("ar2_labHBsAg", "").equals("R")?"selected":""%> >R</option>
+		  </select>
 		  </td>
 		</tr><tr>
 		  <td colspan="2">HEMOGLOBIN (1st & 3rd TM)
@@ -697,11 +778,24 @@ function calToday(field) {
       <table width="100%" border="1"  cellspacing="0" cellpadding="0">
         <tr>
           <td><span class="small9">A.F.P./ TRIPLE SCREEN</span><br>
-          <input type="text" name="ar2_labAfpTS" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labAfpTS", "") %>" @oscar.formDB />
+          <!--input type="text" name="ar2_labAfpTS" style="width:100%" size="10" maxlength="10" value="<%--= props.getProperty("ar2_labAfpTS", "") --%>" @oscar.formDB /-->
+          <select name="ar2_labAfpTS">
+          <%
+          String[] optAfp = {"", "Neg", "Pos", "+ve", "-ve", "declined"}; 
+          for (int i=0; i<optAfp.length; i++) {
+          %>
+            <option value="<%=optAfp[i]%>" <%=props.getProperty("ar2_labBlood", "").equals(optAfp[i])?"selected":""%> ><%=optAfp[i]%></option>
+          <%}%>
+          </select>
 		  </td>
 		</tr><tr>
           <td><span class="small9">S.T.S.</span><br>
-          <input type="text" name="ar2_labSTS" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labSTS", "") %>" @oscar.formDB />
+          <!--input type="text" name="ar2_labSTS" style="width:100%" size="10" maxlength="10" value="<%--= props.getProperty("ar2_labSTS", "") --%>" @oscar.formDB /-->
+		  <select name="ar2_labSTS">
+		    <option value="" <%= props.getProperty("ar2_labSTS", "").equals("")?"selected":""%> ></option>
+		    <option value="NR" <%= props.getProperty("ar2_labSTS", "").equals("NR")?"selected":""%> >NR</option>
+		    <option value="R" <%= props.getProperty("ar2_labSTS", "").equals("R")?"selected":""%> >R</option>
+		  </select>
 		  </td>
 		</tr><tr>
           <td><span class="small9">HIV TEST DONE<br>
@@ -709,10 +803,16 @@ function calToday(field) {
 		  No
           <input type="checkbox" name="ar2_labHivTestY" <%= props.getProperty("ar2_labHivTestY", "")%>  @oscar.formDB dbType="tinyint(1)"  /> 
 		  Yes</span>
+		  <select name="ar2_labHIV" @oscar.formDB dbType="varchar(10)">
+		    <option value="" <%= props.getProperty("ar2_labHIV", "").equals("")?"selected":""%> ></option>
+		    <option value="NR" <%= props.getProperty("ar2_labHIV", "").equals("NR")?"selected":""%> >NR</option>
+		    <option value="R" <%= props.getProperty("ar2_labHIV", "").equals("R")?"selected":""%> >R</option>
+		  </select>
 		  </td>
 		</tr><tr>
           <td><span class="small9">OTHER TESTS<br>
-          <input type="text" name="ar2_labOtherTest" style="width:100%"  size="20" maxlength="50" value="<%= props.getProperty("ar2_labOtherTest", "")%>"  @oscar.formDB /> 
+          <!--input type="text" name="ar2_labOtherTest" style="width:100%"  size="20" maxlength="200" value="<%--= props.getProperty("ar2_labOtherTest", "")--%>"  @oscar.formDB /--> 
+          <textarea name="ar2_labOtherTest" style="width:100%" cols="50" rows="2"  ><%= props.getProperty("ar2_labOtherTest", "") %></textarea> </td>
 		  </td>
 		</tr>
       </table>
@@ -897,7 +997,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos1", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos1" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos1", "") %>" @oscar.formDB />
   </td>
   <td width="38%">
   <input type="text" name="pg2_comment1" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment1", "") %>" @oscar.formDB />
@@ -928,7 +1028,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos2", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos2" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos2", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment2" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment2", "") %>" @oscar.formDB />
@@ -959,7 +1059,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos3", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos3" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos3", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment3" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment3", "") %>" @oscar.formDB />
@@ -990,7 +1090,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct4", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos4", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos4" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos4", "") %>" @oscar.formDB />
   </td>
   <td><span class="small8"><font color="red">NOTE: SEND A PHOTOCOPY OF ANTENATAL PARTS 1&2 TO<br>
   HOSPITAL AT 20 WEEKS</font>
@@ -1026,7 +1126,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos5", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos5" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos5", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment5" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment5", "") %>" @oscar.formDB />
@@ -1057,7 +1157,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct6" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct6", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos6" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos6", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos6" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos6", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment6" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment6", "") %>" @oscar.formDB />
@@ -1088,7 +1188,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct7" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct7", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos7" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos7", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos7" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos7", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment7" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment7", "") %>" @oscar.formDB />
@@ -1119,7 +1219,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct8" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct8", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos8" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos8", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos8" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos8", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment8" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment8", "") %>" @oscar.formDB />
@@ -1150,7 +1250,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct9" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct9", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos9" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos9", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos9" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos9", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment9" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment9", "") %>" @oscar.formDB />
@@ -1181,7 +1281,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct10" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct10", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos10" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos10", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos10" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos10", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment10" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment10", "") %>" @oscar.formDB />
@@ -1212,7 +1312,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct11" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct11", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos11" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos11", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos11" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos11", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment11" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment11", "") %>" @oscar.formDB />
@@ -1243,7 +1343,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct12" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct12", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos12" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos12", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos12" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos12", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment12" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment12", "") %>" @oscar.formDB />
@@ -1274,7 +1374,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct13" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct13", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos13" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos13", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos13" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos13", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment13" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment13", "") %>" @oscar.formDB />
@@ -1305,7 +1405,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct14" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct14", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos14" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos14", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos14" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos14", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment14" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment14", "") %>" @oscar.formDB />
@@ -1336,7 +1436,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct15" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct15", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos15" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos15", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos15" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos15", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment15" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment15", "") %>" @oscar.formDB />
@@ -1367,7 +1467,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct16" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct16", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos16" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos16", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos16" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos16", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg2_comment16" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment16", "") %>" @oscar.formDB />
@@ -1398,7 +1498,7 @@ function calToday(field) {
   <input type="text" name="pg2_fhrAct17" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_fhrAct17", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg2_pos17" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos17", "") %>" @oscar.formDB />
+  <input type="text" name="pg2_pos17" onDblClick="showBox('Langdiv',1, this, event);" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg2_pos17", "") %>" @oscar.formDB />
   </td>
   <td><span class="small8"><font color="red">NOTE: SEND HOSPITAL COPY AT 36 WEEKS</font></span><br>
   <input type="text" name="pg2_comment17" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg2_comment17", "") %>" @oscar.formDB />
