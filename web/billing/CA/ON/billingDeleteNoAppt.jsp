@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,75 +22,71 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
- <%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-//  mygroupno = (String) session.getAttribute("groupno");  
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
+<%
+if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
+
+//String curUser_no = (String) session.getAttribute("user");String userfirstname = (String) session.getAttribute("userfirstname");String userlastname = (String) session.getAttribute("userlastname");
 %>    
+
 <%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
+
 <html>
 <head>
 <script LANGUAGE="JavaScript">
-    <!--
-    function start(){
-      this.focus();
-    }
-    function closeit() {
-    	//self.opener.refresh();
-      //self.close();      
-    }   
-    //-->
+<!--
+function start(){
+	this.focus();
+}
+//-->
 </script>
 </head>
+
 <body  onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            DELETE A BILLING RECORD</font></th>
-      </tr>
-    </table>
+
+<table border="0" cellspacing="0" cellpadding="0" width="90%" >
+<tr bgcolor="#486ebd"> 
+	<th align="CENTER">
+	<font face="Helvetica" color="#FFFFFF">DELETE A BILLING RECORD</font></th>
+</tr>
+</table>
+
 <%
-   String billCode = request.getParameter("billCode");
-   if (billCode.substring(0,1).compareTo("B") == 0) {
-   %>
-     <p><h1>Sorry, cannot delete billed items.</h1></p>
-     <form>
+String billCode = request.getParameter("billCode");
+if (billCode.substring(0,1).compareTo("B") == 0) {
+%>
+
+<p><h1>Sorry, cannot delete billed items.</h1></p>
+<form>
 <input type="button" value="Back to previous page" onClick="history.go(-1)">
 </form>
-   <% }
-   else{
-     
-   
-  int rowsAffected=0;
-  rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("billing_no"),"delete_bill");
-       
-       
 
-%>
-  <p><h1>Successful Addition of a billing Record.</h1></p>
-<script LANGUAGE="JavaScript">
-      self.close();
-   	self.opener.refresh();
-</script>
 <%
-  apptMainBean.closePstmtConn();
-  }
+} else{
+	int rowsAffected=0;
+	rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("billing_no"),"delete_bill");
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
+
+<p><h1>Successful Addition of a billing Record.</h1></p>
+<script LANGUAGE="JavaScript">
+self.close();
+self.opener.refresh();
+</script>
+
+<%
+	apptMainBean.closePstmtConn();
+}
+%>
+
+<p></p>
+<hr width="90%"></hr>
 <input type="button" value="Close this window" onClick="window.close()">
-</form>
+
 </center>
 </body>
 </html>
