@@ -252,7 +252,11 @@
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementStyleSheetForm"/>      
     <form-bean      name="EctAddMeasurementStyleSheetForm"
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementStyleSheetForm"/>                          
-                                    
+<!-- oscarmeasurements/oscarForm start -->                                    
+    <form-bean      name="EctVTFormForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.oscarForm.pageUtil.EctVTFormForm"/>                          
+
+
 <!-- OscarComm start -->
     <form-bean      name="EctViewAttachmentForm"
                     type="oscar.oscarEncounter.pageUtil.EctViewAttachmentForm"/>
@@ -1252,6 +1256,21 @@
        <forward name="success" path="/oscarEncounter/oscarMeasurements/AddMeasurementStyleSheet.jsp"/>
     </action>
     
+    <!--start oscarmeasurements/oscarForm actions -->
+        <action path="/oscarEncounter/oscarMeasurements/oscarForm/SetupVTForm"
+                type="oscar.oscarEncounter.oscarMeasurements.oscarForm.pageUtil.EctSetupVTFormAction"
+                name="EctVTFormForm"
+                scope="request">                
+                <forward name="continue" path="/form/formVT.jsp"/>
+        </action> 
+        <action path="/oscarEncounter/oscarMeasurements/oscarForm/VTForm"
+                type="oscar.oscarEncounter.oscarMeasurements.oscarForm.pageUtil.EctVTFormAction"
+                name="EctVTFormForm"
+                input="/form/formVT.jsp"
+                scope="request">                
+                <forward name="success" path="/form/formVT2OSDEF.jsp"/>
+        </action> 
+    <!-- end oscarmeasurements/oscarForm actions -->
 <!-- end measurements actions-->    
 
 
