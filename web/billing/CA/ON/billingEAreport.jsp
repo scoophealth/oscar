@@ -100,14 +100,17 @@
                         <td width="12%">Code Error</td>
                 </logic:present>
                 <logic:present name="claimsError" property="patient_last">
+                <table width="100%" border="0" cellspacing="2" cellpadding="2" bgcolor="#F1E9FE">
                     <tr bgcolor="#F9F1FE"> 
                         <td width="23%" colspan="3"><bean:write name="claimsError" property="patient_last" />, &nbsp;<bean:write name="claimsError" property="patient_first" /> </td>
                         <td width="3%"> <bean:write name="claimsError" property="patient_sex" /> </td>
                         <td width="9%"><bean:write name="claimsError" property="province_code" /></td>
                         <td width="65%" colspan="10"> <bean:write name="claimsError" property="reCode1" />   &nbsp;<bean:write name="claimsError" property="reCode2" />   &nbsp;<bean:write name="claimsError" property="reCode3" />   &nbsp;<bean:write name="claimsError" property="reCode4" />   &nbsp;<bean:write name="claimsError" property="reCode5" />&nbsp;</td>
                     </tr>
+                </table>
                 </logic:present>
                 <logic:present name="claimsError" property="servicecode">
+                <table width="100%" border="0" cellspacing="2" cellpadding="2" bgcolor="#F1E9FE">
                 <tr bgcolor="#F9F1FE"> 
                     <td width="10%"><bean:write name="claimsError" property="hin" /> &nbsp; <bean:write name="claimsError" property="ver" />  </td>
                     <td width="6%"><bean:write name="claimsError" property="dob" /></td>
@@ -116,7 +119,7 @@
                     <td width="9%"><bean:write name="claimsError" property="referNumber" /></td>
                     <td width="7%"><bean:write name="claimsError" property="facilityNumber" />   </td>
                     <td width="9%"><bean:write name="claimsError" property="admitDate" /></td>
-                    <td width="9%"><bean:write name="claimsError" property="heCode1" />  &nbsp;<bean:write name="claimsError" property="heCode2" />  &nbsp;<bean:write name="claimsError" property="heCode3" />  &nbsp;<bean:write name="claimsError" property="heCode4" />  &nbsp;<bean:write name="claimsError" property="heCode5" />&nbsp;</td>
+                    <td width="5%"><bean:write name="claimsError" property="heCode1" />  &nbsp;<bean:write name="claimsError" property="heCode2" />  &nbsp;<bean:write name="claimsError" property="heCode3" />  &nbsp;<bean:write name="claimsError" property="heCode4" />  &nbsp;<bean:write name="claimsError" property="heCode5" />&nbsp;</td>
                     <td width="5%"><bean:write name="claimsError" property="servicecode" /></td>
                     <td width="6%"><bean:write name="claimsError" property="amountsubmit" /></td>
                     <td width="4%"><bean:write name="claimsError" property="serviceno" /></td>
@@ -125,8 +128,10 @@
                     <td width="2%"></td>
                     <td width="12%"> <bean:write name="claimsError" property="code1" />   &nbsp;<bean:write name="claimsError" property="code2" />   &nbsp;<bean:write name="claimsError" property="code3" />   &nbsp;<bean:write name="claimsError" property="code4" />   &nbsp;<bean:write name="claimsError" property="code5" />&nbsp;</td>
                 </tr>
+                </table>
                 </logic:present>
                 <logic:present name="claimsError" property="explain">
+                <table width="100%" border="0" cellspacing="2" cellpadding="2" bgcolor="#F1E9FE">
                 <tr> 
                     <td width="20%"><b>Error/Description</b></td>
                     <td width="20%"><bean:write name="claimsError" property="explain" /></td>
