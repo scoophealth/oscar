@@ -56,17 +56,18 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         WLWaitingListBeanHandler hd = new WLWaitingListBeanHandler(waitingListId);
         ProviderNameBeanHandler phd = new ProviderNameBeanHandler();
         WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler();
-        Collection allWaitingListName = wlNameHd.getWaitingListNameVector();
+        //Vector allWaitingListName = wlNameHd.getWaitingListNameVector();
         phd.setThisGroupProviderVector((String) session.getAttribute("groupno"));
         Collection allProviders = phd.getThisGroupProviderVector();
         String nbPatients = Integer.toString(hd.getWaitingListVector().size());
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd");
-       
+             
+        request.setAttribute("WLId", waitingListId);
         session.setAttribute( "waitingList", hd );            
         session.setAttribute("waitingListName", hd.getWaitingListName());
         session.setAttribute("allProviders", allProviders);
         session.setAttribute("nbPatients", nbPatients);
-        session.setAttribute("allWaitingListName", allWaitingListName);
+        //session.setAttribute("allWaitingListName", allWaitingListName);
         session.setAttribute("today", today);
         return (mapping.findForward("continue"));
     }
