@@ -75,6 +75,7 @@
     {"search_resource_baseurl", "select * from property where name = ?"}, 
 
     {"search_numgrpscheduledate", "select count(scheduledate.provider_no) from mygroup, scheduledate where mygroup_no = ? and scheduledate.sdate=? and mygroup.provider_no=scheduledate.provider_no and scheduledate.available = '1' "}, 
+    {"search_demographic_ver", "select ver from demographic where demographic_no = ? " },
   };
   
   //associate each operation with an output JSP file - displaymode
