@@ -54,7 +54,7 @@ public class DBQuery {
   }
 
   public ResultSet getAppointmentDate(int provider_no,int month,int year){
-     String getQuery = " select distinct appointment_date from appointment where provider_no = "+ provider_no +" and instr(\"appointment_date\",'2001-05')>0  order by appointment_date DESC " ;
+     String getQuery = " select distinct appointment_date from appointment where provider_no = "+ provider_no +" and instr('appointment_date','2001-05')>0  order by appointment_date DESC " ;
          ResultSet RS = null;
                   try{
                     DBConnect dbc= new DBConnect();

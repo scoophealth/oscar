@@ -157,8 +157,8 @@ public class MsgSendMessageAction extends Action {
             {
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
-              //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values ('today','now',\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\" ";
-              db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now',\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\") ");
+              //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"' ";
+              db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"') ");
 
 	      /* Choose the right command to recover the messageid inserted above */
 	      OscarProperties prop = OscarProperties.getInstance();
@@ -175,7 +175,7 @@ public class MsgSendMessageAction extends Action {
               for (int i =0 ; i < providers.length ; i++)
               {
                 System.out.println("sending too"+providers[i]);
-                db.RunSQL("insert into messagelisttbl (message,provider_no,status) values (\""+messageid+"\",\""+providers[i]+"\",\"new\")");
+                db.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
               }
 
 

@@ -211,7 +211,7 @@ public class MsgMessageData {
           }
 
           for (int i =0 ; i < providers.length ; i++){
-             db.RunSQL("insert into messagelisttbl (message,provider_no,status) values (\""+messageid+"\",\""+providers[i]+"\",\"new\")");
+             db.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
           }
 
         rs.close();
