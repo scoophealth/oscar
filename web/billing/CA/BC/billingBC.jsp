@@ -100,6 +100,9 @@ if (request.getParameter("loadFromSession") == null ){
 <script language="JavaScript">
 
 
+
+
+
 <!--                          
 
 function HideElementById(ele){
@@ -115,7 +118,17 @@ function CheckType(){
 	}else{		
 		HideElementById('ICBC');
 	}
+	
+	
+   
 }
+
+function gotoPrivate(){
+   if (document.BillingCreateBillingForm.xml_billtype.value == "PRIV"){
+      document.location = "../../../billing.do?billRegion=BC&billForm=PRI&hotclick=&appointment_no=6440&demographic_name=Regan,Timothy&demographic_no=9731&user_no=999998&apptProvider_no=103&providerview=103&appointment_date=2004-8-6&status=t&start_time=11:0&bNewForm=1&billType=PRIV";
+   }
+}
+
 
 function correspondenceNote(){    
 	if (document.BillingCreateBillingForm.correspondenceCode.value == "0" ){
@@ -128,6 +141,8 @@ function correspondenceNote(){
      ShowElementById('CORRESPONDENCENOTE');
 	}
 }
+
+
 
 
 
@@ -388,12 +403,16 @@ function showHideLayers() { //v3.0
                 thisForm.setXml_provider( sxml_provider);       
                 thisForm.setXml_visittype(sxml_visittype);    
             }
+                        
             String apDate = thisForm.getXml_appointment_date();
             if ( apDate != null && apDate.trim().length() == 0 ){
                 thisForm.setXml_appointment_date(bean.getApptDate());
             }
             System.out.println("app date "+thisForm.getXml_appointment_date());
             
+            if(request.getParameter("billType") != null){
+               thisForm.setXml_billtype(request.getParameter("billType"));    
+            }            
         }
         %>
         
@@ -435,7 +454,7 @@ function showHideLayers() { //v3.0
           <tr> 
             <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.billingtype"/></b> </font></td>
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
-              <html:select property="xml_billtype"  onchange="CheckType();" >
+              <html:select property="xml_billtype"  onchange="CheckType();gotoPrivate();" >
                  <html:option value="MSP" >Bill MSP</html:option>
                  <html:option value="WCB" >Bill WCB</html:option>
                  <html:option value="ICBC" >Bill ICBC</html:option>
@@ -928,6 +947,15 @@ function showHideLayers() { //v3.0
                         &nbsp;<textarea cols="60" rows="5"name="notes" onkeyup="checkTextLimit(this.form.notes,400);" ></textarea>
                         <br>
                         &nbsp;400 characters max. 
+                    </div>
+                    <br/>
+                    <hr/>                    
+                    <br/>
+                    <br/>
+                    <div style="background-color: #CCCCFF;">
+                       <div style="background-color : #EEEEFF;">Billing Notes (Notes are for internal use and will not be sent to MSP)</div>
+                       
+                       &nbsp;<html:textarea cols="60" rows="5" property="messageNotes"></html:textarea>
                     </div>
                     </td>
                 </tr>
