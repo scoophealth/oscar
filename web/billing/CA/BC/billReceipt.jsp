@@ -433,6 +433,7 @@ function showHideLayers() { //v3.0
                     <html:select style="font-size:80%;" property="status" styleClass="header">                        
                        <html:option value="O" >O | Bill MSP</html:option>
                        <html:option value="P" >P | Bill Patient</html:option>
+                       <html:option value="A" >A | Paid Private</html:option>
                        <html:option value="N" >N | Do Not Bill</html:option>                                
                        <html:option value="B" >B | Summitted MSP</html:option>
                        <html:option value="S" >S | Settled/Paid by MSP</html:option>
@@ -444,7 +445,8 @@ function showHideLayers() { //v3.0
                        <html:option value="Z" >Z | Held Bill</html:option>          
                        <html:option value="C" >C | Data Center Changed</html:option>                            
                        <html:option value="E" >E | Paid With Explanation</html:option>          
-                       <html:option value="F" >F | Refused Bill</html:option>              
+                       <html:option value="F" >F | Refused Bill</html:option> 
+             
                     </html:select>
                  </td>
                  <td>&nbsp;</td>
