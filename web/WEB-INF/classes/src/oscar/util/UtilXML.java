@@ -129,19 +129,20 @@ public class UtilXML
     public static String getText(Node node) {
         String ret = "";
         if (node.hasChildNodes()) {
+            
             for(int i = 0; i < node.getChildNodes().getLength(); i++) {
-                Node sub = node.getChildNodes().item(i);
+                Node sub = node.getChildNodes().item(i);            
                 if(sub.getNodeType() == 3)
-                    ret = String.valueOf(ret) + String.valueOf(sub.getNodeValue());
+                    ret += sub.getNodeValue();
+                if(sub.getNodeType() == 1)
+                    ret += toXML(sub);            
             }
 
-        }
+        }        
         return ret;
     }
 
-
-	  public static void setText(Node node, String text)
-    {
+    public static void setText(Node node, String text){
         Text txt = node.getOwnerDocument().createTextNode(text);
         node.appendChild(txt);
         node.normalize();
