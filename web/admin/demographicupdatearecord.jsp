@@ -84,7 +84,7 @@
   apptMainBean.closePstmtConn(); 
 %>
   <p></p>
-<%@ include file="footer2.jsp" %>
+<%@ include file="footer2htm.jsp" %>
   
   </center>
 </body>

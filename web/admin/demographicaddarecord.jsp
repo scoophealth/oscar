@@ -27,7 +27,10 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
 <script LANGUAGE="JavaScript">
     <!--
@@ -46,7 +49,7 @@
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A DEMOGRAPHIC RECORD</font></th>
+            <bean:message key="admin.demographicaddrecord.title"/></font></th>
       </tr>
     </table>
 
@@ -92,26 +95,26 @@
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
     
-    if(rs.next()) //!rs.getString("cpp_id").equals("")) 
-      out.println("***<font color='red'>You may have the CPP record already!!! Please search it first, then delete the duplicated one.***</font><br>");
-
+    if(rs.next()) //!rs.getString("cpp_id").equals("")) %>
+      ***<font color='red'><bean:message key="admin.demographicaddrecord.msgDuplicated"/>***</font><br>
+    <%
     // int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, param, request.getParameter("dboperation"));
     
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
 %>
-  <p><h2>Successful Addition of a Demographic Record.
+  <p><h2><bean:message key="admin.demographicaddrecord.msgSuccessful"/>
   </h2></p>
 <%  
   } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+  <p><h1><bean:message key="admin.demographicaddrecord.msgFailed"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
   <p></p>
-<%@ include file="footer2.jsp" %>
+<%@ include file="footer2htm.jsp" %>
 </center>
 </body>
-</html>
+</html:html>
