@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
 import oscar.oscarDB.DBHandler;
+import java.util.ResourceBundle;
 
 public class EctConEditSpecialistsAction extends Action
 {
@@ -23,16 +24,19 @@ public class EctConEditSpecialistsAction extends Action
         String delete = editSpecialistsForm.getDelete();
         String specialists[] = editSpecialistsForm.getSpecialists();
         System.out.println(String.valueOf(String.valueOf((new StringBuffer("===>")).append(delete).append("<==="))));
-        if(delete.equals("Delete Specialist"))
+        
+        ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources");
+                
+        if(delete.equals(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.EditSpecialists.btnDeleteSpecialist")))
         {
             if(specialists.length > 0)
             {
                 StringBuffer stringBuffer = new StringBuffer();
                 for(int i = 0; i < specialists.length; i++)
                     if(i == specialists.length - 1)
-                        stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer(" specId = '")).append(specialists[i]).append("' "))));
+                        stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer(" specId = ")).append(specialists[i]))));
                     else
-                        stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer(" specId = '")).append(specialists[i]).append("' or "))));
+                        stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer(" specId = ")).append(specialists[i]).append(" or "))));
 
                 try
                 {
@@ -63,7 +67,7 @@ public class EctConEditSpecialistsAction extends Action
         try
         {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = String.valueOf(String.valueOf((new StringBuffer("select * from professionalSpecialists where specId = '")).append(specId).append("'")));
+            String sql = String.valueOf(String.valueOf((new StringBuffer("select * from professionalSpecialists where specId = ")).append(specId)));
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next();)
             {
