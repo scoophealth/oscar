@@ -55,7 +55,7 @@ public final class EctSetupDisplayHistoryAction extends Action {
         request.getSession().setAttribute("EctSessionBean", bean);
         if (bean!=null){
             String demo = (String) bean.getDemographicNo();            
-            EctMeasurementsDataBeanHandler hd = new EctMeasurementsDataBeanHandler(demo);           
+            oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);           
             HttpSession session = request.getSession();
             session.setAttribute( "measurementsData", hd );            
         }
