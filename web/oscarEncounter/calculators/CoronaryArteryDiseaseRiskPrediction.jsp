@@ -370,7 +370,7 @@ function calculate(){
                                         +"* Based on risk, your target lipid      *\n"
                                         +"* levels should be:                     *\n"
                                         +"* LDL-C Level(mmol/L) - < 2.5           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n"
-                                        +"*****************************************\n";
+                                        +"*****************************************";
 	}else{
             document.second.prediction.value="*****************************************\n"
                                         +"*Coronary Artery Disease Risk Prediction*\n"
@@ -381,7 +381,7 @@ function calculate(){
 					+"* Based on risk, your target lipid      *\n"
                                         +"* levels should be:                     *\n"
 					+"* "+lipidLvl
-					+"*****************************************\n";
+					+"*****************************************";
                                         
 	}
 	
@@ -886,7 +886,7 @@ function setValues(){
                 </form>
 			
                 <form name="second">
-                    <textarea name="prediction" rows="10" cols="42" style="overflow:hidden"></textarea>
+                    <textarea name="prediction" rows="12" cols="43" style="overflow:auto"></textarea>
                 </form>	
                 
                 <input type="button" value="Paste" onClick="write2Parent();"/>               
