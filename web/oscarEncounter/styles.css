@@ -835,3 +835,89 @@ A IMG
 .Head A {
     font-size:12pt;
 }
+
+td.tite {
+
+background-color: #bbbbFF;
+color : black;
+font-size: 12pt;
+
+}
+
+td.tite1 {
+
+background-color: #ccccFF;
+color : black;
+font-size: 12pt;
+
+}
+
+th,td.tite2 {
+
+background-color: #BFBFFF;
+color : black;
+font-size: 12pt;
+
+}
+
+td.tite3 {
+
+background-color: #B8B8FF;
+color : black;
+font-size: 12pt;
+
+}
+
+td.tite4 {
+
+background-color: #ddddff;
+color : black;
+font-size: 12pt;
+
+}
+
+td.stat{
+font-size: 10pt;
+}
+
+input.righty{
+text-align: right;
+}
+
+body{
+    FONT-SIZE: 12px;
+    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+}
+td.messengerButtonsA{
+    /*background-color: #6666ff;*/
+    /*background-color: #6699cc;*/
+    background-color: #003399;
+}
+td.messengerButtonsD{
+    /*background-color: #84c0f4;*/
+    background-color: #555599;
+}
+a.messengerButtons{
+    color: #ffffff;
+    font-size: 9pt;
+    text-decoration: none;
+}
+
+table.messButtonsA{
+border-top: 2px solid #cfcfcf;
+border-left: 2px solid #cfcfcf;
+border-bottom: 2px solid #333333;
+border-right: 2px solid #333333;
+}
+
+table.messButtonsD{
+border-top: 2px solid #333333;
+border-left: 2px solid #333333;
+border-bottom: 2px solid #cfcfcf;
+border-right: 2px solid #cfcfcf;
+}
+
+td.Title{
+font-size: 14px;
+border-bottom: 2px solid #003399;
+}
