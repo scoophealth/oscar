@@ -1,0 +1,97 @@
+package oscar.oscarBilling.pageUtil;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Properties;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionServlet;
+import org.apache.struts.util.MessageResources;
+
+public final class BillingViewAction extends Action {
+    
+    public ActionForward perform(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException, ServletException {
+        
+        // Extract attributes we will need
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources();
+        
+        // Setup variables
+        ActionErrors errors = new ActionErrors();
+        Properties oscarVars = (Properties) request.getSession().getAttribute("oscarVariables");
+        
+        if (oscarVars.getProperty("billregion").equals("ON")){
+            String newURL = mapping.findForward("ON").getPath();
+            newURL = newURL + "?"+request.getQueryString();
+            return (new ActionForward(newURL));
+        }else{
+            oscar.oscarBilling.pageUtil.BillingViewBean bean = new oscar.oscarBilling.pageUtil.BillingViewBean();
+            bean.loadBilling(request.getParameter("billing_no"));
+            oscar.oscarBilling.pageUtil.BillingBillingManager bmanager;
+            bmanager = new BillingBillingManager();
+            ArrayList billItem = bmanager.getBillView(request.getParameter("billing_no"));
+            System.out.println("Calling getGrandTotal");
+            bean.setBillItem(billItem);
+            bean.setGrandtotal(bmanager.getGrandTotal(billItem));
+            System.out.println("GrandTotal" +bmanager.getGrandTotal(billItem));
+            oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
+            System.out.println("Calling Demo");
+            
+            oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+            bean.setPatientLastName(demo.getLastName());
+            bean.setPatientFirstName(demo.getFirstName());
+            bean.setPatientDoB(demo.getFirstName());
+            bean.setPatientAddress1(demo.getAddress());
+            bean.setPatientAddress2(demo.getCity());
+            bean.setPatientPostal(demo.getPostal());
+            bean.setPatientSex(demo.getSex());
+            bean.setPatientPHN(demo.getHIN());
+            bean.setPatientHCType(demo.getHCType());
+            bean.setPatientAge(demo.getAge());
+            System.out.println("End Demo Call");
+            
+            //if(request.getParameter("demographic_no")!=null & request.getParameter("appointment_no")!=null)
+            //{
+            //    bean = new oscar.oscarBilling.pageUtil.BillingSessionBean();
+            
+            //	 bean.setApptProviderNo(request.getParameter("apptProvider_no"));
+            //    bean.setPatientName(request.getParameter("demographic_name"));
+            //    bean.setProviderView(request.getParameter("providerview"));
+            //    bean.setBillRegion(request.getParameter("billRegion"));
+            //    bean.setBillForm(request.getParameter("billForm"));
+            //    bean.setCreator(request.getParameter("user_no"));
+            //    bean.setPatientNo(request.getParameter("demographic_no"));
+            //    bean.setApptNo(request.getParameter("appointment_no"));
+            //    bean.setApptDate(request.getParameter("appointment_date"));
+            //    bean.setApptStart(request.getParameter("start_time"));
+            //    bean.setApptStatus(request.getParameter("status"));
+            request.getSession().setAttribute("billingViewBean", bean);
+            
+            //	                  System.out.println("PatientName is:" + bean.getPatientName());
+            //            }//if
+            //else
+            //{
+            //    bean = (oscar.oscarBilling.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
+            //}
+            
+            
+            
+            return (mapping.findForward("success"));
+        }
+    }
+    
+}
