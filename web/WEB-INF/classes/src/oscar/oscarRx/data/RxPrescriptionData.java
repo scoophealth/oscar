@@ -1029,7 +1029,7 @@ public class Prescription {
     
     
     public String getFullDuration(){
-        String ret = this.getDuration();
+        String ret = this.getDuration()+" ";
         if(this.getDurationUnit().equals("D")){
             ret += "Day";
         }
