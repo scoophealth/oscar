@@ -75,7 +75,7 @@
                                 <td> 
                                     <tr>
                                         <td align="left">
-                                            <bean:message key="oscarEncounter.oscarMeasurements.SelectMeasurementGroup.msgCurrentStyleSheet"/> <bean:write name='groupName'/>: <bean:write name="css"/>
+                                            <bean:message key="oscarEncounter.oscarMeasurements.SelectMeasurementGroup.msgCurrentStyleSheet"/> <bean:write name='groupName'/>: <logic:present name="css"><bean:write name="css"/></logic:present>
                                         </td>                                        
                                     <tr>
                                         <td>

@@ -73,7 +73,9 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
 <!--  -->
     
     <html:form action="/oscarEncounter/Measurements" enctype="multipart/form-data">
-    <link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
+    <logic:present name="css">
+        <link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
+    </logic:present>
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
