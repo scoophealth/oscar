@@ -550,22 +550,14 @@ function PVDCheck(){
                                                         <html:hidden property="value(AngValue)"/>
                                                         <html:hidden property="value(ACSValue)"/>                                                        
                                                         <html:hidden property="value(RVTNValue)"/>
-                                                        <html:hidden property="value(MIDate)"/>
-                                                        <html:hidden property="value(AngDate)"/>
-                                                        <html:hidden property="value(ACSDate)"/>                                                        
-                                                        <html:hidden property="value(RVTNDate)"/>                                                        
+                                                                                                             
                                                         <td class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/> DM</td>
                                                         <td class="sixtyPercent"><html:checkbox property="value(HTNValue)"/> HTN</td>
                                                         <td class="sixtyPercent"><html:checkbox property="value(HchlValue)"/> Hyperlipidemia</td>
                                                         <td class="sixtyPercent"><html:checkbox property="value(CADValue)"/> CAD</td>
                                                         <td class="sixtyPercent"><html:checkbox property="value(CVDValue)"/> CVD</td>
                                                         <td class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/> PVD</td>
-                                                        <html:hidden property="value(DMDate)"/>
-                                                        <html:hidden property="value(HTNDate)"/>
-                                                        <html:hidden property="value(HchlDate)"/>
-                                                        <html:hidden property="value(CADDate)"/>
-                                                        <html:hidden property="value(CVDDate)"/>
-                                                        <html:hidden property="value(PVDDate)"/>
+                                                        
                                                     </tr>
                                                 </table>                                                
                                             </td>
