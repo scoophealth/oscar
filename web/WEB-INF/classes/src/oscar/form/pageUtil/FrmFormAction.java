@@ -400,7 +400,9 @@ public class FrmFormAction extends Action {
     }
      
     public String currentMem(){        
-       long Used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
-       return ""+Used;
+       long total = Runtime.getRuntime().totalMemory();
+       long free  = Runtime.getRuntime().freeMemory();
+       long Used = total -  free;
+       return "Total "+total+" Free "+free+" USED "+Used;
     }
 }
