@@ -59,6 +59,46 @@ public class MSPReconcile{
     public static String BILLPATIENT        = "P";
     public static String COLLECTION         = "T";
     public static String PAIDPRIVATE        = "A";
+    
+    
+    public String getStatusDesc(String stat){
+       String statusDesc = "";
+       if (stat.equals(REJECTED)){
+          statusDesc = "Rejected";
+       }else if (stat.equals(NOTSUBMITTED)){
+          statusDesc = "Not Submitted";
+       }else if (stat.equals(SUBMITTED)){
+          statusDesc = "Submitted";
+       }else if (stat.equals(SETTLED)){
+          statusDesc = "Settled";
+       }else if (stat.equals(DELETED)){
+          statusDesc = "Deleted";
+       }else if (stat.equals(HELD)){
+          statusDesc = "Held";
+       }else if (stat.equals(DATACENTERCHANGED)){
+          statusDesc = "Data Center Changed";
+       }else if (stat.equals(PAIDWITHEXP)){
+          statusDesc = "Paid With Exception";
+       }else if (stat.equals(REFUSED)){
+          statusDesc = "Refused";
+       }else if (stat.equals(BADDEBT)){
+          statusDesc = "Bad Debt";
+       }else if (stat.equals(WCB)){
+          statusDesc = "WCB";
+       }else if (stat.equals(CAPITATED)){
+          statusDesc = "Capitated";
+       }else if (stat.equals(DONOTBILL)){
+          statusDesc = "Do Not Bill";
+       }else if (stat.equals(BILLPATIENT)){
+          statusDesc = "Bill Patient";
+       }else if (stat.equals(COLLECTION)){
+          statusDesc = "Sent To Collection";
+       }else if (stat.equals(PAIDPRIVATE)){
+          statusDesc = "Paid Private";
+       }                      
+        
+       return statusDesc;
+    }
             
     public Properties currentC12Records(){
         Properties p = new Properties();
