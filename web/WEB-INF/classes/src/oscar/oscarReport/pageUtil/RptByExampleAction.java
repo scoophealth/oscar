@@ -30,16 +30,20 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.Collection;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
+
 import org.apache.struts.action.*;
-import java.util.Properties;
-import java.util.Collection;
+import org.apache.commons.lang.StringEscapeUtils;
+
 import oscar.oscarReport.data.*;
 import oscar.oscarReport.bean.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
+
 
 public class RptByExampleAction extends Action {
 
@@ -56,14 +60,13 @@ public class RptByExampleAction extends Action {
         String providerNo = (String) request.getSession().getAttribute("user");
         RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler();  
         Collection favorites = hd.getFavoriteCollection(providerNo);       
-        request.setAttribute("favorites", favorites);
-        
+        request.setAttribute("favorites", favorites);        
                 
         String bgcolor = "#ddddff";
         String sql = frm.getSql();
         String pros = "";
         
-        if (sql!= null){
+        if (sql!= null){            
             write2Database(sql, providerNo);
         }
         else
@@ -86,10 +89,13 @@ public class RptByExampleAction extends Action {
             try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
+                StringEscapeUtils strEscUtils = new StringEscapeUtils();
+                
+                //query = exampleData.replaceSQLString (";","",query);
+                //query = exampleData.replaceSQLString("\"", "\'", query);            
 
-                query = exampleData.replaceSQLString (";","",query);
-                query = exampleData.replaceSQLString("\"", "\'", query);            
-
+                query = strEscUtils.escapeSql(query);
+                
                 String sql = "INSERT INTO reportByExamples(providerNo, query, date) VALUES('" + providerNo + "','" + query + "', NOW())";
                 db.RunSQL(sql);
 

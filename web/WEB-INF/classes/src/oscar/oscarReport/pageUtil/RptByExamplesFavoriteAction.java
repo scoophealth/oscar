@@ -41,6 +41,7 @@ import oscar.oscarReport.data.*;
 import oscar.oscarReport.bean.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class RptByExamplesFavoriteAction extends Action {
 
@@ -81,8 +82,10 @@ public class RptByExamplesFavoriteAction extends Action {
         else{
             String favoriteName = frm.getFavoriteName();
             String query = frm.getQuery();   
-            oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();       
-            String queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
+            //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();       
+            //String queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
+            StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
+            String queryWithEscapeChar = strEscUtils.escapeSql(query);
             write2Database(providerNo, favoriteName, queryWithEscapeChar);            
         }
         RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler(providerNo);  
@@ -96,9 +99,13 @@ public class RptByExamplesFavoriteAction extends Action {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
 
-                query = exampleData.replaceSQLString (";","",query);
-                query = exampleData.replaceSQLString("\"", "\'", query);            
+                StringEscapeUtils strEscUtils = new StringEscapeUtils();
+                
+                //query = exampleData.replaceSQLString (";","",query);
+                //query = exampleData.replaceSQLString("\"", "\'", query);            
 
+                query = strEscUtils.escapeSql(query);
+                
                 String sql = "SELECT * from reportByExamplesFavorite WHERE name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
                 ResultSet rs = db.GetSQL(sql);
                 if(!rs.next()){
