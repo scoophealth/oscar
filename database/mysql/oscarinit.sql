@@ -4671,6 +4671,11 @@ CREATE TABLE formVTForm(
   WTComments varchar(255),
   WTLastData varchar(10),
   WTLastDataEnteredDate varchar(10),
+  WHRValue varchar(10),
+  WHRDate varchar(10),
+  WHRComments varchar(255),
+  WHRLastData varchar(10),
+  WHRLastDataEnteredDate varchar(10),
   WCValue varchar(10),
   WCDate varchar(10),
   WCComments varchar(255),
@@ -4881,12 +4886,24 @@ CREATE TABLE formVTForm(
   OthCComments varchar(255),  
   OthCLastData varchar(10),
   OthCLastDataEnteredDate varchar(10),
-    
+  DMValue varchar(10),
+  HTNValue varchar(10),
+  HchlValue varchar(10),
+  CADValue varchar(10),
+  CVDValue varchar(10),
+  PVDValue varchar(10),
+  Diagnosis Text,
+  Subjective Text,
+  Objective Text,
+  Assessment Text,
+  Plan Text,
   PRIMARY KEY  (ID),
   INDEX (ID),
   INDEX (demographic_no)
 
 ) TYPE=MyISAM;
+
+
 
 
 --
