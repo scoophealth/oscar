@@ -403,7 +403,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 <table width="100%" border="0">
   <tr bgcolor="#CCCCFF"> 
     <td colspan="2"  class="bCellData">
-       Billing Information  Data Center <%=allFields.getProperty("datacenter")%> Payee Number: <%=allFields.getProperty("payee_no")%>
+       Billing Information  Data Center <%=allFields.getProperty("datacenter")%> Payee Number: <%=allFields.getProperty("payee_no")%> Practitioner Number: <%=allFields.getProperty("practitioner_no")%>
      </td>
   </tr>
 
