@@ -203,25 +203,33 @@
     }
 
     function goToVisualAid1(){
-        document.getElementById('instruction').style.display = 'none';
-        document.getElementById('visualAid1').style.display = 'block';
-        document.getElementById('visualAid2').style.display = 'none';
-        document.getElementById('page1').style.display = 'none';
-        document.getElementById('page2').style.display = 'none';  
-        document.getElementById('page3').style.display = 'none';
-        document.getElementById('functionBar').style.display = 'none';
-        document.getElementById('copyRight').style.display = 'block';
+        //document.getElementById('instruction').style.display = 'none';
+        //document.getElementById('visualAid1').style.display = 'block';
+        //document.getElementById('visualAid2').style.display = 'none';
+        //document.getElementById('page1').style.display = 'none';
+        //document.getElementById('page2').style.display = 'none';  
+        //document.getElementById('page3').style.display = 'none';
+        //document.getElementById('functionBar').style.display = 'none';
+        //document.getElementById('copyRight').style.display = 'block';
+        var vheight = 500;
+        var vwidth = 600;
+        var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+        window.open("formlatelifedisabilityvisualAid1.jsp","Disability Visual Aid #1", windowprops);
     }
 
     function goToVisualAid2(){
-        document.getElementById('instruction').style.display = 'none';
-        document.getElementById('visualAid1').style.display = 'none';
-        document.getElementById('visualAid2').style.display = 'block';
-        document.getElementById('page1').style.display = 'none';
-        document.getElementById('page2').style.display = 'none';  
-        document.getElementById('page3').style.display = 'none';
-        document.getElementById('functionBar').style.display = 'none';
-        document.getElementById('copyRight').style.display = 'block';
+        //document.getElementById('instruction').style.display = 'none';
+        //document.getElementById('visualAid1').style.display = 'none';
+        //document.getElementById('visualAid2').style.display = 'block';
+        //document.getElementById('page1').style.display = 'none';
+        //document.getElementById('page2').style.display = 'none';  
+        //document.getElementById('page3').style.display = 'none';
+        //document.getElementById('functionBar').style.display = 'none';
+        //document.getElementById('copyRight').style.display = 'block';
+        var vheight = 768;
+        var vwidth = 600;
+        var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+        window.open("formlatelifedisabilityvisualAid2.jsp","Disability Visual Aid #2", windowprops);
     }
 
     function goToPage1(){             
@@ -457,149 +465,7 @@
                 </table>            
             </td>
         </tr>        
-    </table>
-    
-    <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="visualAid1">        
-        <tr>        
-            <td valign="top" colspan="2">
-                <table width="100%" height="650px" border="0" cellspacing="1" cellpadding="2" >                                        
-                    <tr class="title" >
-                        <th colspan="5">Disability Visual Aid #1</th>
-                    </tr> 
-                    <tr>
-                        <td class="question" colspan="5">
-                            How often do you...?
-                            <br>
-                            <br>
-                        </td>
-                    </tr>                   
-                    <tr bgcolor="white" height="150px">
-                        <td width="34%" align="center">
-                            <img src="graphics/disabilityVisualAid/veryOften.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="30%" align="center">
-                            <img src="graphics/disabilityVisualAid/often.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="25%" align="center">
-                            <img src="graphics/disabilityVisualAid/onceInAWhile.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="20%" align="center">
-                            <img src="graphics/disabilityVisualAid/almostNever.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="11%" align="center">
-                            <img src="graphics/disabilityVisualAid/never.JPG" align="center" border='0'/>
-                        </td>
-                    </tr>
-                    <tr bgcolor="white" height="80px">
-                        <td align="center" valign="top">
-                            Frequently<br>
-                            A lot of the time<br>
-                            A major part of your life
-                        </td>
-                        <td align="center" valign="top">
-                            Regularly<br>
-                            A regular part of your life
-                        </td>
-                        <td align="center" valign="top">
-                            Infrequently<br>
-                            From time to time<br>
-                            Occasionally
-                        </td>
-                        <td align="center" valign="top">
-                            Very infrequently<br>
-                            Rarely
-                        </td>
-                        <td align="center" valign="top">                            
-                        </td>
-                    </tr>
-                    <tr><td></td></tr>
-                </table>            
-            </td>
-        </tr>        
-    </table>
-    
-    <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="visualAid2">        
-        <tr>        
-            <td valign="top" colspan="2">
-                <table width="100%" height="650px" border="0" cellspacing="1" cellpadding="2" >                                        
-                    <tr class="title" >
-                        <th colspan="5">
-                            Disability Visual Aid #2
-                        </th>
-                    </tr> 
-                    <tr>
-                        <td class="question" colspan="5">To what extent do you feel limited in...?
-                            <br>
-                            <br>
-                        </td>
-                    </tr>                   
-                    <tr bgcolor="white" height="150px">
-                        <td width="11%" align="center" align="center">
-                            <img src="graphics/disabilityVisualAid/notAtAll.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="20%" align="center">
-                            <img src="graphics/disabilityVisualAid/little.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="25%" align="center">
-                            <img src="graphics/disabilityVisualAid/somewhat.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="30%" align="center">
-                            <img src="graphics/disabilityVisualAid/aLot.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="34%" align="center">
-                            <img src="graphics/disabilityVisualAid/completely.JPG" align="center" border='0'/>
-                        </td>
-                    </tr>
-                    <tr bgcolor="white" height="80px">
-                        <td align="center" valign="center" width="10%">
-                            No Limitations
-                        </td>
-                        <td align="center" valign="center" width="20%">
-                            Slight Limitations
-                        </td>
-                        <td align="center" valign="center" width="25%">
-                            Moderate Limitations
-                        </td>
-                        <td align="center" valign="center" width="31%">
-                            Heavy Limitations
-                        </td>
-                        <td align="center" valign="center" width="34%">
-                            Total Limitation
-                            <br>Cannot do
-                        </td>
-                    </tr>
-                    <tr><td>&nbsp;</td></tr>
-                     <tr>
-                        <td style="border:1px solid #000000" colspan="4">
-                            <table>
-                                <tr>
-                                    <td width="3%"></td>
-                                    <td>
-                                        <font style="text-decoration:underline">Examples of limiting factors that may restrict you:</font>
-                                        <br>
-                                        <li>Mental or Physical Energy</li>
-                                        <li>Too much effort</li>
-                                        <li>Social and economic circumstances</li>
-                                        <li>Transportation problems</li>
-                                        <li>Accessibility issues</li>
-                                        <li>Health</li>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> 
-                    <tr>
-                        <td colspan="3">
-                            <table height="8px">
-                                <tr><td></td></tr>
-                            </table>
-                        </td>
-                    </tr> 
-                </table>            
-            </td>
-        </tr>        
-    </table>
-    
+    </table>          
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="page1">        
         <tr>        
             <td valign="top" colspan="2">

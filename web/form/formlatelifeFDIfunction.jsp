@@ -210,7 +210,7 @@
     }
 
     function goToVisualAid1(){
-        document.getElementById('instruction').style.display = 'none';
+       /*document.getElementById('instruction').style.display = 'none';
         document.getElementById('visualAid1').style.display = 'block';
         document.getElementById('visualAid2').style.display = 'none';
         document.getElementById('page1').style.display = 'none';
@@ -221,11 +221,15 @@
         document.getElementById('totalScore').style.display = 'none'; 
         document.getElementById('subject2').style.display = 'none';
         document.getElementById('functionBar').style.display = 'none';
-        document.getElementById('copyRight').style.display = 'block';
+        document.getElementById('copyRight').style.display = 'block';*/
+        var vheight = 768;
+        var vwidth = 600;
+        var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+        window.open("formlatelifefunctionvisualAid1.jsp","Function Visual Aid #1", windowprops);
     }
 
     function goToVisualAid2(){
-        document.getElementById('instruction').style.display = 'none';
+        /*document.getElementById('instruction').style.display = 'none';
         document.getElementById('visualAid1').style.display = 'none';
         document.getElementById('visualAid2').style.display = 'block';
         document.getElementById('page1').style.display = 'none';
@@ -236,7 +240,11 @@
         document.getElementById('totalScore').style.display = 'none';
         document.getElementById('subject2').style.display = 'none';
         document.getElementById('functionBar').style.display = 'none';
-        document.getElementById('copyRight').style.display = 'block';
+        document.getElementById('copyRight').style.display = 'block';*/
+        var vheight = 768;
+        var vwidth = 600;
+        var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+        window.open("formlatelifefunctionvisualAid2.jsp","Disabiliyt Visual Aid #2", windowprops);
     }
 
     function goToPage1(){             
@@ -547,159 +555,6 @@
                             Let's begin...
                         </td>
                     </tr>
-                </table>            
-            </td>
-        </tr>        
-    </table>
-    <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="visualAid1">        
-        <tr>        
-            <td valign="top" colspan="2">
-                <table width="100%" height="590px" border="0" cellspacing="1" cellpadding="2" >                                        
-                    <tr class="title" >
-                        <th colspan="5">Function Visual Aid #1</th>
-                    </tr> 
-                    <tr>
-                        <td class="question" colspan="5">
-                            Currently, how much difficulty do you have in doing the activity without the help of someone else, and without
-                            the use of a cane, walker or any other assistive walking device?
-                            <br>
-                            <br>
-                        </td>
-                    </tr>                   
-                    <tr bgcolor="white">
-                        <td width="11%" align="center">
-                            <img src="graphics/functionVisualAid/None.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="20%" align="center">
-                            <img src="graphics/functionVisualAid/little.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="25%" align="center">
-                            <img src="graphics/functionVisualAid/some.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="30%" align="center">
-                            <img src="graphics/functionVisualAid/quiteALot.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="34%" align="center">
-                            <img src="graphics/functionVisualAid/cannotDo.JPG" align="center" border='0'/>
-                        </td>
-                    </tr>
-                    <tr bgcolor="white">
-                        <td align="center" valign="top" width="10%">
-                            You have no difficulty doing the activity alone
-                        </td>
-                        <td align="center" valign="top" width="20%">
-                            You can do it alone with a little bit of difficult
-                        </td>
-                        <td align="center" valign="top" width="25%">
-                            You can do it, but you have a moderate amount of difficulty doing it alone
-                        </td>
-                        <td align="center" valign="top" width="31%">
-                            You can manage without help, but you have quite a lot of difficulty doing it
-                        </td>
-                        <td align="center" valign="top" width="34%">
-                            It is so difficult, that you cannot do it unless you have help
-                        </td>
-                    </tr>
-                    <tr><td>&nbsp;</td></tr>
-                     <tr>
-                        <td style="border:1px solid #000000" colspan="3">
-                            <table>
-                                <tr>
-                                    <td width="3%"></td>
-                                    <td>
-                                        Factors that may influence your level of difficulty:
-                                        <br>
-                                        <br>Pain
-                                        <br>Fatigue
-                                        <br>Soreness
-                                        <br>Ailments
-                                        <br>Disabilities
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>            
-            </td>
-        </tr>        
-    </table>
-    <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="visualAid2">        
-        <tr>        
-            <td valign="top" colspan="2">
-                <table width="100%" height="590px" border="0" cellspacing="1" cellpadding="2" >                                        
-                    <tr class="title" >
-                        <th colspan="5">
-                            Function Visual Aid #2 <font style="font-size:80%; font-weight:bold">(For users of canes or walkers only)
-                        </th>
-                    </tr> 
-                    <tr>
-                        <td class="question" colspan="5">
-                            Currently, how much difficulty do you have in doing the activity when you use your cane, walker or any 
-                            other assistive walking device?
-                            <br>
-                            <br>
-                        </td>
-                    </tr>                   
-                    <tr bgcolor="white">
-                        <td width="11%" align="center">
-                            <img src="graphics/functionVisualAid/None.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="20%" align="center">
-                            <img src="graphics/functionVisualAid/little.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="25%" align="center">
-                            <img src="graphics/functionVisualAid/some.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="30%" align="center">
-                            <img src="graphics/functionVisualAid/quiteALot.JPG" align="center" border='0'/>
-                        </td>
-                        <td width="34%" align="center">
-                            <img src="graphics/functionVisualAid/cannotDo.JPG" align="center" border='0'/>
-                        </td>
-                    </tr>
-                    <tr bgcolor="white">
-                        <td align="center" valign="top" width="10%">
-                            You have no difficulty doing the activity alone
-                        </td>
-                        <td align="center" valign="top" width="20%">
-                            You can do it alone with a little bit of difficult
-                        </td>
-                        <td align="center" valign="top" width="25%">
-                            You can do it, but you have a moderate amount of difficulty doing it alone
-                        </td>
-                        <td align="center" valign="top" width="31%">
-                            You can manage without help, but you have quite a lot of difficulty doing it
-                        </td>
-                        <td align="center" valign="top" width="34%">
-                            It is so difficult, that you cannot do it unless you have help
-                        </td>
-                    </tr>
-                    <tr><td>&nbsp;</td></tr>
-                     <tr>
-                        <td style="border:1px solid #000000" colspan="3">
-                            <table>
-                                <tr>
-                                    <td width="3%"></td>
-                                    <td>
-                                        Factors that may influence your level of difficulty:
-                                        <br>
-                                        <br>Pain
-                                        <br>Fatigue
-                                        <br>Soreness
-                                        <br>Ailments
-                                        <br>Disabilities
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> 
-                    <tr>
-                        <td colspan="3">
-                            <table height="8px">
-                                <tr><td></td></tr>
-                            </table>
-                        </td>
-                    </tr> 
                 </table>            
             </td>
         </tr>        
