@@ -268,7 +268,7 @@ function upCaseCtrl(ctrl) {
     }
   }
 %> 
-<%@ include file="footer.htm" %>
+<%@ include file="footer.jsp" %>
 
 </body>
 </html>

@@ -170,6 +170,6 @@ function setfocus() {
 }
 %>
 <p>Please select by clicking on the patient's demographic id for details.</p></center>
-<%@ include file="footer.htm" %>
+<%@ include file="footer.jsp" %>
 </body>
 </html>
