@@ -88,7 +88,7 @@ function checkTotal() {
   String providername = "";
   ResultSet rs = apptMainBean.queryResults(param, "search_provider");
   while (rs.next()) {
-    providername = rs.getString("p.last_name") +","+ rs.getString("p.first_name");
+    providername = rs.getString("last_name") +","+ rs.getString("first_name");
   }
  
   rs = apptMainBean.queryResults(param, "search_detail");
