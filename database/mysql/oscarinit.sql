@@ -2948,6 +2948,7 @@ CREATE TABLE formLabReq (
   formCreated date default NULL,
   formEdited timestamp(14) NOT NULL,
   provName varchar(60) default NULL,
+  reqProvName varchar(60) default "",
   clinicAddress varchar(30) default NULL,
   clinicCity varchar(20) default NULL,
   clinicPC varchar(7) default NULL,
