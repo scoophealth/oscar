@@ -32,7 +32,7 @@
  */
 -->          
 <struts-config>
-
+  
   <!-- ========== Form Bean Definitions =================================== -->
   <form-beans>
     <!-- login form bean -->
@@ -638,6 +638,14 @@
     </action>
     <action     path="/oscarRx/deleteAllergy"
                 type="oscar.oscarRx.pageUtil.RxDeleteAllergyAction"
+                name=""
+                scope="request"
+                input="/oscarRx/ChooseAllergy.jsp">
+        <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
+    </action>
+    
+    <action     path="/oscarRx/showAllergy"
+                type="oscar.oscarRx.pageUtil.RxShowAllergyAction"
                 name=""
                 scope="request"
                 input="/oscarRx/ChooseAllergy.jsp">
@@ -1789,5 +1797,10 @@
 
   </action-mappings>
 
-</struts-config>
+  
+  
+  
+  <message-resources parameter="oscarResources"/> 
+  
+  </struts-config>
 
