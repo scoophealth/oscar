@@ -93,7 +93,7 @@
 <meta http-equiv="refresh" content="180;">
 </head>
 <script language="JavaScript">
-<!--
+
 function setfocus() {
   //this.focus();
 }
@@ -120,7 +120,7 @@ function popupPage2(varpage, windowname) {
     window.open(page, windowname, windowprops);
 }
 
-//<!--oscarMessenger code block-->
+<!--oscarMessenger code block-->
 function popupOscarRx(vheight,vwidth,varpage) { 
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
@@ -161,6 +161,7 @@ function onUnbilled(url) {
 function changeGroup(s) {
 	var newGroupNo = s.options[s.selectedIndex].value;
 	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+	document.location.reload();
 }
 function ts1(s) {
   popupPage(360,680,('../appointment/addappointment.jsp?'+s));
@@ -174,7 +175,7 @@ function goFilpView(s) {
 function goZoomView(s, n) {
 	self.location.href = "providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider="+s+"&curProviderName="+n+"&displaymode=day&dboperation=searchappointmentday" ;
 }
-//-->
+
 </SCRIPT>
 <body bgcolor="#EEEEFF" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
