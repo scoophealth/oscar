@@ -1,0 +1,306 @@
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+package oscar.oscarRx.pageUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+public final class RxWriteScriptForm extends ActionForm {
+    String action = "";
+    int drugId = 0;
+    int demographicNo = 0;
+    String rxDate = null;       //cnv to Date
+    String endDate = null;      //cnv to Date
+    String GN = null;
+    String BN = null;
+    int GCN_SEQNO = 0;
+    String customName = null;
+    String takeMin = null;
+    String takeMax = null;
+    String frequencyCode = null;
+    String duration = null;
+    String durationUnit = null;
+    String quantity = null;
+    int repeat = 0;
+    boolean nosubs = false;
+    boolean prn = false;
+    String special = null;
+    String atcCode = null;
+    String regionalIdentifier = null;
+    
+    
+    public String getAction() {
+        return this.action;
+    }
+    
+    public void setAction(String RHS) {
+        this.action = RHS;
+    }
+    
+    public int getDrugId() {
+        return this.drugId;
+    }
+    
+    public void setDrugID(int RHS) {
+        this.drugId = RHS;
+    }
+    
+    public int getDemographicNo() {
+        return this.demographicNo;
+    }
+    
+    public void setDemographicNo(int RHS) {
+        this.demographicNo = RHS;
+    }
+    
+    public String getRxDate() {
+        return this.rxDate;
+    }
+    
+    public void setRxDate(String RHS) {
+        this.rxDate = RHS;
+    }
+    
+    public String getEndDate() {
+        return this.endDate;
+    }
+    
+    public void setEndDate(String RHS) {
+        this.endDate = RHS;
+    }
+    
+    public String getGenericName() {
+        return this.GN;
+    }
+    
+    public void setGenericName(String RHS) {
+        this.GN = RHS;
+    }
+    
+    public String getBrandName() {
+        return this.BN;
+    }
+    
+    public void setBrandName(String RHS) {
+        this.BN = RHS;
+    }
+    
+    public int getGCN_SEQNO() {
+        return this.GCN_SEQNO;
+    }
+    
+    public void setGCN_SEQNO(int RHS) {
+        this.GCN_SEQNO = RHS;
+    }
+    
+    public String getCustomName() {
+        return this.customName;
+    }
+    public void setCustomName(String RHS) {
+        this.customName = RHS;
+    }
+    
+    public String getTakeMin() {
+        return this.takeMin;
+    }
+    
+    public void setTakeMin(String RHS) {
+        this.takeMin = RHS;
+    }
+    
+    public float getTakeMinFloat() {
+        float i = -1;
+        try {
+            i = Float.parseFloat(this.takeMin);
+        }
+        catch (Exception e) {
+        }
+        return i;
+    }
+    
+    public String getTakeMax() {
+        return this.takeMax;
+    }
+    
+    public void setTakeMax(String RHS) {
+        this.takeMax = RHS;
+    }
+    
+    public float getTakeMaxFloat() {
+        float i = -1;
+        try {
+            i = Float.parseFloat(this.takeMax);
+        }
+        catch (Exception e) {
+        }
+        return i;
+    }
+    
+    public String getFrequencyCode() {
+        return this.frequencyCode;
+    }
+    
+    public void setFrequencyCode(String RHS) {
+        this.frequencyCode = RHS;
+    }
+    
+    public String getDuration() {
+        return this.duration;
+    }
+    
+    public void setDuration(String RHS) {
+        this.duration = RHS;
+    }
+    
+    public String getDurationUnit() {
+        return this.durationUnit;
+    }
+    
+    public void setDurationUnit(String RHS) {
+        this.durationUnit = RHS;
+    }
+    
+    public String getQuantity() {
+        return this.quantity;
+    }
+    
+    public void setQuantity(String RHS) {
+        this.quantity = RHS;
+    }
+    
+    public int getRepeat() {
+        return this.repeat;
+    }
+    
+    public void setRepeat(int RHS) {
+        this.repeat = RHS;
+    }
+    
+    public boolean getNosubs() {
+        return this.nosubs;
+    }
+    
+    public void setNosubs(boolean RHS) {
+        this.nosubs = RHS;
+    }
+    
+    public boolean getPrn() {
+        return this.prn;
+    }
+    
+    public void setPrn(boolean RHS) {
+        this.prn = RHS;
+    }
+    
+    public String getSpecial() {
+        return this.special;
+    }
+    
+    public void setSpecial(String RHS) {
+        this.special = RHS;
+    }
+    
+    /**
+     * Reset all properties to their default values.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        this.action = "";
+        this.drugId = 0;
+        this.demographicNo = 0;
+        this.rxDate = null;
+        this.endDate = null;
+        this.BN = null;
+        this.GCN_SEQNO = 0;
+        this.customName = null;
+        this.takeMin = null;
+        this.takeMax = null;
+        this.frequencyCode = null;
+        this.duration = null;
+        this.durationUnit = null;
+        this.quantity = null;
+        this.repeat = 0;
+        this.nosubs = false;
+        this.prn = false;
+        this.special = null;
+    }
+    
+    
+    /**
+     * Validate the properties that have been set from this HTTP request,
+     * and return an <code>ActionErrors</code> object that encapsulates any
+     * validation errors that have been found.  If no errors are found, return
+     * <code>null</code> or an <code>ActionErrors</code> object with no
+     * recorded error messages.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+    public ActionErrors validate(ActionMapping mapping,
+    HttpServletRequest request) {
+        
+        ActionErrors errors = new ActionErrors();
+        
+        return errors;
+        
+    }
+    
+    /** Getter for property atcCode.
+     * @return Value of property atcCode.
+     *
+     */
+    public java.lang.String getAtcCode() {
+        return atcCode;
+    }
+    
+    /** Setter for property atcCode.
+     * @param atcCode New value of property atcCode.
+     *
+     */
+    public void setAtcCode(java.lang.String atcCode) {
+        this.atcCode = atcCode;
+    }
+    
+    /** Getter for property regionalIdentifier.
+     * @return Value of property regionalIdentifier.
+     *
+     */
+    public java.lang.String getRegionalIdentifier() {
+        return regionalIdentifier;
+    }
+    
+    /** Setter for property regionalIdentifier.
+     * @param regionalIdentifier New value of property regionalIdentifier.
+     *
+     */
+    public void setRegionalIdentifier(java.lang.String regionalIdentifier) {
+        this.regionalIdentifier = regionalIdentifier;
+    }
+    
+}

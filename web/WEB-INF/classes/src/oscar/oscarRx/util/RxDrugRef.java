@@ -1,0 +1,681 @@
+  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+package oscar.oscarRx.util;
+/*
+ * DrugRef.java
+ *
+ * Created on September 19, 2003, 2:16 PM
+ */
+
+
+import java.util.*;
+import org.apache.xmlrpc.*;
+import java.text.*;
+/**
+ *
+ * @author  Jay
+ */
+public class RxDrugRef {
+    
+    private String server_url =
+           // "http://www.hherb.com:8001";
+           "http://24.141.82.168:8001";
+           //"http://192.168.42.3:8001";
+    /** Creates a new instance of DrugRef */
+    public RxDrugRef() {
+        server_url = System.getProperty("drugref_url");
+    }
+    
+    public RxDrugRef(String url){
+        server_url = url;
+    }
+    
+    /**
+     *returns all matching ATC codes for a given (fraction of) a drug name.
+     *Search is case insensitive
+     *query = "select code, text from atc where text like '%s%%'" 
+     *
+     *
+     *	 [{'code':'0', 'text':'None found'}]
+     */
+     public Vector atc(String drug){
+         Vector params = new Vector();
+         params.addElement(drug);
+         Vector vec = (Vector) callWebservice("atc",params);         
+         return vec;         
+     }
+
+     /**
+     *returns all matching ATC codes for a given (fraction of) a drug brand name.
+     *Search is case insensitive
+     *query = "select atc.atccode, pm.brandname from link_product_manufacturer pm, product p, generic_drug_name g, link_drug_atc atc 
+     *         where pm.id_product = p.id and p.id_drug = g.id_drug  and g.id_drug = atc.id_drug and pm.brandname like  '%s%%'"
+     *
+     *   [{'code':'0', 'text':'None found'}]
+     */
+     public Vector atcFromBrand(String drug){
+         Vector params = new Vector();
+         params.addElement(drug);
+         Vector vec = (Vector) callWebservice("atcFromBrand",params);
+         return vec;
+     }
+
+		
+     /**
+      *returns the English name of a drug that matches the stated ATC code
+      *query = "select code, text from atc where code like '%s%%'" 
+      *
+      *return [{'code':'0', 'text':'None found'}]
+      */
+     public Vector  atc2text(String code){
+	 Vector params = new Vector();
+         params.addElement(code);
+         Vector vec = (Vector) callWebservice("atc2text",params);    
+         
+         return  vec;   			
+     }
+     
+     public Vector interaction(Vector atclist){
+        return interaction(atclist,1);        
+     }
+     
+     /**
+      *returns a list of drug-drug interactions as list of "dicts"
+      *atclist : list of ATC codes
+      *minimum_significance: interactions below the stated significance level will be ignored
+      *
+      *query = "select drug, effect, affected_drug, significance, evidence, reference from simple_interactions where drug = '%s' and affected_drug = '%s' and significance >= %d" % 
+      */
+     public Vector interaction(Vector atclist,int minimum_significance){
+         Vector params = new Vector();
+         params.addElement(atclist);
+         params.addElement(new Integer(minimum_significance));         
+         Vector vec = (Vector) callWebservice("interaction",params);         
+         return vec;         
+     }
+     
+     
+     public Hashtable getDrug(String pKey, Boolean boolVal)throws Exception{
+         Vector params = new Vector();
+         params.addElement(pKey);
+         params.addElement(boolVal);
+         Vector vec = (Vector) callWebserviceLite("get_drug",params);             
+         Hashtable returnVal = (Hashtable) vec.get(0);         
+         return returnVal;		         
+     }	
+        
+     
+     public Vector suggestAlias(String alias,String aliasComment,String id,String name,String provider)throws Exception{
+         Vector params = new Vector();
+         params.addElement(alias);
+         params.addElement(aliasComment);
+         params.addElement(id);
+         params.addElement(name);
+         params.addElement(provider);
+         Vector vec = (Vector) callWebserviceLite("suggestAlias",params);                    
+         return vec;
+     }
+     
+     
+     
+     public Hashtable getGenericName(String pKey)throws Exception{
+         Vector params = new Vector();
+         params.addElement(pKey);        
+         Vector vec = (Vector) callWebserviceLite("get_generic_name",params);             
+         Hashtable returnVal = (Hashtable) vec.get(0);         
+         return returnVal;		         
+     }	
+     
+     /**
+      *Returns a list of atc codes without the drug
+      *uses function atc on the back end and strips the name
+      *
+      */
+     public Vector drug2atclist(String drug){
+         Vector params = new Vector();
+         params.addElement(drug);
+         Vector vec = (Vector) callWebservice("drug2atclist",params);             
+         return vec;		         
+     }		
+
+     public Vector druglist2atclist(Vector druglist){
+         Vector params = new Vector();
+         params.addElement(druglist);         
+         Vector vec = (Vector) callWebservice("druglist2atclist",params);         
+         return vec;         
+     }
+
+
+     public Vector interaction_by_drugnames(Vector druglist, int minimum_significance){
+	Vector params = new Vector();
+         params.addElement(druglist);
+         params.addElement(new Integer(minimum_significance));         
+         Vector vec = (Vector) callWebservice("interaction_by_drugnames",params);         
+         return vec;         
+     }
+     
+     public Vector list_drug_element(String searchStr) throws Exception{
+         Vector params = new Vector();
+         params.addElement(searchStr);
+         Vector vec = (Vector) callWebserviceLite("list_search_element",params);             
+         return vec;		         
+     }	
+     
+     public Vector listComponents(String drugId){
+        Vector params = new Vector();
+        params.addElement(drugId);
+        Vector vec = (Vector) callWebservice("getComponents",params);             
+        return vec;	 
+         
+     }
+     
+     public Vector list_brands_from_element(String drugRefId) throws Exception{
+         Vector params = new Vector();
+         params.addElement(drugRefId);
+         Vector vec = (Vector) callWebserviceLite("list_brands_from_element",params);             
+         return vec;		         
+     }	
+     
+     public Vector getDrugInfoPage(String drugRefId){
+         Vector params = new Vector();
+         params.addElement(drugRefId);
+         Vector vec = (Vector) callWebservice("getDrugInfoPage",params);             
+         return vec;		         
+     }	
+     
+     
+     
+     public Vector list_search_element_select_categories(String searchStr,Vector catVec){
+         Vector params = new Vector();
+         params.addElement(searchStr);
+         params.addElement(catVec);
+         Vector vec = (Vector) callWebservice("list_search_element_select_categories",params);             
+         return vec;		         
+     }	
+     
+     public Vector list_drug_class(Vector classVec){
+         Vector params = new Vector();         
+         params.addElement(classVec);
+         Vector vec = (Vector) callWebservice("list_drug_class",params);             
+         return vec;		         
+     }
+     
+     
+     
+      public Vector getAISameByDrugCode(String drugRefId){
+         Vector params = new Vector();
+         params.addElement(drugRefId);
+         Vector vec = (Vector) callWebservice("getAISameByDrugCode",params);             
+         return vec;		         
+     }	
+     
+      public Vector getFormFromDrugCode(String drugCode){
+         Vector params = new Vector();
+         params.addElement(drugCode);
+         Vector vec = (Vector) callWebservice("getFormFromDrugCode",params);             
+         return vec;	
+      }
+        
+      
+      
+      public Vector getDistinctForms(){
+         Vector params = new Vector();       
+         Vector vec = (Vector) callWebservice("getDistinctForms",params);             
+         return vec;	
+      }
+      
+      public Vector getRouteFromDrugCode(String drugCode){
+         Vector params = new Vector();
+         params.addElement(drugCode);
+         Vector vec = (Vector) callWebservice("getRouteFromDrugCode",params);             
+         return vec;	
+      }
+     
+      
+       
+       
+       
+       public Vector getStrengths(String drugCode){
+         Vector params = new Vector();
+         params.addElement(drugCode);
+         Vector vec = (Vector) callWebservice("getStrengths",params);             
+         return vec;	
+      }
+       
+      
+     public Vector getProductData(String drugRefId){
+         Vector params = new Vector();
+         params.addElement(drugRefId);
+         Vector vec = (Vector) callWebservice("getProductData",params);             
+         return vec;		         
+     }	
+     
+     
+     public String getGenericNamefromId(String drugRefId){
+        Vector params = new Vector();
+         params.addElement(drugRefId);
+         Vector vec = (Vector) callWebservice("getGenericNamefromId",params);             
+         return vec.get(0).toString();	                  
+     }
+     
+     private Object callWebservice(String procedureName,Vector params) {
+         Object object = null;
+         try{
+            XmlRpcClient server = new XmlRpcClient(server_url);
+            object = (Object) server.execute(procedureName, params);
+         }catch (XmlRpcException exception) {
+                
+                System.err.println("JavaClient: XML-RPC Fault #" +
+                                   Integer.toString(exception.code) + ": " +
+                                   exception.toString());
+                                   exception.printStackTrace();
+                                   
+                
+                
+         } catch (Exception exception) {
+                System.err.println("JavaClient: " + exception.toString());
+                exception.printStackTrace();
+                
+         }
+         return object;
+     }
+     
+     private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
+         Object object = null;
+         try{
+            XmlRpcClientLite server = new XmlRpcClientLite(server_url);
+            object = (Object) server.execute(procedureName, params);
+         }catch (XmlRpcException exception) {
+                
+                System.err.println("JavaClient: XML-RPC Fault #" +
+                                   Integer.toString(exception.code) + ": " +
+                                   exception.toString());
+                                   exception.printStackTrace();
+                                   
+                throw new Exception("JavaClient: XML-RPC Fault #" +
+                                   Integer.toString(exception.code) + ": " +
+                                   exception.toString());
+                
+         } catch (Exception exception) {
+                System.err.println("JavaClient: " + exception.toString());
+                exception.printStackTrace();
+                throw new Exception("JavaClient: " + exception.toString());
+         }
+         return object;
+     }
+     
+     
+     
+     ////DRUGREF API
+     /** applications only permitting one or few data sources will use this function to check for valid databases.
+      *
+      * Applications allowing more choice will expose all possible data sources to the end user
+      * @param searchexpr mnemonic describing data source,
+      *        e.g. “mims�?, “amh�?, “rote liste�?, “first database�?.
+      *        Case insensitive, partial match possible if using “%�? as wild card
+      * @param tags see tags
+      * @return array of structs alphabetically sorted by “name�? with the following minimum keys:
+      *
+      * <B>pkey</B>: integer. Primary key      
+      * <B>name</B>: string. Menemonic describing data source     
+      * <B>revision</B>: string. Format and meaning depends on data source
+      * <B>last_change</B>: string (date in ISO format yyyy-mm-dd)
+      * <B>deprecated</B>: boolean. True if this source is deprecated and should no longer be used
+      */
+     public Vector list_sources(String searchexpr,Hashtable tags){
+        return new Vector();
+     }
+     
+     /**useful if searches should be constrained to a single source
+      *
+      *@param  pkey primary key.
+      *@return tags: see [tags].
+      */
+     public Hashtable get_source_tag(int pkey){
+         return new Hashtable();
+     }
+
+     /**returns basic identifiers of all drugs, drug products and drug classes available in the database which names match “searchexpr�?, and which other criteria match the constraints in “tags�?
+      *
+      *@param searchexpr: (Partial) name of a “drug�? (generic, brand name, composite drug) Case insensitive, partial match possible if using “%�? as wild card
+      *@tags: see [tags] Additional optional keys:
+      *       classes : boolean. If true, class names (ATC) are listed
+      *       generics : boolean. If true, generic names are listed
+      *       branded : boolean. If true, branded product names are listed
+      *       composites : if true, generic composite drugs are listed
+      *
+      *@return array of structs alphabetically sorted by “name�? with the following minimum keys:
+      *       pkey: integer. Primary key
+      *       Name: string. Name of the drug
+      *       Type: string(2):
+      *         'cl' = class
+      *         'ca' = anatomical class
+      *         'cc' = chemical class,
+      *         'ct' = therapeutic class
+      *         'ge' = generic
+      *         'gc' = composite generic (e.g. Co-Trimoxazole)
+      *         'bp' = branded product
+      *       If the parameter “return_tags�? was given in the query, “tags�? will be available too.
+      */
+     public Vector list_drugs(String searchexpr,Hashtable  tags){
+         Vector params = new Vector();
+         params.addElement(searchexpr);
+         //params.addElement(tags);
+         //Vector vec = (Vector) callWebservice("list_drugs",params); 
+         Vector vec = (Vector) callWebservice("list_search_element",params);
+         
+         
+         return vec;         
+     }
+         
+     
+         
+     
+     
+     public Hashtable tagCreatorEx(int sources,String languages,String countries,int authors,Date  modified_after,boolean return_tags ){      
+        Hashtable retHash = new Hashtable();
+           retHash.put("source",new Integer(0));             
+           retHash.put("sources",new Integer(sources));             
+           retHash.put("language", "");
+           retHash.put("languages", new Integer(languages));
+           retHash.put("country","");
+           retHash.put("countries",new Integer(countries));
+           retHash.put("author", new Integer(0));
+           retHash.put("authors", new Integer(authors));
+           try{
+           retHash.put("modified_after", new SimpleDateFormat("yyyy-MM-dd").parse(modified_after.toString()));            
+           }catch (Exception e){}
+           retHash.put("return_tags",Boolean.toString(return_tags));      //If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+           return retHash;
+     }
+     
+     public Hashtable tagCreatorEx(int sources,String languages,String countries,int authors,boolean return_tags ){      
+        Hashtable retHash = new Hashtable();
+           retHash.put("source",new Integer(0));             
+           retHash.put("sources",new Integer(sources));             
+           retHash.put("language", "");
+           retHash.put("languages", new Integer(languages));
+           retHash.put("country","");
+           retHash.put("countries",new Integer(countries));
+           retHash.put("author", new Integer(0));
+           retHash.put("authors", new Integer(authors));      
+           retHash.put("return_tags",Boolean.toString(return_tags));      //If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+           return retHash;
+     }
+     
+     
+     
+     /**For Creating tags 
+      *@param source: Primary key of the referenced information source (Drugref, MIMS, MULTUM, AMIS, Manufacturer, Inhouse, ...)
+      *@param language:  string. Three character ISO language code
+      *@param country:  string. Two character ISO country code
+      *@param author : integer. Primary key of the submitter of the referenced information
+      *@param modified_after : string. ISO date (yyyy-mm-dd). If set, records older than this date will be ignored.
+      *@param return_tags:  boolean. If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+      *@return Hashtable with values set from input for tags
+      */
+     public Hashtable tagCreator(int source,String language,String country,int author,Date  modified_after,boolean return_tags ){
+        Hashtable retHash = new Hashtable();
+            retHash.put("source",new Integer(source));             
+            retHash.put("language", language);
+            retHash.put("country",country);
+            retHash.put("author", new Integer(author));
+            try{
+            retHash.put("modified_after", new SimpleDateFormat("yyyy-MM-dd").parse(modified_after.toString()));            
+            }catch (Exception e){}
+            retHash.put("return_tags",Boolean.toString(return_tags));      //If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+            return retHash;
+     }
+     
+     
+     /**For Creating tags 
+      *@param source: Primary key of the referenced information source (Drugref, MIMS, MULTUM, AMIS, Manufacturer, Inhouse, ...)
+      *@param language:  string. Three character ISO language code
+      *@param country:  string. Two character ISO country code
+      *@param author : integer. Primary key of the submitter of the referenced information
+      *@param modified_after : string. ISO date (yyyy-mm-dd). If set, records older than this date will be ignored.
+      *@param return_tags:  boolean. If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+      *@return Hashtable with values set from input for tags
+      */
+     public Hashtable tagCreator(int source,String language,String country,int author,boolean return_tags ){
+        Hashtable retHash = new Hashtable();
+            retHash.put("source",new Integer(source));             
+            retHash.put("language", language);
+            retHash.put("country",country);
+            retHash.put("author", new Integer(author));            
+            retHash.put("return_tags",Boolean.toString(return_tags));      //If true, the values returned by a query will include applicable tag bitstrings for each returned value (will slow down query considerably, but allows client-side sub-filtering)
+            return retHash;
+     }
+     
+     
+     
+
+     
+     /**highest level API function to retrieve a complete drug monograph (except for packaging, pricing and subsidy information)
+      *
+      *@param pkey: primary key
+      *
+      *@return struct with at least the following keys:
+      *
+      *     name: string. International nonproprietary name (INPN) of this drug (=�?generic�?)
+      *     atc: string. ATC code
+      *     generics : struct. Lists all generic components (usually just one). Key (string) is the generic name, value (integer) is the repective primary key
+      *     essential: True if this drug is on the WHO essential drug list
+      *     product: string. If this drug is not a generic, the product brand name is listed under this key, else this key is not available
+      *     action: string. Description of mode of action.
+      *     indications: array of structs. Each struct has “indication�? as key, and a struct as value containing the following keys:
+      *         code : integer. Drugref condition code primary key
+      *         firstline : boolean. True if for this indication this drug is considered a first line treatment.
+      *         comment : string
+      *     contraindications: array of structs. Each struct has “contraindication�? as key, and a struct as value containing the following keys:
+      *         code : integer. Drugref condition code primary key.
+      *         severity : integer (1-3, 3 being absolute contraindication)
+      *         comment : string
+      *     practice_points: array of strings
+      *     paediatric_use:  string. Describing special considerations in paediatric use
+      *     pregnancy_use: struct with following keys:
+      *         code : character. ADEC category
+      *         comment : string
+      *     lactation_use: struct with following keys:
+      *         code : integer. 1=compatible, 2=restricted, 3=dangerous
+      *         comment : string
+      *     renal_impairment: struct with following keys:
+      *         code : integer. 1=compatible, 2=restricted, 3=dangerous
+      *         comment : string
+      *     hepatic_impairment: struct with following keys:
+      *         code : integer. 1=compatible, 2=restricted, 3=dangerous
+      *         comment : string
+      *     common_adverse_effects: array of strings
+      *     rare_adverse_effects: array of strings
+      *     dosage: array of structs with following keys:
+      *         text: string. If this key is available, only free text dosage information is available, as described in this string.
+      *         indication : integer. Drugref condition code primary key. 0 is wild card, indicating general dosage recommendation.
+      *         units: string. SI unit for this dosage
+      *         calculation_base_units: integer. 0=not applicable, 1=age in months, 2=age in years, 3=kg body weight, 4=cm2 body surface
+      *         calculation_base : real. Meaning depends on calculation_base_units
+      *         starting_range : real. Usual mimimal recommended dosage
+      *         upper_range : real. Usual maximal recommended dosage
+      *         frequency_units : integer. 0=not applicable, 1=seconds, 2=minutes, 3=hours, 4=days, 5=weeks, 6=months, 7=years
+      *         frequency : integer. How often this drug should be administered
+      *         duration_units: integer. Same as frequency_units, additional value 8='times'
+      *         duration_minimum ; integer. How long a usual course of this drug should be given. -1 is “permanent�?, -2=�?p.r.n.�?
+      *         duration_maximum : integer. -1 is “permanent�?, “-2�?=�?p.r.n.�?
+      *         constrained: boolean. If true, no automazied dosage suggestion must be generated, prescriber must read comment. (e.g. dosage per body surface etc.)
+      *         comment
+      */         
+      /*public Hashtable get_drug(int pkey, boolean html){
+          Hashtable retHash = new Hashtable();
+          Vector params = new Vector();
+          params.add(new Integer(pkey));
+          params.add(new Boolean(html));
+          Vector vec = (Vector) callWebservice("get_drug",params);  
+          Vector retVec = new Vector();
+          for (int i = 0 ; i <  vec.size(); i++){
+             Hashtable h = (Hashtable) vec.get(i);
+             FullDrug fd = new FullDrug();
+             fd.name                     = (String)    h.get("name");
+             fd.atc                      = (String)    h.get("atc");
+             fd.essential                = ((Boolean)   h.get("essential")).booleanValue();
+             fd.product                  = (String)    h.get("product");
+             fd.action                   = (String)    h.get("action");
+             fd.practice_points          = (String[])  h.get("practice_points");
+             fd.paediatric_use           = (String)    h.get("paediatric_use");
+             fd.common_adverse_effects   = (String[])  h.get("common_adverse_effects");
+             fd.rare_adverse_effects     = (String[])  h.get("rare_adverse_effects");
+             
+          
+          //
+          //Vector indications; 
+          //Vector contraindications; 
+          // Vector dosage; 
+          //PregnancyUse pregnancyUse;
+          //LactationUse lactationUse;
+          //RenalImpairment renalImpairment;
+          //HepaticImpairment hepaticImpairment;
+          // 
+             retVec.add(fd);
+          }          
+          
+          return retHash;         
+          
+      }
+      
+      */
+      
+      
+      
+      /**returns a fuill drug monograph formatted as HTML page, with all headings (= keys returned by get_drug) implemented as anchors.
+       *@param pkey: primary key.
+       *@param css: CSS style sheet used to format the retunred HTML page. Details not finalized yet.
+       *@return base64 encoded HTML page
+       */
+       public Base64 get_drug_html(int pkeye4,Base64 css){ //returns base64
+           return  new Base64();
+       }
+
+
+
+       /**returns all available products for a given drug as identified by “pkey�? and constrained by “tags�?
+        *@param pkey: primary key of a drug.
+        *@param tags: see [tags].
+        *return list of structs containing the following minimum keys:
+        *           brandname : string
+        *           form : string. (tablets, capsules, ...)
+        *           strength : string. Brief human readable format
+        *           package_size : string. Brief human readable format
+        *           subsidies : string. Brief human readable format
+        *           manufacturer : string. Company name
+        */
+       public Vector list_products(int pkey, Hashtable tags ){
+           return new Vector();
+       }
+
+       /**returns product specific information for a given drug as identified by “pkey�? and constrained by “tags�?, including available package sizes and strengths, manufacturers, prices and available subsidies as well as legal / subsidy access restrictions.
+        *
+        *@param pkey: primary key of a specific drug product
+        *@param tags: see [tags]
+        *
+        *@return returns the same struct as get_drug(), but with the following additional keys:
+        *           form : integer. Primary key of drug forms tablets, capsules, syrup ...)
+        *           form_str : string. Drug form in clear text
+        *           units: struct. Key (string) is the generic ingredient, value (string) is the SI unit for the strength (mg, ml ...)
+        *           strength : struct. Key (string) is the generic ingredient, value (Real) is the strength in units as stated above
+        *           pkg_units : string
+        *           pkg_size : real
+        *           subsidies : struct. Key is name of subsidy, value is character:
+        *                   y=yes
+        *                   n=no
+        *                   c=conditional
+        *           subsidy_conditions : struct. Key is name of subsidy, value is a string (conditions in human readable text)
+        *           subsidy_gap : struct. Key is name of subsidy, value (Real ) is th amount
+        *           brand_price_premium : struct. Key is “applicability�? (all, pensioners ...), value (Real) is the price
+        *           prices : struct. Key is price category (retail, wholesale, subsidized), value (Real) is the price
+        *           currency : string. Currency the stated price / gap / premium is based on
+        */
+       public Hashtable get_product(int pkey,Hashtable tags){
+           return new Hashtable();
+       }
+
+
+
+
+       /**returns the Consumer Product Information formatted as HTML, base64 encoded
+        *@param pkey: primary key of a drug product.
+        *@param css: CSS style sheet used to format the returned HTML page. Details not finalized yet.
+        *@return base64 encoded HTML page
+        */
+       public Base64 get_product_CPI(int pkey,Base64 css){
+           return new Base64();
+       }
+
+       /**returns an array of structs describing the possible interactions between any two drugs contained in “drugs�?. Information used for interaction checking constrained by “tags�?.
+        *@param drugs: array of integers. Primary keys of drugs
+        *@param tags: see [tags].
+        *@return array of structs with the following minimum keys:
+        *       affecting_drug : integer. Primary Key
+        *       affected_drug : integer. Primary key.
+        *       effect : string. Single character:
+        *           a = augments
+        *           i = inhibits
+        *           n = no effect
+        *           c = conflicting evidence
+        *       clinical_effect : boolean. If false, the effect has no bearing on clinical situations
+        *       significance : integer. Clinical significance graded 1-3, 1=mild, 2=moderate, 3=severe
+        *       evidence : integer. Level of evidence graded 1-3, 1=poor, 2=fair, 3=good
+        *       reference : integer. Primary key of reference
+        */
+       public Vector list_interactions(Vector drugs,Hashtable tags){
+            return new Vector();
+       }
+
+       
+       /**List all conditions and their codes / coding systems known to drugref, constrained by “searchexpr�? as welll as by tags. “Searchexpr�? accepts “%�? as wildcard.
+        *
+        */
+       public Vector list_conditions(String searchexpr,Hashtable tags){           
+           return new Vector();
+       }
+       
+       /**
+        *@param indication : integer. Primary key.
+        */
+       public Vector list_drugs_for_indication(int indication ,Hashtable tags){
+           return new Vector();
+       }
+       
+       
+       /**List all references this drugref database is based on. 
+        *@param tags: see [tags].
+        *@return array of structs with following minimum keys:
+        *           name : string. short name of reference source
+        *           full title : string.
+        *           authors : string
+        *           publ_year : string
+        */ 
+       public Vector list_references(Hashtable tags){
+           return new Vector();
+       }
+
+}

@@ -1,0 +1,196 @@
+  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+
+package oscar.oscarRx.data;
+
+import oscar.oscarDB.*;
+import oscar.oscarRx.util.*;
+import java.util.*;
+import java.sql.*;
+
+public class RxAllergyData {
+    public Allergy getAllergy(String DESCRIPTION, int HICL_SEQNO, int HIC_SEQNO,
+    int AGCSP, int AGCCS, int TYPECODE) {
+        return new Allergy(DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE);
+    }
+    
+    public Allergy getAllergy(){
+        return new Allergy();
+    }
+    
+    
+    public class Allergy {
+        int PickID;          
+        String DESCRIPTION;
+        int HICL_SEQNO;
+        int HIC_SEQNO;
+        int AGCSP;
+        int AGCCS;
+        int TYPECODE;
+        String reaction;
+        
+        public Allergy(){
+        }
+        
+        public Allergy(int PickID, String DESCRIPTION, int HICL_SEQNO, int HIC_SEQNO,
+        int AGCSP, int AGCCS, int TYPECODE) {
+            this.PickID = PickID;
+            this.DESCRIPTION = DESCRIPTION;
+            this.HICL_SEQNO = HICL_SEQNO;
+            this.HIC_SEQNO = HIC_SEQNO;
+            this.AGCSP = AGCSP;
+            this.AGCCS = AGCCS;
+            this.TYPECODE = TYPECODE;
+        }
+        
+        public Allergy(String DESCRIPTION, int HICL_SEQNO, int HIC_SEQNO,
+        int AGCSP, int AGCCS, int TYPECODE) {
+            this(0, DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE);
+        }
+        
+        public String getReaction() {
+            return this.reaction;
+        }
+        
+        public void setReaction(String reaction) {
+            this.reaction = reaction;
+        }
+        
+        public int getPickID() {
+            return this.PickID;
+        }
+        public void setPickID(int RHS) {
+            this.PickID=RHS;
+        }
+        
+        public String getDESCRIPTION() {
+            return this.DESCRIPTION;
+        }
+        
+        public void setDESCRIPTION(String desc) {
+            this.DESCRIPTION = desc;
+        }
+        
+        public int getHICL_SEQNO() {
+            return this.HICL_SEQNO;
+        }
+        
+        public int getHIC_SEQNO() {
+            return this.HIC_SEQNO;
+        }
+        
+        public int getAGCSP() {
+            return this.AGCSP;
+        }
+        
+        public int getAGCCS() {
+            return this.AGCCS;
+        }
+        
+        public int getTYPECODE() {
+            return this.TYPECODE;
+        }
+        public void setTYPECODE(int typecode) {
+            this.TYPECODE=typecode;
+        }
+        
+        public String getAllergyDisp() {
+            return this.DESCRIPTION + " (" + this.getTypeDesc() + ")";
+        }
+        
+        public String getTypeDesc() {
+            String s;
+            /** 6 |  1 | generic
+                7 |  2 | compound
+                8 |  3 | brandname
+                9 |  4 | ther_class
+               10 |  5 | chem_class
+               13 |  6 | ingredient
+            **/
+            switch(this.TYPECODE) {
+                /*
+                *|  8 | anatomical class
+                *|  9 | chemical class
+                *| 10 | therapeutic class
+                *| 11 | generic
+                *| 12 | composite generic
+                *| 13 | branded product
+                *| 14 | ingredient
+                */
+                case 11:
+                    s = "Generic Name";
+                    break;                
+                case 12:
+                    s = "Coumpound";
+                    break;
+                case 13:
+                    s = "Brand Name";
+                    break;
+                case 8:
+                    s = "ATC Class";
+                    break;
+                case 10:
+                    s = "AHFS Class";
+                    break;
+                case 14:
+                    s = "Ingredient";
+                    break;
+                default:
+                    s = "";
+            }
+            return s;
+        }
+    }
+    
+    public class Reaction {
+        int GCN_SEQNO;
+        Allergy allergy;
+        int severity;
+        
+        public Reaction(int GCN_SEQNO, Allergy allergy, int severity) {
+            this.GCN_SEQNO = GCN_SEQNO;
+            this.allergy = allergy;
+            this.severity = severity;
+        }
+        
+        public int getGCN_SEQNO() {
+            return this.GCN_SEQNO;
+        }
+        public String getGenericName() {
+            try{                
+            return new RxDrugData().getGenericName(this.GCN_SEQNO);
+            }catch(Exception e){ 
+                e.printStackTrace();                
+            }
+            return "";
+        }
+        public Allergy getAllergy() {
+            return this.allergy;
+        }
+        public int getSeverity() {
+            return severity;
+        }
+    }
+}
