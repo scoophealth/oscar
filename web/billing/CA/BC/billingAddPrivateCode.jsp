@@ -38,7 +38,28 @@
 <link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
 <script type="text/javascript">
 
+function isNumeric(strString){
+    var validNums = "0123456789.";
+    var strChar;
+    var retval = true;
 
+    for (i = 0; i < strString.length && retval == true; i++){
+       strChar = strString.charAt(i);
+       if (validNums.indexOf(strChar) == -1){
+          retval = false;
+       }
+    }
+     return retval;
+}
+
+function checkUnits(){   
+	if  (!isNumeric(document.BillingAddCodeForm.value.value)){
+		alert("Price has to be a numeric value");
+	        document.BillingAddCodeForm.value.focus();
+		return false;
+	}
+	return true;
+}
 	
 	
 
@@ -102,8 +123,12 @@
             <td class="MainTableLeftColumn" valign="top">&nbsp;
             &nbsp;
             </td>
-            <td class="MainTableRightColumn">                                 
-              <html:form action="/billing/CA/BC/billingAddCode" >
+            <td class="MainTableRightColumn">    
+                             
+            
+            
+            
+              <html:form action="/billing/CA/BC/billingAddCode" onsubmit="return checkUnits();">
                 <%
                     BillingAddCodeForm frm = (BillingAddCodeForm) request.getAttribute("BillingAddCodeForm");
                     if (request.getAttribute("code") != null){
@@ -133,7 +158,7 @@
                     </tr>
                     <tr>
                         <td>Code</td>
-                        <td>P-<html:text property="code" maxlength="4"/></td>
+                        <td>P-<html:text property="code" maxlength="9"/></td>
                     </tr>
                     <tr>
                         <td>Desc</td>
