@@ -86,7 +86,7 @@ function setfocus() {
   } else {
     String[] param2 =new String[2];
     param2[0]=request.getParameter("demographic_no");
-    param2[1]="rourkebabyrecord1%" ; //form_name;
+    param2[1]="Old Rourke" ; //form_name;
 //System.out.println(param2[0]+param2[1]);
     rsdemo = formMainBean.queryResults(param2, "search_form_no");
     while (rsdemo.next()) { 

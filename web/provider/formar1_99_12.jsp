@@ -25,11 +25,10 @@
 -->
 
 <%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String form_name="ar1_99_12";
   String user_no = (String) session.getAttribute("user");
-  String username = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
+  String resource_baseurl = "http://67.69.12.117:8080/oscarResource/";
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -52,7 +51,7 @@
 <html>
 <head>
 <title> ANTENATAL RECORD </title>
-<link rel="stylesheet" href="antenatalrecord.css" >
+<link rel="stylesheet" href="../provider/antenatalrecord.css" >
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -104,10 +103,11 @@ function checkTypeInUnit(obj) {
 	}
 }
 function onExit() {
-  if(confirm("Are you sure to exit WITHOUT saving the form?")) window.close();
+  if(confirm("Did you SAVE?")) window.close();
 }
 function onSave() {
   saveTemp=1;
+  onSubmitForm();
 }
 function onSaveExit() {
   saveTemp=0;
@@ -118,14 +118,31 @@ function onPrint() {
 function onSaveClose() { //save & close
   saveTemp=3;
 }
+function onSaveEnc() {
+  saveTemp=4;
+}
 function onSubmitForm() {
+  if(document.serviceform.xml_soa.value=="" || document.serviceform.xml_soa.value==" " || document.serviceform.xml_soa.value=="null" || document.serviceform.xml_date.value=="") {
+    alert("Please type in a Signature/Date at the bottom of the form!\nYour action is cancelled!");
+    return false;
+  }
+  var fedb = document.serviceform.xml_fedb.value;
+  if(fedb.length >0 && fedb.length !=10 ) {
+    alert("Please type in a date in the right format (yyyy/mm/dd) in 'Final EDB' field!\nYour action is cancelled!");
+    return false;
+  } else if (fedb.length ==10) {
+	  if (fedb.indexOf("/") != 4 ) {
+        alert("Please type in a date in the right format (yyyy/mm/dd) in 'Final EDB' field!\nYour action is cancelled!");
+        return false;
+	  }
+  }
   if(saveTemp==0) {
     document.serviceform.target="apptProvider";
     document.serviceform.cmd.value="Save & Exit";
     document.serviceform.submit();
   }
   if(saveTemp==1) {
-    popupPage(10,10,'providercontrol.jsp');
+    popupPage(30,200,'notice.htm');
     document.serviceform.target="printlocation";
     document.serviceform.cmd.value="Save";
     document.serviceform.submit();
@@ -140,6 +157,10 @@ function onSubmitForm() {
     document.serviceform.cmd.value="Save";
     document.serviceform.submit();
   }
+  if(saveTemp==4) {
+    document.serviceform.cmd.value="Save & Enc";
+    document.serviceform.submit();
+  }
   return false;
 }
 //-->
@@ -152,7 +173,7 @@ function onSubmitForm() {
   //if bNewForm is false (0), then it should be able to display xml data.
   boolean bNew = true, bNewList = true; //bNew=if using the old xml_form data, bNewList=if it is from history
   ResultSet rsdemo = null;
-  String content="", demoname=null,address=null,dob=null,homephone=null,workphone=null,allergies="",medications="";
+  String content="", demoname=null,address=null,dob=null,homephone=null,workphone=null,familydoc=null,allergies="",medications="";
   String birthAttendants="", newbornCare="",riskFactors="",finalEDB="",g="",t="",p="",a="",l="",prepregwt="";
   int age=0;
   if( request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("0")==0 ) bNew = false;
@@ -171,7 +192,6 @@ function onSubmitForm() {
     param2[0]=request.getParameter("demographic_no");
     param2[1]="ar1%" ; //form_name;
     rsdemo = formMainBean.queryResults(param2, "search_form_no");
-    //rsdemo = formMainBean.queryResults(request.getParameter("demographic_no"), "search_form_ar1");
     while (rsdemo.next()) { 
       bNew = false;
       content = rsdemo.getString("content");
@@ -192,7 +212,10 @@ function onSubmitForm() {
       dob=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth");
       homephone=rsdemo.getString("phone");
       workphone=rsdemo.getString("phone2");
-      age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
+      familydoc = SxmlMisc.getXmlContent(rsdemo.getString("family_doctor"),"family_doc");
+      familydoc = familydoc !=null ? familydoc : "" ;
+
+	  age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
     }
     rsdemo = formMainBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); //dboperation=search_demograph
     if (rsdemo.next()) { 
@@ -231,8 +254,10 @@ function onSubmitForm() {
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr bgcolor="#486ebd"><th width="25%" nowrap>
-	<%=bNewList&&(request.getParameter("patientmaster")!=null)?"<input type='submit' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
-	<%=bNewList&&(request.getParameter("patientmaster")==null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""%></th>
+	<%--=bNewList?"<a href=# onClick='onSave()'><img src='../images/buttonsave.gif' align='top' width='75' height='25' ></a> ":""--%>
+	<%=bNewList?"<input type='button' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
+	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
+	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%></th>
       <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Antenatal 
         Record 1 </font></th>
       <th width="25%" nowrap> 
@@ -250,10 +275,10 @@ function onSubmitForm() {
   <table width="60%" border="1"  cellspacing="0" cellpadding="0" <%=bNew?"":"datasrc='#xml_list'"%>>
     <tr>
       <td valign="top" colspan='4'>Name
-        <input type="text" name="xml_name"  style="width:100%" size="30" maxlength="60" <%=bNew?"value=\""+demoname+"\"":"datafld='xml_name'"%>> </td>
+        <input type="text" name="xml_name"  style="width:100%" size="30" maxlength="60" <%=bNewList?"value=\""+demoname+"\"":"datafld='xml_name'"%>> </td>
     </tr>
     <tr><td valign="top" colspan='4'>Address 
-        <input type="text" name="xml_address"  style="width:100%" size="60" maxlength="80" <%=bNew?"value=\""+address+"\"":"datafld='xml_address'"%>> </td>
+        <input type="text" name="xml_address"  style="width:100%" size="60" maxlength="80" <%=bNewList?"value=\""+address+"\"":"datafld='xml_address'"%>> </td>
 	</tr>
     <tr>
       <td valign="top" width="28%">Date of birth (yyyy/mm/dd)<br>
@@ -279,9 +304,9 @@ function onSubmitForm() {
 	</td><td>Language<br>
         <input type="text" name="xml_lang" size="15" style="width:100%" maxlength="25" <%=bNew?"":"datafld='xml_lang'"%>>
     </td><td>Home phone<br>
-        <input type="text" name="xml_hp" size="15" style="width:100%" maxlength="20" <%=bNew?"value='"+homephone+"'":"datafld='xml_hp'"%>>
+        <input type="text" name="xml_hp" size="15" style="width:100%" maxlength="20" <%=bNewList?"value='"+homephone+"'":"datafld='xml_hp'"%>>
     </td><td>Work phone<br>
-        <input type="text" name="xml_wp" size="15" style="width:100%" maxlength="20" <%=bNew?"value='"+workphone+"'":"datafld='xml_wp'"%>>
+        <input type="text" name="xml_wp" size="15" style="width:100%" maxlength="20" <%=bNewList?"value='"+workphone+"'":"datafld='xml_wp'"%>>
     </td><td>Name of partner<br>
         <input type="text" name="xml_nop" size="15" style="width:100%" maxlength="50" <%=bNew?"":"datafld='xml_nop'"%>>
     </td><td>Age<br>
@@ -298,7 +323,7 @@ function onSubmitForm() {
         <input type="text" name="xml_ba" size="15" style="width:100%" maxlength="25" <%=bNewList?("value=\""+birthAttendants+"\""):"datafld='xml_ba'"%>>
 	</td>
       <td nowrap valign="top">Family physician<br>
-        <div align="center"><textarea name="xml_fphy" style="width:100%" cols="30" rows="2" <%=bNew?"":"datafld='xml_fphy'"%>></textarea></div>
+        <div align="center"><textarea name="xml_fphy" style="width:100%" cols="30" rows="2" <%=bNew?"":"datafld='xml_fphy'"%>><%--=bNewList?familydoc:""--%></textarea></div>
 	</td><td nowrap>Newborn care<br>
         <input type="checkbox" name="xml_ncp" value="checked" <%=bNew?"":"datafld='xml_ncp'"%>>Ped.
         <input type="checkbox" name="xml_ncfp" value="checked" <%=bNew?"":"datafld='xml_ncfp'"%>>FP
@@ -636,22 +661,22 @@ function onSubmitForm() {
             <td colspan="3"><i>(check if positive)</i></td>
           </tr>
 		  <tr> 
-      <td>1.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/clp1");return false;'>Bleeding</a></td>
+            <td>1.</td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c1p1");return false;'>Bleeding</a></td>
             <td width="15%"> 
               <input type="checkbox" name="xml_cp1b" value="checked" <%=bNew?"":"datafld='xml_cp1b'"%>>
             </td>
           </tr>
           <tr> 
             <td>2.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c2p1");return false;'>Vomiting</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c2p1");return false;'>Vomiting</a></td>
             <td> 
               <input type="checkbox" name="xml_cp2v" value="checked" <%=bNew?"":"datafld='xml_cp2v'"%>>
             </td>
           </tr>
           <tr> 
             <td valign="top">3.</td>
-            <td nowrap><font size=1> <a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c3p1");return false;'>Smoking</a><br>
+            <td nowrap><font size=1> <a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c3p1");return false;'>Smoking</a><br>
               cig/day 
               <input type="text" name="xml_cp3c" size="2" maxlength="3" <%=bNew?"":"datafld='xml_cp3c'"%>>
               </font></td>
@@ -661,14 +686,14 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>4.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c4p1");return false;'>Drugs</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c4p1");return false;'>Drugs</a></td>
             <td> 
               <input type="checkbox" name="xml_cp4d" value="checked" <%=bNew?"":"datafld='xml_cp4d'"%>>
             </td>
           </tr>
           <tr> 
             <td valign="top">5.</td>
-            <td nowrap><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c5p1");return false;'>Alcohol</a><br>
+            <td nowrap><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c5p1");return false;'>Alcohol</a><br>
               drinks/day <font size=1> 
               <input type="text" name="xml_cp5d" size="2" maxlength="3" <%=bNew?"":"datafld='xml_cp5d'"%>>
               </font></td>
@@ -678,21 +703,21 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>6.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c6p1");return false;'>Infertility</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c6p1");return false;'>Infertility</a></td>
             <td> 
               <input type="checkbox" name="xml_cp6i" value="checked" <%=bNew?"":"datafld='xml_cp6i'"%>>
             </td>
           </tr>
           <tr> 
             <td>7.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c7p1");return false;'>Radiation</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c7p1");return false;'>Radiation</a></td>
             <td> 
               <input type="checkbox" name="xml_cp7r" value="checked" <%=bNew?"":"datafld='xml_cp7r'"%>>
             </td>
           </tr>
           <tr> 
             <td valign="top">8.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c8p1");return false;'>Occup./Env.<br>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c8p1");return false;'>Occup./Env.<br>
               hazards </a></td>
             <td> 
               <input type="checkbox" name="xml_cp8o" value="checked" <%=bNew?"":"datafld='xml_cp8o'"%>>
@@ -743,7 +768,7 @@ function onSubmitForm() {
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr> 
             <td>9.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c9p1");return false;'>Hypertension</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c9p1");return false;'>Hypertension</a></td>
             <td> 
               <input type="checkbox" name="xml_m9hy" value="checked" <%=bNew?"":"datafld='xml_m9hy'"%>>
             </td>
@@ -753,7 +778,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>10.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c10p1");return false;'>Endocrine/Diabetes</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c10p1");return false;'>Endocrine/Diabetes</a></td>
             <td> 
               <input type="checkbox" name="xml_m10ey" value="checked" <%=bNew?"":"datafld='xml_m10ey'"%>>
             </td>
@@ -763,7 +788,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>11.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl1p1");return false;'>Heart</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl1p1");return false;'>Heart</a></td>
             <td> 
               <input type="checkbox" name="xml_m11hy" value="checked" <%=bNew?"":"datafld='xml_m11hy'"%>>
             </td>
@@ -773,7 +798,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>12.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl2p1");return false;'>Renal/urinary tract</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl2p1");return false;'>Renal/urinary tract</a></td>
             <td> 
               <input type="checkbox" name="xml_m12ry" value="checked" <%=bNew?"":"datafld='xml_m12ry'"%>>
             </td>
@@ -783,7 +808,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>13.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl3p1");return false;'>Respiratory</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl3p1");return false;'>Respiratory</a></td>
             <td>
               <input type="checkbox" name="xml_m13ry" value="checked" <%=bNew?"":"datafld='xml_m13ry'"%>>
             </td>
@@ -793,7 +818,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>14.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl4p1");return false;'>Liver/Hepatitis/GI</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl4p1");return false;'>Liver/Hepatitis/GI</a></td>
             <td>
               <input type="checkbox" name="xml_m14ly" value="checked" <%=bNew?"":"datafld='xml_m14ly'"%>>
             </td>
@@ -803,7 +828,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>15.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl5p1");return false;'>Neurological</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl5p1");return false;'>Neurological</a></td>
             <td>
               <input type="checkbox" name="xml_m15ny" value="checked" <%=bNew?"":"datafld='xml_m15ny'"%>>
             </td>
@@ -813,7 +838,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>16.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl6p1");return false;'>Autoimmune</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl6p1");return false;'>Autoimmune</a></td>
             <td>
               <input type="checkbox" name="xml_m16ay" value="checked" <%=bNew?"":"datafld='xml_m16ay'"%>>
             </td>
@@ -823,7 +848,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>17.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl7p1");return false;'>Breast</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl7p1");return false;'>Breast</a></td>
             <td>
               <input type="checkbox" name="xml_m17by" value="checked" <%=bNew?"":"datafld='xml_m17by'"%>>
             </td>
@@ -833,7 +858,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>18.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl8p1");return false;'>Gyn/PAP</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl8p1");return false;'>Gyn/PAP</a></td>
             <td>
               <input type="checkbox" name="xml_m18gy" value="checked" <%=bNew?"":"datafld='xml_m18gy'"%>>
             </td>
@@ -843,7 +868,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>19.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/cl9p1");return false;'>Hospitalizations</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/cl9p1");return false;'>Hospitalizations</a></td>
             <td>
               <input type="checkbox" name="xml_m19hy" value="checked" <%=bNew?"":"datafld='xml_m19hy'"%>>
             </td>
@@ -853,7 +878,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>20.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c20p1");return false;'>Surgeries</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c20p1");return false;'>Surgeries</a></td>
             <td>
               <input type="checkbox" name="xml_m20sy" value="checked" <%=bNew?"":"datafld='xml_m20sy'"%>>
             </td>
@@ -863,7 +888,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>21.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c2lp1");return false;'>Anesthetics</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c2lp1");return false;'>Anesthetics</a></td>
             <td>
               <input type="checkbox" name="xml_m21ay" value="checked" <%=bNew?"":"datafld='xml_m21ay'"%>>
             </td>
@@ -873,7 +898,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>22.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c22p1");return false;'>Hem./Transfusions</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c22p1");return false;'>Hem./Transfusions</a></td>
             <td>
               <input type="checkbox" name="xml_m22hy" value="checked" <%=bNew?"":"datafld='xml_m22hy'"%>>
             </td>
@@ -883,7 +908,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>23.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c23p1");return false;'>Varicosities/Phlebitis</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c23p1");return false;'>Varicosities/Phlebitis</a></td>
             <td>
               <input type="checkbox" name="xml_m23vy" value="checked" <%=bNew?"":"datafld='xml_m23vy'"%>>
             </td>
@@ -893,7 +918,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>24.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c24p1");return false;'>Psychiatric illness</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c24p1");return false;'>Psychiatric illness</a></td>
             <td>
               <input type="checkbox" name="xml_m24py" value="checked" <%=bNew?"":"datafld='xml_m24py'"%>>
             </td>
@@ -903,7 +928,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>25.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c25p1");return false;'>Other</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c25p1");return false;'>Other</a></td>
             <td>
               <input type="checkbox" name="xml_m25oy" value="checked" <%=bNew?"":"datafld='xml_m25oy'"%>>
             </td>
@@ -925,7 +950,7 @@ function onSubmitForm() {
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr> 
             <td>26.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c26p1");return false;'>Age&gt;=35 at EDB</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c26p1");return false;'>Age&gt;=35 at EDB</a></td>
             <td width="15%" align="center"> 
               <input type="checkbox" name="xml_g26ay" value="checked" <%=bNew?"":"datafld='xml_g26ay'"%>>
             </td>
@@ -935,7 +960,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td valign="top">27.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c27p1");return false;'>&quot;At risk&quot; population</a><br>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c27p1");return false;'>&quot;At risk&quot; population</a><br>
               <span class="small">(Tay-Sach's, sicke cell,<br>
               thalassemia, etc.)</span></td>
             <td align="center" valign="top"> 
@@ -947,7 +972,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td valign="top">28.</td>
-            <td nowrap><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c28p1");return false;'>Known 
+            <td nowrap><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c28p1");return false;'>Known 
               teratogen exposure</a><br>
               <span class="small">(includes maternal diabetes)</span></td>
             <td align="center"> 
@@ -959,7 +984,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>29.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c29p1");return false;'>Previous 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c29p1");return false;'>Previous 
               birth defect</a></td>
             <td align="center"> 
               <input type="checkbox" name="xml_g29py" value="checked" <%=bNew?"":"datafld='xml_g29py'"%>>
@@ -973,7 +998,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>30.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c30p1");return false;'>Neural 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c30p1");return false;'>Neural 
               tube defects</a></td>
             <td align="center"> 
               <input type="checkbox" name="xml_fh30ny" value="checked" <%=bNew?"":"datafld='xml_fh30ny'"%>>
@@ -984,7 +1009,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>31.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c3lp1");return false;'>Development 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c3lp1");return false;'>Development 
               delay</a></td>
             <td align="center"> 
               <input type="checkbox" name="xml_fh31dy" value="checked" <%=bNew?"":"datafld='xml_fh31dy'"%>>
@@ -995,7 +1020,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td valign="top">32.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c32p1");return false;'>Congenital 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c32p1");return false;'>Congenital 
               physical<br>
               anomalies </a>(includes<br>
               congenital heart disease)</td>
@@ -1008,7 +1033,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>33.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c33p1");return false;'>Congenital 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c33p1");return false;'>Congenital 
               hypotonias</a></td>
             <td align="center"> 
               <input type="checkbox" name="xml_fh33cy" value="checked" <%=bNew?"":"datafld='xml_fh33cy'"%>>
@@ -1019,7 +1044,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td valign="top">34.</td>
-            <td> <a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c34p1");return false;'>Chromosomal 
+            <td> <a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c34p1");return false;'>Chromosomal 
               disease</a><br>
               <span class="small">(Down's, Turner's, etc.) </span></td>
             <td align="center"> 
@@ -1031,7 +1056,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td valign="top">35.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c35p1");return false;'>Genetic 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c35p1");return false;'>Genetic 
               disease</a><br>
               <span class="small">(cystic fibrosis, muscular<br>
               dystrophy, etc.)</span></td>
@@ -1044,7 +1069,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>36.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c36p1");return false;'>Further 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c36p1");return false;'>Further 
               investigations</a></td>
             <td align="center"> 
               <input type="checkbox" name="xml_fh36fy" value="checked" <%=bNew?"":"datafld='xml_fh36fy'"%>>
@@ -1055,7 +1080,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>37.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c37p1");return false;'>MSS</a><br>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c37p1");return false;'>MSS</a><br>
             </td>
             <td align="center">&nbsp;</td>
             <td align="center">&nbsp;</td>
@@ -1086,35 +1111,35 @@ function onSubmitForm() {
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr> 
             <td>38.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c38p1");return false;'>STDs/Herpes</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c38p1");return false;'>STDs/Herpes</a></td>
             <td> 
               <input type="checkbox" name="xml_idt38s" value="checked" <%=bNew?"":"datafld='xml_idt38s'"%>>
             </td>
           </tr>
           <tr> 
             <td>39.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c39p1");return false;'>HIV</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c39p1");return false;'>HIV</a></td>
             <td> 
               <input type="checkbox" name="xml_idt39h" value="checked" <%=bNew?"":"datafld='xml_idt39h'"%>>
             </td>
           </tr>
           <tr> 
             <td>40.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c40p1");return false;'>Varicella</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c40p1");return false;'>Varicella</a></td>
             <td> 
               <input type="checkbox" name="xml_idt40v" value="checked" <%=bNew?"":"datafld='xml_idt40v'"%>>
             </td>
           </tr>
           <tr> 
             <td>41.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c4lp1");return false;'>Toxo/CMV/Parvo</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c4lp1");return false;'>Toxo/CMV/Parvo</a></td>
             <td> 
               <input type="checkbox" name="xml_idt41t" value="checked" <%=bNew?"":"datafld='xml_idt41t'"%>>
             </td>
           </tr>
           <tr> 
             <td>42.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c42p1");return false;'>TB/Other</a> 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c42p1");return false;'>TB/Other</a> 
               <input type="text" name="xml_idt42o" size="10" maxlength="20" <%=bNew?"":"datafld='xml_idt42o'"%> >
             </td>
             <td> 
@@ -1126,7 +1151,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>43.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c43p1");return false;'>Social 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c43p1");return false;'>Social 
               support</a></td>
             <td> 
               <input type="checkbox" name="xml_pdt43s" value="checked" <%=bNew?"":"datafld='xml_pdt43s'"%>>
@@ -1134,7 +1159,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>44.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c44p1");return false;'>Couple's 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c44p1");return false;'>Couple's 
               relationship</a></td>
             <td> 
               <input type="checkbox" name="xml_pdt44c" value="checked" <%=bNew?"":"datafld='xml_pdt44c'"%>>
@@ -1142,14 +1167,14 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>45.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c45p1");return false;'>Emotional/Depression</a></td>
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c45p1");return false;'>Emotional/Depression</a></td>
             <td> 
               <input type="checkbox" name="xml_pdt45e" value="checked" <%=bNew?"":"datafld='xml_pdt45e'"%>>
             </td>
           </tr>
           <tr> 
             <td>46.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c46p1");return false;'>Substance 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c46p1");return false;'>Substance 
               abuse</a></td>
             <td> 
               <input type="checkbox" name="xml_pdt46s" value="checked" <%=bNew?"":"datafld='xml_pdt46s'"%>>
@@ -1157,7 +1182,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>47.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c47p1");return false;'>Family 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c47p1");return false;'>Family 
               violence</a></td>
             <td> 
               <input type="checkbox" name="xml_pdt47f" value="checked" <%=bNew?"":"datafld='xml_pdt47f'"%>>
@@ -1165,7 +1190,7 @@ function onSubmitForm() {
           </tr>
           <tr> 
             <td>48.</td>
-            <td><a href=# onClick='popupPage(600,700,"http://209.61.188.77:8888/oscarResource/ob/riskinfo/c48p1");return false;'>Parenting 
+            <td><a href=# onClick='popupPage(600,700,"<%=resource_baseurl%>ob/riskinfo/c48p1");return false;'>Parenting 
               concerns</a></td>
             <td> 
               <input type="checkbox" name="xml_pdt48p" value="checked" <%=bNew?"":"datafld='xml_pdt48p'"%>>
@@ -1304,26 +1329,29 @@ function onSubmitForm() {
 %>
 	<tr><td>Signature of attendant<br>
     <input type="text" name="xml_soa" size="30" maxlength="50" style="width:80%" 
-    <%=bNewList?"value='"+username+"'":"datafld='xml_soa'"%>>
+    <%--=bNewList?"value='"+request.getParameter("username")+"'":"datafld='xml_soa'"--%>
+    <%=bNew?"value=''":"datafld='xml_soa'"%> >
 	</td><td>Date (yyyy/mm/dd)<br>
     <input type="text" name="xml_date" size="30" maxlength="50" style="width:80%" 
-    <%=bNewList?"value='"+now.get(Calendar.YEAR)+"/"+(now.get(Calendar.MONTH)+1)+"/"+now.get(Calendar.DAY_OF_MONTH)+"'":"datafld='xml_date'"%>>
+    <%--=bNewList?"value='"+now.get(Calendar.YEAR)+"/"+(now.get(Calendar.MONTH)+1)+"/"+now.get(Calendar.DAY_OF_MONTH)+"'":"datafld='xml_date'"--%> 
+    <%=bNew?"value='"+now.get(Calendar.YEAR)+"/"+(now.get(Calendar.MONTH)+1)+"/"+now.get(Calendar.DAY_OF_MONTH)+"'":"datafld='xml_date'"%>>
 	</td></tr>
     <tr bgcolor="#486ebd"><td align="center"  colspan="2">
           <input type="hidden" name="xml_subject" value="form:AR1">
+          <input type="hidden" name="reason" value="<%=request.getParameter("reason")%>">
+          <input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
           <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
           <input type="hidden" name="form_date" value='<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>'>
           <input type="hidden" name="form_time" value='<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)%>'>
           <input type="hidden" name="user_no" value='<%=user_no%>'>
           <input type="hidden" name="formtype" value='direct'>
-          <input type="hidden" name="formfrom" value='<%=request.getParameter("appointment_no")%>'>
           <input type="hidden" name="form_name" value='<%=form_name%>'>
-          <input type="hidden" name="reason" value='<%=request.getParameter("reason")%>'>
           <input type="hidden" name="dboperation" value="save_form">
           <input type="hidden" name="displaymode" value="saveform">
           <table width='100%' border=0><tr><td width='90%' align='center'>
 	        <%=bNewList&&(request.getParameter("patientmaster")!=null)?"<input type='submit' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
-        	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""%>
+	        <%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%>
+        	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
           </td><td align='right'><%=bNewList?"<input type='button' name='Button' value=' Exit ' onClick='onExit();'>":"<input type='button' name='Button' value=' Exit ' onClick='window.close();'>" %>
           </td></table>
     </td></tr>

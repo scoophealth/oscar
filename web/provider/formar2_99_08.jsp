@@ -30,7 +30,7 @@
   String form_name="ar2_99_08";
   String username = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.UtilDateUtilities, oscar.form.graphic.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="checklist" class="oscar.OBChecklist_99_12" scope="page" />
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
@@ -52,7 +52,7 @@
 <html>
 <head>
 <title> ANTENATAL RECORD </title>
-<link rel="stylesheet" href="antenatalrecord.css" >
+<link rel="stylesheet" href="../provider/antenatalrecord.css" >
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -63,7 +63,7 @@ function setfocus() {
 }
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=50,left=100";
   var popup=window.open(page, "printlocation", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
@@ -76,25 +76,37 @@ function onAR1FieldsFocus(obj) {
     window.alert("Please edit Antenatal Record 1 for this field value.");
 }
 function onExit() {
-  if(confirm("Are you sure to exit WITHOUT saving the form?")) window.close();
+  if(confirm("Did you SAVE?")) window.close();
 }
 function onSave() {
   saveTemp=1;
+  onSubmitForm();
 }
 function onSaveExit() {
   saveTemp=0;
+}
+function onSaveEnc() {
+  saveTemp=4;
 }
 function onPrint() {
   saveTemp=2;
 }
 function onSubmitForm() {
+  if(document.serviceform.xml_soa.value=="" || document.serviceform.xml_soa.value==" " || document.serviceform.xml_soa.value=="null") {
+    alert("Please type in a Signature at the bottom of the form!");
+    return false;
+  }
+  if(document.serviceform.xml_fedb.value.length != 10 && document.serviceform.xml_fedb.value.length != 0 ) {
+    alert("Please type in a 'Final EDB' date in a standard format, e.g. 2003/01/01. \nYour action is cancelled! ");
+    return false;
+  }
   if(saveTemp==0) {
     document.serviceform.target="apptProvider";
     document.serviceform.cmd.value="Save & Exit";
     document.serviceform.submit();
   }
   if(saveTemp==1) {
-    popupPage(10,10,'providercontrol.jsp');
+    popupPage(30,200,'notice.htm');
     document.serviceform.target="printlocation";
     document.serviceform.cmd.value="Save";
     document.serviceform.submit();
@@ -103,6 +115,10 @@ function onSubmitForm() {
   }
   if(saveTemp==2) {
     document.serviceform.cmd.value="Print Preview";
+    document.serviceform.submit();
+  }
+  if(saveTemp==4) {
+    document.serviceform.cmd.value="Save & Enc";
     document.serviceform.submit();
   }
   return false;
@@ -118,8 +134,9 @@ function onSubmitForm() {
   boolean bNew = true, bNewList = true; //bNew=if using the old form data, bNewList=if using dynamic list data
   ResultSet rsdemo = null;
   String[] param2 =new String[2];
-  String content="", demoname=null,address=null,dob=null,homephone=null,workphone=null,allergies="",medications="";
+  String content="", demoname=null,address=null,dob=null,homephone=null,workphone=null,familydoc=null,allergies="",medications="";
   String birthAttendants="", newbornCare="",riskFactors="",finalEDB="",g="",t="",p="",a="",l="",prepregwt="";
+  int pageno = 1;
   int age=0;
   if( request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("0")==0 ) bNew = false;
 
@@ -154,15 +171,19 @@ function onSubmitForm() {
 	  t = t==null?"":t;
       p = SxmlMisc.getXmlContent(content, "<xml_prem>","</xml_prem>");
 	  p = p==null?"":p;
-      int aa = Integer.parseInt(SxmlMisc.getXmlContent(content, "<xml_ect>","</xml_ect>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_ect>","</xml_ect>") )
-	     +Integer.parseInt(SxmlMisc.getXmlContent(content, "<xml_tet>","</xml_tet>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_tet>","</xml_tet>") )
-	     +Integer.parseInt(SxmlMisc.getXmlContent(content, "<xml_spt>","</xml_spt>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_spt>","</xml_spt>") )
-	     +Integer.parseInt(SxmlMisc.getXmlContent(content, "<xml_stt>","</xml_stt>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_stt>","</xml_stt>") ) ;
+      int aa = Integer.parseInt((SxmlMisc.getXmlContent(content, "<xml_ect>","</xml_ect>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_ect>","</xml_ect>")).trim() )
+	     +Integer.parseInt((SxmlMisc.getXmlContent(content, "<xml_tet>","</xml_tet>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_tet>","</xml_tet>")).trim() )
+	     +Integer.parseInt((SxmlMisc.getXmlContent(content, "<xml_spt>","</xml_spt>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_spt>","</xml_spt>")).trim() )
+	     +Integer.parseInt((SxmlMisc.getXmlContent(content, "<xml_stt>","</xml_stt>")==null?"0":SxmlMisc.getXmlContent(content, "<xml_stt>","</xml_stt>")).trim() ) ;
 	  a = ""+aa;
 	  l = SxmlMisc.getXmlContent(content, "<xml_liv>","</xml_liv>");
 	  l = l==null?"":l;
 	  prepregwt = SxmlMisc.getXmlContent(content, "<xml_ppw>","</xml_ppw>");
 	  prepregwt = prepregwt==null?"":prepregwt;
+	  
+	  //page no
+	  pageno = Integer.parseInt(SxmlMisc.getXmlContent(content, "<xml_pageno>","</xml_pageno>")==null?"1":SxmlMisc.getXmlContent(content, "<xml_pageno>","</xml_pageno>"));
+    if( request.getParameter("bNext")!=null && request.getParameter("bNext").compareTo("1")==0 ) pageno++;
 	}
 	
     param2[0]=request.getParameter("demographic_no");
@@ -182,6 +203,7 @@ function onSubmitForm() {
       dob=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth");
       homephone=rsdemo.getString("phone");
       workphone=rsdemo.getString("phone2");
+      familydoc=rsdemo.getString("family_doctor");
       age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
     }
     rsdemo = formMainBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); //dboperation=search_demograph
@@ -191,19 +213,38 @@ function onSubmitForm() {
     }
   }
   //boolean bNewDemoAcc=true;
+  if( request.getParameter("bNew")!=null && request.getParameter("bNew").compareTo("1")==0 ) bNew = true; //here for another ar2 new form, continue from finished previous ar2 form
 %>
 
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+<table border="0" cellspacing="0" cellpadding="0" width="100%" <%=bNew?"":"datasrc='#xml_list'"%> >
   <tr bgcolor="#486ebd"><th width="25%" nowrap>
-	<%=bNewList&&(request.getParameter("patientmaster")!=null)?"<input type='submit' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
-	<%=bNewList&&(request.getParameter("patientmaster")==null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""%></th>
-      <th align=CENTER  ><font face="Helvetica" color="#FFFFFF">ANTENATAL RECORD 2</font></th>
+  <!--input type="hidden" name="xml_pageno" value="<%--=pageno--%>"-->
+	<%--=bNewList?"<a href=# onClick='onSave()'><img src='../images/buttonsave.gif' align='top' width='75' height='25' ></a> ":""--%>
+	<%=bNewList?"<input type='button' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
+	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
+	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%></th>
+      <th align=CENTER  ><font face="Helvetica" color="#FFFFFF">ANTENATAL RECORD 2</font> <font color="orange">page
+      <input type="text" name="xml_pageno" size="1" maxlength="1" <%=bNewList?("value='"+pageno+"'"):"datafld='xml_pageno'"%> ></font></th>
       <th width="25%" nowrap> 
         <div align="right">
+<%
+  //if(bNewList&&!(request.getParameter("patientmaster")!=null) ) {
+  if(bNewList || (request.getParameter("patientmaster")!=null) ) {
+%>        
+<a href=# onClick="popupPage(600,900,'providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=&bNewForm=1&username=&reason=<%=URLEncoder.encode(request.getParameter("reason")==null?"":request.getParameter("reason"))%>&displaymode=ar1&dboperation=search_demograph');return false;" title="Antenatal Record 1">
+            <font color='yellow'>View AR1</font></a> | 
+<a href=# onClick="popupPage(500,600,'../demographic/formhistory.jsp?demographic_no=<%=request.getParameter("demographic_no")%>')" title="Previous Antenatal Record 2">
+            <font color='yellow'>Prev. AR2</font></a>
+		  | <a href="providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=request.getParameter("curProvider_no")%>&username=<%=request.getParameter("username")%>&reason=<%=request.getParameter("reason")%>&displaymode=ar2&dboperation=search_demograph&template=&bNext=1"  title="Next AR2 Form">
+		  <font color='yellow'> Next AR2 </font></a>
+<% } %>
           <%=bNewList?"<input type='button' name='Button' value=' Exit ' onClick='onExit();'>":"<input type='button' name='Button' value=' Exit ' onClick='window.close();'>" %>
           <input type="submit" name="print" value="Print Preview" onClick='onPrint()'>
-		  <a href=# onClick="popupPage(200,300,'formarprintsetting.jsp');return false;"> . </a>
+		  <a href=# onClick="popupPage(200,300,'formarprintsetting.jsp');return false;">.</a>
+		  <!--a href="providercontrol.jsp?appointment_no=<%--=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=request.getParameter("curProvider_no")%>&username=<%=request.getParameter("username")%>&reason=<%=request.getParameter("reason")--%>&displaymode=ar2&dboperation=search_demograph&template=&bNew=1"  title="A New AR2 Form">
+		  <font color='yellow'> New AR2 </font></a-->
+
 		  <input type="hidden" name="oox" value="0">
 		  <input type="hidden" name="ooy" value="0">
 		  <input type="hidden" name="cmd" value="">
@@ -215,10 +256,10 @@ function onSubmitForm() {
   <table width="60%" border="1"  cellspacing="0" cellpadding="0" <%=bNew?"":"datasrc='#xml_list'"%>>
     <tr>
       <td valign="top" colspan='2'>Name
-        <input type="text" name="xml_name"  style="width:100%" size="30" maxlength="60" <%=bNew?"value=\""+demoname+"\"":"datafld='xml_name'"%>> </td>
+        <input type="text" name="xml_name"  style="width:100%" size="30" maxlength="60" <%=bNewList?"value=\""+demoname+"\"":"datafld='xml_name'"%>> </td>
     </tr>
     <tr><td valign="top" colspan='2'>Address 
-        <input type="text" name="xml_address"  style="width:100%" size="60" maxlength="80" <%=bNew?"value=\""+address+"\"":"datafld='xml_address'"%>> </td>
+        <input type="text" name="xml_address"  style="width:100%" size="60" maxlength="80" <%=bNewList?"value=\""+address+"\"":"datafld='xml_address'"%>> </td>
 	</tr>
     <tr>
       <td valign="top" width="50%">Birth attendants<br>
@@ -248,6 +289,67 @@ function onSubmitForm() {
       <td><textarea name="xml_Medication_demographicaccessory" style="width:100%" cols="30" rows="3" <%=bNewList?"":"datafld='xml_Medication_demographicaccessory'"%> ><%=bNewList?medications:""%></textarea></td>
   </tr>
 </table>
+
+<script language="JavaScript">
+<!--		
+	function calcWeek(source) {
+<%
+String fedb = null;
+if (bNewList) fedb = finalEDB; 
+else fedb = SxmlMisc.getXmlContent(content, "xml_fedb");   //:"datafld='xml_fedb'";
+
+String sDate = "";
+if (fedb != null && fedb.length() == 10 ) {
+	FrmGraphicAR arG = new FrmGraphicAR();
+	java.util.Date edbDate = arG.getStartDate(fedb);
+    sDate = UtilDateUtilities.DateToString(edbDate, "MMMMM dd, yyyy"); //"yy,MM,dd");
+	//System.out.println(sDate);
+%>
+	    var delta = 0;
+        var str_date = getDateField(source.name);
+        if (str_date.length < 10) return;
+        var yyyy = str_date.substring(0, str_date.indexOf("/"));
+        var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
+        var dd = str_date.substring(eval(str_date.lastIndexOf("/")+1));
+        var check_date=new Date(yyyy,mm,dd);
+        var start=new Date("<%=sDate%>");
+
+		if (check_date.getUTCHours() != start.getUTCHours()) {
+			if (check_date.getUTCHours() > start.getUTCHours()) {
+			    delta = -1 * 60 * 60 * 1000;
+			} else {
+			    delta = 1 * 60 * 60 * 1000;
+			}
+		} 
+
+		var day = eval((check_date.getTime() - start.getTime() + delta) / (24*60*60*1000));
+        var week = Math.floor(day/7);
+		var weekday = day%7;
+        source.value = week + "w+" + weekday;
+<% } %>
+}
+
+	function getDateField(name) {
+		var temp = ""; //xml_sv1ga - xml_sv1da
+		var n1 = name.substring(eval(name.indexOf("v")+1), name.indexOf("g"));
+
+		if (n1>17) {
+			name = "xml_sv" + n1 + "da";
+		} else {
+			name = "xml_sv" + n1 + "da";
+		}
+        
+        for (var i =0; i <document.serviceform.elements.length; i++) {
+            if (document.serviceform.elements[i].name == name) {
+               return document.serviceform.elements[i].value;
+    	    }
+	    }
+        return temp;
+    }
+//-->
+</SCRIPT>
+
+
   <table width="100%" border="1" cellspacing="0" cellpadding="0" <%=bNew?"":"datasrc='#xml_list'"%>>
     <tr> 
       <td nowrap width="13%"><b>Final EDB</b> (yyyy/mm/dd)<br>
@@ -363,12 +465,16 @@ function onSubmitForm() {
       <td nowrap width="4%">Cig./<br>
         day</td>
     </tr>
+<%
+  boolean bTemp = bNew;
+  if( request.getParameter("bNext")!=null && request.getParameter("bNext").compareTo("1")==0 ) bNew = true; //here for next ar2 form, continue from finished previous ar2 form
+%>    
     <tr align="center"> 
       <td width="11%"> 
         <input type="text" name="xml_sv1da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv1da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv1ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv1ga'"%>>
+        <input type="text" name="xml_sv1ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv1ga'"%>  onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv1sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv1sf'"%>>
@@ -403,7 +509,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv2da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv2da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv2ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv2ga'"%>>
+        <input type="text" name="xml_sv2ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv2ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv2sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv2sf'"%>>
@@ -438,7 +544,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv3da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv3da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv3ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv3ga'"%>>
+        <input type="text" name="xml_sv3ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv3ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv3sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv3sf'"%>>
@@ -473,7 +579,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv4da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv4da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv4ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv4ga'"%>>
+        <input type="text" name="xml_sv4ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv4ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv4sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv4sf'"%>>
@@ -508,7 +614,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv5da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv5da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv5ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv5ga'"%>>
+        <input type="text" name="xml_sv5ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv5ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv5sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv5sf'"%>>
@@ -543,7 +649,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv6da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv6da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv6ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv6ga'"%>>
+        <input type="text" name="xml_sv6ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv6ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv6sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv6sf'"%>>
@@ -578,7 +684,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv7da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv7da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv7ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv7ga'"%>>
+        <input type="text" name="xml_sv7ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv7ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv7sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv7sf'"%>>
@@ -613,7 +719,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv8da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv8da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv8ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv8ga'"%>>
+        <input type="text" name="xml_sv8ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv8ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv8sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv8sf'"%>>
@@ -648,7 +754,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv9da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv9da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv9ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv9ga'"%>>
+        <input type="text" name="xml_sv9ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv9ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv9sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv9sf'"%>>
@@ -683,7 +789,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv10da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv10da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv10ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv10ga'"%>>
+        <input type="text" name="xml_sv10ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv10ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv10sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv10sf'"%>>
@@ -718,7 +824,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv11da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv11da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv11ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv11ga'"%>>
+        <input type="text" name="xml_sv11ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv11ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv11sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv11sf'"%>>
@@ -753,7 +859,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv12da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv12da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv12ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv12ga'"%>>
+        <input type="text" name="xml_sv12ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv12ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv12sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv12sf'"%>>
@@ -788,7 +894,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv13da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv13da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv13ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv13ga'"%>>
+        <input type="text" name="xml_sv13ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv13ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv13sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv13sf'"%>>
@@ -823,7 +929,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv14da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv14da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv14ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv14ga'"%>>
+        <input type="text" name="xml_sv14ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv14ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv14sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv14sf'"%>>
@@ -858,7 +964,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv15da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv15da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv15ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv15ga'"%>>
+        <input type="text" name="xml_sv15ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv15ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv15sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv15sf'"%>>
@@ -893,7 +999,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv16da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv16da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv16ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv16ga'"%>>
+        <input type="text" name="xml_sv16ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv16ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv16sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv16sf'"%>>
@@ -928,7 +1034,7 @@ function onSubmitForm() {
         <input type="text" name="xml_sv17da" size="10" maxlength="10" style="width:90%" <%=bNew?"":"datafld='xml_sv17da'"%>>
       </td>
       <td width="7%"> 
-        <input type="text" name="xml_sv17ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv17ga'"%>>
+        <input type="text" name="xml_sv17ga" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv17ga'"%> onDblClick="calcWeek(this)">
       </td>
       <td width="7%"> 
         <input type="text" name="xml_sv17sf" size="6" maxlength="6" style="width:90%" <%=bNew?"":"datafld='xml_sv17sf'"%>>
@@ -958,6 +1064,9 @@ function onSubmitForm() {
         <input type="text" name="xml_sv17ra" size="5" maxlength="5" style="width:90%" <%=bNew?"":"datafld='xml_sv17ra'"%>>
       </td>
     </tr>
+<%
+  bNew = bTemp;
+%>    
   </table>
   <table width="100%" border="0" cellspacing="0" cellpadding="0" <%=bNew?"":"datasrc='#xml_list'"%>>
     <tr>
@@ -1167,26 +1276,28 @@ function onSubmitForm() {
   <table width="100%" border="0" <%=bNew?"":"datasrc='#xml_list'"%>>
 	<tr><td>Signature of attendant<br>
     <input type="text" name="xml_soa" size="30" maxlength="50" style="width:80%" 
-    <%=bNewList?"value='"+username+"'":"datafld='xml_soa'"%>>
+    <%--=bNewList?"value='"+request.getParameter("username")+"'":"datafld='xml_soa'"--%>
+    <%=bNew?"value=''":"datafld='xml_soa'"%>>
 	</td><td>Date (yyyy/mm/dd)<br>
     <input type="text" name="xml_date" size="30" maxlength="50" style="width:80%" 
     <%=bNewList?"value='"+now.get(Calendar.YEAR)+"/"+(now.get(Calendar.MONTH)+1)+"/"+now.get(Calendar.DAY_OF_MONTH)+"'":"datafld='xml_date'"%>>
 	</td></tr>
     <tr bgcolor="#486ebd"><td align="center"  colspan="2"> 
         <input type="hidden" name="xml_subject" value="form:AR2">
+          <input type="hidden" name="reason" value="<%=request.getParameter("reason")%>">
+          <input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
         <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
         <input type="hidden" name="form_date" value='<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>'>
         <input type="hidden" name="form_time" value='<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)%>'>
         <input type="hidden" name="user_no" value='<%=user_no%>'>
         <input type="hidden" name="formtype" value='direct'>
-        <input type="hidden" name="formfrom" value='<%=request.getParameter("appointment_no")%>'>
-        <input type="hidden" name="reason" value='<%=request.getParameter("reason")%>'>
         <input type="hidden" name="form_name" value='<%=form_name%>'>
         <input type="hidden" name="dboperation" value="save_form">
         <input type="hidden" name="displaymode" value="saveform">
           <table width='100%' border=0><tr><td width='90%' align='center'>
 	        <%=bNewList&&(request.getParameter("patientmaster")!=null)?"<input type='submit' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
-        	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""%>
+	        <%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%>
+        	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
           </td><td align='right'><%=bNewList?"<input type='button' name='Button' value=' Exit ' onClick='onExit();'>":"<input type='button' name='Button' value=' Exit ' onClick='window.close();'>" %>
           </td></table>
       </td>
