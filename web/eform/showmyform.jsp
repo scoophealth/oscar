@@ -106,7 +106,7 @@ function newWindow(file,window) {
       <td><%=rs.getString("subject")%></td>
       <td align='center'><%=rs.getString("form_date")%></td>
 	  <td align='center'><%=rs.getString("form_time")%></td>
-	  <td align='center'><a href="deleteformdata.jsp?fdid=<%=rs.getInt("fdid")%>&demographic_no=<%=demographic_no%>">Delete</a></td>
+	  <td align='center'><a href="deleteformdata.jsp?fdid=<%=rs.getInt("fdid")%>&demographic_no=<%=demographic_no%>"><bean:message key="eform.uploadimages.btnDelete"/></a></td>
 	  </tr>
 <%    }  
   }else {
