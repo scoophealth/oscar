@@ -34,17 +34,19 @@ public class BillingCreateBillingAction extends Action {
         
         oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean;
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
+        
+        BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
         String patientNo   = bean.getPatientNo();
         String patientName = bean.getPatientName();
         String apptNo     = bean.getApptNo();
         
-        String[] service  = ((BillingCreateBillingForm)form).getService();
-        String other_service1 = ((BillingCreateBillingForm)form).getXml_other1();
-        String other_service2 = ((BillingCreateBillingForm)form).getXml_other2();
-        String other_service3 = ((BillingCreateBillingForm)form).getXml_other3();
-        String other_service1_unit = ((BillingCreateBillingForm)form).getXml_other1_unit();
-        String other_service2_unit = ((BillingCreateBillingForm)form).getXml_other2_unit();
-        String other_service3_unit = ((BillingCreateBillingForm)form).getXml_other3_unit();
+        String[] service  = frm.getService();
+        String other_service1 = frm.getXml_other1();
+        String other_service2 = frm.getXml_other2();
+        String other_service3 = frm.getXml_other3();
+        String other_service1_unit = frm.getXml_other1_unit();
+        String other_service2_unit = frm.getXml_other2_unit();
+        String other_service3_unit = frm.getXml_other3_unit();
         oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager bmanager;
         bmanager = new BillingBillingManager();
         ArrayList billItem = bmanager.getDups2(service, other_service1, other_service2, other_service3,other_service1_unit, other_service2_unit, other_service3_unit);
@@ -65,35 +67,41 @@ public class BillingCreateBillingAction extends Action {
         bean.setPatientPHN(demo.getHIN());
         bean.setPatientHCType(demo.getHCType());
         bean.setPatientAge(demo.getAge());
-        bean.setBillingType(((BillingCreateBillingForm)form).getXml_billtype());
+        bean.setBillingType(frm.getXml_billtype());
         bean.setEncounter(((BillingCreateBillingForm) form).getXml_encounter());
 		
-        bean.setVisitType(((BillingCreateBillingForm)form).getXml_visittype());
-        bean.setVisitLocation(((BillingCreateBillingForm)form).getXml_location());
-        bean.setServiceDate(((BillingCreateBillingForm)form).getXml_appointment_date());
-        bean.setStartTime(((BillingCreateBillingForm)form).getXml_starttime());
-        bean.setEndTime(((BillingCreateBillingForm)form).getXml_endtime());
-        bean.setAdmissionDate(((BillingCreateBillingForm)form).getXml_vdate());
-        bean.setBillingProvider(((BillingCreateBillingForm)form).getXml_provider());
+        bean.setVisitType(frm.getXml_visittype());
+        bean.setVisitLocation(frm.getXml_location());
+        bean.setServiceDate(frm.getXml_appointment_date());
+        bean.setStartTime(frm.getXml_starttime());
+        bean.setEndTime(frm.getXml_endtime());
+        bean.setAdmissionDate(frm.getXml_vdate());
+        bean.setBillingProvider(frm.getXml_provider());
         
         oscar.oscarBilling.ca.bc.data.BillingFormData billform = new oscar.oscarBilling.ca.bc.data.BillingFormData();
         
-        bean.setBillingPracNo(billform.getPracNo(((BillingCreateBillingForm)form).getXml_provider()));
-        bean.setBillingGroupNo(billform.getGroupNo(((BillingCreateBillingForm)form).getXml_provider()));
+        bean.setBillingPracNo(billform.getPracNo(frm.getXml_provider()));
+        bean.setBillingGroupNo(billform.getGroupNo(frm.getXml_provider()));
         
         
         
-        bean.setDx1(((BillingCreateBillingForm)form).getXml_diagnostic_detail1());
-        bean.setDx2(((BillingCreateBillingForm)form).getXml_diagnostic_detail2());
-        bean.setDx3(((BillingCreateBillingForm)form).getXml_diagnostic_detail3());
-        bean.setReferral1(((BillingCreateBillingForm)form).getXml_refer1());
-        bean.setReferral2(((BillingCreateBillingForm)form).getXml_refer2());
-        bean.setReferType1(((BillingCreateBillingForm)form).getRefertype1());
-        bean.setReferType2(((BillingCreateBillingForm)form).getRefertype2());
+        bean.setDx1(frm.getXml_diagnostic_detail1());
+        bean.setDx2(frm.getXml_diagnostic_detail2());
+        bean.setDx3(frm.getXml_diagnostic_detail3());
+        bean.setReferral1(frm.getXml_refer1());
+        bean.setReferral2(frm.getXml_refer2());
+        bean.setReferType1(frm.getRefertype1());
+        bean.setReferType2(frm.getRefertype2());
         bean.setBillItem(billItem);
         
-        bean.setNotes(((BillingCreateBillingForm) form).getNotes());
-	bean.setIcbc_claim_no(((BillingCreateBillingForm) form).getIcbc_claim_no());
+        bean.setCorrespondenceCode(frm.getCorrespondenceCode());
+        bean.setNotes(frm.getNotes());
+        bean.setDependent(frm.getDependent());
+        bean.setAfterHours(frm.getAfterHours());
+        bean.setTimeCall(frm.getTimeCall());
+        bean.setSubmissionCode(frm.getSubmissionCode());
+        bean.setService_to_date(frm.getService_to_date());
+	bean.setIcbc_claim_no(frm.getIcbc_claim_no());
         if (((BillingCreateBillingForm) form).getXml_billtype().equalsIgnoreCase("WCB")){
                 WCBForm wcbForm = new WCBForm();
                 wcbForm.Set(bean);
