@@ -357,6 +357,8 @@
                     type="oscar.oscarSurveillance.CheckSurveillanceForm"/>
     <form-bean      name="SurveillanceAnswerForm"
                     type="oscar.oscarSurveillance.SurveillanceAnswerForm"/>
+    <form-bean      name="CreateSurveillanceFileForm"
+                    type="oscar.oscarSurveillance.CreateSurveillanceFileForm"/>
 <!-- OscarSurveillance ON stop -->                    
 
                     
@@ -1719,6 +1721,12 @@
                 name="SurveillanceAnswerForm"              
                 scope="request">                
        <forward name="survey"  path="/oscarSurveillance/CheckSurveillance.do"/>       
+    </action>           
+    <action     path="/oscarSurveillance/CreateSurveillanceFile"
+                type="oscar.oscarSurveillance.CreateSurveillanceFileAction"                  
+                name="CreateSurveillanceFileForm"
+                scope="request">                
+       <forward name="success"  path="/oscarSurveillance/ReportSurvey.jsp"/>       
     </action>           
     <!-- oscarSurveillance  end -->
 
