@@ -55,7 +55,7 @@ public class BillingSaveBillingAction extends Action {
         int curDay = now.get(Calendar.DAY_OF_MONTH);
         String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) + "-" + String.valueOf(curDay);
         String billingid = "";
-        String dataCenterId = OscarProperies.getProperty("dataCenterId");
+        String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
         
         System.out.println("appointment_no: "+ bean.getApptNo());
         System.out.println("BillStatus:" + billStatus);
