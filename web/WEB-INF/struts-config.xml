@@ -160,6 +160,11 @@
                     type="oscar.billing.controler.ConsultaFaturamentoPacienteForm"/>                    
 <!-- oscarBilling Brazil stop -->
 
+	<!-- popups start-->
+    <form-bean name="procedimentoForm" type="oscar.billing.popup.ProcedimentoForm"/>
+    <form-bean name="atividadeSaudeForm" type="oscar.billing.popup.AtividadeSaudeForm"/>
+    <!-- popups end-->
+
   </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -821,6 +826,43 @@
         </action>
         
     <!-- ConsultaFaturamentoPaciente end -->
+    
+    <!-- Popup Procedimento -->
+    <action   path="/popup/procedimento/init"
+              type="oscar.billing.popup.ProcedimentoAction"
+              parameter="INIT"
+              scope="session"
+              name="procedimentoForm"
+              input="/popup/procedimento.jsp">
+              <forward name="success" path="/popup/procedimento.jsp"/>
+    </action>
+    <action   path="/popup/procedimento/findProc"
+              type="oscar.billing.popup.ProcedimentoAction"
+              parameter="FIND_PROC"
+              scope="session"
+              name="procedimentoForm"
+              input="/popup/procedimento.jsp">
+              <forward name="success" path="/popup/procedimento.jsp"/>
+    </action>
+
+    <!-- Popup Atividade Profissional -->
+    <action   path="/popup/atividade/init"
+              type="oscar.billing.popup.AtividadeSaudeAction"
+              parameter="INIT"
+              scope="session"
+              name="atividadeSaudeForm"
+              input="/popup/atividade.jsp">
+              <forward name="success" path="/popup/atividade.jsp"/>
+    </action>
+    <action   path="/popup/atividade/findAtiv"
+              type="oscar.billing.popup.AtividadeSaudeAction"
+              parameter="FIND_ATIV"
+              scope="session"
+              name="atividadeSaudeForm"
+              input="/popup/atividade.jsp">
+              <forward name="success" path="/popup/atividade.jsp"/>
+    </action>
+    
   </action-mappings>
 </struts-config>
 
