@@ -388,6 +388,7 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 					String desc = null;
 					java.sql.ResultSet rs = apptMainBean.queryResults(new String[]{"O", request.getParameter("billing_no")},"select_c12_record");
 					while (rs.next()){
+                   String seqNum = rs.getString("t_dataseq");
 						for (int i = 1; i < 8; i++){
 							desc = rs.getString("t_exp" + String.valueOf(i));
                      String descfull = (String)codes.get(desc);
@@ -395,7 +396,7 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 								//rsCode = apptMainBean.queryResults(new String[]{desc},"select_msp_code");
 								if (descfull != null){
 %>
-				<li><%=desc+ " - " + descfull%></li>
+				<li><%=seqNum+" "+desc+ " - " + descfull%></li>
 <%
 								}
 							}
