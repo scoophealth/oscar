@@ -56,7 +56,8 @@ import oscar.oscarDemographic.data.*;
 
 public class BillingReProcessBillAction extends Action {
     
-    
+   Misc misc = new Misc(); 
+   
     public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -129,8 +130,8 @@ public class BillingReProcessBillAction extends Action {
         String claimComment = frm.getShortComment();//f
         
         String billingStatus =frm.getStatus();//f
-        
-        
+                
+        String originalMSPNumber = misc.forwardZero("", 20);
         
         String oinInsurerCode = frm.getInsurerCode();//f
         String oinRegistrationNo = demo.getHIN();//d
@@ -180,7 +181,18 @@ public class BillingReProcessBillAction extends Action {
             name_verify = "0000";
         }
             
-            
+        if (submissionCode.equals("E")){
+           String seqNum = frm.getDebitRequestSeqNum();
+           String dateRecieved = frm.getDebitRequestDate();
+           try{
+              dateRecieved = dateRecieved.trim();
+              Integer.parseInt(dateRecieved);
+           }catch (Exception e){
+              dateRecieved = "";
+           }
+           
+           originalMSPNumber = constructOriginalMSPNumber(dataCenterId, seqNum, dateRecieved);
+        }
             
             String sql = "update billingmaster set "                                                   
                         + "billingstatus = '"+billingStatus+"', "                                                                      
@@ -216,7 +228,8 @@ public class BillingReProcessBillAction extends Action {
                         + "service_end_time = '"+serviceEndTime+"', "
                         + "birth_date = '"+birthDate+"', "                        
                         + "correspondence_code = '"+correspondenceCode+"', "
-                        + "claim_comment = '"+claimComment+"', "                                                
+                        + "claim_comment = '"+claimComment+"', " 
+                        + "original_claim = '"+originalMSPNumber+"',"
                         
                         + "oin_insurer_code = '"+oinInsurerCode+"', "
                         + "oin_registration_no = '"+oinRegistrationNo+"', "
@@ -290,6 +303,12 @@ public class BillingReProcessBillAction extends Action {
             
         }
         return sdate;
+    }
+    public String constructOriginalMSPNumber(String dataCenterNum, String seqNum, String dateRecieved){
+       String retval = "";
+       
+       retval = misc.forwardZero(dataCenterNum, 5)+misc.forwardZero(seqNum,7)+misc.forwardZero(dateRecieved, 8);
+       return retval;
     }
     
 }
