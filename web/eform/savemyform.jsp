@@ -86,7 +86,8 @@
   }
 
   //Section that creates XML, still needs to be inserted somewhere into a MYSQL table
-  try{
+  //TODO: Needs to xml validate for illegal characters
+  /*try{
   Document doc = UtilXML.newDocument();
   Element root = UtilXML.addNode(doc, form_name);
     while (e.hasMoreElements()){
@@ -99,7 +100,7 @@
   catch(Exception ex){
   ex.printStackTrace();
   }
-  
+  */
 
   
 // "formString" - from eforom
