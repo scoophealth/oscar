@@ -39,6 +39,7 @@ import org.apache.struts.util.MessageResources;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
+import oscar.oscarReport.oscarMeasurements.data.*;
 import oscar.OscarProperties;
 
 
@@ -53,6 +54,11 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         MessageResources mr = getResources(request);
         ArrayList reportMsg = new ArrayList();
         ArrayList headings = new ArrayList();
+        RptMeasurementsData mData = new RptMeasurementsData();
+        String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
+        String startDateA = frm.getStartDateA();
+        String endDateA = frm.getEndDateA();
+        int nbPatient = 0; 
         try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);  
                 if(!validate(frm, request)){                    
@@ -61,7 +67,13 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 
                 
                 addHeading(headings, request);
-                getNbPatientSeen(db, frm, reportMsg, request);  
+                if(patientSeenCheckbox!=null){
+                    nbPatient = mData.getNbPatientSeen(db, startDateA, endDateA);  
+                    String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
+                    System.out.println(msg);
+                    reportMsg.add(msg);
+                    reportMsg.add("");
+                }
                 getFrequenceOfTestPerformed(db, frm, reportMsg, request);
                 
                 String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
@@ -159,39 +171,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         return valid;
     }   
 
-     /*****************************************************************************************
-     * get the number of Patient seen during aspecific time period
-     *
-     * @return ArrayList which contain the result in String format
-     ******************************************************************************************/  
-    private int getNbPatientSeen(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList messages, HttpServletRequest request){
-        String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
-        String startDateA = frm.getStartDateA();
-        String endDateA = frm.getEndDateA();
-        int nbPatient = 0;
-        if(patientSeenCheckbox!=null){
-            try{
-                String sql = "SELECT * FROM eChart WHERE timestamp >= '" + startDateA + "' AND timestamp <= '" + endDateA + "'";
-                ResultSet rs;
-                rs = db.GetSQL(sql);
-                System.out.println("SQL Statement: " + sql);
-                rs.last();
-                nbPatient = rs.getRow();
-                MessageResources mr = getResources(request);
-                String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
-                System.out.println(msg);
-                messages.add(msg);
-                messages.add("");
-                rs.close();
 
-            }
-            catch(SQLException e)
-            {
-                System.out.println(e.getMessage());
-            }
-        }
-        return nbPatient;
-    }
     
      /*****************************************************************************************
      * get the Frequence of Test Performed during aspecific time period
@@ -206,6 +186,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         int[] lessThan = frm.getLessThan();
         String[] frequencyCheckbox = frm.getFrequencyCheckbox();      
         MessageResources mr = getResources(request);
+        RptMeasurementsData mData = new RptMeasurementsData();
         
         if (frequencyCheckbox!=null){
             try{
@@ -221,7 +202,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                     String measurementType = (String) frm.getValue("measurementTypeD"+ctr);                    
                     String sNumMInstrc = (String) frm.getValue("mNbInstrcsD"+ctr);
                     int iNumMInstrc = Integer.parseInt(sNumMInstrc);                    
-                    ArrayList patients = getPatients(db, startDate, endDate);
+                    ArrayList patients = mData.getPatientsSeen(db, startDate, endDate);
                     int nbPatients = patients.size();
                     
                     for(int j=0; j<iNumMInstrc; j++){
@@ -232,20 +213,20 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                         int nbExact =0;
                         int nbMore =0;
                         int nbLess =0;
+                        int nbTest =0;
                         
                         String mInstrc = (String) frm.getValue("mInstrcsCheckboxD"+ctr+j);
                         if(mInstrc!=null){
                             for(int k=0; k<nbPatients; k++){
                                 String patient = (String) patients.get(k);                            
 
-                                String sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                String sql = "SELECT COUNT(demographicNo) AS nbTest FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
                                              + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                              + "' AND demographicNo=" + "'" + patient + "'";
-
-                                System.out.println("SQL statement is " + sql);
-                                ResultSet rs = db.GetSQL(sql);
-                                rs.last();
-                                int nbTest = rs.getRow();                              
+                                
+                                ResultSet rs = db.GetSQL(sql);  
+                                if (rs.next())
+                                    nbTest = rs.getInt("nbTest");                              
                                 rs.close();
                                 
                                 if(nbTest == exact){
@@ -270,7 +251,8 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                                 endDate,
                                                 measurementType,
                                                 mInstrc,
-                                                Double.toString(exactPercentage),
+                                                Double.toString(nbExact) + "/" + Double.toString(nbPatients) +
+                                                " (" + Double.toString(exactPercentage) + "%)",
                                                 Integer.toString(exact)};
                             String msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsExact", param0);                              
                             System.out.println(msg);
@@ -279,7 +261,8 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                                 endDate,
                                                 measurementType,
                                                 mInstrc,
-                                                Double.toString(morePercentage),
+                                                Double.toString(nbMore) + "/" + Double.toString(nbPatients) +
+                                                " (" + Double.toString(morePercentage) + "%)",
                                                 Integer.toString(more)};
                             msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsMoreThan", param1); 
                             System.out.println(msg);
@@ -288,7 +271,8 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                                 endDate,
                                                 measurementType,
                                                 mInstrc,
-                                                Double.toString(lessPercentage),
+                                                Double.toString(nbLess) + "/" + Double.toString(nbPatients) +
+                                                " (" + Double.toString(lessPercentage) + "%)",
                                                 Integer.toString(less)};
                             msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsLessThan", param2); 
                             System.out.println(msg);
@@ -309,31 +293,5 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         return percentageMsg;
     }
 
-     /*****************************************************************************************
-     * get the number of patients during aspecific time period
-     *
-     * @return ArrayList which contain the result in String format
-     ******************************************************************************************/      
-    private ArrayList getPatients(DBHandler db, String startDate, String endDate){
 
-        ArrayList patients = new ArrayList();
-        
-        try{
-            String sql = "SELECT DISTINCT demographicNo  FROM eChart WHERE timestamp >= '" + startDate + "' AND timestamp <= '" + endDate + "'";
-            System.out.println("SQL Statement: " + sql);
-            ResultSet rs;
-            
-            for(rs=db.GetSQL(sql); rs.next();){            
-                String patient = rs.getString("demographicNo");
-                patients.add(patient);                
-            }
-            rs.close();
-        }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-       
-        return patients;
-    }        
 }
