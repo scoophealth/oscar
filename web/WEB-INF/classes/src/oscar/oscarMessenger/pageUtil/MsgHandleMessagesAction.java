@@ -112,7 +112,7 @@ public  class MsgHandleMessagesAction extends Action {
           try{   //gets the sender
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              java.sql.ResultSet rs;
-             String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = \'"+messageNo+"\'");
+             String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = '"+messageNo+"'");
              rs = db.GetSQL(sql);
 
              if ( rs.next()){
@@ -164,7 +164,7 @@ public  class MsgHandleMessagesAction extends Action {
            try{   //gets the sender
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
-              String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = \'+messageNo+\'");
+              String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = '"+messageNo+"'");
               rs = db.GetSQL(sql);
 
               if ( rs.next()){
