@@ -200,6 +200,9 @@ function popupDecisionSupport(){
         var popup=window.open(varpage, "Decision Support", windowprops);  
         popup.focus();
     }
+    else{
+        alert("Vascular Tracker Decision Support Page not found!");
+    }
     
  }
   
@@ -209,6 +212,28 @@ function showHideItem(id){
         document.getElementById(id).style.display = 'block'; 
     else
         document.getElementById(id).style.display = 'none'; 
+}
+
+function updateWaistHipRatio(){
+    var e = document.forms[0].elements;
+    var waist, hip, ratio;    
+    for(i=50; i<70; i++){
+        switch(e[i].name){
+            case 'value(WHRValue)': ratio = i; break;
+            case 'value(WCValue)': waist = i; break;
+            case 'value(HCValue)': hip = i; break;
+        }
+    }
+    if (document.forms[0].elements[waist].value=="" || document.forms[0].elements[hip].value==""){
+        document.forms[0].elements[ratio].readOnly = false;
+    }
+    else{
+        var r = document.forms[0].elements[ratio].value;
+        var w = document.forms[0].elements[waist].value;
+        var h = document.forms[0].elements[hip].value;
+        document.forms[0].elements[ratio].value = parseInt(w) / parseInt(h);
+        document.forms[0].elements[ratio].readOnly = true;        
+    }
 }
 
 function storeSMKSupportData(){
@@ -798,7 +823,7 @@ function controlEyeExam(){
                                                         </logic:present>
                                                         
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%" onfocus="javascript: updateWaistHipRatio();"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
@@ -814,7 +839,7 @@ function controlEyeExam(){
                                                         </logic:present>
                                                         
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%" onchange="javascript: updateWaistHipRatio();"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
@@ -830,7 +855,7 @@ function controlEyeExam(){
                                                         </logic:present>
                                                         
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistHipRatio();"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>                                                 
