@@ -9,7 +9,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 
 <% 
-String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"form_date desc";  
+String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"form_name ";  
 String [][] dbQueries=new String[][] { 
 // Postgres cant execute this query
 //{"search_eform", "select * from eform where status = 1 order by ?, form_date desc, form_time desc" }, 
@@ -98,7 +98,7 @@ String [][] dbQueries=new String[][] {
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
+            <td class="MainTableTopRowLeftColumn" width="175">
                 <bean:message key="eform.myform.msgEForm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
@@ -134,9 +134,9 @@ String [][] dbQueries=new String[][] {
       <tr bgcolor=<%=deepColor%> >
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>
+      <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>-->
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
+      <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> -->
       </tr>      
       
 <%
@@ -145,14 +145,14 @@ String [][] dbQueries=new String[][] {
     bgcolor = rs.getRow()%2==0?weakColor:"white" ;
 %>
       <tr bgcolor="<%=bgcolor%>">
-	    <td width=25%>
+	    <td >
         <a href="makemyform.jsp?fid=<%=rs.getInt("fid")%>&form_name=<%=rs.getString("form_name")%>&demographic_no=<%=demographic_no%>&subject=<%=rs.getString("subject")%>">
 	    <%=rs.getString("form_name")%>
         </a></td>
-                <td width=30% ><%=rs.getString("subject")%></td>
-		<td width=25% ><%=rs.getString("file_name")%></td>
+                <td  ><%=rs.getString("subject")%></td>
+		<!--<td width=25% ><%=rs.getString("file_name")%></td>-->
 		<td nowrap align='center'><%=rs.getString("form_date")%></td>
-		<td nowrap align='center'><%=rs.getString("form_time")%></td>
+		<!--<td nowrap align='center'><%=rs.getString("form_time")%></td>-->
 	  </tr>
 <%
   }  
