@@ -82,9 +82,11 @@ public class EctMeasurementsAction extends Action {
                     String inputValueName = "inputValue-" + i;
                     String inputTypeName = "inputType-" + i;
                     String mInstrcName = "inputMInstrc-" + i;
+                    String commentsName = "comments-" + i;
                     String inputValue = (String) frm.getValue(inputValueName);
                     String inputType = (String) frm.getValue(inputTypeName);
                     String mInstrc = (String) frm.getValue(mInstrcName);
+                    String comments = (String) frm.getValue(commentsName);
                     
                     String msg = null;
                     String regExp = null;
@@ -94,7 +96,8 @@ public class EctMeasurementsAction extends Action {
                     EctValidation ectValidation = new EctValidation();                    
                     ActionErrors errors = new ActionErrors();                    
                     ResultSet rs = ectValidation.getValidationType(inputType, mInstrc);
-
+                    String regCharExp = ectValidation.getRegCharacterExp();
+                    
                     if (rs.next()){
                         dMax = rs.getDouble("maxValue");
                         dMin = rs.getDouble("minValue");
@@ -115,6 +118,12 @@ public class EctMeasurementsAction extends Action {
                     else if(!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
                         errors.add(inputValueName,
                         new ActionError("error.bloodPressure"));
+                        saveErrors(request, errors);
+                        valid = false;
+                    }
+                    else if(!ectValidation.matchRegExp(regCharExp, comments)){                        
+                        errors.add(commentsName,
+                        new ActionError("errors.invalidComments", inputType));
                         saveErrors(request, errors);
                         valid = false;
                     }
