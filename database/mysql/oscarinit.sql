@@ -3736,6 +3736,27 @@ CREATE TABLE reportagesex (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table reportByExamples
+--
+CREATE TABLE reportByExamples(
+  id int(9) auto_increment ,
+  providerNo varchar(6) NOT NULL,
+  query blob NOT NULL,
+  date datetime NOT NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table reportByExamplesFavorite
+--
+CREATE TABLE reportByExamplesFavorite(
+  id int(9) auto_increment ,
+  providerNo varchar(6) NOT NULL,
+  query blob NOT NULL,  
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `reportprovider`
 --
 
