@@ -502,6 +502,27 @@ public class MSPReconcile{
         return p;
     }    
     
+    
+    public void updateBillingStatus(String billingNo,String stat){
+       try {              
+          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);        
+          db.RunSQL("update billingmaster set billingstatus = '"+stat+"' where billing_no = '"+billingNo+"'");                
+          db.RunSQL("update billing set status = '"+stat+"' where billing_no = '"+billingNo+"'");                
+          db.CloseConn();
+       }catch(Exception e){
+          e.printStackTrace();
+       }          
+    }
+    public void updateBillingMasterStatus(String billingMasterNo,String stat){
+       try {              
+          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);        
+          db.RunSQL("update billingmaster set billingstatus = '"+stat+"' where billingmaster_no = '"+billingMasterNo+"'");                
+          db.CloseConn();
+       }catch(Exception e){
+          e.printStackTrace();
+       }          
+    }
+    
     public boolean updateStat(String stat,String billingNo){
         //get current status of bill
         boolean updated = true;
