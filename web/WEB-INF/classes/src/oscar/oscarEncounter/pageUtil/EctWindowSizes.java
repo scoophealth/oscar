@@ -21,7 +21,7 @@ public class EctWindowSizes {
     }
     
     public static Properties getWindowSizes(String provNo) {
-        Properties props = new Properties();
+        Properties props = new Properties();        
         
         try {
 
@@ -29,20 +29,20 @@ public class EctWindowSizes {
             String sql = "select * from encounterWindow where provider_no='"+provNo+"'";
             ResultSet rs = db.GetSQL(sql);
             
-            if (rs.next()) {           
-            	props.setProperty("rowOneSize", rs.getString("rowOneSize"));
-            	props.setProperty("rowTwoSize", rs.getString("rowTwoSize"));
-            	props.setProperty("rowThreeSize", rs.getString("rowThreeSize"));
-            	props.setProperty("presBoxSize", rs.getString("presBoxSize"));
-            }                           
+            rs.next(); // we WANT this to throw an exception if there is no corresponding row in the DB
+            
+            props.setProperty("rowOneSize", rs.getString("rowOneSize"));
+            props.setProperty("rowTwoSize", rs.getString("rowTwoSize"));
+            props.setProperty("rowThreeSize", rs.getString("rowThreeSize"));
+            props.setProperty("presBoxSize", rs.getString("presBoxSize"));                                       
            
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+            // e.printStackTrace(System.out);
             props.setProperty("rowOneSize", "60");
             props.setProperty("rowTwoSize", "60");
             props.setProperty("rowThreeSize", "378");
             props.setProperty("presBoxSize", "30");
-        }
+        }        
         return props;
     }
 }
