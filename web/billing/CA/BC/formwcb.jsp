@@ -117,7 +117,10 @@ function isformNeeded(){
      HideElementById('employerSectionTitle');
      HideElementById('reportTypeSection');
      HideElementById('workersAddressSection');
-     
+     if (document.WCBForm.w_feeitem.value == "" && document.WCBForm.w_extrafeeitem.value != ""){
+        document.WCBForm.w_feeitem.value = document.WCBForm.w_extrafeeitem.value ;
+        document.WCBForm.w_extrafeeitem.value = "";
+     }
   }
   }
   
@@ -564,14 +567,14 @@ td.wcblayerItem{
 }
 </style>
 
-<div id="Layer1" style="position:absolute; left:1px; top:1px; width:380px; height:311px; visibility: hidden; z-index:1"   >
+<div id="Layer1" style="position:absolute; left:1px; top:1px; width:350px; height:311px; visibility: hidden; z-index:1"   >
 <!--  This should be changed to automagically fill if this changes often -->                             
 <table width="98%" border="0" cellspacing="1" cellpadding="1" align=center>
     <tr class="LightBG"> 
       <td class="wcblayerTitle">Code</td>
       <td class="wcblayerTitle">&nbsp;</td>
       <td class="wcblayerTitle">Description</td>
-      <td class="wcblayerTitle">
+      <td class="wcblayerTitle" align="right">
              <a href="javascript: function myFunction() {return false; }" onclick="hidepic('Layer1');" style="text-decoration: none;">X</a>           
       </td>
     </tr>
