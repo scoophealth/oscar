@@ -13,7 +13,7 @@
 	<type>BP</type> 
 	<typeDesc>Blood Pressure</typeDesc>
 	<typeDisplayName>Blood Pressure</typeDisplayName>
-	<measuringInstrc>Sitting Position (nnn/nnn) Target:<130/80 Interval:3mo.</measuringInstrc>
+	<measuringInstrc>Sitting Position (nnn/nnn) Target:&lt;130/80 Interval:3mo.</measuringInstrc>
 	<validationRule>
 	    <name>Blood Pressure</name>
 	    <regularExp>[0-9]{2,3}/{1}[0-9]{2,3}</regularExp>
@@ -83,7 +83,7 @@
         <type>HbA1</type>
         <typeDesc>HbA1c</typeDesc>
         <typeDisplayName>HbA1c</typeDisplayName>
-	<measuringInstrc>(n.nn) Range:0.04-0.20 Target:<0.07 Interval:3-6mo.</measuringInstrc>
+	<measuringInstrc>(n.nn) Range:0.04-0.20 Target:&lt;0.07 Interval:3-6mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0.04 to 0.2</name>
            <minValue>0.04</minValue>
@@ -107,7 +107,7 @@
         <type>LDL</type>
         <typeDesc>Low Density Lipid</typeDesc>
         <typeDisplayName>LDL</typeDisplayName>
-        <measuringInstrc>in mmol/L (nn.n) Range:0.5-10  Target:<2.5 Interval:6-12mo.</measuringInstrc>
+        <measuringInstrc>in mmol/L (nn.n) Range:0.5-10  Target:&lt;2.5 Interval:6-12mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0.5 to 10</name>
            <minValue>0.5</minValue>
@@ -333,7 +333,7 @@
         <type>Exer</type>
         <typeDesc>Exercise</typeDesc>
         <typeDisplayName>Exercise</typeDisplayName>
-        <measuringInstrc>Minutes of moderate or vigorous exercise per week (nnnn) Range:0-6720 Target:>240 Interval:3mo.</measuringInstrc>
+        <measuringInstrc>Minutes of moderate or vigorous exercise per week (nnnn) Range:0-6720 Target:&gt;240 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 6720</name>
            <minValue>0</minValue>
