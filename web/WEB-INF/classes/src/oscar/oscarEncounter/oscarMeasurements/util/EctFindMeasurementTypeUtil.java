@@ -72,7 +72,7 @@ public class EctFindMeasurementTypeUtil {
         }
         return ret;
     }
-    
+    /*
     static public Vector getMeasurementsType(String formName, String demo) {
         
         boolean verdict = true;
@@ -104,7 +104,7 @@ public class EctFindMeasurementTypeUtil {
             verdict = false;
         }
         return measurementTypeVector;
-    }
+    }*/
     
     /**
      * Compare the form definition xml file with the measurementtype table in the database. 
@@ -139,10 +139,10 @@ public class EctFindMeasurementTypeUtil {
             if(!rs.next()){                  
                 verdict = false;
             }
-            else{
+            /*else{
                 if(!measurementFrmIsAdded(formName, rs.getString("id")))
                     add2MeasurementForm(formName, rs.getString("id"));
-            }
+            }*/
             rs.close();
             db.CloseConn();
         }
@@ -153,6 +153,7 @@ public class EctFindMeasurementTypeUtil {
         return verdict;
     }
     
+    /*
     static public boolean measurementFrmIsAdded(String formName, String typeId){
         boolean verdict = true;
         try {
@@ -171,7 +172,8 @@ public class EctFindMeasurementTypeUtil {
             verdict = false;
         }
         return verdict;
-    }
+    }*/
+    
     static public void addMeasurementType(EctMeasurementTypesBean mt, String formName){
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -188,12 +190,12 @@ public class EctFindMeasurementTypeUtil {
                             "VALUES('" + mt.getType() + "', '" + mt.getTypeDisplayName() + "', '" + mt.getTypeDesc() + "', '" +
                             mt.getMeasuringInstrc() + "', '" + validationId + "')";
                 db.RunSQL(sql);                
-                sql = "SELECT * FROM measurementType ORDER BY id DESC LIMIT 1";
+                /*sql = "SELECT * FROM measurementType ORDER BY id DESC LIMIT 1";
                 ResultSet rs = db.GetSQL(sql);             
                 if(rs.next()){
                     if(!measurementFrmIsAdded(formName, rs.getString("id")))
                         add2MeasurementForm(formName, rs.getString("id"));
-                }
+                }*/
             }
             db.CloseConn();
         }
@@ -202,6 +204,7 @@ public class EctFindMeasurementTypeUtil {
         }
     }
     
+    /*
     static public void add2MeasurementForm(String formName, String typeId){
         boolean verdict = true;
         try {
@@ -215,6 +218,6 @@ public class EctFindMeasurementTypeUtil {
         catch(SQLException e) {
             System.out.println(e.getMessage());           
         }        
-    }
+    }*/    
         
 }
