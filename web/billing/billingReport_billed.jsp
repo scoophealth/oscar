@@ -85,7 +85,7 @@
 %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <TD align="center" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
-    <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime%></font></b></TD>
+    <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime==null?"00:00:00":apptTime%></font></b></TD>
     <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason%>(<%=note%>)
       </font></b></TD>
