@@ -72,6 +72,7 @@ public class DBHandler {
 			throws SQLException {
 		return this.GetSQL(SQLStatement, false);
 	}
+        
 	synchronized public java.sql.ResultSet GetSQL(String SQLStatement,
 			boolean updatable) throws SQLException {
 		Statement stmt;
@@ -99,4 +100,19 @@ public class DBHandler {
 			pool.free(conn);
 		}
 	}
+        
+        /**
+         *Method makes sure connection to database is closed
+         **/
+        protected void finalize() throws Throwable {           
+           try{
+              if(conn != null){                                       
+                 CloseConn();                       
+              }
+           }catch(SQLException e){
+              System.out.println("Problem finalizing DBHandler");
+              e.printStackTrace();
+           }
+        }
+        
 }
