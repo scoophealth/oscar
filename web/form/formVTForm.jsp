@@ -167,10 +167,7 @@ Vascular Tracker
         document.forms[0].submit.value="save"; 
         storeSMKSupportData();
         storeFTExamSupportData();
-        storeEyeExamSupportData();
-            var ret = confirm("Are you sure you want to update Vascular Tracker?");
-        
-        return ret;
+        storeEyeExamSupportData();            
     }
     function onExit() {
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)
@@ -451,7 +448,7 @@ function controlEyeExam(){
     <table class="Head" class="hidePrint" width="640px" cellpadding="0" cellspacing="0">
         <tr>
             <td align="left">                
-                <input type="submit" value="Update VT" onclick="javascript:return onSave();" />
+                <input type="submit" value="Update VT" onclick="javascript:onSave();" />
                 <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
                 <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
                 <input type="button" value="Print" onclick="javascript:return onPrint();"/>
@@ -1442,7 +1439,7 @@ function controlEyeExam(){
         <tr>
             <td align="left">
                 <input type="hidden" name="submit" value=""/>
-                <input type="submit" value="Update VT" onclick="javascript:return onSave();" />
+                <input type="submit" value="Update VT" onclick="javascript:onSave();" />
                 <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
                 <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
                 <input type="button" value="Print" onclick="javascript:return onPrint();"/>
