@@ -83,6 +83,12 @@
           <servlet-name>ScatterPlotChartServlet</servlet-name>
           <servlet-class>oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet</servlet-class>          
   </servlet>
+  
+  <servlet>
+          <servlet-name>DocumentUploadServlet</servlet-name>
+          <servlet-class>oscar.DocumentUploadServlet</servlet-class>
+          <load-on-startup>0</load-on-startup>
+  </servlet>
 
   <!-- Action Servlet Mapping -->
   <servlet-mapping>
@@ -139,6 +145,11 @@
   <servlet-mapping>
           <servlet-name>ScatterPlotChartServlet</servlet-name>
           <url-pattern>/servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+          <servlet-name>DocumentUploadServlet</servlet-name>
+          <url-pattern>/servlet/oscar.DocumentUploadServlet</url-pattern>
   </servlet-mapping>
 
   <!-- The Welcome File List -->
