@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,32 +22,29 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java" %>
 <%@ page import="oscar.oscarEncounter.immunization.data.*, oscar.util.*" %>
 <%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-
-<html:html locale="true">
-<head>
-<title>
-<bean:message key="oscarEncounter.immunization.Schedule.title"/>
-</title>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
 //System.out.println(bean.demographicNo+" "+ bean.providerNo+"  this is the demoNO");
 String sDoc = new EctImmImmunizationData().getImmunizations(bean.demographicNo);
-if(sDoc == null)
-{
+if(sDoc == null){
     response.sendRedirect("loadConfig.do");
-}
-else
-{
+    return;
+} 
 %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
+<html>
+<head>
+<title>
+<bean:message key="oscarEncounter.immunization.Schedule.title"/>
+</title>
 <style type="text/css">
 
 .ellipsis
@@ -83,6 +80,11 @@ TD.grey
 </style>
 
 <script language="javascript">
+    function onClose() {
+        var x = window.confirm("Are you sure your wish to exit without saving?");
+        if(x) {window.close();}
+    }
+
     function edit(nodeName)
     {
         windowprops = "height=440,width=630,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
@@ -115,8 +117,7 @@ TD.grey
         eval('frm.' + nodeName + '_comments').value    = comments;
     }
 
-    function showSet(tblName, ev)
-    {
+    function showSet(tblName, ev) {
         var tbl = document.getElementById(tblName);
         var b = false;
 
@@ -137,11 +138,37 @@ TD.grey
 
         if(b==true)
         {
-            tbl.style.display='';
+            tbl.style.display=''; 
+            //document.tblSetBar.style.display='';
+            document.getElementById("tblSetBar").style.display='';
         }
         else
         {
             tbl.style.display='none';
+            document.getElementById("tblSetBar").style.display='none';
+        }
+    }
+    
+    function showSetName(tblName, chkId) {
+        var tbl = document.getElementById(tblName);
+        var b = false;
+
+        if(chkId !=null){
+            if(document.getElementById(chkId).checked) {
+            	document.getElementById(chkId).checked = false;
+                b = false;
+            } else {
+            	document.getElementById(chkId).checked = true;
+                b = true;
+            }
+        } 
+
+        if(b==true) {
+            tbl.style.display=''; 
+            document.getElementById("tblSetBar").style.display='';
+        } else {
+            tbl.style.display='none';
+            document.getElementById("tblSetBar").style.display='none';
         }
     }
 
@@ -164,7 +191,7 @@ TD.grey
                         <td  >
                         </td>
                         <td style="text-align:right" NOWRAP>
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
+                                <a href="javascript:window.close();"  ><bean:message key="global.btnClose"</a> |  
                         </td>
                     </tr>
                 </table>
@@ -175,12 +202,12 @@ TD.grey
 
             </td>
             <td class="MainTableRightColumn">
-                <html:form action="/oscarEncounter/immunization/saveSchedule">
-            <table  name="encounterTableRightCol" >
+            <html:form action="/oscarEncounter/immunization/saveSchedule">
+            <table name="encounterTableRightCol"  width="100%">
                 <tr>
                     <td>
 
-                        <table>
+                        <table width="80%">
                             <tr>
                                 <td>
                         <%
@@ -190,10 +217,8 @@ TD.grey
                         %>
                         <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
                                 </td>
-                                <td>
+                                <td align="right">
                         <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
-                                </td>
-                                <td>
                         <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
                                 </td>
                             </tr>
@@ -203,7 +228,7 @@ TD.grey
                 <tr>
                     <td>
 
-                        <input type="hidden" name="xmlDoc" value="<%= UtilMisc.encode64(UtilXML.toXML(doc)) %>" />
+                        <input type="hidden" name="xmlDoc" value='<%= UtilMisc.encode64(UtilXML.toXML(doc)) %>' />
                         <%
 
                         for(int i=0; i<sets.getLength(); i++)
@@ -212,11 +237,12 @@ TD.grey
 
                             %>
                             <div style="font-weight: bold">
-                                <input type="checkbox" onclick="javascript:showSet('tblSet<%=i%>', event);" id="chkSet<%=i%>" checked="checked" />
-                                <%= set.getAttribute("name") %>
+                                <input type="checkbox" onclick="javascript:showSet('tblSet<%=i%>', event);" id="chkSet<%=i%>"  />
+                                <a href=# onclick="javascript:showSetName('tblSet<%=i%>', 'chkSet<%=i%>');">
+                                <%= set.getAttribute("name") %></a>
                             </div>
 
-                            <table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>" style="margin-bottom:10px">
+                            <table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>"  style="display:none" >
                             <%
 
                             int colCount = -1;
@@ -386,20 +412,19 @@ TD.grey
                                 document.forms[0].submit();
                             }
                         </script>
-
                                 <table>
                                     <tr>
                                         <td>
-                                <input type="hidden" name="hdnAction"/>
+                                            <input type="hidden" name="hdnAction"/>
                                         </td>
                                         <td>
-                                <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
+                                            <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
                                         </td>
                                         <td>
-                                <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
+                                            <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
                                         </td>
                                         <td>
-                                <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
+                                            <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
                                         </td>
                                     </tr>
                                 </table>
@@ -419,10 +444,7 @@ TD.grey
             </td>
         </tr>
     </table>
-    <%
-    //pairs off with the response.sendRedirect if statement at the top of the file
-    } %>
 
 </body>
-</html:html>
+</html>
 

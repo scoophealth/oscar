@@ -31,11 +31,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-
-<html:html locale="true">
+<html>
 <head>
 <title>
-<bean:message key="oscarEncounter.immunization.ScheduleConfig.title"/>
+Configure Immunization Schedule
 </title>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
@@ -47,7 +46,7 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarEncounter.immunization.ScheduleConfig.msgImm"/>
+                Immunization
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -57,8 +56,8 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
                         </td>
                         <td>
                         </td>
-                        <td style="text-align:right;width:650;">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
+                        <td style="text-align:right" NOWRAP>
+                                <a href="javascript:history.go(-1);"  >Back</a> | <a href="javascript:window.close();" >Close</a> |
                         </td>
                     </tr>
                 </table>
@@ -68,33 +67,42 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
             <td class="MainTableLeftColumn">
             </td>
             <td class="MainTableRightColumn">
-<%
+<%--
 String sCfg = new EctImmConfigData().getImmunizationConfig();
 Document cfgDoc = UtilXML.parseXML(sCfg);
 Element cfgRoot = cfgDoc.getDocumentElement();
 NodeList cfgSets = cfgRoot.getElementsByTagName("immunizationSet");
+--%>
+<%
+Vector cfgSet = new EctImmConfigData().getImmunizationConfigName();
+Vector cfgId = new EctImmConfigData().getImmunizationConfigId();
 %>
 <html:form action="/oscarEncounter/immunization/saveConfig">
-<input type="hidden" name="xmlDoc" value="<%= UtilMisc.encode64(UtilXML.toXML(cfgDoc)) %>" />
+<input type="hidden" name="xmlDoc" value="<%--= UtilMisc.encode64(UtilXML.toXML(cfgDoc)) --%>" />
+
 <%
-for(int i=0; i<cfgSets.getLength(); i++)
-{
-    Element cfgSet = (Element)cfgSets.item(i);
-    %>
-    <div style="font-weight: bold">
-        <input type="checkbox" name="chkSet<%=i%>" />
-        <%= cfgSet.getAttribute("name") %>
-    </div>
-    <%
-}
-
+//for(int i=0; i<cfgSets.getLength(); i++) {    Element cfgSet = (Element)cfgSets.item(i);
+for(int i=0; i<cfgSet.size(); i++) {
+// cfgSet.getAttribute("name")
 %>
-<input type="hidden" name="submit_form" value="Save Configuration" />
-<input type="button" value="<bean:message key="oscarEncounter.immunization.ScheduleConfig.btnSaveConfig"/>" onclick="document.forms['EctImmPassThruForm'].submit.value='Save Configuration';document.forms['EctImmPassThruForm'].submit();" />
-<input type="button" value="<bean:message key="global.btnCancel"/>" onclick="javascript:location.href='loadSchedule.do';" />
-<input type="button" value="<bean:message key="oscarEncounter.immunization.ScheduleConfig.btnConfig"/>" onclick="javascript:location.href='config/initConfig.do';" />
+    <div style="font-weight: bold">
+        <input type="checkbox" name="chkSet<%--=i--%>" value="<%=(String)cfgId.get(i)%>"/>
+        <%=(String)cfgSet.get(i)%>;
+    </div>
+<%
+}
+%>
+<br>
+<table width="80%">
+<tr><td>
+<html:submit value="Add Immu. Template" />
+<input type="button" value="Cancel" onclick="javascript:location.href='loadSchedule.do';" />
+  </td><td align="right">
+<input type="button" value="Create Immu. Template" onclick="javascript:location.href='config/initConfig.do';" />
+</td>
+</tr>
+</table>
 </html:form>
-
             </td>
         </tr>
         <tr>
@@ -107,4 +115,4 @@ for(int i=0; i<cfgSets.getLength(); i++)
         </tr>
     </table>
 </body>
-</html:html>
+</html>

@@ -30,8 +30,13 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%
+int stat = 0;
+stat = request.getParameter("stat") != null ? Integer.parseInt(request.getParameter("stat")) : stat ;
+stat = request.getAttribute("stat") != null ? Integer.parseInt((String)request.getAttribute("stat")) : stat ;
+boolean deletedList = stat == 0 ? false : true;
+
 oscar.oscarEncounter.immunization.config.data.EctImmImmunizationSetData immuSets = new oscar.oscarEncounter.immunization.config.data.EctImmImmunizationSetData();
-immuSets.estImmunizationVecs();
+immuSets.estImmunizationVecs(stat);
 
 %>
 
@@ -92,6 +97,9 @@ font-size: 12pt;
 function BackToOscar(){
        window.close();
 }
+function goURL(s){
+       self.location.href = s ;
+}
 
 function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
@@ -127,7 +135,7 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
+                                <a href="javascript:history.go(-1);"  ><bean:message key="global.btnBack"/></a> | <a href="javascript:window.close();" ><bean:message key="global.btnClose"/></a> 
                         </td>
                     </tr>
                 </table>
@@ -137,9 +145,12 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
             <td class="MainTableLeftColumn">
             </td>
             <td class="MainTableRightColumn">
-                 <table border=0 cellspacing=1>
+                 <table width="50%" border=0 cellspacing=1>
+                 <html:form action="/oscarEncounter/immunization/config/deleteImmunizationSet">
+                 
                     <tr>
-                            <th>
+                    <th></th>
+                            <th><font color="red"><%=deletedList?"(Deleted)":""%></font>
                             <bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.msgImmName"/>
                             </th>
                             <th>
@@ -151,22 +162,35 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
                         String id = (String) immuSets.setIdVec.elementAt(i);
                         String createDate = (String) immuSets.createDateVec.elementAt(i);
                     %>
-                        <tr>
-                            <td class="tite4">
+                        <tr bgcolor="<%= i%2==0? "#EEEEFF" : "#CCCCFF"%>">
+                          <td width="3%"><input type="checkbox" name="chkSetId" value="<%=id%>" />
+                          </td>
+                            <td width="70%">
 
                             <a href="javascript:popupImmunizationSet(768,1024,'ImmunizationSetDisplay.do?setId=<%=id%>')">
                             <%=name%>
                             </a>
                             </td>
-                            <td class="tite4">
+                            <td align="center" >
                             <%=createDate%>
                             </td>
                         </tr>
                     <%}%>
                 </table>
                 <br/>
-                <a href="CreateImmunizationSetInit.jsp"><bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnAddNew"/></a>
-                <a href="javascript:window.close()"><bean:message key="global.btnClose"/></a>
+                <table width="50%" border=0 cellspacing=1>
+                <tr>
+                  <td>
+                  <input type="submit" name="action" value="<%=deletedList?"Restore":"Delete"%>" >
+				  </td>
+                  <td align="right">
+                  <input type="button" name="Button" value="Add New" onClick="javascript:goURL('CreateImmunizationSetInit.jsp');">
+                  <input type="button" name="action" value="<%=deletedList?"Immu. Set List":"Deleted List"%>" onClick="goURL('AdministrateImmunizationSets.jsp<%=deletedList?"":"?stat=2"%>');">
+                  </td>
+                </tr>
+                </html:form>
+                
+                </table>
             </td>
         </tr>
         <tr>
@@ -176,6 +200,8 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
             </td>
         </tr>
     </table>
+    
+    
 </body>
 </html:html>
 
