@@ -266,11 +266,11 @@ public class MSPReconcile{
         }
         
         if (startDate != null && !startDate.trim().equalsIgnoreCase("")){
-            startDateQuery = " and ( to_days(service_date) > to_days('"+startDate+"')) ";
+            startDateQuery = " and ( to_days(service_date) >= to_days('"+startDate+"')) ";
         }
         
         if (endDate != null && !endDate.trim().equalsIgnoreCase("")){
-            endDateQuery = " and ( to_days(service_date) < to_days('"+endDate+"')) ";
+            endDateQuery = " and ( to_days(service_date) <= to_days('"+endDate+"')) ";
         }
         if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")){
             demoQuery = " and b.demographic_no = '"+demoNo+"' ";
@@ -303,7 +303,7 @@ public class MSPReconcile{
                  +  demoQuery
                  +  billingType;
         
-        //System.out.println(p);
+        System.out.println(p);
         //String 
         billSearch.list = new ArrayList();
         billSearch.count = 0;
