@@ -132,6 +132,18 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
             textField.value = textField.value.substring(0, maximumlength);
          } 
       }
+      
+      function correspondenceNote(){    
+         if (document.ReProcessBilling.correspondenceCode.value == "0" ){
+            HideElementById('CORRESPONDENCENOTE');
+         }else if (document.ReProcessBilling.correspondenceCode.value == "C" ){
+            HideElementById('CORRESPONDENCENOTE');
+         }else if (document.ReProcessBilling.correspondenceCode.value == "N" ){
+            ShowElementById('CORRESPONDENCENOTE');
+         }else {(document.ReProcessBilling.correspondenceCode.value == "B" )
+            ShowElementById('CORRESPONDENCENOTE');
+         }
+      }
  		
 		function rs(n,u,w,h,x) {
 		  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
@@ -208,7 +220,7 @@ function checkDebitRequest(){
 
          
 
-<body bgcolor="#FFFFFF" text="#000000" topmargin="5"  leftmargin="0" rightmargin="0" onLoad="setfocus();checkDebitRequest();">
+<body bgcolor="#FFFFFF" text="#000000" topmargin="5"  leftmargin="0" rightmargin="0" onLoad="setfocus();checkDebitRequest();correspondenceNote();">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
     <td height="40" width="10%"> </td>
@@ -708,7 +720,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
             <td class="bCellData">Correspondence Code</td><!--CORRESPONDENCE-CODE-->                
             <td class="bCellData">
-                <select name="correspondenceCode" >
+                <select name="correspondenceCode" onchange="correspondenceNote();" >
                     <option value="0" <%=allFields.getProperty("correspondence_code").equals("0")?"selected":""%>>None</option> 
                     <option value="C" <%=allFields.getProperty("correspondence_code").equals("C")?"selected":""%>>Paper Note</option>            
                     <option value="N" <%=allFields.getProperty("correspondence_code").equals("N")?"selected":""%>>Elec Note</option>            
@@ -730,7 +742,11 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             <td class="bCellData">Claim Short Comment</td><!--CLAIM-SHORT-COMMENT-->
             <td><input type="text" name="shortComment" value="<%=allFields.getProperty("claim_comment")%>"size="20" maxlength="20"/></td>
             <td class="bCellData">Note</td>
-            <td><textarea cols="60" rows="5"name="notes" onkeyup="checkTextLimit(this.form.notes,400);"><%=corrNote%></textarea></td>
+            <td> 
+               <div id="CORRESPONDENCENOTE">
+                  <textarea cols="60" rows="5"name="notes" onkeyup="checkTextLimit(this.form.notes,400);"><%=corrNote%></textarea>
+               </div>
+            </td>
             
        </tr>      
        <!--<tr>
