@@ -416,7 +416,11 @@ function goZoomView(s, n) {
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="Flip view"  >
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
-          <%=curProviderName[nProvider]%></a></b> <%=userAvail?"":"[not on Schedule]"%></td></tr>
+          <%=curProviderName[nProvider]%></a></b>
+          <% if (!userAvail) {%>
+          [<bean:message key="provider.appointmentProviderAdminDay.msgNotOnSched"/>]"%>
+          <% } %>
+</td></tr>
           <tr><td valign="top">
         
         <!-- table for hours of day start --> 
