@@ -124,57 +124,37 @@ function openNewPage(vheight,vwidth,varpage) {
 <tr>
     <td>
         <html:form action="/oscarResearch/oscarDxResearch/dxResearch.do">
-        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="300">
-        <tr> 
-                <td width="25%" valign="top"> 
+        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="500">
+        <html:errors/>
+            <tr> 
+                <td width="26%" valign="top"> 
 
-                <table width="100%" border="0" cellspacing="0" cellpadding="2" height="300" bgcolor="#FFFFFF">
+                <table width="100%" border="0" cellspacing="0" cellpadding="2" height="500" bgcolor="#FFFFFF">
                     <tr> 
-                        <td class="heading">Coding System: <select name="codingSys" style="width:80px">
-                                                                <option value="ICHPPC">ICHPPC</option>
-                                                           </select>
+                        <td class="heading"><bean:message key="oscarResearch.oscarDxResearch.codingSystem"/>: <bean:write name="codingSystem"/>
                         </td>
-                    </tr>
-                    <tr>
-                        <td><html:errors/></td>
-                    </tr>
+                    </tr>                                        
                     <tr> 
                         <td>
-                            <input type="text" name="xml_research1" size="30">
+                            <html:text property="xml_research1" size="30"/>
                             <input type="hidden" name="demographicNo" value="<bean:write name="demographicNo"/>">
                             <input type="hidden" name="providerNo" value="<bean:write name="providerNo"/>">
                         </td>
                     </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research2" size="30">
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research3" size="30">
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research4" size="30">
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research5" size="30">
-                        </td>
-                    </tr>
+                    <tr><td><html:text property="xml_research2" size="30"/></td></tr>
+                    <tr><td><html:text property="xml_research3" size="30"/></td></tr>
+                    <tr><td><html:text property="xml_research4" size="30"/></td></tr>
+                    <tr><td><html:text property="xml_research5" size="30"/></td></tr>
                     <tr> 
                         <td> 
                             <input type="hidden" name="forward" value="none"/>
-                            <input type="button" name="button" class=mbttn value="Code Search" onClick="javascript: ResearchScriptAttach();")>
-                            <input type="button" name="button" class=mbttn value="Add" onClick="javascript: submitform('');">
+                            <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>" onClick="javascript: ResearchScriptAttach();")>
+                            <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>" onClick="javascript: submitform('');">
                         </td>
                     </tr>
                     <tr>
                         <td class="heading">
-                            QuickList
+                            <bean:message key="oscarResearch.oscarDxResearch.quickList"/>
                         </td>                
                     </tr>
                     <tr>
@@ -188,7 +168,7 @@ function openNewPage(vheight,vwidth,varpage) {
                     </tr>
                     <logic:iterate id="item" name="allQuickListItems" property="dxQuickListItemsVector">
                     <tr>
-                        <td>
+                        <td class="quickList">
                             <a href="#" title='<bean:write name="item" property="dxSearchCode"/>' onclick="javascript:submitform('<bean:write name="item" property="dxSearchCode"/>');"><bean:write name="item" property="description"/></a>
                         </td>
                     </tr>
@@ -201,11 +181,11 @@ function openNewPage(vheight,vwidth,varpage) {
                 <td width="75%" valign="top">
 
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
-                <tr class="heading"> 
-                        <td width="48%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis"/></b></td>
-                        <td width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit"/></b></td>
-                        <td width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgLastVisit"/></b></td>
-                        <td width="22%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgAction"/></b></td>
+                <tr> 
+                    <td class="heading" width="48%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis"/></b></td>
+                    <td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit"/></b></td>
+                    <td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgLastVisit"/></b></td>
+                    <td class="heading" width="22%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgAction"/></b></td>
                 </tr>        
                 <logic:iterate id="diagnotics" name="allDiagnostics" property="dxResearchBeanVector" indexId = "ctr" >
                     <%  
