@@ -219,7 +219,7 @@
  
  <target name="oscarcomm-jar" depends="web">
         <echo message="${classes_web}/oscar/comm/**" />
-        <jar destfile="${build}/oscarcomm.jar">
+        <jar destfile="${build}/oscarcomm-${now}.jar">
              
              <fileset dir="${classes_web}">
                 <exclude name="oscar/oscarEncounter/**"/>
