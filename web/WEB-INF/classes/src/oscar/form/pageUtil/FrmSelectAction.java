@@ -52,14 +52,13 @@ public class FrmSelectAction extends Action {
                 
                 if (frm.getForward().compareTo("add")==0) {
                     System.out.println("the add button is pressed");
-                    String[] selectedAddTypes = frm.getSelectedAddTypes();
-                    String sql = "SELECT * FROM encounterForm WHERE hidden<>'0'";
-                    ResultSet rs = db.GetSQL(sql);
-                    rs.last();
-                    int newOrder = rs.getRow() + 1;
+                    String[] selectedAddTypes = frm.getSelectedAddTypes();                    
                     if(selectedAddTypes != null){
                         for(int i=0; i<selectedAddTypes.length; i++){
-                            System.out.println(selectedAddTypes[i]);
+                            String sql = "SELECT * FROM encounterForm WHERE hidden<>'0'";
+                            ResultSet rs = db.GetSQL(sql);
+                            rs.last();
+                            int newOrder = rs.getRow() + 1;                            
                             sql = "UPDATE encounterForm SET hidden ='" + newOrder + "' WHERE form_name='" + selectedAddTypes[i] + "'";
                             System.out.println(" sql statement "+sql);
                             db.RunSQL(sql);                                
@@ -76,7 +75,18 @@ public class FrmSelectAction extends Action {
                             System.out.println(" sql statement "+sql);
                             db.RunSQL(sql);                                
                         }
+                        String sql = "SELECT hidden FROM encounterForm WHERE hidden <> '0' ORDER BY hidden";
+                        ResultSet rs = db.GetSQL(sql);
+                        int i=1;
+                        while(rs.next()){
+                            sql = "UPDATE encounterForm SET hidden='"+i+"' WHERE hidden='"+rs.getString("hidden")+"'";
+                            db.RunSQL(sql);
+                            i++;
+                        }
+                        
                     }
+                    
+                    //need to update the order number under the hidden column!!!!!
                 }
                 else if (frm.getForward().compareTo("up")==0){
                     System.out.println("The Move UP button is pressed!");
