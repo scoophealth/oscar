@@ -92,7 +92,7 @@ public final class WCBForm extends ActionForm {
         boolean isValid = true;
         return isValid;
     }
-    public String SQL(String billingno, String amount) {              
+    public String SQL(String billingno, String amount) {          
         return sql
         + "'"
         + oscar.Misc.mysqlEscape(billingno)
@@ -459,6 +459,10 @@ public final class WCBForm extends ActionForm {
     public void setW_demographic(String no) {
         this.demographic_no = no;
     }
+    
+    public String getDemographic() {
+        return this.demographic_no ;
+    }
     public String getW_reporttype() {
         return oscar.Misc.safeString(this.w_reportype);
     }
@@ -651,10 +655,10 @@ public final class WCBForm extends ActionForm {
     public void setW_rehab(String w_rehab) {
         this.w_rehab = w_rehab;
     }
-    public String getW_rehabtype() {
+    public String getW_rehabtype() {       
         return oscar.Misc.safeString(w_rehabtype);
     }
-    public void setW_rehabtype(String w_rehabtype) {
+    public void setW_rehabtype(String w_rehabtype) {       
         this.w_rehabtype = w_rehabtype;
     }
     public String getW_estimatedate() {
