@@ -4,8 +4,6 @@ import org.apache.log4j.Category;
 
 import org.apache.struts.action.*;
 
-import oscar.OscarProperties;
-
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -49,6 +47,7 @@ public abstract class OscarAction extends Action {
 		saveErrors(request, aes);
 		cat.error("Erro - " + error);
 	}
+	
 
     protected void generalError(HttpServletRequest request, String error, Object[] params) {
         ActionErrors aes = new ActionErrors();

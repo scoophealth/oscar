@@ -27,7 +27,7 @@ import javax.servlet.http.*;
 public class ProcedimentoRealizadoAction extends OscarAction {
     static Category cat = Category.getInstance(ProcedimentoRealizadoAction.class.getName());
 
-    public ActionForward perform(ActionMapping mapping, ActionForm form,
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {
         ActionForward myforward = null;
         ProcedimentoRealizadoForm procedimentoRealizadoForm = (ProcedimentoRealizadoForm) form;
@@ -70,6 +70,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
                 myforward = performGravar(mapping, form, request, response);
             }
         } else if ("INIT".equalsIgnoreCase(myaction)) {
+			System.out.println(" [ProcedimentoRealizadoAction] Vai chamar Init");
             myforward = performInit(mapping, form, request, response);
         } else if ("DEL_PROC".equalsIgnoreCase(myaction)) {
             myforward = performDeleteProcedimento(mapping, form, request,
@@ -87,22 +88,24 @@ public class ProcedimentoRealizadoAction extends OscarAction {
     private ActionForward performInit(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        //cat.info(" [ProcedimentoRealizadoAction] INIT");
+        cat.debug(" [ProcedimentoRealizadoAction] INIT");
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
         HttpSession session = request.getSession();
 
         try {
             String appId = request.getParameter("appId");
+			System.out.println(" [ProcedimentoRealizadoAction] appId = " + appId);
 
             if (appId == null || appId.trim().length() <= 0) {
-                generalError(request, "error.general", "faturamento.notfount");
+                generalError(request, "faturamento.notfound");
+				System.out.println(" [ProcedimentoRealizadoAction] faturamento.notfound");
 
                 return mapping.findForward("failure");
             }
 
             form.clear();
-            cat.info(" [ProcedimentoRealizadoAction] Limpou form");
+            cat.debug(" [ProcedimentoRealizadoAction] Limpou form");
 
             FatFormulariosDAO formDAO = new FatFormulariosDAO(getPropertiesDb(request));
             AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(request));

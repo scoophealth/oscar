@@ -30,7 +30,10 @@
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
 //System.out.println(bean.demographicNo+" "+ bean.providerNo+"  this is the demoNO");
-String sDoc = new EctImmImmunizationData().getImmunizations(bean.demographicNo);
+String sDoc = null;
+if (bean.demographicNo != null) {
+  sDoc = new EctImmImmunizationData().getImmunizations(bean.demographicNo);
+}
 if(sDoc == null){
     response.sendRedirect("loadConfig.do");
     return;

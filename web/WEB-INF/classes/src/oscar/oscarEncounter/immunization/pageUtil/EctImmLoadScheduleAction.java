@@ -25,22 +25,17 @@
 package oscar.oscarEncounter.immunization.pageUtil;
 
 import java.io.IOException;
-import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
-import org.apache.struts.util.MessageResources;
 
 public final class EctImmLoadScheduleAction extends Action
 {
 
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources();
-        ActionErrors errors = new ActionErrors();
         return mapping.findForward("success");
     }
 }
