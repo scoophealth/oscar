@@ -352,12 +352,12 @@
                     type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadForm"/>    
 <!-- OscarBilling ON stop -->    
 
-<!-- OscarSurveillance ON start --    
+<!-- OscarSurveillance ON start -->
     <form-bean      name="CheckSurveillanceForm"
                     type="oscar.oscarSurveillance.CheckSurveillanceForm"/>
     <form-bean      name="SurveillanceAnswerForm"
                     type="oscar.oscarSurveillance.SurveillanceAnswerForm"/>
-!-- OscarSurveillance ON stop -->                    
+<!-- OscarSurveillance ON stop -->                    
 
                     
 <!-- OscarWaitingList start-->
@@ -1707,7 +1707,7 @@
     
     <!-- oscarBilling ON end -->
   
-    <!-- oscarSurveillance  start --
+    <!-- oscarSurveillance  start -->
     <action     path="/oscarSurveillance/CheckSurveillance"
                 type="oscar.oscarSurveillance.CheckSurveillanceAction"  
                 name="CheckSurveillanceForm"              
@@ -1720,7 +1720,7 @@
                 scope="request">                
        <forward name="survey"  path="/oscarSurveillance/CheckSurveillance.do"/>       
     </action>           
-    !-- oscarSurveillance  end -->
+    <!-- oscarSurveillance  end -->
 
     <!-- oscarWaitingList -->
     <action path="/oscarWaitingList/SetupDisplayPatientWaitingList"
