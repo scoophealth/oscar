@@ -31,7 +31,7 @@
 Error Page
 </h1>
 <hr>
-<p><center>Since this is only the version 1.0.1, lots of bugs may be existed. 
+<p><center>OSCAR has encountered a fatal error and is unable to continue. 
 <br><a href="index.html">Back to Home</a></center>
 <p>
 <hr>
