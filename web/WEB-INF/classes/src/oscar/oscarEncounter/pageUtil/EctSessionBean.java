@@ -52,8 +52,7 @@ public class EctSessionBean {
     public ArrayList remindersArray;
     public ArrayList appointmentsIdArray;
     public ArrayList appointmentsNamesArray;
-    public ArrayList templateNames;
-    public ArrayList templateValues;
+    public ArrayList templateNames;    
     public ArrayList measurementGroupNames;
     
     public void resetAll(){
@@ -94,8 +93,7 @@ public class EctSessionBean {
         
         appointmentsIdArray = new ArrayList();
         appointmentsNamesArray = new ArrayList();
-        templateNames = new ArrayList();
-        templateValues = new ArrayList();
+        templateNames = new ArrayList();        
         measurementGroupNames = new ArrayList();
         
         //This block gets the patient age and
@@ -138,8 +136,7 @@ public class EctSessionBean {
             sql = "select * from encountertemplate order by encountertemplate_name";
             rs = db.GetSQL(sql);
             while(rs.next()){
-                templateNames.add(rs.getString("encountertemplate_name"));
-                templateValues.add(rs.getString("encountertemplate_value"));
+                templateNames.add(rs.getString("encountertemplate_name"));                
             }
             rs.close();
             
@@ -187,8 +184,7 @@ public class EctSessionBean {
         appointmentsIdArray = new ArrayList();
         appointmentsNamesArray = new ArrayList();
         templateNames = new ArrayList();
-        templateValues = new ArrayList();
-
+        
         String tmp;
         DBHandler db = null;
         ResultSet rs;
@@ -221,8 +217,7 @@ public class EctSessionBean {
             sql = "select * from encountertemplate order by encountertemplate_name";
             rs = db.GetSQL(sql);
             while(rs.next()){
-                templateNames.add(rs.getString("encountertemplate_name"));
-                templateValues.add(rs.getString("encountertemplate_value"));
+                templateNames.add(rs.getString("encountertemplate_name"));                
             }
             rs.close();
             db.CloseConn();
