@@ -68,7 +68,7 @@ function upCaseCtrl(ctrl) {
 }
 function checkInput() {
 	if(document.schedule.holiday_name.value == "") {
-	  alert(<bean:message key="schedule.scheduletemplatecodesetting.msgCheckInput"/>);
+	  alert("<bean:message key="schedule.scheduletemplatecodesetting.msgCheckInput"/>");
 	  return false;
 	} else {
 	  return true;
