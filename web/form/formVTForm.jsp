@@ -31,7 +31,7 @@
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
-    System.out.println(session.getServletContext().getRealPath("../form/VTForm.xml"));
+    //String milesServerErrMsg = request.getAttribute("decisionSupportURL")==null?"(Miles server is not available)":"";
 %>
 
 <html:html locale="true">
@@ -197,12 +197,12 @@ function popupDecisionSupport(){
         var popup=window.open(varpage, "DecisionSupport", windowprops);  
         popup.focus();
     }
-    else{
+    /*else{
         alert("Miles server is not avaiable!");
-    }
+    }*/
     
  }
-  
+   
  
 function showHideItem(id){ 
     if(document.getElementById(id).style.display == 'none')
@@ -465,7 +465,7 @@ function controlEyeExam(){
     <table width="640px">
         <tr>            
             <td class="subject">
-                Vascular Data Entry Template
+                Vascular Data Entry Template <%=request.getAttribute("decisionSupportURL")==null?"(Miles server is not available)":""%>
             </td>
         </tr>
         <tr>                     
