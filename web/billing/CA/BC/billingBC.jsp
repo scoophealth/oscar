@@ -266,15 +266,14 @@ function OtherScriptAttach() {
   awnd=rs('att','<rewrite:reWrite jspPage="billingCodeNewSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',820,660,1);
   awnd.focus();
 }
-function ReferralScriptAttach() {
-  t0 = escape(document.BillingCreateBillingForm.xml_refer1.value);
-  t1 = escape(document.BillingCreateBillingForm.xml_refer2.value);
- // t2 = escape(document.BillingCreateBillingForm.xml_refer3.value);
- // f1 = document.serviceform.xml_dig_search1.value;
- // f2 = escape(document.serviceform.elements["File2Data"].value);
- // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','<rewrite:reWrite jspPage="billingReferCodeSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=&search=',600,600,1);
-  awnd.focus();
+
+
+function ReferralScriptAttach(elementName) {                   
+     var d = elementName;                     
+     t0 = escape(document.BillingCreateBillingForm.elements[d].value);
+     t1 = escape("");    
+     awnd=rs('att','<rewrite:reWrite jspPage="billingReferCodeSearch.jsp"/>?name='+t0 + '&name1=' + t1 + '&name2=&search=&formElement=' +d+ '&formName=BillingCreateBillingForm',600,600,1);
+     awnd.focus();
 }
 
 
@@ -662,52 +661,52 @@ function showHideLayers() { //v3.0
                         
                   <td width="91%" valign="top"> 
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
-                            <tr> 
-                              
-                        <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.referral.doctor"/></font></b></td>
-                              
-                        <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.referral.type"/> </font></b></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                                <html:text property="xml_refer1" size="40" />
-                                </font></td>
-                              
-                        <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                          <html:select property="refertype1">
-                            <html:option value="" >Select Type</html:option>
-                            <html:option value="T">Refer To</html:option>
-                            <html:option value="B">Refer By</html:option>
-                          </html:select>
-                          </font></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                                <html:text property="xml_refer2" size="40" />
-								             
-                                </font></td>
-                              
-                        <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:select property="refertype2">
-                               <html:option value="" >Select Type</html:option>
-                               <html:option value="T">Refer To</html:option>
-                               <html:option value="B">Refer By</html:option>
+                       <tr> 
+                          <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.referral.doctor"/></font></b></td>
+                          <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.referral.type"/> </font></b></td>
+                       </tr>
+                       <tr> 
+                          <td>
+                             <font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                             <html:text property="xml_refer1" size="40" />
+                             </font>
+                          </td>
+                          <td>
+                             <font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                             <html:select property="refertype1">
+                                <html:option value="" >Select Type</html:option>
+                                <html:option value="T">Refer To</html:option>
+                                <html:option value="B">Refer By</html:option>
                              </html:select>
-                          </font></td>
-                            </tr>
-                            <tr> 
-                              
-                        <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp; 
-                          </font></td>
-                              
-                        <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp; 
-                          </font></td>
-                            </tr>
-                            <tr> 
-                              <td colspan="2"><a href="javascript:ReferralScriptAttach()"><img src="../../../images/search_code.jpg" border="0"></a> 
-                              </td>
-                            </tr>
-                          </table>
+                             </font>
+                          </td>
+                       </tr>                       
+                       <tr> 
+                          <td colspan="2">
+                             <a href="javascript:ReferralScriptAttach('xml_refer1')"><img src="../../../images/search_code.jpg" border="0"></a> 
+                          </td>
+                       </tr>
+                       <tr> 
+                          <td>
+                             <font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                             <html:text property="xml_refer2" size="40" />
+								     </font>
+                          </td>
+                          <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                             <html:select property="refertype2">
+                                <html:option value="" >Select Type</html:option>
+                                <html:option value="T">Refer To</html:option>
+                                <html:option value="B">Refer By</html:option>
+                             </html:select>
+                             </font>
+                          </td>
+                       </tr>                       
+                       <tr> 
+                          <td colspan="2">
+                             <a href="javascript:ReferralScriptAttach('xml_refer2')"><img src="../../../images/search_code.jpg" border="0"></a> 
+                          </td>
+                       </tr>
+                    </table>
                         </td>
                         <td width="9%"> 
                           <!--
