@@ -129,11 +129,14 @@ public class EctValidation{
 
         boolean validation = true;
         String datePattern1 = "yyyy-mm-dd";
-        String datePattern2 = "yyyy-m-d";        
+        String datePattern2 = "yyyy-m-d";  
+        String datePattern3 = "yyyy-mm-d";   
+        String datePattern4 = "yyyy-m-dd";   
         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
         
-        if(!gValidator.isDate(inputValue, datePattern1, false) || !gValidator.isDate(inputValue, datePattern2, false)){                                                 
+        if(!gValidator.isDate(inputValue, datePattern1, false) || !gValidator.isDate(inputValue, datePattern2, false) ||
+           !gValidator.isDate(inputValue, datePattern3, false) || !gValidator.isDate(inputValue, datePattern4, false)){                                                 
             validation=false;
         }
                
