@@ -51,8 +51,7 @@ public class EctImmImmunizationData
     
     public static boolean hasImmunizations(String demographicNo)
         throws SQLException
-    {
-        System.out.println("In hasImmunizations...");
+    {        
         boolean retval = false;
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
@@ -61,8 +60,7 @@ public class EctImmImmunizationData
             retval = true;
         }         
         rs.close();
-        db.CloseConn();
-        System.out.println("Value of retval is: "+retval);
+        db.CloseConn();     
         return retval;
     }
 
