@@ -30,7 +30,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
-import org.apache.regexp.*;
+
 public final class EctAddMeasuringInstructionForm extends DynaValidatorForm {
 
     String typeDisplayName;
