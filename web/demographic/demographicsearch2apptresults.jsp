@@ -23,6 +23,9 @@
  * Ontario, Canada 
  */
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 
 <% 
   if(session.getValue("user") == null)    response.sendRedirect("../logout.htm");
@@ -41,11 +44,10 @@
 
 <html> 
 <head>
-<title> PATIENT SEARCH RESULTS (demographicsearch2apptresults)</title>
+<title> <bean:message key="demographic.demographicsearch2apptresults.title"/> (demographicsearch2apptresults)</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
-<!--
 function setfocus() {
   this.focus();
   document.titlesearch.keyword.focus();
@@ -58,7 +60,7 @@ function checkTypeIn() {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
     }
     if(dob.value.length != 10) {
-      alert("You have a wrong DOB input!!!");
+      alert("<bean:message key="demographic.demographicsearch2apptresults.msgWrongDOB"/>");
       return false;
     } else {
       return true;
@@ -78,29 +80,29 @@ function searchAll() {
     if (checkTypeIn()) document.forms[0].submit()
 }
 
-//-->
+
 </SCRIPT>
 </head>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-	  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S RECORD</font></th></tr>
+	  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="demographic.demographicsearch2apptresults.patientsRecord"/></font></th></tr>
 </table>
 
   <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
 	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="checkTypeIn()">
 	<%--@ include file="zdemographictitlesearch.htm"--%>
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
+		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.demographicsearch2apptresults.btnSearch"/> 
         </i></b></font></td>
 			
       <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
         <input type="radio" name="search_mode" value="search_name" <%=request.getParameter("search_mode").equals("search_name")?"checked":""%>>
-        Name </font></td>
+        <bean:message key="demographic.demographicsearch2apptresults.optName"/> </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
           <input type="radio"  name="search_mode" value="search_phone" <%=request.getParameter("search_mode").equals("search_phone")?"checked":""%>>
-          Phone</font></td> 
+          <bean:message key="demographic.demographicsearch2apptresults.optPhone"/></font></td> 
         <td nowrap><font size="1" face="Verdana" color="#0000FF">
           <input type="radio"  name="search_mode" value="search_dob" <%=request.getParameter("search_mode").equals("search_dob")?"checked":""%>>
-          DOB(yyyymmdd)</font></td> 
+          <bean:message key="demographic.demographicsearch2apptresults.optDOB"/></font></td> 
       <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17"  MAXLENGTH="100">
         <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" >
         <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
@@ -135,7 +137,7 @@ function searchAll() {
 
 <table width="95%" border="0">
 <tr>
-<td align="left"><font size="-1"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></font></td>
+<td align="left"><font size="-1"><i><bean:message key="demographic.demographicsearch2apptresults.msgKeywords"/></i> : <%=request.getParameter("keyword")%></font></td>
 </tr>
 </table>
 
@@ -155,14 +157,14 @@ function addName(lastname, firstname, chartno) {
 <CENTER><table width="100%" border="1"  cellpadding="0" cellspacing="1" bgcolor="#ffffff"> 
 	<form method="post" name="addform" action="../appointment/addappointment.jsp" >
 <tr bgcolor="#339999">
-<TH align="center" width="20%"><b>DEMOGP' ID</b></TH>
-<TH align="center" width="20%"><b>LAST NAME </b></TH>
-<TH align="center" width="20%"><b>FIRST NAME </b></TH>
-<TH align="center" width="5%"><b>A'</b></TH>
-<TH align="center" width="10%"><b>ROSTER STATUS</b></TH>
-<TH align="center" width="5%"><b>X</B></TH>
-<TH align="center" width="10%"><b>DOB(yy/mm/dd)</B></TH>
-<TH align="center" width="10%"><b>DOCTOR</B></TH>
+<TH align="center" width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.demographicId"/></b></TH>
+<TH align="center" width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.lastName"/></b></TH>
+<TH align="center" width="20%"><b><bean:message key="demographic.demographicsearch2apptresults.firstName"/></b></TH>
+<TH align="center" width="5%"><b><bean:message key="demographic.demographicsearch2apptresults.age"/></b></TH>
+<TH align="center" width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.rosterStatus"/></b></TH>
+<TH align="center" width="5%"><b><bean:message key="demographic.demographicsearch2apptresults.sex"/></B></TH>
+<TH align="center" width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.DOB"/></B></TH>
+<TH align="center" width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.doctor"/></B></TH>
 </tr>
 
 <%@ include file="../demographic/zdemographicsearchresult.jsp" %>
@@ -232,12 +234,12 @@ function next() {
 <%
   if(nLastPage>=0) {
 %>
-<input type="submit" name="submit" value="Last Page"  onClick="last()">
+<input type="submit" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"  onClick="last()">
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<input type="submit" name="submit" value="Next Page"  onClick="next()">
+<input type="submit" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"  onClick="next()">
 <%
 }
 %>
