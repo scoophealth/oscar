@@ -33,7 +33,6 @@
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
-<link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -47,7 +46,7 @@
     String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
     String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
     String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
-    String formattedDate = year+"/"+month+"/"+day;
+    String formattedDate = year+"-"+month+"-"+day;
     String input = null;
 
 %>
@@ -85,6 +84,7 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
 <!--  -->
     <html:errors/>
     <html:form action="/oscarEncounter/Measurements" enctype="multipart/form-data">
+    <link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
@@ -146,49 +146,12 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
                                                             <html:options collection='<%="mInstrcs"+ ctr%>' property="measuringInstrc" labelProperty="measuringInstrc" style="width:160"/>
                                                         </html:select>                                
                                                     </td>
-                                                    <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" />     
-                                                    <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="20"/>
-                                                    <td><select name='<%= "value(month-" + ctr + ")" %>'>
-                                                            <% for (int j=1; j < 13; j++){
-                                                                String monthObserved = Integer.toString(j);
-                                                                if (j < 10){ 
-                                                                    monthObserved = "0"+monthObserved;
-                                                                }
-                                                                if (Integer.parseInt(month)==j){%>
-                                                                    <option value="<%=monthObserved%>" selected ><%=monthObserved%></option>
-                                                                <%;}
-                                                                  else{%>
-                                                                    <option value="<%=monthObserved%>" ><%=monthObserved%></option>
-                                                                <%;}
-                                                                }%>
-                                                        </select> / 
-                                                        <select name='<%= "value(day-" + ctr + ")" %>'>
-                                                            <% for (int j=1; j < 32; j++){
-                                                                String dayObserved = Integer.toString(j);
-                                                                if (j < 10){ 
-                                                                    dayObserved = "0"+dayObserved;
-                                                                }
-                                                                if (Integer.parseInt(day)==j){%>
-                                                                    <option value="<%=dayObserved%>" selected ><%=dayObserved%></option>
-                                                                <%;}
-                                                                  else{%>
-                                                                    <option value="<%=dayObserved%>" ><%=dayObserved%></option>
-                                                                <%;}
-                                                                }%>
-                                                        </select> / 
-                                                        <select name='<%= "value(year-" + ctr + ")" %>'>
-                                                            <% for (int j=1; j < 30; j++){
-                                                                String yearObserved = Integer.toString(j+2000);
-                                                                if (yearObserved.compareTo(year) == 0){%>
-                                                                    <option value="<%=yearObserved%>" selected ><%=yearObserved%></option>
-                                                                <%;}
-                                                                  else{%>
-                                                                    <option value="<%=yearObserved%>" ><%=yearObserved%></option>
-                                                                <%;}
-                                                                }%>
-                                                        </select>
-                                                    </td>                            
-                                                    <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>                            
+                                                    <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>     
+                                                    <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="20"/></td>
+                                                    <td><html:text property='<%= "value(date-" + ctr + ")" %>' size="20"/></td>
+                                                                                
+                                                    <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>
+                                                    <input type="hidden" name='<%= "value(inputTypeDisplayName-" + ctr + ")" %>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>                            
                                                     <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/></td>
                                                     <% i++; %>
                                                 </tr>
@@ -201,7 +164,9 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
                                                 </logic:present>
                                                 </logic:iterate>                        
                                                 <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>
-                                                <html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>                                                
+                                                <html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>
+                                                <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
+                                                <input type="hidden" name="value(css)" value="<bean:write name="css"/>"/>
                                             </td>
                                         </tr>
                                     </table>
