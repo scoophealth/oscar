@@ -33,6 +33,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
 <%@ page import="java.util.Vector;"%>
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -51,7 +52,7 @@
 </head>
 
 
-<link rel="stylesheet" type="text/css" href="../styles.css">
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
 <html:errors/>
 <html:form action="/oscarEncounter/oscarMeasurements/DeleteData">
@@ -69,42 +70,61 @@
                 <tr>
                     <td>               
                         <tr>
-                            <th align="left" class="td.tite" width="5">
+                            
+                            <th align="left" class="Header" width="5">                                
+                            </th>
+                            <th align="left" class="Header" width="5">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingType"/>
                             </th>
-                            <th align="left" class="td.tite" width="20">
+                            <th align="left" class="Header" width="20">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingProvider"/>
-                            </th>
-                            <th align="left" class="td.tite" width="10">
-                                <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingData"/>
-                            </th>
-                            <th align="left" class="td.tite" width="300">
+                            </th>                            
+                            <th align="left" class="Header" width="200">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingMeasuringInstruction"/>
                             </th>
-                            <th align="left" class="td.tite" width="300">
+                            <th align="left" class="Header" width="10">
+                                <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingData"/>
+                            </th>
+                            <th align="left" class="Header" width="300">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingComments"/>
                             </th>
-                            <th align="left" class="td.tite" width="150">
+                            <th align="left" class="Header" width="150">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingObservationDate"/>
                             </th>
-                            <th align="left" class="td.tite" width="150">
+                            <th align="left" class="Header" width="150">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDateEntered"/>
                             </th>
-                            <th align="left" class="td.tite" width="10">
+                            <th align="left" class="Header" width="10">
                                 <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>
                             </th>
                          </tr>
                         <logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId = "ctr" >
-                        <tr>
+                        <logic:present name="data" property="canPlot">
+                        <tr class="data">
+                            <td width="5"><img src="img/chart.gif" onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>')"/></td>
                             <td width="5"><a href="../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>"><bean:write name="data" property="type" /></a></td>
-                            <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                            
+                            <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                                                        
+                            <td width="200"><bean:write name="data" property="measuringInstrc" /></td>
                             <td width="10"><bean:write name="data" property="dataField" /></td>
-                            <td width="300"><bean:write name="data" property="measuringInstrc" /></td>
                             <td width="300"><bean:write name="data" property="comments" /></td>
                             <td width="150"><bean:write name="data" property="dateObserved" /></td>
                             <td width="150"><bean:write name="data" property="dateEntered" /></td>
                             <td width="10"><input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />"</td>                            
-                        </tr>                        
+                        </tr>
+                        </logic:present>
+                        <logic:notPresent name="data" property="canPlot">
+                        <tr class="data">
+                            <td width="5"></td>
+                            <td width="5"><bean:write name="data" property="type" /></td>
+                            <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                                                        
+                            <td width="200"><bean:write name="data" property="measuringInstrc" /></td>
+                            <td width="10"><bean:write name="data" property="dataField" /></td>
+                            <td width="300"><bean:write name="data" property="comments" /></td>
+                            <td width="150"><bean:write name="data" property="dateObserved" /></td>
+                            <td width="150"><bean:write name="data" property="dateEntered" /></td>
+                            <td width="10"><input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />"</td>                            
+                        </tr>
+                        </logic:notPresent>
                         </logic:iterate>                                                
                     </td>
                 </tr>
