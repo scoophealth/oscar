@@ -36,7 +36,7 @@ public final class FrmFormForm extends ActionForm {
     private final Map values = new HashMap();
 
     public void setValue(String key, Object value) {
-       System.out.println("Size of FrmFormForm "+values.size());
+       System.out.println("adding key "+key+" value "+value+" Size of FrmFormForm "+values.size());
         values.put(key, value);
     }
 
