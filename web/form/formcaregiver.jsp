@@ -279,42 +279,42 @@
                 <tr class="answer"> 
                     <td></td>
                     <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="spouse" <%= props.getProperty("spouse", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="spouseY" <%= props.getProperty("spouseY", "") %>/>
                         Spouse
                     </td>
                 </tr>
                 <tr class="answer"> 
                     <td></td>
                     <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="child" <%= props.getProperty("child", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="childY" <%= props.getProperty("childY", "") %>/>
                         Child
                     </td>
                 </tr>
                 <tr class="answer"> 
                     <td></td>
                     <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="grandchild" <%= props.getProperty("grandchild", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="grandchildY" <%= props.getProperty("grandchildY", "") %>/>
                         Grandchild
                     </td>
                 </tr>
                 <tr class="answer"> 
                     <td></td>
                     <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="sibling" <%= props.getProperty("sibling", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="siblingY" <%= props.getProperty("siblingY", "") %>/>
                         Sibling
                     </td>
                 </tr>
                 <tr class="answer"> 
                     <td></td>
                     <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="friend" <%= props.getProperty("friend", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="friendY" <%= props.getProperty("friendY", "") %>/>
                         Friend
                     </td>
                 </tr>
                 <tr class="answer"> 
                     <td></td>
                     <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="other" <%= props.getProperty("other", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="otherY" <%= props.getProperty("otherY", "") %>/>
                         Other, please specify: <input type="text" name="otherRelation" value="<%=props.getProperty("otherRelation", "")%>"/>
                     </td>
                 </tr>
@@ -606,7 +606,7 @@
                     A score of 7 or higher indicates a high level of stress.)
                     </td>
                     <td class="answerYN" colspan="2">
-                        <input type="text" name="score" size="10" value="<%= props.getProperty("score", "") %>"/>
+                        <input type="text" name="score1" size="10" value="<%= props.getProperty("score1", "") %>"/>
                     </td>
             </table>
         </td>
