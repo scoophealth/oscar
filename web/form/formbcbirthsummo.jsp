@@ -43,6 +43,24 @@
 </head>
 
 <script type="text/javascript" language="Javascript">
+    function reset() {
+        document.forms[0].target = "apptProviderSearch";
+        document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
+	}
+    function onPrint() {
+        document.forms[0].submit.value="print"; 
+        var ret = checkAllDates();
+        if(ret==true)
+        {
+            popupFixedPage(650,850,'../provider/notice.htm');
+            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Labour+and+Birth+Summary+Record&__cfgfile=bclbPrintCfgPg1&__template=bcbirthsummary";
+            document.forms[0].target="planner";
+            document.forms[0].submit();
+            document.forms[0].target="apptProviderSearch";
+        }
+        return ret;
+    }
+
 function setfocus() {
     this.focus();
 }
@@ -90,23 +108,6 @@ function onCheckSlave(a, masterName) {
 }
 
 
-    function reset() {
-        document.forms[0].target = "apptProviderSearch";
-        document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
-	}
-    function onPrint() {
-        document.forms[0].submit.value="print"; //printAR1
-        var ret = checkAllDates();
-        if(ret==true)
-        {
-            popupFixedPage(650,850,'../provider/notice.htm');
-            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Labour+and+Birth+Summary+Record&__cfgfile=bclbPrintCfgPg1&__template=bcbirthsummary";
-            document.forms[0].target="planner";
-            document.forms[0].submit();
-            document.forms[0].target="apptProviderSearch";
-        }
-        return ret;
-    }
     function onSave() {
         document.forms[0].submit.value="save";
         var ret = checkAllDates();
@@ -367,8 +368,8 @@ var maxYear=9900;
 <%
   }
 %>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
+            <input type="submit" value="Print" onclick="javascript:return onPrint();return false;"/>
         </td>
     </tr>
 </table>
@@ -1295,8 +1296,8 @@ var maxYear=9900;
 <%
   }
 %>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
+            <input type="submit" value="Print" onclick="javascript:return onPrint();return false()"/>
         </td>
     </tr>
 </table>
