@@ -275,7 +275,7 @@ function newStatus() {
                 </td></tr>
                 <tr class="Header">
                     <td style="font-weight:bold">
-                        Billing
+                        <bean:message key="admin.admin.billing"/>
                     </td>
                 </tr>
                 <tr><td>
@@ -305,7 +305,7 @@ function newStatus() {
                 <% } %>  
                 <tr class="Header">
                     <td style="font-weight:bold">
-                        Clinical Module
+                        <bean:message key="oscarEncounter.Index.clinicalModules"/>
                     </td>
                 </tr>
                 <tr><td>
@@ -331,7 +331,7 @@ function newStatus() {
                 <% } %>
                 <tr class="Header">
                     <td style="font-weight:bold">
-                        Clinical Resources
+                        <bean:message key="oscarEncounter.Index.clinicalResources"/>
                     </td>
                 </tr>
                 <tr><td>
