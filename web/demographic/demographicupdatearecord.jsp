@@ -1,4 +1,4 @@
-<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, java.util.*, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--  
 /*
@@ -100,18 +100,16 @@
     }
     //add to waiting list if the waiting_list parameter in the property file is set to true
    
-    String[] paramWLChk = new String[2];
-    paramWLChk[0] = request.getParameter("demographic_no");
-    paramWLChk[1] = request.getParameter("list_id");    
-    //check if patient has already added to the waiting list and check if the patient already has an appointment in the future
-    rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
+    WaitingList wL = WaitingList.getInstance();
+    if(wL.getFound()){
     
-    if(!rs.next()){
-        //System.out.println("not on the waiting list");
-        //ResultSet rsfa = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_future_appt");
-        //System.out.println("nb of row: " + rsfa.getRow());
-        //if(rsfa.getRow()<=0){         
-            //System.out.println(request.getParameter("demographic_no") + " has no appointment yet");
+        String[] paramWLChk = new String[2];
+        paramWLChk[0] = request.getParameter("demographic_no");
+        paramWLChk[1] = request.getParameter("list_id");    
+        //check if patient has already added to the waiting list and check if the patient already has an appointment in the future
+        rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
+
+        if(!rs.next()){
             String[] paramWLPosition = new String[1];
             paramWLPosition[0] = request.getParameter("list_id");
             if(paramWLPosition[0].compareTo("")!=0){
@@ -126,8 +124,9 @@
                     apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
                 }
             }
-        //}
+        }
     }
+    
     if (vLocale.getCountry().equals("BR")) {
 	    //find the demographic_ptbr record for update
 	    rs = apptMainBean.queryResults(request.getParameter("demographic_no"),"search_demographic_ptbr");

@@ -1,4 +1,4 @@
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -194,20 +194,24 @@
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
         
         //add to waiting list if the waiting_list parameter in the property file is set to true
-        
-        String[] paramWLPosition = new String[1];
-        paramWLPosition[0] = request.getParameter("list_id");
-        if(paramWLPosition[0].compareTo("")!=0){
-            ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
+       
+        WaitingList wL = WaitingList.getInstance();
+        if(wL.getFound()){
+    
+            String[] paramWLPosition = new String[1];
+            paramWLPosition[0] = request.getParameter("list_id");
+            if(paramWLPosition[0].compareTo("")!=0){
+                ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
 
-            if(rsWL.next()){
-                System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
-                String[] paramWL = new String[4];
-                paramWL[0] = request.getParameter("list_id");
-                paramWL[1] = rs.getString("demographic_no");
-                paramWL[2] = request.getParameter("waiting_list_note");
-                paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
-                apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
+                if(rsWL.next()){
+                    System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
+                    String[] paramWL = new String[4];
+                    paramWL[0] = request.getParameter("list_id");
+                    paramWL[1] = rs.getString("demographic_no");
+                    paramWL[2] = request.getParameter("waiting_list_note");
+                    paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
+                    apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
+                }
             }
         }
 
