@@ -708,7 +708,7 @@ if (!fedb.equals("") ) {
     for (int i = 1; i < 18; i++) {
         if (!props.getProperty(("pg2_date" + i), "").equals("") ) {
 			dx = arG.getWeekByEDB(fedb, props.getProperty(("pg2_date" + i)));
-			if (arG.getWeekInt() < 19 || arG.getWeekInt() > 40 || arG.getHt(props.getProperty(("pg2_ht" + i), "")).equals("") || !props.getProperty(("pg2_ht" + i), "").matches("\\d*.?\\d+") || arG.getHt(props.getProperty(("pg2_ht" + i), "")).equals("-")) continue;
+			if (arG.getWeekInt() < 19 || arG.getWeekInt() > 40 || arG.getHt(props.getProperty(("pg2_ht" + i), "")).equals("") || !props.getProperty(("pg2_ht" + i), "").matches("\\d*\\.?\\d+") || arG.getHt(props.getProperty(("pg2_ht" + i), "")).equals("-")) continue;
        		dy = Float.parseFloat(arG.getHt(props.getProperty("pg2_ht" + i)));
 	        x = (int) ((ox + (dx -19) * width / (11.5 * 2)) -2) ;
 	        y = (int) ((oy - (dy - 11.818) * height / (5.636 * 5)) -1) ;
@@ -719,7 +719,7 @@ if (!fedb.equals("") ) {
     for (int i = 18; i < 35; i++) {
         if (!props.getProperty(("pg3_date" + i), "").equals("") ) {
 			dx = arG.getWeekByEDB(fedb, props.getProperty(("pg3_date" + i)));
-			if (arG.getWeekInt() < 19 || arG.getWeekInt() > 40 || arG.getHt(props.getProperty(("pg3_ht" + i), "")).equals("") || !props.getProperty(("pg3_ht" + i), "").matches("\\d*.?\\d+") || arG.getHt(props.getProperty(("pg3_ht" + i), "")).equals("-")) continue;
+			if (arG.getWeekInt() < 19 || arG.getWeekInt() > 40 || arG.getHt(props.getProperty(("pg3_ht" + i), "")).equals("") || !props.getProperty(("pg3_ht" + i), "").matches("\\d*\\.?\\d+") || arG.getHt(props.getProperty(("pg3_ht" + i), "")).equals("-")) continue;
        		dy = Float.parseFloat(arG.getHt(props.getProperty("pg3_ht" + i)));
 	        x = (int) ((ox + (dx -19) * width / (11.5 * 2)) -2) ;
 	        y = (int) ((oy - (dy - 11.818) * height / (5.636 * 5)) -1) ;
