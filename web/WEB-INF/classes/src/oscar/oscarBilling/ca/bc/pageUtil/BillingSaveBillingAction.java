@@ -105,7 +105,7 @@ public class BillingSaveBillingAction extends Action {
             bean.setBillingType("MSP");  //RESET this to MSP to get processed
             billingAccountStatus = 'N';           
         }else if  (bean.getBillingType().equals("WCB")){            
-            billingAccountStatus = 'W';           
+            billingAccountStatus = 'O';           
         }
         
         //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
@@ -383,7 +383,7 @@ public class BillingSaveBillingAction extends Action {
            WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
            String insertBillingMaster = 
             " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
-            " VALUES ('"+billingid+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "','"+convertDate8Char(bean.getServiceDate())+"')"; 
+            " VALUES ('"+billingid+"',NOW(),'"+wcb.getW_payeeno()+"','"+billingAccountStatus+"','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "','"+convertDate8Char(bean.getServiceDate())+"')"; 
            
             wcb.setW_demographic(bean.getPatientNo());
             wcb.setW_providerno(bean.getBillingProvider());
@@ -420,7 +420,7 @@ public class BillingSaveBillingAction extends Action {
                    rs.close();
                    
                    String secondBillingMaster = " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
-                    " VALUES ('"+secondWCBBillingId+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "','"+convertDate8Char(bean.getServiceDate())+"')";
+                    " VALUES ('"+secondWCBBillingId+"',NOW(),'"+wcb.getW_payeeno()+"','"+billingAccountStatus+"','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "','"+convertDate8Char(bean.getServiceDate())+"')";
                    
                    db.RunSQL(secondBillingMaster);
                    rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
