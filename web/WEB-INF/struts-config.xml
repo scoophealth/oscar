@@ -275,7 +275,15 @@
                     type="oscar.oscarBilling.pageUtil.BillingSaveBillingForm" />
     <form-bean      name="BillingViewForm"
                     type="oscar.oscarBilling.pageUtil.BillingViewForm" />
+
+    
+    
+    <form-bean      name="ReProcessBilling"
+                    type="oscar.oscarBilling.pageUtil.BillingReProcessBillForm"/>
+<!-- OscarBilling stop -->
+
 <!-- OscarBilling BC stop -->
+
 
 <!-- OscarBilling ON start-->
     <form-bean      name="BillingDocumentErrorReportUploadForm"
@@ -1415,6 +1423,18 @@
               <forward name="success" path="/billing/CA/BC/billingView.jsp"/>
               <forward name="ON"   path="/billing/CA/ON/billingOB2.jsp"/>
     </action>
+    <!-- oscarBilling end -->
+    <action path="/billing/CA/BC/reprocessBill" 
+            type="oscar.oscarBilling.pageUtil.BillingReProcessBillAction"                                              
+            name="ReProcessBilling" 
+            scope="request" 
+            input="/billing/billingTeleplanCorrection.jsp">
+            <forward name="success" path="/billing/CA/BC/adjustBill.jsp" />
+            <forward name="save" path="/billing/CA/BC/billStatus.jsp" />
+	</action>
+    
+    
+
     <!-- oscarBilling BC end -->
 
     <!-- oscarBilling ON start -->
@@ -1426,6 +1446,7 @@
        <forward name="success" path="/billing/CA/ON/billingEAreport.jsp"/>
     </action>          
     <!-- oscarBilling ON end -->
+
         
   </action-mappings>
 
