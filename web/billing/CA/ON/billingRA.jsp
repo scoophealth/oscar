@@ -24,26 +24,34 @@
  */
 --%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" /> 
 <%   
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-String docdownload = oscarVariables.getProperty("project_home") ;
-session.setAttribute("homepath", docdownload);      
 %>
-
 
 <html>
 <head>
 <title>Billing Reconcilliation</title>
 <meta http-equiv="Content-Type" content="text/html">
+<script language="JavaScript">
+<!--
+function setfocus() {
+    this.focus();
+}
+//-->
+</SCRIPT>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000">
-<p>
-<font face="Arial, Helvetica, sans-serif" size="2"><b>Billing Reconcilliation</b></font></p>
+<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()">
+<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+<tr bgcolor="#486ebd">
+	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
+	Billing Reconcilliation </font></th>
+</tr>
+</table>
 
-<form name="form1" method="post" action="../../../servlet/oscar.DocumentUploadServlet" ENCTYPE="multipart/form-data">
+<p>
 <table width="400" border="0">
+<form name="form1" method="post" action="../../../servlet/oscar.DocumentUploadServlet" ENCTYPE="multipart/form-data">
 <tr> 
 	<td width="181">
 	<b><font face="Arial, Helvetica, sans-serif" size="2">Select diskette </font></b></td>
@@ -56,11 +64,10 @@ session.setAttribute("homepath", docdownload);
 	</td>
 	<td width="209">&nbsp;</td>
 </tr>
+</form>
 </table>
 
-<p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
-<p>&nbsp; </p>
-</form>
+<p><font face="Arial, Helvetica, sans-serif" size="2">* Select a file first or click button 'Create Report' directly.</font></p>
 
 </body>
 </html>

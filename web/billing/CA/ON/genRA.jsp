@@ -28,6 +28,10 @@
  // 
 --%>
 
+<% 
+    if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+%>
+
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -52,10 +56,7 @@ String raNo = "";
 ResultSet rslocal;
 filename = documentBean.getFilename();
 
-String url=request.getRequestURI();
-url = url.substring(1);
-url = url.substring(0,url.indexOf("/")); 
-filepath = "/usr/local/OscarDocument/" + url +"/document/";
+filepath = oscarVariables.getProperty("DOCUMENT_DIR").trim(); //"/usr/local/OscarDocument/" + url +"/document/";
 FileInputStream file = new FileInputStream(filepath + filename);
 InputStreamReader reader = new InputStreamReader(file);
 BufferedReader input = new BufferedReader(reader);
@@ -311,24 +312,26 @@ function checkReconcile(url){
 </tr>
 </table>
  
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
 <form>
-<tr>  
-	<td width="10%" height="16">Read Date</td>
-	<td width="10%" height="16">Payment Date </td>
-	<td width="20%" height="16">Payable </td>
-	<td width="10%" height="16">Records/Claims</td>
-	<td width="10%" height="16">Total </td>
-	<td width="30%" height="16">Action</td>
-	<td width="10%" height="16">Status</td>
+<tr bgcolor="#CCCCFF">  
+	<th width="10%">Read Date</th>
+	<th width="10%">Payment Date </th>
+	<th width="25%">Payable </th>
+	<th width="10%">Records/Claims</th>
+	<th width="8%">Total </th>
+	<th width="22%">Action</th>
+	<th>Status</th>
 </tr>
    
 <%
+int n = 0;
 ResultSet rsdemo = null;
 String[] param5 =new String[1];
 param5[0] = "D";
 rsdemo = apptMainBean.queryResults(param5, "search_all_rahd");
 while (rsdemo.next()) {   
+	n++;
 	raNo = rsdemo.getString("raheader_no");
 	nowDate = rsdemo.getString("readdate");
 	paymentdate = rsdemo.getString("paymentdate");
@@ -338,14 +341,17 @@ while (rsdemo.next()) {
 	total = rsdemo.getString("totalamount");
 %> 
 		     
-<tr> 
-    <td width="10%" height="16"><%=nowDate%>  </td>
-    <td width="10%" height="16"><%=paymentdate%> </td>
-    <td width="20%" height="16"><%=payable%></td>
-    <td width="10%" height="16"><%=strcount%>/<%=strtCount%></td>
-    <td width="10%" height="16"><%=total%></td>
-    <td width="30%" height="16"><a href="genRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | <a href="genRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| <a href="genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
-    <td width="10%" height="16"><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
+<tr bgcolor="<%=n%2==0?"#EFEFEF":"white"%>"> 
+    <td><%=nowDate%>  </td>
+    <td align="center"><%=paymentdate%> </td>
+    <td><%=payable%></td>
+    <td align="center"><%=strcount%>/<%=strtCount%></td>
+    <td align="right"><%=total%></td>
+    <td align="center">
+	<a href="../billing/CA/ON/genRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | 
+	<a href="../billing/CA/ON/genRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| 
+	<a href="../billing/CA/ON/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
+    <td><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/CA/ON/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"../billing/CA/ON/checkReconcile('genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>" : rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"../billing/CA/ON/checkReconcile('genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
 </tr>
 <%
 }

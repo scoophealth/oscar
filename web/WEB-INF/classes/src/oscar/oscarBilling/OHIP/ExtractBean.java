@@ -131,7 +131,6 @@ public class ExtractBean extends Object implements Serializable {
 	private String ver;
 	private java.sql.Date visitDate;
 	private String visitType;
-	private OscarProperties ap;
 	public ExtractBean() {
 		formatter = new SimpleDateFormat("yyyyMMdd"); //yyyyMMddHmm");
 		today = new java.util.Date();
@@ -532,7 +531,7 @@ public class ExtractBean extends Object implements Serializable {
 			 * new FileInputStream(pFile.getPath()); Properties ap = new
 			 * Properties(); ap.load(pStream); pStream.close();
 			 */
-			home_dir = ap.getInstance().getProperty("HOME_DIR");
+			home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
 			FileOutputStream out = new FileOutputStream(home_dir + ohipFilename);
 			PrintStream p = new PrintStream(out);
 			p.println(value1);
@@ -557,7 +556,7 @@ public class ExtractBean extends Object implements Serializable {
 			ap1.load(pStream1);
 			pStream1.close();
 			*/
-			home_dir1 = ap.getInstance().getProperty("HOME_DIR");
+			home_dir1 = OscarProperties.getInstance().getProperty("HOME_DIR");
 			//System.out.println("!!!" + home_dir1);
 			FileOutputStream out1 = new FileOutputStream(home_dir1
 					+ htmlFilename);

@@ -22,11 +22,10 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
- // a little bit change by Li 2004/02/26
- // 
- // 
 --%>
+<% 
+    if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+%>
 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
@@ -68,14 +67,12 @@ raNo = request.getParameter("rano");
 // set localClinic record bean
 billingLocalInvNoBean = new Properties();
 String localClinicNo = oscarVariables.getProperty("clinic_no");
-ResultSet rs8 = apptMainBean.queryResults(raNo, "search_rahd_content");
+ResultSet rs8 = apptMainBean.queryResults(raNo, "search_rahd_short");
 while (rs8.next()) {
 	filename = rs8.getString("filename");
 }
-String url=request.getRequestURI();
-url = url.substring(1);
-url = url.substring(0,url.indexOf("/")); 
-filepath = "/usr/local/OscarDocument/" + url +"/document/";
+
+filepath = oscarVariables.getProperty("DOCUMENT_DIR").trim(); //"/usr/local/OscarDocument/" + url +"/document/";
 FileInputStream file = new FileInputStream(filepath + filename);
 InputStreamReader reader = new InputStreamReader(file);
 BufferedReader input = new BufferedReader(reader);
