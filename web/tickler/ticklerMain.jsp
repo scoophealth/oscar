@@ -1,32 +1,41 @@
+<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*" %>
+<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
+
+
  <%    
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no;
   user_no = (String) session.getAttribute("user");
   int  nItems=0;
-     String strLimit1="0";
-    String strLimit2="5"; 
-    if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+  String strLimit1="0";
+  String strLimit2="5"; 
+  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
+
 <%@ include file="dbTicker.jsp" %>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
-  
-  
-  %><% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
+  %>
+<% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
   String ticklerview=request.getParameter("ticklerview")==null?"A":request.getParameter("ticklerview");
-   String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
-   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay):request.getParameter("xml_appointment_date");
+  String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
+  String xml_appointment_date = request.getParameter("xml_appointment_date")==null?MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay):request.getParameter("xml_appointment_date");
+  
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+  
+  ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
+  
+  String stActive = oscarR.getString("tickler.ticklerMain.stActive");
+  String stComplete = oscarR.getString("tickler.ticklerMain.stComplete");
+  String stDeleted = oscarR.getString("tickler.ticklerMain.stDeleted");
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -38,8 +47,6 @@ GregorianCalendar now=new GregorianCalendar();
       <meta http-equiv="Pragma" content="no-cache">
       
 <script language="JavaScript">
-<!--
-
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
@@ -79,7 +86,7 @@ var beginD = "0001-01-01"
 	document.serviceform.xml_appointment_date.value = newD;
 		document.serviceform.xml_vdate.value = beginD;
 }
-//-->
+
 </script>
 <script>
    
@@ -366,8 +373,8 @@ var beginD = "0001-01-01"
 <TD width="12%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDemographicName"/></B></FONT></TD>
 <TD width="12%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDoctorName"/></B></FONT></TD>
 <TD width="9%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDate"/></B></FONT></TD>
-<TD width="6%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Priority</B></FONT></TD>
-<TD width="12%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Task Assigned To</B></FONT></TD>
+<TD width="6%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.Priority"/></B></FONT></TD>
+<TD width="12%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.taskAssignedTo"/></B></FONT></TD>
 
 <TD width="6%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B></B><bean:message key="tickler.ticklerMain.msgStatus"/></FONT></TD>
 <TD width="40%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgMessage"/></B></FONT></TD>
@@ -379,7 +386,7 @@ var beginD = "0001-01-01"
     String vGrantdate = "1980-01-07 00:00:00.0";
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
     String provider;
-    String taskAssigedTo = "";
+    String taskAssignedTo = "";
 
     if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
     if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
@@ -404,10 +411,10 @@ var beginD = "0001-01-01"
         }
          
         if (rs.getString("assignedLast")==null || rs.getString("assignedFirst")==null){
-            taskAssigedTo = "";
+            taskAssignedTo = "";
         }
         else{
-            taskAssigedTo = rs.getString("assignedLast") + ", " + rs.getString("assignedFirst");
+            taskAssignedTo = rs.getString("assignedLast") + ", " + rs.getString("assignedFirst");
         }
         bodd=bodd?false:true;
         vGrantdate = rs.getString("service_date")+ " 00:00:00.0";
@@ -421,12 +428,17 @@ if (daysDifference > 0){
 
 <tr >
 <TD width="3%"  ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><input type="checkbox" name="checkbox" value="<%=rs.getString("tickler_no")%>"></TD>
-<TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<%
+	if (vLocale.getCountry().equals("BR")) { %>
+     <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<%}else{%>
+     <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<%}%>
 <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=provider%></TD>
 <TD width="9%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("service_date")%> </TD>
 <TD width="6%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("priority")%></TD>
-<TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssigedTo%></TD>
-<TD width="6%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
+<TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssignedTo%></TD>
+<TD width="6%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("status").equals("A")?stActive:rs.getString("status").equals("C")?stComplete:rs.getString("status").equals("D")?stDeleted:rs.getString("status")%></TD>
 <TD width="40%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("message")%></TD>
  </tr>
 <%
@@ -434,12 +446,17 @@ if (daysDifference > 0){
 %>
 <tr >
 <TD width="3%"  ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><input type="checkbox" name="checkbox" value="<%=rs.getString("tickler_no")%>"></TD>
-<TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<%
+	if (vLocale.getCountry().equals("BR")) { %>
+      <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<%}else{%>
+      <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<%}%>
 <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
 <TD width="9%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("service_date")%> </TD>
 <TD width="6%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("priority")%></TD>
-<TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssigedTo%></TD>
-<TD width="6%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
+<TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssignedTo%></TD>
+<TD width="6%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("status").equals("A")?stActive:rs.getString("status").equals("C")?stComplete:rs.getString("status").equals("D")?stDeleted:rs.getString("status")%></TD>
 <TD width="40%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("message")%></TD>
  </tr>
 <%
