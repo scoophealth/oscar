@@ -10,6 +10,15 @@
 <!-- Struts for i18n -->
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%!
+/**
+Checks if the schedule day is patients birthday
+**/
+public boolean isBirthday(String schedDate,String demBday){
+	return schedDate.equals(demBday);
+}
+
+%>
 <%
     if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("doctor"))
         response.sendRedirect("../logout.jsp");
@@ -18,16 +27,16 @@
     response.addCookie(cs.GiveMeACookie(cs.providerCookie));
 
 	String curUser_no = (String) session.getAttribute("user");
-    String mygroupno = (String) session.getAttribute("groupno");  
+    String mygroupno = (String) session.getAttribute("groupno");
     String userfirstname = (String) session.getAttribute("userfirstname");
     String userlastname = (String) session.getAttribute("userlastname");
     String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
-    
+
 	boolean bShortcutForm = oscarVariables.getProperty("appt_formview", "").equalsIgnoreCase("on") ? true : false;
-	String formName = bShortcutForm ? oscarVariables.getProperty("appt_formview_name") : ""; 
-	String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName; 
-        String formName2 = bShortcutForm ? oscarVariables.getProperty("appt_formview_name2", "") : ""; 
-	String formName2Short = formName2.length() > 3 ? (formName2.substring(0,2)+".") : formName2; 
+	String formName = bShortcutForm ? oscarVariables.getProperty("appt_formview_name") : "";
+	String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName;
+        String formName2 = bShortcutForm ? oscarVariables.getProperty("appt_formview_name2", "") : "";
+	String formName2Short = formName2.length() > 3 ? (formName2.substring(0,2)+".") : formName2;
         boolean bShortcutForm2 = bShortcutForm && !formName2.equals("");
 
     //String userprofession = (String) session.getAttribute("userprofession");
@@ -44,13 +53,17 @@
     ResultSet rsStudy = null;
     ResultSet rsDemo = null;
     String tickler_no="", textColor="", tickler_note="";
-    String ver = "", roster="";   
+    String ver = "", roster="";
+    String yob = "";
+    String mob = "";
+    String dob = "";
+    String demBday = "";
     StringBuffer study_no=null, study_link=null,studyDescription=null;
 	String studySymbol = "#", studyColor = "red";
 
     String resourcebaseurl = "http://67.69.12.117:8080/oscarResource/";
     ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
-    while (rsgroup1.next()) { 
+    while (rsgroup1.next()) {
  	    resourcebaseurl = rsgroup1.getString("value");
     }
     rsgroup1 = null;
@@ -64,13 +77,14 @@
     int month = Integer.parseInt(request.getParameter("month"));
     int day = Integer.parseInt(request.getParameter("day"));
 
-    //verify the input date is really existed 
+    //verify the input date is really existed
     cal = new GregorianCalendar(year,(month-1),day);
     year = cal.get(Calendar.YEAR);
     month = (cal.get(Calendar.MONTH)+1);
     day = cal.get(Calendar.DAY_OF_MONTH);
 
     String strDate = year + "-" + month + "-" + day;
+    String monthDay = month + "-" + day;
     SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd", request.getLocale());
     String formatDate;
     try {
@@ -84,29 +98,29 @@
     String strMonth=month>9?(""+month):("0"+month);
     String strDay=day>9?(""+day):("0"+day);
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -121,13 +135,13 @@
 function setfocus() {
   //this.focus();
 }
-function popupPage(vheight,vwidth,varpage) { 
+function popupPage(vheight,vwidth,varpage) {
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
   var popup=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
-      popup.opener = self; 
+      popup.opener = self;
     }
     popup.focus();
   }
@@ -145,7 +159,7 @@ function popupPage2(varpage, windowname) {
 }
 
 <!--oscarMessenger code block-->
-function popupOscarRx(vheight,vwidth,varpage) { 
+function popupOscarRx(vheight,vwidth,varpage) {
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(varpage, "<bean:message key="global.oscarRx"/>", windowprops);
@@ -169,11 +183,11 @@ function review(key) {
 function refresh() {
   document.location.reload();
 }
-function refresh1() {  
+function refresh1() {
   var u = self.location.href;
   if(u.lastIndexOf("view=1") > 0) {
     self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {    
+  } else {
     document.location.reload();
   }
 }
@@ -190,7 +204,7 @@ function ts1(s) {
   popupPage(360,780,('../appointment/addappointment.jsp?'+s));
 }
 function tsr(s) {
-  popupPage(360,780,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s)); 
+  popupPage(360,780,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s));
 }
 function goFilpView(s) {
 	self.location.href = "../schedule/scheduleflipview.jsp?originalpage=../provider/providercontrol.jsp&startDate=<%=year+"-"+month+"-"+day%>" + "&provider_no="+s ;
@@ -210,14 +224,14 @@ function goZoomView(s, n) {
    //initial provider bean for all the application
    if(providerBean.isEmpty()) {
      rsgroup = apptMainBean.queryResults("searchallprovider");
- 	   while (rsgroup.next()) { 
+ 	   while (rsgroup.next()) {
  	    providerBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
  	   }
  	 }
-   
+
    if(view==0) { //multiple views
 	   rsgroup = apptMainBean.queryResults(mygroupno, "searchmygroupcount");
- 	   while (rsgroup.next()) { 
+ 	   while (rsgroup.next()) {
        numProvider=rsgroup.getInt(1);
      }
 
@@ -225,7 +239,7 @@ function goZoomView(s, n) {
        param3[0] = mygroupno;
        param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
   	   rsgroup = apptMainBean.queryResults(param3, "search_numgrpscheduledate");
- 	     while (rsgroup.next()) { 
+ 	     while (rsgroup.next()) {
          numAvailProvider = rsgroup.getInt(1);
        }
 
@@ -246,7 +260,7 @@ function goZoomView(s, n) {
 
 	   rsgroup = apptMainBean.queryResults(mygroupno, "searchmygroupprovider");
 	   int iTemp=0;
-     while (rsgroup.next()) { 
+     while (rsgroup.next()) {
        curProvider_no[iTemp]=rsgroup.getString("provider_no");
        curProviderName[iTemp]=rsgroup.getString("first_name")+" "+rsgroup.getString("last_name");
        iTemp++;
@@ -259,7 +273,7 @@ function goZoomView(s, n) {
      curProvider_no[0]=request.getParameter("curProvider");
      curProviderName[0]=request.getParameter("curProviderName");
    }
-   
+
    //set timecode bean
    String bgcolordef = "#486ebd" ;
    String [] param3 = new String[2];
@@ -267,27 +281,27 @@ function goZoomView(s, n) {
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
      param3[1] = curProvider_no[nProvider];
 	   rsgroup = apptMainBean.queryResults(param3, "search_appttimecode");
-     while (rsgroup.next()) { 
+     while (rsgroup.next()) {
        dateTimeCodeBean.put(rsgroup.getString("provider_no"), rsgroup.getString("timecode"));
-     } 
+     }
    }
 	 rsgroup = apptMainBean.queryResults("search_timecode");
-   while (rsgroup.next()) { 
+   while (rsgroup.next()) {
      dateTimeCodeBean.put("description"+rsgroup.getString("code"), rsgroup.getString("description"));
      dateTimeCodeBean.put("duration"+rsgroup.getString("code"), rsgroup.getString("duration"));
      dateTimeCodeBean.put("color"+rsgroup.getString("code"), (rsgroup.getString("color")==null || rsgroup.getString("color").equals(""))?bgcolordef:rsgroup.getString("color") );
-   } 
-   
-   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);   
+   }
+
+   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
 %>
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 <tr>
-  <td VALIGN="BOTTOM" HEIGHT="20"> 
+  <td VALIGN="BOTTOM" HEIGHT="20">
 
     <table BORDER="0" CELLPADDING="0" CELLSPACING="0" height="20">
       <tr>
         <td></td><td rowspan="2" BGCOLOR="ivory" ALIGN="MIDDLE" nowrap height="20"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"> 
+         <a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true">
          &nbsp;&nbsp;<bean:message key="global.day"/>&nbsp;&nbsp; </a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a></font></td>
@@ -299,20 +313,20 @@ function goZoomView(s, n) {
          <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
 
-             <% 
-                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-                if (vLocale.getCountry().equals("BR")) { %>  
+             <%
+                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+                if (vLocale.getCountry().equals("BR")) { %>
                <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
-             <% } else {%>  
+             <% } else {%>
 				<a HREF="#" ONCLICK ="popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
              <% } %>
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <!--MARK-->
          <% if (prov.equals("BC")){%>
-         <a HREF="#" ONCLICK ="popupPage2('../lab/CA/BC/index.jsp');return false;" TITLE='View lab reports'><%=(new oscar.oscarLab.ca.bc.PathNet.PathNetInfo()).getLabTab(curUser_no)%></a>   
+         <a HREF="#" ONCLICK ="popupPage2('../lab/CA/BC/index.jsp');return false;" TITLE='View lab reports'><%=(new oscar.oscarLab.ca.bc.PathNet.PathNetInfo()).getLabTab(curUser_no)%></a>
          <%}else{%>
-         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a>         
+         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a>
          <%}%>
 <!-- oscarMessenger code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -328,14 +342,14 @@ function goZoomView(s, n) {
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href=# onClick ="popupPage(200,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a></font></td>
-       
+
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a></font></td>
    <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp');return false;" TITLE='<bean:message key="global.tickler"/>'><bean:message key="global.tickler"/></a></font></td>
 
 <td></td>
-      </tr><tr> 
+      </tr><tr>
         <td valign="bottom"><img src="../images/tabs_l_active_end_alone.gif" width="14" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_r_active_end.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
@@ -352,14 +366,14 @@ function goZoomView(s, n) {
 <!--/oscarMessenger code block -->
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-        
+
         <td valign="bottom"><img src="../images/tabs_r_inactive_end.gif" width="17" height="20" border="0"></td>
       </tr>
     </table>
 
   </td>
   <td align="right" valign="bottom">
-  <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>  
+  <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>
   &nbsp;&nbsp;
   </td>
 </tr>
@@ -371,7 +385,7 @@ function goZoomView(s, n) {
       <tr>
         <td BGCOLOR="ivory" width="33%">
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day-1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
-         &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewPrevDay"/>" vspace="2"></a> 
+         &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewPrevDay"/>" vspace="2"></a>
          <b><span CLASS=title><%=formatDate%></span></b>
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day+1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
          <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewNextDay"/>" vspace="2">&nbsp;&nbsp;</a>
@@ -382,7 +396,7 @@ function goZoomView(s, n) {
 	<% } else { %>
 	<B><bean:message key="global.hello"/>
 	<% out.println( userfirstname+" "+userlastname); %>
-	</b></TD> 
+	</b></TD>
 	<% } %>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
   <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
@@ -390,17 +404,17 @@ function goZoomView(s, n) {
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 <%
    rsgroup = apptMainBean.queryResults( "searchmygroupno");
- 	 while (rsgroup.next()) { 
+ 	 while (rsgroup.next()) {
 %>
   <option value="<%=rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%=rsgroup.getString("mygroup_no")%></option>
 <%
  	 }
 %>
 </select>
-<% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>        
-         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a> &nbsp;|&nbsp; 
-<% } else {  %>         
-         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp; 
+<% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
+         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a> &nbsp;|&nbsp;
+<% } else {  %>
+         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp;
 <% } %>
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
       </tr>
@@ -411,7 +425,7 @@ function goZoomView(s, n) {
 				<%
           int hourCursor=0, minuteCursor=0, depth=everyMin; //depth is the period, e.g. 10,15,30,60min.
           String am_pm=null;
-          boolean bColor=true, bColorHour=true; //to change color 
+          boolean bColor=true, bColorHour=true; //to change color
 
    int iCols=0, iRows=0, iS=0,iE=0,iSm=0,iEm=0; //for each S/E starting/Ending hour, how many events
    int ih=0, im=0, iSn=0, iEn=0 ; //hour, minute, nthStartTime, nthEndTime, rowspan
@@ -422,7 +436,7 @@ function goZoomView(s, n) {
 	 String strsearchappointmentday=request.getParameter("dboperation");
    ResultSet rs = null;
 
-   boolean userAvail = true; 
+   boolean userAvail = true;
    int me = -1;
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
      if(curUser_no.equals(curProvider_no[nProvider]) ) {
@@ -435,12 +449,12 @@ function goZoomView(s, n) {
    String [] param1 = new String[2];
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
 //     bColor=bColor?false:true;
-     userAvail = true; 
+     userAvail = true;
      param1[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
      param1[1] = curProvider_no[nProvider];
      rsgroup = apptMainBean.queryResults(param1,"search_scheduledate_single");
-     
-     //viewall function 
+
+     //viewall function
      if(request.getParameter("viewall")==null || request.getParameter("viewall").equals("0") ) {
        if(!rsgroup.next() || rsgroup.getString("available").equals("0")) {
          if(nProvider!=me ) continue;
@@ -450,7 +464,7 @@ function goZoomView(s, n) {
      bColor=bColor?false:true;
  %>
             <td valign="top" width="<%=1*100/numProvider%>%"> <!-- for the first provider's schedule -->
-         
+
         <table border="0" cellpadding="0" bgcolor="#486ebd" cellspacing="0" width="100%"><!-- for the first provider's name -->
           <tr><td NOWRAP ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="Flip view"  >
@@ -462,8 +476,8 @@ function goZoomView(s, n) {
           <% } %>
 </td></tr>
           <tr><td valign="top">
-        
-        <!-- table for hours of day start --> 
+
+        <!-- table for hours of day start -->
         <table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">
 				<%
           bFirstTimeRs=true;
@@ -476,17 +490,17 @@ function goZoomView(s, n) {
             hourCursor = ih/60;
             minuteCursor = ih%60;
             bColorHour=minuteCursor==0?true:false; //every 00 minute, change color
-      
-            //templatecode     
-            if(dateTimeCodeBean.get(curProvider_no[nProvider]) != null) {       
+
+            //templatecode
+            if(dateTimeCodeBean.get(curProvider_no[nProvider]) != null) {
 	            int nLen = 24*60 / ((String) dateTimeCodeBean.get(curProvider_no[nProvider]) ).length();
 	            int ratio = (hourCursor*60+minuteCursor)/nLen;
               hourmin = new StringBuffer(dateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) dateTimeCodeBean.get(curProvider_no[nProvider])).substring(ratio,ratio+1):" " );
             } else { hourmin = new StringBuffer(); }
         %>
           <tr>
-            <td align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b><font face="verdana,arial,helvetica" size="2"> 
-             <a href=# onClick ="popupPage(400,780,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>');return false;" 
+            <td align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b><font face="verdana,arial,helvetica" size="2">
+             <a href=# onClick ="popupPage(400,780,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>');return false;"
              title='<%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+ (minuteCursor<10?"0":"")+minuteCursor)%> - <%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+((minuteCursor+depth-1)<10?"0":"")+(minuteCursor+depth-1))%>' class="adhour">
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></font></b></td>
             <td width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font>
@@ -494,7 +508,7 @@ function goZoomView(s, n) {
 				<%
           	while (bFirstTimeRs?rs.next():true) { //if it's not the first time to parse the standard time, should pass it by
           	  len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
-          	  
+
           	  iS=Integer.parseInt(rs.getString("start_time").substring(0,2));
         	    iSm=Integer.parseInt(rs.getString("start_time").substring(3,5));
          	    iE=Integer.parseInt(rs.getString("end_time").substring(0,2));
@@ -511,9 +525,9 @@ function goZoomView(s, n) {
           	  }
          	    iRows=((iE*60+iEm)-ih)/depth+1; //to see if the period across an hour period
          	    //iRows=(iE-iS)*60/depth+iEm/depth-iSm/depth+1; //to see if the period across an hour period
-         	    
+
          	    //get time format: 00:00am/pm
-         	    //String startTime = (iS>12?("0"+(iS-12)):rs.getString("start_time").substring(0,2))+":"+rs.getString("start_time").substring(3,5)+am_pm ; 
+         	    //String startTime = (iS>12?("0"+(iS-12)):rs.getString("start_time").substring(0,2))+":"+rs.getString("start_time").substring(3,5)+am_pm ;
          	    //String endTime   = (iE>12?("0"+(iE-12)):rs.getString("end_time").substring(0,2))  +":"+rs.getString("end_time").substring(3,5)+(iE<12?"am":"pm");
           	  String name = UtilMisc.toUpperLowerCase(rs.getString("name"));
           	  int demographic_no = rs.getInt("demographic_no");
@@ -527,15 +541,20 @@ function goZoomView(s, n) {
                       tickler_no = rsTickler.getString("tickler_no");
                       tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
                   }
-          	  
+
                   rsDemo = null;
                   ver = "";
-                  roster = "";                  
+                  roster = "";
                   rsDemo = apptMainBean.queryResults(demographic_no, "search_demograph");
                   if(rsDemo.next()){
                     ver = rsDemo.getString("ver");
-                    roster = rsDemo.getString("roster_status");                    
-                    
+                    roster = rsDemo.getString("roster_status");
+                    int intMob = rsDemo.getInt("month_of_birth");
+                    int intDob = rsDemo.getInt("date_of_birth");
+		    mob = String.valueOf(intMob);
+                    dob = String.valueOf(intDob);
+                    demBday = mob + "-" + dob;
+
                     if (roster == null || !roster.equalsIgnoreCase("FS")) {
                         roster = "";
                     }
@@ -559,22 +578,22 @@ function goZoomView(s, n) {
                       study_no = new StringBuffer("0");
                       study_link = new StringBuffer("formstudy.jsp");
 				      studyDescription = new StringBuffer("Form Studies");
-				  } 
-            
+				  }
+
           	  String reason = rs.getString("reason");
           	  String notes = rs.getString("notes");
           	  String status = (rs.getString("status")).trim();
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
-        %>	    
+        %>
             <td bgcolor='<%=as.getBgColor()%>' rowspan="<%=iRows%>" <%-- =view==0?(len==lenLimitedL?"nowrap":""):"nowrap"--%> nowrap>
-            
+
             <%
 			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
             %>
             <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="<bean:message key='<%=as.getTitle()%>' />" >
             <%
-				} 
+				}
 			    if (as.getNextStatus() != null) {
             %>
             <img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<bean:message key='<%=as.getTitle()%>' />"></a>
@@ -610,36 +629,42 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <!--<a href=# onClick="popupPage(700,980,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
             |e</a>-->
-            
+
             <%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%>
             <%= bShortcutForm2?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName2+"&demographic_no="+demographic_no+"\")' title='form'>|"+formName2Short+"</a>" : ""%>
-             <% if(status.indexOf('B')==-1) {             
-                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-                if (vLocale.getCountry().equals("BR")) { %>  
+             <% if(status.indexOf('B')==-1) {
+                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+                if (vLocale.getCountry().equals("BR")) { %>
                <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=rs.getString("appointment_no")%>");return false;' title="Faturamento">|FAT|</a>
-             <% } else {%>  
+             <% } else {%>
 	       <!--<a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>-->
            <!--    <a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(oscarVariables.getProperty("billregion"))%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>-->
                <a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>
-                 
-             <% } %>  
-<% } else {%>  
+
+             <% } %>
+<% } else {%>
     <a href=# onClick='onUnbilled("../billing/CA/<%=prov%>/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="<bean:message key="global.billing"/>">|-<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>
-<% } %>          
+<% } %>
     <% if (vLocale.getCountry().equals("BR")) {%>
-    <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr');return false;" 
+    <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr');return false;"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}else{%>
-    <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;" 
+    <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
 
       <% if (!vLocale.getCountry().equals("BR")) { %>
-      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message key="global.rx"/></a>      
+      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message key="global.rx"/></a>| <b><%=reason%></b>
+      <%
+     //out.print(monthDay + " " + demBday);
+      if(isBirthday(monthDay,demBday)){%>
+      	| <img src="../images/cake.gif" height="20"/>
+
+      <%}%>
       <% } %>
 <% } %>
         		</font></td>
-        <% 
+        <%
         			}
         			bFirstFirstR = false;
           	}
@@ -647,45 +672,45 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
             out.println("<td width='1'></td></tr>"); //no grid display
           }
     			//apptMainBean.closePstmtConn();
-				%>        
+				%>
 
-          </table> <!-- end table for each provider schedule display --> 
+          </table> <!-- end table for each provider schedule display -->
 
          </td></tr>
           <tr><td ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.flipView"/>"  >
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
-          <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="zoom view"-->
+          <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperationhappo=searcintmentday" title="zoom view"-->
           <%=curProviderName[nProvider]%></a></b>
           <% if(!userAvail) { %>
           [<bean:message key="provider.appointmentProviderAdminDay.msgNotOnSched"/>]
           <% } %>
           </td></tr>
-         
+
        </table><!-- end table for each provider name -->
 
             </td>
  <%
-   } //end of display team a, etc.    
+   } //end of display team a, etc.
    apptMainBean.closePstmtConn();
  %>
- 
- 
+
+
           </tr>
-        </table>        <!-- end table for the whole schedule row display --> 
+        </table>        <!-- end table for the whole schedule row display -->
 
 
 
 
         </td>
       </tr>
-      
+
       <tr><td colspan="3">
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   			<tr>
         	<td BGCOLOR="ivory" width="50%">
          	 <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day-1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
-         	 &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewPrevDay"/>" vspace="2"></a> 
+         	 &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewPrevDay"/>" vspace="2"></a>
            <b><span CLASS=title><%=formatDate%></span></b>
            <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day+1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
            <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewNextDay"/>" vspace="2">&nbsp;&nbsp;</a></td>
@@ -694,7 +719,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
   			</TR>
 			</table>
 		</td></tr>
-	
+
 	</table>
 	</td></tr>
 </table>
