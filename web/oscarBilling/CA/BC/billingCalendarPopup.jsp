@@ -25,9 +25,9 @@
 -->
 
  <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../../../appointment/errorpage.jsp" %>
 <%
   //to prepare calendar display  
   String type = request.getParameter("type");
