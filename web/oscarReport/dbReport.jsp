@@ -10,16 +10,16 @@
   
   
   String [][] dbQueries=new String[][] {
-  {"search_catchment", "select * from demographic where roster_status=? and (postal not like 'L0R%' and postal not like 'L3M%' and postal not like 'L8E%' and postal not like 'L9A%' and postal not like 'L8G%' and postal not like 'L9B%' and postal not like 'L8H%' and postal not like 'L9C%' and postal not like 'L8J%' and postal not like 'L9G%' and postal not like 'L8K%' and postal not like 'L9H%' and postal not like 'L8L%' and postal not like 'L9K%' and postal not like 'L8M%' and postal not like 'L8N%' and postal not like 'N0A%' and postal not like 'L8P%' and postal not like 'N3W%' and postal not like 'L8R%' and postal not like 'L8S%' and postal not like 'L8T%' and postal not like 'L8V%' and postal not like 'L8W%' and postal not like 'K8R%' and postal not like 'L0R%' and postal not like 'L5P%' and postal not like 'L8A%' and postal not like 'L8B%' and postal not like 'L8C%' and postal not like 'L8L%' and postal not like 'L9L%' and postal not like 'L9N%' and postal not like 'L9S%' and postal not like 'M9C%' and postal not like 'NOB%')  limit ? offset ?"},
-    {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
-    {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
-     {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no != '' order by last_name"},
-    {"search_demographic_details", "select * from demographic where demographic_no=?"},
-      {"search_demographic_all", "select * from demographic where year_of_birth>?"},
-    {"search_provider_name", "select * from provider where provider_no=?"},
-    {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
-   {"search_bill_location", "select * from clinic_location where clinic_no=1 and clinic_location_no=?"},    
-    {"search_clinic_location", "select * from clinic_location where clinic_no=? order by clinic_location_no"},  	
+        {"search_catchment", "select * from demographic where roster_status=? and (postal not like 'L0R%' and postal not like 'L3M%' and postal not like 'L8E%' and postal not like 'L9A%' and postal not like 'L8G%' and postal not like 'L9B%' and postal not like 'L8H%' and postal not like 'L9C%' and postal not like 'L8J%' and postal not like 'L9G%' and postal not like 'L8K%' and postal not like 'L9H%' and postal not like 'L8L%' and postal not like 'L9K%' and postal not like 'L8M%' and postal not like 'L8N%' and postal not like 'N0A%' and postal not like 'L8P%' and postal not like 'N3W%' and postal not like 'L8R%' and postal not like 'L8S%' and postal not like 'L8T%' and postal not like 'L8V%' and postal not like 'L8W%' and postal not like 'K8R%' and postal not like 'L0R%' and postal not like 'L5P%' and postal not like 'L8A%' and postal not like 'L8B%' and postal not like 'L8C%' and postal not like 'L8L%' and postal not like 'L9L%' and postal not like 'L9N%' and postal not like 'L9S%' and postal not like 'M9C%' and postal not like 'NOB%')  limit ? offset ?"},
+        {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
+        {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
+        {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no != '' order by last_name"},
+        {"search_demographic_details", "select * from demographic where demographic_no=?"},
+        {"search_demographic_all", "select * from demographic where year_of_birth>?"},
+        {"search_provider_name", "select * from provider where provider_no=?"},
+        {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
+        {"search_bill_location", "select * from clinic_location where clinic_no=1 and clinic_location_no=?"},    
+        {"search_clinic_location", "select * from clinic_location where clinic_no=? order by clinic_location_no"},  	
 	{"save_reportagesex", "insert into reportagesex values(?,?,?,?,?,?,?,?)"},
         {"delete_reportagesex_bydate", "delete from reportagesex where reportdate<=?"},
         {"count_reportagesex_roster", "select count(*) as n from reportagesex where (status<>'OP' and status<>'IN' and status<>'DE') and roster=? and sex like ? and provider_no=? and age >= ? and age <=? and date_joined >=? and date_joined <=?"},
@@ -34,6 +34,7 @@
 	{"save_reportprovider_byaction", "insert into reportprovider values(?,?,?,?)"},
 	{"search_reportprovider_check", "select status from reportprovider where  provider_no=? and team=? and action=?"},
 	{"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
+        {"search_reportprovider_ohip","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? and p.provider_no like ? order by team"},
         {"count_visit", "select count(*) n from billing where status<>'D' and creator=? and visittype=? and billing_date>=? and billing_date<=?"},
   };
   

@@ -18,10 +18,11 @@
 <%
 String cTotal="0",hTotal="0",oTotal="0", mNum="", fNum="";
 String p_last="",p_no="",p_first="", team="", oldteam="";
- String dateBegin = request.getParameter("xml_vdate");
-   String dateEnd = request.getParameter("xml_appointment_date");
-   if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+String dateBegin = request.getParameter("xml_vdate");
+String dateEnd = request.getParameter("xml_appointment_date");
+if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+String ohipNo = request.getParameter("providerview");
 ResultSet rs;
 ResultSet rs2;
 ResultSet rs3;
@@ -29,10 +30,9 @@ ResultSet rs4;
 ResultSet rs5;
 ResultSet rs6;
 
-
-
-String param = "visitreport";
-
+String[] param = new String[2];
+param[0] = "visitreport";
+param[1] = ohipNo;
 
 String[] param2 = new String[5];
 
@@ -48,97 +48,95 @@ String[] param3 = new String[4];
 String[] visitcount = new String[5];
 String[] apptvisitcount = new String[5];
 
-    BigDecimal ccTotal = new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
-    BigDecimal hhTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
-    BigDecimal BigTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   
-   BigDecimal ooTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   BigDecimal BigTotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   BigDecimal BigTotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   BigDecimal BigTotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   BigDecimal BigTotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   BigDecimal BigTotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   
-      BigDecimal Total0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      BigDecimal Total1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      BigDecimal Total2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      BigDecimal Total3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      BigDecimal Total4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);   
-      
-      
-        BigDecimal ABigTotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-         BigDecimal ABigTotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-         BigDecimal ABigTotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-         BigDecimal ABigTotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-         BigDecimal ABigTotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-         
-            BigDecimal ATotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-            BigDecimal ATotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-            BigDecimal ATotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-            BigDecimal ATotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      		BigDecimal ATotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);   
- boolean bodd=true;	     
+BigDecimal ccTotal = new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
+BigDecimal hhTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
+BigDecimal BigTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+
+BigDecimal ooTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal BigTotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal BigTotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal BigTotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal BigTotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal BigTotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+
+BigDecimal Total0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal Total1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal Total2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal Total3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal Total4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);   
+
+BigDecimal ABigTotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ABigTotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ABigTotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ABigTotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ABigTotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+
+BigDecimal ATotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ATotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ATotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ATotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+BigDecimal ATotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);   
+
+boolean bodd=true;
 
 rs = null;
-rs = apptMainBean.queryResults(param, "search_reportprovider");
+rs = apptMainBean.queryResults(param, "search_reportprovider_ohip");
+
 while(rs.next()){
-p_last = rs.getString("last_name");
-p_first = rs.getString("first_name");
-p_no = rs.getString("provider_no");
-team = rs.getString("team");
+    p_last = rs.getString("last_name");
+    p_first = rs.getString("first_name");
+    p_no = rs.getString("provider_no");
+    team = rs.getString("team");
 
-oscar.oscarReport.data.VisitReportData vrd = new oscar.oscarReport.data.VisitReportData();
-vrd.setDateBegin(dateBegin);
-vrd.setDateEnd(dateEnd);
-vrd.setProviderNo(p_no);
-visitcount = vrd.getCreatorCount();
-apptvisitcount = vrd.getApptProviderCount();
+    oscar.oscarReport.data.VisitReportData vrd = new oscar.oscarReport.data.VisitReportData();
+    vrd.setDateBegin(dateBegin);
+    vrd.setDateEnd(dateEnd);
+    vrd.setProviderNo(p_no);
+    visitcount = vrd.getCreatorCount();
+    apptvisitcount = vrd.getApptProviderCount();
 
+    if (oldteam.compareTo(team) != 0)  bodd=bodd?false:true; //for the color of rows
 
-if (oldteam.compareTo(team) != 0)  bodd=bodd?false:true; //for the color of rows
-
-%>
-<tr>
-    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=oldteam.equals(team)?"":team%></td>
-    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=p_no%> <%=p_last%>,<%=p_first%></td>
-    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[0]%></td>
-    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[1]%></td>
-    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[2]%></td>
-    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[3]%></td>
-    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[4]%></td>
-    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[0]%></td>
-    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[1]%></td>
-    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[2]%></td>
-    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[3]%></td>
-    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[4]%></td>
-</tr>
-
-<%
-
+    %>
+    <tr>
+        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=oldteam.equals(team)?"":team%></td>
+        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=p_no%> <%=p_last%>,<%=p_first%></td>
+        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[0]%></td>
+        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[1]%></td>
+        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[2]%></td>
+        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[3]%></td>
+        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[4]%></td>
+        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[0]%></td>
+        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[1]%></td>
+        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[2]%></td>
+        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[3]%></td>
+        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[4]%></td>
+    </tr>
+    <%
     Total0= new BigDecimal(Integer.parseInt(visitcount[0].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      Total1= new BigDecimal(Integer.parseInt(visitcount[1].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-       Total2= new BigDecimal(Integer.parseInt(visitcount[2].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-       Total3= new BigDecimal(Integer.parseInt(visitcount[3].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   Total4= new BigDecimal(Integer.parseInt(visitcount[4].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);  
-BigTotal0 = BigTotal0.add(Total0);
-BigTotal1 = BigTotal1.add(Total1);
-BigTotal2 = BigTotal2.add(Total2);
-BigTotal3 = BigTotal3.add(Total3);
-BigTotal4 = BigTotal4.add(Total4);
+    Total1= new BigDecimal(Integer.parseInt(visitcount[1].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+    Total2= new BigDecimal(Integer.parseInt(visitcount[2].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+    Total3= new BigDecimal(Integer.parseInt(visitcount[3].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+    Total4= new BigDecimal(Integer.parseInt(visitcount[4].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);  
+    BigTotal0 = BigTotal0.add(Total0);
+    BigTotal1 = BigTotal1.add(Total1);
+    BigTotal2 = BigTotal2.add(Total2);
+    BigTotal3 = BigTotal3.add(Total3);
+    BigTotal4 = BigTotal4.add(Total4);
 
     ATotal0= new BigDecimal(Integer.parseInt(apptvisitcount[0].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      ATotal1= new BigDecimal(Integer.parseInt(apptvisitcount[1].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-       ATotal2= new BigDecimal(Integer.parseInt(apptvisitcount[2].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-       ATotal3= new BigDecimal(Integer.parseInt(apptvisitcount[3].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   ATotal4= new BigDecimal(Integer.parseInt(apptvisitcount[4].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);  
-ABigTotal0 = ABigTotal0.add(ATotal0);
-ABigTotal1 = ABigTotal1.add(ATotal1);
-ABigTotal2 = ABigTotal2.add(ATotal2);
-ABigTotal3 = ABigTotal3.add(ATotal3);
-ABigTotal4 = ABigTotal4.add(ATotal4);
-oldteam = team;
-   
-}   %>
+    ATotal1= new BigDecimal(Integer.parseInt(apptvisitcount[1].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+    ATotal2= new BigDecimal(Integer.parseInt(apptvisitcount[2].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+    ATotal3= new BigDecimal(Integer.parseInt(apptvisitcount[3].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+    ATotal4= new BigDecimal(Integer.parseInt(apptvisitcount[4].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);  
+    ABigTotal0 = ABigTotal0.add(ATotal0);
+    ABigTotal1 = ABigTotal1.add(ATotal1);
+    ABigTotal2 = ABigTotal2.add(ATotal2);
+    ABigTotal3 = ABigTotal3.add(ATotal3);
+    ABigTotal4 = ABigTotal4.add(ATotal4);
+    oldteam = team;
+} %>
+
   <tr>
     <td bgcolor="#CCCCFF">&nbsp;</td>
     <td bgcolor="#CCCCFF">TOTAL</td>

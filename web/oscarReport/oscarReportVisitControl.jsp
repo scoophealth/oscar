@@ -1,12 +1,12 @@
- <%       
+<%       
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no; 
   user_no = (String) session.getAttribute("user");
   int  nItems=0;  
-     String strLimit1="0"; 
-    String strLimit2="5";
-    if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+  String strLimit1="0"; 
+  String strLimit2="5";
+  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
@@ -22,20 +22,15 @@ GregorianCalendar now=new GregorianCalendar();
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   String clinic="";
   String clinicview = oscarVariables.getProperty("clinic_view");
-   ResultSet rslocal2;
-          rslocal2 = null;
-   rslocal2 = apptMainBean.queryResults(clinicview, "search_visit_location");
-   while(rslocal2.next()){
- clinic = rslocal2.getString("clinic_location_name");
+  ResultSet rslocal2 = null;
+  rslocal2 = apptMainBean.queryResults(clinicview, "search_visit_location");
+  while(rslocal2.next()){
+      clinic = rslocal2.getString("clinic_location_name");
   }
-  
-  
-  
-  %><% 
-  	int flag = 0, rowCount=0;
+  int flag = 0, rowCount=0;
   String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
-   String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
-   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
+  String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
+  String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
 <html>
 <head>
@@ -121,27 +116,17 @@ function refresh() {
        <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b>Select 
             provider </b></font> 
           <select name="providerview">
+            <option value="%">All Providers</option>
             <% String proFirst="";
             String proLast="";
-            String proOHIP="";
-            String specialty_code; 
-            String billinggroup_no; 
-            int Count = 0; 
-            ResultSet rslocal;
-            rslocal = null;
-            rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
+            String proOHIP="";            
+            ResultSet rslocal = apptMainBean.queryResults("visitreport", "search_reportprovider");
             while(rslocal.next()){
                 proFirst = rslocal.getString("first_name");
                 proLast = rslocal.getString("last_name");
-                proOHIP = rslocal.getString("provider_no"); 
-                billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-                specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-%>
-                <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
-            <%
-      }      
-   
-  %>
+                proOHIP = rslocal.getString("provider_no"); %>
+                <option value="<%=proOHIP%>"><%=proLast%>, <%=proFirst%></option>
+            <% } %>
           </select>           
       </td>
       <td width="10%"> <font color="#333333" size="1" face="Verdana, Arial, Helvetica, sans-serif"> 
@@ -160,27 +145,20 @@ function refresh() {
        </tr>
   </form>
 </table>
-<% if (reportAction.compareTo("") == 0 || reportAction == null){%>
-
+<% if (reportAction.compareTo("") == 0 || reportAction == null) { %>
   <p>&nbsp; </p>
 <% } else {  
-%>
-<%
-if (reportAction.compareTo("lk") == 0) {
-%> 
-<%@ include file="oscarReportVisit_lk.jsp" %> 
-<%
-}else{
-if (reportAction.compareTo("vr") == 0) {
-%>
-<%@ include file="oscarReportVisit_vr.jsp" %> 
-<% }}}
-%>
+       if (reportAction.compareTo("lk") == 0) { %> 
+           <%@ include file="oscarReportVisit_lk.jsp" %> 
+<%     } else {
+           if (reportAction.compareTo("vr") == 0) { %>
+               <%@ include file="oscarReportVisit_vr.jsp" %> 
+<%         }
+       }
+   }
 
-  
-    <%
- apptMainBean.closePstmtConn();
-  %>
+apptMainBean.closePstmtConn();
+%>
 
 <%@ include file="../demographic/zfooterbackclose.jsp" %> 
 
