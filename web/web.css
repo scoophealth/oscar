@@ -6,7 +6,7 @@ a:active {  text-decoration : none;}
 a:link {  text-decoration : none;; color: #CC6600}
 a:visited {  text-decoration : none;; color: #0080c0}
 a:hover {COLOR: red; TEXT-DECORATION: underline;} 
-	td {	font-size: 18px;	}
+	td {	font-size: 16px;	}
 	th {	font-size: 18px;	}
   select,textarea { font-size:16px; border: 1 solid black;}
 
