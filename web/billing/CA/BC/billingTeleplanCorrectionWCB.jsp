@@ -44,7 +44,7 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 <html:base/>
 <title>OSCAR oscarBilling - Correction</title>
 <link rel="stylesheet" href="../../../share/css/oscar.css">
-<link rel="stylesheet" href="../../../share/Calendar.css">   
+<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" /> 
 <script src="../../../share/javascript/Oscar.js"></script>
 <script src="../../../share/calendar/calendar.js"></script>
 <script src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" type="text/javascript"></script>
@@ -284,7 +284,7 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 				</tr>
 				<tr>
 					<td class="FormLabel">Service Date:</td>
-					<td><html:text readonly="true" property="w_servidedate" value="<%=form.getW_servicedate()%>" styleId="w_servidedate" /> <a id="hlSDate">Date</a></td>
+					<td><html:text readonly="true" property="w_servicedate" value="<%=form.getW_servicedate()%>" styleId="w_servicedate" /> <a id="hlSDate">Date</a></td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Work Date:</td>
@@ -434,7 +434,7 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 	</tr>
 </table>
 		<script language='javascript'>
-		   Calendar.setup({inputField:"w_servidedate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
+		   Calendar.setup({inputField:"w_servicedate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
 			//Calendar.setup({inputField:"w_servidedate",ifFormat:"y-mm-dd",button:"hlSDate",align:"Bl",singleClick:true});
 			//Calendar.setup({inputField:"w_doi",ifFormat:"y-mm-dd",button:"hlIDate",align:"Bl",singleClick:true});
 			Calendar.setup({inputField:"w_doi",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlIDate",singleClick:true,step:1});
