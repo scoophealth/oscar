@@ -135,7 +135,7 @@ String paymentdate="" , payable="";
 		     
   <tr> 
     <td ><%=paymentdate%>  </td>
-    <td align="right"><%=moneyFormat(payable)%> </td>
+    <td align="right"><%=payable%> </td>
     <td align="right"><%=moneyFormat(amtbilled)%></td>
     <td align="right"><%=moneyFormat(amtpaid)%></td>
     <td align="right"><%=moneyFormat(balancefwd)%></td>
@@ -158,7 +158,10 @@ String paymentdate="" , payable="";
         String moneyStr = "0.00";
         try{             
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
-        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+        }catch (Exception moneyException) { 
+            moneyException.printStackTrace(); 
+            moneyStr = str; 
+        }
     return moneyStr;
     }
 %>
