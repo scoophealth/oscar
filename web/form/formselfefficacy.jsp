@@ -146,7 +146,7 @@
 <script type="text/javascript" language="Javascript">
     var choiceFormat  = null;
     var allNumericField = null;  
-    var a = new Array(1,10, 6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38);    
+    var a = new Array(1,10, 6,7,8,10,12,13,14,15,17,18,19,21,22,23,24,25,27,28,29,31,32,34,36,37,38,39,40,42,43,44,45,46,47);    
     var allMatch = new Array(a);
     var action = "/<%=project_home%>/form/formname.do";
     
@@ -163,7 +163,7 @@
     }
     
     function goToPage2(){              
-        var a = new Array(1,10, 6,7,8,9);        
+        var a = new Array(1,10, 6,7,8,10);        
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
@@ -178,7 +178,7 @@
     }
 
     function goToPage3(){ 
-        var a = new Array(1,10, 10,11,12,13);
+        var a = new Array(1,10, 12,13,14,15);
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
@@ -191,7 +191,7 @@
     }
 
     function goToPage4(){  
-        var a = new Array(1,10, 14,15,16);
+        var a = new Array(1,10, 17,18,19);
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
@@ -206,7 +206,7 @@
     }
 
     function goToPage5(){  
-        var a = new Array(1,10, 17,18,19,20,21);
+        var a = new Array(1,10, 21,22,23,24,25);
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
@@ -221,7 +221,7 @@
     }
 
     function goToPage6(){             
-        var a = new Array(1,10, 22,23,24);
+        var a = new Array(1,10, 27,28,29);
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
@@ -236,7 +236,7 @@
     }
 
     function goToPage7(){ 
-        var a = new Array(1,10, 25,26,27);        
+        var a = new Array(1,10, 31,32,34);        
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
@@ -251,7 +251,7 @@
     }
 
     function goToPage8(){      
-        var a = new Array(1,10, 28,29,30,31,32);
+        var a = new Array(1,10, 36,37,38,39,40);
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
@@ -265,6 +265,65 @@
        }
     }
 
+    function calScore(startItem, endItem, scoreItem, nbMissing){
+        var score = 0;
+        var missing = 0;
+        var nbItems = endItem - startItem + 1;
+
+        if(nbItems!=0){
+            for(var i = startItem; i<=endItem; i++){
+                if(document.forms[0].elements[i].value!="")
+                    score = eval(score) + eval(document.forms[0].elements[i].value);
+                else
+                    missing++;
+            }
+            if(missing>nbMissing)
+                document.forms[0].elements[scoreItem].value = "missing";
+            else
+                document.forms[0].elements[scoreItem].value = round_decimals(score/nbItems,2);
+        }
+    }
+    
+    function calExerScore(){ 
+        calScore("6","8","9","1");
+    }
+    
+    function calDiseaseScore(){ 
+        calScore("10","10","11","0");
+    }
+    
+    function calHelpScore(){ 
+        calScore("12","15","16","1");
+    }
+    
+    function calCommScore(){ 
+        calScore("17","19","20","1");
+    }
+    
+    function calManDiseaseScore(){ 
+        calScore("21","25","26","2");
+    }
+    
+    function calChoresScore(){ 
+        calScore("27","29","30","1");
+    }
+    
+    function calSocialScore(){ 
+        calScore("31","32","33","1");
+    }
+    
+    function calBreathScore(){
+        calScore("34","34","35","0");
+    }
+    
+    function calManSymScore(){
+        calScore("36","40","41","2");
+    }
+    
+    function calManDprScore(){
+        calScore("42","47","48","2");
+    }
+    
 </script>
 <script type="text/javascript" src="formScripts.js">          
 </script>
@@ -351,7 +410,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="ex1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("ex1", "") %>"/>
+                        <input type="text" name="ex1" size="5" onchange="javascript:calExerScore()" maxLength="2" class="textbox" value="<%= props.getProperty("ex1", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -366,7 +425,7 @@
                         </table>                     
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="ex2" size="5" maxLength="2" class="textbox"  value="<%= props.getProperty("ex2", "") %>"/>
+                        <input type="text" name="ex2" size="5" onchange="javascript:calExerScore()" maxLength="2" class="textbox"  value="<%= props.getProperty("ex2", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -381,7 +440,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="ex3" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("ex3", "") %>"/>
+                        <input type="text" name="ex3" size="5" onchange="javascript:calExerScore()" maxLength="2" class="textbox" value="<%= props.getProperty("ex3", "") %>"/>
                     </td>
                 </tr>                
                 <tr>
@@ -391,6 +450,11 @@
                     <td colspan="12" class="score" >
                     Scoring: Score is the mean of the three items. If more than one item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="exerScore" readonly="true" value="<%= props.getProperty("exerScore", "") %>"/>
                     </td>
                 </tr>
                 <tr>
@@ -443,7 +507,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="disease1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("disease1", "") %>"/>
+                        <input type="text" name="disease1" size="5" onchange="javascript:calDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("disease1", "") %>"/>
                     </td>
                 </tr>                            
                 <tr>
@@ -453,7 +517,12 @@
                     <td colspan="12" class="score" >
                     Scoring: This is a single-item scale; scores range from 1 to 10, with a higher score indicating greater self-efficacy.
                     </td>
-                </tr>                
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="diseaseScore" readonly="true" value="<%= props.getProperty("diseaseScore", "") %>"/>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="12">
                     <table height="2"><tr><td></td></tr></table>
@@ -478,7 +547,7 @@
                     <th colspan="12">Self Efficacy to Perform Self-Management Behaviours</th>
                 </tr>  
                 <tr class="subTitle">
-                    <th colspan="12">SE Obtain Help Form</th>
+                    <th colspan="12">SE Obtain Help From Communit, Family and Friends</th>
                 </tr>
                 <tr>
                     <td colspan="12">&nbsp;</td>
@@ -525,7 +594,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="help1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("help1", "") %>"/>
+                        <input type="text" name="help1" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help1", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -540,7 +609,7 @@
                         </table>                     
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="help2" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("help2", "") %>"/>
+                        <input type="text" name="help2" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help2", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -555,7 +624,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="help3" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("help3", "") %>"/>
+                        <input type="text" name="help3" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help3", "") %>"/>
                     </td>
                 </tr>  
                 <tr bgcolor="white">
@@ -571,7 +640,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="help4" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("help4", "") %>"/>
+                        <input type="text" name="help4" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help4", "") %>"/>
                     </td>
                 </tr>  
                 <tr>
@@ -581,6 +650,11 @@
                     <td colspan="12" class="score" >
                     Scoring: Score is the mean of the four items. If more than one item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="helpScore" readonly="true" value="<%= props.getProperty("helpScore", "") %>"/>
                     </td>
                 </tr>
                 <tr>
@@ -658,7 +732,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="communicateWithPhy1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy1", "") %>"/>
+                        <input type="text" name="communicateWithPhy1" size="5" onchange="javascript: calCommScore()" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy1", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -673,7 +747,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="communicateWithPhy2" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy2", "") %>"/>
+                        <input type="text" name="communicateWithPhy2" size="5" onchange="javascript: calCommScore()" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy2", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -688,7 +762,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="communicateWithPhy3" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy3", "") %>"/>
+                        <input type="text" name="communicateWithPhy3" size="5" onchange="javascript: calCommScore()" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy3", "") %>"/>
                     </td>
                 </tr> 
                 <tr>
@@ -699,7 +773,12 @@
                     Scoring: Score is the mean of the three items. If more than one item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
                     </td>
-                </tr>                
+                </tr> 
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="commScore" readonly="true" value="<%= props.getProperty("commScore", "") %>"/>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="12">
                     <table height="180"><tr><td></td></tr></table>
@@ -774,7 +853,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageDisease1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease1", "") %>"/>
+                        <input type="text" name="manageDisease1" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease1", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -789,7 +868,7 @@
                         </table>                     
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageDisease2" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease2", "") %>"/>
+                        <input type="text" name="manageDisease2" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease2", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -805,7 +884,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageDisease3" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease3", "") %>"/>
+                        <input type="text" name="manageDisease3" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease3", "") %>"/>
                     </td>
                 </tr>  
                 <tr bgcolor="white">
@@ -820,7 +899,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageDisease4" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease4", "") %>"/>
+                        <input type="text" name="manageDisease4" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease4", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -835,7 +914,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageDisease5" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease5", "") %>"/>
+                        <input type="text" name="manageDisease5" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease5", "") %>"/>
                     </td>
                 </tr> 
                 <tr>
@@ -845,6 +924,11 @@
                     <td colspan="12" class="score" >
                     Scoring: Score is the mean of the five items. If more than two item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="manDiseaseScore" readonly="true" value="<%= props.getProperty("manDiseaseScore", "") %>"/>
                     </td>
                 </tr>
                 <tr>
@@ -922,7 +1006,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="doChore1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("doChore1", "") %>"/>
+                        <input type="text" name="doChore1" size="5" onchange="javascript:calChoresScore()" maxLength="2" class="textbox" value="<%= props.getProperty("doChore1", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -937,7 +1021,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="doChore2" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("doChore2", "") %>"/>
+                        <input type="text" name="doChore2" size="5" onchange="javascript:calChoresScore()" maxLength="2" class="textbox" value="<%= props.getProperty("doChore2", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -952,7 +1036,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="doChore3" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("doChore3", "") %>"/>
+                        <input type="text" name="doChore3" size="5" onchange="javascript:calChoresScore()" maxLength="2" class="textbox" value="<%= props.getProperty("doChore3", "") %>"/>
                     </td>
                 </tr> 
                 <tr>
@@ -963,7 +1047,12 @@
                     Scoring: Score is the mean of the three items. If more than one item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
                     </td>
-                </tr>                
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="choresScore" readonly="true" value="<%= props.getProperty("choresScore", "") %>"/>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="12">
                     <table height="180"><tr><td></td></tr></table>
@@ -1036,7 +1125,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="social1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("social1", "") %>"/>
+                        <input type="text" name="social1" size="5" onchange="javascript:calSocialScore()" maxLength="2" class="textbox" value="<%= props.getProperty("social1", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -1051,7 +1140,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="social2" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("social2", "") %>"/>
+                        <input type="text" name="social2" size="5" onchange="javascript:calSocialScore()" maxLength="2" class="textbox" value="<%= props.getProperty("social2", "") %>"/>
                     </td>
                 </tr>                 
                 <tr>
@@ -1062,12 +1151,17 @@
                     Scoring: Score is the mean of the two items. If more than one item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
                     </td>
-                </tr>  
+                </tr> 
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="socialScore" readonly="true" value="<%= props.getProperty("socialScore", "") %>"/>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="12">&nbsp;</td>
                 </tr>
                 <tr class="subTitle">
-                    <th colspan="12">SE Social/Recreational Activities</th>
+                    <th colspan="12">SE Manage Shortness of Breath</th>
                 </tr>
                 <tr>
                     <td colspan="12">&nbsp;</td>
@@ -1113,7 +1207,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="shortBreath1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("shortBreath1", "") %>"/>
+                        <input type="text" name="shortBreath1" size="5" onchange="javascript:calBreathScore()" maxLength="2" class="textbox" value="<%= props.getProperty("shortBreath1", "") %>"/>
                     </td>
                 </tr> 
                 <tr>
@@ -1123,7 +1217,12 @@
                     <td colspan="12" class="score" >
                     Scoring: This is a single-item scale; scores range from 1 to 10, with a higher score indicating greater self-efficacy.
                     </td>
-                </tr>   
+                </tr>  
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="breathScore" readonly="true" value="<%= props.getProperty("breathScore", "") %>"/>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="12">
                     <table height="20"><tr><td></td></tr></table>
@@ -1196,7 +1295,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageSymptoms1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms1", "") %>"/>
+                        <input type="text" name="manageSymptoms1" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms1", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -1211,7 +1310,7 @@
                         </table>                     
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageSymptoms2" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms2", "") %>"/>
+                        <input type="text" name="manageSymptoms2" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms2", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -1226,7 +1325,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageSymptoms3" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms3", "") %>"/>
+                        <input type="text" name="manageSymptoms3" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms3", "") %>"/>
                     </td>
                 </tr>  
                 <tr bgcolor="white">
@@ -1235,13 +1334,13 @@
                             <tr>
                                 <td valign="top" width="5%">4.</td>
                                 <td valign="top" width="95%">
-                                    Keep any other symptoms or health problems you have from interfereing with the things you want to do?
+                                    Keep any other symptoms or health problems you have from interfering with the things you want to do?
                                 </td>
                             </tr>
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageSymptoms4" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms4", "") %>"/>
+                        <input type="text" name="manageSymptoms4" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms4", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -1256,7 +1355,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="manageSymptoms5" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms5", "") %>"/>
+                        <input type="text" name="manageSymptoms5" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms5", "") %>"/>
                     </td>
                 </tr> 
                 <tr>
@@ -1266,6 +1365,11 @@
                     <td colspan="12" class="score" >
                     Scoring: Score is the mean of the five items. If more than two item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="manSymScore" readonly="true" value="<%= props.getProperty("manSymScore", "") %>"/>
                     </td>
                 </tr>
                 <tr>
@@ -1343,7 +1447,7 @@
                         </table>
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="controlDepress1" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress1", "") %>"/>
+                        <input type="text" name="controlDepress1" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress1", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -1358,7 +1462,7 @@
                         </table>                     
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="controlDepress2" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress2", "") %>"/>
+                        <input type="text" name="controlDepress2" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress2", "") %>"/>
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -1373,7 +1477,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="controlDepress3" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress3", "") %>"/>
+                        <input type="text" name="controlDepress3" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress3", "") %>"/>
                     </td>
                 </tr>  
                 <tr bgcolor="white">
@@ -1388,7 +1492,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="controlDepress4" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress4", "") %>"/>
+                        <input type="text" name="controlDepress4" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress4", "") %>"/>
                     </td>
                 </tr> 
                 <tr bgcolor="white">
@@ -1403,7 +1507,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="controlDepress5" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress5", "") %>"/>
+                        <input type="text" name="controlDepress5" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress5", "") %>"/>
                     </td>
                 </tr> 
                  <tr bgcolor="white">
@@ -1418,7 +1522,7 @@
                         </table>                         
                     </td>                                     
                     <td align="center">
-                        <input type="text" name="controlDepress6" size="5" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress6", "") %>"/>
+                        <input type="text" name="controlDepress6" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress6", "") %>"/>
                     </td>
                 </tr> 
                 <tr>
@@ -1428,6 +1532,11 @@
                     <td colspan="12" class="score" >
                     Scoring: Score is the mean of the six items. If more than two item is missing, set the value of the score for this
                     scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        Score: <input type="text" name="manDprScore" readonly="true" value="<%= props.getProperty("manDprScore", "") %>"/>
                     </td>
                 </tr>
                 <tr>
