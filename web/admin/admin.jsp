@@ -11,7 +11,9 @@ String userlastname = (String) session.getAttribute("userlastname");
 
 <%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-<% String country = request.getLocale().getCountry(); %>
+<% String country = request.getLocale().getCountry(); 
+   oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
+   response.addCookie(cs.GiveMeACookie(cs.adminCookie)); %>
 
 
 
