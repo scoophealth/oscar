@@ -96,41 +96,51 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
  String proNo = "";
  ResultSet rslocal;
  rslocal = null;
-   ResultSet rs=null ;
-  rs = apptMainBean.queryResults(Integer.parseInt(request.getParameter("demographic_no")), "search_allbill_history");
+ ResultSet rs=null ;
+ rs = apptMainBean.queryResults(Integer.parseInt(request.getParameter("demographic_no")), "search_allbill_history");
 
-  boolean bodd=false;
-  int nItems=0;
-  String billType="", billCode = "";
-  if(rs==null) {
+ boolean bodd=false;
+ int nItems=0;
+ String billType="", billCode = "";
+ if(rs==null) {
     out.println("failed!!!"); 
-  } else {
+ } else {
+                                  
     while (rs.next()) {
-      bodd=bodd?false:true; //for the color of rows
-      nItems++; //to calculate if it is the end of records
+       bodd=bodd?false:true; //for the color of rows
+       nItems++; //to calculate if it is the end of records
        billCode = rs.getString("status");
-      if (billCode.compareTo("B") == 0){ billType = "Submitted MSP"; }
+       if (billCode.compareTo("B") == 0){ billType = "Submitted MSP"; }
        if (billCode.substring(0,1).compareTo("O") == 0){ billType = "Bill MSP"; }
        if (billCode.substring(0,1).compareTo("N") == 0){ billType = "Do Not Bill"; }
        if (billCode.substring(0,1).compareTo("P") == 0){ billType = "Bill Patient"; }
        if (billCode.substring(0,1).compareTo("W") == 0){ billType = "Bill WCB"; }
        if (billCode.substring(0,1).compareTo("H") == 0){ billType = "Capitated"; }
-   if (billCode.substring(0,1).compareTo("S") == 0){ billType = "Settled"; }     
-  if (billCode.substring(0,1).compareTo("D") == 0){billType = "Deleted";}
-  proNo = rs.getString("apptProvider_no")==null?"":rs.getString("apptProvider_no");
+       if (billCode.substring(0,1).compareTo("S") == 0){ billType = "Settled"; }     
+       if (billCode.substring(0,1).compareTo("D") == 0){billType = "Deleted";}
+       
+       if (billCode.substring(0,1).compareTo("R") == 0){billType = "Rejected";}
+       if (billCode.substring(0,1).compareTo("Z") == 0){billType = "Held";}
+       if (billCode.substring(0,1).compareTo("C") == 0){billType = "Data Center Changed";}
+       if (billCode.substring(0,1).compareTo("E") == 0){billType = "Paid w/ Exception";}
+       if (billCode.substring(0,1).compareTo("F") == 0){billType = "Refused";}
+       if (billCode.substring(0,1).compareTo("W") == 0){billType = "Billed";}
+       if (billCode.substring(0,1).compareTo("T") == 0){billType = "Collection";}
+       if (billCode.substring(0,1).compareTo("A") == 0){billType = "Paid Private";}
+       
+       
+       proNo = rs.getString("apptProvider_no")==null?"":rs.getString("apptProvider_no");
   
-  if (proNo.compareTo("") ==0 || proNo.compareTo("000") ==0 || proNo.compareTo("none")==0){
-  proFirst = "Not Available";
-  proLast = "";
-  }else{
-  
-  rslocal = apptMainBean.queryResults(proNo, "search_provider_all_dt");
-   while(rslocal.next()){
-   proFirst = rslocal.getString("first_name");
-   proLast = rslocal.getString("last_name") + ",";
-
-}
-}
+       if (proNo.compareTo("") ==0 || proNo.compareTo("000") ==0 || proNo.compareTo("none")==0){
+          proFirst = "Not Available";
+          proLast = "";
+       }else{  
+          rslocal = apptMainBean.queryResults(proNo, "search_provider_all_dt");
+          while(rslocal.next()){
+             proFirst = rslocal.getString("first_name");
+             proLast = rslocal.getString("last_name") + ",";
+          }
+       }
 %>
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
       <td align="center" height="25"><a href=# onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>')"><%=rs.getString("billing_no")%></a></td>
@@ -147,8 +157,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       <% } %>
 </tr>
 <% 
-    }
-  }
+    }//else
+  }//while
   apptMainBean.closePstmtConn();
   
 %> 
