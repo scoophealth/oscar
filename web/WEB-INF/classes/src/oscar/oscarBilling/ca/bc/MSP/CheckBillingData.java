@@ -212,9 +212,7 @@ public class CheckBillingData {
     public String checkReferral(String m1, String m2, String m3) {
         String ret = "C02:[P41P42|P44P46] " + m3 + " Wrong! ";
         if (m1 != null) {
-            if ((m1.equals("") && m2.equals(""))
-                    || (m1.matches("0") && m2.matches("0{5}"))
-                    || (m1.matches("[BT]") && m2.matches("\\w+"))) {
+            if ( (m1.equals("") && m2.equals("")) || (m1.matches("0") && ( m2.matches("0{5}") || m2.equals("") ) ) || (m1.matches("[BT]") && m2.matches("\\w+"))) {
                 ret = "";
             }
         }
@@ -330,10 +328,8 @@ public class CheckBillingData {
          */
 
         ret += checkSrvLocation(rs2.getString("service_location")); //P40 1 +
-        ret += checkReferral(rs2.getString("referral_flag1"), rs2
-                .getString("referral_no1"), "Referral 1"); //P41 1 + P42 5 +
-        ret += checkReferral(rs2.getString("referral_flag2"), rs2
-                .getString("referral_no2"), "Referral 2"); //P44 1 + P46 5 +
+        ret += checkReferral(rs2.getString("referral_flag1"), rs2.getString("referral_no1"), "Referral 1"); //P41 1 + P42 5 +
+        ret += checkReferral(rs2.getString("referral_flag2"), rs2.getString("referral_no2"), "Referral 2"); //P44 1 + P46 5 +
         /*
          * forwardZero(rs2.getString("time_call"),4) //P47 4 + zero(4) //P48 4 // +
          * zero(4) //P50 4 +
