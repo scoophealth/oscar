@@ -1,3 +1,26 @@
+<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<% 
+
+// Apologies for the crap code.  Definitely could do with a major rewrite...
+
+  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
+  // String curProvider_no = (String) session.getAttribute("user");
+  String curProvider_no = request.getParameter("provider_no");
+  String strLimit1="0";
+  String strLimit2="10";
+  StringBuffer bufChart = null, bufName = null, bufNo = null;
+  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+%>
+
+
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
+
 <!--  
 /*
  * 
@@ -24,23 +47,7 @@
  */
 -->
 
-<% 
 
-// Apologies for the crap code.  Definitely could do with a major rewrite...
-
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
-  // String curProvider_no = (String) session.getAttribute("user");
-  String curProvider_no = request.getParameter("provider_no");
-  String strLimit1="0";
-  String strLimit2="10";
-  StringBuffer bufChart = null, bufName = null, bufNo = null;
-  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
-  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-%>
-
-<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
 <html> 
 <head>
@@ -72,78 +79,103 @@ function checkTypeIn() {
 </SCRIPT>
 </head>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+   <table border="0" cellspacing="0" cellpadding="0" width="100%" >
 	  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT MATCHING</font></th></tr>
-</table>
+   </table>
 
-  <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
-	<form method="post" name="titlesearch" action="PatientSearch.jsp" onSubmit="return checkTypeIn();">
-        <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
-	<%--@ include file="zdemographictitlesearch.htm"--%>
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
-        </i></b></font></td>
-			
-      <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  checked name="search_mode" value="search_name">
-<bean:message key="oscarMDS.segmentDisplay.patientSearch.formName"/></font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio"  name="search_mode" value="search_phone">
-          <bean:message key="oscarMDS.segmentDisplay.patientSearch.formPhone"/></font></td> 
-        <td nowrap><font size="1" face="Verdana" color="#0000FF">
+   <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
+	   <form method="post" name="titlesearch" action="PatientSearch.jsp" onSubmit="return checkTypeIn();">
+         <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
+	      <%--@ include file="zdemographictitlesearch.htm"--%>
+      <tr valign="top">
+         <td rowspan="2" ALIGN="right" valign="middle"> 
+            <font face="Verdana" color="#0000FF"><b><i>Search</i></b></font>
+         </td>			
+         <td width="10%" nowrap>
+            <font size="1" face="Verdana" color="#0000FF"> 
+            <input type="radio"  checked name="search_mode" value="search_name">         
+            <bean:message key="oscarMDS.segmentDisplay.patientSearch.formName"/>
+            </font>
+         </td>
+        <td nowrap>
+           <font size="1" face="Verdana" color="#0000FF"> 
+           <input type="radio"  name="search_mode" value="search_phone">
+           <bean:message key="oscarMDS.segmentDisplay.patientSearch.formPhone"/>
+           </font>
+        </td> 
+        <td nowrap>
+          <font size="1" face="Verdana" color="#0000FF">
           <input type="radio"  name="search_mode" value="search_dob">
-          <bean:message key="oscarMDS.segmentDisplay.patientSearch.formDOB"/></font></td> 
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
-				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-				<INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
-        <input type="hidden" name="displaymode" value="Search " >
-        <input type="SUBMIT" name="displaymode" value="oscarMDS.segmentDisplay.patientSearch.btnSearch" size="17">
-		</tr><tr>
-			
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="search_address">
-       <bean:message key="oscarMDS.segmentDisplay.patientSearch.formAddress"/></font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_hin">
-          <bean:message key="oscarMDS.segmentDisplay.patientSearch.formHIN"/></font></td>
-        <td></td>
+          <bean:message key="oscarMDS.segmentDisplay.patientSearch.formDOB"/>
+          </font>
+        </td> 
+        <td valign="middle" rowspan="2" ALIGN="left">
+          <input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100" value="<%=request.getParameter("keyword")%>">
+			 <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
+			 <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
+			 <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
+			 <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
+          <input type="hidden" name="displaymode" value="Search " >
+          <input type="SUBMIT" name="displaymode" value="<bean:message key="oscarMDS.segmentDisplay.patientSearch.btnSearch"/>" size="17">
+        </td>
+	   </tr>
+      <tr>			
+         <td nowrap>
+            <font size="1" face="Verdana" color="#0000FF"> 
+            <input type="radio" name="search_mode" value="search_address">
+            <bean:message key="oscarMDS.segmentDisplay.patientSearch.formAddress"/>
+            </font>
+         </td>
+         <td nowrap>
+            <font size="1" face="Verdana" color="#0000FF"> 
+            <input type="radio" name="search_mode" value="search_hin">
+            <bean:message key="oscarMDS.segmentDisplay.patientSearch.formHIN"/>
+            </font>
+         </td>
+         <td>
+            &nbsp;
+         </td>
 		</tr>
-	</form>
-  </table>
+	   </form>
+   </table>
 
-<table width="95%" border="0">
-<tr>
-<td align="left"><font size="-1"><i><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgResults"/></i> : <%=request.getParameter("keyword")%></font></td>
-</tr>
-</table>
+   <table width="95%" border="0">
+      <tr>
+         <td align="left">
+            <font size="-1">
+               <i><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgResults"/></i> : <%=request.getParameter("keyword")%>
+            </font>
+         </td>
+      </tr>
+   </table>
 
 
-<script language="JavaScript">
-<!--
-var fullname="";
-function addName(lastname, firstname, chartno) {
-  fullname=lastname+","+firstname;
-  document.addform.action="<%=request.getParameter("originalpage")%>?name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false";  //+"\"" ;
-  document.addform.submit(); // 
-  //return;
-}
-//-->
-</SCRIPT>
+   <script language="JavaScript">
+        <!--
+        var fullname="";
+        function addName(lastname, firstname, chartno) {
+          fullname=lastname+","+firstname;
+          document.addform.action="<%=request.getParameter("originalpage")%>?name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false";  //+"\"" ;
+          document.addform.submit(); // 
+          //return;
+        }
+        //-->
+   </SCRIPT>
  
-<CENTER><table width="100%" border="1"  cellpadding="0" cellspacing="1" bgcolor="#ffffff"> 
-	<form method="post" name="addform" action="PatientMatch.do" >
-        <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
-<tr bgcolor="#339999">
-<TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgPatientId"/></b></TH>
-<TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgLastName"/></b></TH>
-<TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgFirstName"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgAge"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgRosterStatus"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgSex"/></B></TH>
-<TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgDOB"/></B></TH>
-<TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgDoctor"/></B></TH>
-</tr>
+   <CENTER>
+      <table width="100%" border="1"  cellpadding="0" cellspacing="1" bgcolor="#ffffff"> 
+	      <form method="post" name="addform" action="PatientMatch.do" >
+            <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
+         <tr bgcolor="#339999">
+            <TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgPatientId"/></b></TH>
+            <TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgLastName"/></b></TH>
+            <TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgFirstName"/></b></TH>
+            <TH align="center" width="5%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgAge"/></b></TH>
+            <TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgRosterStatus"/></b></TH>
+            <TH align="center" width="5%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgSex"/></B></TH>
+            <TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgDOB"/></B></TH>
+            <TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgDoctor"/></B></TH>
+         </tr>
 
 <%
   GregorianCalendar now=new GregorianCalendar();
@@ -157,8 +189,8 @@ function addName(lastname, firstname, chartno) {
   DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
   
   String keyword="";
-  if ( request.getParameter("keyword") != null ) {
-    keyword = request.getParameter("keyword").trim();
+  if ( request.getParameter("keyword") != null ) {        
+    keyword = request.getParameter("keyword").trim();    
   }
 
   String orderby="", limit="", limit1="", limit2="";
@@ -184,28 +216,32 @@ function addName(lastname, firstname, chartno) {
     }
   }
 
-  String sql = "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit;
+  String sql = "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit;  
   
-  if(request.getParameter("search_mode").equals("search_name")) {
+  if(request.getParameter("search_mode").equals("search_name")) {      
       keyword=keyword+"%";
-      if(keyword.indexOf(",")==-1)  rs = db.queryResults(sql, keyword) ; //lastname
-      else if(keyword.indexOf(",")==(keyword.length()-1))  rs = db.queryResults(sql, keyword.substring(0,(keyword.length()-1)));//lastname
-      else { //lastname,firstname
+      if(keyword.indexOf(",")==-1){         
+         rs = db.queryResults(sql, keyword) ; //lastname
+      }
+      else if(keyword.indexOf(",")==(keyword.length()-1)){         
+         rs = db.queryResults(sql, keyword.substring(0,(keyword.length()-1)));//lastname
+      }
+      else { //lastname,firstname         
     		String[] param =new String[2];
     		int index = keyword.indexOf(",");
 	  		param[0]=keyword.substring(0,index).trim()+"%";//(",");
 	  		param[1]=keyword.substring(index+1).trim()+"%";
 	  		//System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     		rs = db.queryResults(sql, param);
-   		}
-  } else if(request.getParameter("search_mode").equals("search_dob")) {
+   	}
+  } else if(request.getParameter("search_mode").equals("search_dob")) {      
     		String[] param =new String[3];
 	  		param[0]=""+MyDateFormat.getYearFromStandardDate(keyword)+"%";//(",");
 	  		param[1]=""+MyDateFormat.getMonthFromStandardDate(keyword)+"%";
 	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%";  
 	  		//System.out.println("1111111111111111111 " +param[0]+param[1]+param[2]);
     		rs = db.queryResults(sql, param);
-  } else {
+  } else {      
     keyword=keyword+"%";
     rs = db.queryResults(sql, keyword);
   }
@@ -234,16 +270,17 @@ function addName(lastname, firstname, chartno) {
      }	     
 %>
  
-<tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
-      <td><input type="submit" name="demographicNo" value="<%=rs.getString("demographic_no")%>"></td>
-      <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
-      <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
-      <td><%=age%></td>
-      <td><%=rs.getString("roster_status")%></td>
-      <td><%=rs.getString("sex")%></td>
-      <td><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
-      <td><%=providerBean.getProperty(rs.getString("provider_no"))==null?"":providerBean.getProperty(rs.getString("provider_no"))%></td>
-</tr> 
+         <tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
+            <td><input type="submit" name="demographicNo" value="<%=rs.getString("demographic_no")%>"></td>
+            <td><%=nbsp( Misc.toUpperLowerCase(rs.getString("last_name")) )%></td>
+            <td><%=nbsp( Misc.toUpperLowerCase(rs.getString("first_name")) )%></td>
+            <td><%= age %></td>
+            <td><%=nbsp( rs.getString("roster_status") )%></td>
+            <td><%=nbsp( rs.getString("sex") )%></td>
+            <td><%=nbsp( rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth") )%></td>
+            <td><%=providerBean.getProperty(rs.getString("provider_no"))==null?"&nbsp;":providerBean.getProperty(rs.getString("provider_no")) %></td>
+            
+         </tr> 
 <%
       bufName = new StringBuffer( (rs.getString("last_name")+ ","+ rs.getString("first_name")) );
       bufNo = new StringBuffer( (rs.getString("demographic_no")) );
@@ -292,3 +329,12 @@ function next() {
 <bean:message key="oscarMDS.segmentDisplay.patientSearch.msgSearchMessage"/></center>
 </body>
 </html>
+<%!
+String nbsp(String s){
+   String ret = s;
+   if (ret == null || ret.equals("")){
+       ret = "&nbsp;";
+   }
+   return ret;
+}
+%>
