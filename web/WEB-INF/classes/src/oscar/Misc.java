@@ -408,7 +408,12 @@ public String space(int i) {
     }
     
     public String moneyFormatPaddedZeroNoDecimal(String y, int x) {
-        String returnZeroValue = forwardZero(y.replaceAll("\\.",""),x);
+        String returnZeroValue = "";
+        try{
+           returnZeroValue = forwardZero(y.replaceAll("\\.",""),x);
+        }catch (Exception e2){
+           returnZeroValue = zero(x); 
+        }
         return cutFrontString(returnZeroValue,x);                
     }
     
