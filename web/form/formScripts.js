@@ -103,14 +103,15 @@
         return numCheck;
     }
 
-    function isNumeric(s){
+    function isNumeric(s){        
         if(s!=null){
             for(var i=0; i<s.length; ++i){
-                if("0123456789".indexOf(s.charAt(i))<0){
+                if("0123456789.".indexOf(s.charAt(i))<0){
                     return false;
                 }
             }
         }
+        return true;
 
     }
 
@@ -182,13 +183,16 @@
         var isValid = true;
         if (allId !=null){
             for(var i = 0; i<allId.length; i++){
-                var match = allId[i][0];            
-                for(var j = 1; j<allId[i].length; j++){
+                var lower = allId[i][0];  
+                var upper = allId[i][1]; 
+                for(var j = 2; j<allId[i].length; j++){
                     document.forms[formNb].elements[allId[i][j]].style.backgroundColor='white';
                     var s = document.forms[formNb].elements[allId[i][j]].value;
-                    if(isMatched(s,match)==false || maxLength(formNb, allId[i][j])==false){
-                        isValid = false;
-                        document.forms[formNb].elements[allId[i][j]].style.backgroundColor='red';
+                    if(s!=""){
+                        if(isNumeric(s)==false || s<lower || s>upper){
+                            isValid = false;
+                            document.forms[formNb].elements[allId[i][j]].style.backgroundColor='red';
+                        }
                     }
                 }
             }
