@@ -12,6 +12,7 @@
 <%@ page import="org.chip.ping.xml.record.impl.*"%>
 <%@ page import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
 <%@ page import="oscar.OscarPingTalk"%>
+<%@ page import="oscar.oscarDemographic.data.*"%>
 
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -30,11 +31,13 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 String actorTicket = null;
 String actor = "rene@citizenhealth.ca";
 String actorPassword = "password";
-String patientPingId = "jay10@citizenhealth.ca";
+
+DemographicData demoData = new DemographicData();
+String patientPingId = demoData.getDemographic(""+bean.getDemographicNo()).getEmail();
 OscarPingTalk ping = new OscarPingTalk();
 boolean connected = true;
 String connectErrorMsg = "";
-try{
+try{   
 actorTicket = ping.connect(actor,actorPassword);
 }catch(Exception eCon){
     connectErrorMsg = eCon.getMessage();
@@ -108,7 +111,7 @@ String level2 = CddmLevels.MEDICATIONS;
             <!----Start new rows here-->
                   <tr>
                     <td>
- 		      <div class="DivContentTitle">Send Prescriptions to PHR </div>
+ 		      <div class="DivContentTitle">Send Prescriptions to <%=patientPingId%> Personal Health Record</div>
                     </td>
 		  </tr>
                   <tr>
@@ -147,7 +150,12 @@ String level2 = CddmLevels.MEDICATIONS;
                                     DataType dataType = ping.getDataType(Prescription);
                                     CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);
 
-                                    ping.sendCddm(actorTicket, patientPingId,cddmType);
+                                    
+                                    try{                                        
+                                        ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
+                                    }catch(Exception sendCon){
+                                        connectErrorMsg = "<font style=\"font-size: 19px; color: red; font-family : tahoma, Arial,Helvetica,Sans Serif;\">Could Not Send to PHR</font>";
+                                    }
 
                       %>
                 
@@ -162,7 +170,7 @@ String level2 = CddmLevels.MEDICATIONS;
                             }                                                
                         }else{
                             out.write("none"); 
-                        }        %>
+                        }        %><%=connectErrorMsg%>
                     </td>
                   </tr>
                   
