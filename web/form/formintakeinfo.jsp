@@ -88,9 +88,16 @@
             font-weight: normal;            
         }
 
-        INPUT.checkbox{
+        .checkbox{
             height: 22px;
-            width: 22px;            
+            width: 22px;    
+            background-color: #FFFFFF;
+        }
+        
+        .checkboxError{
+            height: 22px;
+            width: 22px;     
+            background-color: red;
         }
 
         .subject {
@@ -138,7 +145,7 @@
     
     function goToPage2(){      
         var checkboxes = new Array(11,15,16,22,24,26,27,31,32,36);
-        if (oneFieldIsNumeric('23')==true && is1CheckboxChecked(0, checkboxes)==true){
+        if (oneFieldIsNumeric(0,'23')==true && is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -150,7 +157,7 @@
     function goToPage3(){      
         var checkboxes = new Array(37,45,46,53,54,56);
         var numericFields = new Array(57,58,59,60);
-        if (allAreNumeric(numericFields)==true && is1CheckboxChecked(0, checkboxes)==true){
+        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
@@ -161,7 +168,7 @@
 
     function goToPage4(){    
         var checkboxes = new Array(62,63,65,66,67,68,69,72,73,76,77,80);
-        if (oneFieldIsNumeric('64')==true && is1CheckboxChecked(0, checkboxes)==true){
+        if (oneFieldIsNumeric(0, '64')==true && is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
