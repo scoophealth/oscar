@@ -113,14 +113,12 @@
       <tr> 
         <td colspan="2"> 
           <div align="center"> 
-            <input type="hidden"  name="color_template" value="deepblue">
-            <input type="hidden"  name="preference_no" value="<%= rs.getString("preference_no")%>">
-            <input type="hidden"  name="dboperation" value="preference_update_record">
+            <input type="hidden" name="color_template" value="deepblue">
+            <input type="hidden" name="preference_no" value="<%= rs.getString("preference_no")%>">
+            <input type="hidden" name="dboperation" value="preference_update_record">
             <input type="hidden" name="displaymode" value="Preference_Update_Record">
             <input type="submit" name="subbutton" value="<bean:message key="admin.preferenceupdatepreference.btnSubmit"/>">
-            <a href='admincontrol.jsp?keyword=<%=rs.getString("preference_no")%>&displaymode=Preference_Delete&dboperation=preference_delete'> 
-            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="<bean:message key="admin.preferenceupdatepreference.altImgDelete"/>"></a> 
-            <!--input type="button" name="Button" value="Cancel" onClick="onCancel()"-->
+            <input type="button" value="<bean:message key="admin.preferenceupdatepreference.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=rs.getString("preference_no")%>&displaymode=Preference_Delete&dboperation=preference_delete'">                         
           </div>
         </td>
       </tr>

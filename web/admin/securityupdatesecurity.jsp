@@ -100,12 +100,11 @@
       </tr>
       <tr> 
         <td colspan="2" align="center"> 
-            <input type="hidden"  name="security_no" value="<%= rs.getString("security_no")%>">
-            <input type="hidden"  name="dboperation" value="security_update_record">
+            <input type="hidden" name="security_no" value="<%= rs.getString("security_no")%>">
+            <input type="hidden" name="dboperation" value="security_update_record">
             <input type="hidden" name="displaymode" value="Security_Update_Record">
             <input type="submit" name="subbutton" value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
-            <a href='admincontrol.jsp?keyword=<%=rs.getString("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'> 
-            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt='<bean:message key="admin.securityupdatesecurity.altImgDelete"/>'></a> 
+            <input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=rs.getString("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'">           
         </td>
       </tr>
       <%
