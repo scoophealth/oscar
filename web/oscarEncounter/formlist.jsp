@@ -1,3 +1,6 @@
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page language="java"%>
 <%@ page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
 <%
@@ -21,9 +24,9 @@
 	oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>Form List</title>
+<title><bean:message key="oscarEncounter.formlist.title"/></title>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <script type="text/javascript" language=javascript>
 function setfocus() {
@@ -70,14 +73,14 @@ function popupPageK(page) {
 
 <body  bgcolor="ivory" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica">FORM HISTORY</font></th></tr>
+  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="oscarEncounter.formlist.msgFormList"/></font></th></tr>
 </table>
 <center>			
 <table BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="60%" BGCOLOR="white">
   <tr BGCOLOR="<%=tableTitle%>" > 
-  <th width=30% nowrap>Form Name</th>
-  <th width=11% nowrap>Created Time</th>
-  <th width=11% nowrap>Edited Time</th>
+  <th width=30% nowrap><bean:message key="oscarEncounter.formlist.formName"/></th>
+  <th width=11% nowrap><bean:message key="oscarEncounter.formlist.formCreated"/></th>
+  <th width=11% nowrap><bean:message key="oscarEncounter.formlist.formEditedTime"/></th>
   </tr>
   
 <%
@@ -108,12 +111,12 @@ function popupPageK(page) {
 		out.println("<tr><td colspan=3  align='center'>");
 		if(nLastPage >= 0) {
 %>
-<a href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="oscarEncounter.formlist.formLastpage"/></a> |
 <%
 		}
 		if(nItems == intLimit2) {
 %>
-<a href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a></td></tr>
+<a href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="oscarEncounter.formlist.formNextPage"/></a></td></tr>
 <%
 		}else { out.println("</td></tr>"); }
 %>
@@ -125,4 +128,4 @@ function popupPageK(page) {
 </table>
 </center>
 </body>
-</html>
+</html:html>
