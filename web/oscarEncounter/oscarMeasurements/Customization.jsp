@@ -50,8 +50,7 @@ body{
 function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.oscarConS"/>", windowprops);
-  window.close();
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.oscarConS"/>", windowprops);  
 }
 </script>
 </head>
@@ -119,7 +118,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
        <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-            <a href="javascript:window.close()" class="messengerButtons"><bean:message key="global.btnCancel"/></a>
+            <a href="javascript:window.close()" class="messengerButtons"><bean:message key="global.btnClose"/></a>
             </td></tr></table>
         </td>
     </tr>
