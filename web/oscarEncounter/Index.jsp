@@ -82,9 +82,9 @@
 <script type="text/javascript" language=javascript>
     var X       = 10;
     var small   = 60;
-    var normal  = 184;
+    var normal  = 166;
     var large   = 378;
-    var full    = 650;
+    var full    = 649;
 //tilde operator function variables
     var handlePressState = 0;
     var handlePressFocus;
