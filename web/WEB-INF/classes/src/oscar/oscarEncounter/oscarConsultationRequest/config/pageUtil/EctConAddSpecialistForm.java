@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
+import java.util.ResourceBundle;
 
 public final class EctConAddSpecialistForm extends ActionForm
 {
@@ -51,12 +52,15 @@ public final class EctConAddSpecialistForm extends ActionForm
 
     public void setTransType(String str)
     {
+        ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources");
+        
         System.out.println("setter transtype = ".concat(String.valueOf(String.valueOf(str))));
         transType = str;
-        if(str.equals("Add Specialist"))
+        
+        if(str.equals(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.addOperation")))
             whichType = 1;
         else
-        if(str.equals("Update Specialist"))
+        if(str.equals(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.updateOperation")))
             whichType = 2;
     }
 
