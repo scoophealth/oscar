@@ -85,26 +85,30 @@ TD.grey
         if(x) {window.close();}
     }
 
-    function edit(nodeName)
+    function edit(nodeName, colName)
     {
-        windowprops = "height=440,width=630,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-        window.open('ScheduleEdit.jsp?node=' + nodeName,"<bean:message key="oscarEncounter.immunization.Schedule.msgRecordImm"/>",windowprops);
+        windowprops = "height=443,width=630,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+        window.open('ScheduleEdit.jsp?node=' + nodeName + '&name=' + colName,"<bean:message key="oscarEncounter.immunization.Schedule.msgRecordImm"/>",windowprops);
     }
 
     function returnEdit(nodeName, givenDate, refusedDate, lot, provider, comments)
     {
         var frm = document.forms[0];
-
+       
         var label;
-        if(givenDate != null)
+        if(givenDate != "")
         {
             label = givenDate;
         }
         else
-        {
-            if(refusedDate != null)
+        {            
+            if(refusedDate != "")
             {
-                label = "<bean:message key="oscarEncounter.immunization.Schedule.msgRefused"/>";
+                label = "<bean:message key="oscarEncounter.immunization.Schedule.msgRefused"/>"+" "+refusedDate;
+            }
+            else 
+            {   
+                label = "";
             }
         }
 
@@ -140,12 +144,12 @@ TD.grey
         {
             tbl.style.display=''; 
             //document.tblSetBar.style.display='';
-            document.getElementById("tblSetBar").style.display='';
+            // document.getElementById("tblSetBar").style.display='';
         }
         else
         {
             tbl.style.display='none';
-            document.getElementById("tblSetBar").style.display='none';
+            // document.getElementById("tblSetBar").style.display='none';
         }
     }
     
@@ -165,10 +169,10 @@ TD.grey
 
         if(b==true) {
             tbl.style.display=''; 
-            document.getElementById("tblSetBar").style.display='';
+            // document.getElementById("tblSetBar").style.display='';
         } else {
             tbl.style.display='none';
-            document.getElementById("tblSetBar").style.display='none';
+            // document.getElementById("tblSetBar").style.display='none';
         }
     }
 
@@ -246,14 +250,13 @@ TD.grey
                             <%
 
                             int colCount = -1;
+                            Element columnList = (Element)set.getElementsByTagName("columnList").item(0);
+                            NodeList columns = columnList.getElementsByTagName("column");
 
                             if(set.getAttribute("headers").equalsIgnoreCase("true"))
                             {
                                 %><tr>
                                 <td class="head">&nbsp;</td><%
-
-                                Element columnList = (Element)set.getElementsByTagName("columnList").item(0);
-                                NodeList columns = columnList.getElementsByTagName("column");
 
                                 for(int j=0; j<columns.getLength(); j++)
                                 {
@@ -298,7 +301,7 @@ TD.grey
                                             if(String.valueOf(k).equals(cell.getAttribute("index")))
                                             {
                                                 String s = "tdSet" + i + "_Row" + j + "_Col" + k;
-                                                %><td class="normal" id="<%=s%>"><%= genCell(s, cell)%></td><%
+                                                %><td class="normal" id="<%=s%>"><%= genCell(s, cell, sName+" - "+((Element)columns.item(k-1)).getAttribute("name"))%></td><%
                                                 n++;
                                             }
                                             else
@@ -322,7 +325,7 @@ TD.grey
                                         if(cell.getAttribute("index").equals(String.valueOf(k+1)))
                                         {
                                             String s = "tdSet" + i + "_Row" + j + "_Col" + (k+1);
-                                            %><td id="<%=s%>"><%= genCell(s, cell)%></td><%
+                                            %><td id="<%=s%>"><%= genCell(s, cell, "")%></td><%
                                         }
                                         else
                                         {
@@ -363,7 +366,7 @@ TD.grey
                             return s;
                         }
 
-                        String genCell(String id, Element cell)
+                        String genCell(String id, Element cell, String colName)
                         {
                             String s = "\n<span style='width:100%'>";
 
@@ -388,7 +391,7 @@ TD.grey
                             {
                                 if(refusedDate.length()>0)
                                 {
-                                    s += "Refused";
+                                    s += "Refused "+refusedDate;
                                 }
                                 else
                                 {
@@ -397,7 +400,7 @@ TD.grey
                             }
                             s += "</span>";
 
-                            s += "<span style='text-align:right;width:15px'><a href=\"javascript:edit('" + id + "');\"><img border=0 src='img/edit.gif' /></a></span>";
+                            s += "<span style='text-align:right;width:15px'><a href=\"javascript:edit('" + id + "', '"+ colName +"');\"><img border=0 src='img/edit.gif' /></a></span>";
 
                             s += "</span>\n";
 

@@ -48,6 +48,7 @@ Record Immunization
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
 String node = request.getParameter("node").toString();
+String immName = request.getParameter("name").toString();
 %>
 <script lanbuage="javascript">
     function changeStatus(status)
@@ -250,10 +251,21 @@ String node = request.getParameter("node").toString();
         window.opener.returnEdit(node, vGivenDate, vRefusedDate, vLot, vProvider, vComments);
         window.close();
     }
+
+    function popupStart(vheight,vwidth,varpage) {
+      var page = varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+      var popup=window.open(varpage, "", windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self;
+        }
+      }
+    }
 </script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="loadPage();">
+<body class="BodyStyle" vlink="#0000FF" onload="loadPage();" bottommargin="0">
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -269,7 +281,7 @@ String node = request.getParameter("node").toString();
                         <td>
                         </td>
                         <td style="text-align:right" NOWRAP>
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> |
+                                <a href="javascript:popupStart(300,400,'../Help.jsp')"  >Help</a> |
                         </td>
                     </tr>
                 </table>
@@ -281,6 +293,11 @@ String node = request.getParameter("node").toString();
             <td class="MainTableRightColumn">
                 <form name="/oscarEncounter/scheduleEdit">
                     <table>
+                        <tr>
+                            <td style="font-weight:bold">
+                                &nbsp;<%=immName%>
+                            </td>
+                        </tr>
                         <tr>
                             <td style="font-weight:bold">
                                 <input type="radio" name="chkStatus" onclick="javascript:changeStatus(0);" value="0" checked="checked"></input>
@@ -302,8 +319,7 @@ String node = request.getParameter("node").toString();
                                             <input type="hidden" id="givenDate" />
                                             <input type="text" id="givenYear" style="width:50px" maxlength=4 />
                                             <b>-</b>
-                                            <select id="givenMonth">
-                                                <option value="0"></option>
+                                            <select id="givenMonth">                                               
                                                 <option value="1">January</option>
                                                 <option value="2">February</option>
                                                 <option value="3">March</option>
@@ -331,7 +347,6 @@ String node = request.getParameter("node").toString();
                                         <td align="right">Provider: </td>
                                         <td>
                                             <select id="provider">
-                                                <option value="0"></option>
                                                 <%= providerCombo() %>
                                             </select>
                                         </td>
@@ -354,8 +369,7 @@ String node = request.getParameter("node").toString();
                                             <input type="hidden" id="refusedDate" />
                                             <input type="text" id="refusedYear" style="width:50px" maxlength=4 />
                                             <b>-</b>
-                                            <select id="refusedMonth">
-                                                <option value="0"></option>
+                                            <select id="refusedMonth">                                                
                                                 <option value="1">January</option>
                                                 <option value="2">February</option>
                                                 <option value="3">March</option>
@@ -411,14 +425,6 @@ String node = request.getParameter("node").toString();
                     return new String(sb);
                 }
                 %>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
             </td>
         </tr>
     </table>
