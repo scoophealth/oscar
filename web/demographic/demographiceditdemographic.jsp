@@ -155,6 +155,7 @@ function checkPhoneNum() {
 <%@ include file="zdemographicfulltitlesearch.jsp" %>
 
 <%
+   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);   
 	//----------------------------REFERRAL DOCTOR------------------------------
 	String rdohip="", rd="", fd="", family_doc = "";
  
@@ -210,8 +211,13 @@ function checkPhoneNum() {
     <th><a href="../eform/showmyform.jsp?demographic_no=<%=demographic_no%>">E-Form</a></th>
     <th><a href='demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10'>Appt.History</a></th>
     <th>
+     <% if (vLocale.getCountry().equals("BR")) { %>  
+      <!--a href="#" onClick="popupPage(500,600,'../billing/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing History</a-->
+      <a href='../oscar/billing/consultaFaturamentoPaciente/init.do?demographic_no=<%=rs.getString("demographic_no")%>'>Hist&oacute;rico do Faturamento</a></th>
+    <% } else  { %>  
       <!--a href="#" onClick="popupPage(500,600,'../billing/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing History</a-->
       <a href='../billing/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10'>Billing History</a></th>
+    <% } %>  
   </tr>
 </table> 
 
@@ -461,11 +467,15 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
     <th><!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
     <a href=# onClick="popupEChart(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;" title="E-Chart">
             E-Chart</a></th>
-    <th><a href=# onclick="popupPage(700, 1000, '../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=0001-01-01&start_time=0:00&bNewForm=1');return false;" title="bill a patient">Add Billing</a></th>
+    <% if (!vLocale.getCountry().equals("BR")) { %>
+    <th>
+           <a href=# onclick="popupPage(700, 1000, '../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=0001-01-01&start_time=0:00&bNewForm=1');return false;" title="bill a patient">Add Billing</a>
+    </th>
     <th><a href=# onclick="window.open('../billing/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&demo_sex=<%=URLEncoder.encode(rs.getString("sex"))%>&demo_hctype=<%=URLEncoder.encode(rs.getString("hc_type")==null?"null":rs.getString("hc_type"))%>&rd=<%=URLEncoder.encode(rd==null?"null":rd)%>&rdohip=<%=URLEncoder.encode(rdohip==null?"null":rdohip)%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=640,height=400');return false;" title='Add Flu Billing'>Flu Billing</a></th>
    
     <th><a href=# onclick="window.open('../billing/inr/addINRbilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;" title='Add INR Billing'>Add INR</a></th>
         <th><a href=# onclick="window.open('../billing/inr/reportINR.jsp?provider_no=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600');return false;" title='INR Billing'>Bill INR</a></th>
+     <% } %>  
      <th><!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')">Prescription</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx')">Prescription</a></th>
 <th>
 <a href="javascript: function myFunction() {return false; }" onclick="popupPage(100,355,'../oscarEncounter/oscarConsultationRequest/ConsultChoice.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')">Consultations</a></th>

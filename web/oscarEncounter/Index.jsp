@@ -57,6 +57,7 @@
   String patientSex = pd.getSex();
   String providerName = bean.userName;
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
 %>
 
 <html:html locale="true">
@@ -540,11 +541,17 @@ border-right: 2px solid #cfcfcf;
                     <td>
                         <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;"
                         title="<bean:message key="oscarEncounter.Index.masterFile"/>"><bean:message key="global.master"/></a><br>
-<% if(bean.status.indexOf('B')==-1) { %><a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode("MFP")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
-<% } else {%>
-    <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a>
-<% } %>
-<br>
+             <% 
+                if (vLocale.getCountry().equals("BR")) { %>  
+               <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
+             <% } else {%>  
+                   <% if(bean.status.indexOf('B')==-1) { %>
+                        <a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode("MFP")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
+                   <% } else {%>
+                        <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a>
+                   <% } %>				
+             <% } %>  
+                <br>
                         <!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">prescriptions</a><br>-->
                         <a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx');return false;"><bean:message key="global.prescriptions"/></a><br>
                         <a href=# onClick="popupOscarCon(100,355,'oscarConsultationRequest/ConsultChoice.jsp');return false;"><bean:message key="global.consultations"/></a><br>
