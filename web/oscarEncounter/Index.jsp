@@ -1006,7 +1006,7 @@ border-right: 2px solid #cfcfcf;
                                     // border-right:6px solid #ccccff;border-right:6px solid #ccccff;
                                         else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0)
                                         {%><%="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
-                                        if(!bean.oscarMsg.equals("")){%><%=bean.oscarMsg%><%}%></textarea>
+                                        if(!bean.oscarMsg.equals("")){%><%="\n\n"+bean.oscarMsg%><%}%></textarea>
                                 </td>
                             </tr>
                         </table>
