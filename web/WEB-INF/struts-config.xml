@@ -229,7 +229,13 @@
     <form-bean      name="RptDemographicReportForm"
                     type="oscar.oscarReport.pageUtil.RptDemographicReportForm"/>                    
     <form-bean      name="RptByExampleForm"
-                    type="oscar.oscarReport.pageUtil.RptByExampleForm"/>                
+                    type="oscar.oscarReport.pageUtil.RptByExampleForm"/>    
+    <form-bean      name="RptViewAllQueryByExamplesForm"
+                    type="oscar.oscarReport.pageUtil.RptViewAllQueryByExamplesForm"/>     
+    <form-bean      name="RptByExamplesFavoriteForm"
+                    type="oscar.oscarReport.pageUtil.RptByExamplesFavoriteForm"/>                    
+    <form-bean      name="RptByExamplesAllFavoritesForm"
+                    type="oscar.oscarReport.pageUtil.RptByExamplesAllFavoritesForm"/>                
     <form-bean      name="ObecForm"
                     type="oscar.oscarReport.pageUtil.ObecForm"/>
     <form-bean      name="RptSelectCDMReportForm"
@@ -1170,6 +1176,29 @@
         <forward name="success" path="/oscarReport/RptByExample.jsp"/>
    </action>
    
+   <action     path="/oscarReport/RptViewAllQueryByExamples"
+                type="oscar.oscarReport.pageUtil.RptViewAllQueryByExamplesAction"
+                name="RptViewAllQueryByExamplesForm" 
+                scope="request"
+                input="/oscarReport/RptViewAllQueryByExamples.jsp" >
+        <forward name="success" path="/oscarReport/RptViewAllQueryByExamples.jsp"/>
+   </action>
+   
+   <action     path="/oscarReport/RptByExamplesFavorite"
+                type="oscar.oscarReport.pageUtil.RptByExamplesFavoriteAction"
+                name="RptByExamplesFavoriteForm" 
+                scope="request" >
+        <forward name="edit" path="/oscarReport/RptByExamplesFavorite.jsp"/>
+        <forward name="success" path="/oscarReport/RptByExamplesAllFavorites.jsp"/>
+   </action>
+   
+   <action     path="/oscarReport/RptByExamplesAllFavorites"
+                type="oscar.oscarReport.pageUtil.RptByExamplesAllFavoritesAction"
+                name="RptByExamplesAllFavoritesForm" 
+                scope="request"
+                input="/oscarReport/RptByExamplesAllFavorites.jsp" >
+        <forward name="success" path="/oscarReport/RptByExamplesAllFavorites.jsp"/>
+   </action>
    
     <action   path="/report/DemographicReport"
               type="oscar.oscarReport.pageUtil.RptDemographicReportAction"
