@@ -4456,7 +4456,7 @@ CREATE TABLE formSelfManagement(
   cogScore varchar(4),
   mentalStressTimes  int(3),
   mentalStressToRelax varchar(255),
-  mentalStressScore int(3),
+  mentalStressScore varchar(10),
   tangibleHelpHouseN tinyint(1),
   tangibleHelpHouseY tinyint(1),
   tangibleHelpYardN tinyint(1),
