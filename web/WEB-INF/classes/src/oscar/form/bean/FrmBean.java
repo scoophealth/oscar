@@ -27,7 +27,7 @@ package oscar.form.bean;
 public class FrmBean{
 
        String formName;
-       int isHidden;
+       String isHidden;       
        
        public FrmBean(){
        }
@@ -44,12 +44,12 @@ public class FrmBean{
            this.formName = formName;
        }
        
-       public int getIsHidden(){
+       public String getIsHidden(){
            return isHidden;
        }
        
-       public void setIsHidden(int isHidden){
+       public void setIsHidden(String isHidden){
            this.isHidden = isHidden;
        }
-       
+              
 }
