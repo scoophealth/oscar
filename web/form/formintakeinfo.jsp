@@ -251,16 +251,14 @@
 
     function checkBeforeSave(){        
         if(document.getElementById('page1').style.display=='block'){
-            if(confirmRange(0, allInputs2,msg2)==true)
-                return true;
+            if(confirmRange(0, allInputs2,msg2)==true && isFormCompleted(11,36,5,1)==true)                
+                return true;            
         }
-        else if(document.getElementById('page2').style.display=='block'){
-            if(confirmRange(0, allInputs3,msg3)==true)
-                return true;
-        }
-        else if(document.getElementById('page5').style.display=='block'){
-            if(isFormCompleted(122,155,8,2)==true)
-                return true;
+        else if(document.getElementById('page2').style.display=='block' && confirmRange(0, allInputs3,msg3)==true && isFormCompleted(37,60,3,4)==true){            
+            return true;
+        }        
+        else if(document.getElementById('page5').style.display=='block' && isFormCompleted(122,155,8,2)==true){
+            return true;
         }    
         else{
             if(isFormCompleted(11,36,5,1)==true && isFormCompleted(37,60,3,4)==true && isFormCompleted(61,61,0,1)==true && isFormCompleted(62,85,8,0)==true && isFormCompleted(86,121,9,0)==true && isFormCompleted(122,155,8,2)==true)
