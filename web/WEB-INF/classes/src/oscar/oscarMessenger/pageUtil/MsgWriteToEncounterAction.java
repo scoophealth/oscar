@@ -66,7 +66,7 @@ public class MsgWriteToEncounterAction extends Action {
             forward.addParameter("providerNo", provider);
             forward.addParameter("appointmentNo", "");
             forward.addParameter("demographicNo", request.getParameter("demographic_no"));
-            forward.addParameter("curProviderNo", "");
+            forward.addParameter("curProviderNo", provider);
             forward.addParameter("reason", "oscarMessenger");
             forward.addParameter("userName", request.getSession().getAttribute("userfirstname")+" "+request.getSession().getAttribute("userlastname"));
             forward.addParameter("curDate", dateString);
