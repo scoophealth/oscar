@@ -69,6 +69,7 @@
      boolean showMSP              = request.getParameter("showMSP")==null?defaultShow:!defaultShow;  //request.getParameter("showMSP");
      boolean showWCB              = request.getParameter("showWCB")==null?defaultShow:!defaultShow;  //request.getParameter("showWCB");
      boolean showPRIV             = request.getParameter("showPRIV")==null?defaultShow:!defaultShow;  //request.getParameter("showPRIV");     
+     boolean showICBC             = request.getParameter("showICBC")==null?defaultShow:!defaultShow;  //request.getParameter("showPRIV");     
      
 %>
 
@@ -201,7 +202,10 @@ function setDemographic(demoNo){
             <td class="bCellData" ><input type="checkbox" name="showWCB" value="show"  <%=showWCB?"checked":""%> />WCB</td>
         </tr>
         <tr>
-            <td class="bCellData" ><input type="checkbox" name="showPRIV" value="show" <%=showPRIV?"checked":""%>  />Private</td>
+            <td class="bCellData" ><input type="checkbox" name="showPRIV" value="show" <%=showPRIV?"checked":""%>  />Private</td>            
+        </tr>
+        <tr>
+            <td class="bCellData" ><input type="checkbox" name="showICBC" value="show" <%=showICBC?"checked":""%>  />ICBC</td>            
         </tr>
     </table>
     </td>
@@ -326,7 +330,7 @@ if (billTypes == null){
     
     ArrayList list;
                          
-    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd,demoNo,!showWCB,!showMSP,!showPRIV);
+    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd,demoNo,!showWCB,!showMSP,!showPRIV,!showICBC);
     list = bSearch.list;
     Properties p2 = bSearch.getCurrentErrorMessages();
     Properties p = msp.currentC12Records();    
