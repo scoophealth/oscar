@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,44 +22,42 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
+<%      
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+%>
 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
-<%
 
+<%
+String typeid = request.getParameter("typeid");
+String type = request.getParameter("type");
+int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbillservice");	   
 
 String[] group = new String[4];
-String typeid = "", type="";
+int recordAffected = -100;
 
-typeid = request.getParameter("typeid");
-type = request.getParameter("type");
-  int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbillservice");	   
-%>
-
-<%
 for(int j=1;j<4;j++){
-group[j] = request.getParameter("group"+j);
+	group[j] = request.getParameter("group"+j);
 
-for (int i=0; i<20; i++){
-
-if(request.getParameter("group"+j+"_service"+i).length() !=0){
-
- String[] param =new String[7];
-	  param[0]=type;
-	  param[1]=typeid;
-	  param[2]=request.getParameter("group"+j+"_service"+i);
-	  param[3]=group[j];
-	  param[4]="Group"+j;
-	  param[5]="A";
-	  param[6]=request.getParameter("group"+j+"_service"+i+"_order");
-	 int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_ctlbillservice");
-
-
+	for (int i=0; i<20; i++){
+		if(request.getParameter("group"+j+"_service"+i).length() !=0){
+			String[] param =new String[7];
+			param[0]=type;
+			param[1]=typeid;
+			param[2]=request.getParameter("group"+j+"_service"+i);
+			param[3]=group[j];
+			param[4]="Group"+j;
+			param[5]="A";
+			param[6]=request.getParameter("group"+j+"_service"+i+"_order");
+			rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_ctlbillservice");
+		}
+	}
 }
-}}
-%>
-             
-  <% response.sendRedirect("manageBillingform.jsp"); %>
+
+if (recordAffected != -100) apptMainBean.closePstmtConn();
+
+response.sendRedirect("manageBillingform.jsp"); 
