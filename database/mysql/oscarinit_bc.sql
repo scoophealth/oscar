@@ -7,6 +7,7 @@
 --
 -- Table structure for table 'billinglocation'
 --
+alter table billing add column billingtype varchar(4) default 'MSP';
 
 CREATE TABLE billinglocation (
   billinglocation varchar(10) default '00',
@@ -1683,4 +1684,59 @@ CREATE TABLE wcb_side (
   usagenote varchar(255) default ''
 ) TYPE=MyISAM;
 
+CREATE TABLE wcb (
+  billing_no int(10) unsigned NOT NULL default '0',
+  demographic_no int(10) unsigned NOT NULL default '0',
+  provider_no int(10) unsigned NOT NULL default '0',
+  formCreated datetime NOT NULL default '0000-00-00 00:00:00',
+  formEdited datetime NOT NULL default '0000-00-00 00:00:00',
+  w_reporttype char(1) NOT NULL default '',
+  bill_amount double default '0',
+  w_fname varchar(12) default NULL,
+  w_lname varchar(18) default NULL,
+  w_mname char(1) default NULL,
+  w_gender char(1) default NULL,
+  w_dob date NOT NULL default '0000-00-00',
+  w_address varchar(25) default NULL,
+  w_city varchar(20) NOT NULL default '',
+  w_postal varchar(6) default NULL,
+  w_area char(3) default NULL,
+  w_phone varchar(7) default NULL,
+  w_phn varchar(12) NOT NULL default '',
+  w_empname varchar(25) default NULL,
+  w_emparea char(3) default NULL,
+  w_empphone varchar(7) default NULL,
+  w_wcbno varchar(25) default NULL,
+  w_opaddress varchar(25) default NULL,
+  w_opcity varchar(25) default NULL,
+  w_rphysician char(1) default NULL,
+  w_duration tinyint(1) default NULL,
+  w_problem varchar(160) default NULL,
+  w_servicedate date NOT NULL default '0000-00-00',
+  w_diagnosis varchar(120) default NULL,
+  w_icd9 varchar(5) default NULL,
+  w_bp varchar(5) default NULL,
+  w_side char(2) default NULL,
+  w_noi varchar(5) default NULL,
+  w_work char(1) default NULL,
+  w_workdate date default NULL,
+  w_clinicinfo text,
+  w_capability char(1) default NULL,
+  w_capreason varchar(240) default NULL,
+  w_estimate char(1) default NULL,
+  w_rehab char(1) default NULL,
+  w_rehabtype char(1) default NULL,
+  w_wcbadvisor char(1) default NULL,
+  w_ftreatment varchar(25) default NULL,
+  w_estimatedate date default NULL,
+  w_tofollow char(1) default NULL,
+  w_payeeno int(10) unsigned default NULL,
+  w_pracno int(10) unsigned default NULL,
+  w_doi date NOT NULL default '0000-00-00',
+  status char(1) NOT NULL default 'O',
+  w_feeitem varchar(5) NOT NULL default '00000',
+  w_extrafeeitem varchar(5) NOT NULL default '00000',
+  w_servicelocation char(1) default 'O',
+  PRIMARY KEY  (`billing_no`)
+) TYPE=MyISAM;
 
