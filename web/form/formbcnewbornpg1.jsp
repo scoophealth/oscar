@@ -54,7 +54,7 @@
         {
             //ret = confirm("Do you wish to save this form and view the print preview?");
             popupFixedPage(650,850,'../provider/notice.htm');
-            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+Part+1&__cfgfile=bcar1PrintCfgPg1&__cfgfile=bcar1PrintCfgPg2&__template=bcar1";
+            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Newborn+Record+Part+1&__cfgfile=bcnb1PrintCfgPg1&__template=bcnewborn1";
             document.forms[0].target="planner";
             document.forms[0].submit();
             document.forms[0].target="apptProviderSearch";
