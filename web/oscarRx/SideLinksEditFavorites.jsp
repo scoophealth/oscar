@@ -27,6 +27,8 @@
         <div class="PropSheetMenu">
         <p class="PropSheetLevel1CurrentItem">Special</p>
         <p class="PropSheetMenuItemLevel1">
+        <a href="SelectPharmacy.jsp">Edit Pharmacy</a></p>
+        <p class="PropSheetMenuItemLevel1">
         <a href="EditFavorites.jsp">Edit Favorites</a></p>
         <p class="PropSheetLevel1CurrentItem">Favorites</p>
         <p class="PropSheetMenuItemLevel1">
