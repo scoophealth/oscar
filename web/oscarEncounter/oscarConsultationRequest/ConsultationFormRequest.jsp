@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -33,7 +33,7 @@
     if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
+    response.setDateHeader ("Expires", 0); //prevents caching at the proxy
 %>
 
 <html:html locale="true">
@@ -48,7 +48,7 @@ oscar.oscarDemographic.data.DemographicData.Demographic demographic = null;
 
 if (demo != null ){
     demoData = new oscar.oscarDemographic.data.DemographicData();
-    demographic = demoData.getDemographic(demo);    
+    demographic = demoData.getDemographic(demo);
 }
 
 else if(requestId==null)
@@ -66,9 +66,7 @@ String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
 String formattedDate = year+"/"+mon+"/"+day;
 
 OscarProperties props = OscarProperties.getInstance();
-%>
-
-<head>
+%><head>
 <title>
 <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title"/>
 </title>
@@ -124,6 +122,8 @@ text-align: right;
 </style>
 </head>
 
+
+
 <link type="text/javascript" src="../consult.js"/>
 
 <SCRIPT LANGUAGE="JavaScript">
@@ -154,6 +154,26 @@ function K( serviceNumber, service ){
 }
 //-------------------------------------------------------------------
 
+//-----------------disableDateFields() disables date fields if "Patient Will Book" selected
+function disableDateFields(){
+	if(document.forms[0].patientWillBook.checked){
+		document.forms[0].appointmentYear.disabled = true;
+		document.forms[0].appointmentMonth.disabled = true;
+		document.forms[0].appointmentDay.disabled = true;
+		document.forms[0].appointmentHour.disabled = true;
+		document.forms[0].appointmentMinute.disabled = true;
+		document.forms[0].appointmentPm.disabled = true;
+	}
+	else{
+		document.forms[0].appointmentYear.disabled = false;
+		document.forms[0].appointmentMonth.disabled = false;
+		document.forms[0].appointmentDay.disabled = false;
+		document.forms[0].appointmentHour.disabled = false;
+		document.forms[0].appointmentMinute.disabled = false;
+		document.forms[0].appointmentPm.disabled = false;
+	}
+}
+//------------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////
 // create car model objects and fill arrays
 //=======
@@ -363,26 +383,26 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 
-function checkForm(submissionVal,formName){  
+function checkForm(submissionVal,formName){
 
    var msg = "<bean:message key="Errors.service.noServiceSelected"/>";
    msg  = msg.replace('<li>','');
-   msg  = msg.replace('</li>','');   
+   msg  = msg.replace('</li>','');
   if (document.EctConsultationFormRequestForm.service.options.selectedIndex == 0){
      alert(msg);
      document.EctConsultationFormRequestForm.service.focus();
      return false;
   }
-  document.forms[formName].submission.value=submissionVal; 
+  document.forms[formName].submission.value=submissionVal;
   document.forms[formName].submit();
   return true;
 }
 </script>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
+<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();disableDateFields()">
 <html:errors/>
 
-<html:form action="/oscarEncounter/RequestConsultation" onsubmit="alert('HTHT'); return false;" >
+<html:form action="/oscarEncounter/RequestConsultation" onsubmit="alert('HTHT'); return false;">
         <input type="hidden" name="providerNo" value="<%=providerNo%>">
         <input type="hidden" name="demographicNo" value="<%=demo%>">
         <input type="hidden" name="requestId" value="<%=requestId%>">
@@ -410,19 +430,20 @@ function checkForm(submissionVal,formName){
                 thisForm.setConcurrentProblems(consultUtil.concurrentProblems);
                 thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
                 thisForm.setUrgency(consultUtil.urgency);
+                thisForm.setPatientWillBook(consultUtil.pwb);
 
                 // System.out.println("this is from in the form setter "+ consultUtil.patientName);
 
 
         }else if(request.getAttribute("validateError") == null){
-            //  new request              
+            //  new request
                 thisForm.setAllergies(demographic.RxInfo.getAllergies());
   		thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
                 thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
         	thisForm.setAppointmentYear(year);
-                                   
+
 	}
         %>
 
@@ -437,7 +458,7 @@ function checkForm(submissionVal,formName){
                     <tr>
                         <td class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
                             <%=consultUtil.patientName%> <%=consultUtil.patientSex%> <%=consultUtil.patientAge%>
-                        </td>                                               
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -508,7 +529,7 @@ function checkForm(submissionVal,formName){
                 </tr>
             </table>
             </td>
-            <td class="MainTableRightColumn">       
+            <td class="MainTableRightColumn">
      <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%" border=1>
 
             <!----Start new rows here-->
@@ -563,7 +584,7 @@ function checkForm(submissionVal,formName){
                 <td align="right" class="tite2">
                     <html:select property="urgency">
                          <html:option value="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent"/></html:option>
-                         <html:option value="1"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent"/></html:option>                         
+                         <html:option value="1"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent"/></html:option>
                          <html:option value="3"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn"/></html:option>
                     </html:select>
                 </td>
@@ -584,6 +605,7 @@ function checkForm(submissionVal,formName){
                     <input type="text" name="fax" class="righty"/>
                 </td>
             </tr>
+
             <tr>
                 <td class="tite4" >
                     <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAddr"/>:
@@ -592,10 +614,17 @@ function checkForm(submissionVal,formName){
                     <textarea name="address" cols=20></textarea>
                 </td>
             </tr>
+			 <tr>
+              <td class="tite4" >Patient Will Book: </td>
+              <td align="right" class="tite3">
+                <html:checkbox property="patientWillBook" value="1" onclick="disableDateFields()" >
+                </html:checkbox>
+              </td>
+            </tr>
             <tr>
                 <td class="tite4">
               <a href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate"/>:</a>
-   
+
                 </td>
                 <td align="right" class="tite3">
                     <table bgcolor="white">
@@ -728,11 +757,11 @@ function checkForm(submissionVal,formName){
                 </td>
             </tr>
             <tr>
-                <td class="tite4">
-                &nbsp;
+                <td class="tite4">&nbsp;
+
                 </td>
-                <td class="tite4">
-                &nbsp;
+                <td class="tite4">&nbsp;
+
                 </td>
             </tr>
             <tr>
@@ -756,7 +785,7 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2>
-                &nbsp;
+
             <td>
        </tr>
        <tr>
@@ -776,7 +805,7 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2>
-                <html:textarea cols="90" rows="3" property="clinicalInformation"></html:textarea>
+                <html:textarea cols="90" rows="10" property="clinicalInformation"></html:textarea>
             </td>
        </tr>
        <tr>
@@ -820,7 +849,7 @@ function checkForm(submissionVal,formName){
             </td>
        </tr>
        <tr>
-            <td colspan=2>            
+            <td colspan=2>
 	        <input type="hidden" name="submission" value="">
                 <%if (request.getAttribute("id") != null){ %>
       		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');"/>
