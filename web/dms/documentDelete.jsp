@@ -1,3 +1,17 @@
+<%
+  if(session.getValue("user") == null) 
+     response.sendRedirect("../logout.htm");
+  String curUser_no,userfirstname,userlastname;
+  
+  curUser_no = (String) session.getAttribute("user");
+  userfirstname = (String) session.getAttribute("userfirstname");
+  userlastname = (String) session.getAttribute("userlastname");
+  
+  GregorianCalendar now=new GregorianCalendar();
+  int curYear = now.get(Calendar.YEAR);
+  int curMonth = (now.get(Calendar.MONTH)+1);
+  int curDay = now.get(Calendar.DAY_OF_MONTH);
+%> 
 <!--  
 /*
  * 
@@ -25,22 +39,12 @@
 -->
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-
-  <%
-  if(session.getValue("user") == null) 
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-//  mygroupno = (String) session.getAttribute("groupno");  
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
-
-%> 
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %> 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
+
 <html:html locale="true">
 <head>
 <script LANGUAGE="JavaScript">
@@ -57,52 +61,41 @@
 </head>
 
 <body   background="../images/gray_bg.jpg" bgproperties="fixed">
-<center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            <bean:message key="dms.documentDelete.msgDeleteDoc"/></font></th>
-      </tr>
-    </table>
-<%
-   GregorianCalendar now=new GregorianCalendar();
-     int curYear = now.get(Calendar.YEAR);
-     int curMonth = (now.get(Calendar.MONTH)+1);
-     int curDay = now.get(Calendar.DAY_OF_MONTH);
-     
-     String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
+   <center>
+      <table border="0" cellspacing="0" cellpadding="0" width="90%" >
+         <tr bgcolor="#486ebd"> 
+            <th align="CENTER">
+               <font face="Helvetica" color="#FFFFFF">
+                  <bean:message key="dms.documentDelete.msgDeleteDoc"/>
+               </font>
+            </th>      
+         </tr>    
+      </table>
+      <%        
+      String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
 
-
-  int rowsAffected = 0;
-  
-   
-  
-    String[] param =new String[2];
-	  param[0]=nowDate;
-	 param[1]=request.getParameter("document_no");
+      int rowsAffected = 0;
+      String[] param =new String[2];
+               param[0]=nowDate;
+               param[1]=request.getParameter("document_no");
 	 
-    rowsAffected = apptMainBean.queryExecuteUpdate(param, "delete_document");
+      rowsAffected = apptMainBean.queryExecuteUpdate(param, "delete_document");
 
-  if (rowsAffected ==1) {
-%>
-  <p><h1><bean:message key="dms.documentDelete.msgSuccess"/></h1></p>
-<script LANGUAGE="JavaScript">
-      close();
-      opener.refresh();
-</script>
-<%  
-  } else {
-%>
-  <p><h1><bean:message key="dms.documentDelete.msgFailed"/></h1></p>
-<%  
-  }
-  apptMainBean.closePstmtConn();
-%>
-  <p></p>
-  <hr width="90%"></hr>
-  <form>
-    <input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
-  </form>
-</center>
+      if (rowsAffected ==1) { %>
+      <p><h1><bean:message key="dms.documentDelete.msgSuccess"/></h1></p>
+      <script LANGUAGE="JavaScript">         
+         self.close();
+         self.opener.refresh();      
+      </script>
+    <%} else { %>
+      <p><h1><bean:message key="dms.documentDelete.msgFailed"/></h1></p>
+    <%}
+      apptMainBean.closePstmtConn(); %>
+      <p></p>
+      <hr width="90%"></hr>    
+      <form>
+         <input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
+      </form>
+    </center>
 </body>
 </html:html>
