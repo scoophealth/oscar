@@ -38,7 +38,7 @@ CREATE TABLE billingmaster (
   anatomical_area char(2) default NULL,
   after_hour char(1) default '0',
   new_program char(2) default '00',
-  billing_code varchar(5) default '00000',
+  billing_code varchar(10) default '00000',
   bill_amount varchar(7) default '0000000',
   payment_mode char(1) default '0',
   service_date varchar(8) default '00000000',
