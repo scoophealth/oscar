@@ -15,6 +15,10 @@
 // * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
 // * 
 // * <OSCAR TEAM>
+// *
+// * Date         Implemented By  Company                 Comments
+// * 29-09-2004   Ivy Chan        iConcept Technologies   initial version
+// *
 // * This software was written for the 
 // * Department of Family Medicine 
 // * McMaster Unviersity 
