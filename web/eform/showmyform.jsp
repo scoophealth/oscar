@@ -18,6 +18,9 @@
 
   ResultSet rs = myFormBean.queryResults(demographic_no, "search_eformdatadefault");
 %>
+<%
+	String country = request.getLocale().getCountry();
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <html:html locale="true">
@@ -44,7 +47,11 @@ function newWindow(file,window) {
 
 <table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="<%=weakColor%>">
   <tr><td align='right'><a href="myform.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="eform.showmyform.btnAddEForm"/></a>
-  | <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a></td>
+<%  if (country.equals("BR")) { %>
+  | <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a></td>
+<%}else{%>
+	<a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a></td>
+<%}%>
   </tr>
 </table> 
 
