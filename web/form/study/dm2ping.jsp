@@ -49,7 +49,7 @@ String owner = actor;
 String originAgent = actor;
 String author = actor;
 String level1 = CddmLevels.CUMULATIVE;
-String level2 = CddmLevels.HEALTHMAINTENANCE;
+String level2 = CddmLevels.HEALTH_MAINTENANCE;
 
 
 if(connected){
@@ -130,6 +130,8 @@ if(connected){
 	DMRecord.setAlbuminuria(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[9]), ""));
 	DMRecord.setFootCheck(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[10]), ""));
 	DMRecord.setEyeCheck(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[11]), ""));
+        DMRecord.setGlucose("");
+        DMRecord.setImmunization("");
 
 	DataType dataType = ping.getDataType(DMRecord);
 	CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);
