@@ -27,7 +27,7 @@
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -80,7 +80,7 @@ while(rslocal.next()){
 		billinggroup_no = "0000";
 	} 
 
-	oscar.oscarBilling.OHIP.ExtractBean extract = new oscar.oscarBilling.OHIP.ExtractBean();
+	oscar.oscarBilling.ca.on.OHIP.ExtractBean extract = new oscar.oscarBilling.ca.on.OHIP.ExtractBean();
 	//extract.setOscarHome(oscar_home);
 	extract.seteFlag("0");
 	extract.setDateRange(dateRange);
