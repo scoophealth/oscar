@@ -67,7 +67,10 @@
 <head> 
 <html:base/>
 <title>Billing Report</title>
-
+<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" /> 
+<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
+<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
 <style type="text/css">
 	<!--
 	BODY                  {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
@@ -194,16 +197,16 @@ function refresh() {
           <font color="#333333">Service Date-Range</font>            
           &nbsp;&nbsp;
           <font size="1" face="Arial, Helvetica, sans-serif">
-          <a href="javascript: function myFunction() {return false; }" onClick="openBrWindow('billingCalendarPopup.jsp?type=&returnItem=xml_vdate&returnForm=serviceform&year=<%=curYear%>&month=<%=curMonth%>','','width=300,height=300')">Begin:</a>
+          <a href="javascript: function myFunction() {return false; }" id="hlSDate">Begin:</a>
           </font> 
-          <input type="text" name="xml_vdate" value="<%=xml_vdate%>">          
+          <input type="text" name="xml_vdate" id="xml_vdate" value="<%=xml_vdate%>">          
         
        
           <font size="1" face="Arial, Helvetica, sans-serif">
-          <a href="javascript: function myFunction() {return false; }" onClick="openBrWindow('billingCalendarPopup.jsp?type=&returnItem=xml_appointment_date&returnForm=serviceform&year=<%=curYear%>&month=<%=curMonth%>','','width=300,height=300')">End:</a>
+          <a href="javascript: function myFunction() {return false; }" id="hlADate" >End:</a>
           </font> 
-          <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">        
-        </div>
+          <input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=xml_appointment_date%>">        
+        </div>                        
       </td>
       <td class="bCellData"> 
         <div align="right"><input type='button' name='print' value='Print' onClick='window.print()'>                      
@@ -338,6 +341,10 @@ if (billTypes == null){
         <td align="center" class="bCellData" >&nbsp;</td>
     </tr>
 </table>
+   <script language='javascript'>
+       Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});          
+       Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});                      
+   </script>
 </body>
 </html>
 <%!
