@@ -46,6 +46,7 @@ public class Survey {
    String surveyTitle;
    String surveyQuestion;
    String surveyId;
+   String patientCriteria = null;
    int randomness;
    int period;// num days
    ArrayList providersParticipating = null;
@@ -62,6 +63,14 @@ public class Survey {
    /** Creates a new instance of Survey */
    public Survey() {
       initRandom();
+   }
+   
+   private boolean hasPatientCriteria(){
+      boolean hasPatientCriteria = true;
+      if ( patientCriteria == null){
+         hasPatientCriteria = false;
+      }
+      return hasPatientCriteria;
    }
    
    private void initRandom(){
@@ -93,8 +102,38 @@ public class Survey {
    }
    
    boolean doesPatientMeetCriteria(String demographic_no){
-      return true; //TODO
+      boolean doespatientmeetcriteria = true;
+      if (hasPatientCriteria()){
+          System.out.println("Survey "+surveyTitle+" has patientCriteria");
+          doespatientmeetcriteria = isDemographicSelected(demographic_no,patientCriteria);
+      }
+      System.out.println("Does patient Meet Criteria "+doespatientmeetcriteria);
+      return doespatientmeetcriteria; //TODO
    }
+   
+   public boolean isDemographicSelected(String demographicNo,String queryString){
+       boolean isdemographicSelected = true;
+       int num = 0;
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT count(demographic_no) as demoCount FROM demographic WHERE demographic_no = '" + demographicNo +"' and "+queryString;            
+            rs = db.GetSQL(sql);            
+            if (rs.next()) {
+               num = rs.getInt("demoCount");
+            }
+            System.out.println(" num of demos that match criteria "+num);
+            if (num == 0){
+               isdemographicSelected = false;
+            }            
+            rs.close();
+            db.CloseConn();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+       return isdemographicSelected;
+    }
    
    boolean isPatientSelected(String demograpic_no){
       return true; //TODO
@@ -507,7 +546,21 @@ public class Survey {
       return list;
    }
    
+   /**
+    * Getter for property patientCriteria.
+    * @return Value of property patientCriteria.
+    */
+   public java.lang.String getPatientCriteria() {
+      return patientCriteria;
+   }   
    
+   /**
+    * Setter for property patientCriteria.
+    * @param patientCriteria New value of property patientCriteria.
+    */
+   public void setPatientCriteria(java.lang.String patientCriteria) {
+      this.patientCriteria = patientCriteria;
+   }   
    
    class Answer {
       public String answerString = "";
