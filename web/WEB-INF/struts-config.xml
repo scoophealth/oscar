@@ -20,6 +20,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
  * 
  * <OSCAR TEAM>
+ *
+ * Date         Implemented By  Company                 Comments
+ * 29-09-2004   Ivy Chan        iConcept Technologies   added actions and forms for waiting list
  * 
  * This software was written for the 
  * Department of Family Medicine 
@@ -345,9 +348,14 @@
 <!-- OscarBilling ON start-->
     <form-bean      name="BillingDocumentErrorReportUploadForm"
                     type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadForm"/>    
-
-    </form-beans>
 <!-- OscarBilling ON stop -->    
+                    
+<!-- OscarWaitingList start-->
+    <form-bean      name="WLWaitingListForm"
+                    type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm"/>       
+<!-- OscarWaitingList stop-->
+    </form-beans>   
+    
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
@@ -1677,6 +1685,25 @@
     
     <!-- oscarBilling ON end -->
 
+    <!-- oscarWaitingList -->
+    <action path="/oscarWaitingList/SetupDisplayPatientWaitingList"
+            type="oscar.oscarWaitingList.pageUtil.WLSetupDisplayPatientWaitingListAction"
+            scope="request">    
+            <forward name="continue" path="/oscarWaitingList/DisplayPatientWaitingList.jsp"/>
+    </action>
+    <action path="/oscarWaitingList/SetupDisplayWaitingList"
+            type="oscar.oscarWaitingList.pageUtil.WLSetupDisplayWaitingListAction"
+            scope="request">    
+            <forward name="continue" path="/oscarWaitingList/DisplayWaitingList.jsp"/>
+    </action>
+    <action     path="/oscarWaitingList/WLWaitingList"
+                type="oscar.pageUtil.WLWaitingListAction"  
+                name="WLWaitingListForm"              
+                scope="request"
+                input="/oscarWaitingList/WLDisplayPatientWaitingList.jsp">                
+       <forward name="success" path="/oscarWaitingList/WLDisplayPatientWaitingList.jsp"/>
+    </action>       
+    <!-- oscarWaitingList end -->
         
   </action-mappings>
 
