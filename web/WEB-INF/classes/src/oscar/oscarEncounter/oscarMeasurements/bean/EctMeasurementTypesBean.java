@@ -38,7 +38,13 @@ public class EctMeasurementTypesBean{
        String typeDesc;
        String measuringInstrc;
        String validation;
-       
+       String lastProviderFirstName = null;
+       String lastProviderLastName = null;  
+       String lastData = null;       
+       String lastMInstrc = null;    
+       String lastComments = null;   
+       String lastDateObserved =null;
+       String lastDateEntered = null;
        
        public EctMeasurementTypesBean(int id, String type, String typeDisplayName, String typeDesc, String measuringInstrc, String validation){
            this.id = id;
@@ -49,6 +55,29 @@ public class EctMeasurementTypesBean{
            this.validation = validation;
        }
 
+       public EctMeasurementTypesBean( int id, String type, String typeDisplayName, String typeDesc, String measuringInstrc, 
+                                       String validation, String lastProviderFirstName,
+                                       String lastProviderLastName,  
+                                       String lastData,       
+                                       String lastMInstrc,    
+                                       String lastComments,   
+                                       String lastDateObserved,
+                                       String lastDateEntered){
+           this.id = id;
+           this.type = type;
+           this.typeDisplayName = typeDisplayName;
+           this.typeDesc = typeDesc;
+           this.measuringInstrc = measuringInstrc;
+           this.validation = validation;
+           this.lastProviderFirstName = lastProviderFirstName;
+           this.lastProviderLastName = lastProviderLastName;
+           this.lastData = lastData;
+           this.lastMInstrc = lastMInstrc;
+           this.lastComments = lastComments;
+           this.lastDateObserved = lastDateObserved;
+           this.lastDateEntered = lastDateEntered;       
+       }
+       
        public int getId(){
            return id;
        }
@@ -71,5 +100,32 @@ public class EctMeasurementTypesBean{
            return validation;
        }
        
+       public String getLastProviderFirstName(){
+           return lastProviderFirstName;
+       }
+       
+       public String getLastProviderLastName(){
+           return lastProviderLastName;  
+       }
+       
+       public String getLastData(){
+           return lastData;       
+       }
+       
+       public String getLastMInstrc(){
+           return lastMInstrc;    
+       }
+       
+       public String getLastComments(){
+           return lastComments;   
+       }
+       
+       public String getLastDateObserved(){
+           return lastDateObserved;
+       }
+       
+       public String getLastDateEntered(){
+           return lastDateEntered.substring(0,10);
+       }
        
 }
