@@ -3950,7 +3950,7 @@ CREATE TABLE serviceSpecialists (
 
 CREATE TABLE specialistsJavascript (
   setId char(1) default NULL,
-  javascriptString text
+  javascriptString mediumtext
 ) TYPE=MyISAM;
 
 --
