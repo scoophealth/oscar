@@ -45,7 +45,7 @@ if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDat
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
 String [][] dbQueries=new String[][] { 
-{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_gravida, pg1_term, c_phone, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, 
+{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_gravida, pg1_term, c_phone, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? group by demographic_no order by c_EDD desc limit ? offset ?"  }, 
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
 };
 reportMainBean.doConfigure(dbParams,dbQueries);
