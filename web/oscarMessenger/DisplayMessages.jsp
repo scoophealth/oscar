@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java" %>
 
@@ -242,17 +242,17 @@ function BackToOscar()
                                     case 0:
 //                                        theMessages =  DisplayMessagesBeanId.getMessageid();
                                         theMessages2 = DisplayMessagesBeanId.estInbox();
-                                        System.out.println("normal messages");
+                                        // System.out.println("normal messages");
                                     break;
                                     case 1:
   //                                      theMessages  = DisplayMessagesBeanId.getSentMessageid();
                                         theMessages2 = DisplayMessagesBeanId.estSentItemsInbox();
-                                        System.out.println("Sent messages");
+                                        // System.out.println("Sent messages");
                                     break;
                                     case 2:
     ///                                    theMessages  = DisplayMessagesBeanId.getDelMessageid();
                                         theMessages2 = DisplayMessagesBeanId.estDeletedInbox();
-                                        System.out.println("deleted messages");
+                                        // System.out.println("deleted messages");
                                     break;
                                 }   //messageid
                                 %>

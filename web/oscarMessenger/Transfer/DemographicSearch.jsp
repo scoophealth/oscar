@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 
 <%@ page language="java"
@@ -123,7 +123,7 @@ function conf()
                             <html:form action="/oscarMessenger/SearchDemographic">
                                 <%
                                 aId = (String) request.getAttribute("IDenc");
-                                System.out.println("aId ="+aId);
+                                // System.out.println("aId ="+aId);
                                 oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
                                 bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
                                 aId = bean.getMessageId();

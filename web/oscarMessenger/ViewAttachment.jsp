@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java" %>
 <%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, oscar.util.*" %>
@@ -226,11 +226,11 @@
 <%
     Document xmlDoc = null;
     String attch = (String) request.getAttribute("Attachment");
-    System.out.println("attach val = "+attch );
+    // System.out.println("attach val = "+attch );
     xmlDoc = MsgCommxml.parseXML(attch);
 
     Element root = xmlDoc.getDocumentElement();
-    System.out.println(MsgCommxml.toXML(root));
+    // System.out.println(MsgCommxml.toXML(root));
 
 %>
 <%!

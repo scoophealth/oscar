@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -485,7 +485,7 @@ function BackToOscar()
                                                                                                 for (int g = 0; g < listy.size(); g++){
                                                                                                     oscar.oscarMessenger.data.MsgProviderData pData;
                                                                                                     pData = (oscar.oscarMessenger.data.MsgProviderData) listy.get(g);
-                                                                                                    System.out.println(g+": pro = "+pData.providerNo+" remo ="+pData.locationId);
+                                                                                                    // System.out.println(g+": pro = "+pData.providerNo+" remo ="+pData.locationId);
                                                                                                 }
                                                                                             }else{
                                                                                                 listy = new java.util.ArrayList();
@@ -578,7 +578,7 @@ function BackToOscar()
       depth++;
 
       Element element = (Element) node;
-      System.out.println("desc = "+element.getAttribute("desc")+"<br>");
+      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){
@@ -643,7 +643,10 @@ function BackToOscar()
             }
          }
 
-       }catch(Exception e){System.out.println("didn't work");}
+       }catch(Exception e){
+           System.out.println("Exception in CreateMessage.jsp.displayNodes():");
+           e.printStackTrace(System.out);
+       }
    }//display nodes
     
 %>

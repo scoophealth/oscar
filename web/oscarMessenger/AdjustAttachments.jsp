@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java"
     contentType='text/xml'
@@ -49,13 +49,13 @@ oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUt
     while(names.hasMoreElements())
     {
         String name = (String)names.nextElement();
-        System.out.println("name = "+name);
+        // System.out.println("name = "+name);
         if(name.startsWith("item"))
         {
             if(request.getParameter(name).equalsIgnoreCase("on"))
             {
                 checks += name.substring(4) + ",";
-                System.out.println("checks "+checks);
+                // System.out.println("checks "+checks);
             }
         }
     }
@@ -75,14 +75,14 @@ oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUt
 //    bean.setUserName("David");
      //request.getSession().setAttribute("SessionBean", bean);
      if (bean != null){
-        System.out.println("\nSet in the bean\n");
+        // System.out.println("\nSet in the bean\n");
         bean.setAttachment(sXML);
         bean.setMessageId(idEnc);
         request.setAttribute("XMLattachment",MsgCommxml.encode64(sXML));
         request.setAttribute("IDenc",idEnc);
 
 
-        System.out.println("ID idEnc "+idEnc);
+        // System.out.println("ID idEnc "+idEnc);
      }
      response.sendRedirect("Transfer/DemographicSearch.jsp");
 %>

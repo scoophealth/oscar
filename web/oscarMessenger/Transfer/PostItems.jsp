@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java"
     contentType='text/xml'
@@ -36,13 +36,13 @@
     while(names.hasMoreElements())
     {
         String name = (String)names.nextElement();
-        System.out.println("name = "+name);
+        // System.out.println("name = "+name);
         if(name.startsWith("item"))
         {
             if(request.getParameter(name).equalsIgnoreCase("on"))
             {
                 checks += name.substring(4) + ",";
-                System.out.println("checks "+checks);
+                // System.out.println("checks "+checks);
             }
         }
     }
@@ -51,7 +51,7 @@
     String xmlDoc = oscar.oscarMessenger.docxfer.util.MsgCommxml.decode64(request.getParameter("xmlDoc"));
     java.util.ArrayList aList = new java.util.ArrayList();
     String sXML = MsgCommxml.toXML(new MsgSendDocument().parseChecks2(xmlDoc, checks, aList));
-System.out.println(sXML);
+    // System.out.println(sXML);
 
     oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
     bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
