@@ -89,7 +89,7 @@ public  class MsgRemoteMessageData extends Thread{
                   theAttach = (rs_message.getString("attachment"));
                   //theaction = (rs_message.getString("actionstatus"));
                }
-               System.out.println("THE ATTACHMENT IS >"+theAttach+"<");
+               // System.out.println("THE ATTACHMENT IS >"+theAttach+"<");
 
                if (theAttach != null && !theAttach.equals("null")){
                int getit = theAttach.indexOf('\n');
@@ -99,7 +99,7 @@ public  class MsgRemoteMessageData extends Thread{
                     }
                }
 
-               System.out.println("THE ATTACHMENT NOW IS >"+theAttach+"<");
+               // System.out.println("THE ATTACHMENT NOW IS >"+theAttach+"<");
 
                //System.err.println("the doc = "+oscar.oscarMessenger.util.Msgxml.toXML(oscar.oscarMessenger.util.Msgxml.parseXML(theAttach)));
 
@@ -109,7 +109,7 @@ public  class MsgRemoteMessageData extends Thread{
                   providerNo.add(rs_whotoo.getString("provider_no"));
                   locationID.add(rs_whotoo.getString("remoteLocation"));
                }
-               System.out.println(" how did i doo "+providerNo.size()+"\n");
+               // System.out.println(" how did i doo "+providerNo.size()+"\n");
 
                for ( int i = 0; i < providerNo.size(); i++){
 
@@ -145,12 +145,12 @@ public  class MsgRemoteMessageData extends Thread{
                fileWriter.write(XMLstring.toString());
                fileWriter.close();
                }
-               catch(java.io.IOException io){ System.out.println(io.getMessage()); }
+               catch(java.io.IOException io){ io.printStackTrace(System.out); }
 
                rs_message.close();
                rs_whotoo.close();
                db.CloseConn();
-            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
             return XMLstring.toString();
          }
@@ -201,6 +201,6 @@ public  class MsgRemoteMessageData extends Thread{
 
         String st = null;
         MsgMessageData messageData = new MsgMessageData();
-        messageData.sendMessage2(stringBuffer.toString(),"Transmission Failed :"+subject,"Mailer Deamon", sentby,"",aList,st);
+        messageData.sendMessage2(stringBuffer.toString(),"Transmission Failed :"+subject,"Mailer Daemon", sentby,"",aList,st);
         }
 }

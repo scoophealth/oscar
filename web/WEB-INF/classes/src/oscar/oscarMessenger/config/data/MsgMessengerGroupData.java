@@ -57,7 +57,7 @@ public class MsgMessengerGroupData {
                  }
               rs.close();
               db.CloseConn();
-         }catch (Exception e){ System.out.println(e.getMessage()); }
+         }catch (Exception e){ e.printStackTrace(System.out); }
       }
 
 
@@ -77,7 +77,7 @@ public class MsgMessengerGroupData {
               }
            rs.close();
            db.CloseConn();
-         }catch (Exception e){ System.out.println(e.getMessage()); }
+         }catch (Exception e){ e.printStackTrace(System.out); }
       return retval;
    }
 
@@ -98,7 +98,7 @@ public class MsgMessengerGroupData {
               }
            rs.close();
            db.CloseConn();
-      }catch (Exception e){ System.out.println(e.getMessage()); }
+      }catch (Exception e){ e.printStackTrace(System.out); }
    return stringBuffer.toString();
    }
 
@@ -117,7 +117,7 @@ public class MsgMessengerGroupData {
         }
         rs.close();
         db.CloseConn();
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
       return groupMemberVector;
    }
@@ -158,7 +158,7 @@ public class MsgMessengerGroupData {
 
               rs.close();
               db.CloseConn();
-          }catch (Exception e){ System.out.println(e.getMessage()); }
+          }catch (Exception e){ e.printStackTrace(System.out); }
 
    }
 
@@ -187,7 +187,7 @@ public class MsgMessengerGroupData {
 
 
            db.CloseConn();
-         }catch (Exception e){ System.out.println(e.getMessage()); }
+         }catch (Exception e){ e.printStackTrace(System.out); }
          stringBuffer.insert(0,"<a href=\"MessengerAdmin.jsp?groupNo=0\">Root</a>");
          return stringBuffer.toString();
    }

@@ -76,7 +76,7 @@ public class MsgGenerate
             }
         }
 
-        System.out.println(MsgCommxml.toXML(doc));
+        // System.out.println(MsgCommxml.toXML(doc));
 
         return doc;
     }
@@ -200,7 +200,7 @@ public class MsgGenerate
             sql += " ORDER BY " + cfgTable.getAttribute("sqlOrder");
         }
 
-        System.out.println(sql);
+        // System.out.println(sql);
         return sql;
     }
 }

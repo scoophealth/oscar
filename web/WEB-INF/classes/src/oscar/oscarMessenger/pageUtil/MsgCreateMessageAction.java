@@ -50,7 +50,7 @@ public class MsgCreateMessageAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-            System.out.println("CreateMessageAction Jackson");
+            // System.out.println("CreateMessageAction Jackson");
             // Extract attributes we will need
             Locale locale = getLocale(request);
             MessageResources messages = getResources();
@@ -82,9 +82,9 @@ public class MsgCreateMessageAction extends Action {
             currLoco                = messageData.getCurrentLocationId();
 
 
-            System.out.println("provider Listing : "+providerListing.size());
-            System.out.println("Local Listings : "+localProviderListing.size());
-            System.out.println("RemoteProviderListing : "+remoteProviderListing.size());
+            // System.out.println("provider Listing : "+providerListing.size());
+            // System.out.println("Local Listings : "+localProviderListing.size());
+            // System.out.println("RemoteProviderListing : "+remoteProviderListing.size());
 
             if (messageData.isLocals()){
             sentToWho = messageData.createSentToString(localProviderListing);
@@ -98,7 +98,7 @@ public class MsgCreateMessageAction extends Action {
 
             messageId = messageData.sendMessage2(message,subject,userName,sentToWho,userNo,providerListing,att);
 
-            System.out.println("messages id = "+messageId);
+            // System.out.println("messages id = "+messageId);
 
             if (messageData.isRemotes()){
 //                oscar.oscarMessenger.data.MsgRemoteMessageData  remoteMessageData;

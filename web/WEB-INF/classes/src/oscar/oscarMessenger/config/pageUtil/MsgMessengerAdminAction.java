@@ -61,7 +61,7 @@ public class MsgMessengerAdminAction extends Action {
         String parent = new String();
 
         if (update.equals("Update group members")){
-        System.out.println("UPDATE WORKING");
+        // System.out.println("UPDATE WORKING");
 
            try{
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -75,14 +75,14 @@ public class MsgMessengerAdminAction extends Action {
               
               MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
               boolean  res = addMake.updateAddressBook();
-              System.out.println("new address book = ? "+res);
+              // System.out.println("new address book = ? "+res);
               db.CloseConn();
-           }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); System.out.println("prob 2"); }
+           }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 
          request.setAttribute("groupNo",grpNo);
         }else if(delete.equals("Delete This group")){
-        System.out.println("DELETE WORKING");
+        // System.out.println("DELETE WORKING");
             try{
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                  java.sql.ResultSet rs;
@@ -112,9 +112,9 @@ public class MsgMessengerAdminAction extends Action {
               rs.close();
               MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
               boolean res = addMake.updateAddressBook();
-              System.out.println("new address book = ? "+res);
+              // System.out.println("new address book = ? "+res);
               db.CloseConn();
-           }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); System.out.println("prob 2");}
+           }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
          request.setAttribute("groupNo",parent);
         }

@@ -49,7 +49,7 @@ public class MsgViewMessageAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-System.out.println("in view message action jackson");
+        // System.out.println("in view message action jackson");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources();
@@ -57,8 +57,8 @@ System.out.println("in view message action jackson");
         oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
         String providerNo= bean.getProviderNo();
 
-        System.out.println(request.getAttributeNames());
-        System.out.println(request.getQueryString());
+        // System.out.println(request.getAttributeNames());
+        // System.out.println(request.getQueryString());
         String messageNo = request.getParameter("messageID");
         int  i = 1;
 
@@ -71,7 +71,7 @@ System.out.println("in view message action jackson");
            //     System.out.println("test from view action \n\n\n" );
            //   return (mapping.findForward("noRights"));
            //}else{
-           System.out.println("theres a message  ");
+           // System.out.println("theres a message  ");
               String sql = new String("Select * from messagetbl where messageid = \'"+messageNo+"\' ");
               rs = db.GetSQL(sql);
 
@@ -84,13 +84,13 @@ System.out.println("in view message action jackson");
                  String thetime = (rs.getString("theime"));
                  String thedate = (rs.getString("thedate"));
                  String att     = rs.getString("attachment");
-System.out.println("attach "+att);
+                 // System.out.println("attach "+att);
                  if (att == null || att.equals("null") ){
                     attach ="0";
                  }else{
                     attach ="1";
                  }
-                 System.out.println("the message "+message+" "+subject);
+                 // System.out.println("the message "+message+" "+subject);
 
                  request.setAttribute("viewMessageMessage",message);
                  request.setAttribute("viewMessageSubject",subject);
@@ -116,7 +116,7 @@ System.out.println("attach "+att);
          rs.close();
          db.CloseConn();
 
-        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+        }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
     return (mapping.findForward("success"));
     }

@@ -58,12 +58,12 @@ public class MsgNewMessagesTag extends TagSupport{
       rs = db.GetSQL(sql);
       while (rs.next()) {
          numNewMessages = (rs.getInt(1));
-         System.out.println(numNewMessages);
+         // System.out.println(numNewMessages);
       }
      rs.close();
      db.CloseConn();
 
-   }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+   }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
    try{
       JspWriter out = pageContext.getOut();
@@ -74,7 +74,7 @@ public class MsgNewMessagesTag extends TagSupport{
       else{
          out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">msg</font>  ");
       }
-   } catch(Exception p){System.out.println("somethin wrong");}
+   } catch(Exception p){p.printStackTrace(System.out);}
   return(SKIP_BODY);
   }//doStartTag
 

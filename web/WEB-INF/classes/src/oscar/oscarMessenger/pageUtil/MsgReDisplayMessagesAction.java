@@ -71,7 +71,7 @@ public class MsgReDisplayMessagesAction extends Action {
                 db.RunSQL(sql);
                 
                 db.CloseConn();
-              }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+              }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
             }//for
 
     return (mapping.findForward("success"));

@@ -114,7 +114,7 @@ public class MsgDocListForm {
        rs.close();
        db.CloseConn();
 
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
   }//setUpDaVectorJaySTyle
 
 

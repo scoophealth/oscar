@@ -51,7 +51,7 @@ public class MsgSendMessageAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-            System.out.println("now in the SendMessageaction jackson");
+            // System.out.println("now in the SendMessageaction jackson");
             // Extract attributes we will need
             Locale locale = getLocale(request);
             MessageResources messages = getResources();
@@ -68,7 +68,7 @@ public class MsgSendMessageAction extends Action {
             subject.trim();
 
             if (message.length() == 0){
-              System.out.println("i got called");
+              // System.out.println("i got called");
               //errors.add(ActionErrors.GLOBAL_ERROR,
                 //       new ActionError("error.message.missing"));
                 //errors.add(
@@ -76,7 +76,7 @@ public class MsgSendMessageAction extends Action {
             }
 
             if (providers.length == 0){
-                System.out.println("i got called");
+                // System.out.println("i got called");
               //errors.add(ActionErrors.GLOBAL_ERROR,
                 //       new ActionError("error.provider.missing"));
 
@@ -85,15 +85,15 @@ public class MsgSendMessageAction extends Action {
             }
 
             if (true)/*(!errors.empty())*/ {
-              System.out.println("there were errors");
+              // System.out.println("there were errors");
 	      saveErrors(request, errors);
             ActionForward actionForward = new ActionForward(mapping.getInput());
-            System.out.println(mapping.getInput());
-            System.out.println(actionForward.toString());
-            System.out.println("name ="+ actionForward.getName()+" path = "+actionForward.getPath());
+            // System.out.println(mapping.getInput());
+            // System.out.println(actionForward.toString());
+            // System.out.println("name ="+ actionForward.getName()+" path = "+actionForward.getPath());
             actionForward.setName(mapping.getInput());
-            System.out.println(actionForward.toString());
-            System.out.println("name ="+ actionForward.getName()+" path = "+actionForward.getPath());
+            // System.out.println(actionForward.toString());
+            // System.out.println("name ="+ actionForward.getName()+" path = "+actionForward.getPath());
 	    //return ( actionForward(mapping.getInput()));
             //return (actionForward);
 
@@ -130,22 +130,16 @@ public class MsgSendMessageAction extends Action {
               java.sql.ResultSet rs;
 
               rs = db.GetSQL(sql);
-
-
               while (rs.next()) {
-              System.out.println(rs.getString("first_name"));
+              // System.out.println(rs.getString("first_name"));
               sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name")+". ");
               //providerFirstName.add(rs.getString("first_name"));
               //providerLastName.add(rs.getString("last_name"));
-
-
               }
-
-
         rs.close();
         db.CloseConn();
 
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
        MsgSentMessageForm  trial = new MsgSentMessageForm();
         trial.setSample(sentToWho.toString());
@@ -169,40 +163,23 @@ public class MsgSendMessageAction extends Action {
 		rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
 	      } else
 	      throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
-              System.out.println(rs.getString(1));
+              // System.out.println(rs.getString(1));
               String messageid = rs.getString(1);
 
               for (int i =0 ; i < providers.length ; i++)
               {
-                System.out.println("sending too"+providers[i]);
+                // System.out.println("sending too"+providers[i]);
                 db.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
               }
-
-
-
         rs.close();
         db.CloseConn();
 
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            System.out.println("the subject "+subject+ "this is the message "+message+"<=");
-            for (int i =0 ; i < providers.length ; i++)
-            {
-              System.out.println("sending too"+providers[i]);
-            }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+            // System.out.println("the subject "+subject+ "this is the message "+message+"<=");
+            // for (int i =0 ; i < providers.length ; i++)
+            // {
+            //   System.out.println("sending too"+providers[i]);
+            // }
 
             //servlet.getServletContext().setAttribute("SendMessageFormId", sentToWho);
             //((SearchPatientForm)form).getSurname();
@@ -210,9 +187,8 @@ public class MsgSendMessageAction extends Action {
             //request.setAttribute(sentToWho.toString(),demoAgain.SentMessageForm);
             //servlet.getServletContext().setAttribute("SentMessageProvs",sentToWho.toString());
             request.setAttribute("SentMessageProvs",sentToWho.toString());
-            System.out.println("about to leave");
+            // System.out.println("about to leave");
             return (mapping.findForward("success"));
     }
-
 }
 

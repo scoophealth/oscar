@@ -75,9 +75,9 @@ public class MsgAddressBook {
             }
             rs.close();
             db.CloseConn();
-         }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+         }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
-         System.out.println("myAddressBook :"+retval);
+         // System.out.println("myAddressBook :"+retval);
       return retval;
    }
    //---------------------------------------------------------------------------
@@ -103,7 +103,7 @@ public class MsgAddressBook {
             }
             rs.close();
             db.CloseConn();
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 
       return vector;
@@ -122,7 +122,7 @@ public class MsgAddressBook {
       depth++;
 
       Element element = (Element) node;
-      System.out.println("desc = "+element.getAttribute("desc")+"<br>");
+      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){
@@ -186,16 +186,16 @@ public class MsgAddressBook {
             }
          }
 
-       }catch(Exception e){System.out.println("didn't work moron");}
+       }catch(Exception e){ e.printStackTrace(System.out); }
    }
 //------------------------------------------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////////////
    public void displayRemoteNodes(Node node,JspWriter out,int depth,String[] thePros,int remoId, java.util.Vector locationVector){
       depth++;
-      System.out.println("\n\nIM IN REMOTE NODES!!!!!"+(String)remoteLocationId.elementAt(remoId)+"!!!!!!!\n\n");
+      // System.out.println("\n\nIM IN REMOTE NODES!!!!!"+(String)remoteLocationId.elementAt(remoId)+"!!!!!!!\n\n");
       Element element = (Element) node;
-      System.out.println("desc = "+element.getAttribute("desc")+"<br>");
+      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){
@@ -259,18 +259,16 @@ public class MsgAddressBook {
             }
          }
 
-       }catch(Exception e){System.out.println("didn't work");
-                           e.getMessage();
-                           e.printStackTrace();}
+       }catch(Exception e){ e.printStackTrace(System.out); }
    }
 //------------------------------------------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////////////
    public void displayRemoteNodes2(Node node,JspWriter out,int depth,oscar.oscarMessenger.data.MsgReplyMessageData reData,int remoId, java.util.Vector locationVector){
       depth++;
-      System.out.println("\n\nIM IN REMOTE NODES!!!!!"+(String)remoteLocationId.elementAt(remoId)+"!!!!!!!\n\n");
+      // System.out.println("\n\nIM IN REMOTE NODES!!!!!"+(String)remoteLocationId.elementAt(remoId)+"!!!!!!!\n\n");
       Element element = (Element) node;
-      System.out.println("desc = "+element.getAttribute("desc")+"<br>");
+      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){
@@ -335,9 +333,7 @@ public class MsgAddressBook {
             }
          }
 
-       }catch(Exception e){System.out.println("didn't work");
-                           e.getMessage();
-                           e.printStackTrace();}
+       }catch(Exception e){ e.printStackTrace(System.out); }
    }
 //------------------------------------------------------------------------------------------------------------
 

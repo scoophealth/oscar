@@ -51,7 +51,7 @@ public final class MsgMessengerAdminForm extends ActionForm {
 
 
     public String getUpdate(){
-    System.out.println("get update"+update);
+    // System.out.println("get update"+update);
        if (this.update == null){
           this.update = new String();
        }
@@ -59,12 +59,12 @@ public final class MsgMessengerAdminForm extends ActionForm {
     }
 
     public void setUpdate(String update){
-    System.out.println("set update"+update);
+    // System.out.println("set update"+update);
        this.update = update;
     }
 
     public String getDelete(){
-    System.out.println("get delete"+delete);
+    // System.out.println("get delete"+delete);
        if (this.delete == null){
           this.delete = new String();
        }
@@ -72,7 +72,7 @@ public final class MsgMessengerAdminForm extends ActionForm {
     }
 
     public void setDelete(String delete){
-    System.out.println("set delete"+delete);
+    // System.out.println("set delete"+delete);
        this.delete = delete;
     }
 

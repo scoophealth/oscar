@@ -50,7 +50,7 @@ public class MsgDisplayMessagesAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-    System.out.println("in display message action jackson");
+    // System.out.println("in display message action jackson");
             // Extract attributes we will need
             Locale locale = getLocale(request);
             MessageResources messages = getResources();
@@ -61,13 +61,13 @@ public class MsgDisplayMessagesAction extends Action {
 
             if(request.getParameter("providerNo")!=null & request.getParameter("userName")!=null)
             {
-                System.out.println("in display message action jackson4");
+                // System.out.println("in display message action jackson4");
                 bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
                 bean.setProviderNo(request.getParameter("providerNo"));
                 bean.setUserName(request.getParameter("userName"));
                 request.getSession().setAttribute("msgSessionBean", bean);
-                System.out.println(bean.getProviderNo());
-                System.out.println(bean.getUserName());
+                // System.out.println(bean.getProviderNo());
+                // System.out.println(bean.getUserName());
             }//if
             else
             {
@@ -84,7 +84,7 @@ public class MsgDisplayMessagesAction extends Action {
                 String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
                 db.RunSQL(sql);
                 db.CloseConn();
-              }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+              }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
             }//for
     return (mapping.findForward("success"));
     }

@@ -46,12 +46,12 @@ public final class MsgMessengerCreateGroupForm extends ActionForm {
    String type;
 
    public void setType2(String type){
-      System.out.println("setting type :"+type+"<");
+      // System.out.println("setting type :"+type+"<");
       this.type = type;
    }
 
    public String getType2(){
-      System.out.println("getting type :"+type+"<");
+      // System.out.println("getting type :"+type+"<");
       if (this.type == null){
          this.type = new String();
       }

@@ -68,7 +68,7 @@ public class MsgViewAttachmentAction extends Action {
         }//while
         rs.close();
         db.CloseConn();
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
     request.setAttribute("Attachment",att);
     request.setAttribute("attId",attachId);

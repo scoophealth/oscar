@@ -48,7 +48,7 @@ public class MsgMessageData {
               }
               rs.close();
               db.CloseConn();
-            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         }
         return currentLocationId;
     }
@@ -100,7 +100,7 @@ public class MsgMessageData {
 
             sql = temp.toString();
 
-            System.out.println(" sql string = "+sql);
+            // System.out.println(" sql string = "+sql);
             //Create A "sent to who String" I thought it would be better to create this line
             //once than have to look this information up in the database everytime the
             //message was viewed. The names are delimited with a '.'
@@ -119,7 +119,7 @@ public class MsgMessageData {
         rs.close();
         db.CloseConn();
 
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 
 
@@ -149,7 +149,7 @@ public class MsgMessageData {
 
             sql = temp.toString();
 
-            System.out.println(" sql string = "+sql);
+            // System.out.println(" sql string = "+sql);
             //Create A "sent to who String" I thought it would be better to create this line
             //once than have to look this information up in the database everytime the
             //message was viewed. The names are delimited with a '.'
@@ -168,7 +168,7 @@ public class MsgMessageData {
         rs.close();
         db.CloseConn();
 
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 
 
@@ -217,7 +217,7 @@ public class MsgMessageData {
         rs.close();
         db.CloseConn();
 
-       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
       return messageid;
     }//=------------------------------------------------------------------------
 
@@ -228,13 +228,13 @@ public class MsgMessageData {
     //message id plus a status of new
     //messageId = messageData.sendMessage(message,       subject,       userName,       sentToWho,       userNo,              providerListing );
     public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,java.util.ArrayList providers,String attach ){
-        System.out.println("message "+message+" subject "+subject+" userName "+userName+" sentToWho "+sentToWho+" userNo "+userNo);
+        // System.out.println("message "+message+" subject "+subject+" userName "+userName+" sentToWho "+sentToWho+" userNo "+userNo);
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
       String messageid=null;
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          java.sql.ResultSet rs;
-            System.out.println("here1");
+            // System.out.println("here1");
             if (attach != null){
                 attach = str.q(attach);
             }
@@ -248,9 +248,9 @@ public class MsgMessageData {
                        +userNo+"','"
                        +getCurrentLocationId()+"','"
                        +attach+"')");
-         System.out.println("here2 "+sql);
+         // System.out.println("here2 "+sql);
          db.RunSQL(sql);
-         System.out.println("here3");
+         // System.out.println("here3");
 
          /* Choose the right command to recover the messageid inserted above */
 	 OscarProperties prop = OscarProperties.getInstance();
@@ -261,11 +261,11 @@ public class MsgMessageData {
                rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
          } else
                throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
-         System.out.println("here4");
+         // System.out.println("here4");
          if(rs.next()){
             messageid = Integer.toString( rs.getInt(1) );
          }
-            System.out.println("Sending message to this many providers"+providers.size());
+            // System.out.println("Sending message to this many providers"+providers.size());
          for (int i =0 ; i < providers.size(); i++){
             MsgProviderData providerData = (MsgProviderData) providers.get(i);
             db.RunSQL("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
@@ -274,7 +274,7 @@ public class MsgMessageData {
        rs.close();
        db.CloseConn();
 
-      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
       return messageid;
     }//=------------------------------------------------------------------------
 
@@ -302,7 +302,7 @@ public class MsgMessageData {
                 String[] theSplit = providerArray[i].split("@");
                 pD.providerNo = theSplit[0];
                 pD.locationId = theSplit[1];
-                System.out.println("i be splitting "+theSplit[0]+" "+theSplit[1]+"\n");
+                // System.out.println("i be splitting "+theSplit[0]+" "+theSplit[1]+"\n");
             }
             providerArrayList.add(pD);
          }
@@ -329,7 +329,7 @@ public class MsgMessageData {
         if ( providerArrayList != null){
             for (int i = 0; i < providerArrayList.size(); i++){
                 MsgProviderData providerData = (MsgProviderData) providerArrayList.get(i);
-                System.out.println("provider No "+providerData.providerNo+" locationId "+providerData.locationId);
+                // System.out.println("provider No "+providerData.providerNo+" locationId "+providerData.locationId);
                 if (providerData.locationId.equals(getCurrentLocationId())){
                     arrayList.add(providerData);
                 }
@@ -459,7 +459,7 @@ public class MsgMessageData {
             for (int j = 0; j < arrayList.size(); j++){
                 providerData = (MsgProviderData) arrayList.get(j);
                 if (providerData.locationId.equals( sortedArrayOfLocations[i] )){
-                    System.out.println("adding provider no "+providerData.providerNo+"  to the list");
+                    // System.out.println("adding provider no "+providerData.providerNo+"  to the list");
                    sortedProvs.add(providerData.providerNo);
                 }
             }
@@ -482,7 +482,7 @@ public class MsgMessageData {
             }
             rs.close();
             db.CloseConn();
-        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+        }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         // get a node list of all the providers for that addressBook then search for ones i need
 
         Document xmlDoc = Msgxml.parseXML(theAddressBook);
@@ -494,7 +494,7 @@ public class MsgMessageData {
 
            Element addressBook = xmlDoc.getDocumentElement();
            NodeList lst = addressBook.getElementsByTagName("address");
-           System.out.println("Size of sortedProvs = "+sortedProvs.size());
+           // System.out.println("Size of sortedProvs = "+sortedProvs.size());
            for (int z=0; z < sortedProvs.size(); z++){
 
               String providerNo = (String) sortedProvs.get(z);
@@ -503,10 +503,10 @@ public class MsgMessageData {
                  Node currNode = lst.item(j);
                  Element elly = (Element) currNode;
 
-                 System.out.println("=>>"+elly.getAttribute("desc")+" the curr id "+elly.getAttribute("id")   );
+                 // System.out.println("=>>"+elly.getAttribute("desc")+" the curr id "+elly.getAttribute("id")   );
 
 
-                    System.out.println("Comparing "+providerNo+" and "+elly.getAttribute("id"));
+                    // System.out.println("Comparing "+providerNo+" and "+elly.getAttribute("id"));
                  if (  providerNo.equals(  elly.getAttribute("id")  ) ){
                     j = lst.getLength();
                     stringBuffer.append(elly.getAttribute("desc")+". ");

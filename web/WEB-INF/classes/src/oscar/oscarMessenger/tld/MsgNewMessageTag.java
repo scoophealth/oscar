@@ -59,7 +59,7 @@ public class MsgNewMessageTag extends TagSupport {
             rs.close();
             db.CloseConn();
         }      catch(SQLException e)        {
-            System.out.println(e.getMessage());
+            e.printStackTrace(System.out);
         }
         try        {
             JspWriter out = super.pageContext.getOut();
@@ -68,7 +68,7 @@ public class MsgNewMessageTag extends TagSupport {
             else
                 out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">Msg</font>  ");
         } catch(Exception p) {
-            System.out.println("somethin wrong");
+            p.printStackTrace(System.out);
         }
         return(SKIP_BODY);
     }

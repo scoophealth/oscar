@@ -33,12 +33,12 @@ public class MsgSentMessageForm extends ActionForm {
   private String sample = "Start2 value";
   //Access sample property
   public String getSample() {
-  System.out.println("imbeingget");
+  // System.out.println("imbeingget");
     return sample;
   }
   //Access sample property
   public void setSample(String newValue) {
-  System.out.println("imbeingset");
+  // System.out.println("imbeingset");
     if (newValue!=null) {
       sample = newValue;
     }

@@ -98,7 +98,7 @@ public  class MsgHandleMessagesAction extends Action {
             
             db.CloseConn();
 
-          }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+          }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
         }
         else if(reply.compareToIgnoreCase("Reply") == 0 || (replyAll.compareToIgnoreCase("reply All") == 0)){
@@ -133,7 +133,7 @@ public  class MsgHandleMessagesAction extends Action {
               if(replyAll.compareToIgnoreCase("reply All") == 0){  // add every one that got the message
                  rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = \'"+messageNo+"\'");
                  while (rs.next()){
-                     System.out.println("pro no "+rs.getString("provider_no")+" remo Loco "+rs.getString("remoteLocation"));
+                     // System.out.println("pro no "+rs.getString("provider_no")+" remo Loco "+rs.getString("remoteLocation"));
                      vector.add(rs.getString("provider_no"));
                      replyMessageData.add(rs.getString("provider_no"),rs.getString("remoteLocation"));
                  }
@@ -145,7 +145,7 @@ public  class MsgHandleMessagesAction extends Action {
              rs.close();
              db.CloseConn();
 
-           }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+           }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 
         request.setAttribute("ReText",theSendMessage.toString());
@@ -181,7 +181,7 @@ public  class MsgHandleMessagesAction extends Action {
              rs.close();
              db.CloseConn();
 
-           }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+           }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 
            request.setAttribute("ReText",theSendMessage.toString());                //this one is a goody

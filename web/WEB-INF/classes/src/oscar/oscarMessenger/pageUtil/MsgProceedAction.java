@@ -66,14 +66,14 @@ public class MsgProceedAction extends Action {
     id = frm.getId();
     //id = oscar.oscarMessenger.docxfer.util.xml.decode64(id);
 
-    System.out.println("demo "+demoId+" id "+id);
+    // System.out.println("demo "+demoId+" id "+id);
 
     try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
         String sel = "select * from remoteAttachments where demographic_no = '"+demoId+"' and messageid = '"+id+"' ";
-System.out.println("select state "+sel);
+// System.out.println("select state "+sel);
         rs = db.GetSQL(sel);
 
         if (rs.next()){
@@ -89,7 +89,7 @@ System.out.println("select state "+sel);
         }
         db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
     bean.nullAttachment();
 

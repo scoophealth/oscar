@@ -59,7 +59,7 @@ public class MsgDisplayMessagesBean {
               }
               rs.close();
               db.CloseConn();
-            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         }
         return currentLocationId;
   }
@@ -223,7 +223,7 @@ public class MsgDisplayMessagesBean {
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
-           System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
            messageid.add( rs.getString("message")  );
            status.add( rs.getString("status")  );
         }
@@ -231,7 +231,7 @@ public class MsgDisplayMessagesBean {
        rs.close();
        db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
   }//getMessageIDs
 ////////////////////////////////////////////////////////////////////////////////
@@ -267,14 +267,14 @@ public class MsgDisplayMessagesBean {
               }
            msg.add(dm);
 
-           System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
 
         }
 
        rs.close();
        db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
     return msg;
   }
@@ -314,14 +314,14 @@ public java.util.Vector estDeletedInbox(){
               }
            msg.add(dm);
 
-           System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
 
         }
 
        rs.close();
        db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
     return msg;
   }
@@ -335,7 +335,7 @@ public java.util.Vector estDeletedInbox(){
    * in the messagelisttbl
    */
   void getDeletedMessageIDs(){
-    System.out.println("In deleted MEssages");
+    // System.out.println("In deleted MEssages");
      String providerNo= this.getProviderNo();
 
      messageid = new java.util.Vector();
@@ -352,13 +352,13 @@ public java.util.Vector estDeletedInbox(){
            status.add("deleted");
            cou++;
         }
-        System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
+        // System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
 
        rs.close();
        db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
-    System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    // System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
   }//getDeletedMessageIDs
 
   /**
@@ -366,7 +366,7 @@ public java.util.Vector estDeletedInbox(){
    * in the messagelisttbl
    */
   void getSentMessageIDs(){
-    System.out.println("In sent MEssages");
+    // System.out.println("In sent MEssages");
      String providerNo= this.getProviderNo();
 
      messageid = new java.util.Vector();
@@ -389,13 +389,13 @@ public java.util.Vector estDeletedInbox(){
            subject.add(rs.getString("thesubject"));
            cou++;
         }
-        System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
+        // System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
 
        rs.close();
        db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
-    System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    // System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
   }//getSentMessageIDs
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -438,7 +438,7 @@ public java.util.Vector estDeletedInbox(){
        rs.close();
        db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
     return msg;
   }
@@ -457,7 +457,7 @@ public java.util.Vector estDeletedInbox(){
    * the Message header Info
    */
   void getInfo(){
-    System.out.println("Get Info called ms = "+messageid.size());
+    // System.out.println("Get Info called ms = "+messageid.size());
      sentby  = new java.util.Vector();
      date    = new java.util.Vector();
      subject = new java.util.Vector();
@@ -467,7 +467,7 @@ public java.util.Vector estDeletedInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        System.out.println("Messages in getInfo = "+messageid.size());
+        // System.out.println("Messages in getInfo = "+messageid.size());
         //make search string
         StringBuffer stringBuffer = new StringBuffer();
         for ( int i = 0; i < messageid.size() ; i++){
@@ -497,7 +497,7 @@ public java.util.Vector estDeletedInbox(){
 //        }//for
        db.CloseConn();
 
-    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
   } //getInfo
 
 }//DisplayMessageBean

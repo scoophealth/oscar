@@ -58,7 +58,7 @@ public class MsgMessengerCreateGroupAction extends Action {
        String parentID = ((MsgMessengerCreateGroupForm)form).getParentID();
        String type = ((MsgMessengerCreateGroupForm)form).getType2();
 
-       System.out.println("type = "+type);
+       // System.out.println("type = "+type);
        grpName = grpName.trim();
 
        if (!grpName.equals("")){
@@ -74,7 +74,7 @@ public class MsgMessengerCreateGroupAction extends Action {
                  addMake.updateAddressBook();
                  db.CloseConn();
 
-               }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); System.out.println("Update of address book didn't happen when updating groups");}
+               }catch (java.sql.SQLException e){ System.out.println("Update of address book didn't happen when updating groups"); e.printStackTrace(System.out); }
            }else if (type.equals("2")){
                 try{
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -86,7 +86,7 @@ public class MsgMessengerCreateGroupAction extends Action {
                  addMake.updateAddressBook();
                  db.CloseConn();
 
-               }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); System.out.println("Update of address book didn't happen when deleting group"); }
+               }catch (java.sql.SQLException e){ System.out.println("Update of address book didn't happen when deleting group"); e.printStackTrace(System.out); }
            }
         }
       request.setAttribute("groupNo",parentID);
