@@ -32,10 +32,49 @@
     <load-on-startup>2</load-on-startup>
   </servlet>
 
+  <!-- Oscar servlets -->
+  <!-- Upload an e-form -->
+  <servlet>
+	  <servlet-name>UploadServlet</servlet-name>
+	  <servlet-class>oscar.eform.UploadServlet</servlet-class>
+          <load-on-startup>0</load-on-startup>
+  </servlet>
+  <!-- Upload an image for e-form -->
+   <servlet>
+	   <servlet-name>UploadImage</servlet-name>
+	   <servlet-class>oscar.eform.UploadImage</servlet-class>
+	   <load-on-startup>0</load-on-startup>
+   </servlet>
+
+   <!-- oscar documents -->
+   <servlet>
+	   <servlet-name>UploadDocument</servlet-name>
+	   <servlet-class>oscar.DocumentMgtUploadServlet</servlet-class>
+	   <load-on-startup>0</load-on-startup>
+   </servlet>
+					       
   <!-- Action Servlet Mapping -->
   <servlet-mapping>
     <servlet-name>action</servlet-name>
     <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+  <!-- Upload an e-form -->
+  <servlet-mapping>
+	   <servlet-name>UploadServlet</servlet-name>
+	   <url-pattern>/servlet/oscar.eform.UploadServlet</url-pattern>
+  </servlet-mapping>
+
+  <!-- Upload an image for e-form -->
+  <servlet-mapping>
+	  <servlet-name>UploadImage</servlet-name>
+	  <url-pattern>/servlet/oscar.eform.UploadImage</url-pattern>
+  </servlet-mapping>
+
+  <!-- oscar documents -->
+  <servlet-mapping>
+	  <servlet-name>UploadDocument</servlet-name>
+	  <url-pattern>/servlet/oscar.DocumentMgtUploadServlet</url-pattern>
   </servlet-mapping>
 
   <!-- The Welcome File List -->
