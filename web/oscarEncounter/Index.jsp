@@ -146,6 +146,7 @@
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u005C/g, "\u005C");
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0022/g, "\u0022");
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0027/g, "\u0027");
+            window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated            
         // }
     }
 
@@ -459,8 +460,8 @@ function loader(){
     window.focus();
     var tmp;
     document.encForm.enTextarea.focus();
-    tmp = document.encForm.enTextarea.value; // what the heck is this supposed to do?
-    document.encForm.enTextarea.value = tmp;
+    tmp = document.encForm.enTextarea.value; // these two lines cause the enTextarea to scroll to the bottom (only works in IE)
+    document.encForm.enTextarea.value = tmp; // another option is to use window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  (also only works in IE)
 }
 </script>
 <script language="javascript">
