@@ -1045,6 +1045,8 @@ CREATE TABLE formBCBirthSumMo(
   conMdSignat varchar(60),
   conFamPhy tinyint(1),
   conOther tinyint(1),
+  conOtherTxt varchar(30),
+  conLos varchar(3),
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
 --
