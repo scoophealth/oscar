@@ -68,21 +68,9 @@ public class EctAddMeasurementTypeAction extends Action {
             if (!allInputIsValid(request, type, typeDesc, typeDisplayName, measuringInstrc)){
                 return (new ActionForward(mapping.getInput()));
             }
-            String sql = "SELECT type FROM measurementType WHERE type='" + str.q(type) +"'";
-            ResultSet rs = db.GetSQL(sql);
-            rs.next();
-            
-            if(rs.getRow()>0){
-                System.out.println("The specified type already exists");
-                MessageResources mr = getResources(request);
-                String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasurementType.duplicateType");
-                messages.add(msg);
-                request.setAttribute("messages", messages);
-                return mapping.findForward("failure");
-            }
-            
+
             //Write to database
-            sql = "INSERT INTO measurementType"
+            String sql = "INSERT INTO measurementType"
                 +"(type, typeDisplayName, typeDescription, measuringInstruction, validation)"
                 +" VALUES ('"+str.q(typeUp)+"','"+str.q(typeDesc)+"','"+str.q(typeDisplayName)+"','"+str.q(measuringInstrc)+"','"
                 + str.q(validation)+"')";
@@ -111,7 +99,23 @@ public class EctAddMeasurementTypeAction extends Action {
         EctValidation validate = new EctValidation();
         String regExp = validate.getRegCharacterExp();
         boolean isValid = true;
-                
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT type FROM measurementType WHERE type='" + type +"'";
+            ResultSet rs = db.GetSQL(sql);
+            rs.next();
+            if(rs.getRow()>0){
+                errors.add(type,
+                new ActionError("error.oscarEncounter.Measurements.duplicateTypeName"));
+                saveErrors(request, errors);
+                isValid = false;                
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }     
+        
         String errorField = "The type " + type;
         if(!validate.matchRegExp(regExp, type)){
             errors.add(type,
@@ -143,7 +147,9 @@ public class EctAddMeasurementTypeAction extends Action {
             saveErrors(request, errors);
             isValid = false;
         }
+       
         return isValid;
+        
     }
 }
     

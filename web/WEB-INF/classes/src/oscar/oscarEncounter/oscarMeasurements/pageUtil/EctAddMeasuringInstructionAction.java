@@ -81,12 +81,10 @@ public class EctAddMeasuringInstructionAction extends Action {
             rs.next();
             
             if(rs.getRow()>0){
-                System.out.println("The specified type already exists");
-                MessageResources mr = getResources(request);
-                String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasurementType.duplicateType");
-                messages.add(msg);
-                request.setAttribute("messages", messages);
-                return mapping.findForward("failure");
+                errors.add(measuringInstrc,
+                new ActionError("error.oscarEncounter.Measurements.duplicateTypeName"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));                
             }
             
             rs.close();
