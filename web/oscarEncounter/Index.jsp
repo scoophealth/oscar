@@ -716,10 +716,9 @@ border-right: 2px solid #cfcfcf;
                     </td>
                 </tr>                
                 <tr>
-                    <td><input type="button" style="height:20px" name="displayHistoryButton" value="<bean:message key="oscarEncounter.Index.btnViewHistory"/>" class="ControlPushButton" onClick="popupOscarCon(1000,800,'oscarMeasurements/ProcessDisplayHistoryAction.jsp');"/></td>                
+                    <td><input type="button" style="height:20px" name="displayHistoryButton" value="<bean:message key="oscarEncounter.Index.btnViewHistory"/>" class="ControlPushButton" onClick="popupOscarCon(600,1000,'oscarMeasurements/ProcessDisplayHistoryAction.jsp');"/></td>                
                     <td><input type="button" style="height:20px" name="editMeasurementButton" value="<bean:message key="oscarEncounter.Index.btnCustomize"/>" class="ControlPushButton" onClick="popupOscarCon(200,400,'oscarMeasurements/EditMeasurementTypes.jsp');"/></td>
-                </tr>
-            
+                </tr>                
             </table>
             <table class="LeftTable">
                 <tr class="Header">
