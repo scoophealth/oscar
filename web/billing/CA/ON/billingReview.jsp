@@ -33,6 +33,7 @@ function validate_form(){
            
 <% 
 String errorMsg="", errorFlag = "";
+String warningMsg="";
 String proNO = request.getParameter("xml_provider");
 String temp2=null, content="", location2="", desc3="",desc2="", scode2=null, scode3=null, dsfee="", fee2="",fee3="", flag="", flag1="", flag2="";
 String pValue="", pCode="", pDesc="", pPerc="", pUnit = "";
@@ -128,9 +129,14 @@ while(rslocal.next()){
 	demoDOBDD = demoDOBDD.length() == 1 ? ("0" + demoDOBDD) : demoDOBDD;
 	demoDOB = demoDOBYY + demoDOBMM + demoDOBDD;
 
-	if (rslocal.getString("hin") == null || rslocal.getString("hin").equals("")) {
+	if (rslocal.getString("hin") == null ) {
 		errorFlag = "1";
 		errorMsg = errorMsg + "Error: The patient does not have a valid HIN. <br>";
+	} else if (rslocal.getString("hin").equals("")) {
+		warningMsg += "Warning: The patient does not have a valid HIN. <br>";
+	}
+	if (r_doctor_ohip != null && r_doctor_ohip.length()>0 && r_doctor_ohip.length() != 6) {
+		warningMsg += "Warning: the referral doctor's no is wrong. <br>";
 	}
 	if (demoDOB.length() != 8) {
 		errorFlag = "1";
@@ -242,6 +248,7 @@ BigDecimal otherfee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal otherfee02 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal otherfee03 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal pValue1= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+BigDecimal pValue1PerUnit = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal otherunit = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal xPercent = new BigDecimal(0).setScale(4, BigDecimal.ROUND_HALF_UP);
 BigDecimal xPercentPremium = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -319,8 +326,9 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 			sotherBuffer.insert(f,"");
 			otherstr = sotherBuffer.toString();   
 
-			if (otherdbcode1.compareTo("P009A")==0 || otherdbcode1.compareTo("P006A") == 0 || otherdbcode1.compareTo("P011A")==0 || otherdbcode1.compareTo("P041A") == 0 || otherdbcode1.compareTo("P018A") == 0 || otherdbcode1.compareTo("P038A") == 0 || otherdbcode1.compareTo("P020A") == 0){
+			if (otherdbcode1.compareTo("S768A")==0 || otherdbcode1.compareTo("S756A")==0 || otherdbcode1.compareTo("S757A")==0 || otherdbcode1.compareTo("S784A")==0 || otherdbcode1.compareTo("S745A")==0 || otherdbcode1.compareTo("P010A")==0 || otherdbcode1.compareTo("P009A")==0 || otherdbcode1.compareTo("P006A") == 0 || otherdbcode1.compareTo("P011A")==0 || otherdbcode1.compareTo("P041A") == 0 || otherdbcode1.compareTo("P018A") == 0 || otherdbcode1.compareTo("P038A") == 0 || otherdbcode1.compareTo("P020A") == 0 || otherdbcode1.compareTo("P031A") == 0 || otherdbcode1.compareTo("Z552A")==0 || otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") || otherdbcode1.endsWith("B") ){
 				pValue1 = pValue1.add(otherfee);
+				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
 				pCode =otherdbcode1;
 				pDesc = otherdesc1;
 				pValue = pValue1.toString();
@@ -384,8 +392,9 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 			sotherBuffer.insert(f,"");
 			otherstr2 = sotherBuffer.toString();
 
-			if (otherdbcode2.compareTo("P009A")==0 || otherdbcode2.compareTo("P006A") == 0 || otherdbcode2.compareTo("P011A")==0 || otherdbcode2.compareTo("P041A") == 0 || otherdbcode2.compareTo("P018A") == 0 || otherdbcode2.compareTo("P038A") == 0 || otherdbcode2.compareTo("P020A") == 0){
+			if (otherdbcode2.compareTo("S768A")==0 || otherdbcode2.compareTo("S756A")==0 || otherdbcode2.compareTo("S757A")==0 || otherdbcode2.compareTo("S784A")==0 || otherdbcode2.compareTo("S745A")==0 || otherdbcode2.compareTo("P010A")==0 || otherdbcode2.compareTo("P009A")==0 || otherdbcode2.compareTo("P006A") == 0 || otherdbcode2.compareTo("P011A")==0 || otherdbcode2.compareTo("P041A") == 0 || otherdbcode2.compareTo("P018A") == 0 || otherdbcode2.compareTo("P038A") == 0 || otherdbcode2.compareTo("P020A") == 0 || otherdbcode2.compareTo("P031A") == 0 || otherdbcode2.compareTo("Z552A")==0 || otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") || otherdbcode2.endsWith("B") ){
 				pValue1 = pValue1.add(otherfee02);
+				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
 				pCode =otherdbcode2;
 				pDesc = otherdesc2;
 				pValue = pValue1.toString();
@@ -448,8 +457,9 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 			sotherBuffer.insert(f,"");
 			otherstr3 = sotherBuffer.toString();
 
-			if (otherdbcode3.compareTo("P009A")==0 || otherdbcode3.compareTo("P006A") == 0 || otherdbcode3.compareTo("P011A")==0 || otherdbcode3.compareTo("P041A") == 0 || otherdbcode3.compareTo("P018A") == 0 || otherdbcode3.compareTo("P038A") == 0 || otherdbcode3.compareTo("P020A") == 0){
+			if (otherdbcode3.compareTo("S768A")==0 || otherdbcode3.compareTo("S756A")==0 || otherdbcode3.compareTo("S757A")==0 || otherdbcode3.compareTo("S784A")==0 || otherdbcode3.compareTo("S745A")==0 || otherdbcode3.compareTo("P010A")==0 || otherdbcode3.compareTo("P009A")==0 || otherdbcode3.compareTo("P006A") == 0 || otherdbcode3.compareTo("P011A")==0 || otherdbcode3.compareTo("P041A") == 0 || otherdbcode3.compareTo("P018A") == 0 || otherdbcode3.compareTo("P038A") == 0 || otherdbcode3.compareTo("P020A") == 0 || otherdbcode3.compareTo("P031A") == 0 || otherdbcode3.compareTo("Z552A")==0 || otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") || otherdbcode3.endsWith("B") ){
 				pValue1 = pValue1.add(otherfee03);
+				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
 				pCode =otherdbcode3;
 				pDesc = otherdesc3;
 				pValue = pValue1.toString();
@@ -527,8 +537,9 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 			BigDecimal bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigTotal = BigTotal.add(bdFee);
 
-			if (scode.compareTo("P009A")==0 || scode.compareTo("P006A") == 0 || scode.compareTo("P011A")==0 || scode.compareTo("P041A") == 0 || scode.compareTo("P018A") == 0 || scode.compareTo("P038A") == 0 || scode.compareTo("P020A") == 0){
+			if (scode.compareTo("S768A")==0 || scode.compareTo("S756A")==0 || scode.compareTo("S757A")==0 || scode.compareTo("S784A")==0 || scode.compareTo("S745A")==0 || scode.compareTo("P010A")==0 || scode.compareTo("P009A")==0 || scode.compareTo("P006A") == 0 || scode.compareTo("P011A")==0 || scode.compareTo("P041A") == 0 || scode.compareTo("P018A") == 0 || scode.compareTo("P038A") == 0 || scode.compareTo("P020A") == 0 || scode.compareTo("P031A") == 0 || scode.compareTo("Z552A")==0 || scode.compareTo("Z716A")==0 || scode.startsWith("S") || scode.endsWith("B") ){
 				pValue1 = pValue1.add(bdFee);
+				pValue1PerUnit = pValue1PerUnit.add(bdFee);
 				pCode = scode;
 				pDesc = desc;
 				pValue = pValue1.toString();
@@ -652,6 +663,22 @@ if (xFlag.compareTo("1")==0) {
 	xPercentPremium = xPercent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
 	BigTotal = BigTotal.add(xPercentPremium);
 	BigTotal = BigTotal.add(percentPremium);
+
+	// add for unit based evening codes
+	if (xCode.equals("E400B") || xCode.equals("E401B")) {
+		// reset
+		BigTotal = BigTotal.subtract(percentPremium);
+		BigTotal = BigTotal.subtract(xPercentPremium);
+		// calc xUnit
+		xPercent = new BigDecimal(Double.parseDouble(xPerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
+		otherunit = new BigDecimal(Double.parseDouble(xUnit)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		xPercentPremium = pValue1PerUnit.multiply(otherunit).setScale(2, BigDecimal.ROUND_HALF_UP);
+		xPercentPremium = xPercent.multiply(pValue1PerUnit).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+		BigTotal = BigTotal.add(xPercentPremium);
+		BigTotal = BigTotal.add(percentPremium);
+	}
+	// end
 
 	String str = xPercentPremium.toString();
 	StringBuffer sBuffer = new StringBuffer(str);
@@ -786,6 +813,11 @@ if (errorFlag.compareTo("1")==0){
 <a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
 
 <% 
+	if (warningMsg.length() > 0) {
+%>
+	<p bgcolor="yellow"><%=warningMsg%></p>
+<%
+	}
 	session.setAttribute("content", content); 
 }
 apptMainBean.closePstmtConn();
