@@ -266,7 +266,8 @@ INSERT INTO encounterForm VALUES ('Falls', '../form/formfalls.jsp?demographic_no
 INSERT INTO encounterForm VALUES ('Self Administered', '../form/formselfadministered.jsp?demographic_no=','formSelfAdministered',1);
 INSERT INTO encounterForm VALUES ('Intake Information', '../form/formintakeinfo.jsp?demographic_no=','formIntakeInfo',1);
 INSERT INTO encounterForm VALUES ('SF36', '../form/formSF36.jsp?demographic_no=','formSF36',1);
-
+INSERT INTO encounterForm VALUES ('2 Minute Walk', '../form/form2minwalk.jsp?demographic_no=','form2MinWalk',1);
+INSERT INTO encounterForm VALUES ('Self Management', '../form/formselfmanagement.jsp?demographic_no=','formSelfManagement',1);
 --
 -- Dumping data for table 'encountertemplate'
 --
