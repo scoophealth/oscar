@@ -27,7 +27,8 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     private String coCid;
 	private String dsCid;
     private CadProcedimentos cadProcedimentos;
-
+    private String tpAtendimento = "";	// attendance type - added in 13 nov 2003
+	
     public ProcedimentoRealizadoForm() {
         this.appointment = new Appointment();
         this.procedimentosForm = new Vector();
@@ -66,6 +67,7 @@ public class ProcedimentoRealizadoForm extends ActionForm {
 		formulario.clear();
 		dispatch = "";
 		coCid = "";
+		tpAtendimento = "";
     }
 
     /**
@@ -205,6 +207,22 @@ public class ProcedimentoRealizadoForm extends ActionForm {
 	 */
 	public void setDsCid(String string) {
 		dsCid = string;
+	}
+
+	/**
+	 * Returns the tpAtendimento.
+	 * @return String
+	 */
+	public String getTpAtendimento() {
+		return tpAtendimento;
+	}
+
+	/**
+	 * Sets the tpAtendimento.
+	 * @param tpAtendimento The tpAtendimento to set
+	 */
+	public void setTpAtendimento(String tpAtendimento) {
+		this.tpAtendimento = tpAtendimento;
 	}
 
 }
