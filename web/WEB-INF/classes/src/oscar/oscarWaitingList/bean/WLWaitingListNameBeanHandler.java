@@ -66,7 +66,7 @@ public class WLWaitingListNameBeanHandler {
         return verdict;
     }
         
-    public Collection getWaitingListNameVector(){
+    public Vector getWaitingListNameVector(){
         return waitingListNameVector;
     }    
         
