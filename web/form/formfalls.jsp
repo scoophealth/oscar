@@ -139,7 +139,7 @@
         <td width="5%" align="right">
             <input type="checkbox" class="checkbox" name="fallenLast12MNotRemember" <%= props.getProperty("fallenLast12MNotRemember", "") %>/>
         </td>
-        <td>Cannot Remember</td>
+        <td>Cannot Remember - go to #5</td>
     </tr>
     <tr>
         <td colspan="2">If Yes, </td>
