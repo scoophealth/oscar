@@ -17,7 +17,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -36,7 +36,7 @@ import oscar.oscarProvider.data.*;
 
 public class ProEditSignatureAction extends Action {
 
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
         String providerNo = (String) request.getSession().getAttribute("user");

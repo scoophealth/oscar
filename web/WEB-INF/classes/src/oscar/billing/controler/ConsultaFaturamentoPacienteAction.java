@@ -39,7 +39,7 @@ import javax.servlet.http.*;
 public class ConsultaFaturamentoPacienteAction extends OscarAction {
     static Category cat = Category.getInstance(ConsultaFaturamentoPacienteAction.class.getName());
 
-    public ActionForward perform(ActionMapping mapping, ActionForm form,
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {
         ActionForward myforward = null;
         String myaction = mapping.getParameter();

@@ -61,7 +61,7 @@ public class BillingReProcessBillAction extends Action {
     
    Misc misc = new Misc(); 
    
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
