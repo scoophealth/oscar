@@ -49,21 +49,32 @@ extends org.apache.struts.action.Action {
    throws IOException, ServletException {
       
       String where = "success";
+      TeleplanCorrectionFormWCB data = (TeleplanCorrectionFormWCB) form;
       try {
-         TeleplanCorrectionFormWCB data = (TeleplanCorrectionFormWCB) form;
+         
          AppointmentMainBean bean = (AppointmentMainBean) request.getSession().getAttribute("apptMainBean");
          
          //bean.queryExecuteUpdate(data.getDemographic(), sql_demographic);
-         bean.queryExecuteUpdate(data.getBilling(), sql_billingmaster);
+         bean.queryExecuteUpdate(data.getBillingForStatus(), sql_billingmaster);
          bean.queryExecuteUpdate(data.getBilling(), sql_biling);
          bean.queryExecuteUpdate(data.getWcb(this.GetFeeItemAmount(data.getW_feeitem(), data.getW_extrafeeitem())), sql_wcb);
          //bean.queryExecuteUpdate(data.getBillingMaster(),CLOSE_RECONCILIATION); 
          bean.closePstmtConn();
+         
+         
       }
       catch (Exception ex) {
          System.err.println("WCB Teleplan Correction Query Error: "+ ex.getMessage()+ " - "+ ex.getStackTrace());
       }
-      return mapping.findForward(where);
+      
+      String newURL = mapping.findForward(where).getPath();
+             newURL = newURL + "?billing_no="+data.getId();
+            System.out.println(newURL);
+            
+      ActionForward actionForward = new ActionForward();
+                    actionForward.setPath(newURL);
+                    actionForward.setRedirect(true);
+      return actionForward;            
    }
    
    private String GetFeeItemAmount(String fee1, String fee2) {
