@@ -320,16 +320,22 @@ public class FrmToXMLUtil{
             if(input.equalsIgnoreCase("yes")){
                 return "true";
             }
-            else
+            else if(input.equalsIgnoreCase("no"))
                 return "false";
         }
         else if (xmlName.startsWith("Sel")){
             if(input.equalsIgnoreCase("yes")){
                 return "Present";
             }
-            else{
+            else if(input.equalsIgnoreCase("no")){
                 return "Absent";
-            }            
+            } 
+            else if(input.equalsIgnoreCase("F")){
+                return "Female";
+            } 
+            else if(input.equalsIgnoreCase("M")){
+                return "Male";
+            } 
         }
         return input;
             
