@@ -119,7 +119,7 @@ extends org.apache.struts.action.ActionForm {
             this.date = result.getString("service_date");
             this.billingNo = result.getString("billing_no");
             this.dataSeqNo = result.getString("t_dataseq");
-            this.serviceLocation = result.getString("service_location");
+            this.serviceLocation = result.getString("w_servicelocation");
             this.w_icd9 = result.getString("w_icd9");
             w_reportype = result.getString("w_reporttype");
             w_mname = result.getString("w_mname");
