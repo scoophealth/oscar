@@ -124,7 +124,7 @@ if (hasSig){
                         <%= patient.getCity() %> <%= patient.getPostal() %><br>
                         <%= patient.getPhone() %><br>
                         <b>
-                        <!--bean:message key="oscar.oscarRx.hin"/--><%--= patient.getHin() --%>
+                        <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
                       </b>
                     </td>
                     <td align=right valign=top><b>
