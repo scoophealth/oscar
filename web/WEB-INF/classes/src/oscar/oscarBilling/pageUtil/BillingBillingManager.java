@@ -16,11 +16,11 @@ public class BillingBillingManager {
         
         try {
             String service_code;
-            int units;
+            double units;
             ArrayList lst = new ArrayList();
             BillingItem billingitem;
             
-            lst = getDups(service,service1,service2,service3,service1unit,service2unit,service3unit);
+            lst = getDups2(service,service1,service2,service3,service1unit,service2unit,service3unit);
             
             for (int i=0; i< lst.size(); i++) {
                 BillingItem bi = (BillingItem) lst.get(i);
@@ -31,13 +31,8 @@ public class BillingBillingManager {
                 
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs;
-                String sql;
-                
-                
-                // SELECT b.service_code, b.description , b.value, b.percentage FROM billingservice b, ctl_billingservice c WHERE b.service_code=c.service_code and b.region='BC' and c.service_group='Group1';
-                
-                sql = "SELECT b.service_code, b.description , b.value, b.percentage "
-                + "FROM billingservice b WHERE b.service_code='" + service_code + "'";
+                String sql = "SELECT b.service_code, b.description , b.value, b.percentage "
+                           + "FROM billingservice b WHERE b.service_code='" + service_code + "'";
                 
                 rs = db.GetSQL(sql);
                 
@@ -70,10 +65,10 @@ public class BillingBillingManager {
         
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;
-            String sql;
-            oscar.oscarBilling.pageUtil.BillingBillingManager bbm = new oscar.oscarBilling.pageUtil.BillingBillingManager();
+            ResultSet rs;            
+            //oscar.oscarBilling.pageUtil.BillingBillingManager bbm = new oscar.oscarBilling.pageUtil.BillingBillingManager();
             
+            String sql;
             sql = "select billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,";
             sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
             sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment ";
@@ -157,30 +152,30 @@ public class BillingBillingManager {
     public ArrayList getDups2(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {        
         ArrayList billingItemsArray = new ArrayList();
         for (int i =0 ; i < service.length ; i++){           
-            addBillItem(billingItemsArray,service[i],1);
+            addBillItem(billingItemsArray,service[i],"1");
         }        
         if (service1.compareTo("") != 0){
             if (service1unit.compareTo("")==0){
                 service1unit = "1";
             }          
-            int numUnit = Integer.parseInt(service1unit);
-            addBillItem(billingItemsArray,service1,numUnit);
+            //int numUnit = Integer.parseInt(service1unit);
+            addBillItem(billingItemsArray,service1,service1unit);
                         
         }
         if (service2.compareTo("") != 0){
             if (service2unit.compareTo("")==0){
                 service2unit = "1";
             }
-            int numUnit = Integer.parseInt(service2unit);
-            addBillItem(billingItemsArray,service2,numUnit);
+            //int numUnit = Integer.parseInt(service2unit);
+            addBillItem(billingItemsArray,service2,service2unit);
             
         }
         if (service3.compareTo("") != 0){
             if (service3unit.compareTo("")==0){
                 service3unit = "1";
             }
-            int numUnit = Integer.parseInt(service3unit);
-            addBillItem(billingItemsArray,service3,numUnit);            
+            //int numUnit = Integer.parseInt(service3unit);
+            addBillItem(billingItemsArray,service3,service3unit);            
         }
         
        
@@ -190,7 +185,7 @@ public class BillingBillingManager {
     }
     
     
-    private BillingItem addBillItem(ArrayList ar,String code,int serviceUnits){
+    private BillingItem addBillItem(ArrayList ar,String code,String serviceUnits){
         boolean newCode = true;
         BillingItem bi = null;
         for (int i = 0; i < ar.size() ;i++ ){
@@ -229,20 +224,20 @@ public class BillingBillingManager {
         String description;
         double price;
         double percentage  ;
-        int units;
+        double units;
         double lineTotal;
         
-        public BillingItem(String service_code, String description, String price1, String percentage1, int units1) {
+        public BillingItem(String service_code, String description, String price1, String percentage1, double units1) {
             this.service_code= service_code;
             this.description = description;
             this.price = Double.parseDouble(price1);
             this.percentage = Double.parseDouble(percentage1);
-            this.units = units;
+            this.units = units1;
         }
         
         public BillingItem(String service_code, String units1) {
             this.service_code= service_code;
-            this.units = Integer.parseInt(units1);
+            this.units = Double.parseDouble(units1);
         }
         public BillingItem(String service_code, int units1) {
             this.service_code= service_code;
@@ -250,11 +245,12 @@ public class BillingBillingManager {
         }
         
         public void addUnits(int num){
-            units += num;
-            
+            units += num;            
         }
         
-        
+        public void addUnits(String num) {
+            units += (num.compareTo("") != 0) ? Double.parseDouble(num) : 0;
+        }
         
         public String getServiceCode() {
             return service_code;
@@ -263,7 +259,7 @@ public class BillingBillingManager {
             return description;
         }
         
-        public int getUnit() {
+        public double getUnit() {
             return units;
         }
         
@@ -272,7 +268,7 @@ public class BillingBillingManager {
             return bdFee.toString();
         }
         public double getPrice() {
-            return price;
+            return price * units;
         }
         public double getPercentage() {
             return percentage;
