@@ -45,7 +45,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-{"select_formar", "select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no order by c_finalEDB desc limit ? offset ?"  }, 
+{"select_formar", "select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  }, 
 {"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by last_name"}, 
   };
   reportMainBean.doConfigure(dbParams,dbQueries);
@@ -92,7 +92,7 @@ function setfocus() {
     providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
   }
     
-  String[] param =new String[3];
+  String[] param =new String[2];
   param[0]=startDate; //"0001-01-01"; 
   param[1]=endDate; //"0001-01-01"; 
   int[] itemp1 = new int[2];
@@ -100,13 +100,14 @@ function setfocus() {
   itemp1[0] = Integer.parseInt(strLimit2);
   boolean bodd=false;
   int nItems=0;
+  System.out.println(startDate + "; " + endDate + "; " + itemp1[0] + "; " + itemp1[1]);
   rs = reportMainBean.queryResults(param,itemp1, "select_formar");
   while (rs.next()) {
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
 %>
 <tr bgcolor="<%=bodd?weakcolor:"white"%>">
-      <td align="center" nowrap><%=rs.getString("c_finalEDB")!=null?rs.getString("c_finalEDB").replace('-','/'):"0000/00/00"%></td>
+      <td align="center" nowrap><%=rs.getString("c_finalEDB")!=null?rs.getString("c_finalEDB").replace('-','/'):"0001/01/01"%></td>
       <td><%=rs.getString("c_pName")%></td>
       <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
       <td><%=rs.getString("pg1_age")%></td>
