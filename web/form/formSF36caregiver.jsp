@@ -156,13 +156,12 @@
 
 
 <script type="text/javascript" language="Javascript">
-    
     var choiceFormat  = new Array(6,10,12,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,62,64,68,70,74,76,81,82,86,88,92,94,98,100,104,106,111,113,117,119,123,125,129,131,135,137,141,143,147,149,153,155,159,161,165,167,171,173,177,179,183,185,189,191,195,197,201,204,208);
     var allNumericField = null;
     var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";
     
-    function goToPage1(){             
+    function backToPage1(){             
             document.getElementById('page1').style.display = 'block';
             document.getElementById('page2').style.display = 'none';  
             document.getElementById('page3').style.display = 'none';
@@ -173,7 +172,7 @@
     
     function goToPage2(){      
         var checkboxes = new Array(6,10,12,16);        
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(6,17,2,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -183,9 +182,18 @@
         }
     }
 
+    function backToPage2(){ 
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none'; 
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none'; 
+    }
+    
     function goToPage3(){      
         var checkboxes = new Array(18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56);        
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(18,57,10,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
@@ -195,9 +203,18 @@
         }
     }
 
+    function backToPage3(){ 
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'block';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none'; 
+    }
+    
     function goToPage4(){    
         var checkboxes = new Array(58,62,64,68,70,74,76,81,82,86,88,92,94,98);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(58,99,7,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -206,10 +223,19 @@
             document.getElementById('page6').style.display = 'none';        
         }
     }
+    
+    function backToPage4(){ 
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'block';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none'; 
+    }
 
     function goToPage5(){      
         var checkboxes = new Array(100,104,106,111,113,117);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(100,118,3,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -218,10 +244,19 @@
             document.getElementById('page6').style.display = 'none';        
         }
     }
+    
+    function backToPage5(){ 
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'block';
+        document.getElementById('page6').style.display = 'none'; 
+    }
 
     function goToPage6(){      
         var checkboxes = new Array(119,123,125,129,131,135,137,141,143,147,149,153,155,159,161,165,167,171);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(119,172,9,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -230,7 +265,19 @@
             document.getElementById('page6').style.display = 'block';        
         }
     }
-
+    
+    function checkBeforeSave(){                
+        if(document.getElementById('page6').style.display=='block'){
+            if(isFormCompleted(173,208,6,0)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,17,2,0)==true && isFormCompleted(18,57,10,0)==true && isFormCompleted(58,99,7,0)==true && isFormCompleted(100,118,3,0)==true && isFormCompleted(119,172,9,0)==true && isFormCompleted(173,208,6,0)==true)
+                return true;
+        }            
+        
+        return false;
+    }
 </script>
 <script type="text/javascript" src="formScripts.js">
 </script>
@@ -579,7 +626,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage1();"><< Previous Page</a>
+            <a href="javascript: backToPage1();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage3();">Next Page >></a>
@@ -815,7 +862,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage2();"><< Previous Page</a>
+            <a href="javascript: backToPage2();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage4();">Next Page >></a>
@@ -956,7 +1003,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage3();"><< Previous Page</a>
+            <a href="javascript: backToPage3();"><< Previous Page</a>
         </td> 
         <td align="right">
             <a href="javascript: goToPage5();">Next Page >></a>
@@ -1215,7 +1262,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage4();"><< Previous Page</a>
+            <a href="javascript: backToPage4();"><< Previous Page</a>
         </td>    
         <td align="right">
             <a href="javascript: goToPage6();">Next Page >></a>
@@ -1445,7 +1492,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage5();"><< Previous Page</a>
+            <a href="javascript: backToPage5();"><< Previous Page</a>
         </td>    
         <td>
            &nbsp;
@@ -1461,7 +1508,7 @@
   if (!bView) {
 %>
             <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>

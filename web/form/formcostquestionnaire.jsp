@@ -179,12 +179,10 @@
     var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";
     
-    function goToPage1(){  
-            
+    function backToPage1(){              
         document.getElementById('page1').style.display = 'block';
         document.getElementById('page2').style.display = 'none';  
-        document.getElementById('page3').style.display = 'none';
-             
+        document.getElementById('page3').style.display = 'none';             
     }
     
     function goToPage2(){              
@@ -192,24 +190,43 @@
         var a = new Array(0,9999, 23,26,29);
         var allInputs = new Array(a);        
         var numericFields = new Array(8,9,12,13,14,15,16,17,18,19,20,22,23,25,26,28,29);
-        if (is1CheckboxChecked(0, checkboxes)==true && allAreNumeric(0, numericFields)==true && areInRange(0, allInputs)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true && allAreNumeric(0, numericFields)==true && areInRange(0, allInputs)==true  && isFormCompleted(6,19,2,8)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
                    
         }
     }
+    
+    function backToPage2(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none';          
+    }
 
     function goToPage3(){ 
         var checkboxes = new Array(30,31,34,35,37,38,42,43);
         var numericFields = new Array(32,33,36,39,40,41,44,46,48,50);
-        if (is1CheckboxChecked(0, checkboxes)==true && allAreNumeric(0, numericFields)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true && allAreNumeric(0, numericFields)==true  && isFormCompleted(30,50,4,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
                 
         }
-    }        
+    } 
+           
+    function checkBeforeSave(){                
+        if(document.getElementById('page3').style.display=='block'){
+            if(isFormCompleted(51,64,1,0)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,19,2,8)==true && isFormCompleted(31,50,4,0)==true && isFormCompleted(51,64,1,0)==true)
+                return true;
+        }            
+        
+        return false;
+    }
     
     function roundCost(index){
         var originalNb = document.forms[0].elements[index].value;
@@ -558,7 +575,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage1();"><< Previous Page</a>
+            <a href="javascript: backToPage1();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage3();">Next Page >></a>
@@ -652,7 +669,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage2();"><< Previous Page</a>
+            <a href="javascript: backToPage2();"><< Previous Page</a>
         </td>
         <td align="right">           
         </td>
@@ -667,7 +684,7 @@
   if (!bView) {
 %>
             <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>

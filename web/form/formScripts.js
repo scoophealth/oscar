@@ -306,3 +306,47 @@
             }
         return value_string
     }
+
+    function trim(str) { 
+        str.replace(/^\s*/, '').replace(/\s*$/, ''); 
+        return str;
+    } 
+    
+    function isFormCompleted(startEle, endEle, nbCheck, nbText){
+        var countCheck=0;
+        var countText=0;
+        var confirmed = true;
+        //var nbItems = endEle - startEle + 1;
+        //var emptyFields = new Array(nbItems);
+        //var index = 0;
+        for(var i=startEle; i<=endEle; i++){
+            //document.forms[0].elements[i].style.backgroundColor='white';
+            if(document.forms[0].elements[i].type =="checkbox"){                
+                if(document.forms[0].elements[i].checked == true){                    
+                    countCheck++;
+                }
+                //else{
+                //    emptyFields[index] = i;
+                //    index++;
+                //}
+            }
+            else if (document.forms[0].elements[i].type == "text"){
+                if(document.forms[0].elements[i].value!=null){
+                    var text = trim(document.forms[0].elements[i].value);
+                    if(text.length!=0)
+                        countText++;
+                }
+                //else{
+                //    emptyFields[index] = i;
+                //    index++;
+                //}
+            }
+        }        
+        if (countCheck<nbCheck || countText<nbText){
+            //for(var i=0; i<emptyFields.length; i++){
+            //    document.forms[0].elements[emptyFields[i]].style.backgroundColor='yellow';
+            //}
+            confirmed = confirm("You have not filled in all the question(s). Are you sure you want to continue?");            
+        }
+        return confirmed;
+    }

@@ -171,19 +171,32 @@
     
     var action = "/<%=project_home%>/form/formname.do";
     
-    function goToPage1(){             
+    function backToPage1(){             
             document.getElementById('page1').style.display = 'block';
             document.getElementById('page2').style.display = 'none';              
     }
     
     function goToPage2(){      
         var checkboxes = new Array(6,9,10,13,14,17,18,21,22,25,26,29,30,33,34,37,38,41,42,45,46,49,50,53);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true && isFormCompleted(6,53,12,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block';             
         }
     }
-
+    
+    function checkBeforeSave(){                
+        if(document.getElementById('page2').style.display=='block'){
+            if(isFormCompleted(54,87,8,1)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,53,12,0)==true && isFormCompleted(54,87,8,1)==true)
+                return true;
+        }            
+        
+        return false;
+    }
+    
     function calScore(){
         if(is1CheckboxChecked(0, choiceFormat)==true){
             //alert("calScore function called");
@@ -531,7 +544,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage1();"><< Previous Page</a>
+            <a href="javascript: backToPage1();"><< Previous Page</a>
         </td>
         <td align="right">            
         </td>
@@ -546,7 +559,7 @@
   if (!bView) {
 %>
             <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>

@@ -155,7 +155,7 @@
 
 <script type="text/javascript" language="Javascript">
     
-    var choiceFormat  = new Array(11,15,16,22,24,26,27,31,32,36,37,45,46,53,54,56,62,63,66,67,70,71,72,73,74,77,78,81,82,85,86,89,90,93,94,97,98,101,102,105,106,109,110,113,114,117,118,121,122,125,126,129,130,133,134,137,138,141,142,145,146,149,150,153);
+    var choiceFormat  = new Array(11,15,16,22,24,26,37,45,46,53,54,56,62,63,66,67,70,71,72,73,74,77,78,81,82,85,86,89,90,93,94,97,98,101,102,105,106,109,110,113,114,117,118,121,122,125,126,129,130,133,134,137,138,141,142,145,146,149,150,153);
     var allNumericField = new Array(23,57,58,59,60,64,68,154,155);
     var allMatch = null;
     var msg2 = "Are you sure that there are more than 5 people living in your household?"
@@ -167,17 +167,19 @@
     
     var action = "/<%=project_home%>/form/formname.do";
     
-    function goToPage1(){             
-            document.getElementById('page1').style.display = 'block';
-            document.getElementById('page2').style.display = 'none';  
-            document.getElementById('page3').style.display = 'none';
-            document.getElementById('page4').style.display = 'none';
-            document.getElementById('page5').style.display = 'none';        
+    function backToPage1(){
+        document.getElementById('page1').style.display = 'block';
+        document.getElementById('page2').style.display = 'none';  
+        document.getElementById('page3').style.display = 'none';
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';        
+        
     }
     
-    function goToPage2(){      
-        var checkboxes = new Array(11,15,16,22,24,26,27,31,32,36);                                
-        if (oneFieldIsNumeric(0,'23')==true && is1CheckboxChecked(0, checkboxes)==true && confirmRange(0, allInputs2,msg2)==true){
+    function goToPage2(){
+        //check page 1
+        var checkboxes = new Array(11,15,16,22,24,26);                                
+        if (oneFieldIsNumeric(0,'23')==true && is1CheckboxChecked(0, checkboxes)==true && confirmRange(0, allInputs2,msg2)==true && isFormCompleted(11,36,5,1)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -186,11 +188,20 @@
         }
     }
 
-    function goToPage3(){      
+    function backToPage2(){    
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none'; 
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';  
+    }
+    
+    function goToPage3(){
+        //check page 2
         var checkboxes = new Array(37,45,46,53,54,56);
         var numericFields = new Array(57,58,59,60);
         
-        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true && confirmRange(0, allInputs3,msg3)==true){
+        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true && confirmRange(0, allInputs3,msg3)==true && isFormCompleted(37,60,3,4)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
@@ -198,11 +209,19 @@
             document.getElementById('page5').style.display = 'none';
         }
     }
+    function backToPage3(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'block';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';        
+    }
 
     function goToPage4(){    
+        //check page 3
         var checkboxes = new Array(62,63,66,67,70,71,72,73,74,77,78,81,82,85);
         numericFields = new Array(64,68);        
-        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true){
+        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(61,61,0,1)==true && isFormCompleted(62,85,8,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -211,9 +230,17 @@
         }
     }
 
+    function backToPage4(){    
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'block';
+        document.getElementById('page5').style.display = 'none';        
+    }
+    
     function goToPage5(){      
         var checkboxes = new Array(86,89,90,93,94,97,98,101,102,105,106,109,110,113,114,117,118,121);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true && isFormCompleted(86,121,9,0)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -222,9 +249,17 @@
         }
     }
 
-    function checkBeforeSave(){
-        if(confirmRange(0, allInputs2,msg2)==true&&confirmRange(0, allInputs3,msg3)==true)
-            return true;
+    function checkBeforeSave(){        
+        if(confirmRange(0, allInputs2,msg2)==true&&confirmRange(0, allInputs3,msg3)==true){
+            if(document.getElementById('page5').style.display=='block'){
+                if(isFormCompleted(122,153,8,0)==true)
+                    return true;
+            }    
+            else{
+                if(isFormCompleted(11,36,5,1)==true && isFormCompleted(37,60,3,4)==true && isFormCompleted(61,61,0,1)==true && isFormCompleted(62,85,8,0)==true && isFormCompleted(86,121,9,0)==true && isFormCompleted(122,153,8,0)==true)
+                    return true;
+            }            
+        }
         return false;
     }
 </script>
@@ -410,7 +445,7 @@
                     <td width="5%" align="right">
                         <input type="checkbox"  class="checkbox" name="helpRelationshipGChildren" <%= props.getProperty("helpRelationshipGChildren", "") %>/>
                     </td>
-                    <td>Grandchildren</td>
+                    <td>Grandchildren/Extened Family</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -442,7 +477,7 @@
                     <td width="5%" align="right">
                         <input type="checkbox"  class="checkbox" name="otherSupportGChildren" <%= props.getProperty("otherSupportGChildren", "") %>/>
                     </td>
-                    <td>Grandchildren</td>
+                    <td>Grandchildren/Extened Family</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -663,7 +698,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage1();"><< Previous Page</a>
+            <a href="javascript: backToPage1();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage3();">Next Page >></a>
@@ -891,7 +926,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage2();"><< Previous Page</a>
+            <a href="javascript: backToPage2();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage4();">Next Page >></a>
@@ -1217,7 +1252,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage3();"><< Previous Page</a>
+            <a href="javascript: backToPage3();"><< Previous Page</a>
         </td> 
         <td align="right">
             <a href="javascript: goToPage5();">Next Page >></a>
@@ -1303,7 +1338,7 @@
                 <tr>                    
                     <th>15. </th>
                     <th colspan="7" class="question">
-                        (Has a doctor ever told you that you had...) chronic osteoporosis?
+                        (Has a doctor ever told you that you had...) osteoporosis?
                     </th>
                 </tr>
                 <tr bgcolor="white">
@@ -1439,7 +1474,7 @@
                 <tr>                    
                     <th valign="top">19. </th>
                     <th colspan="7" class="question">
-                        (Has a doctor ever told you that you had...) backpain?
+                        (Has a doctor ever told you that you had...) back problem?
                     </th>
                 </tr>
                 <tr bgcolor="white">
@@ -1521,7 +1556,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage4();"><< Previous Page</a>
+            <a href="javascript: backToPage4();"><< Previous Page</a>
         </td>    
         <td>&nbsp;</td>
     </tr>
@@ -1534,7 +1569,7 @@
 <%
   if (!bView) {
 %>
-            <input type="submit" value="Save" onclick="javascript: if(checkBeforeSave()==true) return onSave(); else return false;" />
+            <input type="submit" value="Save" onclick="javascript: return onSave()" />
             <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }

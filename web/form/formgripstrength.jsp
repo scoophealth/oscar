@@ -184,6 +184,13 @@
         }
             document.forms[0].elements[result].value=score/(values.length);        
     }
+    
+    function checkBeforeSave(){                        
+        if(isFormCompleted(6,13,0,8)==true)
+            return true;
+        
+        return false;
+    }
 </script>
 <script type="text/javascript" src="formScripts.js">
 </script>
@@ -284,7 +291,7 @@
   if (!bView) {
 %>
             <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>

@@ -247,9 +247,18 @@
             document.getElementById('copyRight').style.display = 'none';
     }
     
+    function backToPage1(){             
+            document.getElementById('instruction').style.display = 'none';
+            document.getElementById('page1').style.display = 'block';
+            document.getElementById('page2').style.display = 'none';  
+            document.getElementById('page3').style.display = 'none';
+            document.getElementById('functionBar').style.display = 'block';
+            document.getElementById('copyRight').style.display = 'none';
+    }
+    
     function goToPage2(){      
         var checkboxes = new Array(6,10,11,15,16,20,21,25,26,30,31,35,36,40,41,45,46,50,51,55,56,60,61,65);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true && isFormCompleted(6,65,12,0)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
@@ -259,9 +268,18 @@
         }
     }
 
+    function backToPage2(){
+        document.getElementById('instruction').style.display = 'none';
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none';
+        document.getElementById('functionBar').style.display = 'block';
+        document.getElementById('copyRight').style.display = 'none';
+    }
+    
     function goToPage3(){      
         var checkboxes = new Array(66,70,71,75,76,80,81,85,86,90,91,95,96,100,101,105,106,110,111,115);        
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(66,115,10,0)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
@@ -270,7 +288,19 @@
             document.getElementById('copyRight').style.display = 'none';
         }
     }    
+     
+    function checkBeforeSave(){                
+        if(document.getElementById('page3').style.display=='block'){
+            if(isFormCompleted(116,165,10,0)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,65,12,0)==true && isFormCompleted(66,115,10,0)==true && isFormCompleted(116,165,10,0)==true)
+                return true;
+        }            
         
+        return false;
+    }
 </script>
 <script type="text/javascript" src="formScripts.js">          
 </script>
@@ -700,7 +730,7 @@
         </tr>    
         <tr class="subject">
             <td align="left">
-                <a href="javascript: goToPage1();"><< Previous Page</a>
+                <a href="javascript: backToPage1();"><< Previous Page</a>
             </td>
             <td align="right">
                 <a href="javascript: goToPage3();">Next Page >></a>
@@ -814,7 +844,7 @@
         </tr>    
         <tr class="subject">
             <td align="left">
-                <a href="javascript: goToPage2();"><< Previous Page</a>
+                <a href="javascript: backToPage2();"><< Previous Page</a>
             </td>
             <td align="right">                
             </td>
@@ -829,7 +859,7 @@
       if (!bView) {
     %>
                 <input type="submit" value="Save" onclick="javascript: return onSave();" />
-                <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+                <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
     <%
       }
     %>

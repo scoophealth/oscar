@@ -259,9 +259,22 @@
             document.getElementById('copyRight').style.display = 'none';
     }
     
+    function backToPage1(){             
+            document.getElementById('instruction').style.display = 'none';
+            document.getElementById('page1').style.display = 'block';
+            document.getElementById('page2').style.display = 'none';  
+            document.getElementById('page3').style.display = 'none';
+            document.getElementById('page4').style.display = 'none';
+            document.getElementById('page5').style.display = 'none'; 
+            document.getElementById('totalScore').style.display = 'none';
+            document.getElementById('subject2').style.display = 'none';
+            document.getElementById('functionBar').style.display = 'block';
+            document.getElementById('copyRight').style.display = 'none';
+    }
+    
     function goToPage2(){      
         var checkboxes = new Array(6,10,11,15,16,20,21,25,26,30,31,35,36,40,41,45);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(6,45,8,0)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
@@ -275,9 +288,22 @@
         }
     }
 
+    function backToPage2(){ 
+        document.getElementById('instruction').style.display = 'none';
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none'; 
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('totalScore').style.display = 'none';
+        document.getElementById('subject2').style.display = 'none';
+        document.getElementById('functionBar').style.display = 'block';
+        document.getElementById('copyRight').style.display = 'none';
+    }
+    
     function goToPage3(){      
         var checkboxes = new Array(46,50,51,55,56,60,61,65,66,70,71,75,76,80,81,85);        
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(46,85,8,0)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
@@ -290,10 +316,23 @@
             document.getElementById('copyRight').style.display = 'none';
         }
     }
+    
+    function backToPage3(){ 
+        document.getElementById('instruction').style.display = 'none';
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'block';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('totalScore').style.display = 'none';
+        document.getElementById('subject2').style.display = 'none';
+        document.getElementById('functionBar').style.display = 'block';
+        document.getElementById('copyRight').style.display = 'none';
+    }
 
     function goToPage4(){    
         var checkboxes = new Array(86,90,91,95,96,100,101,105,106,110,111,115,116,120,121,125);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(86,125,8,0)==true){
             document.getElementById('instruction').style.display = 'none';
             //document.getElementById('visualAid1').style.display = 'none';
             //document.getElementById('visualAid2').style.display = 'none';
@@ -309,6 +348,21 @@
         }
     }
 
+    function backToPage4(){ 
+        document.getElementById('instruction').style.display = 'none';
+        //document.getElementById('visualAid1').style.display = 'none';
+        //document.getElementById('visualAid2').style.display = 'none';
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'block';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('totalScore').style.display = 'none';
+        document.getElementById('subject2').style.display = 'none';
+        document.getElementById('functionBar').style.display = 'block';
+        document.getElementById('copyRight').style.display = 'none';
+    }
+    
     function goToPage5(){      
         var checkboxes = new Array(126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165);
         if (is1CheckboxChecked(0, checkboxes)==true){
@@ -326,10 +380,25 @@
             document.getElementById('copyRight').style.display = 'none';
         }
     }
+    
+    function backToPage5(){ 
+        document.getElementById('instruction').style.display = 'none';
+        //document.getElementById('visualAid1').style.display = 'none';
+        //document.getElementById('visualAid2').style.display = 'none';
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'block';
+        document.getElementById('totalScore').style.display = 'none';
+        //document.getElementById('subject2').style.display = 'block';
+        document.getElementById('functionBar').style.display = 'block';
+        document.getElementById('copyRight').style.display = 'none';
+    }
 
     function goToScorePage(){      
         var checkboxes = new Array(126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165);
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true  && isFormCompleted(126,165,8,0)==true){
             document.getElementById('instruction').style.display = 'none';
             //document.getElementById('visualAid1').style.display = 'none';
             //document.getElementById('visualAid2').style.display = 'none';
@@ -345,6 +414,19 @@
         }
     }
 
+    function checkBeforeSave(){                
+        if(document.getElementById('page5').style.display=='block'){
+            if(isFormCompleted(166,205,8,0)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,45,8,0)==true && isFormCompleted(46,85,8,0)==true && isFormCompleted(86,125,8,0)==true && isFormCompleted(126,165,8,0)==true && isFormCompleted(166,205,8,0)==true)
+                return true;
+        }            
+        
+        return false;
+    }
+    
     function showSubtitle(){
         if(document.getElementById('questionnaire').style.display == 'block')
             document.getElementById('questionnaire').style.display = 'none';
@@ -789,7 +871,7 @@
         </tr>    
         <tr class="subject">
             <td align="left">
-                <a href="javascript: goToPage1();"><< Previous Page</a>
+                <a href="javascript: backToPage1();"><< Previous Page</a>
             </td>
             <td align="right">
                 <a href="javascript: goToPage3();">Next Page >></a>
@@ -912,7 +994,7 @@
         </tr>    
         <tr class="subject">
             <td align="left">
-                <a href="javascript: goToPage2();"><< Previous Page</a>
+                <a href="javascript: backToPage2();"><< Previous Page</a>
             </td>
             <td align="right">
                 <a href="javascript: goToPage4();">Next Page >></a>
@@ -1035,7 +1117,7 @@
         </tr>    
         <tr class="subject">
             <td align="left">
-                <a href="javascript: goToPage3();"><< Previous Page</a>
+                <a href="javascript: backToPage3();"><< Previous Page</a>
             </td>
             <td align="right">
                 <a href="javascript: calculateScore();"> Calculate Total Score</a>
@@ -1076,7 +1158,7 @@
         </tr>    
         <tr class="subject">
             <td align="left">
-                <a href="javascript: goToPage4();"><< Previous Page</a>
+                <a href="javascript: backToPage4();"><< Previous Page</a>
             </td>
             <td align="right">
                 &nbsp;
@@ -1215,7 +1297,7 @@
       if (!bView) {
     %>
                 <input type="submit" value="Save" onclick="javascript: return onSave();" />
-                <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+                <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
     <%
       }
     %>

@@ -176,7 +176,7 @@
     var action = "/<%=project_home%>/form/formname.do";
         
     
-    function goToPage1(){  
+    function backToPage1(){  
             
         document.getElementById('page1').style.display = 'block';
         document.getElementById('page2').style.display = 'none';  
@@ -191,7 +191,7 @@
         var b = new Array(0,180, 13);
         var c = new Array(0,900, 14);
         var allInputs = new Array(a,b,c);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(6,14,0,6)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -199,12 +199,21 @@
             document.getElementById('page5').style.display = 'none';
             document.getElementById('page6').style.display = 'none';        
         }
-    }  
+    } 
+ 
+    function backToPage2(){                      
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none'; 
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none';                
+    } 
 
     function goToPage3(){ 
         var a = new Array(0,5, 15,16,17,18,19,20);
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(15,21,0,7)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
@@ -214,9 +223,18 @@
         }
     }
 
+    function backToPage3(){         
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'block';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none';        
+    }
+    
     function goToPage4(){    
         var numericFields = new Array(22,24);
-        if (allAreNumeric(0,numericFields)==true){
+        if (allAreNumeric(0,numericFields)==true && isFormCompleted(22,24,0,3)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -226,10 +244,19 @@
         }
     }
 
+    function backToPage4(){            
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'block';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none';                
+    }
+    
     function goToPage5(){      
        var checkboxes = new Array(25,26,27,28,29,30,31,32,33,34,35,36,37,38,40,41);
        var numericFields = new Array(39,42);
-       if (is1CheckboxChecked(0, checkboxes)==true&&allAreNumeric(0,numericFields)==true){
+       if (is1CheckboxChecked(0, checkboxes)==true&&allAreNumeric(0,numericFields)==true && isFormCompleted(25,42,8,2)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -239,10 +266,19 @@
        }
     }
 
+    function backToPage5(){      
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'block';
+        document.getElementById('page6').style.display = 'none';                     
+    }
+    
     function goToPage6(){      
         var checkboxes = new Array(43,44,47,48);
         var numericFields = new Array(45,46,49,50);
-        if (is1CheckboxChecked(0, checkboxes)==true&&allAreNumeric(0,numericFields)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true&&allAreNumeric(0,numericFields)==true && isFormCompleted(43,50,2,2)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -252,6 +288,19 @@
         }
     }
 
+    function checkBeforeSave(){                
+        if(document.getElementById('page6').style.display=='block'){
+            if(isFormCompleted(51,54,0,4)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,14,0,6)==true && isFormCompleted(15,21,0,7)==true && isFormCompleted(22,24,0,3)==true && isFormCompleted(25,42,8,2)==true && isFormCompleted(43,50,2,2)==true && isFormCompleted(51,54,0,4)==true)
+                return true;
+        }            
+        
+        return false;
+    }
+    
     function exScore(itemNb){        
         var item = document.forms[0].elements[itemNb].value;
         var score = 0;
@@ -282,6 +331,19 @@
     
     function exScore2(){
         document.forms[0].elements[14].value = exScore('7')+exScore('8')+exScore('9')+exScore('10')+exScore('12');
+    }
+    
+    function calMentalStressScore(){        
+        document.forms[0].elements[24].value = 1;
+                
+        var times = document.forms[0].elements[22].value;
+        if(times==0)
+            document.forms[0].elements[24].value = 1;
+        else if (times>=1 && times<=7)
+            document.forms[0].elements[24].value = 2;
+        else if (times>=8)
+            document.forms[0].elements[24].value = 3;            
+
     }
     
     function cognitiveScore(){
@@ -640,7 +702,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage1();"><< Previous Page</a>
+            <a href="javascript: backToPage1();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage3();">Next Page >></a>
@@ -665,7 +727,7 @@
                     <td width="35%">                    
                     </td>
                     <td width="65%">
-                        <input type="text" name="mentalStressTimes" size="5" value="<%= props.getProperty("mentalStressTimes", "") %>"/> times
+                        <input type="text" name="mentalStressTimes" onchange="javascript:calMentalStressScore()" size="5" value="<%= props.getProperty("mentalStressTimes", "") %>"/> times
                     </td>
                 </tr>
                 <tr bgcolor="white">
@@ -729,7 +791,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage2();"><< Previous Page</a>
+            <a href="javascript: backToPage2();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage4();">Next Page >></a>
@@ -746,7 +808,7 @@
                 </tr>                
                 <tr>
                     <td colspan="3">
-                        In the <font style="font-weight:bold">past 6 months</font>, have you gotten help from resources other
+                        In the <font style="font-weight:bold">past 9 months</font>, have you gotten help from resources other
                         than friends or family for the following services? (Please check Yes or No for each category).
                     </td>
                 </tr>    
@@ -859,7 +921,7 @@
                 </tr>                
                 <tr>
                     <td colspan="3">
-                        In the <font style="font-weight:bold">past 6 months</font>, have you gotten help from resources other
+                        In the <font style="font-weight:bold">past 9 months</font>, have you gotten help from resources other
                         than friends or family for the following services? (Please check Yes or No for each category).
                     </td>
                 </tr>    
@@ -908,7 +970,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage3();"><< Previous Page</a>
+            <a href="javascript: backToPage3();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage5();">Next Page >></a>
@@ -942,7 +1004,7 @@
                     </td>   
                     <td width="65%">
                         If Yes, how many <font style="font-weight:bold">total</font> hours did attend in the 
-                        <font style="font-weight:bold">last 6 months</font>?
+                        <font style="font-weight:bold">last 9 months</font>?
                         <input type="text" name="healthEducationHours"  onchange="javascript: healthEdScore()" size="10" value="<%= props.getProperty("healthEducationHours", "") %>"/>
                     </td>    
                 </tr>  
@@ -997,7 +1059,7 @@
                 </tr>                
                 <tr>
                     <td colspan="4">
-                        In the <font style="font-weight:bold">past 6 months</font>, have you attended any organized exercise programs
+                        In the <font style="font-weight:bold">past 9 months</font>, have you attended any organized exercise programs
                         (such as walking clubs, aerobic classes or water exercise programs)?.
                     </td>
                 </tr>    
@@ -1014,7 +1076,7 @@
                     </td>   
                     <td width="65%">
                         If Yes, how many <font style="font-weight:bold">total</font> hours did attend in the 
-                        <font style="font-weight:bold">last 6 months</font>?
+                        <font style="font-weight:bold">last 9 months</font>?
                         <input type="text" name="exercisePrgmHours" onchange="javascript:exPrgmScore()" size="10" value="<%= props.getProperty("exercisePrgmHours", "") %>"/>
                     </td>    
                 </tr>  
@@ -1071,7 +1133,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage4();"><< Previous Page</a>
+            <a href="javascript: backToPage4();"><< Previous Page</a>
         </td>    
         <td align="right">
             <a href="javascript: goToPage6();">Next Page >></a>
@@ -1163,7 +1225,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage5();"><< Previous Page</a>
+            <a href="javascript: backToPage5();"><< Previous Page</a>
         </td>    
         <td>
            &nbsp;
@@ -1179,7 +1241,7 @@
   if (!bView) {
 %>
             <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>

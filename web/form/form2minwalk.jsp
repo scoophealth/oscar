@@ -171,13 +171,16 @@
         var match3 = document.forms[0].elements[6].value.match(re3);
         var match4 = document.forms[0].elements[6].value.match(re4);
         if(match1||match2||match3||match4){            
-            return true;       
+            if(isFormCompleted(6,21,2,3)==true){
+                return true;
+            }    
         }
         else{
             alert("The input distance must be in ####.# format");
             return false;
         }
-        return true;
+               
+        return false;
     }
 
 </script>

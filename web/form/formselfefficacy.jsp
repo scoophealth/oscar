@@ -174,8 +174,7 @@
     var allMatch = new Array(a);
     var action = "/<%=project_home%>/form/formname.do";
     
-    function goToPage1(){  
-            
+    function backToPage1(){              
         document.getElementById('page1').style.display = 'block';
         document.getElementById('page2').style.display = 'none';  
         document.getElementById('page3').style.display = 'none';
@@ -189,7 +188,7 @@
     function goToPage2(){              
         var a = new Array(1,10, 6,7,8,10);        
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(6,11,0,6)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -201,10 +200,21 @@
         }
     }
 
+    function backToPage2(){ 
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none'; 
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none';
+        document.getElementById('page7').style.display = 'none';     
+        document.getElementById('page8').style.display = 'none';  
+    }
+    
     function goToPage3(){ 
         var a = new Array(1,10, 12,13,14,15);
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(12,16,0,5)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
@@ -214,10 +224,19 @@
         }
     }
 
+    function backToPage3(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'block';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none';
+    }
+    
     function goToPage4(){  
         var a = new Array(1,10, 17,18,19);
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(17,20,0,4)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -229,10 +248,21 @@
         }
     }
 
+    function backToPage4(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'block';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none';        
+        document.getElementById('page7').style.display = 'none';     
+        document.getElementById('page8').style.display = 'none'; 
+    }
+    
     function goToPage5(){  
         var a = new Array(1,10, 21,22,23,24,25);
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(21,26,0,6)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -243,11 +273,22 @@
             document.getElementById('page8').style.display = 'none';             
        }
     }
+    
+    function backToPage5(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'block';
+        document.getElementById('page6').style.display = 'none';    
+        document.getElementById('page7').style.display = 'none';     
+        document.getElementById('page8').style.display = 'none'; 
+    }
 
     function goToPage6(){             
         var a = new Array(1,10, 27,28,29);
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true  && isFormCompleted(27,30,0,4)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -258,11 +299,22 @@
             document.getElementById('page8').style.display = 'none';               
        }
     }
+    
+    function backToPage6(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'block';  
+        document.getElementById('page7').style.display = 'none';     
+        document.getElementById('page8').style.display = 'none'; 
+    }
 
     function goToPage7(){ 
         var a = new Array(1,10, 31,32,34);        
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(31,35,0,5)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -274,10 +326,21 @@
        }
     }
 
+    function backToPage7(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'none'; 
+        document.getElementById('page3').style.display = 'none';  
+        document.getElementById('page4').style.display = 'none';
+        document.getElementById('page5').style.display = 'none';
+        document.getElementById('page6').style.display = 'none';  
+        document.getElementById('page7').style.display = 'block';     
+        document.getElementById('page8').style.display = 'none'; 
+    }
+    
     function goToPage8(){      
         var a = new Array(1,10, 36,37,38,39,40);
         var allInputs = new Array(a);
-        if (areInRange(0, allInputs)==true){
+        if (areInRange(0, allInputs)==true && isFormCompleted(36,41,0,6)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -289,6 +352,19 @@
        }
     }
 
+    function checkBeforeSave(){                
+        if(document.getElementById('page8').style.display=='block'){
+            if(isFormCompleted(42,48,0,7)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,11,0,6)==true && isFormCompleted(12,16,0,5)==true && isFormCompleted(17,20,0,4)==true && isFormCompleted(21,26,0,6)==true && isFormCompleted(27,30,0,4)==true && isFormCompleted(31,35,0,5)==true && isFormCompleted(36,41,0,6)==true && isFormCompleted(42,48,0,7)==true)
+                return true;
+        }            
+        
+        return false;
+    }
+    
     function calScore(startItem, endItem, scoreItem, nbMissing){
         var score = 0;
         var missing = 0;
@@ -688,7 +764,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage1();"><< Previous Page</a>
+            <a href="javascript: backToPage1();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage3();">Next Page >></a>
@@ -807,7 +883,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage2();"><< Previous Page</a>
+            <a href="javascript: backToPage2();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage4();">Next Page >></a>
@@ -962,7 +1038,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage3();"><< Previous Page</a>
+            <a href="javascript: backToPage3();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage5();">Next Page >></a>
@@ -1081,7 +1157,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage4();"><< Previous Page</a>
+            <a href="javascript: backToPage4();"><< Previous Page</a>
         </td>    
         <td align="right">
             <a href="javascript: goToPage6();">Next Page >></a>
@@ -1251,7 +1327,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage5();"><< Previous Page</a>
+            <a href="javascript: backToPage5();"><< Previous Page</a>
         </td>    
         <td align="right">
             <a href="javascript: goToPage7();">Next Page >></a>
@@ -1403,7 +1479,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage6();"><< Previous Page</a>
+            <a href="javascript: backToPage6();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage8();">Next Page >></a>
@@ -1570,7 +1646,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage7();"><< Previous Page</a>
+            <a href="javascript: backToPage7();"><< Previous Page</a>
         </td>
         <td align="right">            
         </td>
@@ -1585,7 +1661,7 @@
   if (!bView) {
 %>
             <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>

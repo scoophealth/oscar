@@ -173,7 +173,7 @@
     
     var action = "/<%=project_home%>/form/formname.do";
     
-    function goToPage1(){             
+    function backToPage1(){             
             document.getElementById('page1').style.display = 'block';
             document.getElementById('page2').style.display = 'none';  
             document.getElementById('page3').style.display = 'none';                
@@ -183,20 +183,39 @@
         var checkboxes = new Array(6,7,11,16,18,19,20,24);
         var numericFields = new Array(8,9,10);        
         var allInputs = new Array(a,b,c);
-        if (allAreNumeric(0,numericFields)==true && is1CheckboxChecked(0, checkboxes)==true && areInRange(0, allInputs)==true){
+        if (allAreNumeric(0,numericFields)==true && is1CheckboxChecked(0, checkboxes)==true && areInRange(0, allInputs)==true && isFormCompleted(6,24,4,3)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
         }
     }
+    
+    function backToPage2(){
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'block'; 
+        document.getElementById('page3').style.display = 'none'; 
+    }
 
     function goToPage3(){      
         var checkboxes = new Array(25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50);                
-        if (is1CheckboxChecked(0, checkboxes)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true && isFormCompleted(25,51,13,1)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block'; 
         }
+    }
+    
+    function checkBeforeSave(){                
+        if(document.getElementById('page3').style.display=='block'){
+            if(isFormCompleted(52,52,0,1)==true)
+                return true;
+        }    
+        else{
+            if(isFormCompleted(6,24,4,3)==true && isFormCompleted(25,51,13,1)==true && isFormCompleted(52,52,0,1)==true)
+                return true;
+        }            
+        
+        return false;
     }
     
     function calScore(){
@@ -637,7 +656,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage1();"><< Previous Page</a>
+            <a href="javascript: backToPage1();"><< Previous Page</a>
         </td>
         <td align="right">
             <a href="javascript: goToPage3();">Next Page >></a>
@@ -676,7 +695,7 @@
     </tr>
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage2();"><< Previous Page</a>
+            <a href="javascript: backToPage2();"><< Previous Page</a>
         </td> 
         <td align="right">            
         </td>
@@ -691,7 +710,7 @@
   if (!bView) {
 %>
             <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>
