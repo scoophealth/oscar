@@ -1,0 +1,31 @@
+pg2_date1	:	pg2_ht1
+pg2_date2	:	pg2_ht2
+pg2_date3	:	pg2_ht3
+pg2_date4	:	pg2_ht4
+pg2_date5	:	pg2_ht5
+pg2_date6	:	pg2_ht6
+pg2_date7	:	pg2_ht7
+pg2_date8	:	pg2_ht8
+pg2_date9	:	pg2_ht9
+pg2_date10	:	pg2_ht10
+pg2_date11	:	pg2_ht11
+pg2_date12	:	pg2_ht12
+pg2_date13	:	pg2_ht13
+pg2_date14	:	pg2_ht14
+pg2_date15	:	pg2_ht15
+pg2_date16	:	pg2_ht16
+pg2_date17	:	pg2_ht17
+
+__origX		:	52
+__origY		:	751
+__nMaxPixX	:	120
+__nMaxPixY	:	142
+__fStartX	:	16
+__fEndX		:	40
+__fStartY	:	11
+__fEndY		:	40
+
+__finalEDB	:	c_EDD
+__dateFormat	:	dd/MM/yyyy
+
+__className	:	oscar.form.graphic.FrmPdfGraphicAR
