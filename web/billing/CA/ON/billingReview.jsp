@@ -322,7 +322,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc1)).setScale(4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal otherperc01 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);   
 
-			if (otherdbcode1.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
+			if (scode.compareTo("E400B") == 0 || scode.compareTo("E401B") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
 				eCode = otherdbcode1;
 				eDesc = otherdesc1;
 				ePerc = otherperc01.toString();
@@ -402,7 +402,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc2)).setScale(4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal otherperc02 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
 
-			if (otherdbcode2.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
+			if (scode.compareTo("E400B") == 0 || scode.compareTo("E401B") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
 				eCode = otherdbcode2;
 				eDesc = otherdesc2;
 				ePerc = otherperc02.toString();
@@ -481,7 +481,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc3)).setScale(4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal otherperc03 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
 
-			if (otherdbcode3.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
+			if (scode.compareTo("E400B") == 0 || scode.compareTo("E401B") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
 				eCode = otherdbcode3;
 				eDesc = otherdesc3;
 				ePerc = otherperc03.toString();
@@ -583,7 +583,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		fee = "";
 	}else{ 
 		if (fee.compareTo(".00")==0) {
-			if (scode.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
+			if (scode.compareTo("E400B") == 0 || scode.compareTo("E401B") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 || otherdbcode1.compareTo("Q012A") == 0) {
 				eCode = scode;
 				eDesc = desc;
 				ePerc = request.getParameter("perc_"+temp);
