@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <!--
     Document   : validation.xml
     Created on : February 3, 2004, 10:59 AM
@@ -82,6 +82,7 @@
             </var>         
          </field>                 
          </form>
+
          <form name="EctAddMeasuringInstructionForm">
          <field
             property="measuringInstrc"
@@ -96,6 +97,19 @@
                 <var-name>maxlength</var-name>
                 <var-value>255</var-value>
             </var>
+            <var>
+                <var-name>mask</var-name>
+                <var-value>^[0-9A-Za-z]*$</var-value>
+            </var>         
+         </field> 
+         </form>
+         
+         <form name="EctDefineNewMeasurementGroupForm">
+         <field
+            property="groupName"
+            depends="required, mask">
+            <arg0 key="oscarEncounter.Measurements.msgGroupName"/>                                    
+            <msg name="mask" key="error.oscarEncounter.Measurements.invalidCharacter"/>                            
             <var>
                 <var-name>mask</var-name>
                 <var-value>^[0-9A-Za-z]*$</var-value>
