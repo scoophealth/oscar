@@ -67,6 +67,10 @@
 %>
 
 <script type="text/javascript" language="Javascript">
+
+var temp;
+temp = "";
+
     function onPrint() {
         document.forms[0].submit.value="print"; 
         var ret = checkAllDates();
@@ -74,12 +78,15 @@
         {
             //ret = confirm("Do you wish to save this form and view the print preview?");
             //popupFixedPage(650,850,'../provider/notice.htm');
+            temp=document.forms[0].action;
             document.forms[0].action = "formlabreqprint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>";
-            document.forms[0].target="labReqPrint";            
+            document.forms[0].target="labReqPrint";
         }
         return ret;
     }
     function onSave() {
+        if (temp != "") { document.forms[0].action = temp; }
+        document.forms[0].target="_self";        
         document.forms[0].submit.value="save";
         var ret = checkAllDates();
         if(ret==true)
@@ -96,6 +103,8 @@
         return(false);
     }
     function onSaveExit() {
+        if (temp != "") { document.forms[0].action = temp; }
+        document.forms[0].target="_self";
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();
         if(ret == true)
