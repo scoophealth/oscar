@@ -237,13 +237,8 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			}
 			location = rsdemo3.getString("visittype");
 			localServiceDate = rsdemo3.getString("billing_date");
+			localServiceDate = localServiceDate.replaceAll("-*", "");
 		}
-
-		// take it out of the loop, use prop
-		//rsdemo2 = apptMainBean.queryResults(rsdemo.getString("providerohip_no"), "search_provider_ohip_dt");
-		//while (rsdemo2.next()){
-		//	proName = rsdemo2.getString("last_name") + "," + rsdemo2.getString("first_name");
-		//}
 
 		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
 		servicecode = rsdemo.getString("service_code");
