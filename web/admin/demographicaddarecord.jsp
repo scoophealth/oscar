@@ -94,14 +94,56 @@
 	  paramName[4]=param[10].trim();
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
-    
-    if(rs.next()) //!rs.getString("cpp_id").equals("")) %>
+    System.out.println("Parametros de Add");
+    System.out.println("0["+paramName[0]+"]");
+    System.out.println("1["+paramName[1]+"]");
+    System.out.println("2["+paramName[2]+"]");
+    System.out.println("3["+paramName[3]+"]");
+    System.out.println("4["+paramName[4]+"]");
+    if(rs.next()){ //!rs.getString("cpp_id").equals(""))%>
       ***<font color='red'><bean:message key="admin.demographicaddrecord.msgDuplicated"/>***</font><br>
+    <%}%>
+    
     <%
     // int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, param, request.getParameter("dboperation"));
     
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
+    //find the demo_no 
+    String[] param1 =new String[7];
+	  param1[0]=request.getParameter("last_name");
+	  param1[1]=request.getParameter("first_name");
+	  param1[2]=request.getParameter("year_of_birth");
+	  param1[3]=request.getParameter("month_of_birth");
+	  param1[4]=request.getParameter("date_of_birth");
+	  param1[5]=request.getParameter("hin");
+	  param1[6]=request.getParameter("ver");
+    
+    rs = apptMainBean.queryResults(param1, "demographic_search_demoaddno");
+    if(rs.next()) { //
+	  	if (request.getParameter("dboperation2") != null) {
+	  	  	String[] parametros = new String[13];
+  	  	
+	  	  	parametros[0]=rs.getString("demographic_no");
+	  	  	parametros[1]=request.getParameter("cpf");
+	  	  	parametros[2]=request.getParameter("rg");
+	  	  	parametros[3]=request.getParameter("chart_address");
+	  	  	parametros[4]=request.getParameter("marriage_certificate");
+	  	  	parametros[5]=request.getParameter("birth_certificate");
+	  	  	parametros[6]=request.getParameter("marital_state");
+	  	  	parametros[7]=request.getParameter("partner_name");
+	  	  	parametros[8]=request.getParameter("father_name");
+	  	  	parametros[9]=request.getParameter("mother_name");
+	  	  	parametros[10]=request.getParameter("district");
+	  	  	parametros[11]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
+	  	  	parametros[12]=request.getParameter("complementary_address");
+  	
+  	
+	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros, request.getParameter("dboperation2")); //add_record
+	  	}
+	}
+      
+  
 %>
   <p><h2><bean:message key="admin.demographicaddrecord.msgSuccessful"/>
   </h2></p>
