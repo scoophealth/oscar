@@ -1539,6 +1539,9 @@ CREATE TABLE teleplanS00 (
   PRIMARY KEY  (s00_id)
 ) TYPE=MyISAM;
 
+
+
+
 --
 -- Table structure for table 'teleplanS21'
 --
@@ -1761,4 +1764,12 @@ CREATE TABLE wcb (
   KEY demographic_no (demographic_no),
   Key provider_no (provider_no)
 ) TYPE=MyISAM;
+
+
+create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
+create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
+
+
+
+
 
