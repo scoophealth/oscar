@@ -1316,6 +1316,7 @@
                   scope="session"
                   input="/billing/billingBrazil.jsp">
            <forward name="success" path="/billing/billingBrazil.jsp"/>
+           <forward name="failure"  path="/failure.jsp" />
         </action>
         <action   path="/oscar/billing/procedimentoRealizado/add"
         		      parameter="add"
