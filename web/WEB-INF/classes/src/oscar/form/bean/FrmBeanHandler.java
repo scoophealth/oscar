@@ -46,16 +46,16 @@ public class FrmBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT form_name, hidden FROM encounterForm";
+            String sql = "SELECT form_name, hidden FROM encounterForm order by hidden, form_name";
             System.out.println("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
                 FrmBean frmBean = new FrmBean(rs.getString("form_name"));
-                if(rs.getInt("hidden")==1)
-                    formShownVector.add(frmBean);
-                else
+                if(rs.getString("hidden").equals("0"))
                     formHiddenVector.add(frmBean);
+                else
+                    formShownVector.add(frmBean);
             }
 
             rs.close();
