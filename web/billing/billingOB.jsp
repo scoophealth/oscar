@@ -1,3 +1,28 @@
+
+
+<%      
+  if(session.getValue("user") == null)
+    response.sendRedirect("../logout.jsp");
+  String user_no; 
+  user_no = (String) session.getAttribute("user");
+  String providerview = request.getParameter("providerview")==null?"":request.getParameter("providerview") ;
+  String asstProvider_no = "";
+  String color ="";
+  String premiumFlag="";
+String service_form="";
+%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ include file="dbBilling.jsp" %>
+<%
+  String clinicview = oscarVariables.getProperty("clinic_view");
+   String clinicNo = oscarVariables.getProperty("clinic_no");
+%>
+
 <!--  
 /*
  * 
@@ -23,28 +48,9 @@
  * Ontario, Canada 
  */
 -->
-
-<%      
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no; 
-  user_no = (String) session.getAttribute("user");
-  String providerview = request.getParameter("providerview")==null?"":request.getParameter("providerview") ;
-  String asstProvider_no = "";
-  String color ="";
-  String premiumFlag="";
-String service_form="";
-%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jsp" %>
-<%
-  String clinicview = oscarVariables.getProperty("clinic_view");
-   String clinicNo = oscarVariables.getProperty("clinic_no");
-%>
 <html>
 <head>
+<html:base/>
 <title>Billing Record</title>
 <style type="text/css">
 	<!--
@@ -188,6 +194,7 @@ function showHideLayers() { //v3.0
     user_no =request.getParameter("user_no");
     String apptProvider_no = request.getParameter("apptProvider_no");
     String ctlBillForm = request.getParameter("billForm");
+    System.out.println("ctlBillForm"+ctlBillForm);
     int ctlCount = 0;
     String assgProvider_no = "", assgProvider_name="";
     
@@ -220,7 +227,7 @@ function showHideLayers() { //v3.0
       <td width="18%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Dx 
         Code</font></b></td>
       <td width="76%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Description</font></b></td>
-      <td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide')">X</a></td>
+      <td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide');return false">X</a></td>
     </tr>
 
                      <% ResultSet rsdiagcode = null;
@@ -256,14 +263,14 @@ function showHideLayers() { //v3.0
             if (ctldiagcodename.length() < 56) {
 	               %>
                               <tr bgcolor=<%=color%>> 
-      <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="#" onClick="document.serviceform.xml_diagnostic_detail.value='<%=ctldiagcode%>|<%=ctldiagcodename%>';showHideLayers('Layer2','','hide')"><%=ctldiagcode%></a></font></b></td>
+      <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="#" onClick="document.serviceform.xml_diagnostic_detail.value='<%=ctldiagcode%>|<%=ctldiagcodename%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
       <td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><%=ctldiagcodename%></font></td>
     </tr>  
                             <%
 	               }else {
 	                %>
                                                        <tr bgcolor=<%=color%>> 
-      <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="#" onClick="document.serviceform.xml_diagnostic_detail.value='<%=ctldiagcode%>|<%=ctldiagcodename%>';showHideLayers('Layer2','','hide')"><%=ctldiagcode%></a></font></b></td>
+      <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="#" onClick="document.serviceform.xml_diagnostic_detail.value='<%=ctldiagcode%>|<%=ctldiagcodename%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
       <td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><%=ctldiagcodename.substring(0,55)%></font></td>
     </tr>                  <%
 	  	                  }
@@ -288,7 +295,7 @@ function showHideLayers() { //v3.0
     <tr bgcolor="#393764"> 
       <td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000">Billing 
         Form</font></b></font></td>
-      <td width="3%" bgcolor="#FFCC00" height="7"><font face="Verdana, Arial, Helvetica, sans-serif" ><b><a href="#" onClick="showHideLayers('Layer1','','hide')">x</a></b></font></td>
+      <td width="3%" bgcolor="#FFCC00" height="7"><font face="Verdana, Arial, Helvetica, sans-serif" ><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">x</a></b></font></td>
     </tr>
     
     <% ResultSet rsctlcode = null;
@@ -311,7 +318,7 @@ function showHideLayers() { //v3.0
             }
             %>
     <tr bgcolor=<%=color%>> 
-      <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=ctlcodename%></a></font></b></td>
+      <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
     </tr>
     <% } %>
      </table>
@@ -322,7 +329,7 @@ function showHideLayers() { //v3.0
     <tr> 
       <td valign="top" height="221"> 
         <table width="107%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
+      <tr>
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b>Patient</b>:</font></td>
             <td><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><u><%=demoname%></u><%=billingdatetime%></font></td>
             <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b>Patient 
@@ -336,7 +343,7 @@ function showHideLayers() { //v3.0
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1">Age:</font></b><br>
               </font></td>
             <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=age%></font></b></td>
-            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show')">Billing 
+            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show');return false;">Billing 
               form</a>:</font></b>
               <% rsctlcode = null;  
                  
@@ -405,7 +412,7 @@ String proFirst="", proLast="", proOHIP="";
             <td width="33%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <% if (appt_no.compareTo("0") == 0) {
             %>
-              <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=service","380","300","0")'>Service 
+              <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=service","380","300","0"); return false;'>Service 
               Date:</a> 
               <input type="text" name="xml_appointment_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>" size="12" datafld='xml_appointment_date'>
               <%} else { %>
@@ -446,7 +453,7 @@ String proFirst="", proLast="", proOHIP="";
               <input type="checkbox" name="xml_referral" value="checked" <%=bNew?"":"datafld='xml_referral'"%>>
               <b>Referral ?</b></font></td>
             <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
-              <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=admission","380","300","0")'>Admission 
+              <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=admission","380","300","0");return false;'>Admission 
               Date:</a> </font></td>
             <td width="24%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <input type="text" name="xml_vdate" datafld='xml_vdate'>
@@ -811,7 +818,7 @@ serviceDisp = serviceValue;
 %>
            
                       <tr bgcolor="#EEEEFF"> 
-                        <td align="left" colspan="4" height="9"> <b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide')">Diagnostic 
+                        <td align="left" colspan="4" height="9"> <b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Diagnostic 
                           </a></font></b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                           <input name="xml_diagnostic_detail" value="" size="25" datafld='xml_diagnostic_detail'>
                           <a href="javascript:ScriptAttach()"><img src="../images/search_dx_code.jpg" border="0"></a> 
