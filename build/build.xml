@@ -86,9 +86,9 @@
  <target name="web" depends="init">
   <javac 
 	 srcdir="${src_web}"
-     excludes="oscar/oscarMessenger/data/MsgRemoteMessageData.java,oscar/form/study/**"
+     excludes="oscar/oscarMessenger/data/MsgRemoteMessageData.java"
      destdir="${classes_web}"
-	 deprecation="on"
+	 deprecation="off"
 	 debug="on">
    <classpath>
       <pathelement path="${classes_web}/"/>
