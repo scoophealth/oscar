@@ -934,7 +934,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
                     <td colspan="2">1. Pap</td>
                     <td width="13%"><input type="text" name="ar2_pap" size="10" maxlength="20" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_pap", "")) %>"></td>
                     <td colspan="2" rowspan="10" align="center">
-                        <textarea name="ar2_comments" style="width:98%" rows="14" cols="20"><%= props.getProperty("ar2_comments", "") %></textarea></td>
+                        <textarea name="ar2_commentsAR2" style="width:98%" rows="14" cols="20"><%= props.getProperty("ar2_commentsAR2", "") %></textarea></td>
                 </tr>
                 <tr>
                     <td colspan="2">2. GC/Chlamydia</td>
