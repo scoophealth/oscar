@@ -14810,6 +14810,11 @@ INSERT INTO billingservice VALUES (17816,'','96500','MHR FORM PERSONS WITH PERSI
 INSERT INTO billingservice VALUES (17817,'','96501','MHR FORM PERSON WITH DISABILITIES DESIGNATION     ','130.00','','2003-05-05','BC','','00');
 INSERT INTO billingservice VALUES (17818,'','96502','MHR SECTION 3 ASSESSOR REPORT                     ','75.00','','2003-05-05','BC','','00');
 
+insert into billingservice (service_code,service_compositecode,description,value,percentage,billingservice_date,specialty,region,anaesthesia) values ('14000','','Delivery Bonus','258.33','','2004-04-02','','BC','00');
+                                                                                
+insert into billingservice (service_code,service_compositecode,description,value,percentage,billingservice_date,specialty,region,anaesthesia) values ('13050','','Chronic Care Bonus','75.00','','2004-04-02','','BC','00');
+
+
 
 INSERT INTO billingvisit VALUES ('R','Patient\'s residence','BC');
 INSERT INTO billingvisit VALUES ('O','Physician\'s office','BC');
