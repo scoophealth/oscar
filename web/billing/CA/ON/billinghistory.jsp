@@ -131,7 +131,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 %>
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td width="5%" align="center" height="25"><a href=# onClick="popupPage(600,800, '../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a></td>
+      <td width="5%" align="center" height="25"><a href=# onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a></td>
       <td align="left" width="25%" height="25"><%=rs.getString("billing_date")%> &nbsp; &nbsp; &nbsp; &nbsp; <%=rs.getString("billing_time")%></td>
       <td align="center" width="10%" height="25"><%=billType%></td>
       <td align="center" width="15%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
@@ -140,7 +140,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       <% if (billCode.substring(0,1).compareTo("B")==0 || billCode.substring(0,1).compareTo("S")==0) { %>
       <td align="center" width="10%" height="25">&nbsp;</td>
       <% } else { %>
-      <td align="center" width="10%" height="25"><a href="../billing/billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+      <td align="center" width="10%" height="25"><a href="billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
       <% } %>
 </tr>
 <% 
@@ -168,7 +168,15 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 %>
 <p>
-<%@ include file="../demographic/zfooterbackclose.jsp" %> 
+  <hr width="100%">
+  <table border="0" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td><a href=# onClick="javascript:history.go(-1)"> <img src="images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
+        Back </a></td>
+      <td align="right"><a href="" onClick="self.close();">Close the Window<img src="images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+    </tr>
+  </table>
+
 </center>
 </body>
 </html>
