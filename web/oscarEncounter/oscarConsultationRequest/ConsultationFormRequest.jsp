@@ -394,10 +394,33 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 
 
         }else if(request.getAttribute("validateError") == null){
+            //
+                oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+                oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
+                arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
+                StringBuffer stringBuffer = new StringBuffer();
+                for (int i = 0; i < arr.length; i++){
+  		   if (arr[i].isCurrent()  ){
+                      stringBuffer.append(arr[i].getRxDisplay()+"\n");
+                   }
+		}
+
+                oscar.oscarRx.data.RxPatientData pData = new oscar.oscarRx.data.RxPatientData();
+                oscar.oscarRx.data.RxPatientData.Patient patient = pData.getPatient(Integer.parseInt(bean.demographicNo));
+                oscar.oscarRx.data.RxPatientData.Patient.Allergy [] allergies = {};
+                allergies = patient.getAllergies();                 
+                StringBuffer stringBuffer2 = new StringBuffer();
+                for (int i=0; i < allergies.length; i++){
+                   oscar.oscarRx.data.RxAllergyData.Allergy allerg = allergies[i].getAllergy();
+                   stringBuffer2.append(allerg.getDESCRIPTION()+"  "+allerg.getTypeDesc()+" \n");
+	        }
+                thisForm.setAllergies(stringBuffer2.toString());
+  		thisForm.setCurrentMedications(stringBuffer.toString());
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
                 thisForm.setConcurrentProblems(bean.ongoingConcerns);
         	thisForm.setAppointmentYear(year);
+                                   
 	}
         %>
 
