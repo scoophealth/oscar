@@ -202,7 +202,7 @@ CREATE TABLE formBCAR (
   pg1_mensCycle varchar(8) default NULL,
   pg1_eddByDate date default NULL,
   pg1_contrMethod varchar(15) default NULL,
-  pg1_stopDate date default NULL,
+  pg1_stopDate varchar(10) default NULL,
   pg1_eddByUs date default NULL,
   pg1_allergyN tinyint(1) default NULL,
   pg1_allergyY tinyint(1) default NULL,
