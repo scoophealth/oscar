@@ -250,32 +250,33 @@ INSERT INTO demographic VALUES (1,'TEST','PATIENT','','','ON','','905-','','',''
 
 INSERT INTO encounterForm VALUES ('Annual','../form/formannual.jsp?demographic_no=','formAnnual', '0');
 INSERT INTO encounterForm VALUES ('Annual V2','../form/formannualV2.jsp?demographic_no=','formAnnualV2', '1');
-INSERT INTO encounterForm VALUES ('ALPHA','../form/formalpha.jsp?demographic_no=','formAlpha', '1');
-INSERT INTO encounterForm VALUES ('Rourke','../form/formrourke.jsp?demographic_no=','formRourke', '1');
-INSERT INTO encounterForm VALUES ('T2Diabetes','../form/formtype2diabete.jsp?demographic_no=','formType2Diabetes', '1');
-INSERT INTO encounterForm VALUES ('Mental Health','../form/formmentalhealth.jsp?demographic_no=','formMentalHealth', '1');
-INSERT INTO encounterForm VALUES ('PeriMenopausal','../form/formperimenopausal.jsp?demographic_no=','formPeriMenopausal', '1');
-INSERT INTO encounterForm VALUES ('Lab Req','../form/formlabreq.jsp?demographic_no=','formLabReq', '1');
-INSERT INTO encounterForm VALUES ('MMSE','../form/formmmse.jsp?demographic_no=','formMMSE', '1');
-INSERT INTO encounterForm VALUES ('Pall. Care','../form/formpalliativecare.jsp?demographic_no=','formPalliativeCare', '1');
-INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','formAR', '1');
-INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf', '1');
-INSERT INTO encounterForm VALUES ('ADFv2', '../form/formadfv2.jsp?demographic_no=', 'formAdfV2', '1');
+INSERT INTO encounterForm VALUES ('ALPHA','../form/formalpha.jsp?demographic_no=','formAlpha', '2');
+INSERT INTO encounterForm VALUES ('Rourke','../form/formrourke.jsp?demographic_no=','formRourke', '3');
+INSERT INTO encounterForm VALUES ('T2Diabetes','../form/formtype2diabete.jsp?demographic_no=','formType2Diabetes', '4');
+INSERT INTO encounterForm VALUES ('Mental Health','../form/formmentalhealth.jsp?demographic_no=','formMentalHealth', '5');
+INSERT INTO encounterForm VALUES ('PeriMenopausal','../form/formperimenopausal.jsp?demographic_no=','formPeriMenopausal', '6');
+INSERT INTO encounterForm VALUES ('Lab Req','../form/formlabreq.jsp?demographic_no=','formLabReq', '7');
+INSERT INTO encounterForm VALUES ('MMSE','../form/formmmse.jsp?demographic_no=','formMMSE', '8');
+INSERT INTO encounterForm VALUES ('Pall. Care','../form/formpalliativecare.jsp?demographic_no=','formPalliativeCare', '9');
+INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','formAR', '10');
+INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf', '11');
+INSERT INTO encounterForm VALUES ('ADFv2', '../form/formadfv2.jsp?demographic_no=', 'formAdfV2', '12');
 INSERT INTO encounterForm VALUES ('ImmunAllergies', '../form/formimmunallergy.jsp?demographic_no=', 'formImmunAllergy', '0');
-INSERT INTO encounterForm VALUES ('Falls', '../form/formfalls.jsp?demographic_no=','formFalls',1);
-INSERT INTO encounterForm VALUES ('Self Administered', '../form/formselfadministered.jsp?demographic_no=','formSelfAdministered',1);
-INSERT INTO encounterForm VALUES ('Intake Information', '../form/formintakeinfo.jsp?demographic_no=','formIntakeInfo',1);
-INSERT INTO encounterForm VALUES ('SF36', '../form/formSF36.jsp?demographic_no=','formSF36',1);
-INSERT INTO encounterForm VALUES ('2 Minute Walk', '../form/form2minwalk.jsp?demographic_no=','form2MinWalk',1);
-INSERT INTO encounterForm VALUES ('Self Management', '../form/formselfmanagement.jsp?demographic_no=','formSelfManagement',1);
-INSERT INTO encounterForm VALUES ('Self Efficacy', '../form/formselfefficacy.jsp?demographic_no=','formSelfEfficacy',1);
-INSERT INTO encounterForm VALUES ('HomeFalls', '../form/formhomefalls.jsp?demographic_no=','formHomeFalls',1);
-INSERT INTO encounterForm VALUES ('Cost Questionnaire', '../form/formcostquestionnaire.jsp?demographic_no=','formCostQuestionnaire',1);
-INSERT INTO encounterForm VALUES ('FDI Function', '../form/formlatelifeFDIfunction.jsp?demographic_no=','formLateLifeFDIFunction',1); 
-INSERT INTO encounterForm VALUES ('FDI Disability', '../form/formlatelifeFDIdisability.jsp?demographic_no=','formLateLifeFDIDisability',1);
-INSERT INTO encounterForm VALUES ('CESD', '../form/formCESD.jsp?demographic_no=','formCESD',1);
-INSERT INTO encounterForm VALUES ('Caregiver', '../form/formcaregiver.jsp?demographic_no=','formCaregiver',1);
-INSERT INTO encounterForm VALUES ('Grip Strength', '../form/formgripstrength.jsp?demographic_no=','formGripStrength',1);
+INSERT INTO encounterForm VALUES ('Falls', '../form/formfalls.jsp?demographic_no=','formFalls',13);
+INSERT INTO encounterForm VALUES ('Self Administered', '../form/formselfadministered.jsp?demographic_no=','formSelfAdministered',14);
+INSERT INTO encounterForm VALUES ('Intake Information', '../form/formintakeinfo.jsp?demographic_no=','formIntakeInfo',15);
+INSERT INTO encounterForm VALUES ('SF36', '../form/formSF36.jsp?demographic_no=','formSF36',16);
+INSERT INTO encounterForm VALUES ('2 Minute Walk', '../form/form2minwalk.jsp?demographic_no=','form2MinWalk',17);
+INSERT INTO encounterForm VALUES ('Self Management', '../form/formselfmanagement.jsp?demographic_no=','formSelfManagement',18);
+INSERT INTO encounterForm VALUES ('Self Efficacy', '../form/formselfefficacy.jsp?demographic_no=','formSelfEfficacy',19);
+INSERT INTO encounterForm VALUES ('HomeFalls', '../form/formhomefalls.jsp?demographic_no=','formHomeFalls',20);
+INSERT INTO encounterForm VALUES ('Cost Questionnaire', '../form/formcostquestionnaire.jsp?demographic_no=','formCostQuestionnaire',21);
+INSERT INTO encounterForm VALUES ('FDI Function', '../form/formlatelifeFDIfunction.jsp?demographic_no=','formLateLifeFDIFunction',22); 
+INSERT INTO encounterForm VALUES ('FDI Disability', '../form/formlatelifeFDIdisability.jsp?demographic_no=','formLateLifeFDIDisability',23);
+INSERT INTO encounterForm VALUES ('CESD', '../form/formCESD.jsp?demographic_no=','formCESD',24);
+INSERT INTO encounterForm VALUES ('Caregiver', '../form/formcaregiver.jsp?demographic_no=','formCaregiver',25);
+INSERT INTO encounterForm VALUES ('Grip Strength', '../form/formgripstrength.jsp?demographic_no=','formGripStrength',26);
+
 --
 -- Dumping data for table 'encountertemplate'
 --
