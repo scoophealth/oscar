@@ -37,7 +37,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -144,8 +144,7 @@ int i;
                             <bean:message key="ChooseDrug.searchAgain"/>
                           </td>
                           <td>
-                            <html:text property="searchString" size="16" maxlength="16"/> <a href="javascript:popupDrugOfChoice(720,700,'http://67.69.12.117:8080/oscarResour
-ce/DoC/')">Drug Of Choice</a>
+                            <html:text property="searchString" size="16" maxlength="16"/> <a href="javascript:popupDrugOfChoice(720,700,'http://67.69.12.117:8080/oscarResource/DoC/')">Drug Of Choice</a>
                             
                             <!--<html:hidden property="otcExcluded" value="true"/>OTC Excluded-->
                           </td>
