@@ -687,13 +687,15 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             <td class="bCellData">Submission Code</td><!--SUBMISSION-CODE-->
             <td class="bCellData">
                 <select name="submissionCode" onChange="checkDebitRequest();" >
-                    <option value="0" <%=allFields.getProperty("submission_code").equals("0")?"selected":""%>>Normal Submission</option> 
-                    <option value="D" <%=allFields.getProperty("submission_code").equals("D")?"selected":""%>>Duplicate</option>            
-                    <option value="E" <%=allFields.getProperty("submission_code").equals("E")?"selected":""%>>Debit Request</option>            
-                    <option value="I" <%=allFields.getProperty("submission_code").equals("I")?"selected":""%>>ICBC Claim</option>            
-                    <option value="R" <%=allFields.getProperty("submission_code").equals("R")?"selected":""%>>Resubmit Claim</option>            
-                    <option value="A" <%=allFields.getProperty("submission_code").equals("A")?"selected":""%>>Pre-approved claim</option>            
-                    <option value="X" <%=allFields.getProperty("submission_code").equals("X")?"selected":""%>>Resubmitting refused or part paid</option>            
+                    <option value="0" <%=allFields.getProperty("submission_code").equals("0")?"selected":""%>>0|Normal Submission</option> 
+                    <option value="D" <%=allFields.getProperty("submission_code").equals("D")?"selected":""%>>D|Duplicate</option>            
+                    <option value="E" <%=allFields.getProperty("submission_code").equals("E")?"selected":""%>>E|Debit Request</option>            
+                    <option value="I" <%=allFields.getProperty("submission_code").equals("I")?"selected":""%>>I|ICBC Claim</option>            
+                    <option value="W" <%=allFields.getProperty("submission_code").equals("W")?"selected":""%>>W|Claim not accepted by WCB</option>            
+                    <option value="C" <%=allFields.getProperty("submission_code").equals("C")?"selected":""%>>C|Subscriber Coverage Problem</option>            
+                    <option value="R" <%=allFields.getProperty("submission_code").equals("R")?"selected":""%>>R|Resubmit Claim</option>            
+                    <option value="A" <%=allFields.getProperty("submission_code").equals("A")?"selected":""%>>A|Pre-approved claim</option>            
+                    <option value="X" <%=allFields.getProperty("submission_code").equals("X")?"selected":""%>>X|Resubmitting refused or part paid</option>            
                 </select>                        
             </td>
        </tr> 
