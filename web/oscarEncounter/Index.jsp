@@ -138,10 +138,15 @@
             location = varpage;
     }
     function insertTemplate(text){
-        var x = window.confirm("<bean:message key="oscarEncounter.Index.insertTemplateConfirm"/>");
-        if(x) {            
+        // var x = window.confirm("<bean:message key="oscarEncounter.Index.insertTemplateConfirm"/>");
+        // if(x) {            
             document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
-        }
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003E/g, "\u003E");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003C/g, "\u003C");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u005C/g, "\u005C");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0022/g, "\u0022");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0027/g, "\u0027");
+        // }
     }
 
     function refresh() {
@@ -680,11 +685,16 @@ border-right: 2px solid #cfcfcf;
                             String encounterTmp ="NONE";
                             String encounterTmpValue="NONE";
                             for(int j=0; j<bean.templateNames.size(); j++) {
-                            encounterTmp = (String)bean.templateNames.get(j);
-                            encounterTmpValue = (String)bean.templateValues.get(j);
+                                encounterTmp = (String)bean.templateNames.get(j);
+                                encounterTmpValue = (String)bean.templateValues.get(j);
+                                encounterTmpValue = encounterTmpValue.replaceAll("\\\\", "\\\\u005C"); // replace \ with unicode equiv.
+                                encounterTmpValue = encounterTmpValue.replaceAll("\"", "\\\\u0022"); // replace " with unicode equiv.
+                                encounterTmpValue = encounterTmpValue.replaceAll("'", "\\\\u0027"); // replace ' with unicode equiv.
+                                encounterTmpValue = encounterTmpValue.replaceAll(">", "\\\\u003E");
+                                encounterTmpValue = encounterTmpValue.replaceAll("<", "\\\\u003C");
                          %>
-                            <option value="<%=encounterTmpValue%>"><%=encounterTmp %>
-                         <%}%>
+                                <option value="<%=encounterTmpValue%>"><%=encounterTmp %></option>
+                         <% }%>
                         </select>
                     </td>
                 </tr>
