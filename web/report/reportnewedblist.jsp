@@ -46,7 +46,9 @@
 <% 
   String [][] dbQueries=new String[][] { 
 {"select_formar", "select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  }, 
-{"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by last_name"}, 
+{"select_backwardscompatible", "(select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ?) union " +
+                               "(select demographic_no, edb as c_finalEDB, patient_name as c_pName, age as pg1_age, gravida as c_gravida, term as c_term, phone as pg1_homePhone, provider_no from edbrept where edb >= ? and edb <= ?) order by c_finalEDB desc limit ? offset ?"  }, 
+{"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
   };
   reportMainBean.doConfigure(dbParams,dbQueries);
 %>
@@ -97,12 +99,21 @@ function setfocus() {
   String[] param =new String[2];
   param[0]=startDate; //"0001-01-01"; 
   param[1]=endDate; //"0001-01-01"; 
+  String[] paramb = new String[4];
+  paramb[0]=startDate; //"0001-01-01"; 
+  paramb[1]=endDate; //"0001-01-01"; 
+  paramb[2]=startDate; //"0001-01-01"; 
+  paramb[3]=endDate; //"0001-01-01"; 
   int[] itemp1 = new int[2];
   itemp1[1] = Integer.parseInt(strLimit1);
   itemp1[0] = Integer.parseInt(strLimit2);
   boolean bodd=false;
   int nItems=0;
-  rs = reportMainBean.queryResults(param,itemp1, "select_formar");
+  try {  // First try the version which also checks the edbrept table.  This will throw an exception if the edbrept table does not exist...
+      rs = reportMainBean.queryResults(paramb,itemp1, "select_backwardscompatible");     
+  } catch (Exception e) {  // ...in which case we go with the standard version
+      rs = reportMainBean.queryResults(param,itemp1, "select_formar");
+  }
   while (rs.next()) {
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
@@ -115,7 +126,7 @@ function setfocus() {
       <td><%=rs.getString("c_gravida")%></td>
       <td><%=rs.getString("c_term")%></td>
       <td nowrap><%=rs.getString("pg1_homePhone")%></td>
-      <td><%=providerNameBean.setProperty(rs.getString("provider_no"), "")%></td>
+      <td><%=providerNameBean.getProperty(rs.getString("provider_no"), "")%></td>
 </tr>
 <%
   }
