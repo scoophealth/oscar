@@ -16,7 +16,7 @@
      <th align='LEFT'>
 		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
     <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Teleplan 
-      Reconcilliation - Billed Report</font></th>
+      Reconcilliation - Summary Report</font></th>
       <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
   </tr>
 </table>
@@ -76,10 +76,10 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
         <tr> 
          <td width="10%" height="16">Payment Date</td>
-         <td width="10%" height="16">Practitioner</td>
+         <td width="10%" height="16">Practitioner #</td>
          <td width="10%" height="16">Practitioner Name</td>
-         <td width="10%" height="16" align="right">Billed Amount</td>
-         <td width="10%" height="16" align="right">Paid Amount</td>
+         <td width="10%" height="16" align="right">Billed</td>
+         <td width="10%" height="16" align="right">Paid</td>
          <td width="50%" height="16">Status &nbsp;</td>
          
           
@@ -143,8 +143,8 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                <td width="10%" height="16">Payment Date</td>
                <td width="5%" height="16">Payee</td>
                <td width="5%" height="16">AJ. Code</td>
-               <td width="10%" height="16">AJ. Identifiction</td>
-               <td width="10%" height="16">AJ. Message</td>
+               <td width="10%" height="16">Pract #</td>
+               <td width="10%" height="16">Practitioner</td>
                <td width="10%" height="16">Calc Method</td>
                <td width="5%" height="16">Regular %</td>
                <td width="5%" height="16">One-Time %</td>
