@@ -142,7 +142,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
-        <td width="300"><a HREF="#" ONCLICK ="ogo()" ><bean:message key="report.reportindex.btnEDBList"/></a></td>
+        <td width="300"><a HREF="#" ONCLICK ="ogo()" ><bean:message key="<%=billingRegion.equals("BC")?"report.reportindex.btnEDDList":"report.reportindex.btnEDBList"%>"/></a></td>
         <td>
         <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.startDate.value")%>')">
         <bean:message key="report.reportindex.formFrom"/></a>

@@ -31,7 +31,7 @@ String curUser_no = (String) session.getAttribute("user");
 String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 
 String strLimit1="0";
-String strLimit2="50";  
+String strLimit2="5000";  
 if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
 if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 
@@ -45,7 +45,8 @@ if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDat
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
 String [][] dbQueries=new String[][] { 
-{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_gravida, pg1_term, c_phone, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? group by demographic_no order by c_EDD desc limit ? offset ?"  }, 
+//{"select_bcformar", "select distinct(demographic_no) from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, 
+{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_gravida, pg1_term, c_phone, c_phyMid, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
 };
 reportMainBean.doConfigure(dbParams,dbQueries);
@@ -69,7 +70,7 @@ function setfocus() {
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="report.reportnewdblist.msgEDBList"/></font></th>
+  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="report.reportnewdblist.msgEDDList"/></font></th>
   </tr><tr>
    <td align="right" ><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()">
    <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></th>
@@ -78,13 +79,13 @@ function setfocus() {
 
 <CENTER><table width="100%" border="0" bgcolor="silver" cellspacing="2" cellpadding="2"> 
 <tr bgcolor='<%=deepcolor%>'> 
-<TH align="center" width="10%" nowrap><b><bean:message key="report.reportnewdblist.msgEDB"/></b></TH>
+<TH align="center" width="10%" nowrap><b><bean:message key="report.reportnewdblist.msgEDD"/></b></TH>
 <TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
 <!--TH align="center" width="20%"><b>Demog' No </b></TH-->
 <TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgAge"/></b></TH>
 <TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgGravida"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="report.reportnewdblist.msgTerm"/></b></TH>
-<TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
+<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgTerm"/></b></TH>
+<TH align="center" width="15%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
 <TH align="center"><b><bean:message key="report.reportnewdblist.msProvider"/></b></TH>
 </tr>
 <%
@@ -93,6 +94,8 @@ function setfocus() {
   while (rs.next()) { 
     providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
   }
+  
+  String temp = "";
     
   String[] param =new String[2];
   param[0]=startDate; //"0001-01-01"; 
@@ -109,6 +112,8 @@ function setfocus() {
   int nItems=0;
   rs = reportMainBean.queryResults(param,itemp1, "select_bcformar");
   while (rs.next()) {
+    if (temp.equals(rs.getString("demographic_no")) ) continue;
+    else temp = rs.getString("demographic_no");
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
 %>
@@ -120,7 +125,7 @@ function setfocus() {
       <td><%=rs.getString("pg1_gravida")!=null?rs.getString("pg1_gravida"):""%></td>
       <td><%=rs.getString("pg1_term")!=null?rs.getString("pg1_term"):""%></td>
       <td nowrap><%=rs.getString("c_phone")%></td>
-      <td><%=providerNameBean.getProperty(rs.getString("provider_no"), "")%></td>
+      <td><%=rs.getString("c_phyMid")%><%--=providerNameBean.getProperty(rs.getString("provider_no"), "")--%></td>
 </tr>
 <%
   }
