@@ -126,7 +126,11 @@ CREATE TABLE billing (
   creator varchar(6) default NULL,
   PRIMARY KEY  (billing_no),
   KEY appointment_no (appointment_no,demographic_no),
-  KEY demographicno (demographic_no)
+  KEY demographic_no (demographic_no),
+  KEY billing_date (billing_date),
+  KEY provider_no (provider_no),
+  KEY apptProvider_no (apptProvider_no),
+  KEY creator (creator)
 ) TYPE=MyISAM;
 
 --
