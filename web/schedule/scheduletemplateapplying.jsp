@@ -8,9 +8,10 @@
 <%@ page import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
-<%  if(!scheduleMainBean.getBDoConfigure()) { %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<!--%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %-->
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
+<%  if(!scheduleMainBean.getBDoConfigure()) { %>
 <%@ include file="scheduleMainBeanConn.jsp" %>  
 <% } %>
 <%
@@ -49,7 +50,6 @@
 
 <% scheduleRscheduleBean.clear(); %>
 
-<html:html locale="true">
 <head>
 <title><bean:message key="schedule.scheduletemplateapplying.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
