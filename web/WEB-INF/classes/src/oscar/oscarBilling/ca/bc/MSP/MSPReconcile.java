@@ -58,6 +58,7 @@ public class MSPReconcile{
     public static String DONOTBILL          = "N";
     public static String BILLPATIENT        = "P";
     public static String COLLECTION         = "T";
+    public static String PAIDPRIVATE        = "A";
             
     public Properties currentC12Records(){
         Properties p = new Properties();
