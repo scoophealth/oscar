@@ -198,7 +198,7 @@ function popupDecisionSupport(){
         popup.focus();
     }
     else{
-        alert("Vascular Tracker Decision Support Page not found!");
+        alert("Miles server is not avaiable!");
     }
     
  }
@@ -465,7 +465,7 @@ function controlEyeExam(){
     <table width="640px">
         <tr>            
             <td class="subject">
-                VASCULAR TRACKER
+                Vascular Data Entry Template
             </td>
         </tr>
         <tr>                     
@@ -503,7 +503,7 @@ function controlEyeExam(){
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><bean:write name="ongoingConcerns"/></td>
+                                                    <td><%=request.getAttribute("ongoingConcerns")%></td>
                                                 </tr>
                                             </table>
                                             </td></tr>
@@ -560,8 +560,8 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(SmkSValue)" size="8%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(SmkHValue)" size="8%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(SmkCValue)" size="8%" /></td>
-                                                    <td class="dataEntryTable" align="center"><input type="text" id="SmkDate" name="SmkDate" value="<bean:write name="SmkSDate"/>" size="8%" /></td>
-                                                    <td class="dataEntryTable" align="center"><input type="text" id="SmkComments" name="SmkComments" value="<bean:write name="SmkSComments"/>" size="25%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><input type="text" id="SmkDate" name="SmkDate" value="<%=request.getAttribute("SmkSDate")%>" size="8%" /></td>
+                                                    <td class="dataEntryTable" align="center"><input type="text" id="SmkComments" name="SmkComments" value="<%=request.getAttribute("SmkSComments")%>" size="25%" tabindex="9999"/></td>
                                                     <html:hidden property="value(SmkSComments)"/>
                                                     <html:hidden property="value(SmkSDate)"/>
                                                     <html:hidden property="value(SmkHComments)"/>
@@ -591,7 +591,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>                                                
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="ExerDesc"/> <font class="eightyPercent"><bean:write name="ExerMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><bean:write name="ExerDesc"/> <font class="eightyPercent"><%=request.getAttribute("ExerMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("ExerLDDate")%></td></tr>
@@ -604,7 +604,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(ExerComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="DietDesc"/> <font class="eightyPercent"><bean:write name="DietMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><bean:write name="DietDesc"/> <font class="eightyPercent"><%=request.getAttribute("DietMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DietLDDate")%></td></tr>
@@ -638,7 +638,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>                                                
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="DpScDisplay"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("DpScDisplay")%>/></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DpScLDDate")%></td></tr>
@@ -654,7 +654,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(DpScComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="StScDisplay"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("StScDisplay")%>/></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("StScLDDate")%></td></tr>
@@ -663,14 +663,14 @@ function controlEyeExam(){
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(StScValue)" value="Yes" />Yes 
-                                                        <html:radio property="value(StScValue)" value="No" />No 
+                                                        <html:radio property="value(StScValue)" value="yes" />Yes 
+                                                        <html:radio property="value(StScValue)" value="no" />No 
                                                     </td>
                                                     <html:hidden property="value(StScDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(StScComments)" size="30%"tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="LcCtDisplay"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("LcCtDisplay")%>/></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("LcCtLDDate")%></td></tr>
@@ -707,7 +707,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>                                                
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="MedGDisplay"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedGDisplay")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedGLDDate")%></td></tr>
@@ -723,7 +723,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedGComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="MedNDisplay"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedNDisplay")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedNLDDate")%></td></tr>
@@ -739,7 +739,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedNComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="MedRDisplay"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedRDisplay")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedRLDDate")%></td></tr>
@@ -755,7 +755,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="MedADisplay"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedADisplay")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedALDDate")%></td></tr>
@@ -803,7 +803,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>
                                                 <tr>
-                                                    <td class="dataEntryTable"><bean:write name="BPDisplay"/><br><font class="eightyPercent"><bean:write name="BPMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("BPDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("BPMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("BPLDDate")%></td></tr>
@@ -816,7 +816,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="WHRDisplay"/><br><font class="eightyPercent"><bean:write name="WHRMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("WHRDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WHRMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="WHRLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -832,7 +832,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="WCDisplay"/><br><font class="eightyPercent"><bean:write name="WCMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("WCDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WCMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="WCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -848,7 +848,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="HCDisplay"/><br><font class="eightyPercent"><bean:write name="HCMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("HCDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HCMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="HCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -864,12 +864,12 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>                                                 
                                                  <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="WTDisplay"/><br><font class="eightyPercent"><bean:write name="WTMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("WTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WTMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="WTLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="WTLDDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="WTLastData"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WTLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WTLastData")%></td></tr>
                                                             
                                                         </table>
                                                         </logic:present>
@@ -880,7 +880,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr class="dataEntryTable">                                                    
-                                                    <td class="dataEntryTable"><bean:write name="HTDisplay"/><br><font class="eightyPercent"><bean:write name="HTMeasuringInstrc"/></font></td>   
+                                                    <td class="dataEntryTable"><%=request.getAttribute("HTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HTMeasuringInstrc")%></font></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HTLDDate")%></td></tr>
@@ -893,7 +893,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="HRDisplay"/><br><font class="eightyPercent"><bean:write name="HRMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("HRDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HRMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HRLDDate")%></td></tr>
@@ -934,13 +934,13 @@ function controlEyeExam(){
                                                 </tr>
                                                 <tr class="dataEntryTable">
                                                     <th class="dataEntryTable" colspan="3">Foot Exam</th>                                                    
-                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" id="FTDate" name="FTDate" value="<bean:write name="FTNoDate"/>" size="10%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" id="FTDate" name="FTDate" value="<%=request.getAttribute("FTNeDate")%>" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" rowspan="8" valign="top" align="center">
-                                                        <textarea name="FTComments" wrap="hard" cols="24" style="height:180" tabindex="9999"><logic:present name="FTNoComments"><bean:write name="FTNoComments"/></logic:present></textarea>
+                                                        <textarea name="FTComments" wrap="hard" cols="24" style="height:180" tabindex="9999"><logic:present name="FTNoComments"><%=request.getAttribute("FTNoComments")%></logic:present></textarea>
                                                     </td>
                                                 </tr>
                                                 <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="FTNoDesc"/></td>   
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTNoDesc")%></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTNoLDDate")%></td></tr>
@@ -957,7 +957,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(FTNoComments)"/>
                                                  </tr>
                                                  <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="FTNeDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTNeDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTNeLDDate")%></td></tr>
@@ -973,7 +973,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(FTNeComments)"/>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="FTIsDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTIsDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTIsLDDate")%></td></tr>
@@ -989,7 +989,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(FTIsComments)" />
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="FTUlDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTUlDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTUlLDDate")%></td></tr>
@@ -1005,7 +1005,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(FTUlComments)" />
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="FTInDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTInDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTInLDDate")%></td></tr>
@@ -1021,7 +1021,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(FTInComments)" />
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="FTOtDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTOtDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTOtLDDate")%></td></tr>
@@ -1037,7 +1037,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(FTOtComments)" />
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="FTReDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTReDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTReLDDate")%></td></tr>
@@ -1054,13 +1054,13 @@ function controlEyeExam(){
                                                  </tr>
                                                  <tr class="dataEntryTable">
                                                     <th class="dataEntryTable" colspan="3">Eye Exam</th>                                                    
-                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" name="iDate" value="<bean:write name="iNoDate"/>" size="10%"/></td>
+                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" name="iDate" value="<%=request.getAttribute("iDiaDate")%>" size="10%"/></td>
                                                     <td class="dataEntryTable" rowspan="8" valign="top" align="center">
-                                                        <textarea name="iComments" wrap="hard" cols="24" style="height:180"><logic:present name="iNoComments"><bean:write name="iNoComments"/></logic:present></textarea>
+                                                        <textarea name="iComments" wrap="hard" cols="24" style="height:180"><logic:present name="iNoComments"><%=request.getAttribute("iNoComments")%></logic:present></textarea>
                                                     </td>
                                                 </tr>
                                                 <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="iNoDesc"/></td>   
+                                                    <td class="dataEntryTable"><%=request.getAttribute("iNoDesc")%></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iNoLDDate")%></td></tr>
@@ -1077,7 +1077,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(iNoComments)" />
                                                  </tr>
                                                  <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="iHypDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("iHypDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iHypLDDate")%></td></tr>
@@ -1093,7 +1093,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(iHypComments)" />
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="iDiaDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("iDiaDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iDiaLDDate")%></td></tr>
@@ -1109,7 +1109,7 @@ function controlEyeExam(){
                                                     <html:hidden property="value(iDiaComments)"/>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="iOthDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("iOthDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iOthLDDate")%></td></tr>
@@ -1168,7 +1168,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>
                                                 <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="HbA1Desc"/><br><font class="eightyPercent"><bean:write name="HbA1MeasuringInstrc"/></font></td>   
+                                                    <td class="dataEntryTable"><%=request.getAttribute("HbA1Desc")%><br><font class="eightyPercent"><%=request.getAttribute("HbA1MeasuringInstrc")%></font></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HbA1LDDate")%></td></tr>
@@ -1181,7 +1181,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Comments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="BGDesc"/><br><font class="eightyPercent"><bean:write name="BGMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("BGDesc")%><br><font class="eightyPercent"><%=request.getAttribute("BGMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("BGLDDate")%></td></tr>
@@ -1194,7 +1194,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BGComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="LDLDesc"/><br><font class="eightyPercent"><bean:write name="LDLMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("LDLDesc")%><br><font class="eightyPercent"><%=request.getAttribute("LDLMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("LDLLDDate")%></td></tr>
@@ -1207,7 +1207,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(LDLComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="HDLDesc"/><br><font class="eightyPercent"><bean:write name="HDLMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("HDLDesc")%><br><font class="eightyPercent"><%=request.getAttribute("HDLMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HDLLDDate")%></td></tr>
@@ -1220,7 +1220,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HDLComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="TCHLDesc"/><br><font class="eightyPercent"><bean:write name="TCHLMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("TCHLDesc")%><br><font class="eightyPercent"><%=request.getAttribute("TCHLMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("TCHLLDDate")%></td></tr>
@@ -1233,7 +1233,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TCHLComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="TRIGDesc"/><br><font class="eightyPercent"><bean:write name="TRIGMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("TRIGDesc")%><br><font class="eightyPercent"><%=request.getAttribute("TRIGMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("TRIGLDDate")%></td></tr>
@@ -1246,7 +1246,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TRIGComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="UALBDesc"/><br><font class="eightyPercent"><bean:write name="UALBMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("UALBDesc")%><br><font class="eightyPercent"><%=request.getAttribute("UALBMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("UALBLDDate")%></td></tr>
@@ -1259,7 +1259,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(UALBComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="24UADesc"/><br><font class="eightyPercent"><bean:write name="24UAMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("24UADesc")%><br><font class="eightyPercent"><%=request.getAttribute("24UAMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("24UALDDate")%></td></tr>
@@ -1345,7 +1345,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>
                                                 <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="NtrCDesc"/></td>   
+                                                    <td class="dataEntryTable"><%=request.getAttribute("NtrCDesc")%></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("NtrCLDDate")%></td></tr>
@@ -1358,7 +1358,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(NtrCComments)" size="45" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><bean:write name="ExeCDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("ExeCDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("ExeCLDDate")%></td></tr>
@@ -1371,7 +1371,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(ExeCComments)" size="45" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="SmCCDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("SmCCDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("SmCCLDDate")%></td></tr>
@@ -1384,7 +1384,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(SmCCComments)" size="45"tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="DiaCDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("DiaCDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DiaCLDDate")%></td></tr>
@@ -1397,7 +1397,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(DiaCComments)" size="45" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="PsyCDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("PsyCDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("PsyCLDDate")%></td></tr>
@@ -1410,7 +1410,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(PsyCComments)" size="45" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><bean:write name="OthCDesc"/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("OthCDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("OthCLDDate")%></td></tr>
