@@ -21,10 +21,12 @@
   ResultSet rs = myFormBean.queryResults("search_eform");
 %>
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>Form Library</title>
+<title><bean:message key="eform.myform.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script language="javascript">
 <!--
@@ -32,7 +34,7 @@
 //  window.resizeTo(790,580)
 function checkHtml(){
   if(document.myForm.FileName.value==""){ 
-    alert("Please choose a file first, then click Upload");
+    alert("<bean:message key="eform.myform.msgChooseFile"/>");
   } else {
     document.myForm.submit();
   } 
@@ -50,17 +52,17 @@ function returnMain(demographic_no) {
 
 <body topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica">E-FORM</font></th></tr>
+  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica"><bean:message key="eform.myform.msgEForm"/></font></th></tr>
 </table>
 
 <table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="<%=weakColor%>">
-  <tr><td align='right'><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail">Back &nbsp;</a></td>
+  <tr><td align='right'><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a></td>
   </tr>
 </table> 
    
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="98%">
-  <tr><td>Form Library </td>
+  <tr><td><bean:message key="eform.myform.msgFormLib"/> </td>
   <td align='right'></td></tr>
 </table>
 
@@ -69,11 +71,11 @@ function returnMain(demographic_no) {
     <td>
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
       <tr bgcolor=<%=deepColor%> >
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name">Form Name</a></th>
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=subject">Subject</a></th>
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=file_name">File</a></th>
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>">Form Date</a></th>
-      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>">Form Time</a></th> 
+      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
+      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>
+      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
+      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
       </tr> 
 <%
   String bgcolor = null;
@@ -99,6 +101,6 @@ function returnMain(demographic_no) {
 </center>
 
 </body>
-</html>
+</html:html>
 
   

@@ -9,16 +9,18 @@
 <jsp:useBean id="myFormBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
+  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"form_date desc";
   String [][] dbQueries=new String[][] { 
-{"search_eformdatadefault", "select * from eform_data where status = 1 and demographic_no = ? order by ?, form_date desc, form_time desc" }, 
+{"search_eformdatadefault", "select * from eform_data where status = 1 and demographic_no = ? order by " +
+                            param + ", form_date desc, form_time desc" }, 
   };
   myFormBean.doConfigure(dbParams,dbQueries);
 
-  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"";
-  ResultSet rs = myFormBean.queryResults(new String[] {demographic_no, param}, "search_eformdatadefault");
+  ResultSet rs = myFormBean.queryResults(demographic_no, "search_eformdatadefault");
 %>
-
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <SCRIPT LANGUAGE="JavaScript">
 <!--
 //if (document.all || document.layers)  window.resizeTo(790,580);
@@ -30,35 +32,35 @@ function newWindow(file,window) {
 </SCRIPT>
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>ShowMyForm</title>
+<title><bean:message key="eform.showmyform.title"/></title>
 <link rel="stylesheet" href="../web.css">
 </head>
 
 <body topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica">My FORM</font></th></tr>
+  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica"><bean:message key="eform.showmyform.msgMyForm"/></font></th></tr>
 </table>
 
 <table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="<%=weakColor%>">
-  <tr><td align='right'><a href="myform.jsp?demographic_no=<%=demographic_no%>" > Add E-Form </a>
-  | <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail">Back &nbsp;</a></td>
+  <tr><td align='right'><a href="myform.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="eform.showmyform.btnAddEForm"/></a>
+  | <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a></td>
   </tr>
 </table> 
 
 <table border="0" cellspacing="0" cellpadding="0" width="95%">
-  <tr><td>Form Library </td>
+  <tr><td><bean:message key="eform.showmyform.msgFormLybrary"/> </td>
   <td align='right'><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>"> 
-    List Deleted Forms </a></td></tr>
+    <bean:message key="eform.showmyform.btnDeleted"/> </a></td></tr>
 </table>
   
 <table border="0" cellspacing="2" cellpadding="2" width="95%">
   <tr bgcolor=<%=deepColor%> >
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name">Form Name</a></th>
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=subject">Subject</a></th>
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>">Form Date</a></th>
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>">Form Time</a></th> 
-    <th>Action</th> 
+    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
+    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
+    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
+    <th></th> 
   </tr> 
 <%
   boolean bodd = true ;
@@ -76,7 +78,9 @@ function newWindow(file,window) {
 	  </tr>
 <%    }  
   }else {
-    out.print("<tr><td align='center' colspan='5'>No data!</td></tr>");
+%>
+    <tr><td align='center' colspan='5'><bean:message key="eform.showmyform.msgNoData"/></td></tr>
+<%
   }
   myFormBean.closePstmtConn();
 %>               
@@ -84,4 +88,4 @@ function newWindow(file,window) {
 </center>
 
 </body>
-</html>  
+</html:html>  

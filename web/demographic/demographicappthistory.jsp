@@ -108,7 +108,7 @@ function refresh() {
 }
 %>
 <p>
-<%@ include file="zfooterbackclose.htm" %> 
+<%@ include file="zfooterbackclose.jsp" %> 
 </center>
 </body>
 </html>
