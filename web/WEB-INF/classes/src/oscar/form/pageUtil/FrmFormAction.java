@@ -441,9 +441,11 @@ public class FrmFormAction extends Action {
         //System.out.println("validationName: " + validationName);
         if(validationName.equalsIgnoreCase("Yes/No")){
             if(inputValue==null)
-                inputValue="";
+                inputValue="no";
             else if (inputValue.equalsIgnoreCase("on"))
                     inputValue="yes";    
+            else if (inputValue.equalsIgnoreCase("off"))
+                    inputValue="no";
         }        
         return inputValue;
     }
