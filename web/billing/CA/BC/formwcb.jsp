@@ -311,7 +311,7 @@ function popup( height, width, url, windowName){
 	<tr>
 		<td>
 		If appropriate, is the worker now ready for a rehabilitation program?</td>
-                <td><input type="radio" name="w_rehab" value="Y" checked> Yes <input type="radio" name="w_rehab" value="N"> No
+                <td><input type="radio" name="w_rehab" value="Y" > Yes <input type="radio" name="w_rehab" value="N" checked> No
 		</td>
 	</tr>
 	<tr>
