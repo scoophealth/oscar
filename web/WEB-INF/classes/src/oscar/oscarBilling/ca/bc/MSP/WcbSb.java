@@ -292,7 +292,7 @@ public class WcbSb {
    private String Claim(String logNo, String billedAmount, String feeitem,String correspondenceCode) {
       return "C02"
       + this.ClaimNote1Head(logNo)
-      + misc.forwardZero(this.w_phn,10)
+      + misc.forwardZero("",10)
       //+ misc.zero(10)      //phn
       + misc.backwardSpace(this.w_fname, 1).toUpperCase()
       + misc.space(1)
