@@ -1,0 +1,62 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+<% 
+ 
+
+ rslocation = null;
+ rslocation = apptMainBean.queryResults(billNo, "search_teleplanbill");
+ while(rslocation.next()){ 
+    DemoNo = rslocation.getString("demographic_no");
+    DemoName = rslocation.getString("demographic_name");
+    UpdateDate = rslocation.getString("update_date");
+    BillDate = rslocation.getString("billing_date");
+    BillType = rslocation.getString("status");
+    Provider = rslocation.getString("provider_no");
+    visitdate = rslocation.getString("visitdate");
+    visittype = rslocation.getString("visittype");
+ }
+
+ rsPatient = null;
+ rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
+ while(rsPatient.next()){
+     DemoSex = rsPatient.getString("sex");
+     DemoAddress = rsPatient.getString("address");
+     DemoCity = rsPatient.getString("city");
+     DemoProvince = rsPatient.getString("province");
+     DemoPostal = rsPatient.getString("postal");
+     DemoDOB = MyDateFormat.getStandardDate(Integer.parseInt(rsPatient.getString("year_of_birth")),Integer.parseInt(rsPatient.getString("month_of_birth")),Integer.parseInt(rsPatient.getString("date_of_birth")));
+     hin = rsPatient.getString("hin") + rsPatient.getString("ver");
+     if (rsPatient.getString("family_doctor") == null){ r_doctor = "N/A"; r_doctor_ohip="000000";}else{
+        r_doctor=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd");
+        r_doctor_ohip=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip");
+     }
+     HCTYPE = rsPatient.getString("hc_type")==null?"ON":rsPatient.getString("hc_type");
+     if (DemoSex.equals("M")) HCSex = "1";
+     if (DemoSex.equals("F")) HCSex = "2";
+     roster_status = rsPatient.getString("roster_status");
+ }
+   
+ %>
