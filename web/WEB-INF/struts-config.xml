@@ -293,6 +293,40 @@
    </action>
 
     <!-- Edit oscarRx -->
+    
+    <!-- oscarMDS -->
+
+    <action     path="/oscarMDS/UpdateStatus" 
+                type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction" 
+                scope="request"
+                name="/SegmentDisplay.jsp">
+        <forward name="failure" path="/errorpage.jsp"/>
+        <forward name="success" path="/oscarMDS/Close.jsp"/>
+    </action>
+    
+    <action     path="/oscarMDS/ReportReassign" 
+                type="oscar.oscarMDS.pageUtil.ReportReassignAction" 
+                scope="request"
+                name="/Index.jsp">
+        <forward name="failure" path="/errorpage.jsp"/>
+        <forward name="success" path="/oscarMDS/Index.jsp"/>
+    </action>
+    
+    <action     path="/oscarMDS/SearchPatient" 
+                type="oscar.oscarMDS.pageUtil.SearchPatientAction" 
+                scope="request"
+                name="/SegmentDisplay.jsp">
+        <forward name="failure" path="/oscarMDS/PatientSearch.jsp?keyword=&amp;search_mode=search_name"/>        
+        <forward name="success" path="/oscarMDS/OpenEChart.jsp"/>
+    </action>
+    
+    <action     path="/oscarMDS/PatientMatch" 
+                type="oscar.oscarMDS.pageUtil.PatientMatchAction" 
+                scope="request"
+                name="/PatientSearch.jsp">
+        <forward name="failure" path="/errorpage.jsp"/>        
+        <forward name="success" path="/oscarMDS/OpenEChart.jsp"/>
+    </action>        
 
     <!-- form study -->
     <action		path="/form/study/studyname"
