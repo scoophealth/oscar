@@ -60,9 +60,12 @@
   String[][] responseTargets=new String[][] {  };
   patientBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<html>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>PATIENT CHART LIST </title>
+<title><bean:message key="report.reportpatientchartlistspecial.title"/> </title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" >
@@ -108,9 +111,9 @@ function refresh() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica">PATIENT CHART LIST</font></th>
+  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportpatientchartlistspecial.msgTitle"/></font></th>
     <th width="10%" nowrap>
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+      <input type="button" name="Button" value="<bean:message key="global.btnPrint" />" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit" />" onClick="window.close()"></th></tr>
 </table>
 <%
   boolean bFistL = true; //first line in a table for TH
@@ -156,16 +159,16 @@ function refresh() {
 </tr></table>
 <table width="100%" border="0" bgcolor="#ffffff" cellspacing="1" cellpadding="2" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=last_name">Last Name</a></b></TH>
-<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=first_name">First Name</a> </b></TH>
-<TH width="2%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=sex">Sex</a> </b></TH>
-<TH width="5%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=chart_no">Chart No</a> </b></TH>
-<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=appointment_date">Appt. Date</a> </b></TH>
-<TH width="20%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=address">Address</a> </b></TH>
-<TH width="10%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=city">City,Province</a> </b></TH>
-<TH width="10%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=postal">Postal</a> </b></TH>
-<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=dob">DOB</a> </b></TH>
-<TH width="2%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=patient_status">Status</a> </b></TH>
+<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=last_name"><bean:message key="report.reportpatientchartlistspecial.btnLastName"/></a></b></TH>
+<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=first_name"><bean:message key="report.reportpatientchartlistspecial.btnFisrtName"/></a> </b></TH>
+<TH width="2%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=sex"><bean:message key="report.reportpatientchartlistspecial.btnSex"/></a> </b></TH>
+<TH width="5%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=chart_no"><bean:message key="report.reportpatientchartlistspecial.btnChart"/></a> </b></TH>
+<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=appointment_date"><bean:message key="report.reportpatientchartlistspecial.btnApptDate"/></a> </b></TH>
+<TH width="20%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=address"><bean:message key="report.reportpatientchartlistspecial.btnAddress"/></a> </b></TH>
+<TH width="10%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=city"><bean:message key="report.reportpatientchartlistspecial.btnCity"/></a> </b></TH>
+<TH width="10%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=postal"><bean:message key="report.reportpatientchartlistspecial.btnPostal"/></a> </b></TH>
+<TH width="12%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=dob"><bean:message key="report.reportpatientchartlistspecial.btnDOB"/></a> </b></TH>
+<TH width="2%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=patient_status"><bean:message key="report.reportpatientchartlistspecial.btnStatus"/></a> </b></TH>
 </tr>
 <%
     }
@@ -190,4 +193,4 @@ function refresh() {
 
 </table>
 </body>
-</html>
+</html:html>

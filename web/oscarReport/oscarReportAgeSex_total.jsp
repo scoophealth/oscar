@@ -23,6 +23,8 @@
  * Ontario, Canada 
  */
 -->
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%
 String Total="0", mNum="", fNum="";
@@ -65,29 +67,29 @@ Total = rs.getString("n");
    BigDecimal LineTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
    BigDecimal LinePerc= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);    
    %>
-<pre><font face="Arial, Helvetica, sans-serif" size="2"> Date: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          Unit: <%=clinic%>                                              Physician: <%=providerview%></font></pre>
+<pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message key="oscarReport.oscarReportAgeSex.msgDate"/>: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message key="oscarReport.oscarReportAgeSex.msgUnit"/>: <%=clinic%>                                              <bean:message key="oscarReport.oscarReportAgeSex.msgPhysician"/>: <%=providerview%></font></pre>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
    <tr  bgcolor="#CCCCFF"> 
      <td> 
-       <div align="center">Age</div>
+       <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgAge"/></div>
      </td>
    <td colspan='12'> 
-       <div align="center">---------------------------Female ---------------------------------</div>
+       <div align="center">---------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgFemale"/> ---------------------------------</div>
      </td>
      <td> 
        <div align="center"> </div>
      </td>
      <td colspan='12'> 
-       <div align="center">----------------------------Male ----------------------------------</div>
+       <div align="center">----------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgMale"/> ----------------------------------</div>
      </td>
      <td colspan='2'> 
-       <div align="center">---Total ---</div>
+       <div align="center">---<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgTotal"/> ---</div>
     
      </td>
   </tr>
  <tr  bgcolor="#CCCCFF"> 
     <td width="10%"> 
-      <div align="center">Group</div>
+      <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgGroup"/></div>
     </td>
     <td  width="8%"> 
       <div align="right">####</div>

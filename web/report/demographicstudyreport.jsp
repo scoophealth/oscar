@@ -23,9 +23,11 @@
 	reportMainBean.doConfigure(dbParams,dbQueries);
 %>
  
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title> REPORT STUDY </title>
+<title> <bean:message key="report.demographicstudyreport.title"/> </title>
 <!--link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" -->
 <script language="JavaScript">
 <!--
@@ -39,19 +41,19 @@ function setfocus() {
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica">Demographic Study List</font></th></tr>
+  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="report.demographicstudyreport.msgTitle"/></font></th></tr>
   <tr>
-	<td align="right" ><input type="button" name="Button" value="Print" onClick="window.print()">
-	<input type="button" name="Button" value="Cancel" onClick="window.close()"></td>
+	<td align="right" ><input type="button" name="Button" value="<bean:message key="global.btnPrint" />" onClick="window.print()">
+	<input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></td>
   </tr>
 </table>
 
 <table width="100%" border="0" bgcolor="white" cellspacing="2" cellpadding="2"> 
 <tr bgcolor='<%=deepcolor%>'>
-  <TH width="30%" nowrap>Last Name</TH>
-  <TH width="30%">First Name</TH>
-  <TH width="20%">Study</TH>
-  <TH>Provider</TH>
+  <TH width="30%" nowrap><bean:message key="report.reportpatientchartlist.msgLastName"/></TH>
+  <TH width="30%"><bean:message key="report.reportpatientchartlist.msgFirstName"/></TH>
+  <TH width="20%"><bean:message key="report.demographicstudyreport.msgStudy"/></TH>
+  <TH><bean:message key="report.demographicstudyreport.msgProvider"/></TH>
 </tr>
 <%
 	ResultSet rs=null ;
@@ -86,14 +88,14 @@ function setfocus() {
 	nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
 	if(nLastPage>=0) {
 %>
-<a href="demographicstudyreport.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a href="demographicstudyreport.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="report.reportactivepatientlist.msgLastPage"/></a> |
 <%
 	}
 	if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="demographicstudyreport.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<a href="demographicstudyreport.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="report.reportactivepatientlist.msgNextPage"/></a>
 <%
 	}
 %>
 </body>
-</html>
+</html:html>

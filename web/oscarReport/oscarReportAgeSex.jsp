@@ -131,7 +131,7 @@ function refresh() {
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
     <td height="40" width="10%">
-      <input type='button' name='print' value=<bean:message key="global.btnPrint"/>' onClick='window.print()'>
+      <input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'>
     </td>
     <td width="90%" align="left"> 
       <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="oscarReport.oscarReportAgeSex.msgOscarReport"/></font></b></font></p>

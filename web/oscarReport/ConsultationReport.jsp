@@ -64,10 +64,10 @@ ArrayList proList = conData.providerList();
 
 
 
-<html>
+<html:html locale="true">
 <head>
 <title>
-Consultation Report <%= mons %>
+<bean:message key="oscarReport.ConsultationReport.title"/> <%= mons %>
 </title>
 <style type="text/css">
    td.nameBox {
@@ -119,13 +119,13 @@ Consultation Report <%= mons %>
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Report
+                <bean:message key="oscarReport.ConsultationReport.msgReport"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar" >
                  <form action="ConsultationReport.jsp">
                     <tr>
-                        <td >Consultation Report</td>
+                        <td ><bean:message key="oscarReport.ConsultationReport.msgTitle"/></td>
                         <td>
                            <select name="numMonth">
                               <option value="1" <%=selled("1",mons)%> >1 Month</option>
@@ -142,7 +142,7 @@ Consultation Report <%= mons %>
                               <option value="12" <%=selled("12",mons)%> >12 Months</option>
                            </select>
                            <select name="proNo">
-                                 <option value="-1" <%=selled("-1",pros)%> >ALL Providers</option>
+                                 <option value="-1" <%=selled("-1",pros)%> ><bean:message key="oscarReport.ConsultationReport.formAllProviders"/></option>
                               <%
                                   for( int i = 0; i < proList.size(); i++){
                                      ArrayList w = (ArrayList) proList.get(i);
@@ -154,10 +154,10 @@ Consultation Report <%= mons %>
                                   }
                               %>
                            </select>
-                           <input type=submit value="update report"/>
+                           <input type=submit value="<bean:message key="oscarReport.ConsultationReport.btnUpdateReport"/>"/>
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
                     </tr>
                   </form>
@@ -214,11 +214,11 @@ nsult.do?requestId=<%=demoCon.requestId%>')"><%=demoCon.referalDate%></td></a>
             <td valign=top width=300>
                <table border=0 cellspacing=3>
                   <tr>
-                    <td class=nameBox colspan=2>Consultation Documents</td>
+                    <td class=nameBox colspan=2><bean:message key="oscarReport.ConsultationReport.msgConsDoc"/></td>
                   </tr>
                   <tr>
-                     <th width=200 class="subTitles" align=left>Document Description</th>
-                     <th width=100 class="subTitles" align=left>Date</th>
+                     <th width=200 class="subTitles" align=left><bean:message key="oscarReport.ConsultationReport.msgDocDesc"/></th>
+                     <th width=100 class="subTitles" align=left><bean:message key="oscarReport.ConsultationReport.msgDate"/></th>
                   </tr>
                   <%
                   RptConsultReportData.DemoConsultDataStruct.ConLetter demoLetter;
@@ -259,4 +259,4 @@ nsult.do?requestId=<%=demoCon.requestId%>')"><%=demoCon.referalDate%></td></a>
         </tr>
     </table>
 </body>
-</html>
+</html:html>

@@ -44,9 +44,11 @@
   String[][] responseTargets=new String[][] {  };
   patientBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>PATIENT CHART LIST </title>
+<title><bean:message key="report.reportpatientchartlist.title"/> </title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" >
@@ -92,9 +94,9 @@ function refresh() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica">PATIENT CHART LIST</font></th>
+  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportpatientchartlist.msgTitle"/></font></th>
     <th width="10%" nowrap>
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit" />" onClick="window.close()"></th></tr>
 </table>
 <%
   boolean bFistL = true; //first line in a table for TH
@@ -125,9 +127,9 @@ function refresh() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=last_name">Last Name</a></b></TH>
-<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=first_name">First Name</a> </b></TH>
-<TH width="20%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=chart_no">Chart No</a> </b></TH>
+<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=last_name"><bean:message key="report.reportpatientchartlist.msgLastName"/></a></b></TH>
+<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=first_name"><bean:message key="report.reportpatientchartlist.msgFirstName"/></a> </b></TH>
+<TH width="20%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=chart_no"><bean:message key="report.reportpatientchartlist.msgChart"/></a> </b></TH>
 </tr>
 <%
     }
@@ -145,4 +147,4 @@ function refresh() {
 
 </table>
 </body>
-</html>
+</html:html>

@@ -44,9 +44,11 @@
   String[][] responseTargets=new String[][] {  };
   patientBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>PATIENT NO SHOW LIST </title>
+<title><bean:message key="report.reportnoshowapptlist.title"/> </title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" >
@@ -99,9 +101,9 @@ function refresh() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica">PATIENT NO SHOW LIST</font></th>
+  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica"><bean:message key="report.reportnoshowapptlist.msgTitle"/></font></th>
     <th width="10%" nowrap>
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+      <input type="button" name="Button" value="<bean:message key="global.btnPrint" />" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit" />" onClick="window.close()"></th></tr>
 </table>
 <%
   boolean bFistL = true; //first line in a table for TH
@@ -131,11 +133,11 @@ function refresh() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor=<%=deepcolor%> align="center">
-<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=appointment_date">Appt Date</a></b></TH>
-<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=start_time">Start Time</a> </b></TH>
-<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=end_time">End Time</a> </b></TH>
-<TH width="10%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=name">Patient's Name</a></b></TH>
-<TH width="30%"><b>Comments</b></TH>
+<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=appointment_date"><bean:message key="report.reportapptsheet.msgApptDate"/></a></b></TH>
+<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=start_time"><bean:message key="report.reportapptsheet.msgStartTime"/></a> </b></TH>
+<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=end_time"><bean:message key="report.reportapptsheet.msgEndTime"/></a> </b></TH>
+<TH width="10%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=name"><bean:message key="report.reportapptsheet.msgName"/></a></b></TH>
+<TH width="30%"><b><bean:message key="report.reportapptsheet.msgComments"/></b></TH>
 </tr>
 <%
     }
@@ -146,7 +148,7 @@ function refresh() {
       <td align="center"><%=rsdemo.getString("start_time")%></td>
       <td align="center"><%=rsdemo.getString("end_time")%></td>
       <td align="center"><%=rsdemo.getString("name")%></td>
-      <td>&nbsp;No Show</td>
+      <td>&nbsp;<bean:message key="report.reportnoshowapptlist.msgNoShow"/></td>
 </tr>
 <%
   }
@@ -156,4 +158,4 @@ function refresh() {
 
 </table>
 </body>
-</html>
+</html:html>

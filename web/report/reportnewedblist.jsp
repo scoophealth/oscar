@@ -51,9 +51,11 @@
   reportMainBean.doConfigure(dbParams,dbQueries);
 %>
  
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title> REPORT EDB </title>
+<title> <bean:message key="report.reportnewdblist.title"/> </title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" >
 <script language="JavaScript">
 <!--
@@ -67,23 +69,23 @@ function setfocus() {
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica">EDB LIST</font></th>
+  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="report.reportnewdblist.msgEDBList"/></font></th>
   </tr><tr>
-   <td align="right" ><input type="button" name="Button" value="Print" onClick="window.print()">
-   <input type="button" name="Button" value="Cancel" onClick="window.close()"></th>
+   <td align="right" ><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()">
+   <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></th>
   </tr>
 </table>
 
 <CENTER><table width="100%" border="0" bgcolor="silver" cellspacing="2" cellpadding="2"> 
 <tr bgcolor='<%=deepcolor%>'> 
-<TH align="center" width="10%" nowrap><b>EDB</b></TH>
-<TH align="center" width="30%"><b>Patient's Name </b></TH>
+<TH align="center" width="10%" nowrap><b><bean:message key="report.reportnewdblist.msgEDB"/></b></TH>
+<TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
 <!--TH align="center" width="20%"><b>Demog' No </b></TH-->
-<TH align="center" width="5%"><b>Age</b></TH>
-<TH align="center" width="5%"><b>Gravida</b></TH>
-<TH align="center" width="10%"><b>Term</b></TH>
-<TH align="center" width="30%"><b>Phone</b></TH>
-<TH align="center"><b>Provider</b></TH>
+<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgAge"/></b></TH>
+<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgGravida"/></b></TH>
+<TH align="center" width="10%"><b><bean:message key="report.reportnewdblist.msgTerm"/></b></TH>
+<TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
+<TH align="center"><b><bean:message key="report.reportnewdblist.msProvider"/></b></TH>
 </tr>
 <%
   ResultSet rs=null ;
@@ -100,7 +102,6 @@ function setfocus() {
   itemp1[0] = Integer.parseInt(strLimit2);
   boolean bodd=false;
   int nItems=0;
-  System.out.println(startDate + "; " + endDate + "; " + itemp1[0] + "; " + itemp1[1]);
   rs = reportMainBean.queryResults(param,itemp1, "select_formar");
   while (rs.next()) {
     bodd=bodd?false:true; //for the color of rows
@@ -129,14 +130,14 @@ function setfocus() {
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="reportnewedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a href="reportnewedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="report.reportnewdblist.msgLastPage"/></a> |
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="reportnewedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<a href="reportnewedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="report.reportnewdblist.msgNextPage"/></a>
 <%
 }
 %>
 </body>
-</html>
+</html:html>

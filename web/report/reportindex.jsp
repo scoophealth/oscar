@@ -39,9 +39,11 @@
 <% } %>
 <%--@ include file="reportMainBeanConn.jsp" --%>  
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>REPORT SETTING</title>
+<title><bean:message key="report.reportindex.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -82,7 +84,7 @@ function go(r) {
   var w = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
   var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v;
   if(r=='new') {
-    if(confirm("Are you sure you want to see only new appts? (The new appts status would be changed to 'old'.)") ) {
+    if(confirm("<bean:message key="report.reportindex.msgGoConfirm"/>") ) {
 	  popupPage(600,750,w);
 	}
   } else {
@@ -126,7 +128,7 @@ function nsgo() {
 <form name='report' >
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">REPORT LIST</font></th>
+      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="report.reportindex.msgTitle"/></font></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="95%">
@@ -137,12 +139,12 @@ function nsgo() {
   <tr>
     <td> 
       <ol>
-        <li><a HREF="#" ONCLICK ="ogo()" >EDB List</a> &nbsp;
-           from <INPUT TYPE="text" NAME="startDate" VALUE="0001/01/01" size='10'> &nbsp; to 
+        <li><a HREF="#" ONCLICK ="ogo()" ><bean:message key="report.reportindex.btnEDBList"/></a> &nbsp;
+           <bean:message key="report.reportindex.formFrom"/> <INPUT TYPE="text" NAME="startDate" VALUE="0001/01/01" size='10'> &nbsp; <bean:message key="report.reportindex.formTo"/> 
            <INPUT TYPE="text" NAME="endDate" VALUE="<%=today%>" size='10'>
-           <INPUT TYPE="button" NAME="button" VALUE="CREATE REPORT" onClick="ogo()"></li>
-        <li><a HREF="#" ONCLICK ="popupPage(600,750,'reportactivepatientlist.jsp')" >Active Patient List</a></li>
-        <li>Day Sheet
+           <INPUT TYPE="button" NAME="button" VALUE="<bean:message key="report.reportindex.btnCreateReport"/>" onClick="ogo()"></li>
+        <li><a HREF="#" ONCLICK ="popupPage(600,750,'reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a></li>
+        <li><bean:message key="report.reportindex.formDaySheet"/>
 <select name="provider_no" >
 <%
    ResultSet rsgroup = reportMainBean.queryResults("search_group");
@@ -160,17 +162,17 @@ function nsgo() {
 <%
  	 }
 %>
-  <option value="*"  >All Providers</option>
+  <option value="*"  ><bean:message key="report.reportindex.formAllProviders"/></option>
 </select>
 
 <br>
-*  <a HREF="#" ONCLICK ="go('all')" >All appointments</a> 
-<a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.asdate.value")%>')">from</a>
+*  <a HREF="#" ONCLICK ="go('all')" ><bean:message key="report.reportindex.btnAllAppt"/></a> 
+<a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.asdate.value")%>')"><bean:message key="report.reportindex.formFrom"/></a>
 <input type='text' name="asdate" VALUE="<%=today%>"  size=10>
-<a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.aedate.value")%>')">to </a>
+<a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.aedate.value")%>')"><bean:message key="report.reportindex.formTo"/> </a>
 <input type='text' name="aedate" VALUE="<%=today%>" size=10>
 <br>
-*  <a HREF="#" ONCLICK ="go('new')" title="New appts will be old after this view, !">Print Day Sheet or only new appointments</a>
+*  <a HREF="#" ONCLICK ="go('new')" title="<bean:message key="report.reportindex.msgNewApptsOld"/>"><bean:message key="report.reportindex.btnPrintDaySheet"/></a>
 <select name="sdate" >
 <%
   cal.add(cal.DATE, -1) ;
@@ -184,8 +186,8 @@ function nsgo() {
 %>
 </select>
 
-        <li><!--a HREF="#" ONCLICK ="popupPage(600,750,'reportnoshowlist.jsp')" -->No Show List & Letters</a></li>
-        <li><a HREF="#" ONCLICK ="ggo('all')" >Bad Appt Sheet</a>
+        <li><!--a HREF="#" ONCLICK ="popupPage(600,750,'reportnoshowlist.jsp')" --><bean:message key="report.reportindex.formNoShow"/></a></li>
+        <li><a HREF="#" ONCLICK ="ggo('all')" ><bean:message key="report.reportindex.formBadAppt"/></a>
 <select name="pprovider_no" >
 <%
    rsgroup = reportMainBean.queryResults("search_group");
@@ -203,7 +205,7 @@ function nsgo() {
 <%
  	 }
 %>
-  <option value="*"  >All Providers</option>
+  <option value="*"  ><bean:message key="report.reportindex.formAllProviders"/></option>
 </select>
 <select name="ssdate" >
 <%
@@ -217,7 +219,7 @@ function nsgo() {
  	}
 %>
 </select>
-        <li><a HREF="#"  ONCLICK ="pcgo()">Patient Chart List</a>
+        <li><a HREF="#"  ONCLICK ="pcgo()"><bean:message key="report.reportindex.btnPatientChartList"/></a>
 <select name="pcprovider_no" >
 <%
    rsgroup = reportMainBean.queryResults("search_group");
@@ -237,7 +239,7 @@ function nsgo() {
 %>
 </select>
         </li>
-        <li><a HREF="#"  ONCLICK ="opcgo()">Old Patient List</a>
+        <li><a HREF="#"  ONCLICK ="opcgo()"><bean:message key="report.reportindex.btnOldPatient"/></a>
 <select name="opcprovider_no" >
 <%
    rsgroup = reportMainBean.queryResults("search_group");
@@ -255,9 +257,9 @@ function nsgo() {
 <%
  	 }
 %>
-</select> age > <input type=text name=age value='65'>
+</select> <bean:message key="report.reportindex.btnOldPatientAge" /> <input type=text name=age value='65'>
         </li>
-        <li><a HREF="#"  ONCLICK ="nsgo()">No Show Appointment List</a>
+        <li><a HREF="#"  ONCLICK ="nsgo()"><bean:message key="report.reportindex.btnNoShowAppointmentList"/></a>
 <select name="nsprovider_no" >
 <%
    rsgroup = reportMainBean.queryResults("search_group");
@@ -291,16 +293,16 @@ function nsgo() {
 
         </li>
         <li>
-         <a href="../oscarReport/ConsultationReport.jsp" target="_blank">Consultation Report</a>
+         <a href="../oscarReport/ConsultationReport.jsp" target="_blank"><bean:message key="report.reportindex.btnConsultationReport"/></a>
         </li>
         <li>
-         <a href="../oscarReport/LabReqReport.jsp" target="_blank">Laboratory Requisition Report</a>
+         <a href="../oscarReport/LabReqReport.jsp" target="_blank"><bean:message key="report.reportindex.btnLaboratoryRequisition"/></a>
         </li>
         <li>
-          <a href="../oscarReport/ReportDemographicReport.jsp" target="_blank">Demographic Report Tool</a>
+          <a href="../oscarReport/ReportDemographicReport.jsp" target="_blank"><bean:message key="report.reportindex.btnDemographicReportTool"/></a>
         </li>        
         <li>
-          <a href=# onClick="popupPage(600,750,'demographicstudyreport.jsp')" >Demographic Study List</a>
+          <a href=# onClick="popupPage(600,750,'demographicstudyreport.jsp')" ><bean:message key="report.reportindex.btnDemographicStudyList"/></a>
         </li>        
 		</ol>
     </td>
@@ -308,7 +310,7 @@ function nsgo() {
             <tr>
               <td> 
                 <div align="right">
-                  <input type="button" name="Button" value="Cancel" onClick="window.close()">
+                  <input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()">
                 </div>
               </td>
             </tr>
@@ -320,4 +322,4 @@ function nsgo() {
           <p>&nbsp;</p>
         </body>
 </form>        
-</html>
+</html:html>

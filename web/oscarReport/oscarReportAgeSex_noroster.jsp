@@ -67,7 +67,7 @@ Total = rs.getString("n");
    BigDecimal LineTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
    BigDecimal LinePerc= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);    
    %>
-<pre><font face="Arial, Helvetica, sans-serif" size="2"> Date: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          Unit: <%=clinic%>                                              Physician: <%=providerview%></font></pre>
+<pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message key="oscarReport.oscarReportAgeSex.msgDate"/>: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message key="oscarReport.oscarReportAgeSex.msgUnit"/>: <%=clinic%>                                              : <%=providerview%></font></pre>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
    <tr  bgcolor="#CCCCFF"> 
      <td> 
