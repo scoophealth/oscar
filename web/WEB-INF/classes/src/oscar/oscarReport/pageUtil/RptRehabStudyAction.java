@@ -56,6 +56,8 @@ public class RptRehabStudyAction extends Action {
         if(request.getSession().getAttribute("user") == null)
             response.sendRedirect("../logout.htm");                
         String formName = frm.getFormName();
+        String startDate = frm.getStartDate();
+        String endDate = frm.getEndDate();
         String results = "<table>";
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);    
@@ -65,15 +67,16 @@ public class RptRehabStudyAction extends Action {
                 results = results + getHeadingStructure(rs);
             rs.close();
             
-            sql = "select max(formEdited) as formEdited, demographic_no from " + formName + " group by demographic_no";
+            sql = "select max(formEdited) as formEdited, demographic_no from " + formName + " where formEdited > '" + startDate +
+                  "' and formEdited < '" + endDate + "' group by demographic_no";
+            System.out.println("sql:" + sql);
             rs = db.GetSQL(sql);
             while(rs.next()){
                 String sqlDemo =   "SELECT * FROM " + formName + " where demographic_no='" + rs.getString("demographic_no")
                                  + "' AND formEdited='" + rs.getString("formEdited") + "'";
                 System.out.println("sqlDemo:" + sqlDemo);
                 ResultSet rsDemo = db.GetSQL(sqlDemo);
-                //if(rsDemo.next())
-                    //System.out.println(getStructure(rsDemo));
+                //if(rsDemo.next())                    
                     results = results + getStructure(rsDemo);
                 rsDemo.close();                    
             }

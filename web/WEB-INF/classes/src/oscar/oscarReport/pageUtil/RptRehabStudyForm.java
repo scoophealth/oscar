@@ -26,11 +26,15 @@ package oscar.oscarReport.pageUtil;
 import java.io.PrintStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import org.apache.struts.action.*;
+import oscar.util.UtilDateUtilities;
 
 public final class RptRehabStudyForm extends ActionForm {
 
-    String formName;
+    String formName;    
+    String startDate;
+    String endDate;
 
     public String getFormName(){
        return formName;
@@ -38,6 +42,24 @@ public final class RptRehabStudyForm extends ActionForm {
 
     public void setFormName(String formName){
        this.formName = formName;
+    }
+    
+    public String getStartDate(){
+        return startDate;
+        
+    }
+    
+    public void setStartDate(String startDate){
+        this.startDate = startDate;
+    }
+    
+    public String getEndDate(){
+        return endDate;
+        
+    }
+    
+    public void setEndDate(String endDate){
+        this.endDate = endDate;
     }
     
 }

@@ -26,8 +26,13 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
+<%
+GregorianCalendar now = new GregorianCalendar();
+GregorianCalendar cal = (GregorianCalendar) now.clone();
+String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
+%>
 <%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.data.*" %>
+<%@ page import="java.util.*,oscar.oscarReport.data.*, java.net.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -60,7 +65,7 @@ function showHideLayers() { //v6.0
 </script>
 <head>
 <title>
-    <bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/>
+    Rehab Study Reports
 </title>
 
 <style type="text/css">
@@ -114,6 +119,16 @@ function showHideLayers() { //v6.0
         document.forms[0].formName.value=formName;
         document.forms[0].submit();
     }
+   function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=15";//360,680
+  var popup=window.open(page, "scheduleholiday", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
 </script>
 
 </head>
@@ -139,11 +154,19 @@ function showHideLayers() { //v6.0
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar" >                 
                     <tr>
-                        <td>
+                        <td width="25%">
                             <logic:present name="formName">
                                 <bean:write name="formName"/>
                             </logic:present>
-                        </td>                                               
+                        </td> 
+                        <td>
+                            <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../oscarReport/oscarReportRehabStudy.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.forms[0].startDate.value")%>')">
+                            <bean:message key="report.reportindex.formFrom"/></a>
+                            <INPUT TYPE="text" NAME="startDate" VALUE="" size='10'>
+                            <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../oscarReport/oscarReportRehabStudy.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.forms[0].endDate.value")%>')">
+                            <bean:message key="report.reportindex.formTo"/></a>
+                            <INPUT TYPE="text" NAME="endDate" size='10'>
+                        </td>
                     </tr>                  
                 </table>
             </td>
@@ -196,6 +219,12 @@ function showHideLayers() { //v6.0
                   </tr>
                   <tr>
                     <td nowrap><a href="#" onClick="generateResult('formSelfManagement');">Self Management</a></td>
+                  </tr>
+                  <tr>
+                    <td nowrap><a href="#" onClick="generateResult('formTreamentPref');">Treatment Preference</a></td>
+                  </tr>
+                  <tr>
+                    <td nowrap><a href="#" onClick="generateResult('formInternetAccess');">Internet Access</a></td>
                   </tr>
                   
                 </table>
