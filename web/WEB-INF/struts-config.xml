@@ -1110,13 +1110,13 @@
     </action>
     
     <!-- oscarBilling start for BC -->
-    <action   path="/billing/CA/BC/billing"
+    <action   path="/billing"
               type="oscar.oscarBilling.pageUtil.BillingAction"
               name="BillingForm"
               scope="request"
               input="/billing/CA/BC/billing.jsp" >
               <forward name="BC" path="/billing/CA/BC/billingBC.jsp" />
-              <forward name="ON" path="/billing/billingOB.jsp" />                                                                                                                                                                                                                                                                                                                                                                                                          
+              <forward name="ON" path="/billing/CA/ON/billingOB.jsp" />                                                                                                                                                                                                                                                                                                                                                                                                          
               <!--<forward name="ON" path="/oscarBilling/billingON.jsp" />-->
     </action>
                                                                                                                                                                                                      
@@ -1142,7 +1142,7 @@
               scope="request"
               input="/billing/CA/BC/billingView.jsp">
               <forward name="success" path="/billing/CA/BC/billingView.jsp"/>
-              <forward name="ON"   path="/billing/billingOB2.jsp"/>
+              <forward name="ON"   path="/billing/CA/ON/billingOB2.jsp"/>
     </action>
     <!-- oscarBilling end -->
 
