@@ -544,9 +544,9 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                 </td>
                 <td align="right" class="tite2">
                     <html:select property="urgency">
-                         <html:option value="1"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent"/></html:option>
-                         <html:option value="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent"/></html:option>
-                         <html:option value="3"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn"/></html:option>
+                         <option value="1"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent"/></option>
+                         <option value="2" selected><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent"/></option>
+                         <option value="3"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn"/></option>
                     </html:select>
                 </td>
             </tr>
