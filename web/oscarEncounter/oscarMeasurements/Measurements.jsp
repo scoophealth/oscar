@@ -128,7 +128,7 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
                                                  </tr>
                                                 <% int i = 0;%>
                                                 <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
-                                                <tr>                          
+                                                <tr class="data">                          
                                                     <td width="5"><bean:write name="measurementType" property="typeDisplayName" /></td>
                                                     <td><bean:write name="measurementType" property="typeDesc" /></td>
                                                     <td>                           
