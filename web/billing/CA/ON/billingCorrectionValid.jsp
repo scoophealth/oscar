@@ -151,6 +151,7 @@ try {
                             scode.compareTo("P038A")==0 || scode.compareTo("P020A")==0 || 
                             scode.compareTo("P031A")==0 || scode.compareTo("Z552A")==0 || 
                             scode.compareTo("P022A")==0 || scode.compareTo("P023A")==0 || 
+                            scode.compareTo("P030A")==0 ||
                             scode.compareTo("Z716A")==0 || scode.startsWith("S") || 
                             (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherunit2);
