@@ -52,7 +52,16 @@
 	   <servlet-class>oscar.DocumentMgtUploadServlet</servlet-class>
 	   <load-on-startup>0</load-on-startup>
    </servlet>
-					       
+   <servlet>
+	   <servlet-name>OscarDownload</servlet-name>
+	   <servlet-class>OscarDownload</servlet-class>
+	   <load-on-startup>0</load-on-startup>
+   </servlet>			       
+   <servlet>
+	   <servlet-name>UploadTeleplanServlet</servlet-name>
+	   <servlet-class>oscar.DocumentTeleplanReportUploadServlet</servlet-class>
+	   <load-on-startup>0</load-on-startup>
+   </servlet>
   <!-- Action Servlet Mapping -->
   <servlet-mapping>
     <servlet-name>action</servlet-name>
@@ -76,7 +85,15 @@
 	  <servlet-name>UploadDocument</servlet-name>
 	  <url-pattern>/servlet/oscar.DocumentMgtUploadServlet</url-pattern>
   </servlet-mapping>
-
+  
+  <servlet-mapping>
+	  <servlet-name>OscarDownload</servlet-name>
+	  <url-pattern>/servlet/OscarDownload</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	  <servlet-name>UploadTeleplanServlet</servlet-name>
+	  <url-pattern>/servlet/oscar.DocumentTeleplanReportUploadServlet</url-pattern>
+  </servlet-mapping>
   <!-- The Welcome File List -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
