@@ -34,33 +34,19 @@
 String demo = request.getParameter("de");
 String proNo = request.getParameter("proNo");
 
-if (demo != null ){
-  EctSessionBean bean;
-//  oscar.oscarSecurity.SessionBean bean;
-/*  if ( (EctSessionBean ) request.getSession().getAttribute("EctSessionBean") != null){
-    bean = (EctSessionBean ) request.getSession().getAttribute("EctSessionBean");
+if (demo != null ){ // this is needed to set up the encounter session bean when we are called from the master demographics page
+    EctSessionBean bean;
+    bean = new EctSessionBean();
     bean.setDemographicNo(demo);
     bean.consultationRequestId = null;
-    //if (proNo != null){
-        //bean.providerNo = proNo;
-        bean.providerNo =  (String) session.getAttribute("user");
-    //}
-  }else{
-*/
-	bean = new EctSessionBean();
-    bean.setDemographicNo(demo);
-	bean.consultationRequestId = null;
-    //if (proNo != null){
-    //    bean.providerNo = proNo;
-    //}
-
-	EctEChartBean eChart = new EctEChartBean();
-	eChart.setEChartBean(demo);
-	bean.ongoingConcerns = eChart.ongoingConcerns;
+    EctEChartBean eChart = new EctEChartBean();
+    eChart.setEChartBean(demo);
+    bean.ongoingConcerns = eChart.ongoingConcerns;
     bean.providerNo =  (String) session.getAttribute("user");
-
     request.getSession().setAttribute("EctSessionBean",bean);
-//  }
+} else { // otherwise we are being called from the e-chart page and the encounter session bean already exists (we hope)
+    EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+    bean.consultationRequestId = null; // make sure we don't accidentally pull up the info from an old consult
 }
 %>
 
