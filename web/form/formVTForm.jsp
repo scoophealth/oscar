@@ -257,6 +257,20 @@ function showHideDetail(){
     showHideItem('bigA');
     showHideItem('bigP');
     showHideItem('assessment');
+    showHideItem('historyLabel');
+    showHideItem('vitalsLabel');
+    showHideItem('examLabel');
+    showHideItem('labsLabel');
+    showHideItem('psychHead1');
+    showHideItem('psychHead2');
+    showHideItem('psychHead3');
+    showHideItem('psychHead4');    
+    showHideItem('medHead1');
+    showHideItem('medHead2');
+    showHideItem('medHead3');
+    showHideItem('medHead4');
+    
+    
     
 }
 
@@ -727,8 +741,8 @@ function clearAll(yRadio, nRadio){
                                         </tr>                                        
                                         <tr>
                                             <th></th>
-                                            <th class="title" width="98%">
-                                            <a href="javascript: showHideItem('history');" >History >> </a>
+                                            <th class="title" width="98%">                                            
+                                            <span id="historyLabel" style="display:none;"><a href="javascript: showHideItem('history');" >History >> </a></span>
                                             </th>
                                         </tr>                                         
                                          <tr>
@@ -750,12 +764,12 @@ function clearAll(yRadio, nRadio){
                                             <table cellpadding='1' cellspacing='0'width="100%">
                                                 <tr>
                                                     <td class="subTitle"  style="text-align:left" colspan='6'>
-                                                        Cigarette Smoking
+                                                        <!--Cigarette Smoking-->
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="subTitle" width="12%">
-                                                       &nbsp;
+                                                       Cigarette<br>Smoking
                                                     </td>
                                                     <td class="subTitle" width="15%">
                                                         Status<br>[cig/day 0-80]
@@ -811,21 +825,22 @@ function clearAll(yRadio, nRadio){
                                             </table></td></tr>
                                             <tr><td>
                                              <table cellpadding='1' cellspacing='0' width="100%">
-                                                <tr>
+                                                <!--tr>
                                                     <td class="subTitle"  style="text-align:left" colspan='4'>
                                                         Lifestyle
                                                     </td>
-                                                </tr>
+                                                </tr-->
                                                 <tr>
-                                                    <td class="subTitle" width="39%">                                                        
+                                                    <td class="subTitle" width="36%" style="text-align:left">
+                                                        Lifestyle
                                                     </td>                                                    
                                                     <td class="subTitle" width="16%">
                                                         Last Data
                                                     </td>
-                                                    <td class="subTitle" width="10%">
+                                                    <td class="subTitle" width="18%">
                                                         New Data
                                                     </td>                                                                                                        
-                                                    <td class="subTitle" width="35%">
+                                                    <td class="subTitle" width="30%">
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                                                     </td>                                                    
                                                 </tr>                                                
@@ -858,22 +873,25 @@ function clearAll(yRadio, nRadio){
                                              </table></td></tr>
                                             <tr><td>
                                              <table cellpadding='1' cellspacing='0' width="100%">
-                                                <tr>
+                                                <!--tr>
                                                     <td class="subTitle"  style="text-align:left" colspan='4'>
                                                         Psychosocial Screen
                                                     </td>
-                                                </tr>
+                                                </tr-->
                                                 <tr>
-                                                    <td class="subTitle" width="36%">                                                        
+                                                    <td class="subTitle" width="36%" style="text-align:left" >                                                        
+                                                    <span id="psychHead1" style="display:none;" >Psychosocial Screen</span
                                                     </td>                                                    
                                                     <td class="subTitle" width="16%">
-                                                        Last Data
+                                                        <span id="psychHead2" style="display:none;" >Last Data</span>
                                                     </td>
                                                     <td class="subTitle" width="18%">
-                                                        New Data
+                                                        <span id="psychHead3" style="display:none;" >New Data</span>
                                                     </td>                                                                                                        
                                                     <td class="subTitle" width="30%">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                        <span id="psychHead4" style="display:none;" >
+                                                            <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                        </span>
                                                     </td>                                                    
                                                 </tr>                                                
                                                  <tr>
@@ -930,22 +948,25 @@ function clearAll(yRadio, nRadio){
                                              </table></td></tr>
                                             <tr><td>
                                              <table cellpadding='1' cellspacing='0' width="100%">
-                                                <tr>
+                                                <!--tr>
                                                     <td class="subTitle"  style="text-align:left" colspan='4'>
                                                         Medication Adherence screen
                                                     </td>
-                                                </tr>
+                                                </tr-->
                                                 <tr>
-                                                    <td class="subTitle" width="36%">                                                        
+                                                    <td class="subTitle" width="36%" style="text-align:left">                                                        
+                                                        <span id="medHead1" style="display:none;" >Medication Adherence screen</span>
                                                     </td>                                                    
                                                     <td class="subTitle" width="16%">
-                                                        Last Data
+                                                        <span id="medHead2" style="display:none;" >Last Data</span>
                                                     </td>
                                                     <td class="subTitle" width="18%">
-                                                        New Data
+                                                        <span id="medHead3" style="display:none;" >New Data</span>
                                                     </td>                                                                                                        
                                                     <td class="subTitle" width="30%">
+                                                        <span id="medHead4" style="display:none;" >
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                        </span>
                                                     </td>                                                    
                                                 </tr>                                                
                                                  <tr>
@@ -1031,8 +1052,8 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th class="title">
-                                            <a href="javascript: showHideItem('vital');">Vitals >> </a>
+                                            <th class="title">                                            
+                                            <span id="vitalsLabel" style="display:none;"><a href="javascript: showHideItem('vital');">Vitals >> </a></span>
                                             </th>
                                         </tr>                                        
                                          <tr>
@@ -1160,12 +1181,12 @@ function clearAll(yRadio, nRadio){
                                        <tr>
                                             <th></th>
                                             <th class="title">
-                                            <a href="javascript: showHideItem('examination');" >Examination >> </a>
+                                            <span id="examLabel" style="display:none;"><a href="javascript: showHideItem('examination');" >Examination >> </a></span>
                                             </th>
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table cellpadding='0' cellspacing='0' id="examination">
+                                            <td><table cellpadding='0' cellspacing='0' id="examination" border="0">
                                                 <tr>
                                                     <td class="subTitle" width="28%">                                                        
                                                     </td>                                                    
@@ -1324,7 +1345,7 @@ function clearAll(yRadio, nRadio){
                                                 <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("iExDesc")%></td>   
                                                     <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
+                                                        <table cellpadding='0' cellspacing='0' border="0">         
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iExLDDate")%></td></tr>
                                                             <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iExLastData")%></td></tr>
                                                             
@@ -1418,7 +1439,7 @@ function clearAll(yRadio, nRadio){
                                         <tr>
                                             <th></th>
                                             <th class="title" widht="98%">
-                                            <a href="javascript: showHideItem('labs');" >Labs >> </a>
+                                            <span id="labsLabel" style="display:none;"><a href="javascript: showHideItem('labs');" >Labs >> </a></span>
                                             </th>
                                         </tr>
                                          <tr>
