@@ -1,16 +1,16 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"";
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
 %>  
 <%@ page import = "java.net.*,java.sql.*"   errorPage="../errorpage.jsp"%> 
 <jsp:useBean id="myFormBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
+  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"form_date desc";
   String [][] dbQueries=new String[][] { 
 // Postgres cant execute this query
 //{"search_eform", "select * from eform where status = 1 order by ?, form_date desc, form_time desc" }, 
-{"search_eform", "select * from eform where status = 1 order by form_date desc, form_time desc" }, 
+{"search_eform", "select * from eform where status = 1 order by " + param + ",form_date desc, form_time desc" }, 
   };
   myFormBean.doConfigure(dbParams,dbQueries);
 
