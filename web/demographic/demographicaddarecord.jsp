@@ -129,9 +129,9 @@
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].trim();
 	  paramName[1]=param[1].trim();
-	  paramName[2]=param[8].trim();
-	  paramName[3]=param[9].trim();
-	  paramName[4]=param[10].trim();
+	  paramName[2]=param[10].trim();
+	  paramName[3]=param[11].trim();
+	  paramName[4]=param[12].trim();
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
     
