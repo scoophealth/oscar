@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="oscar.oscarProvider.data.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--
@@ -48,6 +49,18 @@
 </logic:present>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
+<script type="text/javascript" language="Javascript">
+    function onPrint() {
+        //document.forms[0].submit.value="print";
+        //var ret = checkAllDates();
+        //if(ret==true) {
+            document.forms[0].action = "../form/createpdf?__title=Rx&__cfgfile=oscarRxPrintCfgPg1&__template=a6blank";
+            document.forms[0].target="_blank";
+        //}
+       return ret;
+    }
+</script>
+
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
@@ -66,11 +79,29 @@ if (hasSig){
    doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
 }
 %>
+<html:form action="/form/formname">
 
 <table width="400px" height="500px" cellspacing=0 cellpadding=10 border=2>
     <tr>
         <td valign=top height="100px">
-            <img src="img/rx.gif" border="0">
+        	<input type="image" src="img/rx.gif" border="0" value="submit" alt="[Submit]" name="submit"
+ 			title="Print in a half letter size paper" onclick="javascript:return onPrint();">
+			<input type="hidden" name="printPageSize" value="PageSize.A6"/>
+			<input type="hidden" name="doctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
+			<input type="hidden" name="clinicName" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicName()) %>"/>
+			<input type="hidden" name="clinicAddress" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicAddress()) %>"/>
+			<input type="hidden" name="clinicCityPostal" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicCity())+"   " + StringEscapeUtils.escapeHtml(provider.getClinicPostal())%>"/>
+			<input type="hidden" name="clinicPhone" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicPhone()) %>"/>
+			<input type="hidden" name="clinicFax" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicFax()) %>"/>
+
+			<input type="hidden" name="patientName" value="<%= StringEscapeUtils.escapeHtml(patient.getFirstName())+ " " +StringEscapeUtils.escapeHtml(patient.getSurname()) %>"/>
+			<input type="hidden" name="patientAddress" value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>"/>
+			<input type="hidden" name="patientCityPostal" value="<%= StringEscapeUtils.escapeHtml(patient.getCity())+ " " + StringEscapeUtils.escapeHtml(patient.getPostal())%>"/>
+			<input type="hidden" name="patientPhone" value="<%= "Tel: " + StringEscapeUtils.escapeHtml(patient.getPhone()) %>"/>
+
+			<input type="hidden" name="rxDate" value="<%= StringEscapeUtils.escapeHtml(oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy")) %>"/>
+			<input type="hidden" name="sigDoctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
+            <!--img src="img/rx.gif" border="0"-->
         </td>
         <td valign=top height="100px">
             <b><%=doctorName %></b><br>
@@ -109,6 +140,7 @@ if (hasSig){
                 <tr valign=top>
                     <td colspan=2 height=225px>
                         <%
+                        String strRx = "";
                         for(i=0;i<bean.getStashSize();i++)
                         {
                             rx = bean.getStashItem(i);
@@ -117,8 +149,10 @@ if (hasSig){
                             <%= rx.getFullOutLine().replaceAll(";","<br/>") %>
                             <hr>
                             <%
+                            strRx += rx.getFullOutLine();
                         }
                         %>
+			<input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>
                     </td>
                 </tr>
                 <tr valign=bottom>
@@ -137,5 +171,6 @@ if (hasSig){
         </td>
     </tr>
 </table>
+</html:form>
 </body>
 </html:html>
