@@ -57,7 +57,7 @@ public class EctImmImmunizationSetData {
 					+ "','"
 					+ UtilMisc.charEscape(UtilXML.toXML(setXmlDoc), '\\')
 					+ "',"
-					+ " curdate() ,'"
+					+ " current_date ,'"
 					+ UtilMisc.charEscape(providerNo, '\\')
 					+ "')";
 			db.RunSQL(sql);
