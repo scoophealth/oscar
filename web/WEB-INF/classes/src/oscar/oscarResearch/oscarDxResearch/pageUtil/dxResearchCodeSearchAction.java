@@ -40,7 +40,7 @@ public final class dxResearchCodeSearchAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
                 
-        String demographicNo = request.getParameter("demographicNo");
+        //String demographicNo = request.getParameter("demographicNo");
         String[] xml_research = new String[5];
         xml_research[0] = request.getParameter("xml_research1");
         xml_research[1] = request.getParameter("xml_research2");
