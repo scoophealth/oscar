@@ -379,7 +379,8 @@ public class BillingSaveBillingAction extends Action {
            
         }
         //////////////
-        if (null != request.getSession().getAttribute("WCBForm")) {
+        if (bean.getBillingType().equals("WCB")){
+        //if (null != request.getSession().getAttribute("WCBForm")) {
            WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
            String insertBillingMaster = 
             " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
