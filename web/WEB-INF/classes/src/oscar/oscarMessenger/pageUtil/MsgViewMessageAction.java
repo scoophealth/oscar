@@ -59,7 +59,7 @@ public class MsgViewMessageAction extends Action {
 
         // System.out.println(request.getAttributeNames());
         // System.out.println(request.getQueryString());
-        String messageNo = request.getParameter("messageID");
+        String messageNo = request.getParameter("messageID");        
         int  i = 1;
 
         try{
@@ -99,9 +99,10 @@ public class MsgViewMessageAction extends Action {
                  request.setAttribute("viewMessageTime",thetime);
                  request.setAttribute("viewMessageDate",thedate);
                  request.setAttribute("viewMessageAttach",attach);
-                 request.setAttribute("viewMessageId",messageNo);
+                 request.setAttribute("viewMessageId",messageNo);                 
                  // not from query
                  request.setAttribute("viewMessageNo",messageNo);
+                 request.setAttribute("provideNo",providerNo);
               }
               else{
                  i=0; // somethin wrong no message there
