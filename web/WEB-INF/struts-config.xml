@@ -265,6 +265,10 @@
 <!-- OscarDxResearch Start-->
     <form-bean      name="dxResearchForm"
                     type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchForm"/>
+    <form-bean      name="dxResearchLoadQuickListItemsForm"
+                    type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadQuickListItemsForm"/>  
+    <form-bean      name="dxResearchUpdateQuickListForm"
+                    type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateQuickListForm"/>                    
 <!-- OscarDxResearch End-->
 <!-- oscarBilling Brazil start -->
     <form-bean      name="procedimentoRealizadoForm"
@@ -1344,16 +1348,38 @@
                   type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchCodeSearchAction"
                   name=""
                   scope="request"
-                  input="/oscarEncounter/dxResearch.jsp">
+                  input="/oscarResearch/oscarDxResearch/dxResearch.jsp">
                 <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchCodeSearch.jsp"/>
         </action>
         <action   path="/oscarResearch/oscarDxResearch/dxResearchUpdate"
                   type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateAction"
                   name=""
                   scope="request"
-                  input="/oscarEncounter/dxResearch.jsp">
+                  input="/oscarResearch/oscarDxResearch/dxResearch.jsp">
                 <forward name="success" path="/oscarResearch/oscarDxResearch/setupDxResearch.do"/>
         </action>
+        <action   path="/oscarResearch/oscarDxResearch/dxResearchLoadQuickList"
+                  type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadQuickListAction"
+                  name="dxResearchSelectQuickListForm"
+                  scope="request"
+                  input="/oscarResearch/oscarDxResearch/dxResearchSelectQuickList.jsp">
+                <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchSelectQuickList.jsp"/>
+        </action> 
+        <action   path="/oscarResearch/oscarDxResearch/dxResearchLoadQuickListItems"
+                  type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadQuickListItemsAction"
+                  name="dxResearchLoadQuickListItemsForm"
+                  scope="request"
+                  input="/oscarResearch/oscarDxResearch/dxResearchSelectQuickList.jsp">
+                <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchEditQuickList.jsp"/>
+        </action>
+        <action   path="/oscarResearch/oscarDxResearch/dxResearchUpdateQuickList"
+                  type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateQuickListAction"
+                  name="dxResearchUpdateQuickListForm"
+                  scope="request"
+                  input="/oscarResearch/oscarDxResearch/dxResearchEditQuickList.jsp">
+                <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchLoadQuickListItems.do"/>
+        </action> 
+               
     <!-- OscarDxResearch end-->
     
     <!-- ProcedimentoRealizado start -->
