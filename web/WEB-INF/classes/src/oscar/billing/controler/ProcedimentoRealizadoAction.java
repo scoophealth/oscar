@@ -4,8 +4,10 @@ import org.apache.log4j.Category;
 
 import org.apache.struts.action.*;
 
+import oscar.billing.cad.dao.CadProcedimentoDAO;
 import oscar.billing.cad.dao.CidDAO;
 import oscar.billing.cad.model.CadCid;
+import oscar.billing.cad.model.CadProcedimentos;
 import oscar.billing.dao.AppointmentDAO;
 import oscar.billing.dao.DiagnosticoDAO;
 import oscar.billing.dao.ProcedimentoRealizadoDAO;
@@ -51,6 +53,11 @@ public class ProcedimentoRealizadoAction extends OscarAction {
                         response);
             }
             
+			if ("add_proc".equals(dispatch)) {
+				myforward = performAddProcedimento(mapping, form, request,
+						response);
+			}
+
 			if ("diagnostico".equals(dispatch)) {
 				myforward = performUpdateDiagnostico(mapping, form, request,
 						response);
@@ -270,4 +277,33 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 
         return mapping.findForward("gravar");
     }
+
+	private ActionForward performAddProcedimento(ActionMapping mapping,
+		ActionForm actionForm, HttpServletRequest request,
+		HttpServletResponse response) {
+		cat.info(" [ProcedimentoRealizadoAction] ADD_PROC");
+
+		ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
+
+		try {
+			CadProcedimentoDAO procDAO = new CadProcedimentoDAO(getPropertiesDb(
+						request));
+						
+			//inserir procedimento
+			CadProcedimentos proc = procDAO.retrieve(String.valueOf(form.getCadProcedimentos().getCoProcedimento()));
+			if (proc.getCoProcedimento() != 0) { 
+			   form.getAppointment().addProcedimentos(proc);
+			}
+                    
+			form.getCadProcedimentos().setCoProcedimento(0);
+			form.getCadProcedimentos().setDsProcedimento("");
+		} catch (Exception e) {
+			generalError(request, e, "error.general");
+
+			return mapping.findForward("failure");
+		}
+
+		return mapping.findForward("procedimento");
+	}
+
 }

@@ -5,6 +5,7 @@
 package oscar.billing.model;
 
 import oscar.billing.cad.model.CadCid;
+import oscar.billing.cad.model.CadProcedimentos;
 
 import oscar.billing.fat.model.FatFormularioProcedimento;
 
@@ -325,6 +326,14 @@ public class Appointment {
             this.procedimentoRealizado.add(pr);
         }
     }
+
+	public void addProcedimentos(CadProcedimentos procedimento) {
+		ProcedimentoRealizado pr = new ProcedimentoRealizado();
+		pr.setAppointment(this);
+		pr.setCadProcedimentos(procedimento);
+		pr.setDtRealizacao(new Date());
+		this.procedimentoRealizado.add(pr);
+	}
 
     public void removeProcedimentos(long id) {
         for (int i = 0; i < procedimentoRealizado.size(); i++) {

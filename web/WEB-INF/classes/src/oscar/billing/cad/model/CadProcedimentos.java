@@ -18,6 +18,10 @@ import java.util.Date;
  * </p>
  */
 public class CadProcedimentos {
+	public static final String AMBULATORIAL = "A";
+	public static final String ATIVO = "A";
+	public static final String INATIVO = "I";
+	
     ///////////////////////////////////////
     // attributes
 

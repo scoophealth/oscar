@@ -25,12 +25,14 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     private List formularios;
     private FatFormularios formulario;
     private String coCid;
+    private CadProcedimentos cadProcedimentos;
 
     public ProcedimentoRealizadoForm() {
         this.appointment = new Appointment();
         this.procedimentosForm = new Vector();
         this.formularios = new ArrayList();
         this.formulario = new FatFormularios();
+        this.cadProcedimentos = new CadProcedimentos();
     }
 
     public int getStrutsAction() {
@@ -174,6 +176,20 @@ public class ProcedimentoRealizadoForm extends ActionForm {
 	 */
 	public void setCoCid(String string) {
 		coCid = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public CadProcedimentos getCadProcedimentos() {
+		return cadProcedimentos;
+	}
+
+	/**
+	 * @param procedimentos
+	 */
+	public void setCadProcedimentos(CadProcedimentos procedimentos) {
+		cadProcedimentos = procedimentos;
 	}
 
 }
