@@ -1,0 +1,132 @@
+/*
+ * 
+ */
+
+
+package oscar.eform;
+
+import java.io.*;
+//import javax.servlet.http.*;
+import javax.servlet.*;
+
+/**
+ * Class UploadImage is a servlet to upload the image to the directory
+ * 2002-12-31
+*/
+public class UploadImage extends GenericServlet {
+    String projecthome = "";
+    static final int BUFFER = 2048;
+
+    public void service(ServletRequest servletrequest, ServletResponse servletresponse)
+        throws IOException, ServletException {
+        String projecthome = EfmImagePath.eformImagePath;
+        if (projecthome.equals("")) { return; }
+
+        byte abyte0[] = new byte[2048];
+        byte abyte1[] = new byte[1024];
+        byte abyte2[] = new byte[1024];
+        byte abyte3[] = new byte[2];
+
+        int i = servletrequest.getContentType().indexOf(61);
+        String s = servletrequest.getContentType().substring(i + 1);
+//            System.out.println(servletrequest.getAttribute("user") + "Servlet request contenttype=: " + servletrequest.getContentType());
+        String s1 = projecthome;
+        String s2 = "";
+
+        ServletInputStream servletinputstream = servletrequest.getInputStream();
+        BufferedOutputStream bufferedoutputstream = null;
+        Object obj = null;
+        System.out.println("temp :" + s1);
+        boolean flag = false;
+        boolean flag1 = true;
+        boolean flag2 = false;
+        boolean flag3 = false;
+        byte abyte4[] = s.getBytes();
+        while(flag3 || (i = servletinputstream.readLine(abyte0, 0, 2048)) != -1) 
+        {
+            flag3 = false;
+            boolean flag4 = false;
+ //           System.out.println("S=: " + new String(abyte0, 0, i) + flag4);
+            if(i == 2 && abyte0[0] == 13 && abyte0[1] == 10)
+            {
+                abyte3[0] = 13;
+                abyte3[1] = 10;
+ //               System.out.println("Space=: " + new String(abyte0, 0, i));
+                for(int j = 0; j < 2048; j++)
+                    abyte0[j] = 0;
+
+                i = servletinputstream.readLine(abyte0, 0, 2048);
+                if(i == 2 && abyte0[0] == 13 && abyte0[1] == 10)
+                {
+                    bufferedoutputstream.write(abyte3, 0, 2);
+                    flag3 = true;
+                    continue;
+                }
+                flag4 = true;
+ //               System.out.println("Sin=: " + new String(abyte0, 0, i) + flag4);
+            }
+            String s3 = new String(abyte0, 2, s.length());
+            if(s.equals(s3))
+            {
+                System.out.println("boundery" + i + " :: " + new String(abyte0, 0, i) + flag4);
+                if(flag4)
+                    break;
+                int k;
+                if((k = servletinputstream.readLine(abyte1, 0, 2048)) != -1)
+                {
+                    String s4 = new String(abyte1);
+                    if(s4.length() > 2 && s4.indexOf("filename") != -1) {
+// this is the saving file name, I can use it' original name, or  I can use a temp name for all
+                         s4 = s1 + s4.substring(s4.lastIndexOf(92) + 1, s4.lastIndexOf(34));
+                    //s4 = s1 + "temp.jsp";
+                        FileOutputStream fileoutputstream = new FileOutputStream(new File(s4));
+                        bufferedoutputstream = new BufferedOutputStream(fileoutputstream, 2048);
+                    }
+                    int k1 = servletinputstream.readLine(abyte2, 0, 2048);
+                    if((k1 = servletinputstream.readLine(abyte2, 0, 2048)) != -1)
+                        flag = flag1;
+                }
+                flag1 = !flag1;
+                for(int i1 = 0; i1 < 2048; i1++)
+                    abyte0[i1] = 0;
+
+            }
+            else
+            {
+                if(flag4)
+                {
+                    boolean flag5 = false;
+                    bufferedoutputstream.write(abyte3, 0, 2);
+                  //  System.out.println("write space: " + new String(abyte3, 0, 2));
+                    for(int j1 = 0; j1 < 2; j1++)
+                        abyte3[j1] = 0;
+
+                }
+                if(flag)
+                {
+                    bufferedoutputstream.write(abyte0, 0, i);
+                   // System.out.println("write second: " + new String(abyte0, 0, i));
+                    for(int l = 0; l < 2048; l++)
+                        abyte0[l] = 0;
+
+                }
+            }
+        }
+
+        bufferedoutputstream.close();
+        servletinputstream.close();
+
+        EfmImagePath.setEfmImagePath("");
+
+// send back message to user
+	   PrintWriter out = servletresponse.getWriter();
+	   out.println("<head>");
+	   out.println("<script language=\"JavaScript\">");
+	   out.println("setTimeout(\"top.location.href = '../eform/uploadimages.jsp'\",1000);");
+	   out.println("</script>");
+	   out.println("</head>");
+	   out.println("<body>");
+	   out.println("File upload successfully.<br> Please wait for 1 seconds to go to \"modify\" page"); 
+	   out.println("</body>");
+    }
+}

@@ -1,0 +1,188 @@
+package oscar.form;
+
+import java.util.Date;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Properties;
+import oscar.oscarDB.DBHandler;
+import oscar.util.*;
+
+public class FrmRecordHelp {
+    public Properties getFormRecord(String sql) //int demographicNo, int existingID)
+        throws SQLException  {
+        Properties props = new Properties();
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+
+		ResultSet rs = db.GetSQL(sql);
+		if(rs.next()) {
+			ResultSetMetaData md = rs.getMetaData();
+			for(int i = 1; i <= md.getColumnCount(); i++)  {
+				String name = md.getColumnName(i);
+				String value;
+
+				if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))  {
+					if(rs.getInt(i) == 1)	value = "checked='checked'";
+					else	value = "";
+				} else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))	value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
+				else if(md.getColumnTypeName(i).equalsIgnoreCase("timestamp")) value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd HH:mm:ss");
+				else	value = rs.getString(i);
+
+				if(value != null)	props.setProperty(name, value);
+			}
+		}
+        rs.close();
+        db.CloseConn();
+
+        return props;
+    }
+
+    public synchronized int saveFormRecord(Properties props, String sql)  throws SQLException  {
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+
+        ResultSet rs = db.GetSQL(sql, true);
+        rs.moveToInsertRow();
+
+		rs = updateResultSet(props,  rs, true);
+        rs.insertRow();
+        rs.close();
+
+        int ret = 0;
+        sql = "SELECT LAST_INSERT_ID()";
+        rs = db.GetSQL(sql);
+        if(rs.next())
+            ret = rs.getInt(1);
+        rs.close();
+        db.CloseConn();
+
+        return ret;
+    }
+
+
+    public ResultSet updateResultSet(Properties props,  ResultSet rs, boolean bInsert)  throws SQLException  {
+        ResultSetMetaData md = rs.getMetaData();
+        for(int i = 1; i <= md.getColumnCount(); i++)  {
+            String name = md.getColumnName(i);
+            if(name.equalsIgnoreCase("ID")) {
+				if (bInsert)	rs.updateInt(name, 0);
+                continue;
+            }
+
+            String value = props.getProperty(name, null);
+            if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))  {
+                if(value != null) {
+                    if(value.equalsIgnoreCase("on") || value.equalsIgnoreCase("checked='checked'"))
+                        rs.updateInt(name, 1);
+                    else
+                        rs.updateInt(name, 0);
+                } else {
+                    rs.updateInt(name, 0);
+                }
+                continue;
+            }
+
+            if(md.getColumnTypeName(i).equalsIgnoreCase("date")) {
+                java.util.Date d;
+                if(md.getColumnName(i).equalsIgnoreCase("formEdited"))
+                    d = UtilDateUtilities.Today();
+                else
+                    d = UtilDateUtilities.StringToDate(value, "yyyy/MM/dd");
+                if(d == null)
+                    rs.updateNull(name);
+                else
+                    rs.updateDate(name, new java.sql.Date(d.getTime()));
+                continue;
+            }
+
+            if(md.getColumnTypeName(i).equalsIgnoreCase("timestamp")) {
+                Date d;
+                if(md.getColumnName(i).equalsIgnoreCase("formEdited"))  {
+                    d = UtilDateUtilities.Today();
+                } else {
+                    d = UtilDateUtilities.StringToDate(value, "yyyyMMddHHmmss");
+                }
+                if(d == null)
+                    rs.updateNull(name);
+                else
+                    rs.updateTimestamp(name, new java.sql.Timestamp(d.getTime()));
+                continue;
+            }
+
+            if(value == null)
+                rs.updateNull(name);
+            else
+                rs.updateString(name, value);
+        }
+		return rs;
+	}
+
+	//for page form
+    public void updateFormRecord(Properties props, String sql)  throws SQLException  {
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+
+        ResultSet rs = db.GetSQL(sql, true);
+        //rs.relative(0);
+
+		rs = updateResultSet(props,  rs, false);
+        rs.updateRow();
+
+        rs.close();
+        db.CloseConn();
+	}
+
+
+    public Properties getPrintRecord(String sql) throws SQLException  {
+        Properties props = new Properties();
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+
+        ResultSet rs = db.GetSQL(sql);
+        if(rs.next())  {
+            ResultSetMetaData md = rs.getMetaData();
+            for(int i = 1; i <= md.getColumnCount(); i++)  {
+                String name = md.getColumnName(i);
+                String value;
+
+                if(md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1) {
+                    if(rs.getInt(i) == 1) value = "on";
+                    else value = "off";
+                } else if(md.getColumnTypeName(i).equalsIgnoreCase("date")) value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
+                else value = rs.getString(i);
+
+                if(value != null) props.setProperty(name, value);
+            }
+        }
+        rs.close();
+        db.CloseConn();
+
+        return props;
+    }
+
+
+    public String findActionValue(String submit) throws SQLException {
+        if (submit != null && submit.equalsIgnoreCase("print")) {
+            return "print";
+        } else if (submit != null && submit.equalsIgnoreCase("save")) {
+            return "save";
+        } else if (submit != null && submit.equalsIgnoreCase("exit")) {
+            return "exit";
+        } else {
+            return "failure";
+        }
+    }
+
+    public String createActionURL(String where, String action, String demoId, String formId) throws SQLException {
+        String temp = null;
+
+        if(action.equalsIgnoreCase("print")) {
+            temp = where + "?demoNo=" + demoId + "&formId=" + formId;   // + "&study_no=" + studyId + "&study_link" + studyLink;
+        } else if (action.equalsIgnoreCase("save")) {
+            temp = where + "?demographic_no=" + demoId + "&formId=" + formId ;  // "&study_no=" + studyId + "&study_link" + studyLink;  //+
+        } else if (action.equalsIgnoreCase("exit")) {
+            temp = where;
+        } else {
+            temp = where;
+        }
+        
+        return temp;
+    }
+}

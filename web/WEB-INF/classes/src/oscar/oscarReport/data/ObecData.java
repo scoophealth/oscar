@@ -1,0 +1,119 @@
+package oscar.oscarReport.data;
+
+import oscar.oscarDB.*;
+import java.sql.*;
+import java.util.*;
+import java.io.*;
+
+
+/**
+*This classes main function ObecGenerate collects a group of patients with health insurance number for OHIP validation in the last specified date
+*/
+public class ObecData {
+
+    public ArrayList demoList = null;
+    public String sql= "";
+    public String results= null;
+        public String text= null;
+    public String connect = null;
+    DBPreparedHandler accessDB=null;
+	 Properties oscarVariables = null;
+
+
+    public ObecData() {
+    }
+
+
+
+
+
+    public String generateOBEC( String sDate, String eDate , Properties pp){
+		int count = 0;
+        String retval = "";
+        String filename = "";
+        if (sDate == null || sDate.compareTo("")==0) { sDate = "9999/00/00";}
+        if (eDate == null || eDate.compareTo("")==0) { eDate = "9999/12/31";}
+        try{
+              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              String sql = "select d.demographic_no, d.last_name, d.first_name, LEFT(d.address, 32) as address, LEFT(d.city, 30) as city, d.postal, d.hin, d.ver, d.province from appointment a, demographic d where a.demographic_no=d.demographic_no and d.hin <> '' and a.appointment_date>= '" + sDate + "' and appointment_date<='" + eDate + "' and (d.province='Ontario' or d.province='ON' or d.province='ONTARIO') group by d.demographic_no order by d.last_name";
+              ResultSet rs = db.GetSQL(sql);
+              while(rs.next()){
+				  count = count + 1;
+				  if (count == 1){
+					   retval = retval + "OBEC01" + space(rs.getString("hin"),10) + space(rs.getString("ver"),2) + "\r";
+				  }else{
+                 retval = retval+ "\n" + "OBEC01" + space(rs.getString("hin"),10) + space(rs.getString("ver"),2) + "\r";
+}
+			 }
+              rs.close();
+              db.CloseConn();
+
+              if (retval.compareTo("") == 0){
+				  filename = "0";
+			  } else {
+              filename = writeFile(retval, pp);
+		  }
+           }
+           catch(SQLException e){
+              System.out.println("There has been an error while retrieving a Obec");
+              System.out.println(e.getMessage());
+           }
+
+        return filename;
+     }
+
+   public static String space(String oldString, int leng){
+
+   String outputString = "";
+   int i;
+   for (i=oldString.length(); i<leng; i++) {
+   outputString = outputString + " ";
+   }
+   outputString = oldString + outputString;
+   return outputString;
+   }
+
+   public static String zero(String oldString, int leng){
+
+   String outputString = "";
+   int i;
+   for (i=oldString.length(); i<leng; i++) {
+   outputString = outputString + "0";
+   }
+   outputString = oldString + outputString;
+   return outputString;
+   }
+
+
+
+	public String writeFile(String value1, Properties pp){
+
+    String obecFilename ="";
+
+	   try{
+	   int fileCount = 0;
+	    String home_dir;
+	    String oscar_home = pp.getProperty("DOCUMENT_DIR");
+		Calendar calendar = new GregorianCalendar();
+	    String randomDate =String.valueOf(calendar.get(Calendar.SECOND)) + String.valueOf(calendar.get(Calendar.MILLISECOND));
+	    if (randomDate.length() > 3) { randomDate = randomDate.substring(0,3); }
+	     if (randomDate.length() < 3) { randomDate = zero(randomDate, 3); }
+ 		obecFilename = "OBECE" + randomDate + ".TXT";
+	   FileOutputStream out;
+	   out = new FileOutputStream(oscar_home+ obecFilename);
+	   PrintStream p;
+	   p = new PrintStream(out);
+
+
+	   p.println(value1);
+
+	//System.out.println(sqlE.record);
+	   p.close();
+	   }
+	   catch(Exception e)
+	   {
+	   System.err.println("Error");
+	}
+	return obecFilename;
+}
+};

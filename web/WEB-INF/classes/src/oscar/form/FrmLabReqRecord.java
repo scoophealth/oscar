@@ -1,0 +1,135 @@
+package oscar.form;
+
+import oscar.oscarDB.*;
+import oscar.oscarEncounter.data.*;
+import oscar.util.*;
+import java.util.*;
+import java.sql.*;
+import java.io.*;
+import java.lang.String;
+
+public class FrmLabReqRecord  extends FrmRecord {
+    public Properties getFormRecord(int demographicNo, int existingID)
+            throws SQLException {
+        Properties props = new Properties();
+
+        if(existingID <= 0) {
+			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			String demoProvider = "000000";
+			String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS patientName, "
+                    + "sex, address, city, province, postal, hin, ver, "
+                    + "phone, year_of_birth, month_of_birth, date_of_birth, provider_no  "
+                    + "FROM demographic WHERE demographic_no = " + demographicNo;
+            ResultSet rs = db.GetSQL(sql);
+
+            if(rs.next()) {
+                    java.util.Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+
+                    props.setProperty("demographic_no", rs.getString("demographic_no"));
+                    props.setProperty("patientName", rs.getString("patientName"));
+                    props.setProperty("healthNumber", rs.getString("hin"));
+                    props.setProperty("version", rs.getString("ver"));
+                    props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                    //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                    props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
+                    props.setProperty("homePhone", rs.getString("phone"));
+                    props.setProperty("patientAddress", rs.getString("address"));
+                    props.setProperty("patientCity", rs.getString("city"));
+                    props.setProperty("patientPC", rs.getString("postal"));
+                    props.setProperty("province", rs.getString("province"));
+                    props.setProperty("sex", rs.getString("sex"));
+                    props.setProperty("demoProvider", rs.getString("provider_no"));
+
+                    demoProvider = rs.getString("provider_no");
+            }
+            rs.close();
+
+            //get local clinic information
+            sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_postal, clinic_phone, clinic_fax FROM clinic";
+            rs = db.GetSQL(sql);
+            if(rs.next()) {
+                 props.setProperty("aci", rs.getString("clinic_name") +"\n"+ rs.getString("clinic_address") +"\n"+ rs.getString("clinic_city") +"\n"+ rs.getString("clinic_postal") +"\ntel:"+ rs.getString("clinic_phone") +"\nfax:"+ rs.getString("clinic_fax")  );
+            }
+            rs.close();
+
+			db.CloseConn();
+
+        } else {
+            String sql = "SELECT * FROM formLabReq WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
+			props = (new FrmRecordHelp()).getFormRecord(sql);
+        }
+
+        return props;
+    }
+
+    public Properties getFormCustRecord(Properties props, int provNo) throws SQLException {
+		String demoProvider = props.getProperty("demoProvider", "");
+
+		if (!demoProvider.equals(""))	{
+			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			ResultSet rs = null;
+			String sql = null;
+
+			if ( Integer.parseInt(demoProvider) == provNo) {
+                // from provider table
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
+                    + "FROM provider WHERE provider_no = " + provNo;
+                rs = db.GetSQL(sql);
+
+                if(rs.next()) {
+                    String num = rs.getString("ohip_no");
+                    props.setProperty("apptProvName", "");
+                    props.setProperty("provName", rs.getString("provName"));
+                    props.setProperty("practitionerNo", "0000-"+num+"-00");
+                }
+                rs.close();
+			} else {
+			    // from provider table
+	            sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = " + provNo;
+                rs = db.GetSQL(sql);
+				
+				if(rs.next()) {
+					String num = rs.getString("ohip_no");
+					props.setProperty("apptProvName", rs.getString("provName"));
+                }
+                rs.close();
+
+				// from provider table
+				sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = " + demoProvider;
+                rs = db.GetSQL(sql);
+
+                if(rs.next()) {
+                    String num = rs.getString("ohip_no");
+                    props.setProperty("provName", rs.getString("provName"));
+                    props.setProperty("practitionerNo", "0000-"+num+"-00");
+                }
+                rs.close();
+            }
+			db.CloseConn();
+		}
+
+        return props;
+	}
+
+    public int saveFormRecord(Properties props) throws SQLException {
+        String demographic_no = props.getProperty("demographic_no");
+        String sql = "SELECT * FROM formLabReq WHERE demographic_no=" +demographic_no +" AND ID=0";
+
+		return ((new FrmRecordHelp()).saveFormRecord(props, sql));
+	}
+
+    public Properties getPrintRecord(int demographicNo, int existingID) throws SQLException  {
+        String sql = "SELECT * FROM formLabReq WHERE demographic_no = " +demographicNo +" AND ID = " +existingID ;
+		return ((new FrmRecordHelp()).getPrintRecord(sql));
+    }
+
+
+    public String findActionValue(String submit) throws SQLException {
+ 		return ((new FrmRecordHelp()).findActionValue(submit));
+    }
+
+    public String createActionURL(String where, String action, String demoId, String formId) throws SQLException {
+ 		return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
+    }
+
+}
