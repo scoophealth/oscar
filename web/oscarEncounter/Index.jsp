@@ -433,10 +433,11 @@ function testt(){
 <script language="javascript">
 
 function showpic(picture){
-        if (document.getElementById){ // Netscape 6 and IE 5+
-                var targetElement = document.getElementById(picture);
-        targetElement.style.visibility = 'visible';
-    }
+        //if (document.getElementById){ // Netscape 6 and IE 5+
+        //        var targetElement = document.getElementById(picture);
+        //targetElement.style.visibility = 'visible';
+    //}
+var aew = document.ids.Layer1.visibility;
 }
 
 function hidepic(picture){
@@ -657,57 +658,7 @@ border-right: 2px solid #cfcfcf;
                         <a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;"><bean:message key="oscarEncounter.Index.msgDocuments"/></a><br>
                         <a href="#" onClick="popupPage(500,600, '../eform/showmyform.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="global.eForms"/></a><br>
                  	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a>
-                        <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');" ><bean:message key="oscarEncounter.Index.calculators"/></a>
-                           <span style="position:relative;">
-                              <div id="Layer1" style="position:absolute; left:1px; top:1px; width:180px; height:311px; visibility: hidden; z-index:1"   >
-                                 <table border=0 cellpadding="0" cellspacing="1"  width="100%" class="layerTable" bgcolor="#FFFFFF"  >
-                                   <tr>
-                                       <td align="right" valign="top" class="menuLayer">
-                                          <a href="javascript: function myFunction() {return false; }" onclick="hidepic('Layer1');" style="text-decoration: none;">X</a>
-                                       </td>
-                                   </tr>
-                                   <tr><td align="center" class="menuLayer">
-                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.intmed.mcw.edu/clincalc/body.html','BodyMassIndex');">
-                                             <bean:message key="oscarEncounter.Index.bodyMass"/>
-                                          </a>
-                                   </td></tr>
-                                   <tr><td align="center" class="menuLayer">
-                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/CoronaryArteryDiseaseRiskPrediction.html?sex=<%=bean.patientSex%>&age=<%=pAge%>','CoronaryArteryDiseaseRisk');">
-                                             <bean:message key="oscarEncounter.Index.coronary"/>
-                                          </a>
-                                   </td></tr>
-                                   <tr><td align="center" class="menuLayer">
-                                           <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.htm?sex=<%=bean.patientSex%>&age=<%=pAge%>','OsteoporoticFracture');">
-                                             Osteoporotic Fracture
-                                           </a>
-                                   </td></tr>
-                                   <tr>
-                                       <td align="center" class="menuLayer">
-                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.intmed.mcw.edu/clincalc/pregnancy.html','PregancyCalculator');">
-                                             <bean:message key="oscarEncounter.Index.pregnancy"/>
-                                          </a>
-                                       </td>
-                                   </tr>
-				   <tr>
-                                       <td align="center" class="menuLayer">
-                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(400,500,'calculators/SimpleCalculator.htm','SimpleCalc');">
-                                             <bean:message key="oscarEncounter.Index.simpleCalculator"/>
-                                          </a>
-                                       </td>
-                                   </tr>
-                                   <tr> 
-                                       <td align="center" class="menuLayer">
-                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'calculators/GeneralCalculators.htm','GeneralConversions'); ">
-                                             <bean:message key="oscarEncounter.Index.generalConversions"/>
-                                          </a>
-                                       </td>
-                                   </tr>
-
-
-                                                          </table>
-                                                        </div>
-                                                </span>
-
+                        <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(200,100,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a>
                  </td>
                 </tr>
                 <tr><td>&nbsp;</td></tr>
