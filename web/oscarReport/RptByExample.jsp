@@ -30,24 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
-<%
-if(session.getValue("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-int count = 0;
-
-String bgcolor = "#ddddff";
-String sql = request.getParameter("textarea")==null?"":request.getParameter("textarea");
-String pros = "";
-
-oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
-Properties proppies = (Properties)  request.getSession().getAttribute("oscarVariables");
-
-
-String results = exampleData.exampleReportGenerate(sql, proppies)==null?"": exampleData.exampleReportGenerate(sql, proppies);
-String resultText = exampleData.exampleTextGenerate(sql, proppies)==null?"": exampleData.exampleTextGenerate(sql, proppies);
-%><html>
+<html:html locale="true">
 <script language="JavaScript" type="text/JavaScript">
 <!--
 function reloadPage(init) {  //reloads the window if Nav4 resized
@@ -142,44 +125,47 @@ Query By Examples
 <div id="Layer1" style="position:absolute; left:5px; top:160px; width:800px; height:600px; z-index:1; visibility: hidden;"> 
   <table width="100%" border="1" cellpadding="0" cellspacing="0" bgcolor="#D6D5C5">
     <tr>
-      <td>  <font size="2" face="Tahoma">
-  <pre><%=resultText%></pre>
-  </font></td>
+      <td><font size="2" face="Tahoma">
+        <logic:present name="resultText">
+            <pre><bean:write name="resultText" filter="false"/></pre>
+        </logic:present>
+     </font></td>
     </tr>
   </table>
 </div>
 <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+<html:form action="/oscarReport/RptByExample.do">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
                 Report
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar" >
-                 <form method="post" action="RptByExample.jsp">
+                 
                     <tr>
-                        <td >Query By Examples</td>
+                        <td>Query By Examples</td>
                         <td>
-                         <textarea name="textarea" cols="45" rows="4"></textarea>
-                           <input type=submit value="Query"/>
+                        <html:textarea property="sql" cols="45" rows="4"/>
+                        <input type="button" value="Query" onclick="submit();"/>
                         </td>
                         <td style="text-align:right">
                                 <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
                         </td>
-                    </tr>
-                  </form>
+                    </tr>                  
                 </table>
             </td>
         </tr>
         </table>
-     <% if (results.compareTo("") != 0) {%>
-	 <table width="800" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
-    <td><a href="#" onMouseOver="showHideLayers('Layer1','','show')">Show Text 
-      Version</a></td>
-    <td><a href="#" onMouseOver="showHideLayers('Layer1','','hide')">Hide</a></td>
-  </tr>
-</table>
-<% } %>
-     <%=results%> 
+        <logic:present name="results">
+            <table width="800" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td><a href="#" onMouseOver="showHideLayers('Layer1','','show')">Show Text 
+                  Version</a></td>
+                <td><a href="#" onMouseOver="showHideLayers('Layer1','','hide')">Hide</a></td>
+              </tr>
+            </table>
+            <bean:write name="results" filter="false"/>
+        </logic:present>
+</html:form>
 </body>
-        </html>
+</html:html>

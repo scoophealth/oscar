@@ -7,13 +7,13 @@ import org.apache.struts.action.*;
 
 public final class RptByExampleForm extends ActionForm {
 
-    String requestId;
+    String sql;
 
-    public String getRequestId(){
-       return requestId;
+    public String getSql(){
+       return sql;
     }
 
-    public void setRequestId(String id ){
-       this.requestId = id;
+    public void setSql(String sql){
+       this.sql = sql;
     }
 }
