@@ -42,7 +42,7 @@ public final class BillingAction extends Action {
                 
             if(request.getParameter("demographic_no")!=null & request.getParameter("appointment_no")!=null) {
 
-                //				 ((BillingForm)form).setXml_location("P1|PEMBERTON");
+                // ((BillingForm)form).setXml_location("P1|PEMBERTON");
                 bean = new oscar.oscarBilling.pageUtil.BillingSessionBean();
 
                 bean.setApptProviderNo(request.getParameter("apptProvider_no"));
