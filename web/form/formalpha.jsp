@@ -53,10 +53,7 @@
         }
         function onSave() {
             document.forms[0].submit.value="save";
-            var ret = confirm("<bean:message key="oscarEncounter.formAlpha.msgWannaSave"/>");
-            if(ret == true){
-                window.opener.location.reload();            
-            } 
+            var ret = confirm("<bean:message key="oscarEncounter.formAlpha.msgWannaSave"/>");            
             return ret;
         }
         function onExit() {
@@ -68,10 +65,7 @@
         }
         function onSaveExit() {
             document.forms[0].submit.value="exit";
-            var ret = confirm("<bean:message key="oscarEncounter.formAlpha.msgWannaSaveClose"/>");
-            if(ret == true){
-                window.opener.location.reload();            
-            } 
+            var ret = confirm("<bean:message key="oscarEncounter.formAlpha.msgWannaSaveClose"/>");            
             return ret;
         }
     </script>

@@ -323,9 +323,6 @@ function calcBMIMetric() {
             reset();
             ret = confirm("Are you sure you want to save this form?");
         }
-        if(ret == true){
-                window.opener.location.reload();            
-            } 
         return ret;
     }
     function onExit() {
@@ -342,9 +339,6 @@ function calcBMIMetric() {
             reset();
             ret = confirm("Are you sure you wish to save and close this window?");
         }
-        if(ret == true){
-            window.opener.location.reload();            
-        } 
         return ret;
     }
     function popupPage(varpage) {

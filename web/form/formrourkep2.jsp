@@ -73,9 +73,6 @@
         {
             ret = confirm("<bean:message key="oscarEncounter.formRourke2.msgSave"/>");
         }
-        if(ret == true){
-                window.opener.location.reload();            
-            } 
         return ret;
     }
     function onExit() {
@@ -92,9 +89,6 @@
         {
             ret = confirm("<bean:message key="oscarEncounter.formRourke2.msgSaveExit"/>");
         }
-        if(ret == true){
-            window.opener.location.reload();            
-        } 
         return ret;
     }
 

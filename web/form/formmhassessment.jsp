@@ -89,9 +89,6 @@
         if(ret == true){
             window.opener.location.reload();            
         } 
-        if(ret == true){
-                window.opener.location.reload();            
-            } 
         return ret;
     }
     function onExit() {
