@@ -237,6 +237,7 @@ public class ExtractBean extends Object implements Serializable {
                                                             
                               WcbSb sb = new WcbSb(rs2);
                               htmlContent += sb.getHtmlLine();
+                              htmlContent += checkData.printWarningMsg("");
                                                             
                               logNo = getSequence();
                               String lines = sb.Line1(String.valueOf(logNo));                              
