@@ -221,8 +221,27 @@ function checkTypeIn() {
     <%}%>
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formprovince"/>: </b> </td>
-      <td  align="left"> 
+      <td  align="left">
+        <% if (vLocale.getCountry().equals("BR")) { %>
         <input type="text" name="province" value="<%=props.getProperty("billregion", "ON")%>">
+        <% } else { %>
+        <select name="province">
+        <% String billregion = props.getProperty("billregion", ""); %>          
+          <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
+          <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
+          <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+          <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+          <option value="NF"<%=billregion.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+          <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+          <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
+          <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
+          <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+          <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
+          <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+          <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
+        </select>
+        <% } %>
       </td>
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPostal"/>: </b> </td>
       <td  align="left"> 
@@ -345,17 +364,20 @@ function checkTypeIn() {
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formHCType"/>: </b></td>
       <td> 
         <select name="hc_type">
-        <% String billregion = props.getProperty("billregion", ""); %>
-          <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
+        <% String billregion = props.getProperty("billregion", ""); %>          
           <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
           <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
-          <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>
-          <option value="NF"<%=billregion.equals("NF")?" selected":""%>>NF-Newfoundland</option>
+          <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
           <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-          <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>
+          <option value="NF"<%=billregion.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
           <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+          <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
+          <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
           <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+          <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+          <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
         </select>
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formNurse"/>: </b></td>
@@ -419,11 +441,11 @@ function checkTypeIn() {
       </td>
     </tr>
     <tr valign="top"> 
-      <td align="right" nowrap><bean:message key="demographic.demographicaddrecordhtm.formPCNRosterStatus"/><b>:</b> </td>
+      <td align="right" nowrap><b><bean:message key="demographic.demographicaddrecordhtm.formPCNRosterStatus"/>: </b></td>
       <td align="left" > 
         <input type="text" name="roster_status" onBlur="upCaseCtrl(this)">
       </td>
-      <td align="right" nowrap><bean:message key="demographic.demographicaddrecordhtm.formPCNDateJoined"/><b>:</b></td>
+      <td align="right" nowrap><b><bean:message key="demographic.demographicaddrecordhtm.formPCNDateJoined"/>: </b></td>
       <td align="left"> 
         <input type="text" name="hc_renew_date_year" size="4" maxlength="4">
         <input type="text" name="hc_renew_date_month" size="2" maxlength="2">
@@ -433,7 +455,14 @@ function checkTypeIn() {
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPatientStatus"/>:</b></td>
       <td align="left" > 
-        <input type="text" name="patient_status" value="AC" onBlur="upCaseCtrl(this)">
+        <!-- <input type="text" name="patient_status" value="AC" onBlur="upCaseCtrl(this)"> -->
+        <select name="patient_status">
+          <option value="AC">AC - Active</option>
+          <option value="IN">IN - Inactive</option>
+          <option value="DE">DE - Deceased</option>
+          <option value="MO">MO - Moved</option>
+          <option value="FI">FI - Fired</option>
+        </select>
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartNo"/>:</b></td>
       <td align="left"> 
