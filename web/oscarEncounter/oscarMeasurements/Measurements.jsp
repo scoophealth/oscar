@@ -131,10 +131,10 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                                                 <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
                                                 <tr class="data">                          
                                                     <td width="5"><a title="<bean:write name="measurementType" property="typeDesc" />"><bean:write name="measurementType" property="typeDisplayName" /></a></td>
-                                                    <td>                           
-                                                        <html:select property='<%= "value(inputMInstrc-" + ctr + ")" %>' style="width:160">
-                                                            <html:options collection='<%="mInstrcs"+ ctr%>' property="measuringInstrc" labelProperty="measuringInstrc" style="width:160"/>
-                                                        </html:select>                                
+                                                    <td>                                                        
+                                                        <logic:iterate id="mInstrc" name="<%="mInstrcs"+ ctr%>" property="measuringInstructionVector">                                                            
+                                                            <input type="radio" name='<%= "value(inputMInstrc-" + ctr + ")" %>' value="<bean:write name="mInstrc" property="measuringInstrc"/>" checked/><bean:write name="mInstrc" property="measuringInstrc"/><br>
+                                                        </logic:iterate>                                                                                       
                                                     </td>
                                                     <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>                                                         
                                                     <td><html:text property='<%= "value(date-" + ctr + ")" %>' size="20"/></td>
@@ -142,7 +142,7 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                                                     <td width="10"></td>                            
                                                     <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>
                                                     <input type="hidden" name='<%= "value(inputTypeDisplayName-" + ctr + ")" %>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>                            
-                                                    <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/></td>
+                                                    <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/>
                                                     <% i++; %>
                                                 </tr>
                                                 <logic:present name='measurementType' property='lastMInstrc'>
