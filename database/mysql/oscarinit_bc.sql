@@ -1236,6 +1236,7 @@ CREATE TABLE formBCNewBorn(
   pg1_Time time,
   pg1_Signature varchar(80),
   ar2_9Test1 tinyint(1),
+  ar2_9Test1a tinyint(1),
   ar2_9Test1Time time,
   ar2_9Date1 date,
   ar2_9Date2 date,
