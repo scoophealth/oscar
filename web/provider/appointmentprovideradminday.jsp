@@ -242,6 +242,7 @@ function goZoomView(s, n) {
      dateTimeCodeBean.put("color"+rsgroup.getString("code"), (rsgroup.getString("color")==null || rsgroup.getString("color").equals(""))?bgcolordef:rsgroup.getString("color") );
    } 
    
+   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);   
 %>
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 <tr>
@@ -261,7 +262,15 @@ function goZoomView(s, n) {
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+
+             <% 
+                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+                if (vLocale.getCountry().equals("BR")) { %>  
+               <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+             <% } else {%>  
+				<a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+             <% } %>
+
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../lab/lablinks.htm');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a></font></td>
 
@@ -539,7 +548,14 @@ reason: <%=UtilMisc.htmlEscape(reason)%>
 notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 <a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="<bean:message key="global.encounter"/>">
-            |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a><%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%><% if(status.indexOf('B')==-1) { %><a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>
+            |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a><%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%><% if(status.indexOf('B')==-1) { %>
+             <% 
+                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+                if (vLocale.getCountry().equals("BR")) { %>  
+               <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=rs.getString("appointment_no")%>");return false;' title="Faturamento">|FAT|</a>
+             <% } else {%>  
+				<a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>
+             <% } %>  
 <% } else {%>  
     <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="<bean:message key="global.billing"/>">|-<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>
 <% } %>          
