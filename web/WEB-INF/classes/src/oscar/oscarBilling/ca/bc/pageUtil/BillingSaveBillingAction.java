@@ -382,8 +382,8 @@ public class BillingSaveBillingAction extends Action {
         if (null != request.getSession().getAttribute("WCBForm")) {
            WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
            String insertBillingMaster = 
-            " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no) " +
-            " VALUES ('"+billingid+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "')";
+            " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
+            " VALUES ('"+billingid+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "','"+convertDate8Char(bean.getServiceDate())+"')"; 
            
             wcb.setW_demographic(bean.getPatientNo());
             wcb.setW_providerno(bean.getBillingProvider());
@@ -394,6 +394,7 @@ public class BillingSaveBillingAction extends Action {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 db.RunSQL(insertBillingMaster);
                 rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+wcb.getW_feeitem()+"'");
+                System.out.println("SELECT value FROM billingservice WHERE service_code='"+wcb.getW_feeitem()+"'");
                 if (rs.next()) {
                     amnt = rs.getDouble("value");
                 }
@@ -401,7 +402,9 @@ public class BillingSaveBillingAction extends Action {
                 //if (rs.next()) {
                 //    amnt += rs.getDouble("value");
                 //}
-                billamt = String.valueOf(amnt);
+                
+                billamt = moneyFormat(String.valueOf(amnt));
+                System.out.println("billamt"+billamt);
                 db.RunSQL(wcb.SQL(billingid, billamt));
                                              
                 
@@ -416,15 +419,15 @@ public class BillingSaveBillingAction extends Action {
                    }
                    rs.close();
                    
-                   String secondBillingMaster = " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no) " +
-                    " VALUES ('"+secondWCBBillingId+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "')";
+                   String secondBillingMaster = " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
+                    " VALUES ('"+secondWCBBillingId+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "','"+convertDate8Char(bean.getServiceDate())+"')";
                    
-                   db.RunSQL(insertBillingMaster);
+                   db.RunSQL(secondBillingMaster);
                    rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
                    if (rs.next()) {
                       secondBillingAmt = rs.getDouble("value");
                    }
-                   db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, String.valueOf(secondBillingAmt)));
+                   db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, moneyFormat(String.valueOf(secondBillingAmt))));
         
                    
                 }
@@ -492,5 +495,12 @@ public class BillingSaveBillingAction extends Action {
        return id;
     }
     
+    String moneyFormat(String str){       
+        String moneyStr = "0.00";
+        try{             
+            moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
+        }catch (Exception moneyException) {}
+    return moneyStr;
+    }
 }
 
