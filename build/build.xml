@@ -33,6 +33,7 @@
   <property name="src_web" location="../web/WEB-INF/classes/src" />
   <property name="webapp" location="../web" />
   <property name="jspbasedir" location="${catalina}/webapps/oscar" />
+  <property name="mdsfiledir" location="../mdsFileManagement" />
 
   <mkdir dir="${build}" />
   <mkdir dir="${root_web}" />
@@ -178,6 +179,19 @@
  </target>
 
  <target name="restart" depends="init" >
+ </target>
+ 
+ <target name="mdsfile" depends="init">
+  <javac 
+	 srcdir="${mdsfiledir}"     
+         destdir="${mdsfiledir}"
+	 deprecation="on"
+	 debug="on">
+   <!-- <classpath>
+      <pathelement path="${classes_web}/"/>
+      <path refid="classpath.path"/>
+   </classpath> -->
+  </javac>  
  </target>
 
 </project>
