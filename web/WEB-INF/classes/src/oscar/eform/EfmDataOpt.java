@@ -299,7 +299,114 @@ public class EfmDataOpt {
     return temp;
   }
   
-  
+  public String getClinicName(){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from clinic") ;
+
+      if (rs.next()){
+        temp = rs.getString("clinic_name");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   
+   public String getClinicPhone(){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from clinic") ;
+
+      if (rs.next()){
+        temp = rs.getString("clinic_phone");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   
+   public String getClinicFax(){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from clinic") ;
+
+      if (rs.next()){
+        temp = rs.getString("clinic_fax");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   
+   public String getClinicLabel(){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from clinic") ;
+
+      if (rs.next()){
+        temp = rs.getString("clinic_name") +"\n"
+                + rs.getString("clinic_address")+"\n"
+                + rs.getString("clinic_city") +","+rs.getString("clinic_province")+ ","+ rs.getString("clinic_postal")+ "\n"
+                + "Home:"+ rs.getString("clinic_phone")+"\n"
+                + "Fax:"+ rs.getString("clinic_fax")+"\n";
+        rs.close();
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   
+   public String getClinicAddressLine(){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from clinic") ;
+
+      if (rs.next()){
+        temp = rs.getString("clinic_address");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   
+   public String getClinicAddress(){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from clinic") ;
+
+      if (rs.next()){
+        temp = rs.getString("clinic_address")+"\n"
+                + rs.getString("clinic_city") +","+rs.getString("clinic_postal")+ "\n"
+                + rs.getString("clinic_province") + "," + "Canada";
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }  
   
   public String getFormString(int fid){
     String temp = new String(); 
