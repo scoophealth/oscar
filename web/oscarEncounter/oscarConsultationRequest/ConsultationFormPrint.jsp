@@ -135,7 +135,7 @@ function CloseWindow()
 function flipFaxFooter(){
 
       if (flag == 1 ){
-      document.getElementById("faxFooter").innerHTML="<hr><bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFax"/>";
+      document.getElementById("faxFooter").innerHTML="<hr><bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFaxFooterMessage"/>";
       flag = 0;
       }else{
       document.getElementById("faxFooter").innerHTML="";
@@ -180,6 +180,14 @@ function flipFaxFooter(){
 <tr>
     <td align="center">
        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgConsReq"/>
+       <br>
+       <font size="-1">
+           <b>
+               <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart1"/>
+               <%=reqFrm.getClinicName()%>
+               <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart2"/>
+           </b>
+       </font>
     </td>
 </tr>
 
@@ -187,7 +195,7 @@ function flipFaxFooter(){
     <td>
         <table border=0 align="center" width="100%" cellspacing="0" class="patientInfo">
             <tr>
-                <td valign="top" align="right">
+                <td valign="top" align="left">
                     <table border=0  >
                         <tr>
                             <td class="subTitles">
