@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
-<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.Properties"%>
+<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
@@ -58,11 +58,19 @@
   String patientSex = pd.getSex();
   String providerName = bean.userName;
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
-  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
   MDSResultsData labResults =  new MDSResultsData();    
   labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
+  
+  EctSplitChart ectSplitChart = new EctSplitChart();
+  Vector splitChart = ectSplitChart.getSplitCharts(demoNo);
+  
+  boolean sChart = true;
+  if (splitChart == null || splitChart.size() == 0){
+     sChart = false;
+  }
 %>
 
 <html:html locale="true">
@@ -480,26 +488,55 @@ function loader(){
     window.focus();
     var tmp;
     document.encForm.enTextarea.focus();
-    tmp = document.encForm.enTextarea.value; // these two lines cause the enTextarea to scroll to the bottom (only works in IE)
-    document.encForm.enTextarea.value = tmp; // another option is to use window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  (also only works in IE)
+    document.encForm.enTextarea.value = document.encForm.enTextarea.value + "";
+    
+    //tmp = document.encForm.enTextarea.value; // these two lines cause the enTextarea to scroll to the bottom (only works in IE)
+    //document.encForm.enTextarea.value = tmp; // another option is to use window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  (also only works in IE)
 }
 </script>
 <script language="javascript">
 
-function showpic(picture){
-        //if (document.getElementById){ // Netscape 6 and IE 5+
-        //        var targetElement = document.getElementById(picture);
-        //targetElement.style.visibility = 'visible';
-    //}
-var aew = document.ids.Layer1.visibility;
-}
 
-function hidepic(picture){
-        if (document.getElementById){ // Netscape 6 and IE 5+
-                var targetElement = document.getElementById(picture);
-        targetElement.style.visibility = 'hidden';
+/////
+function showpic(picture,id){
+     if (document.getElementById){ // Netscape 6 and IE 5+      
+        var targetElement = document.getElementById(picture);                
+        var bal = document.getElementById(id);
+
+        var offsetTrail = document.getElementById(id);
+        var offsetLeft = 0;
+        var offsetTop = 0;
+        while (offsetTrail) {
+           offsetLeft += offsetTrail.offsetLeft;
+           offsetTop += offsetTrail.offsetTop;
+           offsetTrail = offsetTrail.offsetParent;
         }
-}
+        if (navigator.userAgent.indexOf("Mac") != -1 && 
+           typeof document.body.leftMargin != "undefined") {
+           offsetLeft += document.body.leftMargin;
+           offsetTop += document.body.topMargin;
+        }
+            
+        targetElement.style.left = offsetLeft +bal.offsetWidth;        
+        targetElement.style.top = offsetTop;	
+        targetElement.style.visibility = 'visible';        
+     }
+  }
+
+  function hidepic(picture){
+     if (document.getElementById){ // Netscape 6 and IE 5+
+        var targetElement = document.getElementById(picture);
+        targetElement.style.visibility = 'hidden';
+     }
+  }
+
+
+/////
+
+
+
+
+
 function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
   hidepic('Layer1');
   var page = varpage;
@@ -949,7 +986,18 @@ border-right: 2px solid #cfcfcf;
                                 <td nowrap>
                                     <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
 									  <tr><td width='75%' >
-                                    <a href=# onClick="popupPage2('../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><div class="RowTop" ><bean:message key="global.encounter"/>: <%=bean.reason%></div></a><input type="hidden" name="enInput"/>
+									         <div class="RowTop" >
+                                    <a href=# onClick="popupPage2('../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;">
+                                       <bean:message key="global.encounter"/>: <%=bean.patientLastName %>, <%=bean.patientFirstName%>                                          
+                                    </a>
+                                    <%if (sChart) {%>
+                                    &nbsp; &nbsp; &nbsp;<!--http://localhost:8084/oscar/oscarEncounter/echarthistoryprint.jsp?echartid=7491&demographic_no=10090-->                                    
+                                    <a href="javascript: function myFunction() {return false; }"  onClick="showpic('splitChartLayer','splitChartId');"  id="splitChartId" >
+                                       Split Chart
+                                    </a>
+                                    <%}%>
+                                    </div>
+                                    <input type="hidden" name="enInput"/>
 									  </td><td width='5%' >
 								<%
 										boolean bSplit = request.getParameter("splitchart")!=null?true:false;
@@ -986,14 +1034,35 @@ border-right: 2px solid #cfcfcf;
                                         <bean:message key="oscarEncounter.Index.r"/></a>
                                    </div>
                                 </td>
-                            </tr>
+                            </tr>                                                        
+                            <%
+                            //System.out.println("reason "+bean.reason+" subject "+bean.subject);
+                            String encounterText = "";
+                            try{                            
+                               if(!bSplit){
+                                  encounterText = bean.encounter;
+                               }else if(bTruncate){
+                                  encounterText = bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
+                               }else{
+                                  encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
+                               }
+                               if(bean.eChartTimeStamp==null){
+                                  encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
+                               }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){ 
+                                  encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                               }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){ 
+                                   encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                               }
+                               //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));                            
+                               if(!bean.oscarMsg.equals("")){
+                                  encounterText +="\n\n"+bean.oscarMsg;                               
+                               }
+                            
+                            }catch(Exception eee){eee.printStackTrace();}
+                            %>
                             <tr>
                                 <td colspan="2" valign="top" style="text-align:left">
-                                    <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><% if(!bSplit) out.print(bean.encounter); else if(bTruncate) out.print(bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n"); else out.print(bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n");%><%if(bean.eChartTimeStamp==null){%><%="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
-                                    // border-right:6px solid #ccccff;border-right:6px solid #ccccff;
-                                        else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0)
-                                        {%><%="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
-                                        if(!bean.oscarMsg.equals("")){%><%="\n\n"+bean.oscarMsg%><%}%></textarea>
+                                    <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><%=encounterText%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -1037,6 +1106,33 @@ border-right: 2px solid #cfcfcf;
     </tr>
 </table>
 </form>
+
+<%if (sChart){ %>
+<div id="splitChartLayer" style="position:absolute; left:1px; top:1px; width:150px; height:311px; visibility: hidden; z-index:1"   >
+
+   <table width="98%" border="1" cellspacing="1" cellpadding="1" align=center bgcolor="#CCCCFF">
+      <tr class="LightBG">              
+         <td class="wcblayerTitle">Date</td>            
+         <td class="wcblayerTitle" align="right">
+            <a href="javascript: function myFunction() {return false; }" onclick="hidepic('splitChartLayer');" style="text-decoration: none;">X</a>           
+         </td>
+      </tr>    
+      <% for (int i = 0 ; i < splitChart.size(); i++){ 
+            String[] s = (String[]) splitChart.get(i);%>      
+      <tr class="background-color : #ccccff;"> 
+         <td class="wcblayerTitle">
+            <a href=# onClick="hidepic('splitChartLayer');popupPage2('echarthistoryprint.jsp?echartid=<%=s[0]%>&demographic_no=<%=bean.demographicNo%>');return false;">
+               <%=s[1]%>
+            </a>
+         </td>              
+	      <td class="wcblayerItem" >
+            &nbsp;
+	      </td>
+      </tr>                                        	
+      <%}%>                                                                                        
+   </table>                                
+</div>
+<%}%>
 
 </body>
 </html:html>
