@@ -17,7 +17,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -47,7 +47,7 @@ import org.apache.struts.util.MessageResources;
 public final class RxAddFavoriteAction extends Action {
     
     
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -55,7 +55,7 @@ public final class RxAddFavoriteAction extends Action {
         
         // Extract attributes we will need
         Locale locale = getLocale(request);
-        MessageResources messages = getResources();
+        MessageResources messages = getResources(request);
         
         // Setup variables
         ActionErrors errors = new ActionErrors();
