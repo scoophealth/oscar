@@ -710,10 +710,12 @@ CREATE TABLE encountertemplate (
 --
                                                                                                                                                              
 CREATE TABLE encounterWindow (
-  rowOneSize int(11) NOT NULL default '60',
-  rowTwoSize int(11) NOT NULL default '60',
-  presBoxSize int(11) NOT NULL default '30',
-  rowThreeSize int(11) NOT NULL default '378'
+  provider_no varchar(6) NOT NULL default '',
+  rowOneSize int(10) NOT NULL default '60',
+  rowTwoSize int(10) NOT NULL default '60',
+  presBoxSize int(10) NOT NULL default '30',
+  rowThreeSize int(10) NOT NULL default '378',
+  PRIMARY KEY  (provider_no)
 ) TYPE=MyISAM;
 
 --
