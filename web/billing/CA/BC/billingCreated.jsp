@@ -352,7 +352,7 @@ function showHideLayers() { //v3.0
               </tr>
                 <td align="right" colspan="4">  
                   <html:form action="/billing/CA/BC/SaveBilling" >
-                    <input type="submit" name="submit" value="Print Receipt" />
+                    <input type="submit" name="submit" value="Save & Print Receipt" />
                     <% if (request.getAttribute("GOBACKWCB") != null && request.getAttribute("GOBACKWCB").equals("true")){%>
                     <input type="button" name="Submit3" value="Go Back" onClick="location.href='formwcb.jsp'"/>
                     <%}else{%>
