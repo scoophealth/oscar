@@ -35,13 +35,17 @@
     reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil ();
     reqFrm.estRequestFromId((String)request.getAttribute("reqId"));
 
+    reqFrm.specPhone = request.getParameter("phone");
     if (reqFrm.specPhone == null || reqFrm.specPhone.equals("null")){
         reqFrm.specPhone = new String();
     }
     
+    reqFrm.specFax = request.getParameter("fax");
     if (reqFrm.specFax == null || reqFrm.specFax.equals("null")){
         reqFrm.specFax = new String();
     }
+    
+    reqFrm.specAddr = request.getParameter("address");
     if (reqFrm.specAddr == null || reqFrm.specAddr.equals("null")){
         reqFrm.specAddr = new String();
     }
