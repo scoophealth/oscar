@@ -259,7 +259,7 @@ function t(s1,s2,s3,s4,s5,s6) {
 %>  
   
 </table>
-<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH))+"-"+now.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnLastMonth"/> </a> |
-<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+2)+"-"+now.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnNextMonth"/></a>
+<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=lastMonth.get(Calendar.YEAR)+"-"+(lastMonth.get(Calendar.MONTH)+1)+"-"+lastMonth.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnLastMonth"/> </a> |
+<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=nextMonth.get(Calendar.YEAR)+"-"+(nextMonth.get(Calendar.MONTH)+1)+"-"+nextMonth.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnNextMonth"/></a>
 </body>
 </html:html>
