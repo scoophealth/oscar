@@ -37,7 +37,7 @@ String proNo = request.getParameter("proNo");
 if (demo != null ){
   EctSessionBean bean;
 //  oscar.oscarSecurity.SessionBean bean;
-  if ( (EctSessionBean ) request.getSession().getAttribute("EctSessionBean") != null){
+/*  if ( (EctSessionBean ) request.getSession().getAttribute("EctSessionBean") != null){
     bean = (EctSessionBean ) request.getSession().getAttribute("EctSessionBean");
     bean.setDemographicNo(demo);
     bean.consultationRequestId = null;
@@ -46,16 +46,21 @@ if (demo != null ){
         bean.providerNo =  (String) session.getAttribute("user");
     //}
   }else{
-    bean = new EctSessionBean();
+*/
+	bean = new EctSessionBean();
     bean.setDemographicNo(demo);
-	  bean.consultationRequestId = null;
+	bean.consultationRequestId = null;
     //if (proNo != null){
     //    bean.providerNo = proNo;
     //}
+
+	EctEChartBean eChart = new EctEChartBean();
+	eChart.setEChartBean(demo);
+	bean.ongoingConcerns = eChart.ongoingConcerns;
     bean.providerNo =  (String) session.getAttribute("user");
 
     request.getSession().setAttribute("EctSessionBean",bean);
-  }
+//  }
 }
 %>
 
