@@ -29,9 +29,10 @@
 %>
 <%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-
-<html>
-<head><title> My Group</title></head>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
+<head><title> <bean:message key="receptionist.receptionistdisplaymygroup.title"/></title></head>
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
 
@@ -47,7 +48,7 @@ function setfocus() {
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="receptionistcontrol.jsp">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#CCCCFF"> 
-      <th align=CENTER NOWRAP>MY GROUP</th>
+      <th align=CENTER NOWRAP><bean:message key="receptionist.receptionistdisplaymygroup.msgTitle"/></th>
   </tr>
 </table>
 
@@ -57,9 +58,9 @@ function setfocus() {
   
           <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
             <tr BGCOLOR="#CCFFFF"  ALIGN="center"> 
-              <th colspan="2">  Group No.</th>
-              <th>Provider's Name </th>
-              <th>Order</th>
+              <th colspan="2">  <bean:message key="receptionist.receptionistdisplaymygroup.msgGroupNo"/></th>
+              <th><bean:message key="receptionist.receptionistdisplaymygroup.msgProviderName"/> </th>
+              <th><bean:message key="receptionist.receptionistdisplaymygroup.msgOrder"/></th>
           </tr>
 <%
    ResultSet rsgroup = null;
@@ -91,14 +92,15 @@ function setfocus() {
 <table width="100%">
   <tr bgcolor="#CCCCFF">
     <TD align="center" >
-      <INPUT TYPE="submit" name="submit" VALUE="Update" SIZE="7">
-      <INPUT TYPE="submit" name="submit" VALUE="Delete" SIZE="7">
-      <INPUT TYPE="submit" name="submit" VALUE="New Group/Add a Member" SIZE="7">
-      <INPUT TYPE = "RESET" VALUE = " Exit " onClick="window.close();"></TD>
+      <input type="hidden" name="submit_form" value="" >
+      <INPUT TYPE="button" VALUE="<bean:message key="receptionist.receptionistdisplaymygroup.btnUpdate"/>" SIZE="7" onclick="document.forms['UPDATEPRE'].submit_form.value='Update'; document.forms['UPDATEPRE'].submit();">
+      <INPUT TYPE="button" VALUE="<bean:message key="receptionist.receptionistdisplaymygroup.btnDelete"/>" SIZE="7" onclick="document.forms['UPDATEPRE'].submit_form.value='Delete'; document.forms['UPDATEPRE'].submit();">
+      <INPUT TYPE="button" VALUE="<bean:message key="receptionist.receptionistdisplaymygroup.btnNew"/>" SIZE="7" onclick="document.forms['UPDATEPRE'].submit_form.value='New Group/Add a Member'; document.forms['UPDATEPRE'].submit();">
+      <INPUT TYPE = "RESET" VALUE = "<bean:message key="receptionist.receptionistdisplaymygroup.btnExit"/>" onClick="window.close();"></TD>
   </tr>
 </TABLE>
 
 </FORM>
 
 </body>
-</html>
+</html:html>
