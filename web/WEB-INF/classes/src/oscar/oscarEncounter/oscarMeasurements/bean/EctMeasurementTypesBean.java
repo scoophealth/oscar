@@ -37,7 +37,7 @@ public class EctMeasurementTypesBean{
        String typeDisplayName;
        String typeDesc;
        String measuringInstrc;
-       String validation;
+       String validation;       
        String lastProviderFirstName = null;
        String lastProviderLastName = null;  
        String lastData = null;       
@@ -45,6 +45,9 @@ public class EctMeasurementTypesBean{
        String lastComments = null;   
        String lastDateObserved =null;
        String lastDateEntered = null;
+       Vector validationRules = new Vector();
+       
+       public EctMeasurementTypesBean(){}
        
        public EctMeasurementTypesBean(int id, String type, String typeDisplayName, String typeDesc, String measuringInstrc, String validation){
            this.id = id;
@@ -81,51 +84,106 @@ public class EctMeasurementTypesBean{
        public int getId(){
            return id;
        }
+       public void setId(int id){           
+           this.id=id;
+       }
+       
        public String getType(){
            return type;
+       }
+       public void setType(String type){           
+           this.type = type;
        }       
+       
        public String getTypeDisplayName(){
            return typeDisplayName;
        }
-    
+       public void setTypeDisplayName(String typeDisplayName){
+           this.typeDisplayName=typeDisplayName;
+       }       
+       
        public String getTypeDesc(){
            return typeDesc;
+       }
+       public void setTypeDesc(String typeDesc){
+           this.typeDesc=typeDesc;
        }
        
        public String getMeasuringInstrc(){
            return measuringInstrc;
        }
-       
+       public void setMeasuringInstrc(String measuringInstrc){
+          this.measuringInstrc=measuringInstrc;
+       }
+              
        public String getValidation(){
            return validation;
+       }
+       public void setValidation(String validation){
+           this.validation=validation;
+       }
+       
+       public Vector getValidationRules(){
+           return this.validationRules;
+       }
+       
+       public void addValidationRule(EctValidationsBean validationRule){
+           this.validationRules.addElement(validationRule);
        }
        
        public String getLastProviderFirstName(){
            return lastProviderFirstName;
+       }       
+       
+       public void setLastProviderFirstName(String lastProviderFirstName){
+           this.lastProviderFirstName = lastProviderFirstName;
        }
        
        public String getLastProviderLastName(){
            return lastProviderLastName;  
        }
        
+       public void setLastProviderLastName(String lastProviderLastName){
+           this.lastProviderLastName = lastProviderLastName;
+       }
+       
        public String getLastData(){
            return lastData;       
        }
        
+       public void setLastData(String lastData){
+           this.lastData = lastData;
+       }
+       
        public String getLastMInstrc(){
            return lastMInstrc;    
+       }
+
+       public void setLastMInstrc(String lastMInstrc){
+           this.lastMInstrc = lastMInstrc;
        }
        
        public String getLastComments(){
            return lastComments;   
        }
        
+       public void setLastComments(String lastComments){
+           this.lastComments = lastComments;   
+       }
+       
        public String getLastDateObserved(){
            return lastDateObserved;
+       }
+       
+       public void setLastDateObserved(String lastDateObserved){
+           this.lastDateObserved = lastDateObserved;
        }
        
        public String getLastDateEntered(){
            return lastDateEntered.substring(0,10);
        }
        
+       public void setLastDateEntered(String lastDateEntered){
+           this.lastDateEntered = lastDateEntered;
+       }
 }
