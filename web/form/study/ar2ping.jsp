@@ -214,13 +214,14 @@ if(connected){
 	//out.println("The record was sent to PING server.<br><p><input type='button' name='but' onclick='window.close()' value='Close'>");
     //System.out.println(UtilXML.toXML(doc));
 
+	connectErrorMsg = "The record was sent to PING server.<br><p><input type='button' name='but' onclick='window.close()' value='Close'>";
     try{                                        
         ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
     }catch(Exception sendCon){
-        connectErrorMsg = "<font style=\"font-size: 19px; color: red; font-family : tahoma, Arial,Helvetica,Sans Serif;\">Could Not Send to PHR</font>";
+        connectErrorMsg = "<font style=\"font-size: 19px; color: red; font-family : tahoma, Arial,Helvetica,Sans Serif;\">Could Not Send to PHR</font>: " + patientPingId + " .<br><p><input type='button' name='but' onclick='window.close()' value='Close'>";
     }
 
-	out.println("The record was sent to PING server.<br><p><input type='button' name='but' onclick='window.close()' value='Close'>");
+	out.println(connectErrorMsg);
 
 }
 %>
