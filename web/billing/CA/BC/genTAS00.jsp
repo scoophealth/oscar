@@ -58,7 +58,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       	      <tr bgcolor="#333333">
       	        <th align='CENTRE'>
-                   <form action="genRAError.jsp">
+                   <form action="genTAS00.jsp">
                       <input type="hidden" name="rano" value="<%=raNo%>">
                       <select name="proNo">
                          <option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
@@ -83,7 +83,9 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       </table>
       
       
-          <% if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){    %>
+          <% if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){    
+                 proNo = "%"; 
+             }%>
              <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
              <form>
                 <tr> 
@@ -114,7 +116,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
           <% String[] param = new String[3];
               param[0] = raNo;
               param[1] = "S01";
-              param[2] = "%";          
+              param[2] = proNo;          
               String[] param0 = new String[2];
               rsdemo2 = null;
               rsdemo = null;
@@ -170,9 +172,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                 </tr>
            <% }
        
-             }else {
-      
-             }
+            
       }%>
      
              

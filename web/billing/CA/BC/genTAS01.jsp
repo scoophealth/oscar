@@ -60,7 +60,8 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       %>
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       	      <tr bgcolor="#333333">
-      	        <th align='CENTRE'><form action="genRAError.jsp"><input type="hidden" name="rano" value="<%=raNo%>"><select name="proNo"><option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
+      	        <th align='CENTRE'>
+<form action="genTAS01.jsp"><input type="hidden" name="rano" value="<%=raNo%>"><select name="proNo"><option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
 	
 	<%   
 	    ResultSet rsdemo3 = null;
@@ -83,6 +84,8 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       
       
       <% if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){ 
+          proNo = "%";
+         }
       %>
       <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
         <tr> 
@@ -110,35 +113,15 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       
          String[] param = new String[3];
                 param[0] = raNo;
-          param[1] = "S01";
-          param[2] = "%";
+                param[1] = "S01";
+                param[2] = proNo;
           
-                 String[] param0 = new String[2];
+                String[] param0 = new String[2];
                 rsdemo2 = null;
-      rsdemo = null;
-            	    rsdemo = apptMainBean.queryResults(param, "search_taS01");
-            	     while (rsdemo.next()) {   
-            	    account = rsdemo.getString("t_officeno");
-            	    
-            	   // param0[0]=raNo;
-            	   // param0[1]=account;
-            	   //   demoLast = "";
-            	   // rsdemo3 =apptMainBean.queryResults(param0[1],"search_bill");
-            	   // while (rsdemo3.next()) {
-            	   // demoLast = rsdemo3.getString("demographic_name");
-            	   // }
-            	   // rsdemo2 = apptMainBean.queryResults(param0,"search_rabillno");
-            	    
-            	   // while (rsdemo2.next()) {   
-             	   //servicecode = rsdemo2.getString("service_code");
-             	   //servicedate = rsdemo2.getString("service_date");
-             	   //serviceno = rsdemo2.getString("service_count");
-      	           //explain = rsdemo2.getString("error_code");
-      	           //amountsubmit = rsdemo2.getString("amountclaim");
-      	           //amountpay = rsdemo2.getString("amountpay");
-                   //                        if (explain.compareTo("") == 0 || explain == null){
-		//		            	           explain = "**";
-      	         //  }      
+                rsdemo = null;
+            	rsdemo = apptMainBean.queryResults(param, "search_taS01");
+            	while (rsdemo.next()) {   
+            	    account = rsdemo.getString("t_officeno");            	                	  
       %>
         <tr> 
                <td width="10%" height="16"><a href="javascript: popupPage(700,750,'adjustBill.jsp?billing_no=<%=rsdemo.getString("t_officeno")%>')" ><%=rsdemo.getString("t_officeno")%></a>&nbsp; </td>
@@ -163,11 +146,9 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       
       
       <%
-      }
+                }
        
-      }else {
       
-      }
       }%>
      
              
