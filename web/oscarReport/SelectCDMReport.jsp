@@ -35,7 +35,7 @@
 <html:html locale="true">
 <head>
 <title>
-<bean:message key="oscarReport.ConsultationReport.title"/>
+<bean:message key="oscarReport.CDMReport.msgSelectCDMGroup"/>
 </title>
 <style type="text/css">
    td.nameBox {
