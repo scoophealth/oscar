@@ -28,6 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
 <%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.Properties"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData"%>
@@ -117,7 +118,7 @@
     function popUpMeasurements(vheight,vwidth,varpage) { //open a new popup window
       if(varpage!= 'null'){  
           document.measurementGroupForm.measurementGroupSelect.options[0].selected = true;
-          var page = "./oscarMeasurements/SetupMeasurements.do?groupName=" + varpage;
+          var page = "<rewrite:reWrite jspPage="oscarMeasurements/SetupMeasurements.do"/>?groupName=" + varpage;
           windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
           var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
           if (popup != null) {
@@ -133,7 +134,7 @@
         //if(x) { 
               if(varpage!= 'null'){  
                   document.insertTemplateForm.templateSelect.options[0].selected=true;
-                  var page = "./InsertTemplate.do?templateName=" + varpage;
+                  var page = "<rewrite:reWrite jspPage="InsertTemplate.do"/>?templateName=" + varpage;
                   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
                   var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
                   if (popup != null) {
@@ -602,11 +603,11 @@ border-right: 2px solid #cfcfcf;
                         <%  if (!vLocale.getCountry().equals("BR")) { %>
                             <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
                         <% } %>
-                        <a href=# onClick="popupOscarCon(700,960,'oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a><br>
+                        <a href=# onClick="popupOscarCon(700,960,'<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a><br>
                         <% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(demoNo)) { %>
-                            <a style="color:red" href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
+                            <a style="color:red" href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message key="global.immunizations"/></a><br>
                         <% } else {%>
-                            <a href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
+                            <a href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message key="global.immunizations"/></a><br>
                         <% } %>
                         <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
                         	<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')"><bean:message key="global.oscarComm"/></a><br> 
@@ -668,7 +669,7 @@ border-right: 2px solid #cfcfcf;
                     </td>
                 </tr>
                 <tr>
-                    <td><a href=# onClick='popupPage2("formlist.jsp?demographic_no=<%=demoNo%>"); return false;' >
+                    <td><a href=# onClick='popupPage2("<rewrite:reWrite jspPage="formlist.jsp"/>?demographic_no=<%=demoNo%>"); return false;' >
 					-<bean:message key="oscarEncounter.Index.msgOldForms"/>-</a>
                     </td>
                 </tr>
@@ -723,7 +724,7 @@ border-right: 2px solid #cfcfcf;
                     </td>
                 </tr>                
                 <tr>                    
-                    <td><a href=# onClick="popupPage(600,1000,'oscarMeasurements/SetupDisplayHistory.do'); return false;" ><bean:message key="oscarEncounter.Index.oldMeasurements"/></a>
+                    <td><a href=# onClick="popupPage(600,1000,'<rewrite:reWrite jspPage="oscarMeasurements/SetupDisplayHistory.do"/>'); return false;" ><bean:message key="oscarEncounter.Index.oldMeasurements"/></a>
                     </td>                                    
                 </tr> 
                 </form>
