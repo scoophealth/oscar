@@ -156,7 +156,7 @@ function checkTotal() {
       </td>
       <td align="center" bgcolor="#CCCCCC"> <a href="#" onClick="onNewPatient()"><bean:message key="demographic.demographiclabelprintsetting.btnNewPatientLabel"/></a><br>
         <input type="checkbox" name="label1checkbox" value="checked" >
-        <input type="text" name="label1no" size="2" maxlength="2" value="1">
+        <input type="text" name="label1no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.1no","1") %>"/>
       </td>
       <td bgcolor="#999999" rowspan="3" valign="middle" align="right"> 
         <p><bean:message key="demographic.demographiclabelprintsetting.formLeft"/>:
