@@ -76,6 +76,9 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
     <logic:present name="css">
         <link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
     </logic:present>
+    <logic:notPresent name="css">
+        <link rel="stylesheet" type="text/css" href="styles/measurementStyle.css">
+    </logic:notPresent>
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
@@ -160,7 +163,12 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                                                 </logic:iterate>                        
                                                 <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>                                                
                                                 <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
-                                                <input type="hidden" name="value(css)" value="<bean:write name="css"/>"/>
+                                                <logic:present name="css"> 
+                                                    <input type="hidden" name="value(css)" value="<bean:write name="css"/>"/>
+                                                </logic:present>
+                                                <logic:notPresent name="css">
+                                                    <input type="hidden" name="value(css)" value=""/>
+                                                </logic:notPresent>
                                             </td>
                                         </tr>
                                     </table>
