@@ -342,6 +342,13 @@ function controlFTExam(){
         document.forms[0].elements[ftOtId-1].checked= false;
         document.forms[0].elements[ftReId-1].checked= false;
         
+        document.forms[0].elements[ftNeId].checked= true;
+        document.forms[0].elements[ftIsId].checked= true;
+        document.forms[0].elements[ftUlId].checked= true;
+        document.forms[0].elements[ftInId].checked= true;
+        document.forms[0].elements[ftOtId].checked= true;
+        document.forms[0].elements[ftReId].checked= true;
+        
         //alert("disable all foot exam checkboxes");
         document.forms[0].elements[ftNeId-1].disabled= true;
         document.forms[0].elements[ftIsId-1].disabled= true;
@@ -424,10 +431,10 @@ function controlEyeExam(){
         document.forms[0].elements[eyeDiaId-1].checked= false;
         document.forms[0].elements[eyeOthId-1].checked= false;
         document.forms[0].elements[eyeRefId-1].checked= false;
-        //document.forms[0].elements[eyeHypId].checked= true;
-        //document.forms[0].elements[eyeDiaId].checked= true;
-        //document.forms[0].elements[eyeOthId].checked= true;
-        //document.forms[0].elements[eyeRefId].checked= true;
+        document.forms[0].elements[eyeHypId].checked= true;
+        document.forms[0].elements[eyeDiaId].checked= true;
+        document.forms[0].elements[eyeOthId].checked= true;
+        document.forms[0].elements[eyeRefId].checked= true;
         
         //alert("disable all foot exam checkboxes");
         document.forms[0].elements[eyeHypId-1].disabled= true;
