@@ -272,7 +272,7 @@ CREATE TABLE formBCAR (
   pg1_speDietSpec varchar(40) default NULL,
   pg1_foliAcid tinyint(1) default NULL,
   pg1_foliAcidSpec varchar(15) default NULL,
-  pg1_foliAcidDate date default NULL,
+  pg1_foliAcidDate varchar(10) default NULL,
   pg1_alco tinyint(1) default NULL,
   pg1_alcoSpec varchar(10) default NULL,
   pg1_alcoTA varchar(5) default NULL,
