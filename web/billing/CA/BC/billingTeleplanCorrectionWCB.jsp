@@ -49,6 +49,46 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 <script src="../../../share/calendar/calendar.js"></script>
 <script src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" type="text/javascript"></script>
 <script src="../../../share/calendar/calendar-setup.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+function popFeeItemList(form,field){
+     var width = 575;
+     var height = 400;
+     var str = document.forms[form].elements[field].value;
+     var url = "support/billingfeeitem.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;     
+     var windowName = field;  
+     popup(height,width,url,windowName);  
+  }
+
+  function popICD9List(form,field){
+     var width = 575;
+     var height = 400;
+     var str = document.forms[form].elements[field].value;
+     var url = "support/icd9.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;     
+     var windowName = field;  
+     popup(height,width,url,windowName);    
+  }
+  
+  function popBodyPartList(form,field){
+     var width = 650;
+     var height = 400;
+     var str = document.forms[form].elements[field].value;
+     var url = "support/bodypart.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;     
+     var windowName = field;  
+     popup(height,width,url,windowName);        
+  }
+  
+  function popNOIList(form,field){  
+     var width = 800;
+     var height = 400;
+     var str = document.forms[form].elements[field].value;
+     var url = "support/natureinjury.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;     
+     var windowName = field;  
+     popup(height,width,url,windowName);        
+  }
+  
+</script>
 </head>
 <body>
 <html:form action="billing/CA/BC/billingTeleplanCorrectionWCB">
@@ -61,6 +101,7 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
     </td>
   </tr>
 </table>
+Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNeeded();"  <%=checked("1",form.getFormNeeded(),true)%> />
 <table width="100%">
 	<tr>
 		<td colspan="2" class="LightBG">
@@ -212,17 +253,22 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 				</tr>-->
 				<tr>
 					<td class="FormLabel">Bill Amount:</td>
-					<td><html:text property="billingAmount" readonly="true" value="<%=form.getBillingAmount()%>" /></td>
+					<td><html:text property="billingAmount" readonly="true" value="<%=form.getBillingAmount()%>" /></td>					
 				</tr>
+				
+  
+  
+  
+  
 				<tr>
 					<td class="FormLabel">ICD 9:</td>
 					<td><html:text property="w_icd9" value="<%=form.getW_icd9()%>" />
-					<a onClick="popup('400', '600', 'support/icd9.jsp?form=TeleplanCorrectionFormWCB&field=w_icd9', 'Code');">Codes</a></td>
+					<a onClick="popICD9List('TeleplanCorrectionFormWCB','w_icd9');">Codes</a></td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Body Part:</td>
 					<td><html:text property="w_bp" value="<%=form.getW_bp()%>" />
-					<a onClick="popup('400', '600', 'support/bodypart.jsp?form=TeleplanCorrectionFormWCB&field=w_bp', 'BodyPart');">Codes</a></td>
+					<a onClick="popBodyPartList('TeleplanCorrectionFormWCB','w_bp');">Codes</a></td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Side:</td>
@@ -239,18 +285,18 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 				<tr>
 					<td class="FormLabel">Nature Of Injury:</td>
 					<td><html:text property="w_noi" value="<%=form.getW_noi()%>" />
-					<a onClick="popup('400', '600', 'support/natureinjury.jsp?form=TeleplanCorrectionFormWCB&field=w_noi', 'NatureOfInjury');">Codes</a></td>
+					<a onClick="popNOIList('TeleplanCorrectionFormWCB','w_noi');">Codes</a></td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Fee Item:</td>
 					<td><html:text property="w_feeitem" value="<%=form.getW_feeitem()%>" />
-					<a onClick="popup('400', '600', 'support/billingfeeitem.jsp?form=TeleplanCorrectionFormWCB&field=w_feeitem', 'FeeItem');">Codes</a></td>
+					<a onClick="popFeeItemList('TeleplanCorrectionFormWCB','w_feeitem');">Codes</a></td>
 				</tr>
-				<tr>
+				<!--<tr>
 					<td class="FormLabel">Fee Item:</td>
 					<td><html:text property="w_extrafeeitem" value="<%=form.getW_extrafeeitem()%>" />
 					<a onClick="popup('400', '600', 'support/billingfeeitem.jsp?info=all&form=TeleplanCorrectionFormWCB&field=w_extrafeeitem', 'eFeeItem');">Codes</a></td>
-				</tr>
+				</tr>-->
 				<tr>
 				<td class="FormLabel">Service Location:</td>
 				<td><html:select name="serviceLocation" value="<%=form.getServiceLocation()%>" property="serviceLocation">
@@ -447,3 +493,18 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 </html:form>
 </body>
 </html:html>
+<%!
+
+String checked(String val,String str,boolean dfault){
+    String retval = "";
+    if(str == null || str.equals("null")){
+        str = "";
+    }
+    if (str.equals("")  && dfault){
+        retval = "CHECKED";
+    }else if (str != null && str.equalsIgnoreCase(val) ){
+        retval = "CHECKED";
+    }
+    return retval;
+}
+%>
