@@ -80,7 +80,7 @@ public final class BillingViewAction extends Action {
             oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
             bean.setPatientLastName(demo.getLastName());
             bean.setPatientFirstName(demo.getFirstName());
-            bean.setPatientDoB(demo.getFirstName());
+            bean.setPatientDoB(demo.getDateOfBirth());
             bean.setPatientAddress1(demo.getAddress());
             bean.setPatientAddress2(demo.getCity());
             bean.setPatientPostal(demo.getPostal());
