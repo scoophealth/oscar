@@ -93,6 +93,7 @@ String billNo ="";
    //    param2[5] = request.getParameter("appointment_date");
    //    param2[6] = request.getParameter("billtype");
        rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
+       rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill_master");     
        
        
        //       }

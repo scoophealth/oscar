@@ -73,7 +73,7 @@
    
   int rowsAffected=0;
   rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("billing_no"),"delete_bill");
-       
+  rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("billing_no"),"delete_bill_master");     
        
 
 %>
