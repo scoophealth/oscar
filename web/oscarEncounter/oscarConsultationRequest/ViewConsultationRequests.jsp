@@ -150,61 +150,49 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
 
 
 
-<link rel="stylesheet" type="text/css" href="../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF">
-<html:errors/>
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-    <tr>
-        <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
-        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
-        </td>
-    </tr>
-    <tr>
-        <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-        <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><bean:message key="ectViewConsultationRequests.title"/></p>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-
-            <!--Start new rows here-->
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
+<body class="BodyStyle" vlink="#0000FF" >
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                Consultation
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td class="Header" NOWRAP >
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msfConsReqForTeam"/> = 
+                            <%
+                               if (team.equals("-1")){
+                            %>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgViewAll"/>
+                            <% } else { %>
+                            <%= team %>
+                            <% } %>               
+                        </td>
+                        <td  >
+                        </td>                        
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr style="vertical-align:top">
+            <td class="MainTableLeftColumn">
+                <table>
+                    <tr>
+                        <td NOWRAP>
+                        <a href="javascript:popupOscarConsultationConfig(700,960,'<%=serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="MainTableRightColumn">
+                <table width="100%">                                
                 <tr>
-                    <td>
- 		                <div class="DivContentTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msfConsReqForTeam"/> = 
-				<%
-				   if (team.equals("-1")){
-				%>
-				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgViewAll"/>
-				<% } else { %>
-				<%= team %>
-				<% } %>
-				</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left" >
-                        <table>
-                            <tr>
-                                <td bgcolor="#9999ff">
-
-                                <a href="javascript:popupOscarConsultationConfig(700,960,'<%=serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/></a>
-
-                                </td>
-                            <tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="DivContentSectionHead">
+                    <td>                        
                         <html:form action="/oscarEncounter/ViewConsultation" >
-
                             <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formSelectTeam"/>:
                             <select name="sendTo">
 				<option value="-1"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll"/></option>
@@ -221,18 +209,16 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                             <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.btnConsReq"/>"/>
                             <html:hidden property="currentTeam"/>
                         </html:form>
-                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-
                         <table border="0" width="80%" cellspacing="1">
                             <tr>
-                                <th class="VCRheads" width="75">
+                                <th align="left" class="VCRheads" width="10%">
                                 <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus"/>
                                 </th>
-                                <th align="left" class="VCRheads">
+                                <th align="left" class="VCRheads" width="75">
                                 <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
                                 </th>
                                 <th align="left" class="VCRheads">
@@ -259,60 +245,50 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                             String date    = (String) theRequests.date.elementAt(i);
                         %>
                             <tr>
-                                <td class="stat<%=status%>" width="75">
-				<% if (status.equals("1")){ %>
-				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgND"/>      
-				<% }else if(status.equals("2")) { %>
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgSR"/>      
-				<% }else if(status.equals("3")) { %>
-				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPR"/>      
-				<% }else if(status.equals("4")) { %>
-				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgDONE"/>    
-				<% } %>
+                                <td class="stat<%=status%>">
+                                    <% if (status.equals("1")){ %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgND"/>      
+                                    <% }else if(status.equals("2")) { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgSR"/>      
+                                    <% }else if(status.equals("3")) { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPR"/>      
+                                    <% }else if(status.equals("4")) { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgDONE"/>    
+                                    <% } %>
                                 </td>
                                 <td class="stat<%=status%>">
-                                <%=patient%>
+                                    <%=patient%>
                                 </td>
                                 <td class="stat<%=status%>">
-                                <%=provide%>
+                                    <%=provide%>
                                 </td>
                                 <td class="stat<%=status%>">
-                                <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
-                                <%=service%>
-                                </a>
+                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <%=service%>
+                                    </a>
 
                                 </td>
                                 <td class="stat<%=status%>">
-                                <%=date%>
+                                    <%=date%>
                                 </td>
                             </tr>
                         <%}%>
                         </table>
-
-
                     </td>
                 </tr>
-            <!----End new rows here-->
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+            </td>
+            <td class="MainTableBottomRowRightColumn">
 
-	<tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
-</table>
+            </td>
+        </tr>
+    </table>
 </body>
+
 </html:html>
 

@@ -46,74 +46,69 @@ function BackToOscar() {
 
 function finishPage(secs){
     setTimeout("window.close()",secs*1000);
+    window.opener.location.href = window.opener.location.href;
+    //if (window.opener.progressWindow)
+    //{
+    //    window.opener.progressWindow.close()
+    //} 
 }
 
 </script>
 
-<link rel="stylesheet" type="text/css" href="../styles.css">
+
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="finishPage(5);">
-<html:errors/>
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-    <tr>
-        <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
-        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
-        </td>
-    </tr>
-    <tr>
-        <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-        <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgConsReq"/>
-	<%
-	String type = (String) request.getAttribute("transType");
-	if (type.equals("1")){ %>
-	<bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgUpdated"/>
-	<% }else if (type.equals("2")){ %>
-	<bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreated"/>
-	<% } %>
-</p>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                Consultation
+            </td>
+            <td class="MainTableTopRowRightColumn">                
+            </td>
+        </tr>
+        <tr style="vertical-align:top">
+            <td class="MainTableLeftColumn" width="10%">
+                &nbsp;
+            </td>
+            <td class="MainTableRightColumn">
+                <table width="100%" height="100%">
+                    <tr>
+                        <td>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgConsReq"/>
+                            <%
+                            String type = (String) request.getAttribute("transType");
+                            if (type.equals("1")){ %>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgUpdated"/>
+                            <% }else if (type.equals("2")){ %>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreated"/>
+                            <% } %>                        
+                        </td>
+                    </tr>                
+                    <tr>
+                        <td>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgClose5Sec"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="javascript: BackToOscar();" >
+                            <bean:message key="global.btnClose"/>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
 
-            <!----Start new rows here-->
-                <tr>
-                    <td>
- 		                <div class="DivContentTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgClose5Sec"/></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="javascript: BackToOscar();" >
-                        <bean:message key="global.btnClose"/>
-                        </a>
-                    </td>
-                </tr>
-            <!----End new rows here-->
+            </td>
+            <td class="MainTableBottomRowRightColumn">
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-
-	<tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
-</table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html:html>
 
