@@ -286,7 +286,7 @@ function newStatus() {
                 <%
                     WaitingList wL = WaitingList.getInstance();
                     if(wL.getFound()){
-                %>                
+                %>
                 <tr><td>
                     <a href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=rs.getString("demographic_no")%>">Waiting List</a>
                 </td></tr>
@@ -314,6 +314,9 @@ function newStatus() {
                     <a href=# onclick="window.open('../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&demo_sex=<%=URLEncoder.encode(rs.getString("sex"))%>&demo_hctype=<%=URLEncoder.encode(rs.getString("hc_type")==null?"null":rs.getString("hc_type"))%>&rd=<%=URLEncoder.encode(rd==null?"null":rd)%>&rdohip=<%=URLEncoder.encode(rdohip==null?"null":rdohip)%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=640,height=400');return false;" title='Add Flu Billing'>Flu Billing</a>
                 </td></tr>
                 <% } %>
+                <tr><td>
+                    <a href=# onclick="popupPage(700, 1000, '../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Hospital Billing</a>
+                </td></tr>
                 <tr><td>
                     <a href=# onclick="window.open('../billing/CA/ON/inr/addINRbilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;" title='Add INR Billing'>Add INR</a></th>
                 </td></tr>
@@ -841,7 +844,7 @@ function newStatus() {
                             <td width="40%" align='right' valign="top">
                                <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="window.open('zdemographicswipe.jsp','', 'scrollbars=yes,resizable=yes,width=600,height=300, top=360, left=0')";>
                                <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>" onclick="window.location='printDemoLabelAction.do?demographic_no=<%=rs.getString("demographic_no")%>'";>
-                               <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'";>                              
+                               <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'";>
                             </td>
                         </table>
                     </tr>
