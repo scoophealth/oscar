@@ -151,12 +151,20 @@
                     type="oscar.oscarProvider.pageUtil.ProEditSignatureForm"/>
 <!-- oscarProvider formbeans stop -->
 
+<!-- oscarBilling Brazil start -->
+    <form-bean      name="procedimentoRealizadoForm"
+                    type="oscar.billing.controler.ProcedimentoRealizadoForm"/>
+    <form-bean      name="consultaFaturamentoMedicoForm"
+                    type="oscar.billing.controler.ConsultaFaturamentoMedicoForm"/>
+<!-- oscarBilling Brazil stop -->
+
   </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
     <forward   name="Logout"  path="/logout.jsp"  redirect="true" />
     <forward   name="SessionTimeOut"  path="/sessiontimeout.jsp"  redirect="true" />
+    <forward   name="failure"  path="/failure.jsp"  redirect="true" />
   </global-forwards>
 
   <!-- ========== Action Mapping Definitions ============================== -->
@@ -735,6 +743,69 @@
         </action>
 
     <!-- oscarProvider end   -->
+
+    <!-- ProcedimentoRealizado start -->
+  
+        <action   path="/oscar/billing/procedimentoRealizado/init"
+        	        parameter="init"
+                  type="oscar.billing.controler.ProcedimentoRealizadoAction"
+                  name="procedimentoRealizadoForm"
+                  scope="session"
+                  input="/billing/billingBrazil.jsp">
+           <forward name="success" path="/billing/billingBrazil.jsp"/>
+        </action>
+        <action   path="/oscar/billing/procedimentoRealizado/add"
+        		      parameter="add"
+                  type="oscar.billing.controler.ProcedimentoRealizadoAction"
+                  name="procedimentoRealizadoForm"
+                  scope="session"
+                  input="/billing/billingBrazil.jsp">
+           <forward name="success" path="/billing/billingBrazil.jsp"/>
+           <forward name="formulario" path="/billing/billingBrazil.jsp"/>
+           <forward name="procedimento" path="/billing/billingBrazil.jsp"/>
+           <forward name="diagnostico" path="/billing/billingBrazil.jsp"/>
+           <forward name="gravar" path="/billing/billingBrazilSuccess.jsp"/>
+        </action>
+        
+        <action   path="/oscar/billing/procedimentoRealizado/deleteProc"
+        		      parameter="del_proc"
+                  type="oscar.billing.controler.ProcedimentoRealizadoAction"
+                  name="procedimentoRealizadoForm"
+                  scope="session"
+                  input="/billing/billingBrazil.jsp">
+           <forward name="success" path="/billing/billingBrazil.jsp"/>
+        </action>
+        
+        <action   path="/oscar/billing/procedimentoRealizado/deleteDiag"
+        		      parameter="del_cid"
+                  type="oscar.billing.controler.ProcedimentoRealizadoAction"
+                  name="procedimentoRealizadoForm"
+                  scope="session"
+                  input="/billing/billingBrazil.jsp">
+           <forward name="success" path="/billing/billingBrazil.jsp"/>
+        </action>        
+    <!-- ProcedimentoRealizado end -->
+
+    <!-- ConsultaFaturamentoMedico start -->
+  
+        <action   path="/oscar/billing/consultaFaturamentoMedico/init"
+        	        parameter="init"
+                  type="oscar.billing.controler.ConsultaFaturamentoMedicoAction"
+                  name="consultaFaturamentoMedicoForm"
+                  scope="session"
+                  input="/billing/billingConsFatMedBrazil.jsp">
+           <forward name="success" path="/billing/billingConsFatMedBrazil.jsp"/>
+        </action>
+        
+        <action   path="/oscar/billing/consultaFaturamentoMedico/search"
+        	        parameter="search"
+                  type="oscar.billing.controler.ConsultaFaturamentoMedicoAction"
+                  name="consultaFaturamentoMedicoForm"
+                  scope="session"
+                  input="/billing/billingConsFatMedBrazil.jsp">
+           <forward name="success" path="/billing/billingConsFatMedBrazil.jsp"/>
+        </action>        
+    <!-- ConsultaFaturamentoMedico end -->
 
   </action-mappings>
 </struts-config>
