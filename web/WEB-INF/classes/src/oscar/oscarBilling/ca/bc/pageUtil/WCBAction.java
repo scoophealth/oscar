@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionMapping;
  * www.andromedia.ca
  */
 public final class WCBAction extends Action {
-    public ActionForward perform(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
         throws IOException, ServletException {
             
         request.getSession().putValue("WCBForm", form);

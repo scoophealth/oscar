@@ -17,7 +17,7 @@
 // * <OSCAR TEAM>
 // * This software was written for the 
 // * Department of Family Medicine 
-// * McMaster Unviersity 
+// * McMaster University 
 // * Hamilton 
 // * Ontario, Canada 
 // *
@@ -34,7 +34,7 @@ import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 public class EctViewRequestAction extends Action {
 
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException    {
 
         EctViewRequestForm frm = (EctViewRequestForm)form;

@@ -44,7 +44,7 @@ public class CreateSurveillanceFileAction extends Action{
    public CreateSurveillanceFileAction() {
    }
  
-   public ActionForward perform(ActionMapping mapping,
+   public ActionForward execute(ActionMapping mapping,
 				ActionForm form,
 				HttpServletRequest request,
 				HttpServletResponse response) throws IOException, ServletException {
