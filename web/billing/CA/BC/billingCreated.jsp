@@ -269,7 +269,8 @@ function showHideLayers() { //v3.0
         </tr>
         <tr>
           <td>Short Note:</td>
-          <td colspan="5"><%=bean.getShortClaimNote()%></td>
+          <td colspan="4"><%=bean.getShortClaimNote()%></td>
+          <td>ICBC claim #:<%=bean.getIcbc_claim_no()%></td>
         </tr>
       </table>      
       <div align="left"></div>
