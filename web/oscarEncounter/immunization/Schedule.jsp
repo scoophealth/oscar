@@ -38,6 +38,11 @@ if(sDoc == null){
     response.sendRedirect("loadConfig.do");
     return;
 } 
+
+
+    Document doc = UtilXML.parseXML(sDoc);
+    Element root = doc.getDocumentElement();
+    NodeList sets = root.getElementsByTagName("immunizationSet");
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -51,31 +56,26 @@ if(sDoc == null){
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <style type="text/css">
 
-.ellipsis
-{
+.ellipsis{
     height:15px;
     width:15px;
     text-align:right;
     valign:middle;
 }
 
-TD.normal
-{
+TD.normal{
     height:30px;
     width:90px;
 }
 
-
-TD.head
-{
+TD.head{
     background-color: #b3cefd;
     font-weight:bold;
     height:30px;
     width:90px;
 }
 
-TD.grey
-{
+TD.grey{
     height:30px;
     width:90px;
     background-color: #CCCCCC;
@@ -89,29 +89,21 @@ TD.grey
         if(x) {window.close();}
     }
 
-    function edit(nodeName, colName)
-    {
+    function edit(nodeName, colName){
         windowprops = "height=443,width=630,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
         window.open('ScheduleEdit.jsp?node=' + nodeName + '&name=' + colName,"<bean:message key="oscarEncounter.immunization.Schedule.msgRecordImm"/>",windowprops);
     }
 
-    function returnEdit(nodeName, givenDate, refusedDate, lot, provider, comments)
-    {
+    function returnEdit(nodeName, givenDate, refusedDate, lot, provider, comments){
         var frm = document.forms[0];
        
         var label;
-        if(givenDate != "")
-        {
+        if(givenDate != ""){
             label = givenDate;
-        }
-        else
-        {            
-            if(refusedDate != "")
-            {
+        }else{            
+            if(refusedDate != ""){
                 label = "<bean:message key="oscarEncounter.immunization.Schedule.msgRefused"/>"+" "+refusedDate;
-            }
-            else 
-            {   
+            }else{   
                 label = "";
             }
         }
@@ -129,29 +121,21 @@ TD.grey
         var tbl = document.getElementById(tblName);
         var b = false;
 
-        if(ev.target!=null)
-        {
-            if(ev.target.checked)
-            {
+        if(ev.target!=null){
+            if(ev.target.checked){
                 b = true;
             }
-        }
-        else
-        {
-            if(event.srcElement.checked)
-            {
+        }else{
+            if(event.srcElement.checked){
                 b = true;
             }
         }
 
-        if(b==true)
-        {
+        if(b==true){
             tbl.style.display=''; 
             //document.tblSetBar.style.display='';
             // document.getElementById("tblSetBar").style.display='';
-        }
-        else
-        {
+        }else{
             tbl.style.display='none';
             // document.getElementById("tblSetBar").style.display='none';
         }
@@ -218,11 +202,7 @@ TD.grey
                         <table  border=0>
                             <tr>
                                 <td>
-                        <%
-                        Document doc = UtilXML.parseXML(sDoc);
-                        Element root = doc.getDocumentElement();
-                        NodeList sets = root.getElementsByTagName("immunizationSet");
-                        %>
+                        
                         <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
                                 </td>
                                 <td align="right">
@@ -267,7 +247,7 @@ TD.grey
                                      <%}%>
                                      
                                </div>
-
+                            <%}%>
                                <table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>"  style="display:none" >
                                <%
 
@@ -354,7 +334,7 @@ TD.grey
                                   }
                             %>
                             </table>
-                          <%}
+                          <%//}
                         }
 
                         %>
