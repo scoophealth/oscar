@@ -91,6 +91,15 @@ int i;
         }
       }
     }
+    
+    function goDOC(){
+       if (document.RxSearchDrugForm.searchString.value.length == 0){
+          popupDrugOfChoice(720,700,'http://67.69.12.117:8080/oscarResource/DoC/')
+       }else{
+          var docURL = "http://67.69.12.117:8080/oscarResource/DoC/OSCAR_search/OSCAR_search_results?title="+document.RxSearchDrugForm.searchString.value+"&SUBMIT=GO";
+          popupDrugOfChoice(720,700,docURL);                               
+       }
+    }    
 
     function isEmpty(){  
         if (document.RxSearchDrugForm.searchString.value.length == 0){
@@ -144,7 +153,7 @@ int i;
                             <bean:message key="ChooseDrug.searchAgain"/>
                           </td>
                           <td>
-                            <html:text property="searchString" size="16" maxlength="16"/> <a href="javascript:popupDrugOfChoice(720,700,'http://67.69.12.117:8080/oscarResource/DoC/')">Drug Of Choice</a>
+                            <html:text property="searchString" size="16" maxlength="16"/> <a href="javascript:goDOC();">Drug Of Choice</a>
                             
                             <!--<html:hidden property="otcExcluded" value="true"/>OTC Excluded-->
                           </td>
