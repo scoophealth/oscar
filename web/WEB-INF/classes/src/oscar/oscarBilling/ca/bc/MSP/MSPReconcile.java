@@ -390,7 +390,24 @@ public class MSPReconcile{
         }
         return retval;        
     }
-     
+    
+    
+    public String getAmountPaid(String billingNo){
+       String retval = "0.00";
+        try {            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs = db.GetSQL("select  sum(t_paidamt)  as sum from teleplanS00 where t_officeno =  '"+forwardZero(billingNo,7)+"'");
+            while(rs.next()){   
+              retval = rs.getString("sum");                            
+            }
+            rs.close();
+            db.CloseConn();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Misc.moneyFormat(retval);        
+    }
+    
     public ArrayList getAllS00Records(String billingNo){
         ArrayList retval = new ArrayList();
         Properties p = new MspErrorCodes();        
