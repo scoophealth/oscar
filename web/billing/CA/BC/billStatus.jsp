@@ -28,7 +28,7 @@
  */ 
 -->
 <%@ page language="java" contentType="text/html" %>
-<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*" %>
+<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -158,6 +158,11 @@ function refresh() {
       history.go(0);
   
 }
+
+function fillEndDate(d){
+    document.serviceform.xml_appointment_date.value= d;
+    
+}
 function setDemographic(demoNo){
 //alert(demoNo);
     document.serviceform.demographicNo.value = demoNo;
@@ -245,7 +250,14 @@ function setDemographic(demoNo){
           <a href="javascript: function myFunction() {return false; }" id="hlADate" >End:</a>
           </font> 
           <input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=xml_appointment_date%>">        
+          
+          <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-30")%>')" >30</a>&nbsp;
+          <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-60")%>')" >60</a>&nbsp;
+          <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-90")%>')" >90</a>&nbsp;
+          
           Demographic:<input type="text" name="demographicNo" size="5"value="<%=xml_demoNo%>"/>
+          
+          
         </div>                                
       </td>
       <td class="bCellData"> 
