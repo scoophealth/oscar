@@ -44,7 +44,7 @@ public class EctValidationsBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT name,id FROM validations";
+            String sql = "SELECT name,id FROM validations ORDER BY name";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
