@@ -62,6 +62,7 @@ function showHideLayers() { //v6.0
 <title>
     <bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/>
 </title>
+
 <style type="text/css">
    td.nameBox {
       border-bottom: 1pt solid #888888;
@@ -95,7 +96,19 @@ function showHideLayers() { //v6.0
 	          background-color: #EEEEFF
          }
 </style>
+<style type="text/css" media="print">
+.header {
+    display:none;
+}
+.header INPUT {
+    display:none;
+}
 
+.header A {
+    display:none;
+}
+
+</style>
 <script type="text/javascript">
    var remote=null;
 
@@ -135,8 +148,10 @@ function showHideLayers() { //v6.0
     function write2TextArea(){ 
         if (document.forms[0].selectedRecentSearch.options[document.forms[0].selectedRecentSearch.selectedIndex].value=='Recent Search')
             document.forms[0].sql.value = '';
-        else
-            document.forms[0].sql.value = document.forms[0].selectedRecentSearch.options[document.forms[0].selectedRecentSearch.selectedIndex].value;
+        else{
+            var selectedQuery = document.forms[0].selectedRecentSearch.options[document.forms[0].selectedRecentSearch.selectedIndex].value;
+            document.forms[0].sql.value = selectedQuery;
+        }
      }
 </script>
 
@@ -170,15 +185,9 @@ function showHideLayers() { //v6.0
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top"> 
-                <table>
-                  <tr> 
-                    <td><a href="#" onClick="showHideLayers('Layer1','','show')"><bean:message key="oscarReport.RptByExample.MsgShowTextVersion"/></a></td>
-                  </tr>
+                <table>                  
                   <tr>
-                    <td><a href="#" onClick="showHideLayers('Layer1','','hide')"><bean:message key="oscarReport.RptByExample.MsgHideTextVersion"/></a></td>                    
-                  </tr>
-                  <tr>
-                    <td><a href="#" onClick="popupPage(600, 1000, 'RptViewAllQueryByExamples.do')">View Query History</a></td>
+                    <td nowrap><a href="#" onClick="popupPage(600, 1000, 'RptViewAllQueryByExamples.do')">View Query History</a></td>
                   </tr>
                   <tr>
                     <td><a href="#" onClick="popupPage(600, 1000, 'RptByExamplesAllFavorites.do')">Edit My Favorite</a></td>
@@ -210,8 +219,8 @@ function showHideLayers() { //v6.0
                    <tr>
                         <td>
                             <html:select property="selectedRecentSearch" style="width:660" onchange="write2TextArea();return false;">
-                                <html:option value="My favorites" disabled="true"/> 
-                                <html:options collection="favorites" property="query" labelProperty="queryName"/>
+                                <html:option value="My favorites" disabled="true"/>
+                                <html:options collection="favorites" labelProperty="queryName" property="query" />
                             </html:select>
                         </td>                        
                    </tr>
@@ -222,9 +231,11 @@ function showHideLayers() { //v6.0
                    </tr>
                    <tr></tr>
                    <tr>
-                        <logic:present name="results">                            
+                        <td>
+                        <logic:present name="results">
                             <bean:write name="results" filter="false"/>
                         </logic:present>
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -235,7 +246,7 @@ function showHideLayers() { //v6.0
             </td>
 
             <td class="MainTableBottomRowRightColumn">
-            &nbsp;
+                &nbsp;
             </td>
         </tr>
         </table>
