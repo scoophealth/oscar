@@ -1,3 +1,7 @@
+<%--
+  This file is deprecated - functionality is relocated to oscarReportAgeSex.jsp
+--%>
+
 <!--  
 /*
  * 
