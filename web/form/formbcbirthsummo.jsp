@@ -111,8 +111,10 @@ function onCheckSlave(a, masterName) {
     function onSave() {
         document.forms[0].submit.value="save";
         var ret = checkAllDates();
-        if(ret==true)
-        {
+        if(ret==true) {
+			ret = checkAllTimes();
+		}
+        if(ret==true) {
             reset();
             ret = confirm("Are you sure you want to save this form?");
         }
@@ -128,8 +130,10 @@ function onCheckSlave(a, masterName) {
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();
-        if(ret == true)
-        {
+        if(ret==true) {
+			ret = checkAllTimes();
+		}
+        if(ret == true) {
             reset();
             ret = confirm("Are you sure you wish to save and close this window?");
         }
@@ -234,7 +238,7 @@ var maxYear=9900;
         if (dtStr.indexOf(dtCh,pos2+1)!=-1 || isInteger(stripCharsInBag(dtStr, dtCh))==false){
             return "date"
         }
-    return true
+		return true
     }
 
 
@@ -244,13 +248,10 @@ var maxYear=9900;
         }
     }
 
-    function valDate(dateBox)
-    {
-        try
-        {
+    function valDate(dateBox)   {
+        try   {
             var dateString = dateBox.value;
-            if(dateString == "")
-            {
+            if(dateString == "") {
 				//alert('dateString'+dateString);
                 return true;
             }
@@ -260,15 +261,37 @@ var maxYear=9900;
             var orderString = m + '/' + d + '/' + y;
             var pass = isDate(orderString);
 
-            if(pass!=true)
-            {
+            if(pass!=true) {
                 alert('Invalid '+pass+' in field ' + dateBox.name);
                 dateBox.focus();
                 return false;
             }
+        }  catch (ex) {
+            alert('Catch Invalid Date in field ' + dateBox.name);
+            dateBox.focus();
+            return false;
         }
-        catch (ex)
-        {
+        return true;
+    }
+
+    function valTime(dateBox)   {
+        try   {
+            var dateString = dateBox.value;
+            if(dateString == "") {
+				//alert('dateString'+dateString);
+                return true;
+            }
+            var dt = dateString.split(':');
+            var m = dt[1];  var h = dt[0];
+            var pass = false;
+			if(h >= 0 && h <=23 && m >=0 && m <=59) { pass = true; }
+
+            if(pass!=true) {
+                alert('Invalid data in field ' + dateBox.name);
+                dateBox.focus();
+                return false;
+            }
+        }  catch (ex) {
             alert('Catch Invalid Date in field ' + dateBox.name);
             dateBox.focus();
             return false;
@@ -278,15 +301,36 @@ var maxYear=9900;
 
     function checkAllDates() {
         var b = true;
-        if(valDate(document.forms[0].romDate)==false){
+        if(valDate(document.forms[0].pg1_formDate)==false){
             b = false;
-        } else if(valDate(document.forms[0].fstStqDate)==false){
+        } else if(valDate(document.forms[0].birFHR)==false){
             b = false;
-        } else if(valDate(document.forms[0].secStqDate)==false){
+        } else if(valDate(document.forms[0].birTimeDate1)==false){
             b = false;
-        } else if(valDate(document.forms[0].deliDate)==false){
+        } else if(valDate(document.forms[0].birTimeDate2)==false){
             b = false;
-        } else if(valDate(document.forms[0].placentaDate)==false){
+        } else if(valDate(document.forms[0].birTimeDate3)==false){
+            b = false;
+        } else if(valDate(document.forms[0].birTimeDate4)==false){
+            b = false;
+        } else if(valDate(document.forms[0].birTimeDate5)==false){
+            b = false;
+        } 
+
+        return b;
+    }
+
+	function checkAllTimes() {
+        var b = true;
+        if(valTime(document.forms[0].birTimeHour1)==false){
+            b = false;
+        } else if(valTime(document.forms[0].birTimeHour2)==false){
+            b = false;
+        } else if(valTime(document.forms[0].birTimeHour3)==false){
+            b = false;
+        } else if(valTime(document.forms[0].birTimeHour4)==false){
+            b = false;
+        } else if(valTime(document.forms[0].birTimeHour5)==false){
             b = false;
         } 
 
@@ -1010,42 +1054,42 @@ var maxYear=9900;
 	  </tr><tr>
 		<td align="right">MEMBERANES RUPTURED</td>
 		<td>
-		<input type="text" name="birTimeHour1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour1", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeHour1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour1", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate1", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate1", "") %>" @oscar.formDB  dbType="date"/>
 		</td>
 	  </tr><tr>
 		<td align="right">1st STAGE STARTED</td>
 		<td>
-		<input type="text" name="birTimeHour2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour2", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeHour2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour2", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate2", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate2", "") %>" @oscar.formDB dbType="date" />
 		</td>
 	  </tr><tr>
 		<td align="right">2nd STAGE STARTED</td>
 		<td>
-		<input type="text" name="birTimeHour3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour3", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeHour3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour3", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate3", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate3", "") %>" @oscar.formDB dbType="date" />
 		</td>
 	  </tr><tr>
 		<td align="right">NEWBORN DELIVERED</td>
 		<td>
-		<input type="text" name="birTimeHour4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour4", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeHour4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour4", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate4", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeDate4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate4", "") %>" @oscar.formDB dbType="date" />
 		</td>
 	  </tr><tr>
 		<td align="right">PLACENTA DELIVERED</td>
 		<td>
-		<input type="text" name="birTimeHour5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour5", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeHour5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour5", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate5", "") %>" @oscar.formDB />
+		<input type="text" name="birTimeDate5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate5", "") %>" @oscar.formDB dbType="date" />
 		</td>
 	  </tr>
 	  </table>
@@ -1109,7 +1153,7 @@ var maxYear=9900;
 		</td>
 		<td align="center" rowspan="2"><B>STILLBIRTH</B> (dd/mm/yyyy)<br>
 		Last FHR
-		<input type="text" name="birFHR" size="10" maxlength="10" value="<%= props.getProperty("birFHR", "") %>" @oscar.formDB />
+		<input type="text" name="birFHR" size="10" maxlength="10" value="<%= props.getProperty("birFHR", "") %>" @oscar.formDB  dbType="date"/>
 		</td>
 	  </tr><tr>
 		<td width="10%">
@@ -1241,6 +1285,22 @@ var maxYear=9900;
 </tr>
 </table>
 
+<table class="Head" class="hidePrint">
+    <tr>
+        <td align="left">
+<%
+  if (!bView) {
+%>
+            <input type="submit" value="Save" onclick="javascript:return onSave();" />
+            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+<%
+  }
+%>
+            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
+            <input type="button" value="Print" onclick="javascript:window.print();"/>
+        </td>
+    </tr>
+</table>
 
 </html:form>
 </body>
