@@ -67,6 +67,7 @@ public class EctMeasurementTypesBeanHandler {
                                                                                            rsValidation.getString("name"));   
                     measurementTypeVector.add(measurementTypes);
                 }
+                rsValidation.close();
             }
                             
             rs.close();            
@@ -129,7 +130,9 @@ public class EctMeasurementTypesBeanHandler {
                         measuringInstrcVector = new Vector();
                         hasPreviousData = true;
                     }
+                    rsProvider.close();
                 }
+                rsData.close();
                 if(!hasPreviousData){
                     EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rsMT.getInt("id"), 
                                                                                         rsMT.getString("type"), 
@@ -145,7 +148,7 @@ public class EctMeasurementTypesBeanHandler {
                     measuringInstrcVector = new Vector();
                 }
                 
-                
+                rsMT.close();
                                                                                         
                 
                 
