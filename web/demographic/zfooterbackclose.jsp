@@ -31,6 +31,6 @@
     <tr>
       <td><a href=# onClick="javascript:history.go(-1)"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
         <bean:message key="demographic.zfooterbackclose.btnBack"/> </a></td>
-      <td align="right"><a href="" onClick="self.close();"> <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+      <td align="right"><a href="" onClick="self.close();"><bean:message key="demographic.zfooterbackclose.btnClose"/><img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
     </tr>
   </table>
