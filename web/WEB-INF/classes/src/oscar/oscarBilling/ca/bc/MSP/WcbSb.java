@@ -87,7 +87,8 @@ public class WcbSb {
    w_extrafeeitem,
    w_servicelocation,
    billamountforfeeitem1,
-   billamountforfeeitem2;
+   billamountforfeeitem2,
+   formNeeded;
    
    String newLine ="\r\n";
    Misc misc = new Misc();
@@ -149,6 +150,7 @@ public class WcbSb {
          this.w_extrafeeitem = rs.getString("w_extrafeeitem");
          this.w_servicelocation = rs.getString("w_servicelocation");
          this.billamountforfeeitem1 = rs.getString("feeitem1");
+         this.formNeeded = rs.getString("formNeeded");
       }
       catch (Exception ex) {
          System.err.println("WcbSb (Constructor): " + ex.getMessage());
@@ -369,4 +371,11 @@ public class WcbSb {
        "</tr>";              
        return htmlContent;
     }
+   boolean isFormNeeded(){
+      boolean retval = true;
+      if (formNeeded != null && formNeeded.equals("0")){
+         retval = false;
+      }      
+      return retval;
+   }
 }
