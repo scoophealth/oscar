@@ -43,7 +43,7 @@ public class EctMeasurementsDataBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' ORDER BY dateEntered";
+            String sql = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' ORDER BY dateEntered DESC";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
