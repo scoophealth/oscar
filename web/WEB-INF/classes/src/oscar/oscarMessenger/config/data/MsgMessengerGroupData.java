@@ -28,6 +28,8 @@ package oscar.oscarMessenger.config.data;
 
 import oscar.oscarDB.DBHandler;
 import javax.servlet.jsp.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -123,7 +125,7 @@ public class MsgMessengerGroupData {
    }
 
 
-   public void printAllProvidersWithMembers(String grpNo,JspWriter out){
+   public void printAllProvidersWithMembers(Locale locale,String grpNo,JspWriter out){
 
          java.util.Vector vector = membersInGroups(grpNo);
 
@@ -142,13 +144,32 @@ public class MsgMessengerGroupData {
                  }
                   out.print("      </td>");
                   out.print("      <td>");
-                     out.print(rs.getString("last_name"));
+                  out.print(rs.getString("last_name"));
                   out.print("      </td>");
                   out.print("      <td>");
-                     out.print(rs.getString("first_name"));
+                  out.print(rs.getString("first_name"));
                   out.print("      </td>");
                   out.print("      <td>");
-                     out.print(rs.getString("provider_type"));
+
+                  String strProviderType = new String();
+                  ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",locale);
+                  
+                  if (rs.getString("provider_type").equals("doctor")) {
+                  	strProviderType = oscarR.getString("admin.provider.formType.optionDoctor");
+                  }else if (rs.getString("provider_type").equals("receptionist")) {
+                  	strProviderType = oscarR.getString("admin.provider.formType.optionReceptionist");
+                  }else if (rs.getString("provider_type").equals("nurse")) {
+                  	strProviderType = oscarR.getString("admin.provider.formType.optionNurse");
+                  }else if (rs.getString("provider_type").equals("resident")) {	
+                  	strProviderType = oscarR.getString("admin.provider.formType.optionResident");
+                  }else if (rs.getString("provider_type").equals("admin")) {
+                  	strProviderType = oscarR.getString("admin.provider.formType.optionAdmin");
+                  }else{
+                  	strProviderType = rs.getString("provider_type");
+                  }
+
+                  out.print(strProviderType);
+                  
                   out.print("      </td>");
 
 

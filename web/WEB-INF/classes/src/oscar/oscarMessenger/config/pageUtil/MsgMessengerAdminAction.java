@@ -31,6 +31,7 @@ import oscar.oscarMessenger.data.*;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,8 +60,10 @@ public class MsgMessengerAdminAction extends Action {
         String delete = ((MsgMessengerAdminForm)form).getDelete();
 
         String parent = new String();
+        
+        ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
 
-        if (update.equals("Update group members")){
+        if (update.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"))){
         // System.out.println("UPDATE WORKING");
 
            try{
@@ -81,7 +84,7 @@ public class MsgMessengerAdminAction extends Action {
 
 
          request.setAttribute("groupNo",grpNo);
-        }else if(delete.equals("Delete This group")){
+        }else if(delete.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnDeleteThisGroup"))){
         // System.out.println("DELETE WORKING");
             try{
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
