@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <table width="100%" border="2"  valign="top">
   <% 
@@ -77,21 +77,21 @@
       }
       }
       
-      if (reason.compareTo("N") == 0) reason="Do Not Bill ";
-           if (reason.compareTo("O") == 0) reason="Bill OHIP ";
-                if (reason.compareTo("W") == 0) reason="Bill WSIB ";
-                     if (reason.compareTo("H") == 0) reason="Capitated Bill ";
-                          if (reason.compareTo("P") == 0) reason="Bill Patient";
+if (reason.compareTo("N") == 0) reason="Do Not Bill ";
+if (reason.compareTo("O") == 0) reason="Bill OHIP ";
+if (reason.compareTo("W") == 0) reason="Bill WSIB ";
+if (reason.compareTo("H") == 0) reason="Capitated Bill ";
+if (reason.compareTo("P") == 0) reason="Bill Patient";
 %>
-  <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
-    <TD align="center" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
-    <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime==null?"00:00:00":apptTime%></font></b></TD>
-    <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
-    <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason%>(<%=note%>)
-      </font></b></TD>
-    <TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
-      <%=rs.getString("billing_no")%></a></font></b></TD>                                 
-  </tr>
+<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
+	<TD align="center" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
+	<TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime==null?"00:00:00":apptTime%></font></b></TD>
+	<TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
+	<TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason%>(<%=note%>)
+	  </font></b></TD>
+	<TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+	  <%=rs.getString("billing_no")%></a></font></b></TD>                                 
+</tr>
   <%  rowCount = rowCount + 1;
     }
     if (rowCount == 0) {

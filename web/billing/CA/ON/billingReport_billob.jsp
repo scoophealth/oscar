@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 
 <table width="100%" border="2" cellpadding="0" cellspacing="0">
@@ -92,7 +92,7 @@ int rCount = 0;
 
 %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">  
-    <TD align="left" width="5%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+    <TD align="left" width="5%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
       <%=rs.getString("billing_no")%></a></font></b></TD>
         <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
         <TD align="left" width="12%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
