@@ -25,7 +25,7 @@
  */
 --%>
 
-<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -283,9 +283,14 @@ function newStatus() {
                 <tr><td>
                     <a href='demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message key="demographic.demographiceditdemographic.btnApptHist"/></a>
                 </td></tr>
+                <%
+                    WaitingList wL = WaitingList.getInstance();
+                    if(wL.getFound()){
+                %>                
                 <tr><td>
                     <a href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=rs.getString("demographic_no")%>">Waiting List</a>
                 </td></tr>
+                <%}%>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="admin.admin.billing"/>
@@ -736,6 +741,7 @@ function newStatus() {
                               </td>
                             </tr>
                             <%}%>
+                            <%if(wL.getFound()){%>
                             <tr valign="top">
                               <td align="right" nowrap><b>Waiting List: </b></td>
                               <td align="left" >
@@ -765,6 +771,7 @@ function newStatus() {
                                 <input type="text" name="waiting_list_note" value="<%=wlnote%>" >
                               </td>
                             </tr>
+                            <%}%>
                             <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
                               <td align="left" >

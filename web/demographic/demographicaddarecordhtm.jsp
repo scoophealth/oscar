@@ -7,7 +7,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="addDemoBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -612,6 +612,10 @@ function formatPhoneNum() {
       </td>
     </tr>
     <%}%>
+    <%
+        WaitingList wL = WaitingList.getInstance();
+        if(wL.getFound()){
+    %> 
     <tr valign="top">
       <td align="right" nowrap><b>Add patient to waiting list: </b></td>
       <td align="left" > 
@@ -633,6 +637,7 @@ function formatPhoneNum() {
         <input type="text" name="waiting_list_note" >        
       </td>
     </tr>
+    <%}%>
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDateJoined"/></b><b>: </b></td>
       <td align="left" > 
