@@ -682,9 +682,9 @@ function resetAverageChart(){
         document.getElementById('2cellC10').style.color = "#000000";
         document.getElementById('2cellR10').style.color = "#000000";
         
-        document.getElementById('cellL11').style.background = "#ffffff";
-        document.getElementById('cellC11').style.background = "#ffffff";
-        document.getElementById('cellR11').style.background = "#ffffff";			
+        document.getElementById('2cellL11').style.background = "#ffffff";
+        document.getElementById('2cellC11').style.background = "#ffffff";
+        document.getElementById('2cellR11').style.background = "#ffffff";			
         document.getElementById('2cellL11').style.color = "#000000";
         document.getElementById('2cellC11').style.color = "#000000";
         document.getElementById('2cellR11').style.color = "#000000";
