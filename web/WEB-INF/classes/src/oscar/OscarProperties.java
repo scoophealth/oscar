@@ -42,10 +42,11 @@ public class OscarProperties extends Properties {
 	}
 	
 	static OscarProperties oscarProperties = new OscarProperties();
+        static boolean loaded = false;
 
 	/* Do not use this constructor. Use getInstance instead */
 	/* If cant find the file, inform and continue */
-	private OscarProperties() {
+	/*private OscarProperties() {
 
 		InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties");
 		try {
@@ -62,6 +63,28 @@ public class OscarProperties extends Properties {
 			e.printStackTrace();
 		}
 	} //OscarProperties - end
-	
+         *
+         *
+	*/
+        private OscarProperties() {  System.out.println("OSCAR PROPS CONSTRUCTOR"); }
+        
+        
+        
+        public void loader(String propFileName){
+           if (!loaded){
+               
+               try{
+                    FileInputStream fis2 = new FileInputStream(propFileName) ;
+                    load(fis2);           
+                    fis2.close();
+                    loaded = true;
+               } catch (Exception e) {
+                    System.out.println("Error, file oscar_mcmaster.properties not found.");
+                    System.out.println("This file must be placed at WEB-INF/classes.");
+                    e.printStackTrace();
+               }
+               
+           }
+        }
 }
 
