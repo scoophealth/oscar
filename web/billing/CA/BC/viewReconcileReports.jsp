@@ -1,0 +1,153 @@
+<%      
+  if(session.getValue("user") == null)
+    response.sendRedirect("../../../logout.jsp");
+%>
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->   
+
+ <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
+<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
+<%@ include file="../../../admin/dbconnection.jsp" %>
+<%@ include file="dbBilling.jsp" %>
+
+<%  
+GregorianCalendar now=new GregorianCalendar();
+  int curYear = now.get(Calendar.YEAR);
+  int curMonth = (now.get(Calendar.MONTH)+1);
+  int curDay = now.get(Calendar.DAY_OF_MONTH);
+  
+  String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
+String amtbilled="", amtpaid="", balancefwd="", chequeamt="", newbalance="", raNo="";
+String paymentdate="" , payable="";
+    
+%>
+  
+
+<html>
+<head>
+
+<html:base/>
+<link rel="stylesheet" href="../../../billing/billing.css" >
+<title>Billing 
+      Reconcilliation</title>
+       
+<script language="JavaScript">
+<!--
+    var remote=null;
+    function refresh() {
+        history.go(0);
+    }
+    function rs(n,u,w,h,x) {
+      args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+      remote=window.open(u,n,args);
+      if (remote != null) {
+        if (remote.opener == null)
+          remote.opener = self;
+      }
+      if (x == 1) { return remote; }
+    }
+
+    var awnd=null;
+    function popPage(url) {
+        awnd=rs('',url ,400,200,1);
+        awnd.focus();
+    }
+
+    function checkReconcile(url){    
+        if(confirm("You are about to reconcile the file, are you sure?")) {
+            location.href=url;
+        }else{
+            alert("You have cancel the action!");
+        }
+    }
+//-->
+</SCRIPT>
+</head>
+
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+    <tr bgcolor="#486ebd">
+     <th align='LEFT'>
+		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
+    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing 
+      Reconcilliation </font></th>
+      <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
+  </tr>
+</table>
+ 
+<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
+  <tr>  
+    
+     <td width="5%" height="16">Payment Date </td>
+     <td width="10%" height="16">Payable </td>
+     <td width="10%" height="16">Amount Billed</td>
+     <td width="10%" height="16">Amount Paid</td>
+     <td width="10%" height="16">Balance Fwd</td>
+     <td width="10%" height="16">Cheque Amount</td>
+     <td width="10%" height="16">New Balance</td>
+      <td width="20%" height="16">Action</td>
+      <td width="5%" height="16">Status</td>
+  </tr>
+   
+  <%	
+    ResultSet rsdemo;
+    rsdemo = null;
+    String[] param5 =new String[1];
+    param5[0] = "D";
+    rsdemo = apptMainBean.queryResults(param5, "search_all_tahd");
+    while (rsdemo.next()) {   
+        raNo  = rsdemo.getString("s21_id");
+        paymentdate = rsdemo.getString("t_payment");
+        payable = rsdemo.getString("t_payeename");
+        amtbilled= rsdemo.getString("t_amtbilled");
+        amtpaid = rsdemo.getString("t_amtpaid");
+        balancefwd = rsdemo.getString("t_balancefwd");
+        chequeamt= rsdemo.getString("t_cheque");
+        newbalance = rsdemo.getString("t_newbalance");
+        //total = rsdemo.getString("totalamount");
+   %> 
+		     
+  <tr> 
+    <td><%=paymentdate%>  </td>
+    <td><%=payable%> </td>
+    <td><%=amtbilled%></td>
+    <td><%=amtpaid%></td>
+    <td><%=balancefwd%></td>
+    <td><%=chequeamt%></td>
+    <td><%=newbalance%></td>
+    <td><a href="genTAS01.jsp?rano=<%=raNo%>&proNo=" target="_blank">Billed</a> | <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a>| <a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a></td>
+    <td><%=rsdemo.getString("status")%></td>
+  </tr>
+
+ <% }%>
+
+</table>
+
+</body>
+</html>
