@@ -78,6 +78,7 @@ function popup( height, width, url, windowName){
     </td>
   </tr>
 </table>
+
 <br>
 <table border="0" cellspacing="0" cellpading="0" width="100%" class="SmallerText">
 	<tr>
@@ -210,13 +211,13 @@ function popup( height, width, url, windowName){
                 	<a onClick="popup('400', '400', 'support/billingfeeitem.jsp?form=WCBForm&field=w_feeitem', 'w_feeitem');">Search</a>
 		</td>
 	</tr>
-	<tr>
+	<!--<tr>
 		<td>Extra Fee Item:</td>
 		<td>
 			<input name="w_extrafeeitem" type="text" maxlength="5" size="5" id="w_extrafeeitem" value="<%=form.getW_extrafeeitem()%>"> 
                 	<a onClick="popup('400', '400', 'support/billingfeeitem.jsp?info=all&form=WCBForm&field=w_extrafeeitem', 'w_extrafeeitem');">Search</a>
 		</td>
-	</tr>
+	</tr>-->
 	<tr>
 		<td>
 			ICD9:</td>
