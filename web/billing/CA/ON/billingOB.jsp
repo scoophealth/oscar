@@ -27,7 +27,7 @@ String clinicNo = oscarVariables.getProperty("clinic_no", "");
 <title>Billing Record</title>
 <style type="text/css">
 <!--
-A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
+A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family: Arial, Verdana, Helvetica, tahoma,sans-serif; font-size:10px;}
 -->
 </style>  
 <script language="JavaScript">
@@ -114,6 +114,20 @@ function showHideLayers() { //v3.0
 	if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
 	obj.visibility=v; }
 }
+
+function checkData() {
+    var b = true;
+    if(document.forms[0].xml_provider.value == "000000"){
+    	alert("Please select Billing Physician!");
+        b = false;
+    } else if(document.forms[0].xml_diagnostic_detail.value == ""){
+    	alert("Please input a diagnostic code!");
+        b = false;
+	}
+
+    return b;
+}
+
 //-->
 </script>
 
@@ -185,8 +199,8 @@ while(rslocal.next()){
 <div id="Layer2" style="position:absolute; left:362px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden"> 
 	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr> 
-		<td width="18%"><b><font face="Verdana, Arial, Helvetica" size="-2">Dx Code</font></b></td>
-		<td width="76%"><b><font face="Verdana, Arial, Helvetica" size="-2">Description</font></b></td>
+		<td width="18%"><b><font size="-2">Dx Code</font></b></td>
+		<td width="76%"><b><font size="-2">Description</font></b></td>
 		<td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide');return false">X</a></td>
 	</tr>
 
@@ -200,8 +214,8 @@ while (rsdiagcode.next()){
 	ctldiagcodename = rsdiagcode.getString("des");
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
-		<td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D"><a href="#" onClick="document.serviceform.xml_diagnostic_detail.value='<%=ctldiagcode%>|<%=ctldiagcodename%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
-		<td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D">
+		<td width="18%"><b><font size="-2" color="#7A388D"><a href="#" onClick="document.serviceform.xml_diagnostic_detail.value='<%=ctldiagcode%>|<%=ctldiagcodename%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
+		<td colspan="2"><font size="-2" color="#7A388D">
 		<%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0,55)%></font></td>
 	</tr>  
 <%
@@ -216,7 +230,7 @@ while (rsdiagcode.next()){
 <tr bgcolor="#000000"> 
 	<td height="42" width="10%">&nbsp; </td>
 	<td width="90%"> 
-	<p><font face="Verdana, Arial, Helvetica" color="#FFFFFF" size="3"><b>oscarBilling</b></font></p>
+	<p><font color="#FFFFFF" size="3"><b>oscarBilling</b></font></p>
 	</td>
 </tr>
 </table>
@@ -225,7 +239,7 @@ while (rsdiagcode.next()){
 	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr bgcolor="#393764"> 
 		<td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif" color="#000000"><b>Billing Form</b></font></td>
-		<td width="3%" bgcolor="#FFCC00" height="7"><font face="Verdana, Arial, Helvetica" ><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">X</a></b></font></td>
+		<td width="3%" bgcolor="#FFCC00" height="7"><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">X</a></b></font></td>
 	</tr>
 
 <% 
@@ -241,31 +255,31 @@ while (rsctlcode.next()){
 	ctlCount++;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
-		<td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
+		<td colspan="2"><b><font size="-2" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
 	</tr>
 <% } %>
 	</table>
 </div>
 
-<form name="serviceform" id="serviceform" action="billingReview.jsp"  method="POST" > 
+<form name="serviceform" id="serviceform" action="billingReview.jsp"  method="POST" onSubmit="return(checkData());"> 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" <%=bNew?"":"datasrc='#xml_list'"%>>
 <tr> 
 	<td valign="top" height="221"> 
 
 	<table width="107%" border="0" cellspacing="0" cellpadding="0">
 	<tr>
-		<td width="12%"><font face="Verdana, Arial, Helvetica" size="-2"><b>Patient</b>:</font></td>
-		<td><font face="Verdana, Arial, Helvetica" size="-2"><u><%=demoname%></u><%=billingdatetime%></font></td>
-		<td><font face="Verdana, Arial, Helvetica" size="-2"><b>Patient 
-		Status</b>:</font><font face="Verdana, Arial, Helvetica" size="1"><%=DemoStatus%> 
+		<td width="12%"><font size="-2"><b>Patient</b>:</font></td>
+		<td><font size="-2"><u><%=demoname%></u><%=billingdatetime%></font></td>
+		<td><font size="-2"><b>Patient 
+		Status</b>:</font><font size="1"><%=DemoStatus%> 
 		&nbsp;&nbsp;&nbsp;&nbsp; <b>Roster Status: <%=DemoRoster%></b></font></td>
-		<td width="19%"><font size="1" face="Verdana, Arial, Helvetica"><strong>Assigned 
+		<td width="19%"><font size="1" ><strong>Assigned 
 		Physician</strong></font></td>
 		<td width="24%"><%=assgProvider_name%></td>
 	</tr><tr> 
-		<td width="12%"><b><font face="Verdana, Arial, Helvetica" size="1">Age:</font></b></td>
-		<td><b><font face="Verdana, Arial, Helvetica" size="1"><%=age%></font></b></td>
-		<td><b><font size="1" face="Verdana, Arial, Helvetica">
+		<td width="12%"><b><font size="1">Age:</font></b></td>
+		<td><b><font size="1"><%=age%></font></b></td>
+		<td><b><font size="1" >
 		<a href="#" onClick="showHideLayers('Layer1','','show');return false;">Billing form</a>:</font></b>
 <% 
 rsctlcode = null;  
@@ -277,7 +291,7 @@ while (rsctlcode.next()){
 %>
 <%=ctlcodename.length()<30 ? ctlcodename : ctlcodename.substring(0,30)%>
 
-		</td><td width="19%"><font face="Verdana, Arial, Helvetica" size="-2"> 
+		</td><td width="19%"><font size="-2"> 
 <%
 /*
 if( !bNew ) { //the old billing form
@@ -288,7 +302,7 @@ if( !bNew ) { //the old billing form
 */
 %>
 		<b>Billing Physician</b> </font></td>
-		<td width="24%"><font face="Verdana, Arial, Helvetica" size="-2"> 
+		<td width="24%"><font size="-2"> 
 		<select name="xml_provider" datafld='xml_provider'>
 			<option value="000000" <%=providerview.equals("000000")?"selected":""%>><b>Select Provider</b></option>
 <% 
@@ -304,8 +318,8 @@ while(rslocal.next()){
 <% }  %>
 		</select></font></td>
 	</tr><tr> 
-		<td width="12%"><font face="Verdana, Arial, Helvetica" size="-2"><b>Billing Type</b> </font></td>
-		<td width="12%"><font face="Verdana, Arial, Helvetica" size="-2"> 
+		<td width="12%"><font size="-2"><b>Billing Type</b> </font></td>
+		<td width="12%"><font size="-2"> 
 		<select name="xml_billtype" datafld='xml_billtype' >
 			<option value="ODP | Bill OHIP" selected>Bill OHIP</option>
 			<option value="PAT | Bill Patient">Bill Patient</option>
@@ -313,7 +327,7 @@ while(rslocal.next()){
 			<option value="WCB | Worker's Compensation Board">WSIB</option>
 		</select>
 		</font></td>
-		<td width="33%"><font face="Verdana, Arial, Helvetica" size="-2"> 
+		<td width="33%"><font size="-2"> 
 <% 
 if (appt_no.compareTo("0") == 0) {
 %>
@@ -326,8 +340,8 @@ if (appt_no.compareTo("0") == 0) {
 		<input type="text" name="xml_appointment_date" readonly value="<%=request.getParameter("appointment_date")%>" size="12" datafld='xml_appointment_date'>
 <%} %>
 		</font></td>
-		<td width="19%"><font size="-2" face="Verdana, Arial, Helvetica"><b>Visit Type</b> </font></td>
-		<td width="24%"> <font size="-2" face="Verdana, Arial, Helvetica"> 
+		<td width="19%"><font size="-2" ><b>Visit Type</b> </font></td>
+		<td width="24%"> <font size="-2" > 
 		<select name="xml_visittype" datafld='xml_visittype'>
 			<option value="00| Clinic Visit"  selected>00 | Clinic Visit</option>
 			<option value="01| Outpatient Visit">01 | Outpatient Visit</option>
@@ -337,9 +351,9 @@ if (appt_no.compareTo("0") == 0) {
 		</select>
 		</font></td>
 	</tr><tr> 
-		<td width="12%"><font face="Verdana, Arial, Helvetica" size="-2">
+		<td width="12%"><font size="-2">
 		<b>Visit Location</b> </font></td>
-		<td colspan="2"><font face="Verdana, Arial, Helvetica" size="-2"> 
+		<td colspan="2"><font size="-2"> 
 		<select name="xml_location" datafld='xml_location'>
 <% 
 String clinic_location="", clinic_code="";
@@ -355,10 +369,10 @@ while (rsclinic.next()){
 		</select>
 		<input type="checkbox" name="xml_referral" value="checked" <%=bNew?"":"datafld='xml_referral'"%>>
 		<b>Referral ?</b></font></td>
-		<td width="19%"><font face="Verdana, Arial, Helvetica" size="-2"> 
+		<td width="19%"><font size="-2"> 
 		<a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=admission","380","300","0");return false;'>
 		Admission Date:</a> </font></td>
-		<td width="24%"><font face="Verdana, Arial, Helvetica" size="-2"> 
+		<td width="24%"><font size="-2"> 
 
 <%
 String inPatient = oscarVariables.getProperty("inPatient");                
@@ -412,12 +426,12 @@ while(rslocal.next()){
 	if (CountService == 0) {
 %>
 		<tr bgcolor="#CCCCFF"> 
-			<td width="25%"><font face="Verdana, Arial, Helvetica" size="1" color="#000000"><b><%=headerTitle%> 
+			<td width="15%" nowrap><font size="1" color="#000000"><b><%=headerTitle%> 
 			</b></font>
 			</td>
-			<td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica" size="1" color="#000000">Description</font></b></td>
+			<td width="71%" bgcolor="#CCCCFF"><b><font size="1" color="#000000">Description</font></b></td>
 			<td width="14%" align="right"> 
-			<b><font face="Verdana, Arial, Helvetica" size="1" color="#000000">$ 
+			<b><font size="1" color="#000000">$ 
 			Fee</font></b>
 			</td>
 		</tr>
@@ -435,15 +449,15 @@ while(rslocal.next()){
 	}
 %>
 		<tr bgcolor=<%=color%>> 
-			<td width="25%" height="14"><font face="Verdana, Arial, Helvetica"> 
+			<td width="15%"  nowrap> 
 			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
-			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b></td>
-			<td width="61%" height="14"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDesc%> 
+			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b> &nbsp;</td>
+			<td width="71%"><font size="1" ><%=serviceDesc%> 
 			<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
 			</font></td>
-			<td width="14%" height="14" align="right"> 
-			<font size="1" face="Verdana, Arial, Helvetica"><%=serviceDisp%></font> 
-			<font face="Verdana, Arial, Helvetica"> 
+			<td width="14%" align="right"> 
+			<font size="1" ><%=serviceDisp%></font> 
+			 
 			<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
 			<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
 			</font>
@@ -477,15 +491,15 @@ while(rslocal.next()){
 	while(rs3.next()){
 		premiumFlag = rs3.getString("status");
 	}
-	if (CountService == 0) { // why???
+	if (CountService == 0) { // first line
 %>
 		<tr bgcolor="#CCCCFF"> 
-			<td width="25%"><b></b> 
-			<font face="Verdana, Arial, Helvetica" size="1"><b><%=headerTitle%></b></font>
+			<td width="15%" nowrap><b></b> 
+			<font size="1"><b><%=headerTitle%></b></font>
 			</td>
-			<td width="61%"><b><font face="Verdana, Arial, Helvetica" size="1" >Description</font></b></td>
+			<td width="71%"><b><font size="1" >Description</font></b></td>
 			<td width="14%"> 
-			<div align="right"><b><font face="Verdana, Arial, Helvetica" size="1" >$ Fee</font></b></div>
+			<div align="right"><b><font size="1" >$ Fee</font></b></div>
 			</td>
 		</tr>
 <% 
@@ -495,16 +509,16 @@ while(rslocal.next()){
 	}
 %>
 		<tr bgcolor=<%=CountService%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
-			<td width="25%" height="2"><font face="Verdana, Arial, Helvetica"> 
+			<td width="15%" nowrap> 
 			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
-			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b></td>
-			<td width="61%" height="2"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDesc%></font> 
-			<font face="Verdana, Arial, Helvetica"> 
+			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>&nbsp;</td>
+			<td width="71%"><font size="1" ><%=serviceDesc%></font> 
+			 
 			<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
 			</font></td>
-			<td width="14%" height="2"> 
-			<div align="right"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDisp%></font> 
-			<font face="Verdana, Arial, Helvetica"> 
+			<td width="14%"> 
+			<div align="right"><font size="1" ><%=serviceDisp%></font> 
+			 
 			<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
 			<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
 			</font></div>
@@ -543,12 +557,12 @@ while(rslocal.next()){
 	if (CountService == 0) {
 %>
 		<tr bgcolor="#CCCCFF"> 
-			<td width="25%" align="left"> 
-			<b><font face="Verdana, Arial, Helvetica" size="1" color="#000000"><%=headerTitle%></b></font>
+			<td width="15%" align="left"> 
+			<b><font size="1" color="#000000"><%=headerTitle%></b></font>
 			</td>
-			<td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica" size="1">Description</font></b></td>
+			<td width="71%" bgcolor="#CCCCFF"><b><font size="1">Description</font></b></td>
 			<td width="14%" align="right"> 
-			<b><font face="Verdana, Arial, Helvetica" size="1" >$ Fee</font></b>
+			<b><font size="1" >$ Fee</font></b>
 			</td>
 		</tr>
 <%
@@ -558,16 +572,16 @@ while(rslocal.next()){
 	}
 %>
 		<tr bgcolor=<%=CountService%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
-			<td width="25%" height="1"><b></b> <font face="Verdana, Arial, Helvetica"> 
+			<td width="15%" nowrap><b></b>  
 			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
-			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b></td>
-			<td width="61%" height="1"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDesc%></font> 
-			<font face="Verdana, Arial, Helvetica"> 
+			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>&nbsp;</td>
+			<td width="71%"><font size="1" ><%=serviceDesc%></font> 
+			 
 			<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
 			</font></td>
-			<td width="14%" height="1"> 
-			<div align="right"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDisp%></font> 
-			<font face="Verdana, Arial, Helvetica"> 
+			<td width="14%"> 
+			<div align="right"><font size="1" ><%=serviceDisp%></font> 
+			 
 			<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
 			<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
 			</font></div>
@@ -587,30 +601,30 @@ while(rslocal.next()){
 
 				<table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
 				<tr> 
-					<td><b><font size="1" face="Verdana, Arial, Helvetica">
+					<td><b><font size="1" >
 					Other service/procedure/premium codes</font></b></td>
-					<td><b><font size="1" face="Verdana, Arial, Helvetica">
+					<td><b><font size="1" >
 					# units</font></b></td>
 				</tr><tr> 
-					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<td><font size="1"> 
 					<input type="text" name="xml_other1" size="40" datafld='xml_other1'>
 					</font></td>
-					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<td><font size="1"> 
 					<input type="text" name="xml_other1_unit" size="5" maxlength="2" datafld='xml_other1_unit'>
 					</font></td>
 				</tr><tr> 
-					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<td><font size="1"> 
 					<input type="text" name="xml_other2" size="40" datafld='xml_other2'>
 					</font></td>
-					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<td><font size="1"> 
 					<input type="text" name="xml_other2_unit" size="5" maxlength="2" datafld='xml_other2_unit'>
 					</font></td>
 					</tr>
 					<tr> 
-					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<td><font size="1"> 
 					<input type="text" name="xml_other3" size="40"  datafld='xml_other3'>
 					</font></td>
-					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<td><font size="1"> 
 					<input type="text" name="xml_other3_unit" size="5" maxlength="2" datafld='xml_other3_unit'>
 					</font></td>
 				</tr><tr> 
@@ -625,7 +639,7 @@ while(rslocal.next()){
 
 			<table width="100%" border="0" cellspacing="2" cellpadding="2">
 			<tr bgcolor="#CCCCFF"> 
-				<td colspan="4"><b><font face="Verdana, Arial, Helvetica" size="1" color="#000000">
+				<td colspan="4"><b><font size="1" color="#000000">
 				Diagnostic Codes</font></b></td>
 			</tr>
 
@@ -648,9 +662,9 @@ while(rslocal.next()){
 			<input type="hidden" name="billForm" value="<%=ctlBillForm%>">
            
 			<tr bgcolor="#EEEEFF"> 
-				<td align="left" colspan="4" height="9"> <b><font face="Verdana, Arial, Helvetica" size="1">
+				<td align="left" colspan="4" height="9"> <b><font size="1">
 				<a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">
-				Diagnostic </a></font></b> <font face="Verdana, Arial, Helvetica" size="1"> 
+				Diagnostic </a></font></b> <font size="1"> 
 				<input name="xml_diagnostic_detail" value="" size="25" datafld='xml_diagnostic_detail'>
 				<a href="javascript:ScriptAttach()"><img src="images/search_dx_code.jpg" border="0"></a> 
 				&nbsp; &nbsp; 
