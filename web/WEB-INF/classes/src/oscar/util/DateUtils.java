@@ -46,7 +46,7 @@ public class DateUtils {
     }
 
     /** Compara uma data com a data atual.
-     * @param pDate Data que será comparada com a data atual.
+     * @param pDate Data que serï¿½ comparada com a data atual.
      * @param format Formato da data. Ex: dd/MM/yyyy, yyyy-MM-dd
      * @return  1 - se a data for maior que a data atual.
      * -1 - se a data for menor que a data atual.
@@ -85,8 +85,8 @@ public class DateUtils {
     }
 
 	/** Compara uma data com outra.
-	 * @param pDate Data que será comparada com pDate2.
-	 * * @param pDate2 Data que será comparada com pDate.
+	 * @param pDate Data que serï¿½ comparada com pDate2.
+	 * * @param pDate2 Data que serï¿½ comparada com pDate.
 	 * @param format Formato da data. Ex: dd/MM/yyyy, yyyy-MM-dd
 	 * @return  1 - se a data for maior que a data atual.
 	 * -1 - se a data for menor que a data atual.
@@ -176,5 +176,141 @@ public class DateUtils {
 		
 		return getDateFormatter().format(data);
 
+    }
+    
+    public String NextDay (int day, int month, int year) {    
+    
+        boolean leapyear;             
+        System.out.println("Entered Date: " + year + "-" + month + "-" + day);                
+        
+        switch (month) {
+            // the months with 31 days without december
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:                
+                if (day < 31)
+                    day++;
+                else {
+                    day = 1;
+                    month++;
+                }
+                break;
+            case 12:
+                if (day < 31)
+                    day++;
+                else {
+                    day = 1;
+                    month = 1;
+                    year++;
+                }
+                break;            
+            case 2:
+                if (day < 28)
+                    day ++;
+                else {
+                    if ( ((year % 4 == 0) && !(year % 100 == 0)) || (year % 400 == 0) )
+                        leapyear = true;
+                    else
+                        leapyear = false;
+
+                    // in a leapyear 29 days
+                    if (leapyear == true) 
+                        if (day == 28)
+                            day ++;
+                        else {
+                            day = 1;
+                            month ++;
+                        }
+                    else {
+                        day = 1;
+                        month ++;                        
+                    }                        
+                }
+                break;
+            // these are the other month 4 6 9 11
+            default:
+                if (day < 30)
+                    day++;
+                else {
+                    day = 1;
+                    month++;
+                }
+        } // switch 
+        String nextDay = year + "-" + month + "-" + day;
+        System.out.println("next day: " + nextDay);
+        return nextDay;
+    }
+    
+    public String NextDay (int day, int month, int year, int numDays) {    
+    
+        boolean leapyear;             
+        int modValue = 28;
+        System.out.println("Entered Date: " + year + "-" + month + "-" + day);                
+        
+        while(numDays>0){
+            int curNumDays = numDays % modValue;
+            if (curNumDays==0){
+                curNumDays = modValue;
+            }
+            switch (month) {
+                // the months with 31 days without december
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:                
+                    if (day+curNumDays < 31)
+                        day = day + curNumDays;
+                    else {
+                        day = (day + curNumDays) % 31;
+                        month++;
+                    }
+                    break;
+                case 12:
+                    if (day+curNumDays < 31)
+                        day = day + curNumDays;
+                    else {
+                        day = (day + curNumDays) % 31;
+                        month = 1;
+                        year++;
+                    }
+                    break;            
+                case 2:
+                    if ( ((year % 4 == 0) && !(year % 100 == 0)) || (year % 400 == 0) ){                   
+                        if (day+curNumDays < 29)
+                            day = day + curNumDays;
+                        else {
+                            day = (day + curNumDays) % 29;
+                            month++;
+                        }
+                    }
+                    else{
+                        if (day+curNumDays < 28)
+                            day = day + curNumDays;
+                        else {
+                            day = (day + curNumDays) % 28;
+                            month++;
+                        }
+                    }
+                    break;
+                // these are the other month 4 6 9 11
+                default:
+                    if (day+curNumDays < 30)
+                        day = day + curNumDays;
+                    else{
+                        day = (day + curNumDays) % 30;
+                        month++;
+                    }
+            } // switch 
+            numDays = numDays - curNumDays;
+            System.out.println("curNumDays: " + curNumDays + " ; numDays: " + numDays);
+        }
+        String nextDay = year + "-" + month + "-" + day;
+        System.out.println("next few day: " + nextDay);
+        return nextDay;
     }
 }
