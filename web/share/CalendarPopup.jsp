@@ -96,7 +96,7 @@ int [][] dateGrid = aDate.getMonthDateGrid();
 </tr>
 </table>
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
+<table width="100%" border="0" cellspacing="1" cellpadding="2"  bgcolor="silver" >
 <tr bgcolor="#CCCCFF" align="center"> 
 	<th width="14%"><font color="red">Sun</font></td>
 	<th width="14%">Mon</font></td>
