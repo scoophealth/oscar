@@ -133,7 +133,7 @@ function checkTypeIn() {
   }
 }
 
-function checkTypeInEdit() {
+function checkTypeInEdit() {  
   var typeInOK = false;
     if(document.updatedelete.last_name.value!="" && document.updatedelete.first_name.value!="" && document.updatedelete.sex.value!="") {
       if(checkTypeNum(document.updatedelete.year_of_birth.value) && checkTypeNum(document.updatedelete.month_of_birth.value) && checkTypeNum(document.updatedelete.date_of_birth.value) ){
@@ -163,12 +163,19 @@ function checkTypeNum(typeIn) {
 	} else typeInOK = false;
 	return typeInOK;
 }
-function checkPhoneNum() {
-  var typeIn = document.updatedelete.phone.value ;
-  while(typeIn.indexOf('-') > 0 ) {
-    typeIn = typeIn.replace("-", "") ;
-  }
-  document.updatedelete.phone.value = typeIn ;
+function formatPhoneNum() {    
+    if (document.updatedelete.phone.value.length == 10) {
+        document.updatedelete.phone.value = document.updatedelete.phone.value.substring(0,3) + "-" + document.updatedelete.phone.value.substring(3,6) + "-" + document.updatedelete.phone.value.substring(6);
+        }
+    if (document.updatedelete.phone.value.length == 11 && document.updatedelete.phone.value.charAt(3) == '-') {
+        document.updatedelete.phone.value = document.updatedelete.phone.value.substring(0,3) + "-" + document.updatedelete.phone.value.substring(4,7) + "-" + document.updatedelete.phone.value.substring(7);
+    }        
+    if (document.updatedelete.phone2.value.length == 10) {
+        document.updatedelete.phone2.value = document.updatedelete.phone2.value.substring(0,3) + "-" + document.updatedelete.phone2.value.substring(3,6) + "-" + document.updatedelete.phone2.value.substring(6);
+        }  
+    if (document.updatedelete.phone2.value.length == 11 && document.updatedelete.phone2.value.charAt(3) == '-') {
+        document.updatedelete.phone2.value = document.updatedelete.phone2.value.substring(0,3) + "-" + document.updatedelete.phone2.value.substring(4,7) + "-" + document.updatedelete.phone2.value.substring(7);
+    }        
 }
 function checkONReferralNo() {
   var referralNo = document.updatedelete.r_doctor_ohip.value ;
@@ -194,7 +201,7 @@ function newStatus() {
 </script>
 
 </head>
-<body onLoad="setfocus(); checkONReferralNo();" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();" topmargin="0" leftmargin="0" rightmargin="0">
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
@@ -486,19 +493,12 @@ function newStatus() {
                             <tr valign="top"> 
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneH"/>: </b> </td>
                               <td align="left" > 
-                                <input type="text" name="phone" size="30" value="
-                        <%
-                        if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
-                          out.print(rs.getString("phone").substring(0,3) + "-" + rs.getString("phone").substring(3,6) +"-"+  rs.getString("phone").substring(6) );
-                        } else {
-                          out.print(rs.getString("phone") );
-                        }
-                        %>
-                        ">
+                                <%-- // <input type="text" name="phone" size="30" value="<%=rs.getString("phone")!=null && rs.getString("phone").length()==10?rs.getString("phone").substring(0,3) + "-" + rs.getString("phone").substring(3,6) +"-"+  rs.getString("phone").substring(6):rs.getString("phone")%>">--%>
+                                <input type="text" name="phone" size="30" onblur="formatPhoneNum();" value="<%=rs.getString("phone")%>">
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:</b> </td>
                               <td  align="left"> 
-                                <input type="text" name="phone2" size="30" value="<%=rs.getString("phone2")%>">
+                                <input type="text" name="phone2" size="30" onblur="formatPhoneNum();" value="<%=rs.getString("phone2")%>">
                               </td>
                             </tr>
                             <tr valign="top"> 
