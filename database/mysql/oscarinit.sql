@@ -744,7 +744,8 @@ CREATE TABLE form (
   form_time time NOT NULL default '00:00:00',
   form_name varchar(50) default NULL,
   content text,
-  PRIMARY KEY  (form_no)
+  PRIMARY KEY  (form_no),
+  KEY 'form_select' ('demographic_no', 'form_name')
 ) TYPE=MyISAM;
 
 --
