@@ -30,6 +30,13 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
+<% 
+    boolean readonly = false;
+    String readOnlyParam = request.getParameter("readonly");
+    if(readOnlyParam != null && readOnlyParam.equals("true")){
+       readonly = true;   
+    }
+%>
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
@@ -173,7 +180,7 @@ function popup( height, width, url, windowName){
 	<tr>
 		<td>
 		Prior/Other Problems Affecting Injury, Recovery and Disability</td><td>
-              <textarea name="w_problem" cols="50" id="w_problem" style="height:50px;width:100%;" value="<%=form.getW_problem()%>"></textarea>
+              <textarea name="w_problem" cols="50" id="w_problem" style="height:50px;width:100%;" ><%=form.getW_problem()%></textarea>
 		</td>
 	</tr>
 	<tr class="LightBG">
@@ -192,7 +199,7 @@ function popup( height, width, url, windowName){
 	<tr>
 		<td>
 			Diagnosis:</td>
-          <td><input name="w_diagnosis" type="text" maxlength="120" size="120" id="w_diagnosis">
+          <td><input name="w_diagnosis" type="text" maxlength="120" size="120" id="w_diagnosis" value="<%=form.getW_diagnosis()%>">
 		</td>
 	</tr>
 	<tr>
@@ -266,7 +273,7 @@ function popup( height, width, url, windowName){
 		<td td align="left" valign="top">
 		Clinical Information:<br><small>What happened?<br>Subjective Symptoms<br>Examination<br>Investigations<br>Treatment, Meds</small>
 		</td><td td align="left" valign="top">
-		<textarea name="w_clinicinfo" class="mhAssTextarea" id="w_clinicinfo" style="height:80px;width:100%;" value="<%=form.getW_clinicinfo()%>"></textarea> 
+		<textarea name="w_clinicinfo" class="mhAssTextarea" id="w_clinicinfo" style="height:80px;width:100%;" ><%=form.getW_clinicinfo()%></textarea> 
 		</td>
 	</tr>
 	<tr>
@@ -339,10 +346,10 @@ function popup( height, width, url, windowName){
     </tr>
     <tr>
     	<td colspan="2" align="right" valign="top" class="DarkBG">
-    		<input type="button" value="Back" onClick="history.back();"></input> |
-			<input type="button" name="Button" value="Cancel" onClick="window.close();"> | 
-			<input type="button" name="Button" value="Print" onClick="window.print()"> |
-            <input type="submit" value="Save"/>
+    	   <%if(!readonly){%><input type="button" name="Submit3" value="Go Back" onClick="location.href='billingBC.jsp?loadFromSession=yes'"/>|<%}%>
+			<input type="button" name="Button" value="Cancel" onClick="window.close();"/> | 
+			<input type="button" name="Button" value="Print" onClick="window.print()"/> |
+         <%if(!readonly){%><input type="submit" value="Save"/><%}%>
     	</td>
     </tr>
 </table> 
