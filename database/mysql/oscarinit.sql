@@ -4921,7 +4921,10 @@ CREATE TABLE measurements(
   comments varchar(255) NOT NULL, 
   dateObserved datetime NOT NULL, 
   dateEntered datetime NOT NULL,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  KEY type (type),
+  KEY measuringInstruction (measuringInstruction),
+  KEY demographicNo (demographicNo)
 ) TYPE=MYISAM;
 
 --
@@ -4957,7 +4960,8 @@ CREATE TABLE measurementsDeleted(
 DROP TABLE IF EXISTS measurementGroup;
 CREATE TABLE measurementGroup(
   name varchar(100) NOT NULL,
-  typeDisplayName varchar(20) 
+  typeDisplayName varchar(20), 
+  KEY name (name)
 ) TYPE =MyISAM;
 
 --
@@ -4983,7 +4987,10 @@ CREATE TABLE measurementType (
   typeDescription varchar(255) NOT NULL, 
   measuringInstruction varchar(255) NOT NULL, 
   validation varchar(100) NOT NULL,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  KEY id (id),
+  KEY type (type),
+  KEY measuringInstruction (measuringInstruction)
 ) TYPE =MyISAM;
 
 --
