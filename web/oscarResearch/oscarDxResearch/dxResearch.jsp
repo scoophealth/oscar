@@ -135,7 +135,7 @@ function submitform(form){
 </style>  
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="5" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')">
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="5" marginwidth="0" marginheight="0" onLoad="setfocus()">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr bgcolor="#000000"> 
