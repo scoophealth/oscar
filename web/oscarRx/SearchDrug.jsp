@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+<%@ page import="oscar.oscarRx.data.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -15,6 +16,15 @@
 </logic:present>
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+%>
+
+<% RxPharmacyData pharmacyData = new RxPharmacyData();
+  RxPharmacyData.Pharmacy pharmacy ;                                  
+  pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));                                  
+  String prefPharmacy = "";
+  if (pharmacy != null){   
+     prefPharmacy = pharmacy.name;                                  
+  }
 %>
 
 <!--  
@@ -50,6 +60,17 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 <link rel="stylesheet" type="text/css" href="styles.css">
 
 <html:base />
+
+<style type="text/css">
+table.hiddenLayer {	
+	height: 200px;        	
+	margin-left: 20px;
+	border: 1px solid #dcdcdc;
+	background-color: #f5f5f5
+
+}
+
+</style>
 <script type="text/javascript">
 
     function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
@@ -94,6 +115,38 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
         }
         return true;
     }
+    
+    function showpic(picture){
+     if (document.getElementById){ // Netscape 6 and IE 5+      
+        var targetElement = document.getElementById(picture);                
+        var bal = document.getElementById("Calcs");
+
+        var offsetTrail = document.getElementById("Calcs");
+        var offsetLeft = 0;
+        var offsetTop = 0;
+        while (offsetTrail) {
+           offsetLeft += offsetTrail.offsetLeft;
+           offsetTop += offsetTrail.offsetTop;
+           offsetTrail = offsetTrail.offsetParent;
+        }
+        if (navigator.userAgent.indexOf("Mac") != -1 && 
+           typeof document.body.leftMargin != "undefined") {
+           offsetLeft += document.body.leftMargin;
+           offsetTop += document.body.topMargin;
+        }
+            
+        targetElement.style.left = offsetLeft +bal.offsetWidth;        
+        targetElement.style.top = offsetTop;	
+        targetElement.style.visibility = 'visible';        
+     }
+  }
+
+  function hidepic(picture){
+     if (document.getElementById){ // Netscape 6 and IE 5+
+        var targetElement = document.getElementById(picture);
+        targetElement.style.visibility = 'hidden';
+     }
+  }
 </script>
 </head>
 
@@ -144,6 +197,11 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                             <td>
                                 <b><bean:message key="SearchDrug.ageText"/></b>
                                 <jsp:getProperty name="patient" property="age"/>
+                            </td>
+                            <td></td>
+                            <td>                               
+                               <b>Prefered Pharmacy :</b>
+                               <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');"  id="Calcs" ><%=prefPharmacy%></a>                               
                             </td>
                         </tr>
                         <oscarProp:oscarPropertiesCheck property="PHR" value="yes">
@@ -418,9 +476,105 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
     </tr>
 
 </table>
+
+
+                                                         
+                                                                
+                                                                   
+      
+<% if (pharmacy != null ){ %>
+<div id="Layer1" style="position:absolute; left:1px; top:1px; width:350px; height:311px; visibility: hidden; z-index:1"   >
+<!--  This should be changed to automagically fill if this changes often -->      
+                       
+<table  border="0" cellspacing="1" cellpadding="1" align=center class="hiddenLayer">
+    <tr class="LightBG"> 
+      <td class="wcblayerTitle">&nbsp;</td>
+      <td class="wcblayerTitle">&nbsp;</td>   
+      <td class="wcblayerTitle" align="right">
+             <a href="javascript: function myFunction() {return false; }" onclick="hidepic('Layer1');" style="text-decoration: none;">X</a>           
+      </td>
+    </tr>
+   
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Name
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>
+          <td><%=pharmacy.name%></td>
+    </tr>                  
+  
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Address
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.address%></td>
+    </tr>                  
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">               
+          City                 
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.city%></td>
+    </tr>                  
+	                        
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Province
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.province%></td>
+    </tr>                  
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Postal Code :
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.postalCode%></td>
+    </tr>                  	                          
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Phone 1 :
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.phone1%></td>
+    </tr>                  	                          
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Phone 2 :
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.phone2%></td>
+    </tr>                  	                                                                                        
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Fax :
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.fax%></td>
+    </tr>                  	
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+          Email :
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>	       
+          <td><%=pharmacy.email%></td>
+    </tr>                  	                                                                                                                                                                                
+    <tr class="LightBG"> 
+          <td colspan="3" class="wcblayerTitle">
+          Notes :
+          </td>          
+    </tr>                  	                                                                                                                                                                                
+    <tr class="LightBG">           
+          <td colspan="3"><%=pharmacy.notes%></td>
+    </tr>                  	                                                                                                                                                                                
+    
+  </table>
+                                
+</div>
+<%}%>
 </body>
 </html:html>
-
 
 
 
