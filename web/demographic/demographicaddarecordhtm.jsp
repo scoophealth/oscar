@@ -241,7 +241,7 @@ function checkTypeIn() {
           <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
-          <option value=""<%=province.equals("")?" selected":""%>>Other</option>
+          <option value=""  <%=billregion.equals("")?" selected":""%>>Other</option>
         </select>
         <% } %>
       </td>
