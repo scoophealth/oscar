@@ -217,6 +217,44 @@
  </target>
 
  
+ <target name="oscarcomm-jar" depends="web">
+        <echo message="${classes_web}/oscar/comm/**" />
+        <jar destfile="${build}/oscarcomm.jar">
+             
+             <fileset dir="${classes_web}">
+                <exclude name="oscar/oscarEncounter/**"/>
+                <exclude name="oscar/appt/**"/>
+                <exclude name="oscar/billing/**"/>
+                <exclude name="oscar/descision/**"/>
+                <exclude name="oscar/eform/**"/>
+                <exclude name="oscar/form/**"/>
+                <exclude name="oscar/login/**"/>
+                <exclude name="oscar/oscarBilling/**"/>
+                <exclude name="oscar/oscarClinic/**"/>
+                <exclude name="oscar/oscarMDS/**"/>
+                <exclude name="oscar/oscarDemographic/**"/>
+                <exclude name="oscar/oscarFax/**"/>
+                <exclude name="oscar/oscarMessenger/**"/>
+                <exclude name="oscar/oscarProvider/**"/>
+                <exclude name="oscar/oscarReport/**"/>
+                <exclude name="oscar/oscarResearch/**"/>
+                <exclude name="oscar/oscarRx/**"/>
+                <exclude name="oscar/oscarSecurity/**"/>                
+                <exclude name="oscar/decision/**"/>
+                <exclude name="oscar/*.class"/>
+                <exclude name="*"/>
+                <exclude name="bean/**"/>
+             </fileset>
+               <!-- <include name="${classes_web}/oscar/oscarDB/**"/>                
+                <include name="${classes_web}/oscar/util/**"/>                
+                <include name="${classes_web}/oscar/Misc.class"/>                -->
+            <!--</fileset>-->
+            <manifest>
+                <attribute name="Built-By" value="oscarmcmaster"/>
+            </manifest>
+        </jar>
+    </target>
+ 
  <target name="mdsfile" depends="init">
   <javac 
 	 srcdir="${mdsfiledir}"     
