@@ -104,11 +104,12 @@ function calculateEndTime() {
   if(document.ADDAPPT.keyword.value.substring(0,1)=="." && document.ADDAPPT.demographic_no.value=="" ) {
     document.ADDAPPT.status.value = 'N' ;
   }
+  return true;
 }
 
 function onButRepeat() {
 	document.forms[0].action = "appointmentrepeatbooking.jsp" ;
-	document.forms[0].submit();
+	if (calculateEndTime()) { document.forms[0].submit(); }
 }
 // stop javascript -->
 </script>
