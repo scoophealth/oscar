@@ -85,6 +85,16 @@ session.setAttribute("ohipdownload", ohipdownload);
 function setfocus() {
 	this.focus();
 }
+var checkSubmitFlg = false;
+function checkSubmit() {
+	if (checkSubmitFlg == true) {
+		return false;      
+	}
+	checkSubmitFlg = true;
+	document.forms[0].Submit.disabled = true;
+	return true;   
+}
+
 function reloadPage(init) {  //reloads the window if Nav4 resized
 if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
 document.pgW=innerWidth; document.pgH=innerHeight; onresize=reloadPage; }}
@@ -139,7 +149,7 @@ obj.visibility=v; }
 
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-<form name="form1" method="post" action="<%=oscarVariables.getProperty("group_billing", "").trim().equals("on")?"genGroupReport.jsp" : "genreport.jsp"%>">
+<form name="form1" method="post" action="<%=oscarVariables.getProperty("group_billing", "").trim().equals("on")?"genGroupReport.jsp" : "genreport.jsp"%>"  onsubmit="return checkSubmit();">
 <tr> 
 	<td width="220">
 	<a href="#" onClick="showHideLayers('Layer2','','show')">Show Archive</a>
