@@ -24,7 +24,8 @@ public class FrmBCNewBornRecord extends FrmRecord {
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
                 props.setProperty("c_surname", rs.getString("last_name"));
-                props.setProperty("c_givenName", rs.getString("first_name"));
+                //props.setProperty("c_givenName", rs.getString("first_name"));
+                props.setProperty("c_motherName", rs.getString("first_name") + " " + rs.getString("last_name"));
                 props.setProperty("c_address", rs.getString("address"));
                 props.setProperty("c_city", rs.getString("city"));
                 props.setProperty("c_province", rs.getString("province"));

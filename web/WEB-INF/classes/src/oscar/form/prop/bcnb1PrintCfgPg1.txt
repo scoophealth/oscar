@@ -131,7 +131,7 @@
  pg1_phyAgeWk      : left, 477, 355, 0, BaseFont.HELVETICA, 8
  pg1_phy1Normal    : left, 297, 384, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy1Abnormal  : left, 323, 384, 0, BaseFont.HELVETICA, 8 , X 
- pg1_phy1Comm      : left, 375, 366, 0, BaseFont.HELVETICA, 8, _, 675, 414, 9
+ pg1_phy1Comm      : left, 375, 366, 0, BaseFont.HELVETICA, 8, _, 560, 414, 9
  pg1_phy1Temp      : left, 570, 370, 0, BaseFont.HELVETICA, 8
  pg1_phy1RR        : left, 570, 380, 0, BaseFont.HELVETICA, 8
  pg1_phy1HR        : left, 570, 391, 0, BaseFont.HELVETICA, 8
@@ -142,47 +142,57 @@
  pg1_phy2Mec       : left, 384, 404, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy2Peel      : left, 384, 415, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy2Jaun      : left, 384, 426, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy2Comm      : left, 430, 395, 0, BaseFont.HELVETICA, 8, _, 590, 426, 9
  pg1_phy3Normal    : left, 298, 449, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy3Abnormal  : left, 323, 449, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy3Comm      : left, 340, 440, 0, BaseFont.HELVETICA, 8, _, 590, 460, 9
  pg1_phy4Eent      : left, 298, 470, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy4Cleft     : left, 323, 470, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy4Micro     : left, 323, 480, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy4Susp      : left, 384, 470, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy4Comm      : left, 410, 470, 0, BaseFont.HELVETICA, 8, _, 590, 480, 9
  pg1_phy5Normal    : left, 298, 502, 0, BaseFont.HELVETICA, 8 , X
  pg1_phy5Grunt     : left, 323, 502, 0, BaseFont.HELVETICA, 8 , X
  pg1_phy5Nasal     : left, 323, 513, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy5Retract   : left, 323, 524, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy5Shallow   : left, 384, 502, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy5Tachy     : left, 384, 513, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy5Comm      : left, 448, 488, 0, BaseFont.HELVETICA, 8, _, 590, 510, 9
  pg1_phy6Normal    : left, 298, 545, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy6Murmur    : left, 323, 545, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy6Central   : left, 323, 555, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy6Abn       : left, 384, 545, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy6AbnRate   : left, 384, 555, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy6Comm      : left, 475, 530, 0, BaseFont.HELVETICA, 8, _, 590, 560, 9
  pg1_phy7Normal    : left, 298, 577, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy7Scaph     : left, 323, 577, 0, BaseFont.HELVETICA, 8 , X
  pg1_phy7Distention : left, 323, 588, 0, BaseFont.HELVETICA, 8 , X
  pg1_phy7Hepato    : left, 323, 600, 0, BaseFont.HELVETICA, 8 , X
  pg1_phy7Spleno    : left, 384, 577, 0, BaseFont.HELVETICA, 8 , X
  pg1_phy7Abn       : left, 384, 588, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy7Comm      : left, 438, 570, 0, BaseFont.HELVETICA, 8, _, 590, 600, 9
  pg1_phy8Umbilical : left, 298, 616, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy8Mec       : left, 323, 616, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy8Vess      : left, 323, 627, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy8Thin      : left, 384, 616, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy8Comm      : left, 420, 606, 0, BaseFont.HELVETICA, 8, _, 590, 620, 9
  pg1_phy9Genito    : left, 298, 643, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy9Hypos     : left, 323, 643, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy9Imper     : left, 323, 653, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy9UndesTest : left, 384, 643, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy9Comm      : left, 455, 630, 0, BaseFont.HELVETICA, 8, _, 590, 660, 9
  pg1_phy10Muscu    : left, 298, 670, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy10Spine    : left, 323, 670, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy10Hip      : left, 323, 681, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy10Extre    : left, 384, 670, 0, BaseFont.HELVETICA, 8 , X 
+ pg1_phy10Comm     : left, 420, 670, 0, BaseFont.HELVETICA, 8, _, 590, 680, 9
  pg1_phy11Neuro    : left, 298, 701, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy11Hypo     : left, 323, 701, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy11Cry      : left, 323, 713, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy11Jittery  : left, 384, 701, 0, BaseFont.HELVETICA, 8 , X 
  pg1_phy11Reflexes : left, 384, 713, 0, BaseFont.HELVETICA, 8 , X 
- pg1_phy12Other    : left, 298, 717, 0, BaseFont.HELVETICA, 7 , _, 598, 775, 8
+ pg1_phy11Comm     : left, 420, 690, 0, BaseFont.HELVETICA, 8, _, 590, 700, 9
+ pg1_phy12Other    : left, 298, 719, 0, BaseFont.HELVETICA, 7 , _, 598, 775, 8
  pg1_Date          : left, 271, 762, 0, BaseFont.HELVETICA, 8
  pg1_Time          : left, 334, 762, 0, BaseFont.HELVETICA, 8
  pg1_Signature     : left, 408, 762, 0, BaseFont.HELVETICA, 8
