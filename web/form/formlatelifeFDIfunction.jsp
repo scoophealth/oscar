@@ -307,7 +307,7 @@
             document.getElementById('page3').style.display = 'none';  
             document.getElementById('page4').style.display = 'none';
             document.getElementById('page5').style.display = 'block';
-            document.getElementById('subject2').style.display = 'block';
+            //document.getElementById('subject2').style.display = 'block';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
         }
@@ -324,7 +324,7 @@
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,732)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -341,14 +341,14 @@
 <input type="hidden" name="formId" value="<%=formId%>" />
 <input type="hidden" name="submit" value="exit"/>
 
-<table border="0" cellspacing="1" cellpadding="0" width="740px" height="95%">
+<table border="0" cellspacing="1" cellpadding="0" width="735px" height="95%">
 <tr>    
     <td valign="top" colspan="2">
-    <table border="0" cellspacing="0" cellpadding="0" width="740px" height="10%">
+    <table border="0" cellspacing="0" cellpadding="0" width="735px" height="10%">
         <tr>
             <th class="lefttopCell" width="17%">&nbsp;</th>
             <th class="subject">
-                Late Life FDI: Function Question <br>
+                Late Life FDI: Function Component <br>
                 <table style="display:none" id="subject2">
                     <tr><th class="subject" style="border: 0px">
                         For those who use walking devices
@@ -417,11 +417,11 @@
                             routines.  I am interested in your <font style="font-style: italic">sense of your ability</font> to do it on
                             a typical day. It is not important that you actually do the activity on a daily basis.  In fact, I may mention
                             some activities that you do not do at all. You can still answer these questions by assessing how difficult you
-                            <font style="text-decoration: underline"> think they would be for you to do on an average day.</font>
+                            <font style="text-decoration: underline"> think</font> they would be for you to do on an average day.
                             <br>
                             <br>
                             Factors that influence the level of difficulty you have may include: pain, fatigue, fear, weakness, soreness,
-                            ailments, health conditions, or disabilites.
+                            ailments, health conditions, or disabilities.
                             <br>
                             <br>
                             I want you to know how difficult the activity would be for you to do <font style="text-decoration: underline">
@@ -497,7 +497,6 @@
             </td>
         </tr>        
     </table>
-    
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="visualAid1">        
         <tr>        
             <td valign="top" colspan="2">
@@ -570,7 +569,6 @@
             </td>
         </tr>        
     </table>
-    
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="visualAid2">        
         <tr>        
             <td valign="top" colspan="2">
@@ -652,7 +650,6 @@
             </td>
         </tr>        
     </table>
-    
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="page1">        
         <tr>        
             <td valign="top" colspan="2">
@@ -774,7 +771,6 @@
             </td>
         </tr>
     </table>
-    
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page2" >    
         <tr>        
             <td valign="top" colspan="2">
@@ -898,7 +894,6 @@
             </td>
         </tr>
     </table>
-    
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page3" >    
         <tr>        
             <td valign="top" colspan="2">
@@ -1022,7 +1017,6 @@
             </td>
         </tr>
     </table>
-    
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page4" >    
         <tr>        
             <td valign="top" colspan="2">
@@ -1141,23 +1135,21 @@
             <td align="left">
                 <a href="javascript: goToPage3();"><< Previous Page</a>
             </td>
-            <td align="right">
-                <a href="javascript: goToPage5();">Next Page >></a>
+            <td align="right">                
             </td>
         </tr>
     </table>
-    
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page5" >    
         <tr>        
             <td valign="top" colspan="2">
-                   <table width="100%" height="540px" border="0"  cellspacing="1px" cellpadding="0" >                                   
+                   <table width="100%" height="590px" border="0"  cellspacing="1px" cellpadding="0" >                                   
                     <tr class="title">
                         <th colspan="7">
                             <table border="0" cellspacing="0" cellpadding="0">
-                                <tr class="title" ><th>How much difficulty do you have...?</th></tr>
-                                <tr class="title" ><th align="left"><font style="font-size: 65%; text-align:left;">(Remember this is without the help of someone else and without the use of any
-                                        assistive walking device.)</font>
-                                </tr></th>
+                                <tr class="title" >
+                                    <th>When you use your cane, walker, or other walking device, how much difficulty do you have...?
+                                    </th>
+                                </tr>                                
                             </table>
                         </th>                        
                     </tr> 
@@ -1263,9 +1255,10 @@
         </tr>    
         <tr class="subject">
             <td align="left">
-                <a href="javascript: goToPage4();"><< Previous Page</a>
+                &nbsp;
             </td>
-            <td align="right">           
+            <td align="right">
+                 &nbsp;
             </td>
         </tr>
     </table>
