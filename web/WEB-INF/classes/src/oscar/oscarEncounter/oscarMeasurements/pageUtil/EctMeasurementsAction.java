@@ -137,7 +137,8 @@ public class EctMeasurementsAction extends Action {
                         iMax = rs.getInt("maxLength");
                         iMin = rs.getInt("minLength");
                         regExp = rs.getString("regularExp");
-                    }                                                                                                                        
+                    }     
+                    rs.close();
 	
                     if(!ectValidation.isInRange(dMax, dMin, inputValue)){                       
                         errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
