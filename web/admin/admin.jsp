@@ -361,7 +361,12 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <tr  bgcolor="#EEEEFF">
       <td><a href="#" ONCLICK ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></td>
     </tr>
-  <% } %>
+	<% if (oscarVariables.getProperty("billregion","").equals("ON")){    %>
+    <tr  bgcolor="#EEEEFF">
+      <td><a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilledphcp.jsp');return false;">PHCP</a>
+        <font size="-2">(Setting: <a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilledvisitprovider.jsp');return false;">provider</a>, <a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilleddxgrp.jsp');return false;">dx category</a>)</font></td>
+    </tr>
+  <% } } %>
 
   </table>
 
