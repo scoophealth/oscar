@@ -57,14 +57,15 @@ public class FrmRecordHelp {
         rs.insertRow();
         String saveAsXml = OscarProperties.getInstance().getProperty("save_as_xml", "false"); 
         System.out.println("the value of save_as_xml is: " + saveAsXml);
-        if(saveAsXml.equalsIgnoreCase("true")){
+        
+	if(saveAsXml.equalsIgnoreCase("true")){
             //System.out.println("savs as XML");
             String demographicNo = props.getProperty("demographic_no");
             int index = sql.indexOf("form");
             int spaceIndex = sql.indexOf(" ",index);;            
-            String formClass = sql.substring(index, spaceIndex);
-            java.util.Date d = UtilDateUtilities.Today();            
-            String now = UtilDateUtilities.DateToString(d, "yyyyMMddhhmmss");
+            String formClass = sql.substring(index, spaceIndex);            
+            Date d = UtilDateUtilities.now();
+            String now = UtilDateUtilities.DateToString(d,"yyyyMMddHHmmss");
             String place= OscarProperties.getInstance().getProperty("form_record_path", "/root");            
             
             if(!place.endsWith(System.getProperty("file.separator")))
