@@ -3499,7 +3499,7 @@ DROP TABLE IF EXISTS measurementType;
 CREATE TABLE measurementType (
   id int UNSIGNED AUTO_INCREMENT,
   type varchar(4) NOT NULL,
-  typeDisplayName varchar(20) NOT NULL,
+  typeDisplayName varchar(255) NOT NULL,
   typeDescription varchar(255) NOT NULL, 
   measuringInstruction varchar(255) NOT NULL, 
   validation varchar(100) NOT NULL,
@@ -3817,6 +3817,7 @@ CREATE TABLE reportByExamplesFavorite(
   id int(9) auto_increment ,
   providerNo varchar(6) NOT NULL,
   query blob NOT NULL,  
+  name varchar(255) NOT NULL,
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
