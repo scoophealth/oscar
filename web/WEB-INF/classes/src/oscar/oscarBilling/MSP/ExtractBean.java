@@ -23,22 +23,20 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarBilling.MSP;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.io.Serializable;
-import java.io.*;
-import java.math.*;
-import java.net.*;
-import java.lang.*;
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.ListIterator;
-import java.util.Properties;
-import java.util.GregorianCalendar;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
-import oscar.*;
 
 
 public class ExtractBean extends Object implements Serializable {
@@ -134,6 +132,9 @@ public class ExtractBean extends Object implements Serializable {
     public String user;
     public String password;
     public String sdriver;
+    public String errorMsg;
+    
+    public CheckBillingData checkData = new CheckBillingData();
     
     
     
@@ -141,8 +142,6 @@ public class ExtractBean extends Object implements Serializable {
         formatter = new SimpleDateFormat("yyyyMMddHmm");
         today = new java.util.Date();
         output = formatter.format(today);
-        
-        
     }
     
     public void dbQuery(String[] dbP){
@@ -160,7 +159,8 @@ public class ExtractBean extends Object implements Serializable {
             if (vsFlag == 0) {
                 logNo = getSequence(sdriver, surl, user, password);
                 batchHeader = "VS1" + dataCenterId + forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + space(25) + space(57) + "\r";
-                //System.out.println("BH:" + batchHeader);
+                errorMsg = checkData.checkVS1("VS1" , dataCenterId , forwardZero(logNo,7) , "V6242" , "OSCAR_MCMASTER           " , "V1.1      " , "20030930" , "OSCAR MCMASTER                          " , "(905) 575-1300 " , space(25) , space(57));
+                
                 logValue = batchHeader;
                 setLog(logNo, logValue);
                 vsFlag = 1;
@@ -172,8 +172,8 @@ public class ExtractBean extends Object implements Serializable {
             htmlContentHeader = "<html><body><style type='text/css'><!-- .bodytext{  font-family: Tahoma, Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
             htmlContentHeader = htmlContentHeader + "<table width='100%' border='0' cellspacing='0' cellpadding='0'>";
             htmlContentHeader = htmlContentHeader + "<tr>";
-            htmlContentHeader = htmlContentHeader + "<td colspan='4' class='bodytext'>OHIP Invoice for OHIP No."+ providerNo +"</td>";
-            htmlContentHeader = htmlContentHeader + "<td colspan='6' class='bodytext'>Payment date of " + output.substring(0,8) + "</td>";
+            htmlContentHeader = htmlContentHeader + "<td colspan='4' class='bodytext'>Billing Invoice for Billing No."+ providerNo +"</td>";
+            htmlContentHeader = htmlContentHeader + "<td colspan='7' class='bodytext'>Payment date of " + output.substring(0,8) + "</td>";
             htmlContentHeader = htmlContentHeader + "</tr>";
             htmlContentHeader = htmlContentHeader + "<tr>";
             htmlContentHeader = htmlContentHeader + "<td width='9%' class='bodytext'>INVOICE</td>";
@@ -189,16 +189,20 @@ public class ExtractBean extends Object implements Serializable {
             htmlContentHeader = htmlContentHeader + "<td width='5%' align='right' class='bodytext'>COMMENT</td>";
             htmlContentHeader = htmlContentHeader + "</tr>";
             
-            htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>OHIP No: 016096: 173 RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: 11277.32</td>  </tr></table></body></html>";
-            // htmlContentHeader = "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4' class='bodytext'>OHIP Invoice for OHIP No." + providerNo +"</td><td colspan='4' class='bodytext'>Payment date of " + output.substring(0,8) + "</td></tr>";
+            htmlContentHeader += errorMsg;
+            errorMsg = "";
+            
+            // htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>Billing No: 016096: 173 RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: 11277.32</td>  </tr></table></body></html>";
+            // htmlContentHeader = "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4' class='bodytext'>Billing Invoice for Billing No." + providerNo +"</td><td colspan='4' class='bodytext'>Payment date of " + output.substring(0,8) + "</td></tr>";
             // htmlContentHeader = htmlContentHeader + "<tr><td class='bodytext'>ACCT NO</td><td class='bodytext'>NAME</td><td class='bodytext'>HEALTH #</td><td class='bodytext'>BILLDATE</td><td class='bodytext'>CODE</td><td align='right' class='bodytext'>BILLED</td><td align='right' class='bodytext'>DX</td><td align='right' class='bodytext'>Comment</td></tr>";
             // htmlValue = htmlContentHeader;
             value = batchHeader;
             dbExtract dbExt = new dbExtract();
+            System.out.println("1st billing query d");
             
             dbExt.openConnection(sdriver, surl, user, password);
             query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
-            //System.out.println("1st billing query "+query);
+            System.out.println("1st billing query "+query);
             ResultSet rs = dbExt.executeQuery(query);
             if (rs != null){
                 while(rs.next()) {
@@ -309,7 +313,7 @@ public class ExtractBean extends Object implements Serializable {
                         //String dataLine =     rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") +     forwardZero(rs2.getString("phn"),10)    + rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6);
                         String dataLine = getClaimDetailRecord(rs2,logNo);
                         if (dataLine.length() != 424 ){
-                        System.out.println("dataLine2 "+logNo+" Len"+dataLine.length());
+                            System.out.println("dataLine2 "+logNo+" Len"+dataLine.length());
                         }                        
                         value = value + "\n"+dataLine+"\r";
                         logValue =  dataLine;
@@ -322,7 +326,11 @@ public class ExtractBean extends Object implements Serializable {
                             htmlContent = htmlContent + "<tr><td class='bodytext'>" + invNo+ "</td><td class='bodytext'>" + demoName + "</td><td class='bodytext'>" +rs2.getString("phn")+ "</td><td class='bodytext'>" +rs2.getString("service_date")+ "</td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
                         }else{
                             htmlContent = htmlContent + "<tr><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
-                        }                        
+                        }
+                        
+                        errorMsg = checkData.checkC02(rs2); 
+                        htmlContent += errorMsg;
+                            
                         invCount = invCount + 1;    
                         if (eFlag.compareTo("1") == 0){
                             setAsBilledMaster(rs2.getString("billingmaster_no"));
@@ -330,7 +338,6 @@ public class ExtractBean extends Object implements Serializable {
                     }                                        
                     if (eFlag.compareTo("1") == 0) {
                         setAsBilled(invNo);
-
                     }                                                                                
                 }
                 //      hcCount = hcCount + healthcardCount;
@@ -342,16 +349,18 @@ public class ExtractBean extends Object implements Serializable {
                 //      percent = new BigDecimal(0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
                 //      BigTotal = BigTotal.multiply(percent);
                 //      value = value + "\n" + HE + "E" + zero(flagOrder) + pCount + zero(thirdFlag) +hcCount + zero(secondFlag) + rCount + space(63) + "\r";
-                // htmlContent = htmlContent + "<tr><td colspan='8' class='bodytext'>&nbsp;</td></tr><tr><td colspan='4' class='bodytext'>OHIP No: "+ providerNo+": "+ pCount+" RECORDS PROCESSED</td><td colspan='4' class='bodytext'>TOTAL: " + BigTotal.toString().substring(0,BigTotal.toString().length() -2)  +"</td></tr>";
+                // htmlContent = htmlContent + "<tr><td colspan='8' class='bodytext'>&nbsp;</td></tr><tr><td colspan='4' class='bodytext'>Billing No: "+ providerNo+": "+ pCount+" RECORDS PROCESSED</td><td colspan='4' class='bodytext'>TOTAL: " + BigTotal.toString().substring(0,BigTotal.toString().length() -2)  +"</td></tr>";
                 // totalAmount = BigTotal.toString();
                 //  writeFile(value);
                 //      htmlValue = htmlValue + htmlContent + "</table>";
                 //      htmlHeader = "<html><body><style type='text/css'><!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
                 
-                htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>OHIP No: "+ providerNo + ": "+ pCount +" RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: " +BigTotal +"</td>  </tr></table></body></html>";
+                htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>Billing No: "+ providerNo + ": "+ pCount +" RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: " +BigTotal +"</td>  </tr></table></body></html>";
                 htmlCode = htmlContentHeader + htmlContent + htmlFooter;
                 
-                writeHtml(htmlCode);
+                if (eFlag.compareTo("1") == 0) {
+                    	writeHtml(htmlCode);
+                }
                 
                 ohipReciprocal = String.valueOf(hcCount);
                 ohipRecord = String.valueOf(rCount);
