@@ -52,7 +52,7 @@ public final class LoginAction extends Action {
       Properties pvar = cl.getOscarVariable() ;
       session.setAttribute("oscarVariables", pvar);
       oscar.oscarDB.DBHandler.init(pvar.getProperty("db_name"),pvar.getProperty("db_driver"),pvar.getProperty("db_uri"),pvar.getProperty("db_username"),pvar.getProperty("db_password")  ) ;
-
+      System.setProperty("drugref_url",pvar.getProperty("drugref_url"));
       //get View Type
       String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());
 
