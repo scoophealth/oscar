@@ -1,0 +1,42 @@
+package oscar;
+
+import org.xml.sax.*;
+import javax.xml.parsers.*;
+import java.io.IOException;
+import org.xml.sax.helpers.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class OBChecklist_99_12 {
+
+	public String doStuff(String uri, Properties savedar1params) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+		try {
+			df.parse(savedar1params.getProperty("finalEDB")); 
+		} catch (java.text.ParseException pe) {
+		  return "Error: final EDB";
+		}
+
+		try {
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			SAXParser saxParser = factory.newSAXParser();
+			XMLReader reader = saxParser.getXMLReader();
+
+			ContentHandler contentHandler = new OBChecklistHandler_99_12(savedar1params);
+			reader.setContentHandler( contentHandler );
+			reader.parse(uri);
+
+			return ((OBChecklistHandler_99_12) contentHandler).getResults();
+
+		} catch (IOException e) {
+			System.out.println("Error reading URI: " + e.getMessage());
+		} catch (SAXException e) {
+			System.out.println("Error in parsing: " + e.getMessage());
+		} catch (ParserConfigurationException e) {
+			System.out.println("Error configuring parser: " + e.getMessage());
+		}
+
+		return "Error: unable to parse the checklist xml file";
+  }
+
+}
