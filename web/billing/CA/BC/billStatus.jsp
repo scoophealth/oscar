@@ -140,7 +140,7 @@ function refresh() {
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr bgcolor="#FFFFFF"> 
-        <div align="right"><a href=# onClick="popupPage(700,720,'../oscarReport/manageProvider.jsp?action=billingreport')"><font face="Arial, Helvetica, sans-serif" size="1">Manage Provider List </font></a></div>
+        <div align="right"><a href=# onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')"><font face="Arial, Helvetica, sans-serif" size="1">Manage Provider List </font></a></div>
       </tr>
    </table>
    <table width="100%" border="0" cellspacing="0" cellpadding="0">
