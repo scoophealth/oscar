@@ -8,14 +8,15 @@
 <jsp:useBean id="myFormBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
+  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"form_name";
+  
   String [][] dbQueries=new String[][] { 
-{"search_deleted", "select * from eform where status = 0 order by ?, form_date desc, form_time desc" }, 
+{"search_deleted", "select * from eform where status = 0 order by "+param+" ,form_date desc, form_time desc" }, 
   };
   myFormBean.doConfigure(dbParams,dbQueries);
-%>
-<%  
-  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"";
-  ResultSet rs = myFormBean.queryResults(new String[] {param}, "search_deleted");
+
+  
+  ResultSet rs = myFormBean.queryResults("search_deleted");
 %>
 <html>
 <head>
