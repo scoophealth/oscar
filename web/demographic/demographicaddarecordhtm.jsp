@@ -22,6 +22,7 @@
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
 
   OscarProperties props = OscarProperties.getInstance();
+  props.loader("oscar_mcmaster.properties");
 
   GregorianCalendar now=new GregorianCalendar();
   String curYear = Integer.toString(now.get(Calendar.YEAR));
@@ -145,7 +146,7 @@ function newStatus() {
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Search" >
-				<INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="Search" SIZE="17"></td>
+				<INPUT TYPE="SUBMIT" VALUE="<bean:message key="demographic.demographicaddrecordhtm.msgSearch"/>" SIZE="17"></td>
 		</tr><tr>
 			
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
@@ -395,7 +396,10 @@ function newStatus() {
     </tr>
     <tr> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formHCType"/>: </b></td>
-      <td> 
+      <td>
+        <% if(vLocale.getCountry().equals("BR")) { %>
+           <input type="text" name="hc_type" value="">
+        <% } else {%>
         <select name="hc_type">
         <% String billregion = props.getProperty("billregion", ""); %>          
           <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
@@ -412,6 +416,7 @@ function newStatus() {
           <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
         </select>
+        <% }%>
       </td>
       <td>
           &nbsp;

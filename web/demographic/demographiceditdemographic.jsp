@@ -456,7 +456,11 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formHCType"/>:</b> </td>
       <td align="left" > 
-		<% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
+        <% if(vLocale.getCountry().equals("BR")) { %>
+           <% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
+           <input type="text" name="hc_type" value="<%=hctype%>">
+        <% } else {%>
+	<% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
         <select name="hc_type">
           <option value="" >None Selected</option>
           <option value="AB"<%=hctype.equals("AB")?" selected":""%>>AB-Alberta</option>
@@ -473,6 +477,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
           <option value="SK"<%=hctype.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=hctype.equals("YT")?" selected":""%>>YT-Yukon</option>                                       
         </select>
+        <% }%>
       </td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
@@ -548,7 +553,12 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
     <tr valign="top"> 
       <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: </b></td>
       <td align="left" > 
-        <input type="text" name="roster_status" value="<%=rs.getString("roster_status")%>" onBlur="upCaseCtrl(this)">
+        <%String rosterStatus = rs.getString("roster_status");
+          if (rosterStatus == null) {
+             rosterStatus = "";
+          }
+          %>
+        <input type="text" name="roster_status" value="<%=rosterStatus%>" onBlur="upCaseCtrl(this)">
       </td>
       <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.DateJoined"/>: </b></td>
       <td align="left">
@@ -566,10 +576,15 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
       </td>
     </tr>
     <tr valign="top"> 
-      <td align="right"><b>Patient Status:</b> <b> </b></td>
+      <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:</b> <b> </b></td>
       <td align="left" >
         <% if (vLocale.getCountry().equals("BR")) { %>
-          <input type="text" name="patient_status" value="<%=rs.getString("patient_status")%>">
+         <%String pacStatus = rs.getString("patient_status");
+          if (pacStatus == null) {
+             pacStatus = "";
+          }
+          %>
+          <input type="text" name="patient_status" value="<%=pacStatus%>">
         <% } else { 
         String patientStatus = rs.getString("patient_status"); %>
         <select name="patient_status">
