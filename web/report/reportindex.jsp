@@ -185,8 +185,13 @@ function nsgo() {
  	}
 %>
 </select>
-
+        <%
+           // if browser set to pt_BR, do not show following message
+           String country = request.getLocale() .getCountry();
+           if (!country.equals("BR")) {
+        %>
         <li><!--a HREF="#" ONCLICK ="popupPage(600,750,'reportnoshowlist.jsp')" --><bean:message key="report.reportindex.formNoShow"/></a></li>
+        <% } %>
         <li><a HREF="#" ONCLICK ="ggo('all')" ><bean:message key="report.reportindex.formBadAppt"/></a>
 <select name="pprovider_no" >
 <%
@@ -295,12 +300,17 @@ function nsgo() {
         <li>
          <a href="../oscarReport/ConsultationReport.jsp" target="_blank"><bean:message key="report.reportindex.btnConsultationReport"/></a>
         </li>
+	<%
+           // If country = Brazil, do not show the following links:
+           if (!country.equals("BR")) {
+        %>
         <li>
          <a href="../oscarReport/LabReqReport.jsp" target="_blank"><bean:message key="report.reportindex.btnLaboratoryRequisition"/></a>
         </li>
         <li>
           <a href="../oscarReport/ReportDemographicReport.jsp" target="_blank"><bean:message key="report.reportindex.btnDemographicReportTool"/></a>
         </li>        
+        <% } // end - if country %>
         <li>
           <a href=# onClick="popupPage(600,750,'demographicstudyreport.jsp')" ><bean:message key="report.reportindex.btnDemographicStudyList"/></a>
         </li>        

@@ -27,7 +27,7 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.appointment_date, a.start_time") ;
+  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date, start_time") ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -128,12 +128,12 @@ function refresh() {
   while (rsdemo.next()) { 
     //if it is a group and a group member
 	if(!myGroupBean.isEmpty()) {
-	  if(myGroupBean.getProperty(rsdemo.getString("a.provider_no"))==null) continue;
+	  if(myGroupBean.getProperty(rsdemo.getString("provider_no"))==null) continue;
 	}
   
   bodd = bodd?false:true;
-	if(!strTemp.equals(rsdemo.getString("a.provider_no")) ) { //new provider for a new table
-	  strTemp = rsdemo.getString("a.provider_no") ;
+	if(!strTemp.equals(rsdemo.getString("provider_no")) ) { //new provider for a new table
+	  strTemp = rsdemo.getString("provider_no") ;
 	  bFistL = true;
 	  out.println("</table> <p>") ;
 	}
@@ -142,26 +142,26 @@ function refresh() {
     bodd = false ;
 %>
 <table width="480" border="0" cellspacing="1" cellpadding="0" ><tr> 
-<td><%=providerBean.getProperty(rsdemo.getString("a.provider_no"))+" - " +sdate %>  </td>
+<td><%=providerBean.getProperty(rsdemo.getString("provider_no"))+" - " +sdate %>  </td>
 <td align="right"></td>
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.appointment_date"><bean:message key="report.reportapptsheet.msgApptDate"/></a></b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time"><bean:message key="report.reportapptsheet.msgStartTime"/></a> </b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.end_time"><bean:message key="report.reportapptsheet.msgEndTime"/></a> </b></TH>
-<TH width="10%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.name"><bean:message key="report.reportapptsheet.msgName"/></a></b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=appointment_date"><bean:message key="report.reportapptsheet.msgApptDate"/></a></b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=start_time"><bean:message key="report.reportapptsheet.msgStartTime"/></a> </b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=end_time"><bean:message key="report.reportapptsheet.msgEndTime"/></a> </b></TH>
+<TH width="10%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=name"><bean:message key="report.reportapptsheet.msgName"/></a></b></TH>
 <TH width="30%"><b><bean:message key="report.reportapptsheet.msgComments"/></b></TH>
 </tr>
 <%
     }
 %> 
 <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-      <td align="center"><a href=# onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("a.appointment_no")%>&provider_no=<%=curUser_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("a.appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("a.appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("a.appointment_date"))%>&start_time=<%=rsdemo.getString("a.start_time")%>&demographic_no=');return false;" >
-      <%=rsdemo.getString("a.appointment_date")%></a></td>
-      <td align="center"><%=rsdemo.getString("a.start_time")%></td>
-      <td align="center"><%=rsdemo.getString("a.end_time")%></td>
-      <td align="center"><%=rsdemo.getString("a.name")%></td>
+      <td align="center"><a href=# onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("appointment_no")%>&provider_no=<%=curUser_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("appointment_date"))%>&start_time=<%=rsdemo.getString("start_time")%>&demographic_no=');return false;" >
+      <%=rsdemo.getString("appointment_date")%></a></td>
+      <td align="center"><%=rsdemo.getString("start_time")%></td>
+      <td align="center"><%=rsdemo.getString("end_time")%></td>
+      <td align="center"><%=rsdemo.getString("name")%></td>
       <td>&nbsp;</td>
 </tr>
 <%

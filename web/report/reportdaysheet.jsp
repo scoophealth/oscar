@@ -1,6 +1,6 @@
 <%
     if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-    String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.start_time") ;
+    String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
@@ -114,12 +114,12 @@ function setfocus() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.appointment_date"><bean:message key="report.reportdaysheet.msgAppointmentDate"/></a></b></TH>
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.start_time"><bean:message key="report.reportdaysheet.msgAppointmentTime"/></a></b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.last_name"><bean:message key="report.reportdaysheet.msgPatientLastName"/></a> </b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.chart_no">Chart No<bean:message key="report.reportdaysheet.msgChartNo"/></a></b></TH>
-<TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.roster_status"><bean:message key="report.reportdaysheet.msgRosterStatus"/></a></b></TH>
+<TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=appointment_date"><bean:message key="report.reportdaysheet.msgAppointmentDate"/></a></b></TH>
+<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=start_time"><bean:message key="report.reportdaysheet.msgAppointmentTime"/></a></b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=last_name"><bean:message key="report.reportdaysheet.msgPatientLastName"/></a> </b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>
+<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=chart_no"><bean:message key="report.reportdaysheet.msgChartNo"/></a></b></TH>
+<TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=roster_status"><bean:message key="report.reportdaysheet.msgRosterStatus"/></a></b></TH>
 <TH width="20%"><b><bean:message key="report.reportdaysheet.msgComments"/></b></TH>yy
 </tr>
 <%
@@ -127,12 +127,12 @@ function setfocus() {
 %> 
 <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
       <td align="center" nowrap><%=rsdemo.getString("appointment_date")%></td>
-      <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("a.end_time")%>"><%=rsdemo.getString("a.start_time")%></td>
-      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name"))%></td>
-      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("d.first_name"))%></td>
-      <td align="center"><%=rsdemo.getString("d.chart_no")%></td>
-      <td align="center"><%=rsdemo.getString("d.roster_status")%></td>
-      <td><%=rsdemo.getString("a.reason")%>&nbsp;</td>
+      <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("end_time")%>"><%=rsdemo.getString("start_time")%></td>
+      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("last_name"))%></td>
+      <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("first_name"))%></td>
+      <td align="center"><%=rsdemo.getString("chart_no")%></td>
+      <td align="center"><%=rsdemo.getString("roster_status")%></td>
+      <td><%=rsdemo.getString("reason")%>&nbsp;</td>
 </tr>
 <%
   }
