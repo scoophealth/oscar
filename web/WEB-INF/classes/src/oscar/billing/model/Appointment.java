@@ -1,0 +1,353 @@
+/** Java class "Appointment.java" generated from Poseidon for UML.
+ *  Poseidon for UML is developed by <A HREF="http://www.gentleware.com">Gentleware</A>.
+ *  Generated with <A HREF="http://jakarta.apache.org/velocity/">velocity</A> template engine.
+ */
+package oscar.billing.model;
+
+import oscar.billing.cad.model.CadCid;
+import oscar.billing.fat.model.FatFormularioProcedimento;
+
+import java.util.*;
+import java.util.Date;
+
+
+/**
+ * <p>
+ *
+ * </p>
+ */
+public class Appointment {
+	public static final String TODOS = "T";
+	public static final String PENDENTE = "D";
+	public static final String AGENDADO = "A";
+	public static final String FATURADO = "F";
+	
+    ///////////////////////////////////////
+    // attributes
+
+    /**
+     * <p>
+     * Represents ...
+     * </p>
+     */
+    private long appointmentNo;
+
+    /**
+     * <p>
+     * Represents ...
+     * </p>
+     */
+    private Date appointmentDate;
+
+    /**
+     * <p>
+     * Represents ...
+     * </p>
+     */
+    private Date startTime;
+
+    /**
+     * <p>
+     * Represents ...
+     * </p>
+     */
+    private Date endTime;
+
+    /**
+     * <p>
+     * Represents ...
+     * </p>
+     */
+    private String name;
+
+    /**
+     * <p>
+     * Represents ...
+     * </p>
+     */
+    private String status;
+
+    /**
+     * <p>
+     * Represents ...
+     * </p>
+     */
+    private String reason;
+
+    ///////////////////////////////////////
+    // associations
+
+    /**
+     * <p>
+     *
+     * </p>
+     */
+    public Provider provider;
+
+    /**
+     * <p>
+     *
+     * </p>
+     */
+    public Demographic demographic;
+
+    /**
+     * <p>
+     *
+     * </p>
+     */
+    public List procedimentoRealizado = new ArrayList(); // of type ProcedimentoRealizado
+
+    /**
+     * <p>
+     *
+     * </p>
+     */
+    public List diagnostico = new ArrayList(); // of type Diagnostico
+
+    /**
+     *
+     */
+    public Appointment() {
+
+    }
+
+    ///////////////////////////////////////
+    // operations
+
+    /**
+     * <p>
+     * Does ...
+     * </p><p>
+     *
+     * </p>
+     */
+    public void clear() {
+		appointmentNo = 0;
+		appointmentDate = null;
+		startTime = null;
+		endTime = null;
+		name = "";
+		status = "";
+		reason = "";
+		if (provider != null) {
+		   provider.clear();
+		}
+		if (demographic != null) {
+			demographic.clear();
+		}
+		procedimentoRealizado.clear();
+		diagnostico.clear();
+    }
+
+    // end clear        
+
+    /**
+     * @return
+     */
+    public Date getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    /**
+     * @return
+     */
+    public long getAppointmentNo() {
+        return appointmentNo;
+    }
+
+    /**
+     * @return
+     */
+    public Demographic getDemographic() {
+        if (demographic != null) {
+            return demographic;
+        } else {
+        	demographic = new Demographic();
+            return demographic;
+        }
+    }
+
+    /**
+     * @return
+     */
+    public List getDiagnostico() {
+        return diagnostico;
+    }
+
+    /**
+     * @return
+     */
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return
+     */
+    public List getProcedimentoRealizado() {
+        return procedimentoRealizado;
+    }
+
+    /**
+     * @return
+     */
+    public Provider getProvider() {
+        if (provider != null) {
+            return provider;
+        } else {
+        	provider = new Provider();
+            return provider;
+        }
+    }
+
+    /**
+     * @return
+     */
+    public String getReason() {
+        return reason;
+    }
+
+    /**
+     * @return
+     */
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * @return
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param date
+     */
+    public void setAppointmentDate(Date date) {
+        appointmentDate = date;
+    }
+
+    /**
+     * @param l
+     */
+    public void setAppointmentNo(long l) {
+        appointmentNo = l;
+    }
+
+    /**
+     * @param demographic
+     */
+    public void setDemographic(Demographic demographic) {
+        this.demographic = demographic;
+    }
+
+    /**
+     * @param collection
+     */
+    public void setDiagnostico(List collection) {
+        diagnostico = collection;
+    }
+
+    /**
+     * @param date
+     */
+    public void setEndTime(Date date) {
+        endTime = date;
+    }
+
+    /**
+     * @param string
+     */
+    public void setName(String string) {
+        name = string;
+    }
+
+    /**
+     * @param collection
+     */
+    public void setProcedimentoRealizado(List collection) {
+        procedimentoRealizado = collection;
+    }
+
+    /**
+     * @param provider
+     */
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
+    /**
+     * @param string
+     */
+    public void setReason(String string) {
+        reason = string;
+    }
+
+    /**
+     * @param date
+     */
+    public void setStartTime(Date date) {
+        startTime = date;
+    }
+
+    /**
+     * @param string
+     */
+    public void setStatus(String string) {
+        status = string;
+    }
+
+    public void addProcedimentos(List procedimento) {
+        for (int i = 0; i < procedimento.size(); i++) {
+            FatFormularioProcedimento formProc = (FatFormularioProcedimento) procedimento.get(i);
+            ProcedimentoRealizado pr = new ProcedimentoRealizado();
+            pr.setAppointment(this);
+            pr.setCadProcedimentos(formProc.getCadProcedimentos());
+            pr.setDtRealizacao(new Date());
+
+            this.procedimentoRealizado.add(pr);
+        }
+    }
+    
+	public void removeProcedimentos(long id) {
+		for (int i = 0; i < procedimentoRealizado.size(); i++) {
+			ProcedimentoRealizado pr = (ProcedimentoRealizado) procedimentoRealizado.get(i);
+			System.out.println("pr " + pr.getCadProcedimentos().getCoProcedimento());
+			if (pr.getCadProcedimentos().getCoProcedimento() == id) {
+				procedimentoRealizado.remove(i);
+			}
+		}
+	}
+	
+	public void removeDiagnostico(String id) {
+		for (int i = 0; i < diagnostico.size(); i++) {
+			Diagnostico diag = (Diagnostico) diagnostico.get(i);
+			if (diag.getCadCid().getCoCid().toUpperCase().trim().equals(id.toUpperCase().trim())) {
+				diagnostico.remove(i);
+			}
+		}
+	}
+
+	public void addDiagnostico(CadCid cid) {
+			Diagnostico diag = new Diagnostico();
+			diag.setAppointment(this);
+			diag.setCadCid(cid);
+			diag.setOrdem(diagnostico.size() + 1);
+
+			this.diagnostico.add(diag);
+	}
+	
+  
+}
+
+
+// end Appointment

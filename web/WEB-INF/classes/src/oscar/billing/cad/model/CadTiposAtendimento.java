@@ -1,0 +1,65 @@
+
+/** Java class "CadTiposAtendimento.java" generated from Poseidon for UML.
+ *  Poseidon for UML is developed by <A HREF="http://www.gentleware.com">Gentleware</A>.
+ *  Generated with <A HREF="http://jakarta.apache.org/velocity/">velocity</A> template engine.
+ */
+package oscar.billing.cad.model;
+
+import java.util.*;
+import oscar.billing.fat.model.FatBpa;
+
+/**
+ * <p>
+ * 
+ * </p>
+ */
+public class CadTiposAtendimento {
+
+  ///////////////////////////////////////
+  // attributes
+
+
+/**
+ * <p>
+ * Represents ...
+ * </p>
+ */
+    private long coTipoatendimento; 
+
+/**
+ * <p>
+ * Represents ...
+ * </p>
+ */
+    private String dsTipoatendimento; 
+
+   ///////////////////////////////////////
+   // associations
+
+/**
+ * <p>
+ * 
+ * </p>
+ */
+    public FatBpa fatBpa; 
+
+
+  ///////////////////////////////////////
+  // operations
+
+
+/**
+ * <p>
+ * Does ...
+ * </p><p>
+ * 
+ * </p>
+ */
+    public void clear() {        
+        // your code here
+    } // end clear        
+
+} // end CadTiposAtendimento
+
+
+
