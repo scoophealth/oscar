@@ -85,7 +85,7 @@ function setfocus() {
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   int age=0;
   ResultSet rs=null ;
-  rs = reportMainBean.queryResults("last_name", "search_provider");
+  rs = reportMainBean.queryResults("search_provider");
   while (rs.next()) { 
     providerNameBean.setDef(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
   }
@@ -112,10 +112,10 @@ function setfocus() {
   } 
 
 	String[] param =new String[4];
-	param[0]=startDate; //"0001-01-01"; 
-	param[1]=endDate; //"0001-01-01"; 
+	param[1]=startDate; //"0001-01-01"; 
+	param[0]=endDate; //"0001-01-01"; 
 	param[2]=curUser_no; 
-	param[3]="edb";
+	//param[3]="edb";
   int[] itemp1 = new int[2];
   itemp1[0] = Integer.parseInt(strLimit1);
   itemp1[1] = Integer.parseInt(strLimit2);

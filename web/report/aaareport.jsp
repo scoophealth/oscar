@@ -60,7 +60,7 @@ busy ...
   boolean bNewDemo = false;
   String temp="",content="";
 
-  rsdemo = daySheetBean.queryResults("last_name", "searchallprovider");
+  rsdemo = daySheetBean.queryResults("searchallprovider");
   while (rsdemo.next()) { 
     nameBean.setProperty(rsdemo.getString("provider_no"), new String( rsdemo.getString("first_name")+" "+rsdemo.getString("last_name") ));
   }

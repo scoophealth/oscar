@@ -27,7 +27,7 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.appointment_date") ;
+  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date") ;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
@@ -131,21 +131,21 @@ function refresh() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor=<%=deepcolor%> align="center">
-<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.appointment_date">Appt Date</a></b></TH>
-<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time">Start Time</a> </b></TH>
-<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.end_time">End Time</a> </b></TH>
-<TH width="10%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.name">Patient's Name</a></b></TH>
+<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=appointment_date">Appt Date</a></b></TH>
+<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=start_time">Start Time</a> </b></TH>
+<TH width="20%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=end_time">End Time</a> </b></TH>
+<TH width="10%"><b><a href="reportnoshowapptlist.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=name">Patient's Name</a></b></TH>
 <TH width="30%"><b>Comments</b></TH>
 </tr>
 <%
     }
 %> 
 <tr bgcolor="<%=bodd?weakcolor:"white"%>">
-      <td align="center"><a href=# onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("a.appointment_no")%>&provider_no=<%=curUser_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("a.appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("a.appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("a.appointment_date"))%>&start_time=<%=rsdemo.getString("a.start_time")%>&demographic_no=');return false;" >
-      <%=rsdemo.getString("a.appointment_date")%></a></td>
-      <td align="center"><%=rsdemo.getString("a.start_time")%></td>
-      <td align="center"><%=rsdemo.getString("a.end_time")%></td>
-      <td align="center"><%=rsdemo.getString("a.name")%></td>
+      <td align="center"><a href=# onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("appointment_no")%>&provider_no=<%=curUser_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("appointment_date"))%>&start_time=<%=rsdemo.getString("start_time")%>&demographic_no=');return false;" >
+      <%=rsdemo.getString("appointment_date")%></a></td>
+      <td align="center"><%=rsdemo.getString("start_time")%></td>
+      <td align="center"><%=rsdemo.getString("end_time")%></td>
+      <td align="center"><%=rsdemo.getString("name")%></td>
       <td>&nbsp;No Show</td>
 </tr>
 <%

@@ -248,7 +248,7 @@ function checkTypeIn() {
         <select name="resident">
           <option value="" ></option>
 <%
-  ResultSet rsdemo = apptMainBean.queryResults("last_name", "search_provider");
+  ResultSet rsdemo = apptMainBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(resident)?"selected":""%> >
@@ -263,7 +263,7 @@ function checkTypeIn() {
         <select name="provider_no">
           <option value="" ></option>
 <%
-  rsdemo = apptMainBean.queryResults("last_name", "search_provider");
+  rsdemo = apptMainBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(rs.getString("provider_no"))?"selected":""%> >
@@ -276,7 +276,7 @@ function checkTypeIn() {
         <select name="nurse">
           <option value="" ></option>
 <%
-  rsdemo = apptMainBean.queryResults("last_name", "search_provider");
+  rsdemo = apptMainBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%> >

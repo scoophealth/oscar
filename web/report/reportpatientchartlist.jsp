@@ -28,7 +28,7 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("d.last_name") ;
+  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("last_name") ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -125,17 +125,17 @@ function refresh() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=d.last_name">Last Name</a></b></TH>
-<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=d.first_name">First Name</a> </b></TH>
-<TH width="20%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=d.chart_no">Chart No</a> </b></TH>
+<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=last_name">Last Name</a></b></TH>
+<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=first_name">First Name</a> </b></TH>
+<TH width="20%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=chart_no">Chart No</a> </b></TH>
 </tr>
 <%
     }
 %> 
 <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-      <td> &nbsp;<%=rsdemo.getString("d.last_name")%></td>
-      <td> &nbsp;<%=rsdemo.getString("d.first_name")%></td>
-      <td align="center"><%=rsdemo.getString("d.chart_no")%></td>
+      <td> &nbsp;<%=rsdemo.getString("last_name")%></td>
+      <td> &nbsp;<%=rsdemo.getString("first_name")%></td>
+      <td align="center"><%=rsdemo.getString("chart_no")%></td>
 </tr>
 <%
   }

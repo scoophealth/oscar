@@ -18,7 +18,7 @@
 <% 
 	String [][] dbQueries=new String[][] { 
 		{"search_study", "select study_no, study_name, description from study where current = ?"}, 
-		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name, d.first_name, d.provider_no from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by d.last_name"}, 
+		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name , d.first_name, d.provider_no from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by d.last_name"}, 
 	};
 	reportMainBean.doConfigure(dbParams,dbQueries);
 %>
@@ -69,7 +69,7 @@ function setfocus() {
 		nItems++; 
 %>
 <tr bgcolor="<%=(nItems%2 == 0)?weakcolor:"white"%>">
-  <td nowrap><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("d.last_name")%></a></td>
+  <td nowrap><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("last_name")%></a></td>
   <td><%=rs.getString("d.first_name")%></td>
   <td  title='<%=studyBean.getProperty(rs.getString("s.study_no")+studyBean.getProperty(rs.getString("s.study_no")), "")%>'><%=studyBean.getProperty(rs.getString("s.study_no"), "")%></td>
   <td><%=providerBean.getProperty(rs.getString("d.provider_no"), "")%></td>

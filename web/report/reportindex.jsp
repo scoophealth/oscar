@@ -138,7 +138,7 @@ function nsgo() {
     <td> 
       <ol>
         <li><a HREF="#" ONCLICK ="ogo()" >EDB List</a> &nbsp;
-           from <INPUT TYPE="text" NAME="startDate" VALUE="0000/00/00" size='10'> &nbsp; to 
+           from <INPUT TYPE="text" NAME="startDate" VALUE="0001/01/01" size='10'> &nbsp; to 
            <INPUT TYPE="text" NAME="endDate" VALUE="<%=today%>" size='10'>
            <INPUT TYPE="button" NAME="button" VALUE="CREATE REPORT" onClick="ogo()"></li>
         <li><a HREF="#" ONCLICK ="popupPage(600,750,'reportactivepatientlist.jsp')" >Active Patient List</a></li>
@@ -153,7 +153,7 @@ function nsgo() {
  	 } 
 %>
 <%
-     rsgroup = reportMainBean.queryResults("last_name", "search_provider");
+     rsgroup = reportMainBean.queryResults("search_provider");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
@@ -196,7 +196,7 @@ function nsgo() {
  	 } 
 %>
 <%
-     rsgroup = reportMainBean.queryResults("last_name", "search_provider");
+     rsgroup = reportMainBean.queryResults("search_provider");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
@@ -228,7 +228,7 @@ function nsgo() {
  	 } 
 %>
 <%
-     rsgroup = reportMainBean.queryResults("last_name", "search_provider");
+     rsgroup = reportMainBean.queryResults("search_provider");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
@@ -248,7 +248,7 @@ function nsgo() {
  	 } 
 %>
 <%
-     rsgroup = reportMainBean.queryResults("last_name", "search_provider");
+     rsgroup = reportMainBean.queryResults("search_provider");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
@@ -268,7 +268,7 @@ function nsgo() {
  	 } 
 %>
 <%
-     rsgroup = reportMainBean.queryResults("last_name", "search_provider");
+     rsgroup = reportMainBean.queryResults("search_provider");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
