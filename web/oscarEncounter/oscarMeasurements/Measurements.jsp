@@ -72,7 +72,7 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
 <!--  -->
     
-    <html:form action="/oscarEncounter/Measurements" enctype="multipart/form-data">
+    <html:form action="/oscarEncounter/Measurements" >
     <logic:present name="css">
         <link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
     </logic:present>
