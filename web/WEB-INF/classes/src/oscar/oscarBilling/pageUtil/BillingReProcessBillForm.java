@@ -51,6 +51,8 @@ public final class BillingReProcessBillForm extends ActionForm {
     String service_code =null;
     String billing_unit =null;
     String billing_amount = null;
+    String billingUnit = null;
+    String billingAmount = null;
     String dx1 =null;
     String dx2=null;
     String dx3=null;
@@ -781,6 +783,38 @@ clinic_ref_code
    */
   public void setBillNumber(java.lang.String billNumber) {
       this.billNumber = billNumber;
+  }
+  
+  /** Getter for property billingUnit.
+   * @return Value of property billingUnit.
+   *
+   */
+  public java.lang.String getBillingUnit() {
+      return billingUnit;
+  }
+  
+  /** Setter for property billingUnit.
+   * @param billingUnit New value of property billingUnit.
+   *
+   */
+  public void setBillingUnit(java.lang.String billingUnit) {
+      this.billingUnit = billingUnit;
+  }
+  
+  /** Getter for property billingAmount.
+   * @return Value of property billingAmount.
+   *
+   */
+  public java.lang.String getBillingAmount() {
+      return billingAmount;
+  }
+  
+  /** Setter for property billingAmount.
+   * @param billingAmount New value of property billingAmount.
+   *
+   */
+  public void setBillingAmount(java.lang.String billingAmount) {
+      this.billingAmount = billingAmount;
   }
   
   /**
