@@ -46,6 +46,7 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
+  BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP); 
 
   MSPReconcile msp = new MSPReconcile();
 
@@ -243,12 +244,19 @@ if (billTypes == null){
 <table width="100%" border="2"  valign="top">
  
   <tr bgcolor="#CCCCFF"> 
-    <TH align="center" class="bHeaderData" >SERVICE DATE</TH>
-    <TH align="center" class="bHeaderData" >TIME</TH>
-    <TH align="center" class="bHeaderData" >PATIENT</TH>
-    <TH align="center" class="bHeaderData" >DESCRIPTION</TH>
-    <TH align="center" class="bHeaderData" >ACCOUNT</TH>
-    <TH align="center" class="bHeaderData" >MESSAGES</TH>
+    <th align="center" class="bHeaderData" >SERVICE DATE</th>
+    <th align="center" class="bHeaderData" >PATIENT</th>
+    <th align="center" class="bHeaderData" >STAT</th>
+    <th align="center" class="bHeaderDate" >CODE</th>
+    <th align="center" class="bHeaderDate" >AMOUNT</th>
+    <th align="center" class="bHeaderDate" >DX1</th>
+    <th align="center" class="bHeaderDate" >DX2</th>
+    <th align="center" class="bHeaderDate" >DX3</th>
+    <th align="center" class="bHeaderData" >ACCOUNT</th>
+    <th align="center" class="bHeaderData" >MESSAGES</th>
+    
+    
+    
   </tr>
   <%
 
@@ -263,28 +271,36 @@ if (billTypes == null){
     boolean bodd = true;
     System.out.println(list.size()+" in this billing list");
     for (int i = 0; i < list.size(); i++){     
+        
         MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records                           
       String rejected = isRejected(b.billMasterNo,p); 
       String rejected2  = isRejected(b.billMasterNo,p2);      
       
+      total = total.add(new BigDecimal(b.amount).setScale(2, BigDecimal.ROUND_HALF_UP));
    %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
-    <TD align="center" class="bCellData" ><%=b.apptDate%></TD>
-    <TD align="center" class="bCellData" ><%=b.apptTime==null?"00:00:00":b.apptTime%></TD>
-    <TD align="center" class="bCellData" ><%=b.demoName%></TD>
-    <TD align="center" class="bCellData" ><%=b.reason%></TD>
-    <TD align="center" class="bCellData" >
+    <td align="center" class="bCellData" ><%=b.apptDate%></td>    
+    <td align="center" class="bCellData" ><%=b.demoName%></td>
+    <td align="center" class="bCellData" ><%=b.reason%></td>
+    <td align="center" class="bCellData" ><%=b.code%></td>
+    <td align="center" class="bCellData" ><%=b.amount%></td>
+    <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
+    <td align="center" class="bCellData" ><%=s(b.dx2)%></td>
+    <td align="center" class="bCellData" ><%=s(b.dx3)%></td>
+    <td align="center" class="bCellData" >
         <a href="javascript: function myFunction() {return false; }" onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=b.billing_no%>&dboperation=search_bill&hotclick=0")' title="<%=b.reason%>">
             <%=b.billing_no%>
         </a>
-    </TD>                                 
+    </td>                                     
     <td>
         <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>')" >Edit</a>
         <%=rejected%>
         <%=rejected2%>
     </td>
+    
+    
   </tr>
   <%  //}
     rowCount = rowCount + 1;    
@@ -292,11 +308,23 @@ if (billTypes == null){
     if (rowCount == 0) {
     %>
   <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-    <td colspan="5" align="center" class="bCellData">
-        No unbill items
+    <td colspan="10" align="center" class="bCellData">
+        No bills
     </td>
   </tr>
  <% }%>
+    <tr>
+        <td align="center" class="bCellData" >Count:</td>       
+        <td align="center" class="bCellData" ><%=list.size()%></td>
+        <td align="center" class="bCellData" >&nbsp;</td>        
+        <td align="center" class="bCellData" >Total:</td>
+        <td align="center" class="bCellData" ><%=total.toString()%></td>
+        <td align="center" class="bCellData" >&nbsp;</td>
+        <td align="center" class="bCellData" >&nbsp;</td>
+        <td align="center" class="bCellData" >&nbsp;</td>
+        <td align="center" class="bCellData" >&nbsp;</td>
+        <td align="center" class="bCellData" >&nbsp;</td>
+    </tr>
 </table>
 </body>
 </html>
@@ -317,4 +345,20 @@ String isRejected(String billingNo,Properties p){
     }
     return s;
 }
+
+    String moneyFormat(String str){       
+        String moneyStr = "0.00";
+        try{             
+            moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
+        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+    return moneyStr;
+    }
+    
+    String s(String str){
+        if (str == null || str.length() == 0 ){
+            str = "&nbsp;";
+        }
+        return str;
+    }
+
 %>
