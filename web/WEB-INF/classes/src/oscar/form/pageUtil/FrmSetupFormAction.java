@@ -239,10 +239,15 @@ public final class FrmSetupFormAction extends Action {
     private List getDrugList(String demographicNo){
         RxPatientData pData = new RxPatientData();
         List drugs = new LinkedList();
+        String fluShot = getFluShotBillingDate(demographicNo);
+        //System.out.println("getFluShotBillingDate: " + fluShot);
+        if(fluShot!=null)
+            drugs.add(fluShot + "     Flu Shot");
+            
         try{
             RxPatientData.Patient p = pData.getPatient(Integer.parseInt(demographicNo));
             RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();
-            if(prescribedDrugs.length==0)
+            if(prescribedDrugs.length==0 && fluShot==null)
                 drugs=null;
             for(int i=0; i<prescribedDrugs.length; i++){
                 drugs.add(prescribedDrugs[i].getRxDate().toString() + "    " + prescribedDrugs[i].getRxDisplay());            
@@ -271,6 +276,26 @@ public final class FrmSetupFormAction extends Action {
             e.printStackTrace();   
         }
         return allergyLst;
+    }
+    
+    private String getFluShotBillingDate(String demoNo) {
+        String s = null;
+        try {
+                DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+                String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where b.demographic_no='"
+                                + demoNo
+                                + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
+                                + " and bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
+                ResultSet rs = dbhandler.GetSQL(s1);
+                //System.out.println("flushot: " + s1);
+                if (rs.next())
+                        s = rs.getString("billing_date");
+                rs.close();
+                dbhandler.CloseConn();
+            } catch (SQLException sqlexception) {
+                System.out.println(sqlexception.getMessage());
+        }
+        return s;
     }
     
     private Properties getFormRecord(String formName, String formId, String demographicNo){
