@@ -260,11 +260,23 @@ public class MSPReconcile{
               b.billMasterNo = rs.getString("billingmaster_no");
               b.billingtype = rs.getString("billingtype");
               
+              
               b.amount = rs.getString("bill_amount");
               b.code   = rs.getString("billing_code");
               b.dx1    = rs.getString("dx_code1");
               b.dx2    = rs.getString("dx_code2");
               b.dx3    = rs.getString("dx_code3");
+              
+              if (b.isWCB()){
+                 ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '"+b.billing_no+"'");
+                 if (rs2.next()){
+                    b.amount = rs2.getString("bill_amount")  ;
+                    b.code = rs2.getString("w_feeitem");
+                    b.dx1 = rs2.getString("w_icd9");
+                 }                                    
+                 rs2.close();
+              }
+              
               
             billSearch.justBillingMaster.add(b.billMasterNo);
             billSearch.list.add(b);
