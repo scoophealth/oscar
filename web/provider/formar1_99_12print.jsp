@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,8 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
+--%>
 <%
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
   int oox=0, ooy=0;
@@ -117,7 +116,7 @@ ff(13,175,20,20,"<%=Misc.JSEscape(request.getParameter("xml_baobs")==null?"":"X"
 ff(55,175,20,20,"<%=Misc.JSEscape(request.getParameter("xml_bafp")==null?"":"X")%>" );
 ff(90,175,20,20,"<%=Misc.JSEscape(request.getParameter("xml_bam")==null?"":"X")%>" );
 ff(10,195,200,20,"<%=Misc.JSEscape(request.getParameter("xml_ba"))%>" );
-ff(150,175,200,100,"<%=Misc.JSEscape(request.getParameter("xml_fphy"))%>" );
+ff(150,175,200,100,"<%=Misc.JSEscape(request.getParameter("xml_fphy")).replace('\r', ' ')%>" );
 ff(324,175,20,20,"<%=Misc.JSEscape(request.getParameter("xml_ncp")==null?"":"X")%>" );
 ff(365,175,20,20,"<%=Misc.JSEscape(request.getParameter("xml_ncfp")==null?"":"X")%>" );
 ff(400,175,20,20,"<%=Misc.JSEscape(request.getParameter("xml_ncm")==null?"":"X")%>" );
