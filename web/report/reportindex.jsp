@@ -310,10 +310,10 @@ function nsgo() {
         <li>
           <a href="../oscarReport/ReportDemographicReport.jsp" target="_blank"><bean:message key="report.reportindex.btnDemographicReportTool"/></a>
         </li>        
-        <% } // end - if country %>
         <li>
           <a href=# onClick="popupPage(600,750,'demographicstudyreport.jsp')" ><bean:message key="report.reportindex.btnDemographicStudyList"/></a>
         </li>        
+        <% } // end - if country %>
 		</ol>
     </td>
             </tr>
