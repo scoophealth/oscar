@@ -5,7 +5,7 @@ OSCAR (Open Source Clinical Application Resource) - README
   Oscar facilitates Clinical Decision Support and Evidence Based Medicine 
   
   
-  Version 1.0 - 11/17/2002
+  Version 1.1 - 06/09/2003
   http://www.oscarhome.org/
 
   Licence for OSCAR software
@@ -36,8 +36,8 @@ OSCAR (Open Source Clinical Application Resource) - README
 
   Requirements: 
     Linux (tested with Redhat 7.x, Redhat 8.0)
-    Java2 SDK 4.0.01
-    MySQL 3.23.x (tested with 3.23.49, 3.23.52, 3.23.53a)
+    Java2 SDK 4.1.01
+    MySQL 4.0.x (tested with 3.23.49, 3.23.52, 3.23.53a, 4.0.12)
     Jakarta Tomcat 4.0.x (tested with 4.0.1, 4.0.4, 4.0.6)
     Mozilla 1.1 or equivalent browser (tested with Mozilla 1.1 and Microsoft Internet Explorer 6 (SP1))
                 
@@ -47,7 +47,6 @@ OSCAR (Open Source Clinical Application Resource) - README
     - Billing
     - Electronic Medical Record
     - free text, templates, and forms
-    - Prescription
     - online or via wireless handheld device such as Palm (linked with DrugMagnet software)
     - Clinical Resource Database
     - Decision Support tools
@@ -156,7 +155,19 @@ OSCAR (Open Source Clinical Application Resource) - README
     Please see the INSTALL file.
   
   ChangeLog:
-    No changes in ChangeLog as of 11-17-2002
+    
+    	       2003-01-28	All Appt Report moved in Report Tab	oscarReport
+	       2003-01-21	Change Appt Status with Bill and Sign	oscarBilling
+	       2003-01-21	Doing eChart from 'M' page		oscarEncounter
+  	       2003-01-27	Encounter Date Util			oscarEncounter
+	       2003-01-30	Changes on Billing Correction		oscarBilling
+	       2003-01-30	Changes on Reconcillation		oscarBilling
+	       2003-02-13	Form AR2 graphic SVG enhancement	oscarEncounter
+	       2003-02-20	MySQL 4.0 upgraded			oscar
+	       2003-03-01	eEncounter updated filesize control	oscarEncounter
+	       2003-03-20	Consult ReDated				oscarConsultations
+	       2003-03-27	mySQL Driver change			oscar
+
   
   Documentation:
     Basic documentation available in http://www.oscarhome.org

@@ -1,113 +1,341 @@
-OSCAR (Open Source Clinical Application Resource) - Installation
+OSCAR (Open Source Clinical Application Resource) - Installation 
 
-  Packages in oscar_mcmaster tar ball:
-    [1] Java2 SDK Environment 
-    [2] Jakarta Tomcat 
-    [3] Mysql Database 
-    [4] OSCAR source files
-    [5] OSCAR web application files
-    [6] OSCAR eDocument Repository
-    [7] OSCAR Security Config file
-    [8] OSCAR property files
-    [9] Temporary SSL Keyfile
-    [0] compat-libstdc++ rpm package
+
+  Oscar is a set of Clinic Applications, Clinic Resources, and 
+  electronic patient records, developed using Open Source Tools. 
+  Oscar facilitates Clinical Decision Support and Evidence Based Medicine 
   
   
-  Hardware Requirement
+  Version 1.1 - 06/09/2003
+  http://www.oscarhome.org/
+
+  Licence for OSCAR software
+  This software is copyright © 2001 McMaster University. 
+  You can redistribute it and/or modify it under the terms of the 
+  GNU General Public License version 2 as published by the Free 
+  Software Foundation. A copy of this licence follows.  This 
+  program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+  GNU General Public License below for more details. 
+ 
+  This software was created under contract to McMaster University. 
+ 
+  To purchase support or enhancements for this software, contact: 
+ 
+ 
+  Department of Family Medicine 
+  McMaster University 
+  1200 Main Street West.
+  Hamilton, Ontario
+  Canada L8N 3Z5
+ 
+ Email: Dr. David H Chan <dchan@mcmaster.ca>
+ WWW: http://www.oscarhome.org/
+
+
+
+Packages in OSCAR_MCMASTER Compressed Tar File
+    [1] OSCAR Web Application WAR file
+    [2] OSCAR e-Document Container Compressed Tar File
+    [3] oscar_mcmaster.properties file
+    [4] oscar_security.properties file
+    [5] OSCAR DB Script for Installing and initializing tables
+    [6] README File
+    [7] INSTALL File
+
+Hardware Requirement
     [CPU] - Pentium 2 or higher (tested with Celeron 400)
     [MEM] - 128MB minumum, 256MB recommended (tested with 64MB)
     [HD ] - 600MB free space, 6 GB recommended 
     [CD ] - CD Rom Drive
     [NTW] - Networking capability 
     
-  Software Requirement  
+Software Requirement  
     [OS ] - Linux (tested with Redhat 7.2)
     [PKG] - Installation Type - Server
           - Developement Package selected (Gcc++ lib for JAVA)
           
   
-  Quick Install from Scratch:
+Quick Install from Scratch:
     
-    REDHAT Installation:
+REDHAT Installation:
     [1] Boot Linux Image from CD
     [2] Select Automatic Partition
     [3] Select "Server" Grade installation
     [4] Security Level : Medium, allow ssh
     [5] Add Development tools Package ("select individual package" option selected) 
-    
-    OSCAR Installation:
-    [0] Login as root access
-    
-    [1] Untar the distribution in any directory
-        tar zxvf oscar_mcmaster_x.x.tar.gz
-    
-    [2] Run install script in untar directory
-        cd oscar_mcmaster
-        ./install.sh
-    
-    [3] Add the following statement on /etc/profile file before the export statment
-        
-        JAVA_HOME="/usr/local/java"
-	CATALINA_HOME="/usr/local/tomcat"
-	PATH="$PATH:/usr/local/java/bin:/usr/local/tomcat/bin:/usr/local/mysql/bin"
-	
-	export JAVA_HOME CATALINA_HOME PATH USER LOGNAME MAIL HOSTNAME HISTSIZE INPUTRC
 
-    [4] The oscar package should be installed. To start all serivces:
-    
-  +--------------------------------------------------------+
-  | Starting up OSCAR:                                     |
-  | [1]  cd /usr/local/mysql                               |
-  | [2]  ./bin/safe_mysqld &                               |
-  | [3]  cd /usr/local/tomcat/webapps/                     |
-  | [4]  ../bin/startup.sh                                 |
-  | [5]  open the client browser and run                   |
-  |      https://<yourhostname>:8443/oscar_mcmaster/       |
-  |                                                        |
-  | You should see the oscar login page, then login as     |
-  |                                                        |                                                     
-  |                                                        |                                                     
-  | OSCAR LOGIN |  USER ID   |  PASSWORD   |  PIN          |
-  | Admin       | oscaradmin |  mac2002    |  1117         |
-  | Doctor      | oscardoc   |  mac2002    |  1117         |
-  | Receptionist| oscarrep   |  mac2002    |  1117         | 
-  |                                                        |                                                     
-  |                                                        |
-  | Shutting down OSCAR:                                   |                                                     
-  | [1] cd /usr/local/tomcat/webapps/                      |
-  | [2] ../bin/shutdown.sh                                 |                                                     
-  | [3] cd /usr/local/mysql                                |
-  | [4] ../bin/mysqladmin -p<your_db_password> shutdown    |                                                     
-  |                                                        |
-  +--------------------------------------------------------+
-        
-        
-    
-    
-    
-    Installation notes:    
-    
-    If you like to change the database userid and password, you can do the following:
-    
-    Advanced MYSQL Configuration:
-    [1] Starting mysql
-        cd /usr/local/mysql
-        ./bin/safe_mysqld & (if not starting up, please refer to http://www.mysql.com)
-    [2] Configure the mysqladmin
-        mysqladmin -u root password "<yourpassword>" please refer to the 
-        oscar_mcmaster.properties file for database password
-    [3] Grant permission to user
-        mysql -u root -p<yourpassword> oscar_mcmaster
-        mysql> grant all on oscar_mcmaster.* to root@localhost identified by "<yourpassword>"
-    [4] Then try query on browser
-        https://<yourhostname>:8443/oscar_mcmaster/mysql.jsp
-        if you see "connection sucess!", you can access OSCAR
-        
-    Edit oscar_mcmaster.properties file
-    [1] cd /root
-    [2] vi oscar_mcmaster.properties file
-    [3] change the value in db_username and db_password
-    [4] save it
-    [5] run oscar again
+Download the Required Files
 
+j2sdk-1_4_1_01-linux-i586.bin
+Java 2 SDK (java.sun.com)
+
+jakarta-tomcat-4.0.6.tar.gz                         
+Jakarta Tomcat Server (jakarta.apache.org)
+
+mysql-standard-4.0.12-pc-linux-i686.tar.gz
+MySQL Database (www.mysql.com)
+
+mysql-connector-java-3.0.7-stable.tar.gz
+MySQL JDBC Driver (www.mysql.com)
+
+
+Java Development Kit Installation 
+1 switch to the /home directory  
+ 		cd /home 
+
+2 change the j2sdk-1_4_1_01-linux-i586.bin  file to an executable  
+  		chmod +x j2sdk-1_4_1_01-linux-i586.bin
+
+3 switch to the /usr/local directory  
+  cd  /usr/local 
+
+4 run the .bin file and answer "yes" when prompted  
+ 		 /home/j2sdk-1_4_1_01-linux-i586.bin
   
+
+
+Tomcat Installation  
+1 Switch to /usr/local directory if you are not already there  
+  		cd  /usr/local 
+
+2 Use the tar command with the gunzip switch to install Jakarta Tomcat
+  		tar xvzf /home/jakarta-tomcat-4.0.6.tar.gz       
+
+3 Add a link to the tomcat directory
+ln -s jakarta-tomcat-4.0.6.tar.gz  tomcat
+
+
+Edit the /etc/profile file 
+ 
+1 Switch to the /etc directory 
+  		cd /etc 
+
+2 Make a backup of the existing profile file in case it becomes corrupt.  
+  		cp profile profile.BAK.mm.dd.yy 
+
+3 Using your favorite editor and as root, open /etc/profile for editing. You should see a line at the bottom of the file which begins with the word "export" and has a string of upper case only names beside it.  Insert the following lines somewhere before the "export" line but not inside of the"if...if" code blocks you'll see scattered around 
+
+ JAVA_HOME="/usr/local/j2sdk1.4.1_01" 
+ CATALINA_HOME="/usr/local/ jakarta-tomcat-4.0.6" 
+ PATH="$PATH:/usr/local/ j2sdk1.4.1_01/bin:/usr/local/ jakarta-tomcat-4.0.6/bin" 
+ export EXISTING STUFF PATH JAVA_HOME CATALINA_HOME 
+
+4 Save your edited profile file, log out and log back in again as root test Tomcat  
+  
+
+
+Test Tomcat             
+1 Start Tomcat go to CATALINA_HOME/webapps and run 
+  		../bin/startup.sh 
+
+2 View the Tomcat test page on your browser at address http://localhost:8080:/index.html. 
+ 	If you don't see the test page something has gone wrong.
+ 
+3 Stop Tomcat go to CATALINA_HOME/webapps and run  
+  		../bin/shutdown.sh 
+  
+
+Enable SSL  
+1 Create a certificate keystore by executing the following command from the /root directory 
+  		keytool -genkey -alias tomcat -keyalg RSA -keystore /root/.keystore 
+  		and specify a password value of "changeit" 
+
+2 Uncomment the "SSL HTTP/1.1 Connector" entry in $CATALINA_HOME/conf/server.xml and tweak as necessary. You can uncomment the SSL HTTP/1.1 section by removing the "<!--" and "-->" tags that surround it. Remember to save a backup of server.xml first.  
+
+3 In the SSL HTTP/1.1 section of server .xml place the following string after the clientAuth="false" statement and save the edited file.  
+  		keystoreFile="/root/.keystore" 
+  
+
+Test Tomcat and SSL 
+1 Start Tomcat go to CATALINA_HOME/webapps and run  
+  		../bin/startup.sh 
+
+2 View the Tomcat test page on your browser at address https://localhost:8443:/index.html. 
+If you don't get a secure connection to the Tomcat test page something has gone wrong 
+
+3 Stop Tomcat go to CATALINA_HOME/webapps and run  
+  		../bin/shutdown.sh 
+
+
+MySQL Installation  
+Enter the following commands in sequence 
+  		groupadd mysql 
+  		
+useradd -g mysql mysql 
+  		
+cd /usr/local 
+  		
+tar zxvf /home/ mysql-standard-4.0.12-pc-linux-i686.tar.gz
+  		
+ln -s mysql-standard-4.0.12-pc-linux-i686 mysql 
+  		
+cd mysql 
+  		
+./scripts/mysql_install_db 
+  		
+chown -R root /usr/local/mysql 
+  		
+chown -R mysql /usr/local/mysql/data 
+  		
+chgrp -R mysql /usr/local/mysql 
+  		
+chown -R root /usr/local/mysql/bin 
+  		
+./bin/mysqld_safe --user=mysql & 
+
+cd bin 
+
+  		./mysqladmin -u root password *********** 
+
+Remember for security reasons always start the MySQL daemon as the mysql user
+(i.e. using the --user=mysql option) 
+  
+
+
+Installing the JDBC drivers  
+1 Move to the /home directory
+cd /home
+
+2 Use the tar command with the gunzip switch to Extract the JDBC jar file
+tar zxf  mysql-connector-java-3.0.7-stable.tar.gz
+
+3 Copy the JDBC drivers to the appropriate directory in the java SDK  
+
+    cp /home/ mysql-connector-java-3.0.7-stable/mysql-connector-java-3.0.7-stable-bin.jar            
+         /usr/local/j2sdk1.4.0/jre/lib/ext/ 
+  
+
+
+Setting up MySQL  
+1 From anywhere in your directory tree run the following commands to enter into the MySQL command prompt  
+  		cd /usr/local/mysql/bin 
+  		./mysql -p {enter password *********} 
+
+2 At the mysql prompt(mysql>) run the following command 
+  		create database oscar_mcmaster; 
+  		quit 
+
+3 Login to the MySQL prompt and grant local and network user permissions(substitute your own host name for "yourhostname") 
+  a) At the system prompt type  
+    		./mysql -u root -p oscar_mcmaster 
+    		{enter password "********" } 
+
+  b) At the MySQL prompt (mysql>) type    
+grant all on oscar_mcmaster.* to root@localhost.localdomain identified by "***********"; 
+
+4 Exit the MySQL command prompt  by entering quit  
+  		quit   
+  
+
+Before we begin the installation of OSCAR software we will presume JAVA 2 SDK, Jakarta Tomcat and MySQL are properly configured.
+Assuming the OSCAR-Mcmaster Tar ball is uncompressed to /home directory.
+
+
+Install OSCAR Software
+
+1 Switch to the Jakarta Tomcat directory 
+cd /usr/local/tomcat
+2 Switch to web application directory where the OSCAR Web Application WAR file locate
+cd webapps
+3 Copy the oscar_mcmaster.war file from CD-Rom to webapps directory
+cp /home/oscar_mcmaster/oscar_mcmaster.war .
+4 Starting oscar_mcmaster at webapps directory
+../bin/startup.sh
+
+
+Install and Configure OSCAR e-Document Container
+
+Install the OscarDocument Container
+
+1 Switch to the /usr/local  directory 
+cd /usr/local/
+2 Copy the OscarDocument.tar.gz from CD-ROM to /usr/local
+cp /home/oscar_mcmaster/OscarDocument.tar.gz .
+3 Uncompress the OscarDocument tar file to /usr/local directory
+tar -zxvf OscarDocument.tar.gz 
+
+Configure the OscarDocument Container
+     
+     1	Switch to the tomcat configuration directory
+cd /usr/local/tomcat/conf
+2 Edit the server.xml file to add OscarDocument  as Container
+vi server.xml
+3 In the vi editor, search for context mapping
+?docBase= <Enter>
+
+<!-- Tomcat Root Context -->
+        <!--
+          <Context path="" docBase="ROOT" debug="0"/>
+        -->
+4 Insert the following statement after the Root Context
+<!-- Tomcat OscarDocument Context -->
+        <!--
+          <Context path="/OscarDocument" docBase="/usr/local/OscarDocument" debug="0"/>
+        -->
+    5	Save File 
+<ESC> :wq! <Enter>
+
+    6	Edit the web.xml to avoid listing direcrtory content
+vi web.xml
+	
+7 In the vi editor, search for listing mapping
+?listings<   <Enter>
+
+8 Change the status from true to false and Save File
+	
+<param-name>listings</param-name>
+<param-value>false</param-value>
+
+
+Installing OSCAR DB and initializing tables
+
+1 Go to /usr/local/mysql directory 
+cd /usr/local/mysql
+2 Load the OSCAR DB Script from CD-ROM into MySQL
+./bin/mysql -uroot -pyourpassword oscar_mcmaster < /home/oscar_mcmaster/oscarinit.sql
+3 Check the OSCAR DB is installed property
+./bin/mysql -uroot -pyourpassword oscar_mcmaster
+4 In the mysql shell mysql> , list all DB tables
+show tables;
+5 Exit the MySql Command prompt by entering quit
+quit;
+
+Configuring OSCAR Properties Files
+
+
+1 Install Properties Files in root directory
+cp /home/oscar_mcmaster/oscar_*properties /root/.
+2 Go to /root directory
+cd 
+3 Configure oscar_mcmaster.properties
+
+
+# Mysql connection
+db_name = oscar_mcmaster
+db_username = root
+db_password = yourpassword
+db_driver = com.mysql.jdbc.Driver
+db_uri = jdbc:mysql:///
+
+# Extract folder
+HOME_DIR: /usr/local/OscarDocument/oscar_mcmaster/billing/download/
+DOCUMENT_DIR: /usr/local/OscarDocument/oscar_mcmaster/document/
+RA_FORWORD: /billing/genRA.jsp
+DOC_FORWARD: /dms/complete.jsp
+EA_FORWORD: /billing/billingEAreport.jsp
+# Billing
+default_view = MFP
+clinic_view = 3866
+clinic_no = 1111
+# User rights for Document Management System
+SUPERUSER = oscardoc
+# Path
+tomcat_path = 
+project_home = oscar_mcmaster
+
+
+
+
+
