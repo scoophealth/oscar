@@ -56,7 +56,7 @@ public class IncomingMDSFiles {
                logger.info("Working file already existed");
             }
         } catch (IOException e) {
-           logger.severe("Error Creating Working File "+e.getMessage());
+           logger.severe("Error Creating Working File:"+workingFile+ " Error "+e.getMessage());
         }
         return success;
     }
@@ -94,6 +94,7 @@ public class IncomingMDSFiles {
     }
     
     public long getCurrentModifiedTime(String incomingHL7dir){
+       logger.info("Getting Last Modified time of "+incomingHL7dir);
        File file = new File(incomingHL7dir);           
        return file.lastModified(); 
     }
@@ -101,6 +102,7 @@ public class IncomingMDSFiles {
     
     public long getLastModifiedTime(String moddedTime){
         //READ FILE  
+        logger.info ("Reading Last Modified Time from: "+moddedTime);
         String str = "0";
         try {
            BufferedReader in = new BufferedReader(new FileReader(moddedTime));               
@@ -120,6 +122,7 @@ public class IncomingMDSFiles {
     }
     
     public void setLastModifiedTime(long modTime,String moddedTimeFile){
+       logger.info("Writeing Last Modified Time to: "+moddedTimeFile);
         try {
            BufferedWriter out = new BufferedWriter(new FileWriter(moddedTimeFile));
            out.write(Long.toString(modTime));
@@ -129,7 +132,7 @@ public class IncomingMDSFiles {
         }
     }
     
-    public ArrayList getFileNamesToParse(String incomingHL7dir){
+    public ArrayList getFileNamesToParse(String incomingHL7dir,String auditLogFile){
         logger.info("Getting Files Names to Parse");
         ArrayList retval = new ArrayList();
         File dir = new File(incomingHL7dir);
@@ -141,7 +144,8 @@ public class IncomingMDSFiles {
         } else {
             for (int i=0; i<children.length; i++) {
             // Get filename of file or directory
-            if (!children[i].endsWith("TXT")){
+            logger.info("filename: "+children[i]);
+            if (!children[i].endsWith("TXT") && !children[i].equals(auditLogFile)){
                 logger.info("Adding filename :"+children[i] +" to list of files to be parsed");
                 retval.add(children[i]);
             }
