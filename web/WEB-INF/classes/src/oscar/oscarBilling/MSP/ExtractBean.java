@@ -681,8 +681,8 @@ public class ExtractBean extends Object implements Serializable {
                             + forwardZero(rs2.getString("referral_flag2"),1)        //p44   1
                             + forwardZero(rs2.getString("referral_no2"),5)          //p46   5
                             + forwardZero(rs2.getString("time_call"),4)             //p47   4
-                            + zero(4)                                               //p48   4 
-                            + zero(4)                                               //p50   4
+                            + forwardZero(rs2.getString("service_start_time"),4)    //p48   4 
+                            + forwardZero(rs2.getString("service_end_time"),4)      //p50   4
                             + forwardZero(rs2.getString("birth_date"),8)            //p52   8
                             + forwardZero(rs2.getString("billingmaster_no"), 7)     //p54   7
                             + forwardSpace(rs2.getString("correspondence_code"), 1) //p56   1
