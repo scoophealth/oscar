@@ -120,8 +120,11 @@ public class FrmFormAction extends Action {
             validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
             String inputValue = (String) frm.getValue(mt.getType()+"Value");
             String observationDate = (String) frm.getValue(mt.getType()+"Date");
-            if(mt.getType().equalsIgnoreCase("DM") || mt.getType().equalsIgnoreCase("HTN") || mt.getType().equalsIgnoreCase("Hchl") || mt.getType().equalsIgnoreCase("CAD") || mt.getType().equalsIgnoreCase("CVD") || mt.getType().equalsIgnoreCase("PVD") || mt.getType().equalsIgnoreCase("MI") || mt.getType().equalsIgnoreCase("Ang") || mt.getType().equalsIgnoreCase("ACS") || mt.getType().equalsIgnoreCase("RVTN")){
-                observationDate = today;
+            if(observationDate==null){
+                observationDate = today;                
+            }
+            else if(observationDate.compareTo("")==0){
+                observationDate = today; 
             }
                         
             //parse the checkbox value
@@ -165,9 +168,18 @@ public class FrmFormAction extends Action {
                 String inputValue = (String) frm.getValue(type+"Value");                
                 String lastData = (String) frm.getValue(type+"LastData");                
                 String lastDataEnteredDate = (String) frm.getValue(type+"LastDataEnteredDate");
+
                 String observationDate = (String) frm.getValue(type+"Date");
+                if(observationDate==null){
+                    observationDate = today;                
+                }
+                else if(observationDate.compareTo("")==0){
+                    observationDate = today; 
+                }
+                
                 String comments = (String) frm.getValue(type+"Comments");
                 comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
+                
                 
                 //parse the checkbox value
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
@@ -320,7 +332,7 @@ public class FrmFormAction extends Action {
                 saveErrors(request, errors);
                 valid = false;
             }        
-            if(!ectValidation.isDate(observationDate)&&inputValue.compareTo("")!=0){                        
+            if(!ectValidation.isDate(observationDate)){                        
                 errors.add(inputDateName,
                 new ActionError("errors.invalidDate", inputTypeDisplay));
                 saveErrors(request, errors);
