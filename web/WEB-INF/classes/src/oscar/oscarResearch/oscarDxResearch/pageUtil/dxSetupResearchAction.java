@@ -40,14 +40,14 @@ public final class dxSetupResearchAction extends Action {
                                  HttpServletRequest request,
                                  HttpServletResponse response)
         throws Exception {
-          
+                  
         String demographicNo = request.getParameter("demographicNo");
         String providerNo = request.getParameter("providerNo");
-        String selectedQuickList = request.getParameter("quickList");        
+        String selectedQuickList = request.getParameter("quickList");          
         dxResearchBeanHandler hd = new dxResearchBeanHandler(demographicNo);
         dxQuickListBeanHandler quicklistHd = null;
         dxQuickListItemsHandler quicklistItemsHd = null;
-        System.out.println("Quick List: " + selectedQuickList);
+        //System.out.println("Quick List: " + selectedQuickList);
         if (selectedQuickList.equals("")||selectedQuickList==null){
             quicklistHd = new dxQuickListBeanHandler(providerNo);
             quicklistItemsHd = new dxQuickListItemsHandler(quicklistHd.getLastUsedQuickList(),providerNo);
