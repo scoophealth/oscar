@@ -43,7 +43,7 @@
 
 <head>
 <title>
-<bean:message key="global.measurements.general"/>
+<logic:present name="groupName"><bean:write name="groupName"/></logic:present> <bean:message key="oscarEncounter.Index.measurements"/>
 </title>
 <html:base/>
 
@@ -62,12 +62,10 @@ function getDropboxValue(ctr){
     alert("hello!");
 }
 
-function popupPage(vheight,vwidth,type,selection) { //open a new popup window
-  
-  var page = "../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type="+ type + "&mInstrc=" + selection;
+function popupPage(vheight,vwidth,page) { //open a new popup window
+    
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(page, "blah", windowprops);
-  window.close();
+  var popup=window.open(page, "blah", windowprops);  
 }
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
@@ -125,6 +123,8 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
                                                     <td align="left"  width="150">
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
                                                     </td>
+                                                    <td align="left"  width="20">                                                        
+                                                    </td>
                                                  </tr>
                                                 <% int i = 0;%>
                                                 <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
@@ -139,7 +139,7 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
                                                     <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>     
                                                     <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="20"/></td>
                                                     <td><html:text property='<%= "value(date-" + ctr + ")" %>' size="20"/></td>
-                                                                                
+                                                    <td width="20"></td>                            
                                                     <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>
                                                     <input type="hidden" name='<%= "value(inputTypeDisplayName-" + ctr + ")" %>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>                            
                                                     <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/></td>
@@ -152,6 +152,7 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
                                                     <td><bean:write name='measurementType' property='lastData'/></td>
                                                     <td><bean:write name='measurementType' property='lastComments'/></td>
                                                     <td><bean:write name='measurementType' property='lastDateEntered'/></td>                                                    
+                                                    <td><img src="img/history.gif" title='<bean:message key="oscarEncounter.Index.oldMeasurements"/>' onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="measurementType" property="type" />'); return false;" /></td>
                                                 </tr>
                                                 </logic:present>
                                                 </logic:iterate>                        
