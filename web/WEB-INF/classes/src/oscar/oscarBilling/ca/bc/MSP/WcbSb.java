@@ -278,8 +278,8 @@ public class WcbSb {
       int length = this.w_clinicinfo.length();
       return this.Note(logNo,misc.backwardSpace(((length >= 400)? this.w_clinicinfo.substring(400, length): "Clinical Information Complete"),400));
    }
-   private String Claim5(String logNo) {
-      return this.Claim(logNo, this.billamountforfeeitem2, this.w_extrafeeitem, "0");
+   private String Claim5(String logNo) {      
+      return this.Claim(logNo, this.billamountforfeeitem1, this.w_feeitem, "0");
    }
    private String Note(String logNo, String a) {
       return this.Note(logNo, a, "");
