@@ -179,6 +179,27 @@ public class MSPReconcile{
             }           
     }
     
+    public ArrayList getSequenceNumbers(String billingNo){
+        ArrayList retval = new ArrayList();
+        try {            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs = db.GetSQL("select t_dataseq from teleplanC12 where t_officefolioclaimno = '"+forwardZero(billingNo,7)+"'");
+            while(rs.next()){   
+              //String exp[] = new String[7];  
+              retval.add(rs.getString("t_dataseq"));                                     
+            }
+            rs = db.GetSQL("select t_dataseq from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");
+            while(rs.next()){   
+              retval.add(rs.getString("t_dataseq"));                                     
+            }
+            rs.close();
+            db.CloseConn();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return retval;
+    }
+    
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate){
         
         
@@ -311,9 +332,10 @@ public class MSPReconcile{
         }        
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs = db.GetSQL("select distinct t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanC12 where t_officefolioclaimno = '"+forwardZero(billingNo,7)+"'");
+            ResultSet rs = db.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanC12 where t_officefolioclaimno = '"+forwardZero(billingNo,7)+"'");
             while(rs.next()){   
               String exp[] = new String[7];  
+              String seq = rs.getString("t_dataseq");
               exp[0] = rs.getString("t_exp1");
               exp[1] = rs.getString("t_exp2");
               exp[2] = rs.getString("t_exp3");
@@ -323,7 +345,7 @@ public class MSPReconcile{
               exp[6] = rs.getString("t_exp7");
               for (int i = 0 ; i < exp.length ; i++){
                    if (exp[i].length() != 0){
-                       retval.add(exp[i]+" "+p.getProperty(exp[i],""));
+                       retval.add(seq+"&nbsp;&nbsp;"+exp[i]+"&nbsp;&nbsp;"+p.getProperty(exp[i],""));
                    }
               }
             }
@@ -343,9 +365,10 @@ public class MSPReconcile{
         } catch (IOException e) { e.printStackTrace(); }        
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs = db.GetSQL("select distinct t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");
+            ResultSet rs = db.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");
             while(rs.next()){   
               String exp[] = new String[7];  
+              String seq = rs.getString("t_dataseq");
               exp[0] = rs.getString("t_exp1");
               exp[1] = rs.getString("t_exp2");
               exp[2] = rs.getString("t_exp3");
@@ -355,7 +378,7 @@ public class MSPReconcile{
               exp[6] = rs.getString("t_exp7");
               for (int i = 0 ; i < exp.length ; i++){
                    if (exp[i].length() != 0){
-                       retval.add(exp[i]+" "+p.getProperty(exp[i],""));
+                       retval.add(seq+"&nbsp;&nbsp;"+exp[i]+"&nbsp;&nbsp;"+p.getProperty(exp[i],""));
                    }
               }
             }
