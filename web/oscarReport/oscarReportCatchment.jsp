@@ -1,0 +1,159 @@
+ <%      
+  if(session.getValue("user") == null)
+    response.sendRedirect("../logout.jsp");
+  String user_no; 
+  user_no = (String) session.getAttribute("user");
+  int  nItems=0;  
+     String strLimit1="0"; 
+    String strLimit2="50";
+    if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+  boolean bodd = true;
+  String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
+%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
+<%@ include file="dbReport.jsp" %>
+<%
+GregorianCalendar now=new GregorianCalendar();
+  int curYear = now.get(Calendar.YEAR);
+  int curMonth = (now.get(Calendar.MONTH)+1);
+  int curDay = now.get(Calendar.DAY_OF_MONTH);
+  String clinic="";
+  String clinicview = oscarVariables.getProperty("clinic_view");
+   ResultSet rslocal2;
+          rslocal2 = null;
+    int[] itemp1 = new int[2];
+    itemp1[0] = Integer.parseInt(strLimit1);
+  itemp1[1] = Integer.parseInt(strLimit2);
+  
+  
+  %><% 
+  	int flag = 0, rowCount=0;
+  String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
+   String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
+   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
+%>
+<html>
+<head>
+<title>oscarReport -  Visit Report</title>
+<link rel="stylesheet" href="oscarReport.css" >
+<style type="text/css">
+<!--
+.bodytext
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-style: bold;
+  line-height: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+-->
+</style>
+      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+      <meta http-equiv="Pragma" content="no-cache">
+      
+<script language="JavaScript">
+<!--
+ 
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "attachment", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
+function selectprovider(s) {
+  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
+  else a = self.location.href;
+	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
+}
+
+function setfocus() {
+  this.focus();
+}
+function refresh() {
+  var u = self.location.href;
+  if(u.lastIndexOf("view=1") > 0) {
+    self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
+  } else {
+    history.go(0);
+  }
+}
+//-->
+</script>
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head>
+
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#000000"> 
+    <td height="40" width="10%">
+      <input type='button' name='print' value='Print' onClick='window.print()'>
+    </td>
+    <td width="90%" align="left"> 
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Report 
+        - PCN Catchment Area</font></font></b></font></p>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#666699"> 
+    <td width="23%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Demographic</font></strong></div></td>
+    <td width="4%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Sex</font></strong></div></td>
+    <td width="11%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">DoB</font></strong></div></td>
+    <td width="15%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">City</font></strong></div></td>
+    <td width="17%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Province</font></strong></div></td>
+    <td width="19%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Postal</font></strong></div></td>
+    <td width="11%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Status</font></strong></div></td>
+  </tr>
+  <%
+  String[] param = new String[1];
+  param[0] = "RO";
+  rslocal2 = apptMainBean.queryResults(param, itemp1, "search_catchment");
+     while(rslocal2.next()){  
+    bodd=bodd?false:true; //for the color of rows 
+    nItems++; 
+%>
+<tr bgcolor="<%=bodd?"#EEEEEE":"white"%>">
+    <td><div align="left"><font size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"> <%=rslocal2.getString("last_name")%>,<%=rslocal2.getString("first_name")%></font></div></td>
+    <td><div align="center"><font size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("sex")%></font></div></td>
+    <td><div align="center"><font size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("date_of_birth")%>-<%=rslocal2.getString("month_of_birth")%>-<%=rslocal2.getString("year_of_birth")%></font></div></td>
+    <td><div align="center"><font size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("city")%></font></div></td>
+    <td><div align="center"><font size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("province")%></font></div></td>
+    <td><div align="center"><font size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("postal")%></font></div></td>
+    <td><div align="center"><font size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><%=rslocal2.getString("patient_status")%></font></div></td>
+  </tr>
+  <%  }
+%>
+
+<%
+  int nLastPage=0,nNextPage=0;
+  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
+  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
+  if(nLastPage>=0) {
+%>
+<a href="oscarReportCatchment.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<%
+  }
+  if(nItems==Integer.parseInt(strLimit2)) {
+%>
+<a href="oscarReportCatchment.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<%
+}
+%>
+</table>
+</body>
+</html>
