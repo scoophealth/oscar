@@ -604,7 +604,7 @@ function showHideLayers() { //v3.0
         <div id="ICBC">
            <table width="100%">
 	           <tr>
-	              <td>ICBC Claim No: <html:text name="icbc_claim_no" property="icbc_claim_no" maxlength="8" value="<%=""%>" />
+	              <td>ICBC Claim No: <html:text property="icbc_claim_no" maxlength="8"  />
 	              
 	              MVA: <html:select property="mva_claim_code">
                             <html:option value="N" >No</html:option>
