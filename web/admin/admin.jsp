@@ -145,6 +145,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         </td>
     </tr>
       
+           <%-- This links doesnt make sense on Brazil. There are other billing engines that we must use for billing --%>
+           <% if (!country.equals("BR")) { %>
     <tr bgcolor="#CCCCFF"> 
       <td> 
         <p><bean:message key="admin.admin.billing"/></p>
@@ -175,6 +177,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
                    	         
         </td>
     </tr>
+           <% } %>
     <%-- removed the add demographic button because it was never used, it was out of sync with the 
          doctor/receptionist version, and it was too much of a pain to keep it up to date --%>
     <%-- <tr bgcolor="#CCCCFF"> 
