@@ -38,8 +38,7 @@ import oscar.oscarProvider.data.*;
  * Developed By Andromedia
  * www.andromedia.ca
  */
-public class TeleplanCorrectionActionWCB
-extends org.apache.struts.action.Action {
+public class TeleplanCorrectionActionWCB extends org.apache.struts.action.Action {
    private static final String sql_biling = "update_wcb_billing", //set it to be billed again in billing
    sql_billingmaster = "update_wcb_billingmaster", // set it to be billed again in billingmaster
    sql_demographic = "update_wcb_demographic", //update demographic information
@@ -47,7 +46,7 @@ extends org.apache.struts.action.Action {
    provider_wcb = "update_provider_wcb",
    CLOSE_RECONCILIATION = "close_reconciliation"; //closes c12 record
    
-   public ActionForward perform(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
+   public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
    throws IOException, ServletException {
       
       String where = "success";
