@@ -278,6 +278,7 @@ INSERT INTO encounterForm VALUES ('Caregiver', '../form/formcaregiver.jsp?demogr
 INSERT INTO encounterForm VALUES ('Grip Strength', '../form/formgripstrength.jsp?demographic_no=','formGripStrength',0);
 INSERT INTO encounterForm VALUES ('Treatment Preference', '../form/formtreatmentpref.jsp?demographic_no=','formTreatmentPref',0);
 INSERT INTO encounterForm VALUES ('Caregiver - SF36', '../form/formSF36caregiver.jsp?demographic_no=','formSF36Caregiver',0);
+INSERT INTO encounterForm VALUES ('Vascular Tracker', ' ../form/SetupForm.do?formName=VTForm&demographic_no=','formVTForm',0);
 
 --
 -- Dumping data for table 'encountertemplate'
