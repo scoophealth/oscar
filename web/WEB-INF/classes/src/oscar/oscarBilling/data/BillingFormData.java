@@ -8,7 +8,15 @@ import oscar.oscarDB.DBHandler;
 
 public class BillingFormData {
     
-    
+    public String getBillingFormDesc(BillingForm[] billformlist,String billForm){
+        for (int i = 0; i < billformlist.length; i++){ 
+             if(billformlist[i].getFormCode().equals( billForm)){                 
+                  return billformlist[i].getDescription();
+             }
+        }
+               
+        return "";
+    }
     
     public BillingService[] getServiceList(String serviceGroup, String serviceType, String billRegion) {
         BillingService[] arr ={};
