@@ -116,6 +116,7 @@
 
     function popUpMeasurements(vheight,vwidth,varpage) { //open a new popup window
       if(varpage!= 'null'){  
+          document.measurementGroupForm.measurementGroupSelect.options[0].selected = true;
           var page = "./oscarMeasurements/SetupMeasurements.do?groupName=" + varpage;
           windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
           var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
@@ -126,6 +127,23 @@
             }
           }
       }
+    }
+    function popUpInsertTemplate(vheight,vwidth,varpage) { //open a new popup window
+        //var x = window.confirm("<bean:message key="oscarEncounter.Index.insertTemplateConfirm"/>");
+        //if(x) { 
+              if(varpage!= 'null'){  
+                  document.insertTemplateForm.templateSelect.options[0].selected=true;
+                  var page = "./InsertTemplate.do?templateName=" + varpage;
+                  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+                  var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+                  if (popup != null) {
+                    if (popup.opener == null) {
+                      popup.opener = self;
+                      alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
+                    }
+                  }
+              }
+          //}
     }
 
     function popupStart1(vheight,vwidth,varpage) {
@@ -139,7 +157,7 @@
     }
     function insertTemplate(text){
         // var x = window.confirm("<bean:message key="oscarEncounter.Index.insertTemplateConfirm"/>");
-        // if(x) {            
+        // if(x) {               
             document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003E/g, "\u003E");
             document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003C/g, "\u003C");
@@ -681,21 +699,15 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <select name="templateSelect" class="ControlSelect" onchange="javascript:insertTemplate(document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
+                        <select name="templateSelect" class="ControlSelect" onchange="javascript:popUpInsertTemplate(0,0,document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.insertTemplate"/>-
                          <%
                             String encounterTmp ="NONE";
                             String encounterTmpValue="NONE";
                             for(int j=0; j<bean.templateNames.size(); j++) {
-                                encounterTmp = (String)bean.templateNames.get(j);
-                                encounterTmpValue = (String)bean.templateValues.get(j);
-                                encounterTmpValue = encounterTmpValue.replaceAll("\\\\", "\\\\u005C"); // replace \ with unicode equiv.
-                                encounterTmpValue = encounterTmpValue.replaceAll("\"", "\\\\u0022"); // replace " with unicode equiv.
-                                encounterTmpValue = encounterTmpValue.replaceAll("'", "\\\\u0027"); // replace ' with unicode equiv.
-                                encounterTmpValue = encounterTmpValue.replaceAll(">", "\\\\u003E");
-                                encounterTmpValue = encounterTmpValue.replaceAll("<", "\\\\u003C");
+                                encounterTmp = (String)bean.templateNames.get(j);                                
                          %>
-                                <option value="<%=encounterTmpValue%>"><%=encounterTmp %></option>
+                                <option value="<%=encounterTmp%>"><%=encounterTmp %></option>
                          <% }%>
                         </select>
                     </td>
