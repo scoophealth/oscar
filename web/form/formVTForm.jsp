@@ -38,7 +38,7 @@
 
 <head>
 <title>
-Vascular Tracker
+Vascular Tracker (Draft)
 </title>
 <style type="text/css">
         a:link{
@@ -522,7 +522,7 @@ function PVDCheck(){
     <table width="640px">
         <tr>            
             <td class="subject">
-                Vascular Data Entry Template <%=request.getAttribute("decisionSupportURL")==null?"(Miles server is not available)":""%>
+                Vascular Data Entry Template (draft) <%=request.getAttribute("decisionSupportURL")==null?"(Miles server is not available)":""%>
             </td>
         </tr>
         <tr>                     
