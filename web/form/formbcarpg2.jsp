@@ -24,8 +24,13 @@
 	String project_home = request.getContextPath().substring(1);
 %>
 <%
-  boolean bView = false;
-  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+	boolean bView = false;
+	if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+  
+	//1. LMP from AR1 should copy over to AR2 #16 LMP
+	//2. Age at EDD on AR1 should copy over to AR2 #16 'age'
+	if (props.getProperty("ar2_lmpDate", "").equals("") ) 	props.setProperty("ar2_lmpDate", props.getProperty("pg1_lmp", ""));
+	if (props.getProperty("ar2_age", "").equals("") ) 	props.setProperty("ar2_age", props.getProperty("pg1_ageAtEDD", ""));
 %>
 
 <html:html locale="true">

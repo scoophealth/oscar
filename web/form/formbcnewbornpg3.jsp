@@ -432,7 +432,10 @@ function onCheckSlave(a, masterName) {
       <td width="15%" nowrap><b>9.</b> DATE DONE<br>&nbsp;&nbsp;&nbsp;dd/mm/yyyy</td>
 	  <td rowspan="2" valign="bottom">
 	  <input type="checkbox" name="ar2_9Test1" <%= props.getProperty("ar2_9Test1", "") %>   /> 
-	  PKU. TSH. GALACTOSEMIA &nbsp;&nbsp;&nbsp;TIME:
+	  PKU. TSH. GALACTOSEMIA &nbsp;
+	  <input type="checkbox" name="ar2_9Test1a" <%= props.getProperty("ar2_9Test1a", "") %> /> 
+	  DEFERRED &nbsp;&nbsp;
+	  TIME:
       <input type="text" name="ar2_9Test1Time" size="5" maxlength="5" value="<%= props.getProperty("ar2_9Test1Time", "") %>"  />
 	  </td>
 	</tr><tr>

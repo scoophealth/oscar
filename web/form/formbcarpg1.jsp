@@ -687,7 +687,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
     <input type="text" name="pg1_mensCycle" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_mensCycle", "") %>" @oscar.formDB />
 	</td>
     <td>EDD BY DATES<br> dd/mm/yyyy<br>
-    <input type="text" name="pg1_eddByDate"  style="background-color: #FFEFD5; width:100%;" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" onDblClick="calByLMP();" @oscar.formDB dbType="date"/>
+    <input type="text" name="pg1_eddByDate"  class="spe" style="width:100%;" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" onDblClick="calByLMP();" @oscar.formDB dbType="date"/>
 	</td>
   </tr>
   <tr>
