@@ -18,8 +18,7 @@
 
     FrmData fd = new FrmData();
     String resource = fd.getResource();
-    resource = resource + "ob/riskinfo/";
-    props.setProperty("c_lastVisited", "pg2");
+    //resource = resource + "ob/riskinfo/";    props.setProperty("c_lastVisited", "pg2");
 
 	//get project_home
 	String project_home = getServletContext().getRealPath("/") ;
