@@ -343,8 +343,9 @@ function showHideLayers() { //v3.0
                 <td align="right" colspan="4">  
                   <html:form action="/billing/CA/BC/SaveBilling" >
 	                 <input type="button" name="Submit3" value="Go Back" onClick="location.href='billingBC.jsp?loadFromSession=yes'"/>
-                    <input type="submit" name="Submit" value="Save Bill">
-                    <input type="button" name="Submit2" value="Cancel" onClick="window.close();">
+	                 <input type="submit" name="submit" value="Another Bill" />
+                    <input type="submit" name="submit" value="Save Bill"/>
+                    <input type="button" name="Submit2" value="Cancel" onClick="window.close();" />
                   </html:form>
                 </td>
               </tr>
