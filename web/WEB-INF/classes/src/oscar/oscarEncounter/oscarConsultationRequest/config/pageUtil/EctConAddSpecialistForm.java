@@ -32,6 +32,18 @@ import java.util.ResourceBundle;
 
 public final class EctConAddSpecialistForm extends ActionForm
 {
+    String fName;
+    String lName;
+    String proLetters;
+    String address;
+    String phone;
+    String fax;
+    String website;
+    String email;
+    String specType;
+    String transType;
+    String specId;
+    int whichType;
 
     public EctConAddSpecialistForm()
     {
@@ -52,16 +64,8 @@ public final class EctConAddSpecialistForm extends ActionForm
 
     public void setTransType(String str)
     {
-        ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources");
-        
         System.out.println("setter transtype = ".concat(String.valueOf(String.valueOf(str))));
         transType = str;
-        
-        if(str.equals(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.addOperation")))
-            whichType = 1;
-        else
-        if(str.equals(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.updateOperation")))
-            whichType = 2;
     }
 
     public String getFirstName()
@@ -219,16 +223,20 @@ public final class EctConAddSpecialistForm extends ActionForm
         whichType = 0;
     }
 
-    String fName;
-    String lName;
-    String proLetters;
-    String address;
-    String phone;
-    String fax;
-    String website;
-    String email;
-    String specType;
-    String transType;
-    String specId;
-    int whichType;
+	/**
+	 * Returns the whichType.
+	 * @return int
+	 */
+	public int getWhichType() {
+		return whichType;
+	}
+
+	/**
+	 * Sets the whichType.
+	 * @param whichType The whichType to set
+	 */
+	public void setWhichType(int whichType) {
+		this.whichType = whichType;
+	}
+
 }
