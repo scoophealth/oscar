@@ -83,6 +83,16 @@ table.hiddenLayer {
         }
       }
     }
+    
+    
+    function goDOC(){
+       if (document.RxSearchDrugForm.searchString.value.length == 0){
+          popupDrugOfChoice(720,700,'http://67.69.12.117:8080/oscarResource/DoC/')
+       }else{
+          var docURL = "http://67.69.12.117:8080/oscarResource/DoC/OSCAR_search/OSCAR_search_results?title="+document.RxSearchDrugForm.searchString.value+"&SUBMIT=GO";
+          popupDrugOfChoice(720,700,docURL);                               
+       }
+    }     
 
     function popupWindow(vheight,vwidth,varpage,varPageName) { //open a new popup window
       var page = varpage;
@@ -385,7 +395,7 @@ table.hiddenLayer {
                             <bean:message key="SearchDrug.drugSearchTextBox"/>
                           </td>
                           <td>
-                            <html:text property="searchString" size="16" maxlength="16"/>&nbsp;<a href="javascript:popupDrugOfChoice(720,700,'http://67.69.12.117:8080/oscarResource/DoC/')">Drug of Choice</a>
+                            <html:text property="searchString" size="16" maxlength="16"/>&nbsp;<a href="javascript:goDOC();">Drug of Choice</a>                            
                           </td>
                         </tr>
                         <tr>
