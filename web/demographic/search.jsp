@@ -33,24 +33,28 @@
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
-<!--
+
 function setfocus() {
   document.titlesearch.keyword.focus();
   document.titlesearch.keyword.select();
 }
 function checkTypeIn() {
-  var dob = document.titlesearch.keyword ;
+  var dob = document.titlesearch.keyword; typeInOK = false;
+  
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
       //alert(dob.value.length);
+      typeInOK = true;
     }
     if(dob.value.length != 10) {
       alert("<bean:message key="demographic.search.msgWrongDOB"/>");
+      typeInOK = false;
     }
+    
+    return typeInOK ;
   }
 }
-//-->
 </SCRIPT>
 <link rel="stylesheet" href="../web.css">
 </head>
@@ -60,7 +64,7 @@ function checkTypeIn() {
 </table>
 
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">
-	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="checkTypeIn()">
+	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="return checkTypeIn()">
 		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.search.msgSearch"/> 
         </i></b></font></td>
 			
