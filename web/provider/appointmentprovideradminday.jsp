@@ -101,11 +101,16 @@ function popupPage(vheight,vwidth,varpage) {
     }
   }
 }
+
 function popupPage2(varpage) {
-var page = "" + varpage;
-windowprops = "height=700,width=1000,location=no,"
-+ "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
-window.open(page, "apptProviderSearch", windowprops);
+    popupPage2(varpage, "apptProviderSearch");
+}
+
+function popupPage2(varpage, windowname) {
+    var page = "" + varpage;
+    windowprops = "height=700,width=1000,location=no,"
+    + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
+    window.open(page, windowname, windowprops);
 }
 
 //<!--oscarMessenger code block-->
@@ -272,7 +277,7 @@ function goZoomView(s, n) {
              <% } %>
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../lab/lablinks.htm');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a></font></td>
 
 <!-- oscarMessenger code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
