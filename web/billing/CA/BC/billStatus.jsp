@@ -49,6 +49,7 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
   BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP); 
+  BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP); 
 
   MSPReconcile msp = new MSPReconcile();
 
@@ -260,7 +261,7 @@ if (billTypes == null){
         <input type="radio" name="billTypes" value="<%=MSPReconcile.CAPITATED%>"    <%=billTypes.equals(MSPReconcile.CAPITATED)?"checked":""%>/> Capitated
         <input type="radio" name="billTypes" value="<%=MSPReconcile.DONOTBILL%>"    <%=billTypes.equals(MSPReconcile.DONOTBILL)?"checked":""%>/> Do Not Bill
         <input type="radio" name="billTypes" value="<%=MSPReconcile.BILLPATIENT%>"  <%=billTypes.equals(MSPReconcile.BILLPATIENT)?"checked":""%>/> Bill Patient
-        <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/> ALL
+        <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/> All
 
       </td>
     </tr>
@@ -275,6 +276,7 @@ if (billTypes == null){
     <th align="center" class="bHeaderData" >STAT</th>
     <th align="center" class="bHeaderDate" >CODE</th>
     <th align="center" class="bHeaderDate" >AMOUNT</th>
+    <th align="center" class="bHeaderDate" >PAID</th>
     <th align="center" class="bHeaderDate" >DX1</th>
     <th align="center" class="bHeaderDate" >DX2</th>
     <th align="center" class="bHeaderDate" >DX3</th>
@@ -297,9 +299,11 @@ if (billTypes == null){
     Properties p = msp.currentC12Records();    
     boolean bodd = true;
     boolean incorrectVal = false;
+    boolean paidinCorrectval = false;
     System.out.println(list.size()+" in this billing list");
     for (int i = 0; i < list.size(); i++){     
       incorrectVal = false;  
+      paidinCorrectval = false;
       MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records                           
@@ -313,15 +317,28 @@ if (billTypes == null){
         incorrectVal = true;
       }
       total = total.add(valueToAdd);
+      String pAmount = msp.getAmountPaid(b.billMasterNo);
+        BigDecimal valueToPaidAdd = new BigDecimal("0.00");
+      try{
+        valueToPaidAdd = new BigDecimal(pAmount).setScale(2, BigDecimal.ROUND_HALF_UP);  
+      }catch(Exception badValueException){ 
+        System.out.println(" Error calculating paid value for "+b.billMasterNo); 
+        paidinCorrectval = true;
+      }
+      paidTotal = paidTotal.add(valueToPaidAdd);
+      
    %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <td align="center" class="bCellData" ><%=b.apptDate%></td>    
     <td align="center" class="bCellData" ><a href="javascript: setDemographic('<%=b.demoNo%>');"><%=b.demoName%></a></td>
     <td align="center" class="bCellData" ><%=b.reason%></td>
     <td align="center" class="bCellData" ><%=b.code%></td>
-    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> >
+    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> >        
+            <%=b.amount%>        
+    </td>
+    <td align="center" class="bCellData" >
         <a href="javascript: function myFunction() {return false; }" onClick="popupPage2(500,1020,'genTAS00ByOfficeNo.jsp?officeNo=<%=b.billMasterNo%>','RecValues');">
-            <%=b.amount%>
+            <%=pAmount%>  
         </a>
     </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
@@ -349,7 +366,7 @@ if (billTypes == null){
     if (rowCount == 0) {
     %>
   <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-    <td colspan="10" align="center" class="bCellData">
+    <td colspan="11" align="center" class="bCellData">
         No bills
     </td>
   </tr>
@@ -360,6 +377,7 @@ if (billTypes == null){
         <td align="center" class="bCellData" >&nbsp;</td>        
         <td align="center" class="bCellData" >Total:</td>
         <td align="center" class="bCellData" ><%=total.toString()%></td>
+        <td align="center" class="bCellData" ><%=paidTotal.toString()%></td>
         <td align="center" class="bCellData" >&nbsp;</td>
         <td align="center" class="bCellData" >&nbsp;</td>
         <td align="center" class="bCellData" >&nbsp;</td>
