@@ -721,7 +721,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>                                         
                                          <tr>
                                             <td></td>
-                                            <td ><table style="display:none" cellpadding='1' cellspacing='0' id="history">                                            
+                                            <td ><table cellpadding='1' cellspacing='0' id="history">                                            
                                             <tr><td>
                                             <table style="display:none" id="detailHistory" cellpadding='1' cellspacing='0'width="100%">                                                   
                                                 <tr>
@@ -1025,7 +1025,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>                                        
                                          <tr>
                                             <td></td>                                            
-                                            <td><table style="display:none" cellpadding='0' cellspacing='0' id="vital">                                                
+                                            <td><table cellpadding='0' cellspacing='0' id="vital">                                                
                                                 <tr>
                                                     <td class="subTitle" width="34%">                                                        
                                                     </td>                                                    
@@ -1153,7 +1153,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table style="display:none" cellpadding='0' cellspacing='0' id="examination">
+                                            <td><table cellpadding='0' cellspacing='0' id="examination">
                                                 <tr>
                                                     <td class="subTitle" width="28%">                                                        
                                                     </td>                                                    
@@ -1328,6 +1328,23 @@ function clearAll(yRadio, nRadio){
                                                     <html:hidden property="value(iExComments)" />
                                                  </tr>
                                                  <tr>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("iDiaDesc")%></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <table cellpadding='0' cellspacing='0'>                                                            
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iDiaLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iDiaLastData")%></td></tr>
+
+                                                        </table>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(iDiaValue)" value="yes" />Yes
+                                                        <html:radio property="value(iDiaValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(eyeDiaId, eyeDiaId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
+                                                    </td>
+                                                    <html:hidden property="value(iDiaDate)"/>
+                                                    <html:hidden property="value(iDiaComments)"/>
+                                                 </tr>
+                                                 <tr>
                                                     <td colspan='3'>
                                                         <table cellpadding="0" cellspacing="0" width="100%" style="display:none" id="detailEye">                                                                                                                 
                                                              <tr>
@@ -1346,24 +1363,7 @@ function clearAll(yRadio, nRadio){
                                                                 </td>
                                                                 <html:hidden property="value(iHypDate)" />
                                                                 <html:hidden property="value(iHypComments)" />
-                                                             </tr>
-                                                             <tr>
-                                                                <td class="dataEntryTable"><%=request.getAttribute("iDiaDesc")%></td>
-                                                                <td class="dataEntryTable" align="center">
-                                                                    <table cellpadding='0' cellspacing='0'>                                                            
-                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iDiaLDDate")%></td></tr>
-                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iDiaLastData")%></td></tr>
-
-                                                                    </table>
-                                                                </td>
-                                                                <td class="dataEntryTable" align="center">
-                                                                    <html:radio property="value(iDiaValue)" value="yes" />Yes
-                                                                    <html:radio property="value(iDiaValue)" value="no" />No
-                                                                    <a title="clear all" href="javascript:clearAll(eyeDiaId, eyeDiaId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
-                                                                </td>
-                                                                <html:hidden property="value(iDiaDate)"/>
-                                                                <html:hidden property="value(iDiaComments)"/>
-                                                             </tr>
+                                                             </tr>                                                             
                                                              <tr>
                                                                 <td class="dataEntryTable"><%=request.getAttribute("iOthDesc")%></td>
                                                                 <td class="dataEntryTable" align="center">
@@ -1411,7 +1411,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table style="display:none" cellpadding='0' cellspacing='0' id="labs">
+                                            <td><table cellpadding='0' cellspacing='0' id="labs">
                                                 <tr>
                                                     <td class="subTitle" width="34%">                                                        
                                                     </td>                                                    
@@ -1557,7 +1557,7 @@ function clearAll(yRadio, nRadio){
                                                     </tr>
                                                     <tr>                                                        
                                                         <td>
-                                                            <table style="display:none" cellpadding='1' cellspacing='0' id="diagnosis">
+                                                            <table cellpadding='1' cellspacing='0' id="diagnosis">
                                                             <tr>
                                                                 <td>
                                                                     <html:textarea property="value(diagnosisVT)" cols="78" style="height:40"></html:textarea>
@@ -1587,7 +1587,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table style="display:none" cellpadding='1' cellspacing='0' id="medications">
+                                            <td><table cellpadding='1' cellspacing='0' id="medications">
                                             <tr>
                                                 <td>
                                                     <logic:present name="drugs">
@@ -1610,7 +1610,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table style="display:none" cellpadding='1' cellspacing='0' id="medicationAllergies">
+                                            <td><table cellpadding='1' cellspacing='0' id="medicationAllergies">
                                             <tr>
                                                 <td>
                                                     <logic:present name="allergies">
@@ -1637,7 +1637,7 @@ function clearAll(yRadio, nRadio){
                                                     </tr>
                                                      <tr>
                                                         <td></td>
-                                                        <td><table width="100%" style="display:none" cellpadding='1' cellspacing='0' id="counselling">
+                                                        <td><table width="100%" cellpadding='1' cellspacing='0' id="counselling">
                                                             <tr>
                                                                 <td class="subTitle" width="29%">                                                        
                                                                 </td>                                                    
