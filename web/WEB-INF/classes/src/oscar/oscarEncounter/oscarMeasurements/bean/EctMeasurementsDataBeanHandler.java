@@ -88,7 +88,7 @@ public class EctMeasurementsDataBeanHandler {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql ="SELECT mt.type, mt.typeDisplayName, mt.typeDescription, mt.measuringInstruction FROM measurements m," +
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = mt.type " +
-                        "GROUP BY mt.id ORDER BY m.type ASC";
+                        "GROUP BY mt.type ORDER BY m.type ASC";
             
             System.out.println(" EctMeasurementDataBeanHandler sql: " + sql);
             ResultSet rs;
@@ -118,7 +118,7 @@ public class EctMeasurementsDataBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
+            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, mt.measuringInstruction,"+  
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
