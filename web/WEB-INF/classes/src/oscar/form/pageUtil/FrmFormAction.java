@@ -156,19 +156,22 @@ public class FrmFormAction extends Action {
                     props.setProperty(type+"LastData", lastData);
                 if(lastDataEnteredDate!=null)
                     props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
-                props.setProperty(type+"Value", inputValue);
-                props.setProperty(type+"Date", observationDate);
-                props.setProperty(type+"Comments", comments);                
-                if(type.equalsIgnoreCase("BP")){
-                    //extract SBP and DBP for blood pressure
-                    String bp = inputValue;
-                    if(bp!=null){
-                        int sbpIndex = bp.indexOf("/");                    
-                        if(sbpIndex>=0){
-                            String sbp = bp.substring(0,sbpIndex);
-                            String dbp = bp.substring(sbpIndex+1);
-                            props.setProperty("SBPValue", sbp);
-                            props.setProperty("DBPValue", dbp);
+                org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+                if(!gValidator.isBlankOrNull(inputValue)){
+                    props.setProperty(type+"Value", inputValue);
+                    props.setProperty(type+"Date", observationDate);
+                    props.setProperty(type+"Comments", comments);                
+                    if(type.equalsIgnoreCase("BP")){
+                        //extract SBP and DBP for blood pressure
+                        String bp = inputValue;
+                        if(bp!=null){
+                            int sbpIndex = bp.indexOf("/");                    
+                            if(sbpIndex>=0){
+                                String sbp = bp.substring(0,sbpIndex);
+                                String dbp = bp.substring(sbpIndex+1);
+                                props.setProperty("SBPValue", sbp);
+                                props.setProperty("DBPValue", dbp);
+                            }
                         }
                     }
                 }
