@@ -162,6 +162,8 @@ public class AppointmentDAO extends DAO {
             "app.demographic_no = dem.demographic_no and " +
             "app.appointment_no = " + id;
 
+        System.out.println("sql = " + sql);
+        
         DBHandler db = getDb();
 
         try {

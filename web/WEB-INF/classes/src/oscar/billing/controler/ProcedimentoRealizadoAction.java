@@ -95,7 +95,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
         try {
             String appId = request.getParameter("appId");
 
-            if (appId == null) {
+            if (appId == null || appId.trim().length() <= 0) {
                 generalError(request, "error.general", "object.notfount");
 
                 return mapping.findForward("failure");
