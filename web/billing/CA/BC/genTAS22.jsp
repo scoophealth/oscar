@@ -123,8 +123,8 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
          <td width="10%" height="16"><%=rsdemo.getString("t_payment")%></td>
                <td width="10%" height="16"><%=rsdemo.getString("t_practitionerno")%></td>
                <td width="10%" height="16"><%=rsdemo.getString("t_practitionername")%></td>
-               <td width="10%" height="16" align="right"><%=rsdemo.getString("t_amtbilled")%></td>
-               <td width="10%" height="16" align="right"><%=rsdemo.getString("t_amtpaid")%></td>
+               <td width="10%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_amtbilled"))%></td>
+               <td width="10%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_amtpaid"))%></td>
                <td width="50%" height="16"><%=rsdemo.getString("t_linecode").compareTo("Y")==0?"Practitioner Totals within Payee":""%></td>
       
   </tr>
@@ -171,20 +171,20 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
              %>
               <tr> 
         
-                     <td width="10%" height="16"><%=rsdemo.getString("t_payment")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_payeeno")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_ajc")%></td>
-      	       <td width="10%" height="16"><%=rsdemo.getString("t_aji")%></td>
-      	       <td width="10%" height="16"><%=rsdemo.getString("t_ajm")%></td>
-      	       <td width="10%" height="16"><%=rsdemo.getString("t_calcmethod")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_rpercent")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_opercent")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_gamount")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_ramount")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_oamount")%></td>
-      	       <td width="5%" height="16"><%=rsdemo.getString("t_balancefwd")%></td>
-      	       <td width="10%" height="16"><%=rsdemo.getString("t_adjmade")%></td>
-                     <td width="10%" height="16"><%=rsdemo.getString("t_adjoutstanding")%></td>
+                     <td width="10%" height="16"><%=rsdemo.getString("t_payment")%>&nbsp;</td>
+      	       <td width="5%" height="16"><%=rsdemo.getString("t_payeeno")%>&nbsp;</td>
+      	       <td width="5%" height="16"><%=rsdemo.getString("t_ajc")%>&nbsp;</td>
+      	       <td width="10%" height="16"><%=rsdemo.getString("t_aji")%>&nbsp;</td>
+      	       <td width="10%" height="16"><%=rsdemo.getString("t_ajm")%>&nbsp;</td>
+      	       <td width="10%" height="16"><%=rsdemo.getString("t_calcmethod")%>&nbsp;</td>
+      	       <td width="5%"  height="16" align="right"><%=moneyFormat(rsdemo.getString("t_rpercent"))%>&nbsp;</td>
+      	       <td width="5%"  height="16" align="right"><%=moneyFormat(rsdemo.getString("t_opercent"))%>&nbsp;</td>
+      	       <td width="5%"  height="16" align="right"><%=moneyFormat(rsdemo.getString("t_gamount"))%>&nbsp;</td>
+      	       <td width="5%"  height="16" align="right"><%=moneyFormat(rsdemo.getString("t_ramount"))%>&nbsp;</td>
+      	       <td width="5%"  height="16" align="right"><%=moneyFormat(rsdemo.getString("t_oamount"))%>&nbsp;</td>
+      	       <td width="5%"  height="16" align="right"><%=moneyFormat(rsdemo.getString("t_balancefwd"))%>&nbsp;</td>
+      	       <td width="10%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_adjmade"))%>&nbsp;</td>
+               <td width="10%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_adjoutstanding"))%>&nbsp;</td>
         </tr>
             
             
@@ -219,10 +219,10 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 	                 %>
 	                  <tr> 
 	            
-	                         <td width="10%" height="16"><%=rsdemo.getString("t_payment")%></td>
-	          	       <td width="10%" height="16"><%=rsdemo.getString("t_payeeno")%></td>
-	          	       <td width="10%" height="16"><%=rsdemo.getString("t_practitionerno")%></td>
-	          	         <td width="70%" height="16"><%=rsdemo.getString("t_message")%></td>
+	                         <td width="10%" height="16"><%=rsdemo.getString("t_payment")%>&nbsp;</td>
+	          	       <td width="10%" height="16"><%=rsdemo.getString("t_payeeno")%>&nbsp;</td>
+	          	       <td width="10%" height="16"><%=rsdemo.getString("t_practitionerno")%>&nbsp;</td>
+	          	         <td width="70%" height="16"><%=rsdemo.getString("t_message")%>&nbsp;</td>
 	            </tr>
 	                
 	                
@@ -252,3 +252,12 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
   
  </body>
  </html>
+<%!
+    String moneyFormat(String str){       
+        String moneyStr = "0.00";
+        try{             
+            moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
+        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+    return moneyStr;
+    }
+%>

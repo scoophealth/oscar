@@ -5,8 +5,21 @@
 <html>
 <head>
 <link rel="stylesheet" href="billing.css" >
-<title>Teleplan
-      Reconcilliation</title>
+<title>Teleplan Reconcilliation</title>
+<script language="JavaScript">
+
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "attachment", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+    popup.focus();
+  }
+}
+</script>
 </head>
 
 <body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
@@ -128,23 +141,24 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       	         //  }      
       %>
         <tr> 
-                <td width="10%" height="16"><%=rsdemo.getString("t_officeno")%>&nbsp; </td>
+               <td width="10%" height="16"><a href="javascript: popupPage(700,750,'adjustBill.jsp?billing_no=<%=rsdemo.getString("t_officeno")%>')" ><%=rsdemo.getString("t_officeno")%></a>&nbsp; </td>
                <td width="10%" height="16"><%=rsdemo.getString("t_practitionerno")%>&nbsp; </td>
                <td width="5%" height="16"><%=rsdemo.getString("t_ajc1")%>&nbsp; </td>
-               <td width="5%" height="16"><%=rsdemo.getString("t_aja1")%>&nbsp; </td>
+               <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja1"))%>&nbsp; </td>
                <td width="5%" height="16"><%=rsdemo.getString("t_ajc2")%>&nbsp; </td>
-               <td width="5%" height="16"><%=rsdemo.getString("t_aja2")%>&nbsp; </td>
+               <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja2"))%>&nbsp; </td>
                <td width="5%" height="16"><%=rsdemo.getString("t_ajc3")%>&nbsp; </td>
-               <td width="5%" height="16"><%=rsdemo.getString("t_aja3")%>&nbsp; </td>
+               <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja3"))%>&nbsp; </td>
                <td width="5%" height="16"><%=rsdemo.getString("t_ajc4")%>&nbsp; </td>
-               <td width="5%" height="16"><%=rsdemo.getString("t_aja4")%>&nbsp; </td>
+               <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja4"))%>&nbsp; </td>
                <td width="5%" height="16"><%=rsdemo.getString("t_ajc5")%>&nbsp; </td>
-               <td width="5%" height="16"><%=rsdemo.getString("t_aja5")%>&nbsp; </td>
+               <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja5"))%>&nbsp; </td>
                <td width="5%" height="16"><%=rsdemo.getString("t_ajc6")%>&nbsp; </td>
-               <td width="5%" height="16"><%=rsdemo.getString("t_aja6")%>&nbsp; </td>
+               <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja6"))%>&nbsp; </td>
                <td width="5%" height="16"><%=rsdemo.getString("t_ajc7")%>&nbsp; </td>
-               <td width="5%" height="16"><%=rsdemo.getString("t_aja7")%>&nbsp; </td>
-               <td width="10%" height="16" align=right><%=rsdemo.getString("t_paidamt")%></td>
+               <!--<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja7"))%>&nbsp; </td>-->
+               <td width="5%" height="16"><%=rsdemo.getString("t_s00type")%>&nbsp; </td>               
+               <td width="10%" height="16" align=right><%=moneyFormat(rsdemo.getString("t_paidamt"))%></td>
   </tr>
       
       
@@ -162,3 +176,12 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
  
  </body>
  </html>
+<%!
+    String moneyFormat(String str){       
+        String moneyStr = "0.00";
+        try{             
+            moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
+        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+    return moneyStr;
+    }
+%>
