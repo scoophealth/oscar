@@ -20,6 +20,8 @@ String tickler_no="", textColor="", tickler_note="";
   int lenLimitedL=11, lenLimitedS=3;
   int len = lenLimitedL;
   if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view
+  OscarProperties props = OscarProperties.getInstance();
+  boolean bDispTemplatePeriod = ( props.getProperty("receptionist_alt_view") != null && props.getProperty("receptionist_alt_view").equals("yes") ); // true - display as schedule template period, false - display as preference
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
@@ -237,22 +239,22 @@ function findProvider(p,m,d) {
     <table BORDER="0" CELLPADDING="0" CELLSPACING="0" height="20">
       <tr>
         <td></td><td rowspan="2" BGCOLOR="ivory" ALIGN="MIDDLE" nowrap height="20"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="receptionistcontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.viewDailySchedule"/>' OnMouseOver='window.status='<bean:message key="receptionist.appointmentreceptionistadminday.viewDailySchedule"/>'; return true'><bean:message key="receptionist.appointmentreceptionistadminday.btnDay"/></a></font></td>
+         <a href="receptionistcontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.viewDailySchedule"/>' OnMouseOver="window.status='<bean:message key="receptionist.appointmentreceptionistadminday.viewDailySchedule"/>'; return true"><bean:message key="receptionist.appointmentreceptionistadminday.btnDay"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth"   TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.viewMonthlyTemplate"/>' OnMouseOver='window.status='<bean:message key="receptionist.appointmentreceptionistadminday.viewMonthlyTemplate"/>'; return true'><bean:message key="receptionist.appointmentreceptionistadminday.btnMonth"/></a></font></td>
+         <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth"   TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.viewMonthlyTemplate"/>' OnMouseOver="window.status='<bean:message key="receptionist.appointmentreceptionistadminday.viewMonthlyTemplate"/>'; return true"><bean:message key="receptionist.appointmentreceptionistadminday.btnMonth"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="#" ONCLICK ="popupPage(550,800,'<%=resourcebaseurl%>');return false;" title='<bean:message key="receptionist.appointmentreceptionistadminday.manageClinicalResource"/>'><bean:message key="receptionist.appointmentreceptionistadminday.btnResource"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage(550,760,'../demographic/search.jsp');return false;"  TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.searchPatientRecords"/>' OnMouseOver='window.status='<bean:message key="receptionist.appointmentreceptionistadminday.searchPatientRecords"/>'; return true'><bean:message key="receptionist.appointmentreceptionistadminday.btnSearch"/></a></font></td>
+         <a HREF="#" ONCLICK ="popupPage(550,760,'../demographic/search.jsp');return false;"  TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="receptionist.appointmentreceptionistadminday.searchPatientRecords"/>'; return true"><bean:message key="receptionist.appointmentreceptionistadminday.btnSearch"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.generateReport"/>' OnMouseOver='window.status='<bean:message key="receptionist.appointmentreceptionistadminday.generateReport"/>'; return true'><bean:message key="receptionist.appointmentreceptionistadminday.btnReport"/></a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.generateReport"/>' OnMouseOver="window.status='<bean:message key="receptionist.appointmentreceptionistadminday.generateReport"/>'; return true"><bean:message key="receptionist.appointmentreceptionistadminday.btnReport"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
              <% 
                 //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
                 if (vLocale.getCountry().equals("BR")) { %>  
                <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
              <% } else {%>  
-				<a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp??displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.generateBillingReport"/>' onmouseover='window.status='<bean:message key="receptionist.appointmentreceptionistadminday.generateBillingReport"/>';return true'><bean:message key="receptionist.appointmentreceptionistadminday.btnBilling"/></a></font>
+				<a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp??displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="receptionist.appointmentreceptionistadminday.generateBillingReport"/>' onmouseover="window.status='<bean:message key="receptionist.appointmentreceptionistadminday.generateBillingReport"/>';return true"><bean:message key="receptionist.appointmentreceptionistadminday.btnBilling"/></a></font>
              <% } %>
          </td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -357,6 +359,8 @@ function findProvider(p,m,d) {
    StringBuffer hourmin = null;
    String [] param1 = new String[2];
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
+     int timecodeLength = DateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) DateTimeCodeBean.get(curProvider_no[nProvider]) ).length() : 4*24;
+     depth = bDispTemplatePeriod ? (24*60 / timecodeLength) : everyMin; // add function to display different time slot	
      param1[0] = strYear+"-"+strMonth+"-"+strDay;
      param1[1] = curProvider_no[nProvider];
      rsgroup = apptMainBean.queryResults(param1, "search_scheduledate_single");
@@ -397,7 +401,7 @@ function findProvider(p,m,d) {
         %>
           <tr>
             <td align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b><font face="verdana,arial,helvetica" size="2"> 
-             <a href=# onClick ="ts1('provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=DateTimeCodeBean.get("duration"+hourmin.toString())%>');return false;" 
+             <a href=# onClick ="ts1('provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=DateTimeCodeBean.get("duration"+hourmin.toString())!=null?DateTimeCodeBean.get("duration"+hourmin.toString()):(""+depth) %>');return false;"              
              title='<%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+ (minuteCursor<10?"0":"")+minuteCursor)%> - <%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+((minuteCursor+depth-1)<10?"0":"")+(minuteCursor+depth-1))%>' class="adhour">
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></font></b></td>
             <td width='1%' <%=DateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+hourmin.toString()) ):("bgcolor="+bgcolordef) %> title='<%=DateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(DateTimeCodeBean.get("color"+hourmin.toString())!=null && !DateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"black" %>'><%=hourmin.toString() %></font>
