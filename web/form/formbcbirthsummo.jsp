@@ -810,25 +810,103 @@ var maxYear=9900;
 		YES
 	  </td>
 	</tr><tr>
-	  <td>
-		<input type="checkbox" name="delPlaSpont" <%= props.getProperty("delPlaSpont", "") %>  @oscar.formDB dbType="tinyint(1)"/>
-		SPONTANEOUS &nbsp;&nbsp;
-		<input type="checkbox" name="delPlaAssis" <%= props.getProperty("delPlaAssis", "") %>  @oscar.formDB dbType="tinyint(1)"/>
-		ASSISTED
+	  <td colspan="2">
+		<input type="checkbox" name="delPlaManOper" <%= props.getProperty("delPlaManOper", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		MANUAL/OPERATIVE REMOVAL
 	  </td><td align="right">
-	    COMPLETE
+	    CORD VESSELS
 	  </td><td>
-		<input type="checkbox" name="delPlaCompN" <%= props.getProperty("delPlaCompN", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		<input type="checkbox" name="delPla2" <%= props.getProperty("delPla2", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		2
+	  </td><td>
+		<input type="checkbox" name="delPla3" <%= props.getProperty("delPla3", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		3
+	  </td>
+	</tr><tr>
+	  <td colspan="2">
+		ABNORMALITIES:
+	  </td><td align="right">
+	    CORD GASES SENT
+	  </td><td>
+		<input type="checkbox" name="delPlaCGSN" <%= props.getProperty("delPlaCGSN", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 		NO
 	  </td><td>
-		<input type="checkbox" name="delPlaCompY" <%= props.getProperty("delPlaCompY", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		<input type="checkbox" name="delPlaCGSY" <%= props.getProperty("delPlaCGSY", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 		YES
 	  </td>
-
+	</tr><tr>
+	  <td colspan="2">
+	  </td><td align="right">
+	    PLACENTA SENT TO PATHOLOGY
+	  </td><td>
+		<input type="checkbox" name="delPlaPSPN" <%= props.getProperty("delPlaPSPN", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		NO
+	  </td><td>
+		<input type="checkbox" name="delPlaPSPY" <%= props.getProperty("delPlaPSPY", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		YES
+	  </td>
 	</tr>
 	</table>
 
+	</td>
+  </tr><tr>
+    <td width="40%" rowspan="2" valign="top">
 
+	<table  class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
+	<tr>
+	  <td colspan="2"><B>PERINEUM/VAGINA/CERVIX</B></td>
+	</tr><tr>
+	  <td colspan="2">
+		<input type="checkbox" name="delPerIntact" <%= props.getProperty("delPerIntact", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		INTACT
+		<br>
+		<input type="checkbox" name="delPerLaceration" <%= props.getProperty("delPerLaceration", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		LACERATION
+		<br>&nbsp;&nbsp;&nbsp;
+		<input type="checkbox" name="delPer1" <%= props.getProperty("delPer1", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		1st
+		<input type="checkbox" name="delPer2" <%= props.getProperty("delPer2", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		2nd
+		<input type="checkbox" name="delPer3" <%= props.getProperty("delPer3", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		3rd
+		<input type="checkbox" name="delPer4" <%= props.getProperty("delPer4", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		4th
+		<br>
+		<input type="checkbox" name="delPerCerTear" <%= props.getProperty("delPerCerTear", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		CERVICAL TEAR
+		<br>
+		<input type="checkbox" name="delPerOthTrau" <%= props.getProperty("delPerOthTrau", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		OTHER TRAUMA
+		<input type="text" name="delPerOthTrauSpec" size="12" maxlength="60" value="<%= props.getProperty("delPerOthTrauSpec", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td>
+		<input type="checkbox" name="delPerEpisio" <%= props.getProperty("delPerEpisio", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		EPISIOTOMY
+	  </td><td>
+		<input type="checkbox" name="delPerMidline" <%= props.getProperty("delPerMidline", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		MIDLINE
+	  </td>
+	</tr><tr>
+	  <td>
+	  </td><td>
+		<input type="checkbox" name="delPerMedio" <%= props.getProperty("delPerMedio", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		MEDIOLATERAL
+	  </td>
+	</tr><tr>
+	  <td colspan="2">
+		Sutured by:
+		<input type="text" name="delPerSutu" size="12" maxlength="60" value="<%= props.getProperty("delPerSutu", "") %>" @oscar.formDB />
+		MD/RM
+	  </td>
+	</tr>
+	</table>
+
+    </td><td colspan="2" valign="top">
+
+	</td>
+  </tr><tr>
+    <td>
 
 	</td>
   </tr>
