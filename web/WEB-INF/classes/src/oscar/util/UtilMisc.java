@@ -110,10 +110,17 @@ public static String toUpperLowerCase(String S){
   boolean bUpper = false;
   StringBuffer sb=new StringBuffer(N);
   for(int i=0;i<N;i++){
-    char c=S.charAt(i);
-    if(i==0 || bUpper) { sb.append(Character.toUpperCase(c)); bUpper = false; }
-    else if(c==' ' || c==',') { sb.append(c); bUpper = true; }
-    else sb.append(c);
+    char c=S.charAt(i);            
+    if(i==0 || bUpper) { 
+        sb.append(Character.toUpperCase(c)); 
+        bUpper = false; 
+    } else {
+        sb.append(c);
+    }
+    if(c==' ' || c==',') { 
+        bUpper = true; 
+    }    
+    
   }
   return sb.toString();
 }
