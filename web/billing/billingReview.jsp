@@ -40,6 +40,17 @@
 <head>
 <title>Billing Summary</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<script language="JavaScript">
+<!--
+function validate_form(){
+  // do some validation
+  document.body.style.cursor = "wait";
+  document.forms.form1.Submit.disabled = true;
+  return true; 
+}
+//-->
+</SCRIPT>
+
 </head>
            
 <% 
@@ -188,7 +199,7 @@ crFirst = rsprovider.getString("first_name");
     }
   %>
 <body bgcolor="#FFFFFF" text="#000000">
-<form name="form1" method="post" action="billingSave.jsp">
+<form name="form1" method="post" action="billingSave.jsp" onsubmit="return validate_form();">
   <p><b><font face="Arial, Helvetica, sans-serif">Generic Billing Form for General Practice</font></b></p>
   <p><b><font face="Arial, Helvetica, sans-serif"><u>Billing Summary</u></font></b><br>
   </p>
