@@ -28,6 +28,8 @@
 */ 
 --%>
 <% 
+String country = request.getLocale() .getCountry();
+
 if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 String curUser_no = (String) session.getAttribute("user");
 String mygroupno = (String) session.getAttribute("groupno");  
@@ -86,6 +88,7 @@ function go(r) {
   var v = document.report.aedate.value ;
   var w = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
   var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v;
+
   if(r=='new') {
     if(confirm("<bean:message key="report.reportindex.msgGoConfirm"/>") ) {
 	  popupPage(600,750,w);
@@ -160,6 +163,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td><INPUT TYPE="button" NAME="button" VALUE="<bean:message key="report.reportindex.btnCreateReport"/>" onClick="ogo()"></td>
         <td></td>
     </tr>
+    <% if (!country.equals("BR")) {  %>
     <tr>    
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
@@ -169,6 +173,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
     </tr>
+    <% }%>
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
@@ -383,7 +388,6 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     </tr>    
     <%
        // If country = Brazil, do not show the following links:
-       String country = request.getLocale() .getCountry();
        if (!country.equals("BR")) {
     %>
     <tr>
