@@ -193,8 +193,6 @@
 
     function goToInstructions(){
         document.getElementById('instruction').style.display = 'block';
-        document.getElementById('visualAid1').style.display = 'none';
-        document.getElementById('visualAid2').style.display = 'none';
         document.getElementById('page1').style.display = 'none';
         document.getElementById('page2').style.display = 'none';  
         document.getElementById('page3').style.display = 'none';
@@ -203,39 +201,21 @@
     }
 
     function goToVisualAid1(){
-        //document.getElementById('instruction').style.display = 'none';
-        //document.getElementById('visualAid1').style.display = 'block';
-        //document.getElementById('visualAid2').style.display = 'none';
-        //document.getElementById('page1').style.display = 'none';
-        //document.getElementById('page2').style.display = 'none';  
-        //document.getElementById('page3').style.display = 'none';
-        //document.getElementById('functionBar').style.display = 'none';
-        //document.getElementById('copyRight').style.display = 'block';
         var vheight = 500;
-        var vwidth = 600;
+        var vwidth = 640;
         var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-        window.open("formlatelifedisabilityvisualAid1.jsp","Disability Visual Aid #1", windowprops);
+        window.open("formlatelifedisabilityvisualAid1.jsp","", windowprops);
     }
 
     function goToVisualAid2(){
-        //document.getElementById('instruction').style.display = 'none';
-        //document.getElementById('visualAid1').style.display = 'none';
-        //document.getElementById('visualAid2').style.display = 'block';
-        //document.getElementById('page1').style.display = 'none';
-        //document.getElementById('page2').style.display = 'none';  
-        //document.getElementById('page3').style.display = 'none';
-        //document.getElementById('functionBar').style.display = 'none';
-        //document.getElementById('copyRight').style.display = 'block';
         var vheight = 768;
-        var vwidth = 600;
+        var vwidth = 640;
         var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-        window.open("formlatelifedisabilityvisualAid2.jsp","Disability Visual Aid #2", windowprops);
+        window.open("formlatelifedisabilityvisualAid2.jsp","", windowprops);
     }
 
     function goToPage1(){             
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'block';
             document.getElementById('page2').style.display = 'none';  
             document.getElementById('page3').style.display = 'none';
@@ -247,8 +227,6 @@
         var checkboxes = new Array(6,10,11,15,16,20,21,25,26,30,31,35,36,40,41,45,46,50,51,55,56,60,61,65);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none';
@@ -261,8 +239,6 @@
         var checkboxes = new Array(66,70,71,75,76,80,81,85,86,90,91,95,96,100,101,105,106,110,111,115);        
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';

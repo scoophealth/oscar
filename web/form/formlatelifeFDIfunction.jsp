@@ -196,8 +196,6 @@
 
     function goToInstructions(){
         document.getElementById('instruction').style.display = 'block';
-        document.getElementById('visualAid1').style.display = 'none';
-        document.getElementById('visualAid2').style.display = 'none';
         document.getElementById('page1').style.display = 'none';
         document.getElementById('page2').style.display = 'none';  
         document.getElementById('page3').style.display = 'none';
@@ -209,48 +207,23 @@
         document.getElementById('copyRight').style.display = 'block';
     }
 
-    function goToVisualAid1(){
-       /*document.getElementById('instruction').style.display = 'none';
-        document.getElementById('visualAid1').style.display = 'block';
-        document.getElementById('visualAid2').style.display = 'none';
-        document.getElementById('page1').style.display = 'none';
-        document.getElementById('page2').style.display = 'none';  
-        document.getElementById('page3').style.display = 'none';
-        document.getElementById('page4').style.display = 'none';
-        document.getElementById('page5').style.display = 'none';
-        document.getElementById('totalScore').style.display = 'none'; 
-        document.getElementById('subject2').style.display = 'none';
-        document.getElementById('functionBar').style.display = 'none';
-        document.getElementById('copyRight').style.display = 'block';*/
+    function goToVisualAid1(){       
         var vheight = 768;
-        var vwidth = 600;
-        var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-        window.open("formlatelifefunctionvisualAid1.jsp","Function Visual Aid #1", windowprops);
+        var vwidth = 640;
+        var page = "formlatelifefunctionvisualAid1.jsp";
+        windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+        window.open(page,"",windowprops);
     }
 
-    function goToVisualAid2(){
-        /*document.getElementById('instruction').style.display = 'none';
-        document.getElementById('visualAid1').style.display = 'none';
-        document.getElementById('visualAid2').style.display = 'block';
-        document.getElementById('page1').style.display = 'none';
-        document.getElementById('page2').style.display = 'none';  
-        document.getElementById('page3').style.display = 'none';
-        document.getElementById('page4').style.display = 'none';
-        document.getElementById('page5').style.display = 'none'; 
-        document.getElementById('totalScore').style.display = 'none';
-        document.getElementById('subject2').style.display = 'none';
-        document.getElementById('functionBar').style.display = 'none';
-        document.getElementById('copyRight').style.display = 'block';*/
+    function goToVisualAid2(){        
         var vheight = 768;
-        var vwidth = 600;
-        var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-        window.open("formlatelifefunctionvisualAid2.jsp","Disabiliyt Visual Aid #2", windowprops);
+        var vwidth = 640;
+        var windowprops = "height=768,width=600,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+        window.open("formlatelifefunctionvisualAid2.jsp","",windowprops);
     }
 
     function goToPage1(){             
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'block';
             document.getElementById('page2').style.display = 'none';  
             document.getElementById('page3').style.display = 'none';
@@ -266,8 +239,6 @@
         var checkboxes = new Array(6,10,11,15,16,20,21,25,26,30,31,35,36,40,41,45);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -284,8 +255,6 @@
         var checkboxes = new Array(46,50,51,55,56,60,61,65,66,70,71,75,76,80,81,85);        
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
@@ -302,8 +271,8 @@
         var checkboxes = new Array(86,90,91,95,96,100,101,105,106,110,111,115,116,120,121,125);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
+            //document.getElementById('visualAid1').style.display = 'none';
+            //document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -320,8 +289,8 @@
         var checkboxes = new Array(126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
+            //document.getElementById('visualAid1').style.display = 'none';
+            //document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -338,8 +307,8 @@
         var checkboxes = new Array(126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
-            document.getElementById('visualAid1').style.display = 'none';
-            document.getElementById('visualAid2').style.display = 'none';
+            //document.getElementById('visualAid1').style.display = 'none';
+            //document.getElementById('visualAid2').style.display = 'none';
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
