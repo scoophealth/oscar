@@ -299,10 +299,10 @@ public class FrmToXMLUtil{
         }
         else if (xmlName.startsWith("Sel")){
             if(input.equalsIgnoreCase("yes")){
-                return "present";
+                return "Present";
             }
             else{
-                return "absent";
+                return "Absent";
             }            
         }
         return input;
