@@ -156,7 +156,7 @@ CREATE TABLE billingdetail (
   diagnostic_code char(3) default NULL,
   appointment_date date default NULL,
   status char(1) default NULL,
-  billingunit char(1) default NULL,
+  billingunit char(2) default NULL,
   PRIMARY KEY  (billing_dt_no),
   KEY billingno (billing_no)
 ) TYPE=MyISAM;
