@@ -259,9 +259,9 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                         <html:submit styleClass="ControlPushButton" property="delete">
 					<bean:message key="oscarMessenger.ViewMessage.btnDelete"/>
 					</html:submit>
-                                        <html:hidden property="messageNo" value="<%=(String)request.getAttribute(\"viewMessageNo\") %>"/>                                   
-                                    </html:form>
+                                        <html:hidden property="messageNo" value="<%=(String)request.getAttribute(\"viewMessageNo\") %>"/>                                                                       
                                     </td>
+                                    </html:form>
                                 </tr>
                                 <tr>
                                     <td bgcolor="#EEEEFF" ></td>
@@ -273,16 +273,12 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                 </tr>                                    
                                 <tr>
                                     <td bgcolor="#EEEEFF" ></td>
-                                    <td bgcolor="#EEEEFF" >
-                                        <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
+                                    <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
+                                        <td bgcolor="#EEEEFF" >                                        
                                             <bean:message key="oscarMessenger.ViewMessage.msgDemographicName"/>:
                                             <input type="TEXT" name="keyword" size="15" value="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>">
                                             <input class="ControlPushButton" type="submit" name="Submit" value="<bean:message key="oscarMessenger.ViewMessage.btnSearchAndWriteToEncounter"/>">
-                                        </td>
-                                        <table style="display:none">
-                                            <tr><td>                                                
-                                            </tr></td>
-                                        </table>                                        
+                                        </td>                                        
                                         <input type="hidden" name="orderby" value="last_name" >
                                         <input type="hidden" name="search_mode" value="search_name" >
                                         <input type="hidden" name="messageId" value="<%=request.getAttribute("viewMessageNo")%>" >
@@ -296,12 +292,9 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                         <input type="hidden" name="provider_no" value="115">                                
                                         </form>                                        
                                     </td>
-                                </tr>
-                                    
-                        </table>
-
-
-                        </td>
+                                </tr>                                    
+                            </table>
+                        </td>                        
                     </tr>
                 </table>
             </td>
@@ -314,6 +307,6 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
 
             </td>
         </tr>
-    </table>    
+    </table>   
 </body>
 </html:html>
