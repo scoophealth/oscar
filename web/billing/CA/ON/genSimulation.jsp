@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,78 +22,87 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
+<% 
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+%>
 
- <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbBilling.jsp" %>
 
-<% GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-    int bCount = 1;
-    String batchCount = "0";
-   String provider = request.getParameter("provider");
-              String proOHIP=""; 
-              String specialty_code; 
-              String billinggroup_no;
-   
-   String dateRange = "";
-    String htmlValue="";
-    String oscar_home= oscarVariables.getProperty("project_home")+".properties";
-   
-   String dateBegin = request.getParameter("xml_vdate");
-   String dateEnd = request.getParameter("xml_appointment_date");
-   if (dateEnd.compareTo("") == 0) dateEnd = request.getParameter("curDate");
-   if (dateBegin.compareTo("") == 0){
-        dateRange = " and billing_date <= '" + dateEnd + "'";
-        }else{
-        dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
-        }
-   
-   
-     ResultSet rslocal;
-           rslocal = null;
-    rslocal = apptMainBean.queryResults(request.getParameter("provider").substring(0,6), "search_provider_ohip_dt");
-    while(rslocal.next()){
-    
-    proOHIP = rslocal.getString("ohip_no"); 
-    billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
- specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+<%
+String errorMsg = "";
+int PROVIDER_BILLINGNO_LENGTH = 6;
+int PROVIDER_SPECIALTYCODE_LENGTH = 2;
+int PROVIDER_GROUPNO_LENGTH = 4;
 
-   
-   
+int bCount = 1;
+String batchCount = "0";
+String provider = request.getParameter("provider");
+if (provider.length() != PROVIDER_BILLINGNO_LENGTH) errorMsg = "The provider's billing code is not correct!<br>";
 
-    if (specialty_code == null || specialty_code.compareTo("") == 0 || specialty_code.compareTo("null")==0){
-          specialty_code = "00"; 
-         }
-           if ( billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0){
-         billinggroup_no = "0000";
-          } 
-         oscar.oscarBilling.OHIP.ExtractBean extract = new oscar.oscarBilling.OHIP.ExtractBean();
-   extract.setOscarHome(oscar_home);
-   extract.seteFlag("0");
-   extract.setDateRange(dateRange);
-   extract.setOhipVer(request.getParameter("verCode"));
-   extract.setProviderNo(proOHIP);
-   extract.setOhipCenter(request.getParameter("billcenter"));
-   extract.setGroupNo(billinggroup_no);
-   extract.setSpecialty(specialty_code);
-   extract.setBatchCount(String.valueOf(bCount));
-   extract.dbQuery(dbParams);
-  
- htmlValue = extract.getHtmlValue();
-	  	    
-}	  	    
+String proOHIP=""; 
+String specialty_code; 
+String billinggroup_no;
+   
+String dateRange = "";
+String htmlValue="";
+String oscar_home= oscarVariables.getProperty("project_home")+".properties";
 
-	  request.setAttribute("html",htmlValue);
-	
-	  
- %>
+String dateBegin = request.getParameter("xml_vdate");
+String dateEnd = request.getParameter("xml_appointment_date");
+if (dateEnd.compareTo("") == 0) dateEnd = request.getParameter("curDate");
+if (dateBegin.compareTo("") == 0){
+	dateRange = " and billing_date <= '" + dateEnd + "'";
+}else{
+	dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
+}
+
+
+ResultSet rslocal = apptMainBean.queryResults(request.getParameter("provider"), "search_provider_ohip_dt");
+while(rslocal.next()){
+	proOHIP = rslocal.getString("ohip_no"); 
+	billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+	specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+
+	if (specialty_code == null || specialty_code.compareTo("") == 0 || specialty_code.compareTo("null")==0 || specialty_code.length() != PROVIDER_SPECIALTYCODE_LENGTH){
+		//error msg here
+		errorMsg += "The provider's specialty code is not correct!<br>";
+		specialty_code = "00"; 
+	}
+
+	if (billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0 || billinggroup_no.length() != PROVIDER_GROUPNO_LENGTH){
+		//error msg here
+		errorMsg += "The provider's group no is not correct!<br>";
+		billinggroup_no = "0000";
+	} 
+
+	oscar.oscarBilling.OHIP.ExtractBean extract = new oscar.oscarBilling.OHIP.ExtractBean();
+	extract.setOscarHome(oscar_home);
+	extract.seteFlag("0");
+	extract.setDateRange(dateRange);
+	extract.setOhipVer(request.getParameter("verCode"));
+	extract.setProviderNo(proOHIP);
+	extract.setOhipCenter(request.getParameter("billcenter"));
+	extract.setGroupNo(billinggroup_no);
+	extract.setSpecialty(specialty_code);
+	extract.setBatchCount(String.valueOf(bCount));
+	extract.dbQuery(dbParams);
+
+	htmlValue = "<font color='red'>" + errorMsg + "</font>" + extract.getHtmlValue();
+}
+
+apptMainBean.closePstmtConn();
+
+request.setAttribute("html",htmlValue);
+%>
+
 <jsp:forward page='billingOHIPsimulation.jsp' >
-<jsp:param name="xml_appointment_date" value='<%=dateEnd%>' />
-<jsp:param name="xml_v_date" value='<%=dateBegin%>' />
-<jsp:param name="provider" value='<%=provider.substring(0,6)%>' />
+	<jsp:param name="xml_appointment_date" value='<%=dateEnd%>' />
+	<jsp:param name="xml_v_date" value='<%=dateBegin%>' />
+	<jsp:param name="provider" value='<%=provider%>' />
 </jsp:forward>
 
