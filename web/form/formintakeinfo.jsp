@@ -131,8 +131,8 @@
 
 <script type="text/javascript" language="Javascript">
     
-    var choiceFormat  = new Array(11,15,16,22,24,26,27,31,32,36,37,45,46,53,54,56,62,63,65,66,67,68,69,72,73,76,77,80,81,84,85,88,89,92,93,96,97,100,101,104,105,108,109,112,113,116,117,120,121,124);    
-    var allNumericField = new Array(23,57,58,59,60,64);
+    var choiceFormat  = new Array(11,15,16,22,24,26,27,31,32,36,37,45,46,53,54,56,62,63,66,67,70,71,72,73,74,77,78,81,82,85,86,89,90,93,94,97,98,101,102,105,106,109,110,113,114,117,118,121,122,125,126,129,130,133,134,137,138,141,142,145,146,149);
+    var allNumericField = new Array(23,57,58,59,60,64,68);
     var allMatch = null;
     var msg2 = "Are you sure that there are more than 5 people living in your household?"
     var a2 = new Array(0,5, 23);
@@ -176,8 +176,9 @@
     }
 
     function goToPage4(){    
-        var checkboxes = new Array(62,63,65,66,67,68,69,72,73,76,77,80);
-        if (oneFieldIsNumeric(0, '64')==true && is1CheckboxChecked(0, checkboxes)==true){
+        var checkboxes = new Array(62,63,66,67,70,71,72,73,74,77,78,81,82,85);
+        numericFields = new Array(64,68);        
+        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'none';  
@@ -187,7 +188,7 @@
     }
 
     function goToPage5(){      
-        var checkboxes = new Array(81,84,85,88,89,92,93,96,97,100,101,104,105,108);
+        var checkboxes = new Array(86,89,90,93,94,97,98,101,102,105,106,109,110,113,114,117,118,121);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
@@ -673,11 +674,44 @@
                         Yes<br>
                         No
                     </td>
-                    <td colspan="2"> How many cigarettes per day?                  
-                        <input type="text"  name="nbCigarettes" value="<%= props.getProperty("nbCigarettes", "") %>"/><br>
-                        &nbsp;
+                    <td colspan="2"> 
+                        <table>
+                            <tr>
+                                <td>How many cigarettes per day?</td>
+                                <td><input type="text"  name="nbCigarettes" value="<%= props.getProperty("nbCigarettes", "") %>"/></td>
+                            </tr>
+                            <tr>
+                                <td>How long have you smoked?</td>
+                                <td><input type="text" name="howLongSmk" value="<%=props.getProperty("howLongSmk","")%>"/></td>
+                            </tr>
+                        </table>
                     </td>                          
                 </tr>                                
+                <tr>                    
+                    <th colspan="4" class="question">Did you ever smoke cigarettes regularly?</th>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox"  class="checkbox" name="didSmkY" <%= props.getProperty("didSmkY", "") %>/><br>
+                        <input type="checkbox"  class="checkbox" name="didSmkN" <%= props.getProperty("didSmkN", "") %>/>
+                    </td>
+                    <td width="15%">
+                        Yes<br>
+                        No
+                    </td>
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td>How many cigarettes per day?</td>
+                                <td><input type="text"  name="didNbCigarettes" value="<%= props.getProperty("didNbCigarettes", "") %>"/></td>
+                            </tr>
+                            <tr>
+                                <td>How long have you smoked?</td>
+                                <td><input type="text" name="didHowLongSmk" value="<%=props.getProperty("didHowLongSmk","")%>"/></td>
+                            </tr>
+                        </table>
+                    </td>                          
+                </tr>                                                
                 <tr>                    
                     <th colspan="4" class="question">In the past 12 months, have you had a drink of beer, wine, liquor or other alcoholic beverage?</th>
                 </tr>
@@ -715,10 +749,7 @@
                     <td>No</td>
                     <td></td>
                     <td></td>                                    
-                </tr>
-                <tr>
-                    <td colspan="4">&nbsp;</td>
-                </tr>
+                </tr>                
                 <tr class="title" >
                     <th  valign="top" colspan="8">G. Diagnosis</th>
                 </tr>
@@ -728,9 +759,7 @@
                         </font>
                     </th>
                 </tr>
-                <tr>
-                    <th>&nbsp;</th>
-                </tr>
+                
                 <tr>
                     <th>1. </th>
                     <th colspan="7" class="question">
@@ -1090,27 +1119,7 @@
                     <td>
                         Don't Know
                     </td>
-                </tr>                
-            </table>                      
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: goToPage3();"><< Previous Page</a>
-        </td> 
-        <td align="right">
-            <a href="javascript: goToPage5();">Next Page >></a>
-        </td>
-    </tr>
-</table>
-
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="660px" id="page5" >    
-    <tr>        
-        <td  valign="top" colspan="2">
-        <table width="740px" height="630px" border="0"  cellspacing="0" cellpadding="0" >
-                <tr class="title" >
-                    <th colspan="8">G. Diagnosis (continue...)</th>
-                </tr> 
+                </tr>
                 <tr>                    
                     <th>11. </th>
                     <th colspan="7" class="question">
@@ -1179,6 +1188,26 @@
                         Don't Know
                     </td>
                 </tr> 
+            </table>                      
+        </td>
+    </tr>
+    <tr class="subject">
+        <td align="left">
+            <a href="javascript: goToPage3();"><< Previous Page</a>
+        </td> 
+        <td align="right">
+            <a href="javascript: goToPage5();">Next Page >></a>
+        </td>
+    </tr>
+</table>
+
+<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="660px" id="page5" >    
+    <tr>        
+        <td  valign="top" colspan="2">
+        <table width="740px" height="630px" border="0"  cellspacing="0" cellpadding="0" >
+                <tr class="title" >
+                    <th colspan="8">G. Diagnosis (continue...)</th>
+                </tr>                 
                 <tr>                    
                     <th>13. </th>
                     <th colspan="7" class="question">
@@ -1247,9 +1276,174 @@
                         Don't Know
                     </td>
                 </tr> 
-                <tr>
-                    <td colspan="4">
-                    <table height="250px"><tr><td>&nbsp;</td></tr></table>
+                <tr>                    
+                    <th>15. </th>
+                    <th colspan="7" class="question">
+                        (Has a doctor ever told you that you had...) chronic osteoporosis?
+                    </th>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="osteoporosisY" <%= props.getProperty("osteoporosisY", "") %>/>
+                    </td>
+                    <td>
+                        Yes
+                    </td>                    
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="osteoporosisRefused" <%= props.getProperty("osteoporosisRefused", "") %>/>
+                    </td>
+                    <td>
+                        Refused
+                    </td> 
+                </tr>
+                <tr bgcolor="white">      
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="osteoporosisN" <%= props.getProperty("osteoporosisN", "") %>/>
+                    </td>              
+                    <td>
+                        No
+                    </td>
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="osteoporosisDoNotKnow" <%= props.getProperty("osteoporosisDoNotKnow", "") %>/>
+                    </td>
+                    <td>
+                        Don't Know
+                    </td>
+                </tr>  
+                <tr>                    
+                    <th valign="top">16. </th>
+                    <th colspan="7" class="question">
+                        (Has a doctor ever told you that you had...) fibromyalgia?
+                    </th>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="fibromyalgiaY" <%= props.getProperty("fibromyalgiaY", "") %>/>
+                    </td>
+                    <td>
+                        Yes
+                    </td>                    
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="fibromyalgiaRefused" <%= props.getProperty("fibromyalgiaRefused", "") %>/>
+                    </td>
+                    <td>
+                        Refused
+                    </td>
+                </tr>
+                <tr bgcolor="white"> 
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="fibromyalgiaN" <%= props.getProperty("fibromyalgiaN", "") %>/>
+                    </td>
+                    <td>
+                        No
+                    </td>
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="fibromyalgiaDoNotKnow" <%= props.getProperty("fibromyalgiaDoNotKnow", "") %>/>
+                    </td>
+                    <td>
+                        Don't Know
+                    </td>
+                </tr> 
+                <tr>                    
+                    <th valign="top">17. </th>
+                    <th colspan="7" class="question">
+                        (Has a doctor ever told you that you had...) multiplesclerosis?
+                    </th>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="multiplesclerosisY" <%= props.getProperty("multiplesclerosisY", "") %>/>
+                    </td>
+                    <td>
+                        Yes
+                    </td>                    
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="multiplesclerosisRefused" <%= props.getProperty("multiplesclerosisRefused", "") %>/>
+                    </td>
+                    <td>
+                        Refused
+                    </td>
+                </tr>
+                <tr bgcolor="white"> 
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="multiplesclerosisN" <%= props.getProperty("multiplesclerosisN", "") %>/>
+                    </td>
+                    <td>
+                        No
+                    </td>
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="multiplesclerosisDoNotKnow" <%= props.getProperty("multiplesclerosisDoNotKnow", "") %>/>
+                    </td>
+                    <td>
+                        Don't Know
+                    </td>
+                </tr> 
+                                <tr>                    
+                    <th valign="top">18. </th>
+                    <th colspan="7" class="question">
+                        (Has a doctor ever told you that you had...) asthma?
+                    </th>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="asthmaY" <%= props.getProperty("asthmaY", "") %>/>
+                    </td>
+                    <td>
+                        Yes
+                    </td>                    
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="asthmaRefused" <%= props.getProperty("asthmaRefused", "") %>/>
+                    </td>
+                    <td>
+                        Refused
+                    </td>
+                </tr>
+                <tr bgcolor="white"> 
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="asthmaN" <%= props.getProperty("asthmaN", "") %>/>
+                    </td>
+                    <td>
+                        No
+                    </td>
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="asthmaDoNotKnow" <%= props.getProperty("asthmaDoNotKnow", "") %>/>
+                    </td>
+                    <td>
+                        Don't Know
+                    </td>
+                </tr> 
+                <tr>                    
+                    <th valign="top">19. </th>
+                    <th colspan="7" class="question">
+                        (Has a doctor ever told you that you had...) backpain?
+                    </th>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="backpainY" <%= props.getProperty("backpainY", "") %>/>
+                    </td>
+                    <td>
+                        Yes
+                    </td>                    
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="backpainRefused" <%= props.getProperty("backpainRefused", "") %>/>
+                    </td>
+                    <td>
+                        Refused
+                    </td>
+                </tr>
+                <tr bgcolor="white"> 
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="backpainN" <%= props.getProperty("backpainN", "") %>/>
+                    </td>
+                    <td>
+                        No
+                    </td>
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="backpainDoNotKnow" <%= props.getProperty("backpainDoNotKnow", "") %>/>
+                    </td>
+                    <td>
+                        Don't Know
                     </td>
                 </tr>
             </table>              
