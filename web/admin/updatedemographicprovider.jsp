@@ -34,18 +34,37 @@
 <jsp:useBean id="novector" class="java.util.Vector" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% // table demographiccust: cust1 = nurse   cust2 = resident   cust4 = midwife
-  String [][] dbQueries=new String[][] { 
-    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " }, 
-    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " }, 
-    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " }, 
-    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
-    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
-    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " }, 
-    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " }, 
-  };
+  
+  String [][] dbQueries = new String[1][1];
+  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+  
+  if (strDbType.trim().equalsIgnoreCase("mysql")) {;
+  		dbQueries=new String[][] { 
+		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " }, 
+		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " }, 
+		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " }, 
+		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
+		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
+		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
+		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
+		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
+		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " }, 
+		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " }, 
+		  };
+  }else if (strDbType.trim().equalsIgnoreCase("postgresql"))  {
+  		dbQueries=new String[][] { 
+		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " }, 
+		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " }, 
+		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " }, 
+		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
+		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " }, 
+		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
+		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " }, 
+		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " }, 
+		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " }, 
+		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " }, 
+		  };
+  }
   String[][] responseTargets=new String[][] {  };
   updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
