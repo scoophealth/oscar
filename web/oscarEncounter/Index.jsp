@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
-<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
+<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.Properties"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
@@ -46,12 +46,6 @@
 %>
 
 <%
-
-  GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  String dateString = curYear+"-"+curMonth+"-"+curDay;
   //need these variables for the forms
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
@@ -112,7 +106,7 @@
     //get another encounter from the select list
     function onSplit() {
         document.forms['encForm'].btnPressed.value = 'Split Chart';
-        var ret = confirm("<bean:message key="oscarEncounter.Index.confirmSplit"/>");
+        var ret = confirm("<bean:message key="oscarEncounter.Index.confirmSplit"/>");        
         return ret;
     }
     function popUpImmunizations(vheight,vwidth,varpage) {
@@ -597,14 +591,9 @@ border-right: 2px solid #cfcfcf;
                 if (vLocale.getCountry().equals("BR")) { %>  
                <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
              <% } else {%>  
-                   <% if(bean.status.indexOf('B')==-1) { 
-                   String appDate = bean.appointmentDate;
-                   if (bean.appointmentDate != null || bean.appointmentDate.length() == 0 ){
-                       appDate = dateString;
-                   }
-               %>
+                   <% if(bean.status.indexOf('B')==-1) { %>
                         <!--a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode("MFP")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a-->
-						<a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(province)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=appDate%>&start_time=<%=bean.startTime%>&bNewForm=1&status=t");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
+						<a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(province)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1&status=t");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
                    <% } else {%>
                         <!--a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a-->
 						<a href=# onClick='onUnbilled("../billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a>
@@ -675,6 +664,7 @@ border-right: 2px solid #cfcfcf;
                         }
 
                         %>
+                        
                         </select>
 
                     </td>
@@ -1031,6 +1021,14 @@ border-right: 2px solid #cfcfcf;
                                 </td>
                             </tr>
                         </table>
+                        <%
+                            if(bSplit){%>
+                            <script>
+                                document.forms['encForm'].btnPressed.value='Save'; 
+                                document.forms['encForm'].submit();
+                            </script>
+                            <%}
+                        %>
                     </td>
                 </tr>
 <!-- end new rows here -->
