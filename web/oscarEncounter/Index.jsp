@@ -702,7 +702,7 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <select name="templateSelect" class="ControlSelect" onchange="javascript:popUpInsertTemplate(0,0,document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
+                        <select name="templateSelect" class="ControlSelect" onchange="javascript:popUpInsertTemplate(40,50,document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.insertTemplate"/>-
                          <%
                             String encounterTmp ="NONE";
