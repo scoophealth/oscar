@@ -103,7 +103,7 @@ if (request.getParameter("loadFromSession") == null ){
 
 
 
-<!--                          
+                         
 
 function HideElementById(ele){
 	document.getElementById(ele).style.display='none';
@@ -115,8 +115,10 @@ function ShowElementById(ele){
 function CheckType(){
 	if (document.BillingCreateBillingForm.xml_billtype.value == "ICBC"){		
 		ShowElementById('ICBC');
+		document.BillingCreateBillingForm.mva_claim_code.options[1].selected = true;
 	}else{		
 		HideElementById('ICBC');
+		document.BillingCreateBillingForm.mva_claim_code.options[0].selected = true;
 	}
 	
 	
@@ -142,7 +144,13 @@ function correspondenceNote(){
 	}
 }
 
-
+function checkFACILITY(){
+	if (document.getElementById('FACILITY').style.display == 'none'){		
+		ShowElementById('FACILITY');		
+	}else{		
+		HideElementById('FACILITY');		
+	}		
+}
 
 
 
@@ -276,7 +284,7 @@ function ResearchScriptAttach() {
 function POP(n,h,v) {
   window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
 }
-//-->
+
 </SCRIPT>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <script language="JavaScript">
@@ -465,7 +473,7 @@ function showHideLayers() { //v3.0
               
             </td>
             <td width="33%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
-              <b><bean:message key="billing.visitlocation"/></b> 
+              <b>Clarification Code:</b> 
        
               <html:select property="xml_location" >
               
@@ -479,7 +487,7 @@ function showHideLayers() { //v3.0
                     
                    </html:select>
               </font></td>
-            <td width="14%"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif"><b><bean:message key="billing.visittype"/></b> </font></td>
+            <td width="14%"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif"><b>Service Location</b> </font></td>
             <td width="29%"> <font size="-2" face="Verdana, Arial, Helvetica, sans-serif"> 
               <html:select property="xml_visittype" >
                         <% for (int i=0; i< billvisit.length; i++){ 
@@ -521,7 +529,7 @@ function showHideLayers() { //v3.0
                    <html:text property="timeCall" size="4" maxlength="4" />
                 </td>
                 <td >
-                   <font size="-2"><strong><bean:message key="billing.servicedate.starttime"/></strong></font>
+                   <font size="-2" ><strong><bean:message key="billing.servicedate.starttime"/></strong></font>
                    <html:text property="xml_starttime" size="4" maxlength="4" />
                 </td>
                 <td >
@@ -551,7 +559,26 @@ function showHideLayers() { //v3.0
                         <html:option value="0">No</html:option>
                         <html:option value="E">Yes</html:option>                    
                      </html:select>
-                </td>                              
+                </td> 
+                <td nowrap>
+                <a href="javascript: function myFunction() {return false; }" onclick="checkFACILITY();"><font size="-2"><strong>Facility</strong></font></a>
+                <span style="display: none;" id="FACILITY">
+                <table>
+                <tr>
+                
+                   <td title="Facilty Num">
+                      Fac Num
+                      <html:text property="facilityNum" size="5" maxlength="5"/>
+                   </td>
+                
+                   <td title="Facilty Sub Num">
+                      Fac Sub Num
+                      <html:text property="facilitySubNum" size="5" maxlength="5"/>
+                   </td>
+                </tr>
+                </table>
+                </span>
+                </td>
            </tr>
           </table>
          <div style="display: none">
@@ -561,7 +588,7 @@ function showHideLayers() { //v3.0
                 <td>
                     <bean:message  key="billing.admissiondate"/>: <html:text property="xml_vdate" readonly="true" value="" size="10" styleId="xml_vdate" />
                     <a id="hlADate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
-                </td>
+                </td>                                
            </tr>
         </table> 
          </div>
@@ -576,9 +603,16 @@ function showHideLayers() { //v3.0
         <div align="left"></div>
         <div id="ICBC">
            <table width="100%">
-	      <tr>
-	         <td>ICBC Claim No: <html:text name="icbc_claim_no" property="icbc_claim_no" maxlength="8" value="<%=""%>" /></td>
-	      </tr>
+	           <tr>
+	              <td>ICBC Claim No: <html:text name="icbc_claim_no" property="icbc_claim_no" maxlength="8" value="<%=""%>" />
+	              
+	              MVA: <html:select property="mva_claim_code">
+                            <html:option value="N" >No</html:option>
+                            <html:option value="Y" >Yes</html:option>                            
+	                       </html:select>
+	              
+	              </td>
+	           </tr>
            </table>
         </div>
         <table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
