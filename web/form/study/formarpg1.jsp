@@ -33,7 +33,7 @@
 
 <%
     String formClass = "AR";
-    String formLink = "formarpg1.jsp";
+    String formLink = "study/formarpg1.jsp";
 
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
