@@ -13,7 +13,7 @@
   //includeing the provider name and a month calendar
 %>
 <%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp" %>
-
+<% String country = request.getLocale().getCountry(); %>
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
@@ -172,16 +172,23 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           <td colspan="2" nowrap>
           <%      session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/"); 
           %>
+            <% if (!country.equals("BR")) { %>
            <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/RptByExample.do');return false;"><bean:message key="admin.admin.btnQueryByExample"/></a><br>
-               <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/dbReportAgeSex.jsp');return false;"><bean:message key="admin.admin.btnAgeSexReport"/></a><br>
-                  <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportVisitControl.jsp');return false;"><bean:message key="admin.admin.btnVisitReport"/></a><br>
-                              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportCatchment.jsp');return false;"><bean:message key="admin.admin.btnPCNCatchmentReport"/></a><br>
-                              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/FluBilling.do?orderby=');return false;"><bean:message key="admin.admin.btnFluBillingReport"/></a>
-               <br> <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.do');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a>
- <br>   <a href=# onClick ="popupPage(600,1000,'../billing/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnOBECGenerator"/></a><br>
+            <% } %>
+           <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/dbReportAgeSex.jsp');return false;"><bean:message key="admin.admin.btnAgeSexReport"/></a><br>
+           <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportVisitControl.jsp');return false;"><bean:message key="admin.admin.btnVisitReport"/></a><br>
+           <%-- This links doesnt make sense on Brazil. Hide then --%>
+           <% if (!country.equals("BR")) { %>
+              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportCatchment.jsp');return false;"><bean:message key="admin.admin.btnPCNCatchmentReport"/></a><br>
+              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/FluBilling.do?orderby=');return false;"><bean:message key="admin.admin.btnFluBillingReport"/></a><br>
+              <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.do');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a><br>
+              <a href=# onClick ="popupPage(600,1000,'../billing/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnOBECGenerator"/></a><br>
+           <% } %>
           </td>
       </tr>
     </table>
+           <%-- This links doesnt make sense on Brazil. Hide then --%>
+           <% if (!country.equals("BR")) { %>
 <!--/oscarReport Code block -->
   <!--backup download Code block -->
     <table cellspacing="0" cellpadding="2" width="90%" border="0">
@@ -195,6 +202,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       </tr>
     </table>
 <!--/backup download Code block -->
+    <% } %>
 <!--oscarMessenger Code block -->
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <tr>
@@ -241,12 +249,13 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     </tr>
   </table>
 
+  <% if (!country.equals("BR")) { %>
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <tr>
       <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></td>
     </tr>
   </table>
-
+  <% } %>
   <hr color='orange'>
   <table border="0" cellspacing="0" cellpadding="0" width="90%">
   <tr>
