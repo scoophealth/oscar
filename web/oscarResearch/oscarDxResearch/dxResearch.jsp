@@ -229,11 +229,11 @@ document.serviceform.submit()
       				                  <td width="20%"><%=rsdemo2.getString("start_date")%></td>
       				                  <td width="20%"><%=rsdemo2.getString("update_date")%></td>
       				                  <td width="28%">
-						  <%= if (rsdemo2.getString("status").compareTo("A")==0) { %>
+						  <% if (rsdemo2.getString("status").compareTo("A")==0) { %>
 						  <a href='dxResearchUpdate.jsp?status=C&did=" + rsdemo2.getString("dxresearch_no") + "&demographicNo=" +request.getParameter("demographicNo")+"'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/></a> | <a href='dxResearchUpdate.jsp?status=D&did=" + rsdemo2.getString("dxresearch_no")+"&demographicNo=" +request.getParameter("demographicNo")+"'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>
-						  <%= } else { %>
+						  <% } else { %>
 						  <bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolved"/>| <a href='dxResearchUpdate.jsp?status=D&did=" + rsdemo2.getString("dxresearch_no")+"&demographicNo=" +request.getParameter("demographicNo")+"'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a></td>
-						  <%= } %>
+						  <% } %>
              				   </tr>      	  		 	   
       	  		 	   <%
       		 	          }
