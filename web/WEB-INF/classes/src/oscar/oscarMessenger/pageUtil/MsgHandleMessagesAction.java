@@ -78,19 +78,14 @@ public  class MsgHandleMessagesAction extends Action {
 	java.util.Enumeration enum = request.getParameterNames();
 	while (enum.hasMoreElements()){
 	    String param = ((String) enum.nextElement());
-	    System.out.println(param);
 	    if (param.equals("delete")) {
 		delete = "Delete";
-	    System.out.println("Delete setado");
 	    } else if (param.equals("reply")) {
 		reply = "Reply";
-	    System.out.println("Reply setado");
 	    } else if (param.equals("replyAll")) {
 		replyAll = "reply All";
-	    System.out.println("REply all setado");
 	    } else if (param.equals("forward")) {
 		forward = "Forward";
-	    System.out.println("forward setado");
 	    }
 	}
 
