@@ -116,7 +116,7 @@ function checkInput() {
        //System.out.println(":"+rsdemo.getString("timecode").length()+rsdemo.getString("timecode")+"|");
      }
    }
-   rsdemo = scheduleMainBean.queryResults("name", "search_scheduletemplate");
+   rsdemo = scheduleMainBean.queryResults(param[0], "search_scheduletemplate");
    while (rsdemo.next()) { 
 	%>
         <option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>

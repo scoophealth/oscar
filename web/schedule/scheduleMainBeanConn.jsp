@@ -33,7 +33,7 @@
     
     {"add_scheduletemplate", "insert into scheduletemplate values(?,?,?,?)" }, 
     //{"search_scheduletemplate", "select * from scheduletemplate where provider_no=? order by ?" }, 
-    {"search_scheduletemplate", "select * from scheduletemplate where provider_no=?" }, 
+    {"search_scheduletemplate", "select * from scheduletemplate where provider_no=? order by name" }, 
     {"search_scheduletemplatesingle", "select * from scheduletemplate where provider_no=? and name= ?" }, 
     {"delete_scheduletemplate", "delete from scheduletemplate where provider_no=? and name=?" }, 
   };
