@@ -38,6 +38,7 @@ import oscar.oscarProvider.data.*;
 public class ProviderNameBeanHandler {
     
     Vector providerNameVector = new Vector();
+    Vector doctorNameVector = new Vector();
  
     public ProviderNameBeanHandler() {
         init();
@@ -48,7 +49,7 @@ public class ProviderNameBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT DISTINCT provider_no from provider ORDER BY last_name";
+            String sql = "SELECT DISTINCT provider_no, provider_type from provider ORDER BY last_name";
             System.out.println("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
@@ -56,6 +57,11 @@ public class ProviderNameBeanHandler {
                 ProviderData pData = new ProviderData(rs.getString("provider_no"));
                 ProviderNameBean pNameBean = new ProviderNameBean(pData.getLast_name() + ", " + pData.getFirst_name(), rs.getString("provider_no"));
                 providerNameVector.add(pNameBean);
+                if(rs.getString("provider_type").equalsIgnoreCase("doctor")){
+                    doctorNameVector.add(pNameBean);
+                    System.out.println("doctor name added");
+                }
+                    
             }
 
             rs.close();
@@ -70,6 +76,10 @@ public class ProviderNameBeanHandler {
 
     public Collection getProviderNameVector(){
         return providerNameVector;
+    }
+    
+    public Collection getDoctorNameVector(){
+        return doctorNameVector;
     }
 }
 
