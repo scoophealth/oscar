@@ -167,6 +167,15 @@ public class DBPreparedHandler  {
       preparedStmt = null;
     }    
   }
+  
+   /**
+   * Returns a Connection instance
+   * @return Connection
+   */
+  public Connection getConn() {
+    return conn;
+  }
+  
   public void closeConn() throws SQLException {
     conn.close();
     conn = null;
