@@ -1,176 +1,137 @@
-
-
 <%      
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-  String user_no; 
-  user_no = (String) session.getAttribute("user");
-  String providerview = request.getParameter("providerview")==null?"":request.getParameter("providerview") ;
-  String asstProvider_no = "";
-  String color ="";
-  String premiumFlag="";
+if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+String user_no = (String) session.getAttribute("user");
+String providerview = request.getParameter("providerview")==null?"":request.getParameter("providerview") ;
+String asstProvider_no = "";
+String color ="";
+String premiumFlag="";
 String service_form="";
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %>
 <%
-  String clinicview = oscarVariables.getProperty("clinic_view");
-   String clinicNo = oscarVariables.getProperty("clinic_no");
+String clinicview = oscarVariables.getProperty("clinic_view", "");
+String clinicNo = oscarVariables.getProperty("clinic_no", "");
 %>
 
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
 <html>
 <head>
 <html:base/>
 <title>Billing Record</title>
 <style type="text/css">
-	<!--
-	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
-	
-	-->
+<!--
+A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
+-->
 </style>  
 <script language="JavaScript">
 <!--
-
 function setfocus() {
-		  //document.serviceform.xml_diagnostic_code.focus();
-		  //document.serviceform.xml_diagnostic_code.select();
-		}
-		
+	this.focus();
+	//document.serviceform.xml_diagnostic_code.focus();
+	//document.serviceform.xml_diagnostic_code.select();
+}
+/*		
 function RecordAttachments(Files, File0, File1, File2) {
-  window.document.serviceform.elements["File0Data"].value = File0;
-  window.document.serviceform.elements["File1Data"].value = File1;
-  window.document.serviceform.elements["File2Data"].value = File2;
-    window.document.all.Atts.innerText = Files;
-  }
-
+	window.document.serviceform.elements["File0Data"].value = File0;
+	window.document.serviceform.elements["File1Data"].value = File1;
+	window.document.serviceform.elements["File2Data"].value = File2;
+	window.document.all.Atts.innerText = Files;
+}
+*/
 var remote=null;
 
 function rs(n,u,w,h,x) {
-  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
-  remote=window.open(u,n,args);
-  if (remote != null) {
-    if (remote.opener == null)
-      remote.opener = self;
-  }
-  if (x == 1) { return remote; }
+	args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+	remote=window.open(u,n,args);
+	if (remote != null) {
+		if (remote.opener == null)
+			remote.opener = self;
+	}
+	if (x == 1) { return remote; }
 }
-
 
 var awnd=null;
 function ScriptAttach() {
-  f0 = escape(document.serviceform.xml_diagnostic_detail.value);
-  f1 = document.serviceform.xml_dig_search1.value;
- // f2 = escape(document.serviceform.elements["File2Data"].value);
- // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','billingDigSearch.jsp?name='+f0 + '&search=' + f1,600,600,1);
-  awnd.focus();
+	f0 = escape(document.serviceform.xml_diagnostic_detail.value);
+	f1 = document.serviceform.xml_dig_search1.value;
+	// f2 = escape(document.serviceform.elements["File2Data"].value);
+	// fname = escape(document.Compose.elements["FName"].value);
+	awnd=rs('att','billingDigSearch.jsp?name='+f0 + '&search=' + f1,600,600,1);
+	awnd.focus();
 }
-
-
 
 function OtherScriptAttach() {
-  t0 = escape(document.serviceform.xml_other1.value);
-  t1 = escape(document.serviceform.xml_other2.value);
-  t2 = escape(document.serviceform.xml_other3.value);
- // f1 = document.serviceform.xml_dig_search1.value;
- // f2 = escape(document.serviceform.elements["File2Data"].value);
- // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','billingCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
-  awnd.focus();
+	t0 = escape(document.serviceform.xml_other1.value);
+	t1 = escape(document.serviceform.xml_other2.value);
+	t2 = escape(document.serviceform.xml_other3.value);
+	// f1 = document.serviceform.xml_dig_search1.value;
+	// f2 = escape(document.serviceform.elements["File2Data"].value);
+	// fname = escape(document.Compose.elements["FName"].value);
+	awnd=rs('att','billingCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+	awnd.focus();
 }
+
 function ResearchScriptAttach() {
-  t0 = escape(document.serviceform.xml_research1.value);
-  t1 = escape(document.serviceform.xml_research2.value);
-  t2 = escape(document.serviceform.xml_research3.value);
- // f1 = document.serviceform.xml_dig_search1.value;
- // f2 = escape(document.serviceform.elements["File2Data"].value);
- // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','billingResearchCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
-  awnd.focus();
+	t0 = escape(document.serviceform.xml_research1.value);
+	t1 = escape(document.serviceform.xml_research2.value);
+	t2 = escape(document.serviceform.xml_research3.value);
+	// f1 = document.serviceform.xml_dig_search1.value;
+	// f2 = escape(document.serviceform.elements["File2Data"].value);
+	// fname = escape(document.Compose.elements["FName"].value);
+	awnd=rs('att','billingResearchCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
+	awnd.focus();
 }
 
 function POP(n,h,v) {
-  window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
+	window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
 }
-//-->
-</SCRIPT>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script language="JavaScript">
-<!--
-<!--
+
 function reloadPage(init) {  //reloads the window if Nav4 resized
-  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
-    document.pgW=innerWidth; document.pgH=innerHeight; onresize=reloadPage; }}
-  else if (innerWidth!=document.pgW || innerHeight!=document.pgH) location.reload();
+	if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+		document.pgW=innerWidth; document.pgH=innerHeight; onresize=reloadPage; }}
+	else if (innerWidth!=document.pgW || innerHeight!=document.pgH) location.reload();
 }
 reloadPage(true);
-// -->
 
 function findObj(n, d) { //v4.0
-  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
-    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
-  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
-  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=findObj(n,d.layers[i].document);
-  if(!x && document.getElementById) x=document.getElementById(n); return x;
+	var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+	d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+	if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+	for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=findObj(n,d.layers[i].document);
+	if(!x && document.getElementById) x=document.getElementById(n); return x;
 }
 
 function showHideLayers() { //v3.0
-  var i,p,v,obj,args=showHideLayers.arguments;
-  for (i=0; i<(args.length-2); i+=3) if ((obj=findObj(args[i]))!=null) { v=args[i+2];
-    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
-    obj.visibility=v; }
+	var i,p,v,obj,args=showHideLayers.arguments;
+	for (i=0; i<(args.length-2); i+=3) if ((obj=findObj(args[i]))!=null) { v=args[i+2];
+	if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
+	obj.visibility=v; }
 }
 //-->
 </script>
+
 <link rel="stylesheet" href="billing.css" type="text/css">
 </head>
+
 <%
-  
-  //if bNewForm is false (=0), then it should be able to display xml data.
-  boolean bNew = false; //Is that a new file?
-  if( request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("0")==0 ) 
-    bNew = false;
-  if( request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("0")!=0 ) 
-    bNew = true;
-  
-  String content="", billingdatetime="";
-  String hotclick="";
-  hotclick = request.getParameter("hotclick");
-  if (hotclick.compareTo("gel") == 0) {
-  content = "<xml_k990>checked</xml_k990><xml_a007>checked</xml_a007>";
-   }  
-  if( !bNew ) {
-  content = (String) session.getAttribute("content");
+boolean bNew = false; //Is that a new file?
+if( request.getParameter("bNewForm")!=null ) &&  ) 
+	bNew = request.getParameter("bNewForm").compareTo("0")==0 ? false : true ;
+
+String content="", billingdatetime="";
+String hotclick="";
+hotclick = request.getParameter("hotclick");
+if (hotclick.compareTo("gel") == 0) {
+	content = "<xml_k990>checked</xml_k990><xml_a007>checked</xml_a007>";
+}  
+if( !bNew ) {
+	content = (String) session.getAttribute("content");
 %>    
 <xml id="xml_list">
 <billing>
@@ -178,10 +139,9 @@ function showHideLayers() { //v3.0
 </billing>
 </xml>
 <%
-  bNew = false;
-  }
- %>
-<%
+	bNew = false;
+}
+
 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -194,7 +154,6 @@ function showHideLayers() { //v3.0
     user_no =request.getParameter("user_no");
     String apptProvider_no = request.getParameter("apptProvider_no");
     String ctlBillForm = request.getParameter("billForm");
-    System.out.println("ctlBillForm"+ctlBillForm);
     int ctlCount = 0;
     String assgProvider_no = "", assgProvider_name="";
     
@@ -731,7 +690,7 @@ serviceDisp = serviceValue;
                                 <input type="text" name="xml_other1" size="40" datafld='xml_other1'>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                                <input type="text" name="xml_other1_unit" size="5" maxlength="1" datafld='xml_other1_unit'>
+                                <input type="text" name="xml_other1_unit" size="5" maxlength="2" datafld='xml_other1_unit'>
                                 </font></td>
                             </tr>
                             <tr> 
@@ -739,7 +698,7 @@ serviceDisp = serviceValue;
                                 <input type="text" name="xml_other2" size="40" datafld='xml_other2'>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                                <input type="text" name="xml_other2_unit" size="5" maxlength="1" datafld='xml_other2_unit'>
+                                <input type="text" name="xml_other2_unit" size="5" maxlength="2" datafld='xml_other2_unit'>
                                 </font></td>
                             </tr>
                             <tr> 
@@ -747,7 +706,7 @@ serviceDisp = serviceValue;
                                 <input type="text" name="xml_other3" size="40"  datafld='xml_other3'>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                                <input type="text" name="xml_other3_unit" size="5" maxlength="1" datafld='xml_other3_unit'>
+                                <input type="text" name="xml_other3_unit" size="5" maxlength="2" datafld='xml_other3_unit'>
                                 </font></td>
                             </tr>
                             <tr> 
