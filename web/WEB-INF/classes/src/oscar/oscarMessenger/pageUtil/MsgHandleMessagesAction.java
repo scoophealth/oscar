@@ -69,6 +69,31 @@ public  class MsgHandleMessagesAction extends Action {
         HttpSession session = request.getSession(true);
         java.util.Enumeration ty = session.getAttributeNames();
 
+	/*
+	 * This is a little fix:
+	 * 
+	 * Look the parameter != null and set it correctly
+	 */
+
+	java.util.Enumeration enum = request.getParameterNames();
+	while (enum.hasMoreElements()){
+	    String param = ((String) enum.nextElement());
+	    System.out.println(param);
+	    if (param.equals("delete")) {
+		delete = "Delete";
+	    System.out.println("Delete setado");
+	    } else if (param.equals("reply")) {
+		reply = "Reply";
+	    System.out.println("Reply setado");
+	    } else if (param.equals("replyAll")) {
+		replyAll = "reply All";
+	    System.out.println("REply all setado");
+	    } else if (param.equals("forward")) {
+		forward = "Forward";
+	    System.out.println("forward setado");
+	    }
+	}
+
         if (delete.compareToIgnoreCase("Delete") == 0){
           try{    //sents this message status to del
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

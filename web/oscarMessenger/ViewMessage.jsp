@@ -194,10 +194,18 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
                                         <textarea name="Message" wrap="hard" readonly="true" rows="18" cols="60"><%= request.getAttribute("viewMessageMessage") %></textarea><br>
-                                        <html:submit styleClass="ControlPushButton" property="reply" value="Reply" />
-                                        <html:submit styleClass="ControlPushButton" property="replyAll" value="Reply All"/>
-                                        <html:submit styleClass="ControlPushButton" property="forward" value="Forward"/>
-                                        <html:submit styleClass="ControlPushButton" property="delete" value="Delete"/>
+                                        <html:submit styleClass="ControlPushButton" property="reply">
+					<bean:message key="oscarMessenger.ViewMessage.btnReply"/>
+					</html:submit>
+                                        <html:submit styleClass="ControlPushButton" property="replyAll">
+ 					<bean:message key="oscarMessenger.ViewMessage.btnReplyAll"/>
+					</html:submit>
+                                        <html:submit styleClass="ControlPushButton" property="forward">
+					<bean:message key="oscarMessenger.ViewMessage.btnForward"/>
+					</html:submit>
+                                        <html:submit styleClass="ControlPushButton" property="delete">
+					<bean:message key="oscarMessenger.ViewMessage.btnDelete"/>
+					</html:submit>
                                         <html:hidden property="messageNo" value="<%=(String)request.getAttribute(\"viewMessageNo\") %>"/>
                                     </td>
                                 </tr>
