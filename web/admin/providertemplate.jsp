@@ -97,10 +97,10 @@ function setfocus() {
 <form name="template" method="post" action="providertemplate.jsp">
   <input type="hidden" name="dboperation" value="">
   <tr>
-    <td valign="top" width="20%" align="right" title='no symbol "'> Template Name:</td> 
+    <td valign="top" width="20%" align="right" title='no symbol "'><bean:message key="admin.providertemplate.formTemplateName"/>:</td> 
     <td>  <input type="text" name="name" value="<%=bEdit?tName:""%>" style="width:100%" maxlength="20"></td>
   </tr><tr>
-    <td valign="top" width="20%" align="right"> Template Text: </td>
+    <td valign="top" width="20%" align="right"><bean:message key="admin.providertemplate.formTemplateText"/>: </td>
     <td> <textarea name="value" style="width:100%" rows="20" ><%=bEdit?tValue:""%></textarea> </td>
   </tr>
 </table>
