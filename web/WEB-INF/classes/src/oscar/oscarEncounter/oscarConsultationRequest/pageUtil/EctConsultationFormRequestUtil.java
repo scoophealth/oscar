@@ -28,7 +28,9 @@ import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.Date;
 import oscar.oscarDB.DBHandler;
+import oscar.util.*;
 
 public class EctConsultationFormRequestUtil {
 
@@ -49,6 +51,8 @@ public class EctConsultationFormRequestUtil {
                 patientHealthCardType = rs.getString("hc_type");
                 patientHealthCardVersionCode = rs.getString("ver");
                 patientChartNo = rs.getString("chart_no");
+                patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")));
+              
             }
             rs.close();
             db.CloseConn();
@@ -241,6 +245,7 @@ public class EctConsultationFormRequestUtil {
     public String patientDOB;
     public String patientHealthNum;
     public String patientSex;
+    public String patientAge;
     public String patientHealthCardType;
     public String patientHealthCardVersionCode;
     public String patientChartNo;
