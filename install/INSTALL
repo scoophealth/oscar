@@ -1,0 +1,113 @@
+OSCAR (Open Source Clinical Application Resource) - Installation
+
+  Packages in oscar_mcmaster tar ball:
+    [1] Java2 SDK Environment 
+    [2] Jakarta Tomcat 
+    [3] Mysql Database 
+    [4] OSCAR source files
+    [5] OSCAR web application files
+    [6] OSCAR eDocument Repository
+    [7] OSCAR Security Config file
+    [8] OSCAR property files
+    [9] Temporary SSL Keyfile
+    [0] compat-libstdc++ rpm package
+  
+  
+  Hardware Requirement
+    [CPU] - Pentium 2 or higher (tested with Celeron 400)
+    [MEM] - 128MB minumum, 256MB recommended (tested with 64MB)
+    [HD ] - 600MB free space, 6 GB recommended 
+    [CD ] - CD Rom Drive
+    [NTW] - Networking capability 
+    
+  Software Requirement  
+    [OS ] - Linux (tested with Redhat 7.2)
+    [PKG] - Installation Type - Server
+          - Developement Package selected (Gcc++ lib for JAVA)
+          
+  
+  Quick Install from Scratch:
+    
+    REDHAT Installation:
+    [1] Boot Linux Image from CD
+    [2] Select Automatic Partition
+    [3] Select "Server" Grade installation
+    [4] Security Level : Medium, allow ssh
+    [5] Add Development tools Package ("select individual package" option selected) 
+    
+    OSCAR Installation:
+    [0] Login as root access
+    
+    [1] Untar the distribution in any directory
+        tar zxvf oscar_mcmaster_x.x.tar.gz
+    
+    [2] Run install script in untar directory
+        cd oscar_mcmaster
+        ./install.sh
+    
+    [3] Add the following statement on /etc/profile file before the export statment
+        
+        JAVA_HOME="/usr/local/java"
+	CATALINA_HOME="/usr/local/tomcat"
+	PATH="$PATH:/usr/local/java/bin:/usr/local/tomcat/bin:/usr/local/mysql/bin"
+	
+	export JAVA_HOME CATALINA_HOME PATH USER LOGNAME MAIL HOSTNAME HISTSIZE INPUTRC
+
+    [4] The oscar package should be installed. To start all serivces:
+    
+  +--------------------------------------------------------+
+  | Starting up OSCAR:                                     |
+  | [1]  cd /usr/local/mysql                               |
+  | [2]  ./bin/safe_mysqld &                               |
+  | [3]  cd /usr/local/tomcat/webapps/                     |
+  | [4]  ../bin/startup.sh                                 |
+  | [5]  open the client browser and run                   |
+  |      https://<yourhostname>:8443/oscar_mcmaster/       |
+  |                                                        |
+  | You should see the oscar login page, then login as     |
+  |                                                        |                                                     
+  |                                                        |                                                     
+  | OSCAR LOGIN |  USER ID   |  PASSWORD   |  PIN          |
+  | Admin       | oscaradmin |  mac2002    |  1117         |
+  | Doctor      | oscardoc   |  mac2002    |  1117         |
+  | Receptionist| oscarrep   |  mac2002    |  1117         | 
+  |                                                        |                                                     
+  |                                                        |
+  | Shutting down OSCAR:                                   |                                                     
+  | [1] cd /usr/local/tomcat/webapps/                      |
+  | [2] ../bin/shutdown.sh                                 |                                                     
+  | [3] cd /usr/local/mysql                                |
+  | [4] ../bin/mysqladmin -p<your_db_password> shutdown    |                                                     
+  |                                                        |
+  +--------------------------------------------------------+
+        
+        
+    
+    
+    
+    Installation notes:    
+    
+    If you like to change the database userid and password, you can do the following:
+    
+    Advanced MYSQL Configuration:
+    [1] Starting mysql
+        cd /usr/local/mysql
+        ./bin/safe_mysqld & (if not starting up, please refer to http://www.mysql.com)
+    [2] Configure the mysqladmin
+        mysqladmin -u root password "<yourpassword>" please refer to the 
+        oscar_mcmaster.properties file for database password
+    [3] Grant permission to user
+        mysql -u root -p<yourpassword> oscar_mcmaster
+        mysql> grant all on oscar_mcmaster.* to root@localhost identified by "<yourpassword>"
+    [4] Then try query on browser
+        https://<yourhostname>:8443/oscar_mcmaster/mysql.jsp
+        if you see "connection sucess!", you can access OSCAR
+        
+    Edit oscar_mcmaster.properties file
+    [1] cd /root
+    [2] vi oscar_mcmaster.properties file
+    [3] change the value in db_username and db_password
+    [4] save it
+    [5] run oscar again
+
+  

@@ -1,0 +1,165 @@
+OSCAR (Open Source Clinical Application Resource) - README
+
+  Oscar is a set of Clinic Applications, Clinic Resources, and 
+  electronic patient records, developed using Open Source Tools. 
+  Oscar facilitates Clinical Decision Support and Evidence Based Medicine 
+  
+  
+  Version 1.0 - 11/17/2002
+  http://www.oscarhome.org/
+
+  Licence for OSCAR software
+  This software is copyright © 2001 McMaster University. 
+  You can redistribute it and/or modify it under the terms of the 
+  GNU General Public License version 2 as published by the Free 
+  Software Foundation. A copy of this licence follows.  This 
+  program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+  GNU General Public License below for more details. 
+ 
+  This software was created under contract to McMaster University. 
+ 
+  To purchase support or enhancements for this software, contact: 
+ 
+ 
+  Department of Family Medicine 
+  McMaster University 
+  1200 Main Street West.
+  Hamilton, Ontario
+  Canada L8N 3Z5
+ 
+ Email: Dr. David H Chan <dchan@mcmaster.ca>
+ WWW: http://www.oscarhome.org/
+
+
+
+  Requirements: 
+    Linux (tested with Redhat 7.x, Redhat 8.0)
+    Java2 SDK 4.0.01
+    MySQL 3.23.x (tested with 3.23.49, 3.23.52, 3.23.53a)
+    Jakarta Tomcat 4.0.x (tested with 4.0.1, 4.0.4, 4.0.6)
+    Mozilla 1.1 or equivalent browser (tested with Mozilla 1.1 and Microsoft Internet Explorer 6 (SP1))
+                
+  Summary:
+    OSCAR Application Modules 
+    - Appointment Scheduling
+    - Billing
+    - Electronic Medical Record
+    - free text, templates, and forms
+    - Prescription
+    - online or via wireless handheld device such as Palm (linked with DrugMagnet software)
+    - Clinical Resource Database
+    - Decision Support tools
+    - Evidence-based Antenatal Care Planner
+    - Evidence-based Assessment Records for Long Term Care
+    - Functional Assessment for seniors
+    - Self-Learning Program (web-based CME from CFPC) 
+    
+    BENEFITS to Healthcare
+    - Fewer bugs
+    - Encouragement of standards
+    - Reduced overall cost
+    - Improved evaluation
+
+  Download:
+    You can get the newest version at http://www.oscarhome.org/.
+
+  Credits:
+    This work is based on MUFFIN (McGill University Family Folder Information Network),
+    a MS-DOS computer-based patient record system, was developed by Dr. David Chan at 
+    the McGill University Department of Family Medicine, Montreal General Hospital in 
+    1988. It was his idea to create a web-based interface to further establish the usablity
+    of electronic medical record system using latest J2EE technology. 
+    Thanks go to 
+   
+   
+    [CORE DEVELOPER]
+  
+    OSCAR is the brainchild of Dr. David Chan of McMaster University
+    Department of Medicine, Hamilton, Ontario, Canada.  It is a web based,
+    open source application providing electronic patient records, integrated
+    evidence based decision support and knowledge links, and practice
+    management. 
+
+    McMaster Universitys Department of Family Medicine developed OSCAR in
+    part, to address the requirements of the Ontario Provincial Governments
+    Primary Care Reform Initiative, a multimillion-dollar initiative to
+    transform primary care in the province. 
+
+    Dr. David Chan is a Canadian health care professional, with a dream!  His
+    vision has always been to develop advanced technology software programs
+    for medical professionals that will help them do their work more
+    efficiently and ultimately help the patient.  
+ 
+    While on staff at McMaster University's Department of Family Medicine,
+    his original visionary dream has never faltered over the years.  OSCAR
+    (Open Source Clinical Applications & Resources) is 2002's leading edge in
+    the development of web-based electronic record programs for the medical
+    field. 
+
+    [PROGRAMMERS]
+  
+    2000:  Dan Quach, developed the initial prototype of OSCAR. to apply for
+    Ministry of Health funding to develop software for medical office
+    automation and electronic records that would meet the requirements of the
+    Health Care Reform initiative.
+ 
+    2001 - Trudy Chiswell:  research for the design of OHIP billing,
+    technical writer, trainer, and project management
+
+    2001 - Martin Li Yi:  lead programmer, developed the overall scheduling
+    package, management of program and monitoring of all packages for
+    consistency
+ 
+    2001 - Tony Leung: development of the OHIP billing submission and
+    reporting, document management and the basis for the clinical resource
+    part of the program.
+
+    2001 Tom Tong: development of the self-learning module and the interface
+    for the hand held feature
+
+    2002 - Nick Terenvliet: researched and implemented security functions,
+    licensing and local lab links
+
+    2002 - Daren Spinthoff:  development of user-friendly interface for the
+    Clinical Resource program
+
+    2002 - Jay Gallagher: developed the secure messaging program,
+    consultation booking with tracking program and OSCAR home page
+    development
+
+    2002 - Sarah Vanderbrugghen: development of electronic medical forms:
+    anti-natal planner, palliative care, type II diabetes, mental health
+    referral and assessment forms etc.
+
+    2002 - Brad Visscher: development of the prescription writer program,
+    immunization and initial OSCARcom for communication ability between OSCAR
+    offices
+
+    [OSCAR SITES]
+    
+    September 2001, Maternity Centre Hamilton started using the 1st prototype
+    of the OSCAR program
+    April 15th, 2002 Stonechurch Family Health Centre went live OSCAR for
+    larger clinics
+    June 17th , 2002 McMaster Family Practice Unit went live with OSCAR for
+    larger clinics
+    July 23, 2002 Dr. Hunter, Milton, ON: 1st OB doctor to use OSCAR in
+    paperless office environment
+    Nov 17th Official release of OSCAR v01  
+   
+    And thanks to everyone who sent email with suggestions, bug-reports and/or
+    some feedback.
+   
+  Installation:
+    Please see the INSTALL file.
+  
+  ChangeLog:
+    No changes in ChangeLog as of 11-17-2002
+  
+  Documentation:
+    Basic documentation available in http://www.oscarhome.org
+    
+    
+ 
