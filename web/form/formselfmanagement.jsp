@@ -90,13 +90,15 @@
 
         .checkbox{
             height: 25px;
-            width: 25px;     
+            width: 25px;    
+            border: 0px solid #A9A9A9;
             background-color: #FFFFFF;              
         }
 
         .checkboxError{
             height: 25px;
-            width: 25px;     
+            width: 25px;   
+            border: 0px solid #A9A9A9;
             background-color: red;                   
         }
         
@@ -141,10 +143,11 @@
 <script type="text/javascript" language="Javascript">
     var choiceFormat  = new Array(23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,42,43);
     var allNumericField = new Array(4,21);  
-    var a = new Array("01234", 6,7,8,9,10,12);
-    var b = new Array("0123456789", 13, 14);
-    var c = new Array("012345", 15,16,17,18,19,20,45,46,47);
-    var allMatch = new Array(a,b,c);
+    var a = new Array(0,4, 6,7,8,9,10,12);
+    var b = new Array(0,180, 13);
+    var c = new Array(0,900, 14);
+    var d = new Array(0,5, 15,16,17,18,19,20,45,46,47);
+    var allMatch = new Array(a,b,c,d);
     var action = "/<%=project_home%>/form/formname.do";
     
     function goToPage1(){  
@@ -158,9 +161,10 @@
     }
     
     function goToPage2(){              
-        var a = new Array("01234", 6,7,8,9,10,12);
-        var b = new Array("0123456789", 13, 14);
-        var allInputs = new Array(a,b);
+        var a = new Array(0,4, 6,7,8,9,10,12);
+        var b = new Array(0,180, 13);
+        var c = new Array(0,900, 14);
+        var allInputs = new Array(a,b,c);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
@@ -172,7 +176,7 @@
     }
 
     function goToPage3(){ 
-        var a = new Array("012345", 15,16,17,18,19,20);
+        var a = new Array(0,5, 15,16,17,18,19,20);
         var allInputs = new Array(a);
         if (areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
