@@ -1,0 +1,48 @@
+.Head {
+    background-color:#BBBBBB;
+    padding-top:3px;
+    padding-bottom:3px;
+    width:940px;
+    font-size:12pt;
+}
+
+.Head INPUT {
+    width: 100px;
+}
+
+.Head A {
+    font-size:12pt;
+}
+
+BODY {
+    font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+    background-color: #BBCCFF;
+}
+
+TABLE {
+    font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	font-size: 10pt;
+}
+
+.title {
+    background-color: #486ebd;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: centre;
+}
+
+.shrinkMe table {
+    font-size: 9pt;
+}
+
+.small9 {
+    font-size: 9pt;
+}
+
+.small8 {
+    font-size: 8pt;
+}
+
+.small7 {
+    font-size: 8pt;
+}
