@@ -189,6 +189,7 @@ public class MDSSegmentData
                                   rs.getString("observationValue"),
                                   rs.getString("abnormalFlags"),
                                   rs.getString("observationIden"),
+                                  rs.getString("observationResultStatus"),
                                   (ArrayList)notes.get(Integer.toString(mdsOBXNum)),
                                   labID));
               

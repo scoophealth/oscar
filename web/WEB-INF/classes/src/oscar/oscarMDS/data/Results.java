@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Results
 {
 
-    Results(String n, String rR, String u, String oV, String aF, String oI, ArrayList newnotes, String lID)
+    Results(String n, String rR, String u, String oV, String aF, String oI, String rS, ArrayList newnotes, String lID)
     {
         name = n;
         referenceRange = rR;
@@ -18,6 +18,7 @@ public class Results
         observationValue = oV;
         abnormalFlags = aF;
         observationIden = oI;
+        resultStatus = resultInterpret(rS);
         notes = newnotes;
         labID = lID;
     }
@@ -28,6 +29,24 @@ public class Results
     public String observationValue;
     public String abnormalFlags;
     public String observationIden;
-    public ArrayList notes;
+    public String resultStatus;
+    public ArrayList notes;    
     public String labID;
+    
+    private String resultInterpret(String rS)
+    {
+        switch ((char)rS.toUpperCase().charAt(0)) {
+            case 'C' : return "Edited";
+            case 'D' : return "Deleted";
+            case 'F' : return "Final";
+            case 'I' : return "Pending";
+            case 'P' : return "Preliminary";
+            case 'R' : return "Unverified";
+            case 'S' : return "Partial";
+            case 'X' : return "DNR";
+            case 'U' : return "Final";
+            case 'W' : return "Deleted";
+            default  : return "Invalid";
+        }        
+    }
 }
