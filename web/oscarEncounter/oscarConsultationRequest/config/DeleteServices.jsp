@@ -25,6 +25,8 @@
 -->
 
 <%@ page language="java" %>
+<%@ page import="java.util.ResourceBundle" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -38,7 +40,7 @@ displayServiceUtil.estServicesVectors();
 
 <head>
 <title>
-Adjust Service Providers
+<bean:message key="oscarEncounter.oscarConsultationRequest.config.DeleteServices.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -89,7 +91,7 @@ function BackToOscar()
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Adjust Service Providers</p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.config.DeleteServices.title"/></p>
         </td>
     </tr>
     <tr>
@@ -100,7 +102,7 @@ function BackToOscar()
             <!----Start new rows here-->
                <tr>
                   <td>
-                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar();
+                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                   out.print(titlebar.estBar(request));
                   %>
                   </td>
@@ -108,21 +110,21 @@ function BackToOscar()
                <tr>
                   <td>
                         <div class="DivContentSectionHead">
-                            Services
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.DeleteServices.2ndTitle"/>
                         </div>
                   </td>
                </tr>
 
                <tr>
                   <td>
-                  Please check off all the services you would like to delete<br>
+                  <bean:message key="oscarEncounter.oscarConsultationRequest.config.DeleteServices.msgCheckOff"/><br>
 
                   </td>
                </tr>
                <tr>
                   <td>
                      <html:form action="/oscarEncounter/DelService">
-                     <input type="submit" name="delete" value="Delete Service">
+                     <input type="submit" name="delete" value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.DeleteServices.btnDeleteService"/>">
                      <div class="ChooseRecipientsBox1">
                         <table>
                            <tr>
@@ -130,7 +132,7 @@ function BackToOscar()
                                  &nbsp;
                               </th>
                               <th>
-                                 Service
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.DeleteServices.service"/>
                               </th>
 
 

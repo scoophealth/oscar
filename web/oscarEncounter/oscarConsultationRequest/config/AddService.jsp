@@ -25,6 +25,8 @@
 -->
 
 <%@ page language="java" %>
+<%@ page import="java.util.ResourceBundle" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -33,7 +35,7 @@
 
 <head>
 <title>
-Add Service
+<bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -83,7 +85,7 @@ function BackToOscar()
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Add Service</p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.title"/></p>
         </td>
     </tr>
     <tr>
@@ -95,7 +97,7 @@ function BackToOscar()
 
                <tr>
                   <td >
-                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar();
+                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                   out.print(titlebar.estBar(request));
                   %>
                   </td>
@@ -105,7 +107,7 @@ function BackToOscar()
                   if (added != null){  %>
                   <tr>
                      <td>
-                        <font color="red">Service <%=added%> has been added.</font>
+                        <font color="red"><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.msgServiceAdded" arg0="<%=added%>"/></font>
                      </td>
                   </tr>
                <%}%>
@@ -113,7 +115,7 @@ function BackToOscar()
                <tr>
                   <td>
                         <div class="DivContentSectionHead">
-                            Add Service
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.2ndTitle"/>
                         </div>
                   </td>
                </tr>
@@ -124,7 +126,7 @@ function BackToOscar()
                         <html:form action="/oscarEncounter/AddService">
                         <tr>
                            <td>
-                            Service:
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.service"/>
                            </td>
                            <td>
                            <input type="text" name="service"/>
@@ -132,7 +134,7 @@ function BackToOscar()
                         </tr>
                         <tr>
                            <td colspan="2">
-                           <input type="submit" value="Add Service"/>
+                           <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.btnAddService"/>"/>
                            </td>
                         </tr>
                         </html:form>

@@ -25,6 +25,8 @@
 -->
 
 <%@ page language="java" %>
+<%@ page import="java.util.ResourceBundle" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -36,7 +38,7 @@
 
 <head>
 <title>
-Add Service
+<bean:message key="oscarEncounter.oscarConsultationRequest.config.ShowAllServices.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -87,7 +89,7 @@ function BackToOscar()
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Select Service</p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.config.ShowAllServices.title"/></p>
         </td>
     </tr>
     <tr>
@@ -98,7 +100,7 @@ function BackToOscar()
             <!----Start new rows here-->
                <tr>
                   <td>
-                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar();
+                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                      out.print(titlebar.estBar(request));
                   %>
                   </td>
@@ -108,7 +110,7 @@ function BackToOscar()
                <tr>
                   <td>
                         <div class="DivContentSectionHead">
-                            Select Service
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.ShowAllServices.2ndTitle"/>
                         </div>
                   </td>
                </tr>
@@ -119,7 +121,7 @@ function BackToOscar()
                         <html:form action="/oscarEncounter/AddService">
                         <tr>
                            <td>
-                            Services:
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.ShowAllServices.services"/>
                            </td>
                         </tr>
                         <tr>

@@ -35,7 +35,7 @@ displayServiceUtil.estSpecialistVector();
 %>
 <head>
 <title>
-Adjust Service Providers
+<bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -86,7 +86,7 @@ function BackToOscar()
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Adjust Service Providers</p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.title"/></p>
         </td>
     </tr>
     <tr>
@@ -97,7 +97,7 @@ function BackToOscar()
             <!----Start new rows here-->
                <tr>
                   <td>
-                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar();
+                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                   out.print(titlebar.estBar(request));
                   %>
                   </td>
@@ -105,15 +105,15 @@ function BackToOscar()
                <tr>
                   <td>
                         <div class="DivContentSectionHead">
-                            Specialists
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.2ndTitle"/>
                         </div>
                   </td>
                </tr>
 
                <tr>
                   <td>
-                  Please check off all the specialist that you would like to delete<br>
-                  Click on the specialists you would like to edit<br>
+                  <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.msgCheckOff"/><br>
+                  <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.msgClickOn"/><br>
 
 
                   </td>
@@ -121,7 +121,7 @@ function BackToOscar()
                <tr>
                   <td>
                      <html:form action="/oscarEncounter/EditSpecialists">
-                     <input type="submit" name="delete" value="Delete Specialist">
+                     <input type="submit" name="delete" value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.btnDeleteSpecialist"/>">
                      <div class="ChooseRecipientsBox1">
                         <table>
                            <tr>
@@ -129,16 +129,16 @@ function BackToOscar()
                                  &nbsp;
                               </th>
                               <th>
-                                 Specialist
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.specialist"/>
                               </th>
                               <th>
-                                 Address
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.address"/>
                               </th>
                               <th>
-                                 Phone
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.phone"/>
                               </th>
                               <th>
-                                 Fax
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.fax"/>
                               </th>
 
                            </tr>

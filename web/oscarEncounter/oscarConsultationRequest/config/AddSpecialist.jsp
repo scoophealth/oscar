@@ -25,15 +25,18 @@
 -->
 
 <%@ page language="java" %>
+<%@ page import="java.util.ResourceBundle" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <html:html locale="true">
 
 <%
-  String transactionType = new String("Add Specialist");
+  ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
+  
+  String transactionType = new String(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.addOperation"));
   if ( request.getAttribute("upd") != null){
-      transactionType = new String("Update Specialist");
+      transactionType = new String(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.updateOperation"));
   }
 %>
 
@@ -92,7 +95,7 @@ function BackToOscar() {
             <!----Start new rows here-->
                <tr>
                   <td >
-                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar();
+                  <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                   out.print(titlebar.estBar(request));
                   %>
                   </td>
@@ -102,7 +105,7 @@ function BackToOscar() {
                    if (added != null){  %>
                     <tr>
                        <td>
-                            <font color="red"> Specialist <%=added%> has been added. </font>
+                            <font color="red"> <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.msgSpecialistAdded" arg0="<%=added%>"/> </font>
                        </td>
                     </tr>
                <%}%>
@@ -138,19 +141,19 @@ function BackToOscar() {
                         <html:hidden name="EctConAddSpecialistForm" property="specId"/>
                         <tr>
                            <td>
-                                 First Name:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.firstName"/>
                               </td>
                               <td>
                                  <html:text name="EctConAddSpecialistForm" property="firstName"/>
                            </td>
                            <td>
-                                 Last Name:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.lastName"/>
                               </td>
                               <td>
                                  <html:text name="EctConAddSpecialistForm" property="lastName"/>
                            </td>
                            <td>
-                                 Professional Letters:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.professionalLetters"/>
                               </td>
                               <td>
                                  <html:text name="EctConAddSpecialistForm" property="proLetters"/>
@@ -158,7 +161,7 @@ function BackToOscar() {
                         </tr>
                         <tr>
                            <td>
-                                 Address:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.address"/>
                               </td>
                               <td colspan="5">
                                  <html:textarea name="EctConAddSpecialistForm" property="address" cols="30" rows="3" />
@@ -166,13 +169,13 @@ function BackToOscar() {
                         </tr>
                         <tr>
                            <td>
-                                 Phone:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.phone"/>
                               </td>
                               <td>
                                  <html:text name="EctConAddSpecialistForm" property="phone"/>
                               </td>
                            <td>
-                                 Fax:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.fax"/>
                               </td>
                               <td colspan="4">
                                  <html:text name="EctConAddSpecialistForm" property="fax"/>
@@ -180,13 +183,13 @@ function BackToOscar() {
                         </tr>
                         <tr>
                            <td>
-                                 Website:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.website"/>
                              </td>
                               <td>
                                  <html:text name="EctConAddSpecialistForm" property="website"/>
                            </td>
                            <td>
-                                 Email:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.email"/>
                               </td>
                               <td colspan="4">
                                  <html:text name="EctConAddSpecialistForm" property="email"/>
@@ -194,7 +197,7 @@ function BackToOscar() {
                         </tr>
                         <tr>
                            <td>
-                                 Specialist Type:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.specialistType"/>
                               </td>
                               <td colspan="5">
                                  <html:text name="EctConAddSpecialistForm" property="specType"/>

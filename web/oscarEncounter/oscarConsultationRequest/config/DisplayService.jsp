@@ -25,6 +25,8 @@
 -->
 
 <%@ page language="java" %>
+<%@ page import="java.util.ResourceBundle" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -37,7 +39,7 @@ String serviceDesc = (String) displayServiceUtil.getServiceDesc(serviceId);
 %>
 <head>
 <title>
-Adjust Service Providers
+<bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -88,7 +90,7 @@ function BackToOscar()
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Adjust Service Providers</p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.title"/></p>
         </td>
     </tr>
     <tr>
@@ -113,7 +115,7 @@ function BackToOscar()
                </tr>
                <tr>
                   <td>
-                  Please check off all the specialist that offer <%=serviceDesc %>
+                  <bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.msgCheckOff" arg0="<%=serviceDesc %>"/>
                   </td>
                </tr>
                <tr>
@@ -121,7 +123,7 @@ function BackToOscar()
 
                      <html:form action="/oscarEncounter/UpdateServiceSpecialists">
                      <input type="hidden" name="serviceId"value="<%=serviceId %>">
-                     <input type="submit" value="Update these Services Specialists">
+                     <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.btnUpdateServices"/>">
                      <div class="ChooseRecipientsBox1">
                         <table>
                            <tr>
@@ -129,16 +131,16 @@ function BackToOscar()
                                  &nbsp;
                               </th>
                               <th>
-                                 Specialist
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.specialist"/>
                               </th>
                               <th>
-                                 Address
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.address"/>
                               </th>
                               <th>
-                                 Phone
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.phone"/>
                               </th>
                               <th>
-                                 Fax
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.DisplayService.fax"/>
                               </th>
 
                            </tr>
