@@ -37,28 +37,22 @@
 <title>
 <bean:message key="oscarEncounter.Measurements.msgSelectMeasurementGroup"/>
 </title>
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-</style>
 
 <script type="text/javascript">
     function set(target) {
      document.forms[0].forward.value=target;
 };
+
+function confirmDelete(target) {
+
+    var selected = document.forms[0].selectedGroupName.options[document.forms[0].selectedGroupName.selectedIndex].value;
+    var answer = confirm("Are you sure you want to delete " + selected + " group?");
+    if(answer){
+        set(target);
+        document.forms[0].submit();
+    }
+};
+    
 </script>
 
 </head>
@@ -94,11 +88,9 @@
                             <tr>
                                 <td> 
                                     <tr>
-                                        <th align="left" class="td.tite">
-                                            <bean:message key="oscarEncounter.oscarMeasurements.SelectMeasurementGroup.selectGroup"/>
-                                        </th>
-                                        <td>
-                                         <html:select property="value(groupName)">
+                                        <td align="left">
+                                            <bean:message key="oscarEncounter.oscarMeasurements.SelectMeasurementGroup.selectGroup"/>                                        
+                                        <html:select property="selectedGroupName">
                                             <html:options collection="groups" property="groupName" labelProperty="groupName"/>
                                         </html:select>
                                         </td>
@@ -107,8 +99,11 @@
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                                                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.continueBtn"/>" onclick="submit();"/></td>
+                                                    <input type="hidden" name="forward" value="error"/>
+                                                    <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
+                                                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.modifyMeasurementTypeBtn"/>" onclick="set('type');submit();"/></td>
+                                                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.modifyMeasurementStyleBtn"/>" onclick="set('style');submit();"/></td>
+                                                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.deleteBtn"/>" onclick="confirmDelete('delete');"/></td>
                                                 </tr>
                                             </table>
                                         </td>

@@ -1,4 +1,3 @@
-
 <!--  
 /*
  * 
@@ -34,6 +33,7 @@
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
+<link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -60,7 +60,7 @@
 
 </head>
 
-<script language="javascript">
+<script type="text/javascript">
 
 function write2Parent(text){
     
@@ -68,124 +68,167 @@ function write2Parent(text){
     opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
  }
 
+function getDropboxValue(ctr){   
+    var selectedItem = document.forms[0].value(inputMInstrc-ctr).options[document.forms[0].value(inputMInstrc-ctr).selectedIndex].value;
+    alert("hello!");
+}
+
+function popupPage(vheight,vwidth,type,selection) { //open a new popup window
+  
+  var page = "../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type="+ type + "&mInstrc=" + selection;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+  var popup=window.open(page, "blah", windowprops);
+  window.close();
+}
 </script>
-
-
-
-<link rel="stylesheet" type="text/css" href="../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
-<html:errors/>
-<html:form action="/oscarEncounter/Measurements" enctype="multipart/form-data">
-<table>
-    <tr>
-        <td>
-            <table>
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
+<!--  -->
+    <html:errors/>
+    <html:form action="/oscarEncounter/Measurements" enctype="multipart/form-data">
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                <logic:present name="groupName"><bean:write name="groupName"/></logic:present>
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar" >                 
+                    <tr>
+                        <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >                        
+                            <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
+                        </td>
+                        <td style="text-align:right" NOWRAP>
+                            <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>                  
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn">             
+            </td>            
+            <td class="MainTableRightColumn">
+               <table border=0 cellspacing=1 >
                 <tr>
-                <logic:present name="messages">
-                    <logic:iterate id="msg" name="messages">
-                    <bean:write name="msg"/><br>
-                    </logic:iterate>
-                </logic:present>
-                </tr>
-                <tr>
-                    <td>               
-                        <tr>
-                            <th align="left" class="td.tite" width="100">
-                                <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
-                            </th>
-                            <th align="left" class="td.tite" width="200">
-                                <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingTypeDesc"/>
-                            </th>
-                            <th align="left" class="td.tite" width="250">
-                                <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
-                            </th>
-                            <th align="left" class="td.tite" width="50">
-                                <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValue"/>
-                            </th>
-                            <th align="left" class="td.tite" width="250">
-                                <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
-                            </th>
-                            <th align="left" class="td.tite" width="250">
-                                <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
-                            </th>
-                         </tr>
-                        <% int i = 0;%>
-                        <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
-                        <tr>
-                            <td width="5"><bean:write name="measurementType" property="typeDisplayName" /></td>
-                            <td><bean:write name="measurementType" property="typeDesc" /></td>
-                            <td>                           
-                                <html:select property='<%= "value(inputMInstrc-" + ctr + ")" %>'>
-                                    <html:options collection='<%="mInstrcs"+ ctr%>' property="measuringInstrc" labelProperty="measuringInstrc" style="width:150"/>
-                                </html:select>
-                            </td>
-                            <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" />     
-                            <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="30"/>
-                            <td><select name='<%= "value(month-" + ctr + ")" %>'>
-                                    <% for (int j=1; j < 13; j++){
-                                        String monthObserved = Integer.toString(j);
-                                        if (j < 10){ 
-                                            monthObserved = "0"+monthObserved;
-                                        }
-                                        if (Integer.parseInt(month)==j){%>
-                                            <option value="<%=monthObserved%>" selected ><%=monthObserved%></option>
-                                        <%;}
-                                          else{%>
-                                            <option value="<%=monthObserved%>" ><%=monthObserved%></option>
-                                        <%;}
-                                        }%>
-                                </select> / 
-                                <select name='<%= "value(day-" + ctr + ")" %>'>
-                                    <% for (int j=1; j < 32; j++){
-                                        String dayObserved = Integer.toString(j);
-                                        if (j < 10){ 
-                                            dayObserved = "0"+dayObserved;
-                                        }
-                                        if (Integer.parseInt(day)==j){%>
-                                            <option value="<%=dayObserved%>" selected ><%=dayObserved%></option>
-                                        <%;}
-                                          else{%>
-                                            <option value="<%=dayObserved%>" ><%=dayObserved%></option>
-                                        <%;}
-                                        }%>
-                                </select> / 
-                                <select name='<%= "value(year-" + ctr + ")" %>'>
-                                    <% for (int j=1; j < 30; j++){
-                                        String yearObserved = Integer.toString(j+2000);
-                                        if (yearObserved.compareTo(year) == 0){%>
-                                            <option value="<%=yearObserved%>" selected ><%=yearObserved%></option>
-                                        <%;}
-                                          else{%>
-                                            <option value="<%=yearObserved%>" ><%=yearObserved%></option>
-                                        <%;}
-                                        }%>
-                                </select>
-                            </td>
-                            <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>                            
-                            <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/></td>
-                            <% i++; %>
-                        </tr>
-                        </logic:iterate>
-                        <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>
-                        <html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>
-                        <tr>
-                            <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
-                            <td><input type="button" name="Button" value="<bean:message key="global.btnSubmit"/>" onclick="document.forms['EctMeasurementsForm'].submit();"/></td>
-                        </tr>
-                        
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <table>                                        
+                                        <tr>
+                                            <td>               
+                                                <tr class="Header">
+                                                    <td align="left"  width="100">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
+                                                    </td>
+                                                    <td align="left"  width="200">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingTypeDesc"/>
+                                                    </td>
+                                                    <td align="left"  width="160">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
+                                                    </td>
+                                                    <td align="left"  width="50">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValue"/>
+                                                    </td>
+                                                    <td align="left"  width="140">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td>
+                                                    <td align="left"  width="150">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
+                                                    </td>
+                                                 </tr>
+                                                <% int i = 0;%>
+                                                <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
+                                                <tr>                          
+                                                    <td width="5"><bean:write name="measurementType" property="typeDisplayName" /></td>
+                                                    <td><bean:write name="measurementType" property="typeDesc" /></td>
+                                                    <td>                           
+                                                        <html:select property='<%= "value(inputMInstrc-" + ctr + ")" %>' style="width:160">
+                                                            <html:options collection='<%="mInstrcs"+ ctr%>' property="measuringInstrc" labelProperty="measuringInstrc" style="width:160"/>
+                                                        </html:select>                                
+                                                    </td>
+                                                    <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" />     
+                                                    <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="20"/>
+                                                    <td><select name='<%= "value(month-" + ctr + ")" %>'>
+                                                            <% for (int j=1; j < 13; j++){
+                                                                String monthObserved = Integer.toString(j);
+                                                                if (j < 10){ 
+                                                                    monthObserved = "0"+monthObserved;
+                                                                }
+                                                                if (Integer.parseInt(month)==j){%>
+                                                                    <option value="<%=monthObserved%>" selected ><%=monthObserved%></option>
+                                                                <%;}
+                                                                  else{%>
+                                                                    <option value="<%=monthObserved%>" ><%=monthObserved%></option>
+                                                                <%;}
+                                                                }%>
+                                                        </select> / 
+                                                        <select name='<%= "value(day-" + ctr + ")" %>'>
+                                                            <% for (int j=1; j < 32; j++){
+                                                                String dayObserved = Integer.toString(j);
+                                                                if (j < 10){ 
+                                                                    dayObserved = "0"+dayObserved;
+                                                                }
+                                                                if (Integer.parseInt(day)==j){%>
+                                                                    <option value="<%=dayObserved%>" selected ><%=dayObserved%></option>
+                                                                <%;}
+                                                                  else{%>
+                                                                    <option value="<%=dayObserved%>" ><%=dayObserved%></option>
+                                                                <%;}
+                                                                }%>
+                                                        </select> / 
+                                                        <select name='<%= "value(year-" + ctr + ")" %>'>
+                                                            <% for (int j=1; j < 30; j++){
+                                                                String yearObserved = Integer.toString(j+2000);
+                                                                if (yearObserved.compareTo(year) == 0){%>
+                                                                    <option value="<%=yearObserved%>" selected ><%=yearObserved%></option>
+                                                                <%;}
+                                                                  else{%>
+                                                                    <option value="<%=yearObserved%>" ><%=yearObserved%></option>
+                                                                <%;}
+                                                                }%>
+                                                        </select>
+                                                    </td>                            
+                                                    <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>                            
+                                                    <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/></td>
+                                                    <% i++; %>
+                                                </tr>
+                                                <logic:present name='measurementType' property='lastMInstrc'>
+                                                <tr class="note">
+                                                    <td  align="left"colspan="6">    
+                                                        <bean:message key="oscarEncoutner.oscarMeasurements.msgTheLast"/> <bean:write name="measurementType" property="type"/> <bean:write name='measurementType' property='lastMInstrc'/> <bean:message key="oscarEncoutner.oscarMeasurements.msgValueWasEnteredBy"/> <bean:write name='measurementType' property='lastProviderFirstName'/> <bean:write name='measurementType' property='lastProviderLastName'/> <bean:message key="oscarEncoutner.oscarMeasurements.msgOn"/> <bean:write name='measurementType' property='lastDateEntered'/>: <bean:write name='measurementType' property='lastData'/>                                                       
+                                                    </td>                            
+                                                </tr>
+                                                </logic:present>
+                                                </logic:iterate>                        
+                                                <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>
+                                                <html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>                                                
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table>
+                                    <tr>
+                                        <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
+                                        <td><input type="button" name="Button" value="<bean:message key="global.btnSubmit"/>" onclick="document.forms['EctMeasurementsForm'].submit();"/></td>
+                                    </tr>
+                                    </table>
+                                </td>   
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
-        </td>   
-    </tr>
-</table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
 </html:form>
-
-
-
-
 </body>
 </html:html>
-                             
-                                   
-                                
+

@@ -37,29 +37,6 @@
 <title>
 <bean:message key="oscarEncounter.Measurements.msgDefineNewMeasurementGroup"/>
 </title>
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-</style>
-
-<script type="text/javascript">
-    function set(target) {
-     document.forms[0].forward.value=target;
-};
-</script>
 
 </head>
 
@@ -87,19 +64,31 @@
             <td class="MainTableLeftColumn">             
             </td>
             <td class="MainTableRightColumn">
-               <table border=0 cellspacing=4 width=400>
+               <table border=0 cellspacing=4 width=800>
                 <tr>
                     <td>
                         <table>
                             <tr>
                                 <td> 
                                     <tr>
-                                        <th align="left">
+                                        <td align="left">
                                             <bean:message key="oscarEncounter.oscarMeasurements.addMeasurementGroup.createNewMeasurementGroupName"/>
-                                        </th>
+                                        </td>
                                     </tr> 
                                     <tr>
-                                        <td><html:text property="groupName"/></td>
+                                        <td><html:text property="groupName" size="35"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left">
+                                            <bean:message key="oscarEncounter.oscarMeasurements.addMeasurementGroup.selectStyleSheet"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <html:select property="styleSheet" style="width:250">
+                                                <html:options collection="allStyleSheets" property="cssId" labelProperty="styleSheetName"/>
+                                            </html:select>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>

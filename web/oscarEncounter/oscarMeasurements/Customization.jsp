@@ -66,7 +66,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
         <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(300,1000,'DefineNewMeasurementGroup.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
+            <a href=# onClick="popupOscarConS(300,1000,'SetupStyleSheetList.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
             </td></tr></table>
         </td>
         <td>
@@ -97,6 +97,21 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
         <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
             <a href=# onClick="popupOscarConS(300,1000,'SetupAddMeasuringInstruction.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasuringInstruction"/></a>
+            </td></tr></table>
+        </td>
+    </tr>
+    <tr>
+    <td class=Title colspan="2"><bean:message key="oscarEncounter.Measurements.msgStyleSheets"/></td>
+    </tr>
+    <tr>
+        <td>
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <a href=# onClick="popupOscarConS(300,1000,'SetupDisplayMeasurementStyleSheet.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementStyleSheet"/></a>
+            </td></tr></table>
+        </td>
+        <td>
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <a href=# onClick="popupOscarConS(300,1000,'AddMeasurementStyleSheet.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementStyleSheet"/></a>
             </td></tr></table>
         </td>
     </tr>

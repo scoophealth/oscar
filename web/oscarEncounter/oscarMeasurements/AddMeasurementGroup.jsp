@@ -37,24 +37,6 @@
 <title>
 <bean:message key="oscarEncounter.Measurements.msgAddMeasurementGroup"/>
 </title>
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-</style>
-
 <script type="text/javascript">
     function set(target) {
      document.forms[0].forward.value=target;
@@ -118,7 +100,7 @@
                             <tr>     
                                     <input type="hidden" name="forward" value="error"/>
                                 <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>" onclick="set('add');submit();"/></td>
-                                <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementAction.deleteBtn"/>" onclick="set('delete');submit();"/></td>
+                                <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.deleteBtn"/>" onclick="set('delete');submit();"/></td>
                             </tr>                        
                             <tr>
                                 <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>

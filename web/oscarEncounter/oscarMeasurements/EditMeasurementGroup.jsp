@@ -118,7 +118,7 @@
                             <tr>     
                                     <input type="hidden" name="forward" value="error"/>
                                 <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>" onclick="set('add');submit();"/></td>
-                                <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementAction.deleteBtn"/>" onclick="set('delete');submit();"/></td>
+                                <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.deleteBtn"/>" onclick="set('delete');submit();"/></td>
                             </tr>                        
                             <tr>
                                 <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
