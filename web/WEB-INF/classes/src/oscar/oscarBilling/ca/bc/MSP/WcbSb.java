@@ -40,6 +40,7 @@ public class WcbSb {
    bill_amount,
    visit_type,
    billing_no,
+   invoice_no,
    w_reporttype,
    w_fname,
    w_lname,
@@ -96,6 +97,7 @@ public class WcbSb {
          this.bill_amount = rs.getString("bill_amount");
          this.visit_type = rs.getString("w_servicelocation");
          this.billing_no = getBillingMasterNo(rs.getString("billing_no"));
+         this.invoice_no = rs.getString("billing_no");
          this.demographic_no = rs.getString("demographic_no");
          this.provider_no = rs.getString("provider_no");
          this.formCreated = rs.getString("formCreated");
@@ -332,4 +334,33 @@ public class WcbSb {
    public  String dateFormat(String date){
       return misc.forwardZero(oscar.Misc.cleanNumber(date), 8);
    }
+   
+   public String getHtmlLine(){
+      return getHtmlLine(this.billing_no,this.invoice_no,this.w_lname+","+this.w_fname,this.w_phn,this.w_servicedate,this.w_feeitem,this.billamountforfeeitem1,this.w_icd9,"","");
+
+      
+   }
+   public String getHtmlLine(String billingMasterNo,String invNo, String demoName, String phn, String serviceDate,String billingCode,String billAmount,String dx1,String dx2,String dx3){                           
+       String htmlContent = 
+       "<tr>" +
+          "<td class='bodytext'>" +
+             "<a href='#' onClick=\"openBrWindow('billingTeleplanCorrectionWCB.jsp?billing_no=" +
+                misc.forwardZero(billingMasterNo, 7) +
+                 "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"  +
+               invNo + 
+             "</a>" + 
+          "</td>" +
+          "<td class='bodytext'>" + demoName    + "</td>" +
+          "<td class='bodytext'>" + phn         + "</td>" +
+          "<td class='bodytext'>" + serviceDate + "</td>" +
+          "<td class='bodytext'>" + billingCode + "</td>" +
+          "<td align='right' class='bodytext'>"+ billAmount +"</td>" +
+          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx1, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx2, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx3, 5) + "</td>" +
+          "<td class='bodytext'>" + misc.forwardZero(billingMasterNo, 7)+"</td>" +
+          "<td class='bodytext'>&nbsp;</td>" +
+       "</tr>";              
+       return htmlContent;
+    }
 }
