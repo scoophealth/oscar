@@ -1,5 +1,5 @@
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm");
 String curUser_no = (String) session.getAttribute("user");
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
@@ -138,6 +138,7 @@ while(rslocal.next()){
 	}
 
 }
+rslocal.close();
 
 if (r_doctor==null || r_status == null || r_doctor.equals("")) r_doctor="N/A";
 if (r_doctor_ohip==null || r_status == null || r_doctor_ohip.equals("")) r_doctor_ohip="000000";
@@ -152,18 +153,21 @@ while(rsprovider.next()){
 	proOHIPNO = rsprovider.getString("ohip_no");
 	proRMA = rsprovider.getString("rma_no");
 }
+rsprovider.close();
 
 rsprovider = apptMainBean.queryResults(request.getParameter("apptProvider_no"), "search_provider_name");
 while(rsprovider.next()){
 	apptFirst = rsprovider.getString("first_name");
 	apptLast = rsprovider.getString("last_name");
 }
+rsprovider.close();
 
 rsprovider = apptMainBean.queryResults(request.getParameter("asstProvider_no"), "search_provider_name");
 while(rsprovider.next()){
 	asstFirst = rsprovider.getString("first_name");
 	asstLast = rsprovider.getString("last_name");
 }
+rsprovider.close();
 
 //rsprovider = apptMainBean.queryResults(request.getParameter("user_no"), "search_provider_name");
 rsprovider = apptMainBean.queryResults(curUser_no, "search_provider_name");
@@ -171,6 +175,7 @@ while(rsprovider.next()){
 	crFirst = rsprovider.getString("first_name");
 	crLast = rsprovider.getString("last_name");
 }
+rsprovider.close();
 
 String visitdate = request.getParameter("xml_vdate");
 String billtype = request.getParameter("xml_billtype");
@@ -212,6 +217,7 @@ ResultSet rslocation = apptMainBean.queryResults(location1, "search_visit_locati
 while(rslocation.next()){
 	local_desc = rslocation.getString("clinic_location_name");
 }
+rslocation.close();
 %>
 <tr bgcolor="#EEEEFF"> 
 	<td width="54%">Visit Type Code: <b><%=request.getParameter("xml_visittype")%></b></td>
@@ -274,6 +280,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 		otherfee1 = rsother.getString("value");
 		otherperc1 = rsother.getString("percentage");
 	}
+	rsother.close();
 
 	if (otherdesc1.compareTo("") == 0 || otherdesc1 == null ) {
 		otherflag1 = 0;
@@ -339,6 +346,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 		otherfee2 = rsother.getString("value");
 		otherperc2 = rsother.getString("percentage");
 	}
+	rsother.close();
 
 	if (otherdesc2.compareTo("") == 0 || otherdesc2 == null) { 
 		otherflag2 = 0;
@@ -402,7 +410,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 		otherdbcode3 = rsother.getString("service_code");
 		otherfee3 = rsother.getString("value");
 	}
-	apptMainBean.closePstmtConn();
+	rsother.close();
 
 	if (otherdesc3.compareTo("") == 0 || otherdesc3 == null ) {
 		otherflag3 = 0;
@@ -484,7 +492,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 			content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
 		}
 	} else {
-		content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
+		content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp).trim())+ "</" +temp+ ">";
 	}
 	//////////////////////////////////////////////////////////////////////////////////////  	
 
@@ -780,6 +788,7 @@ if (errorFlag.compareTo("1")==0){
 <% 
 	session.setAttribute("content", content); 
 }
+apptMainBean.closePstmtConn();
 %>
 
 <p>&nbsp;</p>

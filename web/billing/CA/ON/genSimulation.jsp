@@ -94,7 +94,7 @@ while(rslocal.next()){
 
 	htmlValue = "<font color='red'>" + errorMsg + "</font>" + extract.getHtmlValue();
 }
-
+rslocal.close();
 apptMainBean.closePstmtConn();
 
 request.setAttribute("html",htmlValue);

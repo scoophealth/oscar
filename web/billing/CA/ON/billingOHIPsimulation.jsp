@@ -171,6 +171,7 @@ while(rslocal.next()){
 
 <% 
 }
+rslocal.close();
 apptMainBean.closePstmtConn();
 %>
 
