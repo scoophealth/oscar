@@ -97,6 +97,8 @@
                     type="oscar.oscarRx.pageUtil.RxAddAllergyForm" />                    
     <form-bean      name="RxDeleteRxForm"
                     type="oscar.oscarRx.pageUtil.RxDrugListForm"/>
+    <form-bean      name="RxManagePharmacyForm"
+                    type="oscar.oscarRx.pageUtil.RxManagePharmacyForm"/>
 
   
     <!-- study form bean -->
@@ -349,6 +351,14 @@
     <form-bean      name="BillingDocumentErrorReportUploadForm"
                     type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadForm"/>    
 <!-- OscarBilling ON stop -->    
+
+<!-- OscarSurveillance ON start --    
+    <form-bean      name="CheckSurveillanceForm"
+                    type="oscar.oscarSurveillance.CheckSurveillanceForm"/>
+    <form-bean      name="SurveillanceAnswerForm"
+                    type="oscar.oscarSurveillance.SurveillanceAnswerForm"/>
+!-- OscarSurveillance ON stop -->                    
+
                     
 <!-- OscarWaitingList start-->
     <form-bean      name="WLWaitingListForm"
@@ -635,9 +645,21 @@
         <forward name="success" path="/oscarRx/SearchDrug.jsp" />
     </action>
     
-    
+    <action     path="/oscarRx/managePharmacy"
+                type="oscar.oscarRx.pageUtil.RxManagePharmacyAction"
+                name="RxManagePharmacyForm"
+                scope="request"
+                input="/oscarRx/ManagePharacy.jsp">
+        <forward name="success" path="/oscarRx/SelectPharmacy.jsp" />
+    </action>
+        
+    <action     path="/oscarRx/LinkPharmacy"
+                type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction"                
+                scope="request"
+                input="/oscarRx/SelectPharacy.jsp">
+        <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+    </action>
    
-    
     <!-- oscarMDS -->
 
     <action     path="/oscarMDS/UpdateStatus" 
@@ -1684,6 +1706,21 @@
     
     
     <!-- oscarBilling ON end -->
+  
+    <!-- oscarSurveillance  start --
+    <action     path="/oscarSurveillance/CheckSurveillance"
+                type="oscar.oscarSurveillance.CheckSurveillanceAction"  
+                name="CheckSurveillanceForm"              
+                scope="request">                
+       <forward name="survey"  path="/oscarSurveillance/Surveillance.jsp"/>
+    </action>   
+    <action     path="/oscarSurveillance/SurveillanceAnswer"
+                type="oscar.oscarSurveillance.SurveillanceAnswerAction"  
+                name="SurveillanceAnswerForm"              
+                scope="request">                
+       <forward name="survey"  path="/oscarSurveillance/CheckSurveillance.do"/>       
+    </action>           
+    !-- oscarSurveillance  end -->
 
     <!-- oscarWaitingList -->
     <action path="/oscarWaitingList/SetupDisplayPatientWaitingList"
@@ -1705,6 +1742,7 @@
     </action>       
     <!-- oscarWaitingList end -->
         
+
   </action-mappings>
 
 </struts-config>
