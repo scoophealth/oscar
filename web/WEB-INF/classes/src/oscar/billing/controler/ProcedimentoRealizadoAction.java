@@ -87,7 +87,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
     private ActionForward performInit(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [ProcedimentoRealizadoAction] INIT");
+        //cat.info(" [ProcedimentoRealizadoAction] INIT");
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
         HttpSession session = request.getSession();
@@ -96,7 +96,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             String appId = request.getParameter("appId");
 
             if (appId == null || appId.trim().length() <= 0) {
-                generalError(request, "error.general", "object.notfount");
+                generalError(request, "error.general", "faturamento.notfount");
 
                 return mapping.findForward("failure");
             }

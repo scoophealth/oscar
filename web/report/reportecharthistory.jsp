@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 
@@ -48,9 +49,9 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica">ECHART HISTORY</font></th>
+  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="oscarEncounter.echartHistory.title"/></font></th>
     <th width="10%" nowrap> 
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+      <input type="button" name="Button" value="<bean:message key="oscarEncounter.echartHistory.buttonPrint"/>" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="oscarEncounter.echartHistory.buttonExit"/>" onClick="window.close()"></th></tr>
 </table>
 
 <table width="480" border="0" cellspacing="1" cellpadding="0" ><tr> 
@@ -59,8 +60,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 </tr></table>
 <table width="100%" border="0" bgcolor="#ffffff" cellspacing="1" cellpadding="2" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="25%"><b>Appt Date</b></TH>
-<TH width="65%"><b>Reason</b></TH>
+<TH width="25%"><b><bean:message key="oscarEncounter.echartHistory.apptDate"/></b></TH>
+<TH width="65%"><b><bean:message key="oscarEncounter.echartHistory.reason"/></b></TH>
 <!--TH width="10%"><b>Size</b></TH-->
 </tr>
 <%
