@@ -84,7 +84,9 @@ extends org.apache.struts.action.ActionForm {
    w_tofollow = "",
    w_wcbadvisor = "",
    w_feeitem = "",
-   w_extrafeeitem = "";
+   w_extrafeeitem = "",
+   status = "";
+   ;
    public TeleplanCorrectionFormWCB() {
       super();
    }
@@ -146,8 +148,9 @@ extends org.apache.struts.action.ActionForm {
             w_estimatedate = result.getString("w_estimatedate");
             w_tofollow = result.getString("w_tofollow");
             w_wcbadvisor = result.getString("w_wcbadvisor");
-            this.w_feeitem = result.getString("w_feeitem");
-            this.w_extrafeeitem = result.getString("w_extrafeeitem");
+            w_feeitem = result.getString("w_feeitem");
+            w_extrafeeitem = result.getString("w_extrafeeitem");
+            status = result.getString("billingstatus");  
          }
       }
       catch (java.lang.Exception ex) {
@@ -256,7 +259,7 @@ extends org.apache.struts.action.ActionForm {
    public void setBillingUnit(String billingUnit) {
       this.billingUnit = billingUnit;
    }
-   public String getBillingCode() {
+   public String getBillingCode() { 
       return this.billingCode;
    }
    public void setBillingCode(String billingCode) {
@@ -497,6 +500,11 @@ extends org.apache.struts.action.ActionForm {
    public String[] getBilling() {
       return new String[] { this.billingNo };
    }
+   
+   public String[] getBillingForStatus() {
+      return new String[] { this.status, this.billingNo };
+   }
+   
    public String[] getDemographic() {
       return new String[] {
          oscar.Misc.mysqlEscape(this.firstName),
@@ -573,4 +581,21 @@ extends org.apache.struts.action.ActionForm {
          oscar.Misc.mysqlEscape(this.w_extrafeeitem),
          oscar.Misc.mysqlEscape(this.billingNo)};
    }
+   
+   /**
+    * Getter for property status.
+    * @return Value of property status.
+    */
+   public java.lang.String getStatus() {
+      return status;
+   }
+   
+   /**
+    * Setter for property status.
+    * @param status New value of property status.
+    */
+   public void setStatus(java.lang.String status) {
+      this.status = status;
+   }
+   
 }
