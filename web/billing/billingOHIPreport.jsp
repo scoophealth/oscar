@@ -240,7 +240,7 @@ paramYear[1] = thisyear+"/12/31";
    cr = rslocal.getString("claimrecord");
    oFile = rslocal.getString("ohipfilename");
    hFile = rslocal.getString("htmlfilename");
-   total = rslocal.getString("total");
+   total = rslocal.getString("total")==null?"0.00":rslocal.getString("total");
     rspro = apptMainBean.queryResults(pro_ohip, "search_provider_ohip_dt");
     while(rspro.next()){
     pro_name = rspro.getString("last_name") + ", " + rspro.getString("first_name");
