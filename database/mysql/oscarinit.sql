@@ -2832,6 +2832,11 @@ CREATE TABLE formIntakeInfo(
   smkY tinyint(1), 
   smkN tinyint(1),
   nbCigarettes int(5),
+  howLongSmk varchar(20),
+  didSmkY tinyint(1), 
+  didSmkN tinyint(1),
+  didNbCigarettes int(5),
+  didHowLongSmk varchar(20),
   alcoholY tinyint(1),
   alcoholN tinyint(1),
   more12DrinksY tinyint(1),
@@ -2892,8 +2897,29 @@ CREATE TABLE formIntakeInfo(
   visionPbRefused tinyint(1),
   visionPbN tinyint(1),
   visionPbDoNotKnow tinyint(1),  
+  osteoporosisY tinyint(1),
+  osteoporosisRefused tinyint(1),
+  osteoporosisN tinyint(1),
+  osteoporosisDoNotKnow tinyint(1),  
+  fibromyalgiaY tinyint(1),
+  fibromyalgiaRefused tinyint(1),
+  fibromyalgiaN tinyint(1),
+  fibromyalgiaDoNotKnow tinyint(1),
+  multiplesclerosisY tinyint(1),
+  multiplesclerosisRefused tinyint(1),
+  multiplesclerosisN tinyint(1),
+  multiplesclerosisDoNotKnow tinyint(1),
+  asthmaY tinyint(1),
+  asthmaRefused tinyint(1),
+  asthmaN tinyint(1), 
+  asthmaDoNotKnow tinyint(1),
+  backpainY tinyint(1),
+  backpainRefused tinyint(1),
+  backpainN tinyint(1),
+  backpainDoNotKnow tinyint(1),
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
+
 
 
 --
