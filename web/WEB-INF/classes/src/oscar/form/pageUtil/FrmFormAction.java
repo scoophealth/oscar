@@ -148,7 +148,7 @@ public class FrmFormAction extends Action {
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
-                if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))
+                if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))                    //System.out.println("write to measurement table: " + mt.getType());
                     write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
                 
                 //Store all input value as properties for saving to form table
@@ -283,14 +283,14 @@ public class FrmFormAction extends Action {
                 new ActionError("errors.invalidDate", inputTypeDisplay));
                 saveErrors(request, errors);
                 valid = false;
+            }        
+            if(!ectValidation.isDate(observationDate)&&inputValue.compareTo("")!=0){                        
+                errors.add(inputDateName,
+                new ActionError("errors.invalidDate", inputTypeDisplay));
+                saveErrors(request, errors);
+                valid = false;
             }
-        }
-        if(!ectValidation.isDate(observationDate)&&inputValue.compareTo("")!=0){                        
-            errors.add(inputDateName,
-            new ActionError("errors.invalidDate", inputTypeDisplay));
-            saveErrors(request, errors);
-            valid = false;
-        }
+        }   
         return valid;
     }
     
