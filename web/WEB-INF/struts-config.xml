@@ -70,10 +70,7 @@
     <form-bean      name="RxDeleteRxForm"
                     type="oscar.oscarRx.pageUtil.RxDrugListForm"/>
 
-    
-    
-    
-    
+  
     <!-- study form bean -->
     <form-bean      name="FrmStudyForm"
                     type="oscar.form.study.FrmStudyForm"/>
@@ -82,7 +79,7 @@
     <form-bean      name="FrmForm"
                     type="oscar.form.FrmForm"/>
 
-	<!-- oscarEncounter form bean -->
+    <!-- oscarEncounter form bean -->
     <!--form-bean      name="EctSaveEncounterForm"
                     type="oscar.oscarEncounter.pageUtil.EctSaveEncounterForm"/-->
     <form-bean      name="EctARForm"
@@ -159,6 +156,56 @@
     <form-bean      name="EctImmImmunizationSetDisplayForm"
                     type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmImmunizationSetDisplayForm"/>
 
+                    
+    <!-- Measurements form-beans -->
+    <form-bean      name="EctMeasurementsForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctMeasurementsForm"/>
+    <form-bean      name="EctDeleteDataForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataForm"/>                    
+    <form-bean      name="EctAddMeasurementTypeForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementTypeForm">                   
+                    <form-property
+                        name="type"
+                        type="java.lang.String"/>
+                    <form-property
+                        name="typeDesc"
+                        type="java.lang.String"/>
+                    <form-property
+                        name="typeDisplayName"
+                        type="java.lang.String"/>
+                    <form-property
+                        name="measuringInstrc"
+                        type="java.lang.String"/>
+                    <form-property
+                        name="validation"
+                        type="java.lang.String"/>                                                                                                
+    </form-bean>
+    <form-bean      name="EctDeleteMeasurementTypesForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementTypesForm"/> 
+    <form-bean      name="EctAddMeasuringInstructionForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasuringInstructionForm">                   
+                    <form-property
+                        name="typeDisplayName"
+                        type="java.lang.String"/>
+                    <form-property
+                        name="measuringInstrc"
+                        type="java.lang.String"/>                                                                                         
+                    <form-property
+                        name="validation"
+                        type="java.lang.String"/>                                                 
+    </form-bean>
+    <form-bean      name="EctSelectMeasurementGroupForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSelectMeasurementGroupForm"/> 
+    <form-bean      name="EctSetupEditMeasurementGroupForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupEditMeasurementGroupForm"/> 
+    <form-bean      name="EctEditMeasurementGroupForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctEditMeasurementGroupForm"/> 
+    <form-bean      name="EctDefineNewMeasurementGroupForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDefineNewMeasurementGroupForm"/> 
+    <form-bean      name="EctSetupAddMeasurementGroupForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasurementGroupForm"/> 
+    <form-bean      name="EctAddMeasurementGroupForm"
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementGroupForm"/>                     
 <!-- OscarComm start -->
     <form-bean      name="EctViewAttachmentForm"
                     type="oscar.oscarEncounter.pageUtil.EctViewAttachmentForm"/>
@@ -172,6 +219,14 @@
                     type="oscar.oscarReport.pageUtil.RptDemographicReportForm"/>
     <form-bean      name="ObecForm"
                     type="oscar.oscarReport.pageUtil.ObecForm"/>
+    <form-bean      name="RptSelectCDMReportForm"
+                    type="oscar.oscarReport.pageUtil.RptSelectCDMReportForm"/>                    
+    <form-bean      name="RptInitializePatientsMetGuidelineCDMReportForm"
+                    type="oscar.oscarReport.pageUtil.RptInitializePatientsMetGuidelineCDMReportForm"/>           
+    <form-bean      name="RptInitializePatientsInAbnormalRangeCDMReportForm"
+                    type="oscar.oscarReport.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportForm"/>           
+    <form-bean      name="RptInitializeFrequencyOfRelevantTestsCDMReportForm"
+                    type="oscar.oscarReport.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportForm"/>                                                                
 <!-- OscarMaintenance start -->
     <form-bean      name="MaintenanceForm"
                     type="oscar.oscarMaintenance.pageUtil.MaintenanceForm"/>
@@ -193,13 +248,13 @@
                     type="oscar.billing.controler.ConsultaFaturamentoPacienteForm"/>                    
 <!-- oscarBilling Brazil stop -->
 
-	<!-- popups start-->
+    <!-- popups start-->
     <form-bean name="procedimentoForm" type="oscar.billing.popup.ProcedimentoForm"/>
     <form-bean name="atividadeSaudeForm" type="oscar.billing.popup.AtividadeSaudeForm"/>
     <form-bean name="cidForm" type="oscar.billing.popup.CidForm"/>
     <!-- popups end-->
 
-    <!-- OscarBilling start For BC-->
+<!-- OscarBilling start For BC-->
     <form-bean      name="BillingForm" 
                     type="oscar.oscarBilling.pageUtil.BillingForm" />
     <form-bean      name="BillingCreateBillingForm"
@@ -208,10 +263,9 @@
                     type="oscar.oscarBilling.pageUtil.BillingSaveBillingForm" />
     <form-bean      name="BillingViewForm"
                     type="oscar.oscarBilling.pageUtil.BillingViewForm" />
-    <!-- OscarBilling stop -->
+<!-- OscarBilling stop -->
 
-    
-    
+
   </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -808,6 +862,7 @@
             <forward name="success" path="/immunizationConfig/ImmunizationSetDisplay.jsp"/>
     </action>
 
+    
 <!-- end consult actions -->
 
 
@@ -885,6 +940,125 @@
     </action>
 <!-- end immunization actions -->
 
+
+<!-- start measurements actions-->
+
+    <action     path="/oscarEncounter/Measurements"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctMeasurementsAction"
+                name="EctMeasurementsForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/Measurements.jsp">
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessMeasurementsSubmission.jsp"/>
+       <forward name="failure" path="/oscarEncounter/oscarMeasurements/Measurements.jsp" />
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupAddMeasurementType"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasurementTypeAction"
+                name="EctMeasurementsForm"
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/AddMeasurementType.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/AddMeasurementType"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementTypeAction"
+                name="EctAddMeasurementTypeForm"
+                validate="true"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/AddMeasurementType.jsp">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/AddMeasurementType.jsp"/>
+       <forward name="failure" path="/oscarEncounter/oscarMeasurements/AddMeasurementType.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupDisplayMeasurementTypes"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupDisplayMeasurementTypesAction"                
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/DisplayMeasurementTypes.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/DeleteMeasurementTypes"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementTypesAction" 
+                name="EctDeleteMeasurementTypesForm"
+                scope="request">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessDisplayMeasurementTypesAction.jsp"/>
+    </action> 
+    <action     path="/oscarEncounter/oscarMeasurements/SetupMeasurements"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupMeasurementsAction"
+                name="EctMeasurementsForm"
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/Measurements.jsp"/>
+    </action> 
+    <action     path="/oscarEncounter/oscarMeasurements/SetupDisplayHistory"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupDisplayHistoryAction"                
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/DisplayHistory.jsp"/>
+    </action>          
+    <action     path="/oscarEncounter/oscarMeasurements/DeleteData"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataAction" 
+                name="EctDeleteDataForm"
+                scope="request">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessDisplayHistoryAction.jsp"/>
+    </action> 
+    <action     path="/oscarEncounter/oscarMeasurements/SetupAddMeasuringInstruction"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasuringInstructionAction"
+                
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp"/>
+    </action>    
+    <action     path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasuringInstructionAction"
+                name="EctAddMeasuringInstructionForm"
+                validate="true"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp"/>
+       <forward name="failure" path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupGroupList"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupGroupListAction"                
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup.jsp"/>
+    </action>  
+    <action     path="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSelectMeasurementGroupAction"
+                name="EctSelectMeasurementGroupForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup.jsp">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupEditMeasurementGroup"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupEditMeasurementGroupAction"
+                name="EctSetupEditMeasurementGroupForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/EditMeasurementGroup.jsp"/>
+    </action>    
+    <action     path="/oscarEncounter/oscarMeasurements/EditMeasurementGroup"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctEditMeasurementGroupAction"
+                name="EctEditMeasurementGroupForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/EditMeasurementGroup.jsp">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/DefineNewMeasurementGroup"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDefineNewMeasurementGroupAction"
+                name="EctDefineNewMeasurementGroupForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/DefineNewMeasurementGroup">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/ProcessAddMeasurementGroupAction.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupAddMeasurementGroup"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasurementGroupAction"
+                name="EctSetupAddMeasurementGroupForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/ProcessAddMeasurementGroupAction.jsp">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/AddMeasurementGroup.jsp"/>
+    </action> 
+    <action     path="/oscarEncounter/oscarMeasurements/AddMeasurementGroup"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementGroupAction"
+                name="EctAddMeasurementGroupForm"
+                scope="request"
+                input="/oscarEncounter/oscarMeasurements/AddMeasurementGroup.jsp">                
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessAddMeasurementGroupAction.jsp"/>
+    </action>
+<!-- end measurements actions-->    
+
+
 <!-- oscarComm Start -->
     <action     path="/oscarEncounter/ViewAttachment"
                 type="oscar.oscarEncounter.pageUtil.EctViewAttachmentAction"
@@ -905,41 +1079,75 @@
          <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp"/>
    </action>
    
-       <action    path="/oscarReport/FluBilling"
-                  type="oscar.oscarReport.pageUtil.RptFluBillingAction"
-                  name="RptFluBillingForm" 
-                  scope="request"
-                  input="/oscarReport/oscarReportFluBilling.jsp" >
-         <forward name="success" path="/oscarReport/oscarReportFluBilling.jsp"/>
+    <action     path="/oscarReport/FluBilling"
+                type="oscar.oscarReport.pageUtil.RptFluBillingAction"
+                name="RptFluBillingForm" 
+                scope="request"
+                input="/oscarReport/oscarReportFluBilling.jsp" >
+        <forward name="success" path="/oscarReport/oscarReportFluBilling.jsp"/>
+    </action>
+   
+    <action     path="/oscarReport/RptByExample"
+                type="oscar.oscarReport.pageUtil.RptByExampleAction"
+                name="RptByExampleForm" 
+                scope="request"
+                input="/oscarReport/RptByExample.jsp" >
+        <forward name="success" path="/oscarReport/RptByExample.jsp"/>
    </action>
    
-          <action    path="/oscarReport/RptByExample"
-                     type="oscar.oscarReport.pageUtil.RptByExampleAction"
-                     name="RptByExampleForm" 
-                     scope="request"
-                     input="/oscarReport/RptByExample.jsp" >
-            <forward name="success" path="/oscarReport/RptByExample.jsp"/>
-   </action>
    
-   
-        <action   path="/report/DemographicReport"
+    <action   path="/report/DemographicReport"
               type="oscar.oscarReport.pageUtil.RptDemographicReportAction"
               name="RptDemographicReportForm"
               scope="request"
               input="/oscarReport/ReportDemographicReport.jsp">
-           <forward name="success" path="/oscarReport/ReportDemographicReport.jsp"/>
-  <forward name="failure" path="/oscar_sfhc/JAYREPORTS/DemographicReport.jsp"/>
-
+            <forward name="success" path="/oscarReport/ReportDemographicReport.jsp"/>
+            <forward name="failure" path="/oscar_sfhc/JAYREPORTS/DemographicReport.jsp"/>
     </action>
-       <action    path="/oscarReport/obec"
-                        type="oscar.oscarReport.pageUtil.ObecAction"
-                        name="ObecForm" 
-                        scope="request"
-                        input="/oscarReport/obec.jsp" >
-               <forward name="success" path="/oscarReport/obec.jsp"/>
-      </action>
-
-   
+    <action     path="/oscarReport/obec"
+                type="oscar.oscarReport.pageUtil.ObecAction"
+                name="ObecForm" 
+                scope="request"
+                input="/oscarReport/obec.jsp" >
+        <forward name="success" path="/oscarReport/obec.jsp"/>
+    </action>
+    <action     path="/oscarReport/SetupSelectCDMReport"
+                type="oscar.oscarReport.pageUtil.RptSetupSelectCDMReportAction"                
+                scope="request">                
+       <forward name="continue" path="/oscarReport/SelectCDMReport.jsp"/>
+    </action>
+    <action     path="/oscarReport/SelectCDMReport"
+                type="oscar.oscarReport.pageUtil.RptSelectCDMReportAction"  
+                name="RptSelectCDMReportForm"              
+                scope="request">                
+       <forward name="patientWhoMetGuideline" path="/oscarReport/InitializePatientsMetGuidelineCDMReport.jsp"/>
+       <forward name="patientInAbnormalRange" path="/oscarReport/InitializePatientsInAbnormalRangeCDMReport.jsp"/>
+       <forward name="freqencyOfReleventTests" path="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport.jsp"/>
+       <forward name="medicationsPrescribed" path="/oscarReport/medicationsPrescribedCDMReport.do"/>
+    </action> 
+    <action     path="/oscarReport/InitializePatientsMetGuidelineCDMReport"
+                type="oscar.oscarReport.pageUtil.RptInitializePatientsMetGuidelineCDMReportAction"  
+                name="RptInitializePatientsMetGuidelineCDMReportForm"              
+                scope="request">                
+       <forward name="success" path="/oscarReport/CDMReport.jsp"/>
+    </action>
+    <action     path="/oscarReport/InitializePatientsInAbnormalRangeCDMReport"
+                type="oscar.oscarReport.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportAction"  
+                name="RptInitializePatientsInAbnormalRangeCDMReportForm"              
+                scope="request">                
+       <forward name="success" path="/oscarReport/CDMReport.jsp"/>
+    </action>
+    <action     path="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport"
+                type="oscar.oscarReport.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportAction"  
+                name="RptInitializeFrequencyOfRelevantTestsCDMReportForm"              
+                scope="request">                
+       <forward name="success" path="/oscarReport/CDMReport.jsp"/>
+    </action>
+    <action     path="/oscarReport/medicationsPrescribedCDMReport"
+                type="oscar.oscarReport.pageUtil.RptMedicationsPrescribedCDMReportAction"                 
+                scope="request">                
+       <forward name="result" path="/oscarReport/CDMReport.jsp"/>
+    </action>        
 <!-- oscarReport End -->  
     
     
@@ -1108,7 +1316,7 @@
               input="/popup/cid.jsp">
               <forward name="success" path="/popup/cid.jsp"/>
     </action>
-    
+
     <!-- oscarBilling start for BC -->
     <action   path="/billing"
               type="oscar.oscarBilling.pageUtil.BillingAction"
@@ -1146,7 +1354,16 @@
     </action>
     <!-- oscarBilling end -->
 
-
+    
+        
   </action-mappings>
+
+<!-- ========== Plug-in Definitions ============================== -->
+<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+    <set-property 
+    property="pathnames" 
+    value="/WEB-INF/validator-rules.xml, 
+        /WEB-INF/validation.xml"/>
+</plug-in>
 </struts-config>
 
