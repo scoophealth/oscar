@@ -51,6 +51,7 @@ class RourkeVacsMigrator:
 		self.db_password = ""
 		self.db_driver = ""
 	        self.db_uri = ""
+	        self.tbl = "formRourke"
 		self.con = None #java.sql.Connection Object
 		#Maps immunization flags to the corresponding free text field
 		self.pageMappings={
@@ -143,7 +144,7 @@ class RourkeVacsMigrator:
 		log.write(strStartMsg)
         	try:
 			fldNames = self.fieldDescMappings.keys()
-			qry = "select * from formrourke"
+			qry = "select * from " + self.tbl
 			con = self.createConnection()
 			statement = con.createStatement()
 			rs = statement.executeQuery(qry)
@@ -160,7 +161,7 @@ class RourkeVacsMigrator:
 						if strFlag == "1":
 							freeTextFld = self.pageMappings[colName]
 							freeTextData = rs.getString(freeTextFld) + "\\n" + self.fieldDescMappings[colName]  
-							qryUpdate = "update formrourke set " + freeTextFld + "=? " + "where ID = " + rs.getString("ID")
+							qryUpdate = "update " + self.tbl + " set " + freeTextFld + "=? " + "where ID = " + rs.getString("ID")
 							stUpdate = con.prepareStatement(qryUpdate)
 							stUpdate.setString(1,freeTextData)
 							stUpdate.executeUpdate()
