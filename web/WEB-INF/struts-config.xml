@@ -199,6 +199,19 @@
     <form-bean name="cidForm" type="oscar.billing.popup.CidForm"/>
     <!-- popups end-->
 
+    <!-- OscarBilling start For BC-->
+    <form-bean      name="BillingForm" 
+                    type="oscar.oscarBilling.pageUtil.BillingForm" />
+    <form-bean      name="BillingCreateBillingForm"
+                    type="oscar.oscarBilling.pageUtil.BillingCreateBillingForm" />
+    <form-bean      name="BillingSaveBillingForm"
+                    type="oscar.oscarBilling.pageUtil.BillingSaveBillingForm" />
+    <form-bean      name="BillingViewForm"
+                    type="oscar.oscarBilling.pageUtil.BillingViewForm" />
+    <!-- OscarBilling stop -->
+
+    
+    
   </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -1095,6 +1108,45 @@
               input="/popup/cid.jsp">
               <forward name="success" path="/popup/cid.jsp"/>
     </action>
+    
+    <!-- oscarBilling start for BC -->
+    <action   path="/oscarBilling/billing"
+              type="oscar.oscarBilling.pageUtil.BillingAction"
+              name="BillingForm"
+              scope="request"
+              input="/oscarBilling/billing.jsp" >
+              <forward name="BC" path="/oscarBilling/billingBC.jsp" />
+              <forward name="ON" path="/billing/billingOB.jsp" />                                                                                                                                                                                                                                                                                                                                                                                                          
+              <!--<forward name="ON" path="/oscarBilling/billingON.jsp" />-->
+    </action>
+                                                                                                                                                                                                     
+    <action   path="/oscarBilling/CreateBilling"
+              type="oscar.oscarBilling.pageUtil.BillingCreateBillingAction"
+              name="BillingCreateBillingForm"
+              scope="session"
+              input="/oscarBilling/billingBC.jsp">
+              <forward name="success" path="/oscarBilling/billingCreated.jsp"/>
+     </action>
+                                                                                                                                                                                                     
+     <action  path="/oscarBilling/SaveBilling"
+              type="oscar.oscarBilling.pageUtil.BillingSaveBillingAction"
+              name="BillingSaveBillingForm"
+              scope="request"
+              input="/oscarBilling/billingCreated.jsp">
+              <forward name="success" path="/oscarBilling/billingSaved.jsp"/>
+    </action>
+    
+    <action   path="/oscarBilling/billingView"
+              type="oscar.oscarBilling.pageUtil.BillingViewAction"
+              name="BillingViewForm"
+              scope="request"
+              input="/oscarBilling/billingView.jsp">
+              <forward name="success" path="/oscarBilling/billingView.jsp"/>
+              <forward name="ON"   path="/billing/billingOB2.jsp"/>
+    </action>
+    <!-- oscarBilling end -->
+
+    
     
   </action-mappings>
 </struts-config>
