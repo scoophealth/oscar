@@ -55,7 +55,7 @@
     session.setAttribute("everymin", param[2]);
     session.setAttribute("groupno", param[3]);  
 %>
-  <h1>Successful Update a Preference Record.
+  <h1><bean:message key="admin.preferenceaddarecord.msgSuccessful"/>
   </h1>
 <%  
   } else {
