@@ -79,7 +79,7 @@ function checkTypeIn() {
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Search" >
-				<INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="<bean:message key="demographic.search.btnSearch"/>" SIZE="17" onclick="document.form['titlesearch'].displaymode.value='Search'; document.form['titlesearch'].submit();"></td>
+				<INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="<bean:message key="demographic.search.btnSearch"/>" SIZE="17"></td>
 		</tr><tr>
 			
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
