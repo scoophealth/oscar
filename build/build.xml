@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="oscar" 
          default="dist">
-  <property name="catalina" location="/home/users/wagner/jakarta-tomcat-4.1.21" />
+  <property name="catalina" location="/usr/local/tomcat" />
   <property file="tomcat.properties" />
   <property name="webapp.name" value="oscar"/>
   
@@ -169,7 +169,10 @@
  <target name="dist" depends="web">
   <!-- make the webapp clean, so even files that haven't changed get
   their filters updated -->
-
+  <propertyfile file="../web/WEB-INF/classes/build.properties">
+       <entry key="builddate" type="date" value="now"/>
+  </propertyfile>
+  
   <war destfile="${build}/oscar.war" webxml="../web/WEB-INF/web.xml"> 
        <fileset dir="${webapp}"/> 
        <lib dir="${webapp}/WEB-INF/lib"/>
