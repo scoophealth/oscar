@@ -356,7 +356,7 @@ function checkTypeIn() {
   ResultSet rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(curUser_no)?"selected":""%> > 
+          <option value="<%=rsdemo.getString("provider_no")%>"> 
           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
           <%
   }
@@ -373,7 +373,7 @@ function checkTypeIn() {
   rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(curUser_no)?"selected":""%> > 
+          <option value="<%=rsdemo.getString("provider_no")%>"> 
           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
           <%
   }
@@ -388,7 +388,7 @@ function checkTypeIn() {
   rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(curUser_no)?"selected":""%> > 
+          <option value="<%=rsdemo.getString("provider_no")%>"> 
           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
           <%
   }
