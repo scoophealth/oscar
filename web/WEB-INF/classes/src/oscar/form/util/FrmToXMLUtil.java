@@ -25,7 +25,9 @@ package oscar.form.util;
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.*;
+import java.text.*;
 import org.apache.xmlbeans.*;
+import org.apache.xmlbeans.XmlCalendar;
 import oscar.oscarEncounter.oscarMeasurements.bean.*;
 import oscar.oscarRx.data.*;
 import oscar.util.UtilDateUtilities;
@@ -75,38 +77,73 @@ public class FrmToXMLUtil{
                 String itemName = mt.getType();
                 String methodCall = (String) nameProps.get(itemName+"Value");
                 //System.out.println("method "+methodCall);
-                if (methodCall != null){                                       
-                    
-                   Class cls = visit.getClass();
-                   //System.out.println("calling addNew"+methodCall);
-                   Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+                if(!dataProps.getProperty(itemName+"Value").equalsIgnoreCase("")||dataProps.getProperty(itemName+"Value")!=null){
+                    if(mt.getType().equalsIgnoreCase("BP")){
+                        methodCall = (String) nameProps.get("SBPValue");
+                        if (methodCall != null){
+                           Class cls = visit.getClass();
+                           //System.out.println("calling addNew"+methodCall);
+                           Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
-                   Object obj = addNewMethod.invoke(visit,new Object[]{});
-                   
-                   String value = dataProps.getProperty(itemName+"Value");
-                   //System.out.println("who "+who+" how "+how+ " when "+when+ " value "+value);            
-                   setWhoWhatWhereWhen(obj,how,who,when,value);
+                           Object obj = addNewMethod.invoke(visit,new Object[]{});
 
-                   //String date = dataProps.getProperty(itemName+"Date");
-                   //setWhoWhatWhereWhen(obj,how,who,when,date);
+                           String value = dataProps.getProperty("SBPValue");
+                           System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+                           setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                           //String date = dataProps.getProperty(itemName+"Date");
+                           //setWhoWhatWhereWhen(obj,how,who,when,date);
+                        }
+                        methodCall = (String) nameProps.get("DBPValue");
+                        if (methodCall != null){
+                           Class cls = visit.getClass();
+                           //System.out.println("calling addNew"+methodCall);
+                           Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+
+                           Object obj = addNewMethod.invoke(visit,new Object[]{});
+
+                           String value = dataProps.getProperty("DBPValue");
+                           System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+                           setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                           //String date = dataProps.getProperty(itemName+"Date");
+                           //setWhoWhatWhereWhen(obj,how,who,when,date);
+                        }
+                    }                
+                
+                    else if (methodCall != null){                                                                               
+
+                       Class cls = visit.getClass();
+                       //System.out.println("calling addNew"+methodCall);
+                       Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+
+                       Object obj = addNewMethod.invoke(visit,new Object[]{});
+
+                       String value = dataProps.getProperty(itemName+"Value");
+                       System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+                       setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                       //String date = dataProps.getProperty(itemName+"Date");
+                       //setWhoWhatWhereWhen(obj,how,who,when,date);
+                    }
+                    methodCall = (String) nameProps.get(itemName+"Date");
+                    //System.out.println("method "+methodCall);
+                    if (methodCall != null){                                       
+
+                       Class cls = visit.getClass();
+                       //System.out.println("calling addNew"+methodCall);
+                       Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+
+                       Object obj = addNewMethod.invoke(visit,new Object[]{});
+
+                       String value = dataProps.getProperty(itemName+"Date");
+                       System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
+                       setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                       //String date = dataProps.getProperty(itemName+"Date");
+                       //setWhoWhatWhereWhen(obj,how,who,when,date);
+                    } 
                 }
-                methodCall = (String) nameProps.get(itemName+"Date");
-                //System.out.println("method "+methodCall);
-                if (methodCall != null){                                       
-                    
-                   Class cls = visit.getClass();
-                   //System.out.println("calling addNew"+methodCall);
-                   Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
-
-                   Object obj = addNewMethod.invoke(visit,new Object[]{});
-                   
-                   String value = dataProps.getProperty(itemName+"Date");
-                   //System.out.println("who "+who+" how "+how+ " when "+when+ " value "+value);            
-                   setWhoWhatWhereWhen(obj,how,who,when,value);
-
-                   //String date = dataProps.getProperty(itemName+"Date");
-                   //setWhoWhatWhereWhen(obj,how,who,when,date);
-                }  
             }
                         
             //get drug list             
@@ -115,7 +152,7 @@ public class FrmToXMLUtil{
             RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();            
             for(int i=0; i<prescribedDrugs.length; i++){                
                 SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug drug = visit.addNewSitePatientVisitDrug();                
-                drug.setDrugCod("ATC_"+prescribedDrugs[i].getAtcCode());
+                drug.setDrugCod("ATC_"+prescribedDrugs[i].getAtcCode().trim());
                 SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug.TxtDrugName drugName = drug.addNewTxtDrugName();                
                 drugName.setSignedHow(how);
                 drugName.setSignedWho(who);
@@ -166,19 +203,54 @@ public class FrmToXMLUtil{
          setValueMethod.invoke(obj, new Object[] {value} );
          i = 1;
       }catch (NoSuchMethodException noSuchMethod1){}
+
+      try{
+         Method setValueMethod = cls.getMethod("setValue",new Class[] {int.class});
+         if(value.equalsIgnoreCase(""))
+             value="0";
+         Integer integer = new Integer(value);
+         setValueMethod.invoke(obj, new Object[] {integer}); 
+         i = 2;
+      }catch (NoSuchMethodException noSuchMethod1){}
+      
+      try{
+         Method setValueMethod = cls.getMethod("setValue",new Class[] {double.class});
+         if(value.equalsIgnoreCase(""))
+             value="0";
+         Double dbl = new Double(value);
+         setValueMethod.invoke(obj, new Object[] {dbl});           
+         i = 3;
+      }catch (NoSuchMethodException noSuchMethod1){}
       
       try{
          Method setValueMethod = cls.getMethod("setValue",new Class[] {boolean.class});
-         i = 2;      
+         i = 4;      
          Boolean bool = new Boolean(value);
          setValueMethod.invoke(obj, new Object[] {bool});               
       }catch (NoSuchMethodException noSuchMethod2){}
       
       try{
          Method setValueMethod = cls.getMethod("setValue",new Class[] {Calendar.class});
-         i = 3;
-         Calendar c = Calendar.getInstance();
+         i = 5;
+         if(value!=null){
+             //DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+             //Date date = (Date)formatter.parse(value);
+             Calendar c = new XmlCalendar(value);
+             //c.setTime(date);
+             setValueMethod.invoke(obj, new Object[] {c});       
+         }
+         
          //TODO need way to change String Date into a Calendar instance                 
+      }catch (NoSuchMethodException noSuchMethod3){}
+      
+      try{
+         Method setValueMethod = cls.getMethod("setValue",new Class[] {Date.class});
+         i = 5;
+         if(value!=null){
+            Date date = new Date(value);
+            setValueMethod.invoke(obj, new Object[] {date});       
+         }
+         
       }catch (NoSuchMethodException noSuchMethod3){}
       return i;
    }
