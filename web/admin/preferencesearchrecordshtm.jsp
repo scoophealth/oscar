@@ -24,10 +24,13 @@
  */
 -->
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>Search a Preference</title>
+<title><bean:message key="admin.preferencesearchrecordhtm.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
     <!--
@@ -62,8 +65,7 @@
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             
-      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> SEARCH PREFERENCE 
-        RECORDS</font></th>
+      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> <bean:message key="admin.preferencesearchrecordhtm.msgSearch"/></font></th>
       </tr>
     </table>
 
@@ -71,41 +73,40 @@
 
   <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
 	<tr valign="top">
-      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
-          Criteria</i></b></font></td>
+      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="admin.preferencesearchrecordhtm.msgCriteria"/></i></b></font></td>
             <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
               <input type="radio"  name="search_mode" value="search_preferenceno">
-          Preference No. </font></td>
+          <bean:message key="admin.preferencesearchrecordhtm.formPreferenceNo"/> </font></td>
             
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
           <input type="radio" checked name="search_mode" value="search_providerno">
-          Provider No.</font></td>
+          <bean:message key="admin.preferencesearchrecordhtm.formProviderNo"/></font></td>
       <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="provider_no" >
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="preference_search_titlename" >
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Preference_Search" >
-				<INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"></td>
+				<INPUT TYPE="SUBMIT" NAME="button" VALUE="<bean:message key="admin.preferencesearchrecordhtm.btnSearch"/>" SIZE="17"></td>
 
    </tr><tr> 
-        <td nowrap><font size="1" face="Verdana" color="#0000FF">Reserved </font></td>
+        <td nowrap><font size="1" face="Verdana" color="#0000FF"><bean:message key="admin.preferencesearchrecordhtm.msgReserved"/> </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> </font></td>
 
     </tr>
    </form>
 </table>
   
-  <p>Instructions will be provided later.</p>
+  <p><bean:message key="admin.preferencesearchrecordhtm.msgInstructionsLater"/></p>
   <hr width="100%" color="orange">
   <table border="0" cellspacing="0" cellpadding="0" width="100%">
     <tr>
       <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+        <bean:message key="admin.preferencesearchrecordhtm.btnBack"/></a></td>
+      <td align="right"><a href="../logout.jsp"><bean:message key="admin.preferencesearchrecordhtm.btnLogOut"/> <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
     </tr>
   </table>
 
 </center>
 </body>
-</html>
+</html:html>
