@@ -147,8 +147,9 @@ public class EfmDataOpt {
                 + rs.getString("address")+"\n"
                 + rs.getString("city") +","+rs.getString("province")+ ","+ rs.getString("postal")+ "\n"
                 + "Home:"+ rs.getString("phone")+"\n"
+                + "Work:"+ rs.getString("phone2")+"\n"
                 + rs.getString("date_of_birth")+"/"+ rs.getString("month_of_birth")+"/"+ rs.getString("year_of_birth")+"("+ rs.getString("sex")+")" + "\n"
-                + rs.getString("hin"); 
+                + rs.getString("hin")+ "  " + rs.getString("ver") ; 
         rs.close();
         rs.close();
       }
@@ -228,6 +229,78 @@ public class EfmDataOpt {
     return temp;
   }
 
+   public String getDOB(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("date_of_birth") + "/"+ rs.getString("month_of_birth") + "/"+ rs.getString("year_of_birth");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
+  public String getNameAddress(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("first_name") + " "+ rs.getString("last_name") +"\n"
+                + rs.getString("address")+"\n"
+                + rs.getString("city") +","+rs.getString("province")+ ","+ rs.getString("postal");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
+  public String getEmail(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("email");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
+   public String getHIN(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("hin") + "  " + rs.getString("ver") ;
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
+  
+  
   public String getFormString(int fid){
     String temp = new String(); 
     try {
