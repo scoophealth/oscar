@@ -1,0 +1,407 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+<html>
+
+
+
+<head>
+<title>
+General Conversions
+</title>
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+<!-- Generic Unit Conversion Program
+
+// Author    : Jonathan Weesner (jweesner@cyberstation.net)  21 Nov 95
+
+// Copyright : You want it? Take it! ... but leave the Author line intact please!
+
+function convertform(form){
+
+    var firstvalue = 0;
+
+    for (var i = 1; i <= form.count; i++) {
+
+       // Find first non-blank entry
+
+       if (form.elements[i].value != null && form.elements[i].value.length != 0) {
+
+	  if (i == 1 && form.elements[2].value != "") return false;
+
+	  firstvalue = form.elements[i].value / form.elements[i].factor;
+
+	  break;
+
+       }
+
+    }
+
+    if (firstvalue == 0) {
+
+       clearform(form);
+
+       return false;
+
+    }
+
+    for (var i = 1; i <= form.count; i++)
+
+       form.elements[i].value = formatvalue((firstvalue * form.elements[i].factor), form.rsize);
+
+    return true;
+
+}
+
+function formatvalue(input, rsize) {
+
+   var invalid = "**************************";
+
+   var nines = "999999999999999999999999";
+
+   var strin = "" + input;
+
+   var fltin = parseFloat(strin);
+
+   if (strin.length <= rsize) return strin;
+
+   if (strin.indexOf("e") != -1 ||
+
+       fltin > parseFloat(nines.substring(0,rsize)+".4"))
+
+      return invalid.substring(0, rsize);
+
+   var rounded = "" + (fltin + (fltin - parseFloat(strin.substring(0, rsize))));
+
+   return rounded.substring(0, rsize);
+
+}
+
+function resetform(form) {
+
+    clearform(form);
+
+    form.elements[1].value = 1;
+
+    convertform(form);
+
+    return true;
+
+}
+
+function clearform(form) {
+
+    for (var i = 1; i <= form.count; i++) form.elements[i].value = "";
+
+    return true;
+
+}
+
+<!-- done hiding from old browsers -->
+
+</SCRIPT>
+
+
+
+
+
+
+<style type="text/css">
+	table.outline{
+	   margin-top:50px;
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	table.grid{
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	td.gridTitles{
+		border-bottom: 2pt solid #888888;
+		font-weight: bold;
+		text-align: center;
+	}
+	td.middleGrid{
+	   border-left: 1pt solid #888888;	   
+	   border-right: 1pt solid #888888;
+	}	
+</style>
+</head>
+
+<body class="BodyStyle" vlink="#0000FF"  >
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                calculators
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+						General Conversions
+                        </td>
+                        <td  >&nbsp;
+							
+                        </td>
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top">
+          	  <a href="#distance">Distance</A> 
+
+			  <a href="#weight">Weight</A> 
+
+			  <a href="#volume">Volume</A> 
+
+			  <a href="#temps">Temperatures</A>              
+
+              
+            </td>
+            <td class="MainTableRightColumn">
+				<table>
+        <tr> 
+          <td style="text-align: center"> <FORM method="post">
+              <TABLE BORDER=2 cellpadding=3 cellspacing=0>
+                <TR class="Header"> 
+                  <TD COLSPAN=7 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="distance"><b>Distance 
+                    Unit Conversion Calculator</b></A> </TD>
+                </TR>
+                <TR> 
+                  <TD ALIGN=CENTER>Meters</TD>
+                  <TD ALIGN=CENTER>Inches</TD>
+                  <TD ALIGN=CENTER>Feet</TD>
+                  <TD ALIGN=CENTER>Yards</TD>
+                  <TD ALIGN=CENTER>Miles</TD>
+                  <TD ALIGN=CENTER>Nautical<BR>
+                    Miles</TD>
+                  <TD><INPUT TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)"></TD>
+                </TR>
+                <TR> 
+                  <TD><INPUT TYPE=TEXT NAME=val1 SIZE=7 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val2 SIZE=7 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val3 SIZE=7 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val4 SIZE=7 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val5 SIZE=7 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val6 SIZE=7 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE="button"  VALUE="Calculate" onclick="convertform(this.form)"></TD>
+                </TR>
+              </TABLE>
+            </FORM>
+            <FORM  method="post">
+              <TABLE BORDER=2 cellpadding=3 cellspacing=0>
+                <TR class="Header"> 
+                  <TD COLSPAN=8 ALIGN=CENTER VALIGN=MIDDLE style="font-weight:bold"> 
+                    <A NAME="weight"><b>Weight Unit Conversion Calculator</b></A> 
+                  </TD>
+                </TR>
+                <TR> 
+                  <TD ALIGN=CENTER>Kilograms</TD>
+                  <TD ALIGN=CENTER>Ounces</TD>
+                  <TD ALIGN=CENTER>Pounds</TD>
+                  <TD ALIGN=CENTER>Troy<BR>
+                    Pounds</TD>
+                  <TD ALIGN=CENTER>Stones</TD>
+                  <TD ALIGN=CENTER>Short<BR>
+                    Tons</TD>
+                  <TD ALIGN=CENTER>Long<BR>
+                    Tons</TD>
+                  <TD><INPUT TYPE="button" VALUE="Calibrate" onClick="resetform(this.form)"></TD>
+                </TR>
+                <TR> 
+                  <TD><INPUT TYPE=TEXT NAME=val1 SIZE=6 onFocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val2 SIZE=6 onFocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val3 SIZE=6 onFocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val4 SIZE=6 onFocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val5 SIZE=6 onFocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val6 SIZE=6 onFocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val7 SIZE=6 onFocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE="button"  VALUE="Calculate"  onclick="convertform(this.form)"></TD>
+                </TR>
+              </TABLE>
+            </FORM>
+            <FORM method="post">
+              <TABLE border=2  cellpadding=3 cellspacing=0>
+                <TR class="Header"> 
+                  <TD COLSPAN=7 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="volume"><b>Volume 
+                    Unit Conversion Calculator</b></A> </TD>
+                </TR>
+                <TR> 
+                  <TD ALIGN=CENTER>Litres</TD>
+                  <TD ALIGN=CENTER>Fluid<BR>
+                    Ounces</TD>
+                  <TD ALIGN=CENTER>Quarts</TD>
+                  <TD ALIGN=CENTER>Gallons</TD>
+                  <TD ALIGN=CENTER>Imperial<BR>
+                    Gallons</TD>
+                  <TD><INPUT TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)"></TD>
+                </TR>
+                <TR> 
+                  <TD><INPUT TYPE=TEXT NAME=val1 SIZE=6 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val2 SIZE=6 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val3 SIZE=6 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val4 SIZE=6 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE=TEXT NAME=val5 SIZE=6 onfocus="clearform(this.form)"></TD>
+                  <TD><INPUT TYPE="button"  VALUE="Calculate" onclick="convertform(this.form)"></TD>
+                </TR>
+              </TABLE>
+            </FORM>
+            <TABLE border=2  cellpadding=3 cellspacing=0 >
+              <TR class="Header"> 
+                <TD COLSPAN=3 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="temps"><b>Temperatures</b></A> 
+                </TD>
+              </TR>
+              <TR> 
+                <TD >1. Click mouse in a box.</TD>
+                <TD>2. Type in temperature.</TD>
+                <TD>3. Click on the other box to calculate.</TD>
+              </TR>
+			  </table>
+			  
+				 	<form method="post">
+                    	<table border=2  cellpadding=3 cellspacing=0 width="100%" height="100%">
+                      	<tr> 
+                       		<td width="50%" style="text-align: center;" nowrap>Fahrenheit... 
+                          		<input type="text" name="F" value="32" onChange="C.value = 100/(212-32) * (this.value - 32 )"></td>
+                        	<td width="50%" style="text-align: center;" nowrap>Celsius........ 
+                          		<input type="text" name="C" value="0" onChange="F.value = (212-32)/100 * this.value + 32"></td>
+                      	</tr>
+                    	</table>
+                  	</form>
+				
+			</td>
+        </tr>
+        <tr> 
+          <td style="text-align: center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">&nbsp;</td>
+        </tr>
+      </table>
+			</td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
+</body>
+<SCRIPT LANGUAGE="JavaScript">
+
+<!-- Set conversion factors for each item in form. All
+
+// factors must convert the first item to the current item.
+
+// Be sure to use the correct form index. The first form is
+
+// always index "0" and remaining forms are numbered in the
+
+// order they appear in the document.
+
+document.forms[0].count = 6;  // number of unit types
+
+document.forms[0].rsize = 7;  // Rounding size, use same as SIZE
+
+document.forms[0].val1.factor = 1;            // m to m.
+
+document.forms[0].val2.factor = 39.37007874;  // m to in.
+
+document.forms[0].val3.factor = 3.280839895;  // m to ft.
+
+document.forms[0].val4.factor = 1.093613298;  // m to yards.
+
+document.forms[0].val5.factor = 0.00062137119; // m to mi.
+
+document.forms[0].val6.factor = 0.000547045; // m to nm.
+
+<!-- done hiding from old browsers -->
+
+</SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+<!-- Set conversion factors for each item in form.
+
+document.forms[1].count = 7;
+
+document.forms[1].rsize = 6;
+
+document.forms[1].val1.factor = 1;
+
+document.forms[1].val2.factor = 35.273944;
+
+document.forms[1].val3.factor = 2.2046215;
+
+document.forms[1].val4.factor = 2.6792765;
+
+document.forms[1].val5.factor = 0.1574731232747;
+
+document.forms[1].val6.factor = 0.00110231075;
+
+document.forms[1].val7.factor = 0.001;
+
+<!-- done hiding from old browsers -->
+
+</SCRIPT>
+
+
+
+<SCRIPT LANGUAGE="JavaScript">
+
+// Set conversion factors for each item in form.
+
+document.forms[2].count = 5;
+
+document.forms[2].rsize = 6;
+
+document.forms[2].val1.factor = 1;
+
+document.forms[2].val2.factor = 33.8239926;
+
+document.forms[2].val3.factor = 1.056998;
+
+document.forms[2].val4.factor = 0.2642499;
+
+document.forms[2].val5.factor = 0.2200433;
+
+</SCRIPT>
+
+
+</html>
