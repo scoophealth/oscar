@@ -276,7 +276,7 @@ INSERT INTO encounterForm VALUES ('FDI Disability', '../form/formlatelifeFDIdisa
 INSERT INTO encounterForm VALUES ('CESD', '../form/formCESD.jsp?demographic_no=','formCESD',24);
 INSERT INTO encounterForm VALUES ('Caregiver', '../form/formcaregiver.jsp?demographic_no=','formCaregiver',25);
 INSERT INTO encounterForm VALUES ('Grip Strength', '../form/formgripstrength.jsp?demographic_no=','formGripStrength',26);
-INSERT INTO encounterForm VALUES ('Treatment Preference', '../form/formtreatmentpreference.jsp?demographic_no=','formTreatmentPreference',27);
+INSERT INTO encounterForm VALUES ('Treatment Preference', '../form/formtreatmentpref.jsp?demographic_no=','formTreatmentPref',27);
 INSERT INTO encounterForm VALUES ('Caregiver - SF36', '../form/formSF36caregiver.jsp?demographic_no=','formSF36Caregiver',28);
 
 --
@@ -1024,28 +1024,18 @@ INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringI
 --
 -- Dumping data for table 'measurementCSSLocation'
 --
-INSERT INTO measurementCSSLocation(location) VALUES ('measurementTemplate1.css');
-INSERT INTO measurementCSSLocation(location) VALUES ('measurementTemplateRed.css');
+
 
 --
 -- Dumping data for table 'measurementGroup'
 --
 
-INSERT INTO measurementGroup VALUES("General", "HT");
-INSERT INTO measurementGroup VALUES("General", "WT");
-INSERT INTO measurementGroup VALUES("General", "BP");
-INSERT INTO measurementGroup VALUES("GroupA", "BP");
-INSERT INTO measurementGroup VALUES("GroupB", "BP");
-INSERT INTO measurementGroup VALUES("GroupC", "BP");
+
 
 --
 -- Dumping data for table 'measurementGroupStyle'
 --
-INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('General','1');
-INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('GroupA','1');
-INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('GroupB','1');
-INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('GroupC','1');
-INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('Vital','1');
+
 --
 -- Dumping data for table 'messagelisttbl'
 --
