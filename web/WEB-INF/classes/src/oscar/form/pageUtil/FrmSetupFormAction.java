@@ -100,7 +100,7 @@ public final class FrmSetupFormAction extends Action {
         request.setAttribute("drugs", drugLists);        
         request.setAttribute("ongoingConcerns", chartBean.ongoingConcerns.equalsIgnoreCase("")?"None":chartBean.ongoingConcerns);
         if(currentRec!=null)
-            frm.setValue("diagnosis", currentRec.getProperty("diagnosis", "None"));
+            frm.setValue("diagnosisVT", currentRec.getProperty("diagnosis", "None"));
         
         try {            
             System.out.println("formId=" + formId + "opening " + formName + ".xml");
@@ -115,38 +115,14 @@ public final class FrmSetupFormAction extends Action {
             props.setProperty("provider_no", providerNo);
             String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
             String decisionSupportURL = connect2OSDSF(xmlData);
+            System.out.println("decisionSupportURL" + decisionSupportURL);
             request.setAttribute("decisionSupportURL", StringEscapeUtils.escapeHtml(decisionSupportURL));
             
-            //Get the most updated data from Miles"
-            String xmlString = "<SitePatientVisit_Records>"+
-                                   "<SitePatientVisit Visit_cod=\"20041202\" Patient_cod=\"19\">"+
-                                      "<int_Height_cm signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
-                                      "<dbl_Weight_kg signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
-                                      "<int_WaistCircumference_cm signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"1\"/>"+
-                                      "<int_HipCircumference_cm signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
-                                      "<dat_BP signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
-                                      "<int_Pulse_bpm signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"88\"/>"+
-                                      "<dbl_HbA1c signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\".17\"/>"+
-                                      "<dat_HbA1c signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"1999-01-01\"/>"+
-                                      "<dbl_Glucose_mM signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
-                                      "<dat_Glucose signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2003-01-02\"/>"+
-                                      "<dbl_LDL_mM signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2\"/>"+
-                                      "<dat_LDL signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2004-12-31\"/>"+
-                                      "<dbl_HDL_mM signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2\"/>"+
-                                      "<dat_HDL signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2004-12-31\"/>"+
-                                      "<dbl_TotalCholesterol_mM signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
-                                      "<dat_TotalCholesterol signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dbl_Triglycerides_mM signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dat_Triglycerides signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dbl_UrineAlbuminCreatinineRatio_mgPermmol signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dat_UrineAlbuminCreatinineRatio signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dbl_UrineAlbumin_mgPerDay signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dat_UrineAlbumin signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                   "</SitePatientVisit>"+
-                                "</SitePatientVisit_Records>";
+            //Get the most updated data from Miles"            
+            String xmlStr =  getMostRecentRecord(demo);
             nameProps = convertName(formName);
             FrmXml2VTData xml2VTData = new FrmXml2VTData();
-            FrmVTData vtData = xml2VTData.getObjectFromXmlStr(xmlString);
+            FrmVTData vtData = xml2VTData.getObjectFromXmlStr(xmlStr);
             Class vtDataC = Class.forName("oscar.form.data.FrmVTData");
             
             ResultSet rs;
@@ -173,7 +149,7 @@ public final class FrmSetupFormAction extends Action {
                                                             
                     String valueMethodCall = (String) nameProps.get(mt.getType()+"Value");
                     //System.out.println("method "+methodCall);
-                    if (valueMethodCall != null){                      
+                    if (vtDataC!=null && valueMethodCall != null){                      
                         Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});
                         String value = (String) vtGetMethods.invoke(vtData, new Object[]{});
                         frm.setValue(mt.getType()+"Value", value);
@@ -191,7 +167,7 @@ public final class FrmSetupFormAction extends Action {
                         else{
                             vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});
                             value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                            frm.setValue(mt.getType() + "Date", value.replaceAll("/", "-"));    
+                            frm.setValue(mt.getType() + "Date", value==null?"":value.replaceAll("/", "-"));    
                             request.setAttribute(mt.getType() + "Date", value);
                         }  
                     }
@@ -277,7 +253,7 @@ public final class FrmSetupFormAction extends Action {
         //send to osdsf thru XMLRPC
         try{
             XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
-            String result = (String) xmlrpc.execute("vt.vtXMLRtn", data2OSDSF);
+            String result = (String) xmlrpc.execute("vt.saveAndGetRlt", data2OSDSF);
             System.out.println("Reverse result: " + result);
             return result;
         }
@@ -291,6 +267,30 @@ public final class FrmSetupFormAction extends Action {
         return null;
         
     }
+    
+    private String getMostRecentRecord(String demographicNo){
+        Vector ret = new Vector();
+            ret.addElement("getMostRecentRecord");
+            ret.addElement(demographicNo);
+        //send to osdsf thru XMLRPC
+        try{
+            XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
+            String result = (String) xmlrpc.execute("vt.getMostRecentRecord", ret);
+            System.out.println("Reverse result: " + result);
+            return result;
+        }
+        catch(XmlRpcException e){
+            e.printStackTrace();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        
+        return null;
+        
+    }
+    
+    
     
     private Properties convertName(String formName){
         Properties osdsf = new Properties();
