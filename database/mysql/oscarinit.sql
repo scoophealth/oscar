@@ -689,7 +689,7 @@ CREATE TABLE encounterForm (
   form_name varchar(30) NOT NULL default '',
   form_value varchar(255) NOT NULL default '',
   form_table varchar(50) NOT NULL default '',
-  hidden char(2) default '1',
+  hidden int(5) NOT NULL default '0',  
   PRIMARY KEY  (form_value)
 ) TYPE=MyISAM;
 
