@@ -265,16 +265,22 @@ public class DateUtils {
                 case 10:                
                     if (day+curNumDays < 31)
                         day = day + curNumDays;
+                    else if(((day + curNumDays) % 31) == 0){
+                        day = 31;
+                    }
                     else {
-                        day = (day + curNumDays) % 31;
+                        day = ((day + curNumDays) % 31);
                         month++;
                     }
                     break;
                 case 12:
                     if (day+curNumDays < 31)
                         day = day + curNumDays;
+                    else if(((day + curNumDays) % 31) == 0){
+                        day = 31;
+                    }
                     else {
-                        day = (day + curNumDays) % 31;
+                        day = ((day + curNumDays) % 31);
                         month = 1;
                         year++;
                     }
@@ -283,16 +289,22 @@ public class DateUtils {
                     if ( ((year % 4 == 0) && !(year % 100 == 0)) || (year % 400 == 0) ){                   
                         if (day+curNumDays < 29)
                             day = day + curNumDays;
+                        else if(((day + curNumDays) % 29) == 0){
+                            day = 29;
+                        }
                         else {
-                            day = (day + curNumDays) % 29;
+                            day = ((day + curNumDays) % 29);
                             month++;
                         }
                     }
                     else{
                         if (day+curNumDays < 28)
                             day = day + curNumDays;
+                        else if(((day + curNumDays) % 28) == 0){
+                            day = 28;
+                        }
                         else {
-                            day = (day + curNumDays) % 28;
+                            day = ((day + curNumDays) % 28);
                             month++;
                         }
                     }
@@ -301,8 +313,11 @@ public class DateUtils {
                 default:
                     if (day+curNumDays < 30)
                         day = day + curNumDays;
+                    else if(((day + curNumDays) % 30) == 0){
+                            day = 30;
+                        }
                     else{
-                        day = (day + curNumDays) % 30;
+                        day = ((day + curNumDays) % 30);
                         month++;
                     }
             } // switch 
