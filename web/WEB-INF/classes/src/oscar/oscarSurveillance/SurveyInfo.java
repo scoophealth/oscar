@@ -1,0 +1,73 @@
+/**
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * Jason Gallagher
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada   
+ *
+ *
+ * SurveyInfo.java
+ *
+ * Created on October 4, 2004, 10:54 AM
+ */
+
+package oscar.oscarSurveillance;
+
+import java.io.*;
+import java.util.*;
+import oscar.*;
+
+/**
+ *
+ * @author  Jay Gallagher
+ */
+public class SurveyInfo {
+   
+   /** Creates a new instance of SurveyInfo */
+   public SurveyInfo() {
+   }
+   
+   public ArrayList getFileNames(String surveyId){
+      
+      ArrayList list = new ArrayList();
+      
+      String fileDir = OscarProperties.getInstance().getProperty("surveillance_directory");
+      System.out.println("Opening directory "+fileDir );
+      File dir = new File(fileDir);
+                                
+      String[] children = dir.list();
+      
+      for (int i=0; i<children.length; i++) {
+         if (children[i].startsWith(surveyId)){
+            String str[] = {children[i],getCreateDate(fileDir+children[i])};
+            //list.add(children[i]);            
+            list.add(str);            
+         }
+      }
+                       
+      return list;
+   }
+   
+   private String getCreateDate(String filename){
+      File file = new File(filename);
+      // Get the last modified time
+      long modifiedTime = file.lastModified();
+      Date d = new Date(modifiedTime);
+      return d.toString();      
+   }
+}
