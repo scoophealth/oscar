@@ -737,30 +737,39 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <!-- <tr><td>&nbsp;</td></tr> -->
             </table>
-            <table>
-                <tr class="Header">
-                    <td style="font-weight:bold">
+            <table class="LeftTable">
+                <form name="ksearch" >
+                    <tr class="Header">
+                        <td style="font-weight:bold">
                             <bean:message key="oscarEncounter.Index.internetResources"/>
-                    </td>
-                </tr>
-                <tr class="LeftTable">
-                    <form class="LeftTable" name="ksearch" onsubmit="popupSearchPage(600,800,this.channel.options[this.channel.selectedIndex].value+urlencode(this.key.value) ); return false;">
-                        <td>                        
-                                <bean:message key="oscarEncounter.Index.searchFor"/>
-                                    <input class="ControlSelect" type="text" size="14" name="key" value="">
-                                <bean:message key="oscarEncounter.Index.using"/>
-                                    <select class="ControlSelect" name="channel" size="1">
-                                        <option value="http://67.69.12.117:8080/oscarResource/OSCAR_search/OSCAR_search_res
-ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
-                                        <option value="http://emr.skolar.com/gateway?tfUsername=dchan@mcmaster.ca&pwPassword=david&url=/emr/Search.jsp&query="><bean:message key="oscarEncounter.Index.skolar"/></option>
-                                        <option value="https://67.69.12.116:9443/oscar_slp/Greeting.jsp?firstkeyword="><bean:message key="oscarEncounter.Index.selfLearning"/></option>
-                                        <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
-                                        <option value="http://www.ncbi.nlm.nih.gov/entrez/query/static/clinical.html"><bean:message key="global.pubmed"/></option>
-                                    </select>
-				<input type="submit" class="ControlPushButton" name="submit" value="<bean:message key="oscarEncounter.Index.btnGo"/>">                        
                         </td>
-                    </form>
-                </tr>                
+                    </tr>                                                       
+                    <tr>
+                        <td><bean:message key="oscarEncounter.Index.searchFor"/></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="term" class="ControlSelect" value=""/></td>                        
+                    </tr>
+                    <tr>
+                        <td><bean:message key="oscarEncounter.Index.using"/></td>
+                    </tr>
+                    <tr>
+                        <td>
+                                <select class="ControlSelect" name="channel" >
+                                    <option value="http://67.69.12.117:8080/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>                                                                                
+                                    <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
+                                    <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&CDM=Search&DB=PubMed&term="><bean:message key="global.pubmed"/></option>
+                                    <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&FUNCTION=search&SERVER2=server2&SERVER1=server1&PARAMETER="><bean:message key="global.medlineplus"/></option>
+                                    <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&searchButton=Search&q="><bean:message key="global.BNF"/></option>
+                                </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="button" name="button" class="ControlPushButton" value="<bean:message key="oscarEncounter.Index.btnGo"/>" onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].term.value) ); return false;">                        
+                        </td>
+                    </tr>                   
+                </form>                               
             </table>
         </td>        
         <td valign="top">
