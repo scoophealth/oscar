@@ -33,11 +33,15 @@ import oscar.oscarDB.DBHandler;
 
 public class dxQuickListItemsHandler {
     
-    Vector dxQuickListItemVector = new Vector();
+    Vector dxQuickListItemsVector = new Vector();
      
     public dxQuickListItemsHandler(String quickListName, String providerNo) {
         init(quickListName, providerNo);
-    }    
+    } 
+    
+    public dxQuickListItemsHandler(String quickListName) {
+        init(quickListName);
+    } 
         
     public boolean init(String quickListName, String providerNo) {
         
@@ -46,15 +50,23 @@ public class dxQuickListItemsHandler {
             ResultSet rs;
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             //need to put the providerID as well
-            String sql = "Update quickListUser set lastUsed=now() where quickListName='"+quickListName + "' AND providerNo ='"+providerNo+"'";
-            db.RunSQL(sql);
-            
+            String sql = "Select quickListName, providerNo from quickListUser where quickListName='"+quickListName + "' AND providerNo ='"+providerNo+"'";
+            rs = db.GetSQL(sql);
+            if(rs.next()){
+                sql = "Update quickListUser set lastUsed=now() where quickListName='"+quickListName + "' AND providerNo ='"+providerNo+"'";
+                db.RunSQL(sql);
+            }
+            else{
+                sql = "Insert into quickListUser(quickListName, providerNo, lastUsed) VALUES ('"+quickListName+"','"+providerNo+"',now())";
+                db.RunSQL(sql);
+            }
+
             sql = "Select q.dxResearchCode, i.description FROM quickList q, ichppccode i where quickListName='"+ quickListName +"' AND i.ichppccode = q.dxResearchCode order by i.description";
             rs = db.GetSQL(sql);            
             while(rs.next()){                
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),
                                                              rs.getString("dxResearchCode"));                
-                dxQuickListItemVector.add(bean);
+                dxQuickListItemsVector.add(bean);
             }
             rs.close();
             db.CloseConn();
@@ -66,8 +78,31 @@ public class dxQuickListItemsHandler {
         return verdict;
     }
 
-    public Collection getDxQuickListItemVector(){
-        return dxQuickListItemVector;
+    public boolean init(String quickListName) {
+        
+        boolean verdict = true;
+        try {            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                        
+            String sql = "Select q.dxResearchCode, i.description FROM quickList q, ichppccode i where quickListName='"+ quickListName +"' AND i.ichppccode = q.dxResearchCode order by i.description";
+            ResultSet rs = db.GetSQL(sql);            
+            while(rs.next()){                
+                dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),
+                                                             rs.getString("dxResearchCode"));                
+                dxQuickListItemsVector.add(bean);
+            }
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
+    
+    public Collection getDxQuickListItemsVector(){
+        return dxQuickListItemsVector;
     }
 }
 
