@@ -27,12 +27,14 @@ CREATE TABLE allergies (
   allergyid int(10) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL default '0',
   entry_date date default NULL,
-  DESCRIPTION char(50) NOT NULL default '',
+  DESCRIPTION varchar(50) NOT NULL default '',
   HICL_SEQNO int(6) default NULL,
   HIC_SEQNO int(6) default NULL,
   AGCSP int(6) default NULL,
   AGCCS int(6) default NULL,
   TYPECODE tinyint(4) NOT NULL default '0',
+  reaction text,
+  drugref_id varchar(100) default NULL,
   PRIMARY KEY  (allergyid)
 ) TYPE=MyISAM;
 
@@ -511,7 +513,7 @@ CREATE TABLE drugs (
   demographic_no int(10) NOT NULL default '0',
   rx_date date NOT NULL default '0001-01-01',
   end_date date NOT NULL default '0001-01-01',
-  BN varchar(30) default NULL,
+  BN varchar(255) default '',
   GCN_SEQNO decimal(10,0) NOT NULL default '0',
   customName varchar(60) default NULL,
   takemin float default NULL,
@@ -523,10 +525,14 @@ CREATE TABLE drugs (
   repeat tinyint(4) default NULL,
   nosubs tinyint(1) NOT NULL default '0',
   prn tinyint(1) NOT NULL default '0',
-  special varchar(255) NOT NULL default '',
+  special text,
   archived tinyint(1) NOT NULL default '0',
+  GN varchar(255) default NULL,
+  ATC varchar(20) default NULL,
+  script_no int(10) default NULL,
+  regional_identifier varchar(100) default NULL,
   PRIMARY KEY  (drugid)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
 --
 -- Table structure for table 'dxresearch'
@@ -697,6 +703,9 @@ CREATE TABLE favorites (
   nosubs tinyint(1) NOT NULL default '0',
   prn tinyint(1) NOT NULL default '0',
   special varchar(255) NOT NULL default '',
+  GN varchar(255) default NULL,
+  ATC varchar(255) default NULL,
+  regional_identifier varchar(100) default NULL,
   PRIMARY KEY  (favoriteid)
 ) TYPE=MyISAM;
 
@@ -2803,6 +2812,21 @@ CREATE TABLE prescribe (
   prescribe_time time NOT NULL default '00:00:00',
   content text,
   PRIMARY KEY  (prescribe_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'prescription'
+--
+
+CREATE TABLE prescription (
+  script_no int(10) NOT NULL auto_increment,
+  provider_no varchar(6) default NULL,
+  demographic_no int(10) default NULL,
+  date_prescribed date default NULL,
+  date_printed date default NULL,
+  dates_reprinted text,
+  textView text,
+  PRIMARY KEY  (script_no)
 ) TYPE=MyISAM;
 
 --
