@@ -131,7 +131,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <tr bgcolor="#EEEEFF"> 
       <td> 
         <p>
-        <% if (oscarVariables.getProperty("billregion").equals("BC")){ %>
+        <% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
           <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a><br>
           <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan Diskette</a><br>
           <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanCorrection.jsp?billing_no=');return false;">Billing Correction</a><br>
