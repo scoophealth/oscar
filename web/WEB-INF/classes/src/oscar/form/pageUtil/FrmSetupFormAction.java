@@ -341,7 +341,7 @@ public final class FrmSetupFormAction extends Action {
         //send to osdsf thru XMLRPC
         try{
             XmlRpcClient xmlrpc = new XmlRpcClient(osdsfRPCURL);
-            String result = (String) xmlrpc.execute("vt.getPatientRlt", data2OSDSF);
+            String result = (String) xmlrpc.execute("vt.getAndSaveRlt", data2OSDSF);
             System.out.println("Reverse result: " + result);
             return result;
         }
