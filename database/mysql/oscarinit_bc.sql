@@ -1766,6 +1766,233 @@ CREATE TABLE wcb (
 ) TYPE=MyISAM;
 
 
+ 
+ 
+#
+# Table structure for table 'hl7_link'
+#
+ 
+CREATE TABLE `hl7_link` (
+  `pid_id` int(10) unsigned NOT NULL default '0',
+  `demographic_no` int(10) default '0',
+  `status` char(2) default 'P',
+  `provider_no` varchar(6) default NULL,
+  `signed_on` datetime default NULL,
+  PRIMARY KEY  (`pid_id`),
+  KEY `demographic_no` (`demographic_no`)
+) TYPE=MyISAM;
+ 
+ 
+ 
+#
+# Table structure for table 'hl7_message'
+#
+ 
+CREATE TABLE `hl7_message` (
+  `message_id` int(10) unsigned NOT NULL auto_increment,
+  `date_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `notes` text,
+  PRIMARY KEY  (`message_id`),
+  UNIQUE KEY `message_id` (`message_id`),
+  KEY `message_id_2` (`message_id`)
+) TYPE=MyISAM;
+ 
+ 
+ 
+#
+# Table structure for table 'hl7_msh'
+#
+ 
+CREATE TABLE `hl7_msh` (
+  `msh_id` int(10) unsigned NOT NULL auto_increment,
+  `message_id` int(10) unsigned NOT NULL default '0',
+  `seperator` char(1) NOT NULL default '0',
+  `encoding_characters` char(4) NOT NULL default '',
+  `sending_application` char(180) default NULL,
+  `sending_facility` char(180) default NULL,
+  `receiving_application` char(180) default NULL,
+  `receiving_facility` char(180) default NULL,
+  `date_time_of_message` datetime default NULL,
+  `security` char(40) default NULL,
+  `message_type` char(7) NOT NULL default '',
+  `message_control_id` char(20) NOT NULL default '',
+  `processing_id` char(3) NOT NULL default '',
+  `version_id` char(8) NOT NULL default '',
+  `sequence_number` char(15) default NULL,
+  `continuation_pointer` char(180) default NULL,
+  `accept_acknowledgment_type` char(2) default NULL,
+  `application_acknowledge_type` char(2) default NULL,
+  `country_code` char(2) default NULL,
+  `character_set` char(6) default NULL,
+  `principal_language_of_message` char(60) default NULL,
+  PRIMARY KEY  (`msh_id`)
+) TYPE=MyISAM;
+ 
+ 
+ 
+#
+# Table structure for table 'hl7_obr'
+#
+ 
+CREATE TABLE `hl7_obr` (
+  `obr_id` int(10) unsigned NOT NULL auto_increment,
+  `pid_id` int(10) unsigned NOT NULL default '0',
+  `set_id` varchar(4) NOT NULL default '',
+  `placer_order_number` varchar(75) NOT NULL default '',
+  `filler_order_number` varchar(75) NOT NULL default '',
+  `universal_service_id` varchar(200) NOT NULL default '',
+  `priority` char(2) NOT NULL default '',
+  `requested_date_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `observation_date_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `observation_end_date_time` datetime default NULL,
+  `collection_volume` varchar(20) default NULL,
+  `collector_identifier` varchar(60) default NULL,
+  `specimen_action_code` char(1) default NULL,
+  `danger_code` varchar(60) default NULL,
+  `relevant_clinical_info` text,
+  `specimen_received_date_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `specimen_source` text,
+  `ordering_provider` varchar(80) default NULL,
+  `order_callback_phone_number` varchar(40) default NULL,
+  `placers_field1` varchar(60) default NULL,
+  `palcers_field2` varchar(60) default NULL,
+  `filler_field1` varchar(60) default NULL,
+  `filler_field2` varchar(60) default NULL,
+  `results_report_status_change` datetime NOT NULL default '0000-00-00 00:00:00',
+  `charge_to_practice` varchar(40) default NULL,
+  `diagnostic_service_sect_id` varchar(10) default NULL,
+  `result_status` char(1) NOT NULL default '',
+  `parent_result` text,
+  `quantity_timing` varchar(200) default NULL,
+  `result_copies_to` varchar(150) default NULL,
+  `parent_number` varchar(150) default NULL,
+  `transportation_mode` varchar(20) default NULL,
+  `reason_for_study` text,
+  `principal_result_interpreter` varchar(200) default NULL,
+  `assistant_result_interpreter` varchar(200) default NULL,
+  `technician` varchar(200) default NULL,
+  `transcriptionist` varchar(200) default NULL,
+  `scheduled_date_time` datetime default NULL,
+  `transport_arranged` varchar(30) default NULL,
+  `number_of_sample_containers` varchar(4) default NULL,
+  `transport_logistics_of_collected_sample` varchar(60) default NULL,
+  `collector_comment` varchar(200) default NULL,
+  `transport_arrangement_responsibility` varchar(60) default NULL,
+  `escort_required` char(1) default NULL,
+  `planned_patient_transport_comment` varchar(200) default NULL,
+  `note` text,
+  PRIMARY KEY  (`obr_id`),
+  UNIQUE KEY `FillerIndex` (`filler_order_number`)
+) TYPE=MyISAM;
+ 
+ 
+ 
+#
+# Table structure for table 'hl7_obx'
+#
+ 
+CREATE TABLE `hl7_obx` (
+  `obx_id` int(10) unsigned NOT NULL auto_increment,
+  `obr_id` int(10) unsigned NOT NULL default '0',
+  `set_id` varchar(10) default NULL,
+  `value_type` char(2) NOT NULL default '',
+  `observation_identifier` text NOT NULL,
+  `observation_sub_id` varchar(20) NOT NULL default '',
+  `observation_results` text NOT NULL,
+  `units` varchar(60) default NULL,
+  `reference_range` varchar(10) default NULL,
+  `abnormal_flags` varchar(5) default NULL,
+  `probability` varchar(5) default NULL,
+  `nature_of_abnormal_test` char(2) default NULL,
+  `observation_result_status` char(1) NOT NULL default '',
+  `date_last_normal_value` datetime default NULL,
+  `user_defined_access_checks` varchar(20) default NULL,
+  `observation_date_time` datetime default NULL,
+  `producer_id` varchar(60) default NULL,
+  `responsible_observer` varchar(80) default NULL,
+  `observation_method` varchar(60) default NULL,
+  `note` text,
+  PRIMARY KEY  (`obx_id`)
+) TYPE=MyISAM;
+ 
+ 
+ 
+#
+# Table structure for table 'hl7_orc'
+#
+ 
+CREATE TABLE `hl7_orc` (
+  `orc_id` int(10) unsigned NOT NULL auto_increment,
+  `pid_id` int(10) unsigned NOT NULL default '0',
+  `order_control` char(2) NOT NULL default '',
+  `placer_order_number1` char(22) default NULL,
+  `filler_order_number` char(22) default NULL,
+  `placer_order_number2` char(22) default NULL,
+  `order_status` char(2) default NULL,
+  `response_flag` char(1) default NULL,
+  `quantity_timing` char(200) default NULL,
+  `parent` char(200) default NULL,
+  `date_time_of_transaction` datetime default NULL,
+  `entered_by` char(120) default NULL,
+  `verified_by` char(120) default NULL,
+  `ordering_provider` char(120) default NULL,
+  `enterer_location` char(80) default NULL,
+  `callback_phone_number` char(40) default NULL,
+  `order_effective_date_time` datetime default NULL,
+  `order_control_code_reason` char(200) default NULL,
+  `entering_organization` char(60) default NULL,
+  `entering_device` char(60) default NULL,
+  `action_by` char(120) default NULL,
+  PRIMARY KEY  (`orc_id`),
+  UNIQUE KEY `Filler` (`filler_order_number`)
+) TYPE=MyISAM;
+ 
+ 
+ 
+#
+# Table structure for table 'hl7_pid'
+#
+ 
+CREATE TABLE `hl7_pid` (
+  `pid_id` int(10) unsigned NOT NULL auto_increment,
+  `message_id` int(10) unsigned NOT NULL default '0',
+  `set_id` varchar(4) default NULL,
+  `external_id` varchar(20) default NULL,
+  `internal_id` varchar(20) NOT NULL default '',
+  `alternate_id` varchar(20) default NULL,
+  `patient_name` varchar(48) NOT NULL default '',
+  `mother_maiden_name` varchar(48) default NULL,
+  `date_of_birth` datetime default NULL,
+  `sex` char(1) default NULL,
+  `patient_alias` varchar(48) default NULL,
+  `race` char(1) default NULL,
+  `patient_address` varchar(106) default NULL,
+  `country_code` varchar(4) default NULL,
+  `home_number` varchar(40) default NULL,
+  `work_number` varchar(40) default NULL,
+  `language` varchar(60) default NULL,
+  `marital_status` char(1) default NULL,
+  `religion` char(3) default NULL,
+  `patient_account_number` varchar(20) default NULL,
+  `ssn_number` varchar(16) default NULL,
+  `driver_license` varchar(25) default NULL,
+  `mother_identifier` varchar(20) default NULL,
+  `ethnic_group` char(3) default NULL,
+  `birth_place` varchar(60) default NULL,
+  `multiple_birth_indicator` char(2) default NULL,
+  `birth_order` char(2) default NULL,
+  `citizenship` varchar(4) default NULL,
+  `veteran_military_status` varchar(60) default NULL,
+  `nationality` varchar(80) default NULL,
+  `patient_death_date_time` datetime default NULL,
+  `patient_death_indicator` char(1) default NULL,
+  `note` text,
+  PRIMARY KEY  (`pid_id`)
+) TYPE=MyISAM;
+ 
+ 
+
+
 create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
 create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
 create index  billingmaster_billing_no on billingmaster (billing_no);
