@@ -46,7 +46,7 @@
 <!--
 function setfocus() {
         window.focus();
-        window.resizeTo(650,370);
+        window.resizeTo(650,400);
 	document.forms[0].xml_research1.focus();
 	document.forms[0].xml_research1.select();
 }
@@ -102,7 +102,7 @@ function openNewPage(vheight,vwidth,varpage) {
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="setfocus()">
-<table width="100%" border="0" cellspacing="0" cellpadding="0" height="250">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" >
 <tr>
     <td>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -118,95 +118,75 @@ function openNewPage(vheight,vwidth,varpage) {
     <td>
         <html:form action="/oscarResearch/oscarDxResearch/dxResearchUpdateQuickList.do">
         <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#EEEEFF" height="200">
-        <tr class="heading">
-            <td class="heading">Coding System: <select name="codingSys" style="width:80px">
-                                                    <option value="ICHPPC">ICHPPC</option>
-                                               </select>
+        <tr>
+            <td class="heading"><bean:message key="oscarResearch.oscarDxResearch.codingSystem"/>: <bean:write name="codingSystem"/>
             </td>
-            <td></td>
-            <td>
-                Quick List Items of <bean:write name="quickListName"/>
+            <td class="heading"></td>
+            <td class="heading">
+                <bean:message key="oscarResearch.oscarDxResearch.quickListItemsOf"/> <bean:write name="quickListName"/>
                 <input type="hidden" name="quickListName" value="<bean:write name="quickListName"/>"/>
             </td>
         </tr>
+        <tr>
+            <td colspan="3"><html:errors/></td>
+        </tr>
         <tr> 
-                <td width="40%" valign="top"> 
-
-                <table width="100%" border="0" cellspacing="0" cellpadding="2" height="200">                    
-                    <tr>
-                        <td><html:errors/></td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research1" size="30">                            
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research2" size="30">
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research3" size="30">
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research4" size="30">
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td>
-                            <input type="text" name="xml_research5" size="30">
-                        </td>
-                    </tr>
+            <td width="40%" valign="top"> 
+                <table width="100%" border="0" cellspacing="0" cellpadding="2" height="200">
+                    <tr><td><html:text property="xml_research1" size="30"/></td></tr>
+                    <tr><td><html:text property="xml_research2" size="30"/></td></tr>
+                    <tr><td><html:text property="xml_research3" size="30"/></td></tr>
+                    <tr><td><html:text property="xml_research4" size="30"/></td></tr>
+                    <tr><td><html:text property="xml_research5" size="30"/></td></tr>
                     <tr> 
                         <td>                             
-                            <input type="button" name="button" class=mbttn value="Code Search" onClick="javascript: ResearchScriptAttach();")>                            
+                            <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>" onClick="javascript: ResearchScriptAttach();")>                            
                         </td>
                     </tr>                    
-            </table>
-    </td>
-    <td>
-        <table>
-            <tr>
-                <td>
-                    <input type="hidden" name="forward" value="none"/>
-                    <input type="button" name="button" class=mbttn style="width:80" value="Add >>" onClick="javascript: submitform('add');">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="button" name="button" class=mbttn style="width:80" value="<< Remove" onClick="javascript: submitform('remove');">
-                </td>
-            </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <input type="hidden" name="forward" value="none"/>
+                            <input type="button" name="button" class=mbttn style="width:80" value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/> >>" onClick="javascript: submitform('add');">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="button" name="button" class=mbttn style="width:80" value="<< <bean:message key="oscarResearch.oscarDxResearch.btnRemove"/>" onClick="javascript: submitform('remove');">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td valign="top">
+                <table>
+                    <tr>
+                        <td>
+                            <html:select property="quickListItems" style="width:200px" size="10" multiple="true">
+                                <logic:iterate id="qlItems" name="allQuickListItems" property="dxQuickListItemsVector">
+                                    <option value="<bean:write name="qlItems" property="dxSearchCode" />" ><bean:write name="qlItems" property="description" /></option>
+                                </logic:iterate>
+                            </html:select>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>    
+            <td><input type="button" class="mbttn" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>    
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
         </table>
-    </td>
-    <td valign="top">
-        <table>
-            <tr>
-                <td>
-                    <html:select property="quickListItems" style="width:200px" size="10" multiple="true">
-                        <logic:iterate id="qlItems" name="allQuickListItems" property="dxQuickListItemsVector">
-                            <option value="<bean:write name="qlItems" property="dxSearchCode" />" ><bean:write name="qlItems" property="description" /></option>
-                        </logic:iterate>
-                    </html:select>
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
-<tr>
-    <td>&nbsp;</td>
-</tr>
-<tr>    
-    <td><input type="button" class="mbttn" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>    
-</tr>
-<tr>
-    <td>&nbsp;</td>
-</tr>
+        </html:form>
+        </td>
+    </tr>
 </table>
-</html:form>
 </body>
 </html:html>

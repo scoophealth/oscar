@@ -34,7 +34,7 @@
 <html:html locale="true">
 <head>
 <title>
-dxResearch - Customize Disease Registry Quick List
+<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.title"/>
 </title>
 <style type="text/css">
 body{
@@ -56,41 +56,38 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 function setfocus(){
     window.focus();
-    window.resizeTo(450,150);
+    window.resizeTo(450,220);
 }
 </script>
 </head>
 
-<link rel="stylesheet" type="text/css" href="../../oscarEncounter/styles.css">
+<link rel="stylesheet" type="text/css" href="dxResearch.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="setfocus();">
 <html:errors/>
-<table>
-    <tr>
-    <td class=Title colspan="2">Customize Disease Registry Quick List</td>
+<table width="100%" bgcolor="#EEEEFF">
+    <tr bgcolor="#000000"> 
+        <td class="subject" colspan="2">
+        &nbsp;&nbsp;&nbsp;<bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch"/>
+        </td>
     </tr>
     <tr>
-        <td >
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupPage(300,1000,'dxResearchNewQuickList.jsp')" class="messengerButtons">Add New Quick List</a>
-            </td></tr></table>
+    <td class=heading colspan="2"><bean:message key="oscarResearch.oscarDxResearch.dxCustomization.title"/></td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr>
+        <td valign="center">
+            <input type="button" class="mbttn" style="width:180px" onClick="popupPage(230,600,'dxResearchNewQuickList.jsp')" value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.addNewQuickList"/>"/>            
         </td>
-        <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupPage(300,1000,'dxResearchLoadQuickList.do')" class="messengerButtons">Edit Exisiting Quick List</a>
-            </td></tr></table>
+        <td valign="center">
+            <input type="button" class="mbttn" style="width:180px" onClick="popupPage(230,600,'dxResearchLoadQuickList.do')" value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.editQuickList"/>"/>
         </td>
     </tr>
     <tr><td></td></tr>
     <tr>
        <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-            <a href="javascript:window.close()" class="messengerButtons"><bean:message key="global.btnClose"/></a>
-            </td></tr></table>
+            <input type="button" class="mbttn" onClick="javascript:window.close()" value="<bean:message key="global.btnClose"/>"/>            
         </td>
     </tr>
 </table>
 </body>
 </html:html>
-                             
-                                   
-                                

@@ -35,7 +35,7 @@
 <html:html locale="true">
 <head>
 <title>
-dxResearch - Select Quick List
+<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.selectQuickList"/>
 </title>
 
 <script type="text/javascript">
@@ -51,13 +51,13 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 function setfocus(){
     window.focus();
-    window.resizeTo(600,230);
+    window.resizeTo(450,220);
 }
 </script>
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="setfocus()">
+<body class="BodyStyle" vlink="#0000FF" rightmargin="0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="setfocus()">
 <!--  -->    
     <html:form action="/oscarResearch/oscarDxResearch/dxResearchLoadQuickListItems.do">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -74,10 +74,10 @@ function setfocus(){
 </tr>
 <tr>
     <td>
-        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="100">
+        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="125">
         <tr> 
             <td align="left">
-                <bean:message key="oscarEncounter.oscarMeasurements.SelectMeasurementGroup.selectGroup"/>                                        
+                <bean:message key="oscarResearch.oscarDxResearch.dxCustomization.pleaseSelectAQuickList"/>                                        
                 <html:select property="quickListName" style="width:200px">
                     <logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector">
                         <option value="<bean:write name="quickLists" property="quickListName" />" <bean:write name="quickLists" property="lastUsed" />><bean:write name="quickLists" property="quickListName" /></option>
