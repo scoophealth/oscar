@@ -104,6 +104,8 @@ public class BillingSaveBillingAction extends Action {
         if (bean.getBillingType().equals("DONOTBILL")){
             bean.setBillingType("MSP");  //RESET this to MSP to get processed
             billingAccountStatus = 'N';           
+        }else if  (bean.getBillingType().equals("WCB")){            
+            billingAccountStatus = 'W';           
         }
         
         //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
@@ -210,7 +212,7 @@ public class BillingSaveBillingAction extends Action {
 
                        sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,"
                            + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, "
-                           + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment,mva_claim_code, icbc_claim_no) "
+                           + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment,mva_claim_code, icbc_claim_no,facility_no,facility_sub_no) "
                            + "values ('\\N',"
                            +"'"+ billingid+"',"
                            +"NOW(),"  //CURRENT_TIMESTAMP
@@ -253,7 +255,9 @@ public class BillingSaveBillingAction extends Action {
                            +"'" + bean.getCorrespondenceCode()+"',"  //correspondence code
                            +"'" + bean.getShortClaimNote()    +"',"   //claim short comment
                            +"'" + bean.getMva_claim_code()    +"',"
-                           +"'" + bean.getIcbc_claim_no()     +"'"
+                           +"'" + bean.getIcbc_claim_no()     +"',"
+                           +"'" + bean.getFacilityNum()       +"',"
+                           +"'" + bean.getFacilitySubNum()    +"'"
                            +")";
                        try {
                            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -283,7 +287,7 @@ public class BillingSaveBillingAction extends Action {
                        sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,"
                        + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, "
                        + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment, "
-                       + "oin_insurer_code, oin_registration_no, oin_birthdate, oin_first_name, oin_second_name, oin_surname,oin_sex_code, oin_address, oin_address2, oin_address3, oin_address4, oin_postalcode, mva_claim_code, icbc_claim_no) "
+                       + "oin_insurer_code, oin_registration_no, oin_birthdate, oin_first_name, oin_second_name, oin_surname,oin_sex_code, oin_address, oin_address2, oin_address3, oin_address4, oin_postalcode, mva_claim_code, icbc_claim_no,facility_no,facility_sub_no) "
                        + "values ('\\N'," +
                        "'"+ billingid+"'," +
                        "NOW()," +  //NOW
@@ -336,10 +340,12 @@ public class BillingSaveBillingAction extends Action {
                        "'"  + bean.getPatientAddress2()   + "'," +
                        "''," + //oin_address3
                        "''," + //oin_address3
-                       "'"  + bean.getPatientPostal()     +"'," +
+                       "'"  + bean.getPatientPostal()     +"',"  +
                        "'"  + bean.getMva_claim_code()    + "'," +
-                       "'"  + bean.getIcbc_claim_no()     + "" +
-                       "')";   
+                       "'"  + bean.getIcbc_claim_no()     + "'," +
+                       "'"  + bean.getFacilityNum()       + "'," +
+                       "'"  + bean.getFacilitySubNum()    + "'"  +
+                       ")";   
 
                        try {                                                
                            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -410,6 +416,8 @@ public class BillingSaveBillingAction extends Action {
         ActionForward af = mapping.findForward("success");
         if (frm.getSubmit().equals("Another Bill")){
            af = mapping.findForward("anotherBill");
+        } else if ( frm.getSubmit().equals("Print Receipt")){
+           af = new ActionForward("/billing/CA/BC/billingView.do?billing_no="+billingid+"&receipt=yes");           
         }
         return af;//(mapping.findForward("success"));
     }
