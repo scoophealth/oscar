@@ -48,7 +48,9 @@
 
 <head>
 <title>
-<bean:write name="title"/>
+<logic:present name="title">
+<bean:write name="title"/></td>  
+</logic:present> 
 </title>
 <html:base/>
 <style type="text/css">
@@ -102,7 +104,9 @@
                                 <td>                              
                                     <tr>
                                         <th align="left" class="subTitles" width="600">
-                                            <bean:write name="title"/>
+                                            <logic:present name="title">
+                                            <bean:write name="title"/></td>  
+                                            </logic:present> 
                                         </th>
                                     </tr>                                   
                                     <logic:present name="messages">
