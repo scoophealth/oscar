@@ -12,7 +12,7 @@
     <measurement> 
 	<type>BP</type> 
 	<typeDesc>Blood Pressure</typeDesc>
-	<typeDisplayName>Blood Pressure</typeDisplayName>
+	<typeDisplayName>BP</typeDisplayName>
 	<measuringInstrc>Sitting Position (nnn/nnn) Target:&lt;130/80 Interval:3mo.</measuringInstrc>
 	<validationRule>
 	    <name>Blood Pressure</name>
@@ -22,8 +22,8 @@
     <measurement> 
 	<type>HT</type>
 	<typeDesc>Height</typeDesc>
-	<typeDisplayName>Height</typeDisplayName>
-	<measuringInstrc>in cm (nnn) Range:0-300 Interval:3mo.</measuringInstrc>
+	<typeDisplayName>Ht</typeDisplayName>
+	<measuringInstrc>in cm (nnn) Range:0-300</measuringInstrc>
 	<validationRule>
 	   <name>Numeric Value: 0 to 300</name>
 	   <minValue>0</minValue>
@@ -34,7 +34,7 @@
      <measurement>
         <type>WT</type>
         <typeDesc>Weight</typeDesc>
-        <typeDisplayName>Weight</typeDisplayName>
+        <typeDisplayName>Wt</typeDisplayName>
         <measuringInstrc>in kg (nnn.n) Range:0-300 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 300</name>
@@ -44,9 +44,21 @@
         </validationRule>
      </measurement>
      <measurement>
+        <type>WHR</type>
+        <typeDesc>Waist Hip Ratio</typeDesc>
+        <typeDisplayName>Waist:Hip</typeDisplayName>
+        <measuringInstrc>Range:0.5-2 Interval:3mo.</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0.5 to 2</name>
+           <minValue>0.5</minValue>
+           <maxValue>2</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
         <type>WC</type>
         <typeDesc>Waist Circumference</typeDesc>
-        <typeDisplayName>Waist Circumference</typeDisplayName>
+        <typeDisplayName>Waist Circ.</typeDisplayName>
         <measuringInstrc>in cm (nnn) Range:40-500 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 40 to 500</name>
@@ -58,7 +70,7 @@
      <measurement>
         <type>HC</type>
         <typeDesc>Hip Circumference</typeDesc>
-        <typeDisplayName>Hip Circumference</typeDisplayName>
+        <typeDisplayName>Hip Circ.</typeDisplayName>
         <measuringInstrc>in cm (nnn) Range:40-700 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 40 to 700</name>
@@ -70,7 +82,7 @@
      <measurement>
         <type>HR</type>
         <typeDesc>Heart Rate</typeDesc>
-        <typeDisplayName>Heart Rate</typeDisplayName>
+        <typeDisplayName>P</typeDisplayName>
         <measuringInstrc>in bpm (nnn) Range:40-180</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 40 to 180</name>
@@ -299,7 +311,7 @@
         <type>SmkS</type>
         <typeDesc>Cigarette Smoking Status</typeDesc>
         <typeDisplayName>Cigarette Smoking Status</typeDisplayName>
-        <measuringInstrc>Average cigarettes per day (nn) Range:0-80</measuringInstrc>
+        <measuringInstrc>[cig/day 0-80]</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 80</name>
            <minValue>0</minValue>
@@ -310,8 +322,8 @@
      <measurement>
         <type>SmkH</type>
         <typeDesc>Cigarette Smoking History</typeDesc>
-        <typeDisplayName>Cigarette Smoking Status</typeDisplayName>
-        <measuringInstrc>Cumulative pack years (nnn) Range:0-150</measuringInstrc>
+        <typeDisplayName>Cigarette Smoking History</typeDisplayName>
+        <measuringInstrc>[Cum. pack yrs 0-150]</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 150</name>
            <minValue>0</minValue>
@@ -333,7 +345,7 @@
         <type>Exer</type>
         <typeDesc>Exercise</typeDesc>
         <typeDisplayName>Exercise</typeDisplayName>
-        <measuringInstrc>Minutes of moderate or vigorous exercise per week (nnnn) Range:0-6720 Target:&gt;240 Interval:3mo.</measuringInstrc>
+        <measuringInstrc>[min/week 0-1200]</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 6720</name>
            <minValue>0</minValue>
@@ -345,7 +357,7 @@
         <type>Diet</type>
         <typeDesc>Diet</typeDesc>
         <typeDisplayName>Diet</typeDisplayName>
-        <measuringInstrc>Servings of fruits and vegetables per day (nn) Range:0-20 Interval:3mo.</measuringInstrc>
+        <measuringInstrc>[fruit and veg/day 0-20]</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 20</name>
            <minValue>0</minValue>
@@ -356,7 +368,7 @@
      <measurement>
         <type>DpSc</type>
         <typeDesc>Depression Screen</typeDesc>
-        <typeDisplayName>Depression Screen</typeDisplayName>
+        <typeDisplayName>Feeling Sad, blue or depressed for 2 weeks or more</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -366,7 +378,7 @@
      <measurement>
         <type>StSc</type>
         <typeDesc>Stress Screen</typeDesc>
-        <typeDisplayName>Stress Screen</typeDisplayName>
+        <typeDisplayName>Several periods of irritability, feeling filled with anxiety, or difficulty sleeping b/c of stress</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -376,7 +388,7 @@
      <measurement>
         <type>LcCt</type>
         <typeDesc>Locus of Control Screen</typeDesc>
-        <typeDisplayName>Locus of Control Screen</typeDisplayName>
+        <typeDisplayName>Feeling lack of control over daily life</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -386,7 +398,7 @@
      <measurement>
         <type>MedG</type>
         <typeDesc>Medication adherence general problem</typeDesc>
-        <typeDisplayName>Medication adherence general problem</typeDisplayName>
+        <typeDisplayName>Any missed days or doses of meds</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -396,7 +408,7 @@
      <measurement>
         <type>MedN</type>
         <typeDesc>Medication adherence negative beliefs</typeDesc>
-        <typeDisplayName>Medication adherence negative beliefs</typeDisplayName>
+        <typeDisplayName>Concerns about side effects or medication is not working</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -406,7 +418,7 @@
      <measurement>
         <type>MedR</type>
         <typeDesc>Medication adherence recall barriers</typeDesc>
-        <typeDisplayName>Medication adherence recall barriers</typeDisplayName>
+        <typeDisplayName>Difficulty remembering to take meds</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -416,7 +428,7 @@
      <measurement>
         <type>MedA</type>
         <typeDesc>Medication adherence access barriers</typeDesc>
-        <typeDisplayName>Medication adherence access barriers</typeDisplayName>
+        <typeDisplayName>Difficulty affording meds or getting refills on time</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
