@@ -48,7 +48,7 @@ Waiting List
 function goToPage(){
     window.location = '../oscarWaitingList/SetupDisplayWaitingList.do?waitingListId=' + document.forms[0].selectedWL.options[document.forms[0].selectedWL.selectedIndex].value
 }
-function popupPage(ctr, patientName, startDate, vheight,vwidth,varpage) { 
+function popupPage(ctr, patientName, demographicNo, startDate, vheight,vwidth,varpage) { 
   var nbPatients = "<bean:write name="nbPatients"/>";  
   if(nbPatients>1){    
     var selected = document.forms[0].selectedProvider[ctr].options[document.forms[0].selectedProvider[ctr].selectedIndex].value;
@@ -56,7 +56,7 @@ function popupPage(ctr, patientName, startDate, vheight,vwidth,varpage) {
   else{
     var selected = document.forms[0].selectedProvider.options[document.forms[0].selectedProvider.selectedIndex].value;
   }
-  var page = varpage + '&provider_no=' + selected + '&startDate=' + startDate;
+  var page = varpage + '&provider_no=' + selected + '&startDate=' + startDate + '&demographic_no=' + demographicNo + '&demographic_name=' + patientName;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
   var popup=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
   if (popup != null) {
@@ -77,9 +77,11 @@ function popupPage(ctr, patientName, startDate, vheight,vwidth,varpage) {
             </td>
             <td class="MainTableTopRowRightColumn" width="400">
                 <table class="TopStatusBar" >                 
-                    <tr>                         
+                    <tr>    
+                        <td>Current List: <logic:present name="waitingListName"><bean:write name="waitingListName"/></logic:present></td>
                         <td>Please Select a Waiting List:
                             <html:select property="selectedWL">
+                                <option value=""> </option>
                                 <html:options collection="allWaitingListName" property="id" labelProperty="waitingListName"/>
                             </html:select>                        
                             <INPUT type="button" onClick="goToPage()" value="Generate Report">                            
@@ -126,10 +128,10 @@ function popupPage(ctr, patientName, startDate, vheight,vwidth,varpage) {
                                         <td width="100"><bean:write name="waitingListBean" property="note" /></td>
                                         <td width="100"><bean:write name="waitingListBean" property="onListSince" /></td>
                                         <td width="250" nowrap>
-                                            <html:select property="selectedProvider">
+                                            <html:select property="selectedProvider">                                                
                                                 <html:options collection="allProviders" property="providerID" labelProperty="providerName"/>
                                             </html:select>
-                                            <a href=# onClick ="popupPage(<%=ctr%>,'<bean:write name="waitingListBean" property="patientName" />','<bean:write name="today"/>',400,780,'../schedule/scheduleflipview.jsp?originalpage=../oscarWaitingList/DisplayWaitingList.jsp');return false;">Make Appointment</a>
+                                            <a href=# onClick ="popupPage(<%=ctr%>,'<bean:write name="waitingListBean" property="patientName" />','<bean:write name="waitingListBean" property="demographicNo"/>','<bean:write name="today"/>',400,780,'../schedule/scheduleflipview.jsp?originalpage=../oscarWaitingList/DisplayWaitingList.jsp');return false;">Make Appointment</a>
                                         </td>
                                     </tr>                        
                                     </logic:iterate>                                    
