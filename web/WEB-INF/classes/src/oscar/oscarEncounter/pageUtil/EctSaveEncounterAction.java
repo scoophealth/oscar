@@ -67,10 +67,15 @@ public class EctSaveEncounterAction extends Action {
         
         try {  // save enc. window sizes
             DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-            String s = "update encounterWindow set rowOneSize="+httpservletrequest.getParameter("rowOneSize")+
-            ", rowTwoSize="+httpservletrequest.getParameter("rowTwoSize")+
-            ", presBoxSize="+httpservletrequest.getParameter("presBoxSize")+
-            ", rowThreeSize="+httpservletrequest.getParameter("rowThreeSize");
+            String s = "delete from encounterWindow where provider_no='"+sessionbean.providerNo+"'";
+            dbhandler.RunSQL(s);
+            s = "insert into encounterWindow (provider_no, rowOneSize, rowTwoSize, presBoxSize, rowThreeSize) values ('"+
+            sessionbean.providerNo+"', '"+
+            httpservletrequest.getParameter("rowOneSize")+"', '"+
+            httpservletrequest.getParameter("rowTwoSize")+"', '"+
+            httpservletrequest.getParameter("presBoxSize")+"', '"+
+            httpservletrequest.getParameter("rowThreeSize")+"')";
+            System.out.println("DB query: "+s);
             dbhandler.RunSQL(s);
         } catch(Exception e) {
             e.printStackTrace(System.out);

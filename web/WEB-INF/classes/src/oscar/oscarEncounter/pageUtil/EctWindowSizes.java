@@ -20,13 +20,13 @@ public class EctWindowSizes {
     public EctWindowSizes() {
     }
     
-    public static Properties getWindowSizes() {
+    public static Properties getWindowSizes(String provNo) {
         Properties props = new Properties();
         
         try {
 
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "select * from encounterWindow";
+            String sql = "select * from encounterWindow where provider_no='"+provNo+"'";
             ResultSet rs = db.GetSQL(sql);
             
             rs.next();

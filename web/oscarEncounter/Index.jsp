@@ -61,7 +61,7 @@
   MDSResultsData labResults =  new MDSResultsData();    
   labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
-  Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes();
+  Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
 %>
 
 <html:html locale="true">
