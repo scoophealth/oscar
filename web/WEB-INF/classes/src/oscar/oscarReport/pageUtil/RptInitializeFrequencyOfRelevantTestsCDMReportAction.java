@@ -38,7 +38,7 @@ import org.apache.commons.validator.*;
 import org.apache.struts.util.MessageResources;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.OscarProperties;
 
 
@@ -53,13 +53,18 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         String requestId = "";
 
         try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                
-                int nbPatient = getNbPatientSeen(db, frm);
-                ArrayList messages = getFrequenceOfTestPerformed(db, frm);
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);  
+                if(!validate(frm, request)){                    
+                    return (new ActionForward(mapping.getInput()));
+                }
+                
+                ArrayList reportMsg = new ArrayList();
+                getNbPatientSeen(db, frm, reportMsg);  
+                getFrequenceOfTestPerformed(db, frm, reportMsg);
                 MessageResources mr = getResources(request);
                 String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
                 request.setAttribute("title", title);
-                request.setAttribute("messages", messages);
+                request.setAttribute("messages", reportMsg);
                 
                 /* select the correct db specific command */
                 String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
@@ -89,11 +94,50 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
     }
 
      /*****************************************************************************************
+     * validate the input date
+     *
+     * @return boolean
+     ******************************************************************************************/ 
+    private boolean validate(RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, HttpServletRequest request){
+        EctValidation ectValidation = new EctValidation();                    
+        ActionErrors errors = new ActionErrors();        
+        String[] startDateD = frm.getStartDateD();
+        String[] endDateD = frm.getEndDateD();         
+        int[] exactly = frm.getExactly(); 
+        int[] moreThan = frm.getMoreThan();         
+        int[] lessThan = frm.getLessThan();
+        String[] frequencyCheckbox = frm.getFrequencyCheckbox();
+        boolean valid = true;
+        
+        if (frequencyCheckbox!=null){
+       
+            for(int i=0; i<frequencyCheckbox.length; i++){
+                int ctr = Integer.parseInt(frequencyCheckbox[i]);                
+                String startDate = startDateD[ctr];
+                String endDate = endDateD[ctr];                                    
+                String measurementType = (String) frm.getValue("measurementTypeD"+ctr);                                    
+                
+                if(!ectValidation.isDate(startDate)){                       
+                    errors.add(startDate, new ActionError("errors.invalidDate", measurementType));
+                    saveErrors(request, errors);
+                    valid = false;
+                }
+                if(!ectValidation.isDate(endDate)){                       
+                    errors.add(endDate, new ActionError("errors.invalidDate", measurementType));
+                    saveErrors(request, errors);
+                    valid = false;
+                }
+            }
+        }
+        return valid;
+    }   
+
+     /*****************************************************************************************
      * get the number of Patient seen during aspecific time period
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/  
-    private int getNbPatientSeen(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm){
+    private int getNbPatientSeen(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList messages){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
         String endDateA = frm.getEndDateA();
@@ -106,7 +150,10 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 System.out.println("SQL Statement: " + sql);
                 rs.last();
                 nbPatient = rs.getRow();
-                System.out.println("There are " + Integer.toString(nbPatient) + " patients seen from " + startDateA + " to " + endDateA);
+                String msg = "There are " + Integer.toString(nbPatient) + " patients seen from " + startDateA + " to " + endDateA;
+                System.out.println(msg);
+                messages.add(msg);
+                messages.add("");
                 rs.close();
 
             }
@@ -123,14 +170,13 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private ArrayList getFrequenceOfTestPerformed(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm){
+    private ArrayList getFrequenceOfTestPerformed(DBHandler db, RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, ArrayList percentageMsg){
         String[] startDateD = frm.getStartDateD();
         String[] endDateD = frm.getEndDateD();         
         int[] exactly = frm.getExactly(); 
         int[] moreThan = frm.getMoreThan();         
         int[] lessThan = frm.getLessThan();
-        String[] frequencyCheckbox = frm.getFrequencyCheckbox();
-        ArrayList percentageMsg = new ArrayList();
+        String[] frequencyCheckbox = frm.getFrequencyCheckbox();      
         
         if (frequencyCheckbox!=null){
             try{

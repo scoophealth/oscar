@@ -38,7 +38,7 @@ import org.apache.commons.validator.*;
 import org.apache.struts.util.MessageResources;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.OscarProperties;
 
 
@@ -53,13 +53,19 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         String requestId = "";
 
         try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                
-                int nbPatient = getNbPatientSeen(db, frm);                
-                ArrayList messages = getInAbnormalRangePercentage(db, frm);
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);  
+                if(!validate(frm, request)){
+                    System.out.println("the form is invalid");
+                    return (new ActionForward(mapping.getInput()));
+                }
+                
+                ArrayList reportMsg = new ArrayList();
+                getNbPatientSeen(db, frm, reportMsg);  
+                getInAbnormalRangePercentage(db, frm, reportMsg);
                 MessageResources mr = getResources(request);
                 String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientInAbnormalRange");
                 request.setAttribute("title", title);
-                request.setAttribute("messages", messages);
+                request.setAttribute("messages", reportMsg);
                 
                 /* select the correct db specific command */
                 String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
@@ -88,12 +94,118 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         return mapping.findForward("success");
     }
 
+    
+    
+     /*****************************************************************************************
+     * validate the input value
+     *
+     * @return boolean
+     ******************************************************************************************/ 
+    private boolean validate(RptInitializePatientsInAbnormalRangeCDMReportForm frm, HttpServletRequest request){
+        EctValidation ectValidation = new EctValidation();                    
+        ActionErrors errors = new ActionErrors();        
+        String[] startDateC = frm.getStartDateC();
+        String[] endDateC = frm.getEndDateC();         
+        String[] upperBound = frm.getUpperBound(); 
+        String[] lowerBound = frm.getLowerBound();         
+        String[] abnormalCheckbox = frm.getAbnormalCheckbox();
+        boolean valid = true;
+        
+        if (abnormalCheckbox!=null){
+       
+            for(int i=0; i<abnormalCheckbox.length; i++){
+                int ctr = Integer.parseInt(abnormalCheckbox[i]);                
+                String startDate = startDateC[ctr];
+                String endDate = endDateC[ctr];                    
+                String upper = upperBound[ctr];
+                String lower = lowerBound[ctr];
+                String measurementType = (String) frm.getValue("measurementTypeC"+ctr);                    
+                String sNumMInstrc = (String) frm.getValue("mNbInstrcsC"+ctr);
+                int iNumMInstrc = Integer.parseInt(sNumMInstrc);                                                        
+                String upperMsg = "The upper bound value of "+ measurementType;
+                String lowerMsg = "The lower bound value of " + measurementType;
+                
+                if(!ectValidation.isDate(startDate)){                       
+                    errors.add(startDate, new ActionError("errors.invalidDate", measurementType));
+                    saveErrors(request, errors);
+                    valid = false;
+                }
+                if(!ectValidation.isDate(endDate)){                       
+                    errors.add(endDate, new ActionError("errors.invalidDate", measurementType));
+                    saveErrors(request, errors);
+                    valid = false;
+                }
+                for(int j=0; j<iNumMInstrc; j++){
+                    
+                    String mInstrc = (String) frm.getValue("mInstrcsCheckboxC"+ctr+j);
+                    if(mInstrc!=null){
+                        ResultSet rs = ectValidation.getValidationType(measurementType, mInstrc);
+                        String msg = null;
+                        String regExp = null;
+                        double dMax = 0;
+                        double dMin = 0;
+                        try{
+                            if (rs.next()){
+                                dMax = rs.getDouble("maxValue");
+                                dMin = rs.getDouble("minValue");
+                                regExp = rs.getString("regularExp");
+                            }
+                            
+                            if(!ectValidation.isInRange(dMax, dMin, upper)){                       
+                                errors.add(upper, new ActionError("errors.range", upperMsg, 
+                                           Double.toString(dMin), Double.toString(dMax)));
+                                saveErrors(request, errors);
+                                valid = false;                               
+                            }
+                            else if(!ectValidation.isInRange(dMax, dMin, lower)){                       
+                                errors.add(lower, new ActionError("errors.range", lowerMsg, 
+                                           Double.toString(dMin), Double.toString(dMax)));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.matchRegExp(regExp, upper)){                        
+                                errors.add(upper,
+                                new ActionError("errors.invalid", upperMsg));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.matchRegExp(regExp, lower)){                        
+                                errors.add(lower,
+                                new ActionError("errors.invalid", lowerMsg));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.isValidBloodPressure(regExp, upper)){                        
+                                errors.add(upper,
+                                new ActionError("error.bloodPressure"));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.isValidBloodPressure(regExp, lower)){                        
+                                errors.add(lower,
+                                new ActionError("error.bloodPressure"));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                        }
+                        catch(SQLException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+        return valid;
+    }    
+
+    
      /*****************************************************************************************
      * get the number of Patients seen during aspecific time period
      *s
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private int getNbPatientSeen(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm){
+    private int getNbPatientSeen(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList messages){
         String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
         String startDateA = frm.getStartDateA();
         String endDateA = frm.getEndDateA();
@@ -105,8 +217,11 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 rs = db.GetSQL(sql);
                 System.out.println("SQL Statement: " + sql);
                 rs.last();
-                nbPatient = rs.getRow();
-                System.out.println("There are " + Integer.toString(nbPatient) + " patients seen from " + startDateA + " to " + endDateA);
+                nbPatient = rs.getRow();                
+                String msg = "There are " + Integer.toString(nbPatient) + " patients seen from " + startDateA + " to " + endDateA;
+                System.out.println(msg);
+                messages.add(msg);
+                messages.add("");
                 rs.close();
 
             }
@@ -123,13 +238,12 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
      *
      * @return ArrayList which contain the result in String format
      ******************************************************************************************/      
-    private ArrayList getInAbnormalRangePercentage(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm){
+    private ArrayList getInAbnormalRangePercentage(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList metGLPercentageMsg){
         String[] startDateC = frm.getStartDateC();
         String[] endDateC = frm.getEndDateC();         
         String[] upperBound = frm.getUpperBound(); 
         String[] lowerBound = frm.getLowerBound();         
-        String[] abnormalCheckbox = frm.getAbnormalCheckbox();
-        ArrayList metGLPercentageMsg = new ArrayList();
+        String[] abnormalCheckbox = frm.getAbnormalCheckbox();        
         RptCheckGuideline checkGuideline = new RptCheckGuideline();
         
         if (abnormalCheckbox!=null){
