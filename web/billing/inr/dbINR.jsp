@@ -28,17 +28,17 @@
   //operation available to the client - dboperation
   String orderby="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
-  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1");
+  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1")+", ";
   if(request.getParameter("limit2")!=null) {
     limit2=request.getParameter("limit2");
-    limit="limit "+limit2+" offset "+limit1;
+    limit="limit "+limit1+limit2;
   }
   
   
   String [][] dbQueries=new String[][] {
     {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
-    {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != ''  and provider_no like ? order by last_name"},
-     {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no != '' order by last_name"},
+    {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no || null and provider_no like ? order by last_name"},
+     {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no || null order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
     {"search_provider_name", "select * from provider where provider_no=?"},
     {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
