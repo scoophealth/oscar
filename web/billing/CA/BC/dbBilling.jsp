@@ -146,7 +146,8 @@
     {"search_bill_master", "select * from billingmaster where billing_no=? "},
     
     //
-    {"select_user_bill_report_wcb", "SELECT * FROM billingmaster JOIN teleplanC12 ON CAST(teleplanC12.t_officefolioclaimno As unsigned)=billingmaster.billingmaster_no, demographic, wcb WHERE billingmaster.demographic_no=demographic.demographic_no AND billingmaster.billing_no=wcb.billing_no AND billingmaster.billingmaster_no=?"},
+    {"select_user_bill_report_wcb", "SELECT * FROM billingmaster LEFT JOIN teleplanC12 ON CAST(teleplanC12.t_officefolioclaimno As unsigned)=billingmaster.billingmaster_no, demographic, wcb WHERE billingmaster.demographic_no=demographic.demographic_no AND billingmaster.billing_no=wcb.billing_no AND billingmaster.billingmaster_no=?"},
+    {"select_wcb_from_ID","SELECT * FROM billingmaster bm,demographic d, wcb w WHERE bm.demographic_no=d.demographic_no AND bm.billing_no=w.billing_no AND w.ID=?"},
     {"select_user_bill_report", "SELECT * FROM billing, billingmaster JOIN teleplanC12 ON CAST(teleplanC12.t_officefolioclaimno As unsigned)=billingmaster.billingmaster_no, demographic WHERE billing.billing_no=billingmaster.billing_no AND billingmaster.demographic_no = demographic.demographic_no AND teleplanC12.status = 'O' AND billingmaster.billingmaster_no=?"},
     {"search_reportprovider","SELECT p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
     /** Billing WCB Correction **/
