@@ -114,10 +114,18 @@
         var popup=window.open(varpage, "<bean:message key="global.immunizations"/>", windowprops);
     }
 
-    function popUpMeasurements(vheight,vwidth,varpage) {
-        var page = varpage;
-        windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-        var popup=window.open(varpage, "<bean:message key="global.measurements.general"/>", windowprops);
+    function popUpMeasurements(vheight,vwidth,varpage) { //open a new popup window
+      if(varpage!= 'null'){  
+          var page = "./oscarMeasurements/SetupMeasurements.do?groupName=" + varpage;
+          windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+          var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+          if (popup != null) {
+            if (popup.opener == null) {
+              popup.opener = self;
+              alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
+            }
+          }
+      }
     }
 
     function popupStart1(vheight,vwidth,varpage) {
@@ -710,7 +718,7 @@ border-right: 2px solid #cfcfcf;
                 <tr>
                     <td>
                         <form name="measurementGroupForm">
-                        <select name="measurementGroupSelect" class="ControlSelect" onchange="popupPage(500,1000,'./oscarMeasurements/SetupMeasurements.do?groupName='+document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
+                        <select name="measurementGroupSelect" class="ControlSelect" onchange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
                          <%                            
                             for(int j=0; j<bean.measurementGroupNames.size(); j++) {
