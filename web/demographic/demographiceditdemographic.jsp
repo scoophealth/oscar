@@ -112,6 +112,24 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
 }
 
 function checkTypeIn() {
+  var dob = document.titlesearch.keyword; typeInOK = false;
+  
+  if(document.titlesearch.search_mode[2].checked) {
+    if(dob.value.length==8) {
+      dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
+      //alert(dob.value.length);
+      typeInOK = true;
+    }
+    if(dob.value.length != 10) {
+      alert("<bean:message key="demographic.search.msgWrongDOB"/>");
+      typeInOK = false;
+    }
+    
+    return typeInOK ;
+  }
+}
+
+function checkTypeInEdit() {
   var typeInOK = false;
     if(document.updatedelete.last_name.value!="" && document.updatedelete.first_name.value!="" && document.updatedelete.sex.value!="") {
       if(checkTypeNum(document.updatedelete.year_of_birth.value) && checkTypeNum(document.updatedelete.month_of_birth.value) && checkTypeNum(document.updatedelete.date_of_birth.value) ){
@@ -239,7 +257,7 @@ function refresh() {
 </table> 
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeIn();">
+  <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeInEdit();">
     <input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
     <tr> 
       <td align="right" title='<%=rs.getString("demographic_no")%>'> <b><bean:message key="demographic.demographiceditdemographic.formLastName"/>: </b></td>
