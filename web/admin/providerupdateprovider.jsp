@@ -112,7 +112,7 @@ function setfocus() {
     <td><input type="text" name="ohip_no" value="<%= rs.getString("ohip_no") %>"></td>
   </tr>
   <tr> 
-    <td align="right"><bean:message key="admin.provider.RmaNo"/>: </td>
+    <td align="right"><bean:message key="admin.provider.formRmaNo"/>: </td>
     <td><input type="text" name="rma_no" value="<%= rs.getString("rma_no") %>"></td>
   </tr>
   <tr> 
@@ -154,7 +154,6 @@ function setfocus() {
 			<input type="submit" name="subbutton" value=<bean:message key="admin.providerupdateprovider.btnSubmit"/>>
             <a href='admincontrol.jsp?keyword=<%=rs.getString("provider_no")%>&displaymode=Provider_Delete&dboperation=provider_delete'> 
             <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="<bean:message key="admin.providerupdateprovider.msgDeleteRecord"/>"></a> 
-            <!--input type="button" name="Button" value="<bean:message key="admin.providerupdateprovider.btnCancel"/>" onClick="onCancel()"-->
           </div>
       </td>
   </tr>
