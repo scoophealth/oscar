@@ -1,0 +1,447 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// *
+// *
+// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+// * This software is published under the GPL GNU General Public License. 
+// * This program is free software; you can redistribute it and/or 
+// * modify it under the terms of the GNU General Public License 
+// * as published by the Free Software Foundation; either version 2 
+// * of the License, or (at your option) any later version. * 
+// * This program is distributed in the hope that it will be useful, 
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+// * along with this program; if not, write to the Free Software 
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+// * 
+// * <OSCAR TEAM>
+// * This software was written for the 
+// * Department of Family Medicine 
+// * McMaster Unviersity 
+// * Hamilton 
+// * Ontario, Canada 
+// *
+// -----------------------------------------------------------------------------------------------------------------------
+package oscar.oscarReport.oscarMeasurements.pageUtil;
+
+import java.io.*;
+import java.util.*;
+import java.lang.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+import org.apache.struts.validator.*;
+import org.apache.commons.validator.*;
+import org.apache.struts.util.MessageResources;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarMessenger.util.MsgStringQuote;
+import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
+import oscar.OscarProperties;
+
+
+public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action {
+
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+ 
+        RptInitializePatientsInAbnormalRangeCDMReportForm frm = (RptInitializePatientsInAbnormalRangeCDMReportForm) form;                       
+        request.getSession().setAttribute("RptInitializePatientsInAbnormalRangeCDMReportForm", frm);        
+
+        try{
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);  
+                if(!validate(frm, request)){
+                    System.out.println("the form is invalid");
+                    return (new ActionForward(mapping.getInput()));
+                }
+                
+                ArrayList reportMsg = new ArrayList();
+                getNbPatientSeen(db, frm, reportMsg, request);  
+                getInAbnormalRangePercentage(db, frm, reportMsg, request);
+                MessageResources mr = getResources(request);
+                String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientInAbnormalRange");
+                request.setAttribute("title", title);
+                request.setAttribute("messages", reportMsg);
+                
+                /* select the correct db specific command */
+                String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
+                String dbSpecificCommand;
+                if (db_type.equalsIgnoreCase("mysql")) {
+                    dbSpecificCommand = "SELECT LAST_INSERT_ID()";
+                } 
+                else if (db_type.equalsIgnoreCase("postgresql")){
+                    dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
+                }
+                else
+                    throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+                                    
+                db.CloseConn();
+                
+        }
+        
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return mapping.findForward("success");
+    }
+
+    
+    
+     /*****************************************************************************************
+     * validate the input value
+     *
+     * @return boolean
+     ******************************************************************************************/ 
+    private boolean validate(RptInitializePatientsInAbnormalRangeCDMReportForm frm, HttpServletRequest request){
+        EctValidation ectValidation = new EctValidation();                    
+        ActionErrors errors = new ActionErrors();        
+        String[] startDateC = frm.getStartDateC();
+        String[] endDateC = frm.getEndDateC();         
+        String[] upperBound = frm.getUpperBound(); 
+        String[] lowerBound = frm.getLowerBound();         
+        String[] abnormalCheckbox = frm.getAbnormalCheckbox();
+        boolean valid = true;
+        
+        if (abnormalCheckbox!=null){
+       
+            for(int i=0; i<abnormalCheckbox.length; i++){
+                int ctr = Integer.parseInt(abnormalCheckbox[i]);                
+                String startDate = startDateC[ctr];
+                String endDate = endDateC[ctr];                    
+                String upper = upperBound[ctr];
+                String lower = lowerBound[ctr];
+                String measurementType = (String) frm.getValue("measurementTypeC"+ctr);                    
+                String sNumMInstrc = (String) frm.getValue("mNbInstrcsC"+ctr);
+                int iNumMInstrc = Integer.parseInt(sNumMInstrc);                                                        
+                String upperMsg = "The upper bound value of "+ measurementType;
+                String lowerMsg = "The lower bound value of " + measurementType;
+                
+                if(!ectValidation.isDate(startDate)){                       
+                    errors.add(startDate, new ActionError("errors.invalidDate", measurementType));
+                    saveErrors(request, errors);
+                    valid = false;
+                }
+                if(!ectValidation.isDate(endDate)){                       
+                    errors.add(endDate, new ActionError("errors.invalidDate", measurementType));
+                    saveErrors(request, errors);
+                    valid = false;
+                }
+                for(int j=0; j<iNumMInstrc; j++){
+                    
+                    String mInstrc = (String) frm.getValue("mInstrcsCheckboxC"+ctr+j);
+                    if(mInstrc!=null){
+                        ResultSet rs = ectValidation.getValidationType(measurementType, mInstrc);
+                        String msg = null;
+                        String regExp = null;
+                        double dMax = 0;
+                        double dMin = 0;
+                        try{
+                            if (rs.next()){
+                                dMax = rs.getDouble("maxValue");
+                                dMin = rs.getDouble("minValue");
+                                regExp = rs.getString("regularExp");
+                            }
+                            
+                            if(!ectValidation.isInRange(dMax, dMin, upper)){                       
+                                errors.add(upper, new ActionError("errors.range", upperMsg, 
+                                           Double.toString(dMin), Double.toString(dMax)));
+                                saveErrors(request, errors);
+                                valid = false;                               
+                            }
+                            else if(!ectValidation.isInRange(dMax, dMin, lower)){                       
+                                errors.add(lower, new ActionError("errors.range", lowerMsg, 
+                                           Double.toString(dMin), Double.toString(dMax)));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.matchRegExp(regExp, upper)){                        
+                                errors.add(upper,
+                                new ActionError("errors.invalid", upperMsg));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.matchRegExp(regExp, lower)){                        
+                                errors.add(lower,
+                                new ActionError("errors.invalid", lowerMsg));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.isValidBloodPressure(regExp, upper)){                        
+                                errors.add(upper,
+                                new ActionError("error.bloodPressure"));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                            else if(!ectValidation.isValidBloodPressure(regExp, lower)){                        
+                                errors.add(lower,
+                                new ActionError("error.bloodPressure"));
+                                saveErrors(request, errors);
+                                valid = false;
+                            }
+                        }
+                        catch(SQLException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+        return valid;
+    }    
+
+    
+     /*****************************************************************************************
+     * get the number of Patients seen during aspecific time period
+     *s
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/      
+    private int getNbPatientSeen(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList messages, HttpServletRequest request){
+        String[] patientSeenCheckbox = frm.getPatientSeenCheckbox();
+        String startDateA = frm.getStartDateA();
+        String endDateA = frm.getEndDateA();
+        int nbPatient = 0;
+        if(patientSeenCheckbox!=null){
+            try{
+                String sql = "SELECT * FROM eChart WHERE timestamp > '" + startDateA + "' AND timestamp < '" + endDateA + "'";
+                ResultSet rs;
+                rs = db.GetSQL(sql);
+                System.out.println("SQL Statement: " + sql);
+                rs.last();
+                nbPatient = rs.getRow();   
+                MessageResources mr = getResources(request);
+                String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
+                System.out.println(msg);
+                messages.add(msg);
+                messages.add("");
+                rs.close();
+
+            }
+            catch(SQLException e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        return nbPatient;
+    }    
+
+     /*****************************************************************************************
+     * get the number of Patient in the abnormal range during aspecific time period
+     *
+     * @return ArrayList which contain the result in String format
+     ******************************************************************************************/      
+    private ArrayList getInAbnormalRangePercentage(DBHandler db, RptInitializePatientsInAbnormalRangeCDMReportForm frm, ArrayList metGLPercentageMsg, HttpServletRequest request){
+        String[] startDateC = frm.getStartDateC();
+        String[] endDateC = frm.getEndDateC();         
+        String[] upperBound = frm.getUpperBound(); 
+        String[] lowerBound = frm.getLowerBound();         
+        String[] abnormalCheckbox = frm.getAbnormalCheckbox();        
+        RptCheckGuideline checkGuideline = new RptCheckGuideline();
+        MessageResources mr = getResources(request);
+        
+        if (abnormalCheckbox!=null){
+            try{
+                System.out.println("the length of abnormal range checkbox is "  + abnormalCheckbox.length);
+
+                for(int i=0; i<abnormalCheckbox.length; i++){
+                    int ctr = Integer.parseInt(abnormalCheckbox[i]);
+                    System.out.println("the value of abnormal range Checkbox is: " + abnormalCheckbox[i]);
+                    String startDate = startDateC[ctr];
+                    String endDate = endDateC[ctr];                    
+                    String upper = upperBound[ctr];
+                    String lower = lowerBound[ctr];
+                    String measurementType = (String) frm.getValue("measurementTypeC"+ctr);                    
+                    String sNumMInstrc = (String) frm.getValue("mNbInstrcsC"+ctr);
+                    int iNumMInstrc = Integer.parseInt(sNumMInstrc);                                        
+                    double nbMetGL = 0;                    
+                    double metGLPercentage = 0;
+                    ResultSet rs;
+                    String sql = "";
+                    
+                    
+                    for(int j=0; j<iNumMInstrc; j++){
+                        metGLPercentage = 0;                        
+                        nbMetGL = 0;
+                        
+                        String mInstrc = (String) frm.getValue("mInstrcsCheckboxC"+ctr+j);
+                        if(mInstrc!=null){
+                            
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate +
+                                  "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc + "'";
+                            System.out.println("SQL statement is" + sql);
+                            rs = db.GetSQL(sql);
+                            rs.last();
+                            double nbGeneral = rs.getRow();
+                            rs.close();
+                            
+                            if (measurementType.compareTo("BP")==0){
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                         + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
+                                         + "'";
+
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                while(rs.next()){
+                                    if(checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), upper, "<") &&
+                                        checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), lower, ">")){
+                                        nbMetGL++;
+                                    }
+                                }
+                                if(nbGeneral!=0){
+                                    System.out.println("the total number of patients seen: " + nbGeneral + " nb of them pass the test: " + nbMetGL);
+                                    metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                                }                                
+                                String[] param = {  startDate, 
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,
+                                                    lower,
+                                                    upper,
+                                                    Double.toString(metGLPercentage)};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param);                                 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg); 
+                            }
+                            else if (checkGuideline.getValidation(db, measurementType)==1)
+                            {
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                         + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
+                                         + "' AND dataField <" + "'" + upper + "' AND dataField >" + "'" + lower + "'";
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                rs.last();
+                                nbMetGL = rs.getRow();
+                                if(nbGeneral!=0){
+                                    metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                                }                                
+                                String[] param = {  startDate, 
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,
+                                                    lower,
+                                                    upper,
+                                                    Double.toString(metGLPercentage)};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg); 
+                            }
+                            else{
+                                sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                         + "'AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
+                                         + "'";
+                                System.out.println("SQL statement is " + sql);
+                                rs = db.GetSQL(sql);
+                                while(rs.next()){
+                                    if(checkGuideline.isYesNoMetGuideline(rs.getString("dataField"), upper)){
+                                        nbMetGL++;
+                                    }
+                                }
+                                if(nbGeneral!=0){
+                                    metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                                }
+                                String[] param = {  startDate,
+                                                    endDate,
+                                                    measurementType,
+                                                    mInstrc,                                                
+                                                    upper,
+                                                    Double.toString(metGLPercentage)};
+                                String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsIs", param); 
+                                System.out.println(msg);
+                                metGLPercentageMsg.add(msg); 
+                            }
+                                                                                                                
+                            rs.close();
+                            
+
+                                                
+                        }
+                    }
+                    
+                    //percentage of patients who are in abnormal range for the same test with all measuring instruction
+                        metGLPercentage = 0; 
+                        nbMetGL = 0;
+                        
+                        sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate 
+                              + "'AND type='"+ measurementType + "'";
+                        System.out.println("SQL statement is" + sql);
+                        rs = db.GetSQL(sql);
+                        rs.last();
+                        double nbGeneral = rs.getRow();
+                        rs.close();
+                        
+                        if (measurementType.compareTo("BP")==0){
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                     + "'AND type='"+ measurementType + "'";
+
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            while(rs.next()){
+                                if(checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), upper, "<") &&
+                                    checkGuideline.isBloodPressureMetGuideline(rs.getString("dataField"), lower, ">")){
+                                    nbMetGL++;
+                                }
+                            }
+                            
+                            if(nbGeneral!=0){
+                                metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
+                            }
+                            String[] param = {  startDate, 
+                                                endDate,
+                                                measurementType,
+                                                "",
+                                                lower,
+                                                upper,
+                                                Double.toString(metGLPercentage)};
+                            String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
+                            System.out.println(msg);
+                            metGLPercentageMsg.add(msg); 
+                        }
+                        else if (checkGuideline.getValidation(db, measurementType)==1)
+                        {
+                            sql = "SELECT * FROM measurements WHERE dateObserved >='" + startDate + "'AND dateObserved <='" + endDate
+                                     + "'AND type='"+ measurementType + "' AND dataField <=" + "'" + upper + "' AND dataField >=" + "'" + lower + "'";
+
+                            System.out.println("SQL statement is " + sql);
+                            rs = db.GetSQL(sql);
+                            rs.last();
+                            nbMetGL = rs.getRow();
+                            
+                            if(nbGeneral!=0){
+                                metGLPercentage =Math.round(nbMetGL/nbGeneral* 100);
+                            }
+                            String[] param = {  startDate, 
+                                                endDate,
+                                                measurementType,
+                                                "",
+                                                lower,
+                                                upper,
+                                                Double.toString(metGLPercentage)};
+                            String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
+                            System.out.println(msg);
+                            metGLPercentageMsg.add(msg); 
+                            }
+                                                
+                                                         
+                        rs.close();
+                        
+                        
+
+                        
+                }
+            }
+            catch(SQLException e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        else{
+            System.out.println("guideline checkbox is null");
+        }
+        return metGLPercentageMsg;
+    }
+             
+}
