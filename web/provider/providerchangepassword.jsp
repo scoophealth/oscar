@@ -80,7 +80,7 @@ function checkPwdLength() {
 <tr>
 <td width="50%" align="right"><font face="arial"><bean:message key="provider.providerchangepassword.msgChooseNew"/> <b><bean:message key="provider.providerchangepassword.formNewPassword"/>:</b></font></td>
 <td><input type=password name="mypassword" value="" size=20 maxlength=10>
-          <font size="-2">(at least 6 chars)</font></td>
+          <font size="-2">(<bean:message key="provider.providerchangepassword.msgPasswordLength"/>)</font></td>
 </tr>
 <tr>
 <td width="50%" align="right"><font face="arial"><bean:message key="provider.providerchangepassword.msgConfirm"/> <b><bean:message key="provider.providerchangepassword.formNewPassword"/>:</b></font></td>
