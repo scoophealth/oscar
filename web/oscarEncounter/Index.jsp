@@ -894,7 +894,7 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
 									<% } %>
 								</td>
                                 <td style="text-align:right" nowrap>
-				    <input type="button" style="height:20px;" value="<bean:message key="global.btnPrint"/>" onClick="javascript:popupPageK('encounterPrint.jsp');"/>
+				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="javascript:popupPageK('encounterPrint.jsp');"/>
 				    <input type="hidden"  name="btnPressed" value="">
 
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
