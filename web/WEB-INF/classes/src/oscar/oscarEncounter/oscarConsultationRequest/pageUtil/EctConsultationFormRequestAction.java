@@ -48,7 +48,7 @@ public class EctConsultationFormRequestAction extends Action {
         String urg = frm.getUrgency();
         String requestId = "";
         MsgStringQuote str = new MsgStringQuote();
-        if(submission.equals("Submit Consultation Request") || submission.equals("Submit Consultation Request And Print Preview") || submission.equals("Submit,Fax"))
+        if(submission.equals("Submit Consultation Request") || submission.equals("Submit Consultation Request And Print Preview") || submission.equals("Submit And Fax"))
         {
             try
             {
@@ -83,7 +83,7 @@ public class EctConsultationFormRequestAction extends Action {
             }
             request.setAttribute("transType", "2");
         } else
-        if(submission.equals("Update Consultation Request") || submission.equals("Update Consultation Request And Print Preview") || submission.equals("Update,Fax"))
+        if(submission.equals("Update Consultation Request") || submission.equals("Update Consultation Request And Print Preview") || submission.equals("Update And Fax"))
         {
             requestId = bean.getConsultationRequestId();
             System.out.println("request id = ".concat(String.valueOf(String.valueOf(bean.getConsultationRequestId()))));
@@ -104,7 +104,10 @@ public class EctConsultationFormRequestAction extends Action {
         if(submission.equals("Update Consultation Request And Print Preview") || submission.equals("Submit Consultation Request And Print Preview")){
             request.setAttribute("reqId", requestId);
             return mapping.findForward("print");
-        }else {
+        } else if (submission.equals("Update And Fax") || submission.equals("Submit And Fax")) {
+            request.setAttribute("reqId", requestId);
+            return mapping.findForward("fax");
+        } else {
             return mapping.findForward("success");
         }
     }
