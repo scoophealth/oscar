@@ -162,7 +162,7 @@ public class MsgSendMessageAction extends Action {
 
 	      /* Choose the right command to recover the messageid inserted above */
 	      OscarProperties prop = OscarProperties.getInstance();
-	      String db_type = prop.getProperty("db_type");
+	      String db_type = prop.getProperty("db_type").trim();
 	      if (db_type.equalsIgnoreCase("mysql")) {
 		rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
 	      } else if (db_type.equalsIgnoreCase("postgresql")) {
