@@ -66,13 +66,11 @@ public class EctMeasurementsAction extends Action {
         
         String numType = (String) frm.getValue("numType");        
         int iType = Integer.parseInt(numType);
- 
+         
         String demographicNo = null;
-        String providerNo = null;
-        if ( bean != null){
-            demographicNo = bean.getDemographicNo();
-            providerNo = bean.getCurProviderNo();
-        }
+        String providerNo = (String) session.getValue("user");
+        if ( bean != null)
+            demographicNo = bean.getDemographicNo();        
         
         MsgStringQuote str = new MsgStringQuote();       
         
