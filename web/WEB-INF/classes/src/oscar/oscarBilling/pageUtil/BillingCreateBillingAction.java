@@ -28,6 +28,10 @@ public class BillingCreateBillingAction extends Action {
     HttpServletResponse response)
     throws IOException, ServletException {
         
+        if(request.getSession().getAttribute("user") == null  ){
+            return (mapping.findForward("Logout"));
+        }
+        
         oscar.oscarBilling.pageUtil.BillingSessionBean bean;
         bean = (oscar.oscarBilling.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
         String patientNo   = bean.getPatientNo();
