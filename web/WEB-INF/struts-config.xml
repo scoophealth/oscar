@@ -1800,7 +1800,7 @@
   
   
   
-  <message-resources parameter="oscarResources"/> 
+  <!--message-resources parameter="oscarResources"/--> 
   
   </struts-config>
 
