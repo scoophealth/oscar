@@ -1,0 +1,126 @@
+
+Body
+{
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-bottom: 0px;
+	margin: 0px;
+	padding-top: 0px;
+	font-family: Verdana;
+}
+Table
+{
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-bottom: 0px;
+	margin: 0px;
+	padding-top: 0px;
+	font-family: Verdana;
+}
+
+TD.Section
+{
+	font-weight: bold;
+	font-size: 14px;
+	border-bottom: 1px dashed #d4d4d4;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+TD.Header
+{
+	font-size: 12px;
+	border-bottom: solid 1px #d4d4d4;
+	border-left: solid 1px #d4d4d4;
+	border-right: solid 1px #d4d4d4;
+}
+
+TD.Text
+{
+	font-size: 12px;
+}
+
+.regtext
+{
+	font-size: 12px;
+	font-family: Verdana;
+}
+A:hover
+{
+    cursor: hand; 
+	color: #0000CD;
+	text-decoration: underline;
+}
+A
+{
+    cursor: hand; 
+	color: #0000CD;
+	font-family: Verdana;
+	text-decoration: none;
+}
+.LargeTitle
+{
+	font-weight: bold;
+	color: #272727;
+	text-indent: 10px;
+}
+.Title
+{
+	font-weight: bold;
+	color: #272727;
+}
+.LightBG
+{
+	background-color: #f6f6f6;
+}
+.DarkBG
+{
+	background-color: #D4D4D4;
+}
+.FormLabel
+{
+	padding-left: 5px;
+	text-indent: 4px;
+	text-align: left;
+}
+.SmallTitle.Title
+{
+	font-weight: bold;
+	font-size: 10px;
+}
+.SmallerText
+{
+	font-size: smaller;
+}
+Select
+{
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana;
+}
+Option
+{
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana;
+}
+Input
+{
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana;
+}
+TextArea
+{
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana;
+}
+.HiddenList
+{
+	border-right: #d4d4d4 1px solid;
+	border-top: #d4d4d4 1px solid;
+	border-left: #d4d4d4 1px solid;
+	border-bottom: #d4d4d4 1px solid;
+	font-family: Verdana;
+	background-color: #99ccff;
+}
