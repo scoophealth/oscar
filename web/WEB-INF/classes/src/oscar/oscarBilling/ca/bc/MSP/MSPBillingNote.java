@@ -107,7 +107,7 @@ public class MSPBillingNote {
    */
    public static String getN01(String dataCenterNum,String dataCenterSeqNum,String payeeNum,String practitionerNum,String noteType,String note){
       Misc misc = new Misc();
-      String s = "NO1" + misc.forwardZero(dataCenterNum,5)
+      String s = "N01" + misc.forwardZero(dataCenterNum,5)
                        + misc.forwardZero(dataCenterSeqNum, 7)
                        + misc.forwardZero(payeeNum, 5)
                        + misc.forwardZero(practitionerNum, 5)
