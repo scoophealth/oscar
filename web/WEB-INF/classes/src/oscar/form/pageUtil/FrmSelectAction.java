@@ -52,11 +52,15 @@ public class FrmSelectAction extends Action {
                 
                 if (frm.getForward().compareTo("add")==0) {
                     System.out.println("the add button is pressed");
-                    String[] selectedAddTypes = frm.getSelectedAddTypes();  
+                    String[] selectedAddTypes = frm.getSelectedAddTypes();
+                    String sql = "SELECT * FROM encounterForm WHERE hidden<>'0'";
+                    ResultSet rs = db.GetSQL(sql);
+                    rs.last();
+                    int newOrder = rs.getRow() + 1;
                     if(selectedAddTypes != null){
                         for(int i=0; i<selectedAddTypes.length; i++){
                             System.out.println(selectedAddTypes[i]);
-                            String sql = "UPDATE encounterForm SET hidden ='1' WHERE form_name='" + selectedAddTypes[i] + "'";
+                            sql = "UPDATE encounterForm SET hidden ='" + newOrder + "' WHERE form_name='" + selectedAddTypes[i] + "'";
                             System.out.println(" sql statement "+sql);
                             db.RunSQL(sql);                                
                         }
@@ -73,7 +77,77 @@ public class FrmSelectAction extends Action {
                             db.RunSQL(sql);                                
                         }
                     }
-                }                                
+                }
+                else if (frm.getForward().compareTo("up")==0){
+                    System.out.println("The Move UP button is pressed!");
+                    String[] selectedMoveUpTypes = frm.getSelectedDeleteTypes();
+                    if(selectedMoveUpTypes != null){
+                        for(int i=0; i<selectedMoveUpTypes.length; i++){
+                            String sql = "Select hidden from encounterForm where form_name ='"+selectedMoveUpTypes[i] + "'";                            
+                            ResultSet rs = db.GetSQL(sql);
+                            if(rs.next()){
+                                int form_order = rs.getInt("hidden");
+                                String upperOrder = Integer.toString(form_order - 1);
+                                rs.close();
+                                
+                                if (form_order>1){
+                                    sql = "Select form_name from encounterForm where hidden ='"+ upperOrder + "'";
+                                    rs = db.GetSQL(sql);
+                                    while (!rs.next()){
+                                        upperOrder= Integer.toString(Integer.parseInt(upperOrder) - 1);
+                                        if(form_order>1){
+                                            sql = "Select form_name from encounterForm where hidden ='"+ upperOrder + "'";
+                                            rs = db.GetSQL(sql);
+                                        }
+                                    }                                    
+                                        String upperItem = rs.getString("form_name");
+                                        sql = "UPDATE encounterForm SET hidden ='" + form_order + "' WHERE form_name='" + upperItem + "'";
+                                        db.RunSQL(sql);
+                                        sql = "UPDATE encounterForm SET hidden ='" + upperOrder + "' WHERE form_name='" + selectedMoveUpTypes[i] + "'";
+                                        db.RunSQL(sql);
+                                        rs.close();                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                else if (frm.getForward().compareTo("down")==0){
+                    System.out.println("The Move DOWN button is pressed!");
+                    String[] selectedMoveDownTypes = frm.getSelectedDeleteTypes();
+                    if(selectedMoveDownTypes != null){
+                        for(int i=selectedMoveDownTypes.length-1; i>=0; i--){
+                            String sql = "Select hidden from encounterForm where form_name ='"+selectedMoveDownTypes[i] + "'";                            
+                            ResultSet rs = db.GetSQL(sql);                            
+                            if(rs.next()){
+                                int form_order = rs.getInt("hidden");
+                                String lowerOrder = Integer.toString(form_order + 1);
+                                rs.close();
+                                sql = "Select * from encounterForm where hidden <> '0'";
+                                rs = db.GetSQL(sql);
+                                rs.last();
+                                int nbRows = rs.getRow();
+                                rs.close();
+                                
+                                if (form_order<nbRows && form_order>0){
+                                    System.out.println("form_order: " + form_order);                                    
+                                    sql = "Select form_name from encounterForm where hidden ='"+ lowerOrder + "'";
+                                    rs = db.GetSQL(sql);
+                                    if(rs.next()){
+                                        String lowerItem = rs.getString("form_name");
+                                        sql = "UPDATE encounterForm SET hidden ='" + form_order + "' WHERE form_name='" + lowerItem + "'";
+                                        db.RunSQL(sql);
+                                        sql = "UPDATE encounterForm SET hidden ='" + lowerOrder + "' WHERE form_name='" + selectedMoveDownTypes[i] + "'";
+                                        db.RunSQL(sql);
+                                    }
+                                    rs.close();                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                db.CloseConn();
             }
            
             catch(SQLException e)
