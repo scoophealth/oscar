@@ -1,4 +1,7 @@
- <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" /> 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" /> 
  <%   
   if(session.getValue("user") == null)
     response.sendRedirect("../../logout.jsp");
@@ -9,7 +12,7 @@
 
 %>
 
-<html>
+<html:html>
 <head>
 <title>EDT OBEC Response Report Generator</title>
 <meta http-equiv="Content-Type" content="text/html">
@@ -17,8 +20,9 @@
 
 <body bgcolor="#FFFFFF" text="#000000">
 <p><font face="Arial, Helvetica, sans-serif" size="2"><b>EDT OBEC Response Report Generator</b></font></p>
-<form method="post" action="../../../oscarBilling/DocumentErrorReportUpload.do" ENCTYPE="multipart/form-data">
+<html:form action="/oscarBilling/DocumentErrorReportUpload.do" method="POST" enctype="multipart/form-data">
   <font face="Arial, Helvetica, sans-serif" size="2"> </font>
+<html:errors/>
 <table width="400" border="0">
     <tr> 
       <td width="181"><b><font face="Arial, Helvetica, sans-serif" size="2">Select 
@@ -36,6 +40,6 @@
 
   <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
   <p>&nbsp; </p>
-</form>
+</html:form>
 </body>
-</html>
+</html:html>
