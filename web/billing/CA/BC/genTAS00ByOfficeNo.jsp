@@ -82,6 +82,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                      <td width="5%" height="16">Office No</td>
                      <td width="5%" height="16">Practitioner</td>
                      <td width="5%" height="16">Service Code</td>
+                     <td height="16">Payment Date</td>
                      <td width="5%" height="16" alight="right">Billed Amount</td>
                      <td width="5%" height="16" align="right">Paid Amount</td>
                      <td width="2%" height="16">EP1</td>
@@ -122,6 +123,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                    <td width="5%" height="16"><a href="javascript: popupPage(700,750,'adjustBill.jsp?billing_no=<%=rsdemo.getString("t_officeno")%>')" ><%=rsdemo.getString("t_officeno")%></a>&nbsp; </td>
                    <td width="5%" height="16"><%=rsdemo.getString("t_practitionerno")%>&nbsp; </td>
                    <td width="5%" height="16"><%=rsdemo.getString("t_billfeeschedule")%>&nbsp; </td>
+                   <td height="16"><%=rsdemo.getString("t_payment")%>&nbsp;</td>
                    <td width="5%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_billamt"))%>&nbsp; </td>
                    <td width="5%" height="16" align=right><%=moneyFormat(rsdemo.getString("t_paidamt"))%></td>
                    <td width="2%" height="16"><%=rsdemo.getString("t_exp1")%>&nbsp; </td>
