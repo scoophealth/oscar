@@ -485,6 +485,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
 
                                 <% j=0;
+                                   int linenumbefore = linenum;
                                    while ( j<((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.size() ){
                                    if ( ((oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.get(0)).name.length() >= 3
                                         && ((oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.get(0)).name.substring(0,3).equals("ORG") ) {
@@ -550,11 +551,11 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                    } else {  // not an organism sensitivity section
                                        for(k=0;k< ((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.size() ;k++){
                                        oscar.oscarMDS.data.Results thisResult = (oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.get(k);
-                                       if (thisResult.resultStatus.startsWith("DNR")) continue;
+                                       if (thisResult.resultStatus.startsWith("DNR") || (thisResult.resultStatus.startsWith("Deleted") && thisResult.notes == null)) continue;
                                        AbnFlag = thisResult.abnormalFlags; 
                                        boolean lineContinued = false; %>
 
-                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Edited")?"CorrectedRes":AbnFlag.compareTo("HI")==0?"AbnormalRes":AbnFlag.compareTo("LO")==0?"HiLoRes":"NormalRes"%>">
+                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Corrected")?"CorrectedRes":AbnFlag.compareTo("HI")==0?"AbnormalRes":AbnFlag.compareTo("LO")==0?"HiLoRes":"NormalRes"%>">
                                             <td valign="top" align="right"><%=thisResult.name %></td>
                                          <% if ( thisResult.observationValue.equals("") && thisResult.notes != null ) {
                                                 lineContinued = true;
@@ -575,7 +576,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                    while ( iter.hasNext() ) { 
                                                        notetext = (String)iter.next();
                                                            if ( !lineContinued) { %>
-                                                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+                                                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Corrected")?"CorrectedRes":AbnFlag.compareTo("HI")==0?"AbnormalRes":AbnFlag.compareTo("LO")==0?"HiLoRes":"NormalRes"%>">
                                                                     <td>&nbsp;</td>
                                                         <% } // end if !lineContinued %>
                                                                 <td align="left" colspan="5"><%= notetext %></td>
@@ -593,7 +594,10 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                         }  // for k=0... (results)
                                         j++;
                                      } // end if organism sensitivity reports
-                                  }  // end while j=0... (result groups) %>  
+                                  }  // end while j=0... (result groups)
+                                  if (linenumbefore == linenum) { %>
+                                      <td colspan="9" align="center"><i>--- results deleted ---</i></td>
+                               <% } %>
                         </table>
 
                 <% } else {  // not a microbiology report group  %>
@@ -628,16 +632,17 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
 
 
-                                <% for(j=0;j<((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.size();j++){
-                                   oscar.oscarMDS.data.GroupedReports thisGroup = (oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j);%>
+                                <% int linenumbefore = linenum;
+                                   for(j=0;j<((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.size();j++){
+                                   oscar.oscarMDS.data.GroupedReports thisGroup = (oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j); %>
 
                                     <% for(k=0;k< ((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.size() ;k++){
                                        oscar.oscarMDS.data.Results thisResult = (oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.get(k);
-                                       if (thisResult.resultStatus.startsWith("DNR")) continue;
+                                       if (thisResult.resultStatus.startsWith("DNR") || (thisResult.resultStatus.startsWith("Deleted") && thisResult.notes == null)) continue;
                                        AbnFlag = thisResult.abnormalFlags; 
                                        boolean lineContinued = false; %>
 
-                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Edited")?"CorrectedRes":AbnFlag.startsWith("HI", AbnFlag.indexOf("~") + 1)?"AbnormalRes":AbnFlag.startsWith("LO", AbnFlag.indexOf("~") + 1)?"HiLoRes":"NormalRes"%>">
+                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Corrected")?"CorrectedRes":AbnFlag.startsWith("HI", AbnFlag.indexOf("~") + 1)?"AbnormalRes":AbnFlag.startsWith("LO", AbnFlag.indexOf("~") + 1)?"HiLoRes":"NormalRes"%>">
                                             <td valign="top" align="left"><%=thisResult.name %></td>
                                          <% if ( thisResult.observationValue.equals("") && thisResult.notes != null ) {
                                                 lineContinued = true;
@@ -658,7 +663,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                    while ( iter.hasNext() ) { 
                                                        notetext = (String)iter.next(); 
                                                            if ( !lineContinued) { %>
-                                                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+                                                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Corrected")?"CorrectedRes":AbnFlag.compareTo("HI")==0?"AbnormalRes":AbnFlag.compareTo("LO")==0?"HiLoRes":"NormalRes"%>">
                                                                     <td>&nbsp;</td>
                                                         <% } // end if !lineContinued %> 
                                                                 <td align="left" colspan="5"><%= notetext %></td>
@@ -675,7 +680,11 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                }  // end if thisResult.notes != null
                                         linenum++;
                                     }  // for k=0... (results)
-                                  }  // for j=0... (result groups) %>  
+                                    
+                                  }  // for j=0... (result groups) 
+                                  if (linenumbefore == linenum) { %>
+                                      <td colspan="9" align="center"><i>--- results deleted ---</i></td>
+                               <% } %>
                         </table>
                  <% } // end if microbiology or not microbiology
               }  // for i=0... (headers) %>
