@@ -332,19 +332,19 @@ public class RxPrescriptionData {
             ResultSet rs;
             String sql;
             if(GCN_SEQNO!=0) {
-                sql = "SELECT * FROM drugs WHERE archived = 0 AND "
+                sql = "SELECT * FROM drugs WHERE  "
                 + "demographic_no = " + demographicNo + " AND "
                 + "GCN_SEQNO = " + GCN_SEQNO + " "
                 + "ORDER BY rx_date DESC, drugId DESC";
             }
             else {
-                sql = "SELECT * FROM drugs WHERE archived = 0 AND "
+                sql = "SELECT * FROM drugs WHERE  "
                 + "demographic_no = " + demographicNo + " AND "
                 + "GCN_SEQNO = 0 AND customName = '" + customName + "' "
                 + "ORDER BY rx_date DESC, drugId DESC";
             }
             
-            Prescription p;
+            Prescription p;            
             
             rs = db.GetSQL(sql);
             
@@ -364,6 +364,7 @@ public class RxPrescriptionData {
                 p.setRepeat(rs.getInt("repeat"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
+                p.setArchived(rs.getString("archived"));
                 p.setSpecial(rs.getString("special"));
                 p.setGenericName(rs.getString("GN"));
                 p.setAtcCode(rs.getString("ATC"));
