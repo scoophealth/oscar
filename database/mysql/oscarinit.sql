@@ -5264,6 +5264,15 @@ CREATE TABLE recyclebin (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table `rehabStudy2004`
+--
+CREATE TABLE rehabStudy2004(
+  studyID int(10) NOT NULL,
+  demographic_no int(10) NOT NULL,   
+  PRIMARY KEY  (studyID)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `remoteAttachments`
 --
 
