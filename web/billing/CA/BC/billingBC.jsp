@@ -270,7 +270,7 @@ function showHideLayers() { //v3.0
 	                         %>
 	                                               <tr bgcolor=<%=color%>> 
 				       <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
-                              <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');showHideLayers('Layer2','','hide')">
+                              <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');showHideLayers('Layer2','','hide');return false;">
                                  <%=diaglist[i].getDiagnosticCode()%>
                               </a></font></b></td>
 				       <td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><%=diaglist[i].getDescription()%></font></td>
