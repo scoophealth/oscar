@@ -2,24 +2,24 @@
 // *
 // *
 // * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-// * This software is published under the GPL GNU General Public License. 
-// * This program is free software; you can redistribute it and/or 
-// * modify it under the terms of the GNU General Public License 
-// * as published by the Free Software Foundation; either version 2 
-// * of the License, or (at your option) any later version. * 
-// * This program is distributed in the hope that it will be useful, 
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-// * along with this program; if not, write to the Free Software 
-// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-// * 
+// * This software is published under the GPL GNU General Public License.
+// * This program is free software; you can redistribute it and/or
+// * modify it under the terms of the GNU General Public License
+// * as published by the Free Software Foundation; either version 2
+// * of the License, or (at your option) any later version. *
+// * This program is distributed in the hope that it will be useful,
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+// * along with this program; if not, write to the Free Software
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+// *
 // * <OSCAR TEAM>
-// * This software was written for the 
-// * Department of Family Medicine 
-// * McMaster Unviersity 
-// * Hamilton 
-// * Ontario, Canada 
+// * This software was written for the
+// * Department of Family Medicine
+// * McMaster Unviersity
+// * Hamilton
+// * Ontario, Canada
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.immunization.pageUtil;
@@ -48,49 +48,45 @@ import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.UtilXML;
 
 public final class EctImmSaveConfigAction extends Action {
-
-	public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
-        //System.out.println("Save Config Action Jackson");
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
-        ActionErrors errors = new ActionErrors();
-        EctSessionBean bean = null;
-        bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        try
-        {
-            //String sCfgDoc = UtilMisc.decode64(request.getParameter("xmlDoc"));
-            //Document cfgDoc = UtilXML.parseXML(sCfgDoc);
-            //NodeList cfgSets = cfgDoc.getElementsByTagName("immunizationSet");
-            
-            EctImmImmunizationData imm = new EctImmImmunizationData();
-            String sDoc = imm.getImmunizations(bean.demographicNo);
-            Document doc;
-            Element root;
-            try {
-                doc = UtilXML.parseXML(sDoc);
-                root = doc.getDocumentElement();
-            } catch(Exception ex) {
-                doc = UtilXML.newDocument();
-                root = UtilXML.addNode(doc, "immunizations");
-            }
-            //add new src
-            String[] setId = request.getParameterValues("chkSet");
-            if (setId == null) return mapping.findForward("success");
-            
-            for (int i=0; i<setId.length; i++) {
-            	String sCfgDoc = (new EctImmImmunizationSetData()).getSetXMLDoc(setId[i]);
-				Document cfgDoc = UtilXML.parseXML(sCfgDoc);
-				NodeList cfgSets = cfgDoc.getElementsByTagName("immunizationSet");
-				
-				Element cfgSet = (Element)cfgSets.item(i);
-				Node nod = doc.importNode(cfgSet, true);
-				root.appendChild(nod);
-				
-            }
-
-/*            
+   
+   public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+   throws ServletException, IOException {
+      //System.out.println("Save Config Action Jackson");
+      Locale locale = getLocale(request);
+      MessageResources messages = getResources(request);
+      ActionErrors errors = new ActionErrors();
+      EctSessionBean bean = null;
+      bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+      try {
+         //String sCfgDoc = UtilMisc.decode64(request.getParameter("xmlDoc"));
+         //Document cfgDoc = UtilXML.parseXML(sCfgDoc);
+         //NodeList cfgSets = cfgDoc.getElementsByTagName("immunizationSet");
+         
+         EctImmImmunizationData imm = new EctImmImmunizationData();
+         String sDoc = imm.getImmunizations(bean.demographicNo);
+         Document doc;
+         Element root;
+         try {
+            doc = UtilXML.parseXML(sDoc);
+            root = doc.getDocumentElement();
+         } catch(Exception ex) {
+            doc = UtilXML.newDocument();
+            root = UtilXML.addNode(doc, "immunizations");
+         }
+         //add new src
+         String[] setId = request.getParameterValues("chkSet");
+         if (setId == null) return mapping.findForward("success");
+         
+         for (int i=0; i<setId.length; i++) {            
+            String sCfgDoc = (new EctImmImmunizationSetData()).getSetXMLDoc(setId[i]);            
+            Document cfgDoc = UtilXML.parseXML(sCfgDoc);            
+            NodeList cfgSets = cfgDoc.getElementsByTagName("immunizationSet");            
+            Element cfgSet = (Element)cfgSets.item(0);            
+            Node nod = doc.importNode(cfgSet, true);            
+            root.appendChild(nod);                         
+         }
+         
+/*
             for(int i = 0; i < cfgSets.getLength(); i++) {
                 if(request.getParameter("chkSet".concat(String.valueOf(String.valueOf(i)))) != null && request.getParameter("chkSet".concat(String.valueOf(String.valueOf(i)))).equalsIgnoreCase("on"))
                 {
@@ -99,15 +95,16 @@ public final class EctImmSaveConfigAction extends Action {
                     root.appendChild(nod);
                 }
             }
-*/
-            if (doc != null) {
-            	String sXML = UtilXML.toXML(doc);
-            	imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
-            }
-            //System.out.println("after save imm");
-        } catch(Exception ex)  {
-            throw new ServletException("Exception occurred in SaveConfigAction", ex);
-        }
-        return mapping.findForward("success");
-    }
+ */
+         if (doc != null) {
+            String sXML = UtilXML.toXML(doc);
+            imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
+         }
+         //System.out.println("after save imm");
+      } catch(Exception ex)  {
+         ex.printStackTrace();
+         throw new ServletException("Exception occurred in SaveConfigAction", ex);
+      }
+      return mapping.findForward("success");
+   }
 }
