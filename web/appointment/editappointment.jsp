@@ -88,13 +88,15 @@ function onButUpdate() {
   saveTemp=2;
 }
 
-function onButCancel(){
+function onButCancel(){   
    var aptStat = document.EDITAPPT.status.value;    
    if (aptStat.indexOf('B') == 0){
        var agree = confirm("<bean:message key="appointment.editappointment.msgCanceledBilledConfirmation"/>") ; 
        if (agree){
           window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>';
        }              
+   }else{
+      window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>';
    }
 }
 function upCaseCtrl(ctrl) {
