@@ -34,7 +34,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/taglibs-log.tld" prefix="log" %>
+
 <%@ page import="java.util.*, oscar.oscarDemographic.data.*" %>
 <%@ page import="oscar.oscarBilling.data.*" %>
 <%
