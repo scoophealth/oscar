@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
+  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
   String curProvider_no = request.getParameter("provider_no");
   String curUser_no = (String) session.getAttribute("user");
   String userfirstname = (String) session.getAttribute("userfirstname");
@@ -9,7 +9,7 @@
   boolean bFirstDisp=true; //this is the first time to display the window
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -27,8 +27,10 @@ function demographicdetail(vheight,vwidth) {
   var popup=window.open(page, "demographic", windowprops);
 }
 function onButRepeat() {
-	document.forms[0].action = "appointmenteditrepeatbooking.jsp" ;
-	document.forms[0].submit();
+	if(calculateEndTime()) {
+		document.forms[0].action = "appointmenteditrepeatbooking.jsp" ;
+		document.forms[0].submit();
+	}
 }
 // stop javascript -->
 </script>
@@ -107,6 +109,7 @@ function calculateEndTime() {
     alert("<bean:message key="Appointment.msgCheckDuration"/>");
     return false;
   }
+  return true;
 }
 
 function checkTimeTypeIn(obj) {

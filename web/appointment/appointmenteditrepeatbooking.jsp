@@ -5,7 +5,7 @@ String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
 boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 %>
 
-<%@ page import="java.util.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, oscar.*, oscar.util.*, java.sql.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
@@ -14,148 +14,167 @@ boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
 String [][] dbQueries=new String[][] { 
-	{"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"}, 
 	{"add_appt", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?)"}, 
 	{"delete", "delete from appointment where appointment_date=? and start_time=? and end_time=? and name=? and creator=?"}, 
-	{"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" }, 
 	{"search_appt", "select * from appointment where appointment_no = ?" }, 
-	{"delete_appt", "delete from appointment where appointment_no = ?" }, 
-	{"cancel_appt", "update appointment set status = ?, createdatetime = ?, creator = ? where appointment_no = ?" }, 
-	{"update_appt", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,createdatetime=?,creator=?,remarks=? where appointment_no=? " }, 
-	{"search_otherappt", "select * from appointment where appointment_date=? and ((start_time <= ? and end_time >= ?) or (start_time > ? and start_time < ?) ) order by provider_no, start_time" }, 
+	{"delete_appt", "delete from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
+	{"cancel_appt", "update appointment set status = ?, createdatetime = ?, creator = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
+	{"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, createdatetime=?, creator=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" }, 
 };
 groupApptBean.doConfigure(dbParams,dbQueries);
+// this is not an efficient way to deal with the multiple update
 %>
 
+<%!
+GregorianCalendar addDateByYMD(GregorianCalendar cal, String unit, int n) {
+	if (unit.equals("day")) {
+		cal.add(Calendar.DATE, n);
+	} else if (unit.equals("month")) {
+		cal.add(Calendar.MONTH, n);
+	} else if (unit.equals("year")) {
+		cal.add(Calendar.YEAR, n);
+	} 
+	return cal;
+}
+%>
 <%
   if (request.getParameter("groupappt")!=null) {
     boolean bSucc = false;
+	String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
+	String userName =  (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
+
+	String everyNum = request.getParameter("everyNum")!=null? request.getParameter("everyNum") : "0";
+	String everyUnit = request.getParameter("everyUnit")!=null? request.getParameter("everyUnit") : "day";
+	String endDate = request.getParameter("endDate")!=null? request.getParameter("endDate") : UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy");
+	int delta = Integer.parseInt(everyNum);
+	if (everyUnit.equals("week") ) {
+		delta = delta*7;
+		everyUnit = "day";
+	}
+	GregorianCalendar gCalDate = new GregorianCalendar();
+	GregorianCalendar gEndDate = (GregorianCalendar) gCalDate.clone();
+	gEndDate.setTime(UtilDateUtilities.StringToDate(endDate, "dd/MM/yyyy"));
+
+    // repeat adding
     if (request.getParameter("groupappt")!=null && request.getParameter("groupappt").equals("Add Group Appointment") ) {
-        String[] param =new String[16];
+        String[] param =new String[17];
         int rowsAffected=0, datano=0;
-        StringBuffer strbuf=new StringBuffer();
-		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
-		String userName =  (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 
-		String everyNum = request.getParameter("everyNum")!=null? request.getParameter("everyNum") : "0";
-		String everyUnit = request.getParameter("everyUnit")!=null? request.getParameter("everyUnit") : "day";
-		String endDate = request.getParameter("endDate")!=null? request.getParameter("endDate") : UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy");
-		int delta = Integer.parseInt(everyNum);
-		if (everyUnit.equals("week") ) {
-			delta = delta*7;
-			everyUnit = "day";
-		}
-		GregorianCalendar gCalDate = new GregorianCalendar();
-		GregorianCalendar gEndDate = (GregorianCalendar) gCalDate.clone();
-		gEndDate.setTime(UtilDateUtilities.StringToDate(endDate, "dd/MM/yyyy"));
+ 	    param[0]=request.getParameter("provider_no");
+        param[1]=request.getParameter("appointment_date");
+	    param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+        param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+        param[4] = request.getParameter("keyword");
+        param[5]=request.getParameter("notes");
+        param[6]=request.getParameter("reason");
+	    param[7]=request.getParameter("location");
+        param[8]=request.getParameter("resources");
+        param[9]=request.getParameter("type");
+	    param[10]=request.getParameter("style");
+        param[11]=request.getParameter("billing");
+        param[12]=request.getParameter("status");
+ 	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
+        param[14]=userName;  //request.getParameter("creator");
+	    param[15]=request.getParameter("remarks");
+	    param[16]=request.getParameter("demographic_no");
 
-		int[] intparam=new int [1];
-        //for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-	        //strbuf=new StringBuffer(e.nextElement().toString());
-            //if (strbuf.toString().indexOf("one")==-1 && strbuf.toString().indexOf("two")==-1) continue;
-          
-		    //datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
-     	    param[0]=request.getParameter("provider_no");
-	        param[1]=request.getParameter("appointment_date");
-    	    param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-	        param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-            param[4] = request.getParameter("keyword");
-	        param[5]=request.getParameter("notes");
-	        param[6]=request.getParameter("reason");
-    	    param[7]=request.getParameter("location");
-	        param[8]=request.getParameter("resources");
-	        param[9]=request.getParameter("type");
-    	    param[10]=request.getParameter("style");
-	        param[11]=request.getParameter("billing");
-	        param[12]=request.getParameter("status");
-     	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
-	        param[14]=userName;  //request.getParameter("creator");
-    	    param[15]=request.getParameter("remarks");
-	        if (!(request.getParameter("demographic_no").equals(""))) {
-				intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
-     	    } else intparam[0]=0;
-
-        //}
-		// repeat adding
 		while (true) {
-
-			rowsAffected = groupApptBean.queryExecuteUpdate(param,intparam,"add_appt");
+			//rowsAffected = groupApptBean.queryExecuteUpdate(param,intparam,"add_appt");
+			rowsAffected = groupApptBean.queryExecuteUpdate(param, "add_appt");
 			gCalDate.setTime(UtilDateUtilities.StringToDate(param[1], "yyyy-MM-dd"));
-			if (everyUnit.equals("day")) {
-				gCalDate.add(Calendar.DATE, delta);
-			} else if (everyUnit.equals("month")) {
-				gCalDate.add(Calendar.MONTH, delta);
-			} else if (everyUnit.equals("year")) {
-				gCalDate.add(Calendar.YEAR, delta);
-			} 
+			gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
 
 			if (gCalDate.after(gEndDate)) break;
 			else param[1] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
-
 		}
         if (rowsAffected == 1) bSucc = true;
-
 	}
 
 
+    // repeat updating
     if (request.getParameter("groupappt")!=null && (request.getParameter("groupappt").equals("Group Update") 
 		    || request.getParameter("groupappt").equals("Group Cancel") || request.getParameter("groupappt").equals("Group Delete"))) {
         int rowsAffected=0, datano=0;
-        StringBuffer strbuf=new StringBuffer();
-		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
-		String userName =  (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
+        String apptNo = request.getParameter("appointment_no");
 
-		for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-	        strbuf=new StringBuffer(e.nextElement().toString());
-            if (strbuf.toString().indexOf("one")==-1 && strbuf.toString().indexOf("two")==-1) continue;
- 		    datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
+		String[] paramE =new String[10];
+		ResultSet rsdemo = groupApptBean.queryResults(apptNo, "search_appt");
+		if (rsdemo.next()) { 
+	        paramE[0]=rsdemo.getString("appointment_date"); //request.getParameter("appointment_date"); // param[3] - appointment_date
+     	    paramE[1]=rsdemo.getString("provider_no"); //request.getParameter("provider_no");
+    	    paramE[2]=rsdemo.getString("start_time"); //MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+	        paramE[3]=rsdemo.getString("end_time"); //MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+            paramE[4]=rsdemo.getString("name"); //request.getParameter("keyword");
+	        paramE[5]=rsdemo.getString("notes"); //request.getParameter("notes");
+	        paramE[6]=rsdemo.getString("reason"); //request.getParameter("reason");
+     	    paramE[7]=rsdemo.getString("createdatetime"); //request.getParameter("createdatetime");
+	        paramE[8]=rsdemo.getString("creator"); //request.getParameter("creator");
+	        paramE[9]=rsdemo.getString("demographic_no"); //request.getParameter("creator");
+		}	        
 
-            if (request.getParameter("groupappt").equals("Group Cancel")) {
-                String[] paramc =new String[4];
-	            paramc[0]="C";
-	            paramc[1]=createdDateTime;
-     	        paramc[2]=userName;   //request.getParameter("createdatetime");
-	            paramc[3]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
+        // group cancel
+        if (request.getParameter("groupappt").equals("Group Cancel")) {
+            String[] param =new String[13];
+            param[0]="C";
+            param[1]=createdDateTime;
+ 	        param[2]=userName;   
+ 	        for(int k=0; k<paramE.length; k++) param[k+3] = paramE[k];
 
-                rowsAffected = groupApptBean.queryExecuteUpdate(paramc , "cancel_appt");
-			}
-
-			//can find and save them to recyclebin first
-		    //delete the selected appts
-            if (request.getParameter("groupappt").equals("Group Delete")) {
-                rowsAffected = groupApptBean.queryExecuteUpdate(request.getParameter("appointment_no" + datano) , "delete_appt");
-			}
-
-			if (request.getParameter("groupappt").equals("Group Update")) {
-                rowsAffected = groupApptBean.queryExecuteUpdate(request.getParameter("appointment_no" + datano) , "delete_appt");
-     	        
-                String[] paramu =new String[16];
-				paramu[0]=request.getParameter("provider_no"+datano);
-				paramu[1]=request.getParameter("appointment_date");
-	    	    paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-		        paramu[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-			    paramu[4] = request.getParameter("keyword");
-				paramu[5]=request.getParameter("notes");
-		        paramu[6]=request.getParameter("reason");
-			    paramu[7]=request.getParameter("location");
-			    paramu[8]=request.getParameter("resources");
-				paramu[9]=request.getParameter("type");
-	    	    paramu[10]=request.getParameter("style");
-		        paramu[11]=request.getParameter("billing");
-			    paramu[12]=request.getParameter("status");
-     			paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
-		        paramu[14]=userName;  //request.getParameter("creator");
-			    paramu[15]=request.getParameter("remarks");
-			    int[] intparam=new int [1];
-				if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
-					intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
-		 	    } else intparam[0]=0;
-			    
-				rowsAffected = groupApptBean.queryExecuteUpdate(paramu,intparam,"add_appt");
-	            if (rowsAffected != 1) break;
+			// repeat doing
+			while (true) {
+				rowsAffected = groupApptBean.queryExecuteUpdate(param,"cancel_appt");
+	        	if (rowsAffected == 1) bSucc = true;
+				gCalDate.setTime(UtilDateUtilities.StringToDate(param[3], "yyyy-MM-dd"));
+	
+				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
+				if (gCalDate.after(gEndDate)) break;
+				else param[3] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
 			}
 		}
-        if (rowsAffected == 1) bSucc = true;
+
+		//can find and save them to recyclebin first
+		//delete the selected appts
+		if (request.getParameter("groupappt").equals("Group Delete")) {
+            String[] param =new String[10];
+ 	        for(int k=0; k<paramE.length; k++) param[k] = paramE[k];
+			//for(int l=0; l<param.length; l++) System.out.println(" 8 :" + param[l]);
+ 	        
+			// repeat doing
+			while (true) {
+				rowsAffected = groupApptBean.queryExecuteUpdate(param,"delete_appt");
+	        	if (rowsAffected == 1) bSucc = true;
+				gCalDate.setTime(UtilDateUtilities.StringToDate(param[0], "yyyy-MM-dd"));
+				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
+				if (gCalDate.after(gEndDate)) break;
+				else param[0] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
+			}
+		}
+
+		if (request.getParameter("groupappt").equals("Group Update")) {
+            String[] param =new String[20];
+    	    param[0]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+	        param[1]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+		    param[2]=request.getParameter("keyword");
+			param[3]=request.getParameter("demographic_no");
+			param[4]=request.getParameter("notes");
+	        param[5]=request.getParameter("reason");
+		    param[6]=request.getParameter("location");
+		    param[7]=request.getParameter("resources");
+ 			param[8]=createdDateTime;   
+	        param[9]=userName;  
+ 	        for(int k=0; k<paramE.length; k++) param[k+10] = paramE[k];
+		    
+			// repeat doing
+			while (true) {
+				rowsAffected = groupApptBean.queryExecuteUpdate(param,"update_appt");
+	        	if (rowsAffected == 1) bSucc = true;
+				gCalDate.setTime(UtilDateUtilities.StringToDate(param[10], "yyyy-MM-dd"));
+				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
+				if (gCalDate.after(gEndDate)) break;
+				else param[10] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
+			}
+		}
+		
 	}
 %>
 <%   
@@ -235,7 +254,7 @@ function onSub() {
 </head>
 
 <body  bgcolor="ivory" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-<form name="groupappt" method="POST" action="appointmentrepeatbooking.jsp" onSubmit="return ( onSub());">
+<form name="groupappt" method="POST" action="appointmenteditrepeatbooking.jsp" onSubmit="return ( onSub());">
 <INPUT TYPE="hidden" NAME="groupappt" value="">
 <table width="100%" BGCOLOR="silver">
   <tr><TD>
