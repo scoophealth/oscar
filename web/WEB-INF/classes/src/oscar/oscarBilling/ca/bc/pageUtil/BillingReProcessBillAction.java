@@ -55,6 +55,7 @@ import oscar.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDemographic.data.*;
+import oscar.util.*;
 
 public class BillingReProcessBillAction extends Action {
     
@@ -236,17 +237,17 @@ public class BillingReProcessBillAction extends Action {
                         + "original_claim = '"+originalMSPNumber+"',"
                         
                         + "oin_insurer_code = '"+oinInsurerCode+"', "
-                        + "oin_registration_no = '"+oinRegistrationNo+"', "
-                        + "oin_birthdate = '"+oinBirthdate+"', "
-                        + "oin_first_name = '"+oinFirstName+"', "
-                        + "oin_second_name = '"+oinSecondName+"', "
-                        + "oin_surname = '"+oinSurname+"', "
-                        + "oin_sex_code = '"+oinSexCode+"', "
-                        + "oin_address = '"+oinAddress+"', "
-                        + "oin_address2 = '"+oinAddress2+"', "
-                        + "oin_address3 = '"+oinAddress3+"', "
-                        + "oin_address4 = '"+oinAddress4+"', "
-                        + "oin_postalcode = '"+oinPostalcode+"'  "
+                        + "oin_registration_no = '"+UtilMisc.mysqlEscape(oinRegistrationNo)+"', "
+                        + "oin_birthdate = '"+UtilMisc.mysqlEscape(oinBirthdate)+"', "
+                        + "oin_first_name = '"+UtilMisc.mysqlEscape(oinFirstName)+"', "
+                        + "oin_second_name = '"+UtilMisc.mysqlEscape(oinSecondName)+"', "
+                        + "oin_surname = '"+UtilMisc.mysqlEscape(oinSurname)+"', "
+                        + "oin_sex_code = '"+UtilMisc.mysqlEscape(oinSexCode)+"', "
+                        + "oin_address = '"+UtilMisc.mysqlEscape(oinAddress)+"', "
+                        + "oin_address2 = '"+UtilMisc.mysqlEscape(oinAddress2)+"', "
+                        + "oin_address3 = '"+UtilMisc.mysqlEscape(oinAddress3)+"', "
+                        + "oin_address4 = '"+UtilMisc.mysqlEscape(oinAddress4)+"', "
+                        + "oin_postalcode = '"+UtilMisc.mysqlEscape(oinPostalcode)+"'  "
                         +" where billingmaster_no  = '"+billingmasterNo+"'";
             
             System.out.println("\n"+sql+"\n");
