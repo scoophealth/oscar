@@ -88,9 +88,16 @@
             font-weight: normal;            
         }
 
-        INPUT.checkbox{
+        .checkbox{
             height: 22px;
-            width: 22px;            
+            width: 22px;     
+            background-color: #FFFFFF;
+        }
+
+        .checkboxError{
+            height: 22px;
+            width: 22px;     
+            background-color: red;
         }
 
         .subject {
@@ -124,7 +131,7 @@
 
 <script type="text/javascript" language="Javascript">
     
-    var choiceFormat  = new Array(6,10,12,26,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,59,61,62,64,65,67,68,70,71,73,74,76,77,79,83,85,90,92,96,98,103,105,110,112,117,119,124,126,131,133,138,140,145,147,152,154,158,161,166,168,172,174,178,180,184,186,190);        
+    var choiceFormat  = new Array(6,10,12,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,59,61,62,64,65,67,68,70,71,73,74,76,77,79,83,85,90,92,96,98,103,105,110,112,117,119,124,126,131,133,138,140,145,147,152,154,158,161,166,168,172,174,178,180,184,186,190);        
     var action = "/<%=project_home%>/form/formname.do";
     
     function goToPage1(){             
@@ -137,7 +144,7 @@
     }
     
     function goToPage2(){      
-        var checkboxes = new Array(6,10,12,26);        
+        var checkboxes = new Array(6,10,12,16);        
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
@@ -218,9 +225,9 @@
 <input type="hidden" name="formId" value="<%=formId%>" />
 <input type="hidden" name="submit" value="exit"/>
 
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="710px">
+<table border="0" cellspacing="0" cellpadding="0" width="740px" height="95%">
 <tr><td>
-<table border="0" cellspacing="0" cellpadding="0" width="740px" >
+<table border="0" cellspacing="0" cellpadding="0" width="740px" height="10%">
     <tr>
         <th class="subject">Appendix K: Health Status Quetionnaire (SF36)</th>
     </tr>
@@ -230,13 +237,13 @@
 </table>
 </td></tr>
 <tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" height="630px" width="740px" id="page1">        
+<table border="0" cellspacing="0" cellpadding="0" height="85%" width="740px" id="page1">        
     <tr>        
         <td colspan="2">
-            <table width="740px" height="600px" border="0"  cellspacing="0" cellpadding="0" >                
+            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >                
                 <tr>
                     <td colspan="4">
-                        This survey asks for you views about your health.  This information will be summarized in your medical record and will help keep track of you feel and how well you are able to do your usual activities.
+                        This survey asks for your views about your health.  This information will be summarized in your medical record and will help keep track of how you feel and how well you are able to do your usual activities.
                     </td>
                 </tr>
                 <tr>
@@ -250,27 +257,27 @@
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="healthEx" <%= props.getProperty("healthEx", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="1Ex" <%= props.getProperty("1Ex", "") %>/>
                     </td>
                     <td width="45%">Excellent</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="healthF" <%= props.getProperty("healthF", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="1F" <%= props.getProperty("1F", "") %>/>
                     </td>
                     <td width="45%">Fair</td>                
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="healthVG" <%= props.getProperty("healthVG", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="1VG" <%= props.getProperty("1VG", "") %>/>
                     </td>
                     <td width="45%">Very Good</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="healthP" <%= props.getProperty("healthP", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="1P" <%= props.getProperty("1P", "") %>/>
                     </td>
                     <td width="45%">Poor</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="healthG" <%= props.getProperty("healthG", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="1G" <%= props.getProperty("1G", "") %>/>
                     </td>
                     <td width="45%">Good</td>
                     <td width="5%"></td>
@@ -279,7 +286,7 @@
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="3">
-                        Comments: <input type="text" size="80" name="healthCmt" value="<%= props.getProperty("healthCmt", "") %>"/>
+                        Comments: <input type="text" size="80" name="1Cmt" value="<%= props.getProperty("1Cmt", "") %>"/>
                     </td>
                 </tr>
                 <tr>                    
@@ -288,36 +295,36 @@
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="nowHealthMuchBetter" <%= props.getProperty("nowHealthMuchBetter", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="2MuchBetter" <%= props.getProperty("2MuchBetter", "") %>/>
                     </td>
-                    <td width="45%">Excellent</td>
+                    <td width="45%">Much better now than one year ago</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="nowHealthWorse" <%= props.getProperty("nowHealthWorse", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="2Worse" <%= props.getProperty("2Worse", "") %>/>
                     </td>
-                    <td width="45%">Fair</td>                
+                    <td width="45%">Somewhat worse now than one year ago</td>                
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="nowHealthBetter" <%= props.getProperty("nowHealthBetter", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="2Better" <%= props.getProperty("2Better", "") %>/>
                     </td>
-                    <td width="45%">Very Good</td>                
+                    <td width="45%">Somewhat better now than one year ago</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="nowHealthMuchWorse" <%= props.getProperty("nowHealthMuchWorse", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="2MuchWorse" <%= props.getProperty("2MuchWorse", "") %>/>
                     </td>
-                    <td width="45%">Poor</td>
+                    <td width="45%">Much worse now than one year ago</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="nowHealthSame" <%= props.getProperty("nowHealthSame", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="2Same" <%= props.getProperty("2Same", "") %>/>
                     </td>
-                    <td width="45%">Good</td>
+                    <td width="45%">About the same</td>
                     <td width="5%"></td>
                     <td width="45%"></td>
                 </tr>
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="3">
-                        Comments: <input type="text" size="80" name="healthCmt" value="<%= props.getProperty("nowHealthCmt", "") %>"/>
+                        Comments: <input type="text" size="80" name="2Cmt" value="<%= props.getProperty("2Cmt", "") %>"/>
                     </td>
                 </tr>                
             </table>            
@@ -332,14 +339,14 @@
 </table>
 </td></tr>
 <tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="630px" id="page2" >    
+<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page2" >    
     <tr>        
         <td colspan="2">
-            <table width="740px" height="600px" border="0"  cellspacing="0" cellpadding="0" >                
+            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >                
                 <tr>                    
                     <th width="3%" valign="top" >3. </th>
                     <th valign="top" class="question">
-                        The following questions are about activites you might do during a typical day. Does <font style="text-decoration:underline">your health</font> limit you in these activities? If so, how much?</th>
+                        The following questions are about activities you might do during a typical day. Does <font style="text-decoration:underline">your health</font> limit you in these activities? If so, how much?</th>
                 </tr>                
                 <tr>
                     <td colspan="2" width="100%" align="right">
@@ -372,7 +379,7 @@
                                     <input type="checkbox"  class="checkbox" name="3aNo" <%= props.getProperty("3aNo", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="3" name="3aCmt"><%= props.getProperty("3aCmt", "") %></textarea>
+                                    <textarea cols="20" rows="2" name="3aCmt"><%= props.getProperty("3aCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -390,7 +397,7 @@
                                     <input type="checkbox"  class="checkbox" name="3bNo" <%= props.getProperty("3bNo", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="3" name="3bCmt"><%= props.getProperty("3bCmt", "") %></textarea>
+                                    <textarea cols="20" rows="2" name="3bCmt"><%= props.getProperty("3bCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -554,15 +561,15 @@
 </table>
 </td></tr>
 <tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="630px" id="page3" >    
+<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page3" >    
     <tr>        
         <td colspan="2">
-            <table width="740px" height="600px" border="0"  cellspacing="0" cellpadding="0" >                
+            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >                
                 <tr>                    
                     <th width="3%" valign="top" >4. </th>
                     <th valign="top" class="question">
                         During the <font style="text-decoration:underline">past 4 weeks</font>, have you had any of the following problems with your work or other regular daily activities 
-                        <font style="text-decoration:underline">as a result of your physical health?</font> (Please answer <font style="text-decoration:underline">YES</font> or <font style="text-decoration:underline">No</font>
+                        <font style="text-decoration:underline">as a result of your physical health</font>? (Please answer <font style="text-decoration:underline">YES</font> or <font style="text-decoration:underline">NO</font>
                         for each question by selecting the corresponding checkbox on each line.)
                     </th>
                 </tr>                
@@ -644,7 +651,7 @@
                     <th width="3%" valign="top" >5. </th>
                     <th valign="top" class="question">
                         During the <font style="text-decoration:underline">past 4 weeks</font>, have you had any of the following problems with your work or other regular daily activities 
-                        <font style="text-decoration:underline">as a result of any emotional problems</font> (such as feeling depressed or anxious)? (Please answer <font style="text-decoration:underline">YES</font> or <font style="text-decoration:underline">No</font>
+                        <font style="text-decoration:underline">as a result of any emotional problems</font> (such as feeling depressed or anxious)? (Please answer <font style="text-decoration:underline">YES</font> or <font style="text-decoration:underline">NO</font>
                         for each question by selecting the corresponding checkbox on each line.)
                     </th>
                 </tr>                
@@ -721,10 +728,10 @@
 </table>
 </td></tr>
 <tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="630px" id="page4" >    
+<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page4" >    
     <tr> 
         <td colspan='2'>
-            <table width="740px" height="600px" border="0"  cellspacing="0" cellpadding="0" >
+            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >
                 <tr>                    
                     <th valign="top">6. </th>
                     <th valign="top" colspan="3" class="question">
@@ -828,7 +835,7 @@
                     <td width="5%" align="right">
                         <input type="checkbox"  class="checkbox" name="8Slightly" <%= props.getProperty("8Slightly", "") %>/>
                     </td>
-                    <td width="45%">Slightly</td>                
+                    <td width="45%">A little bit</td>                
                     <td width="5%" align="right">
                         <input type="checkbox"  class="checkbox" name="8Extremely" <%= props.getProperty("8Extremely", "") %>/>
                     </td>
@@ -863,10 +870,10 @@
 </table>
 </td></tr>
 <tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="630px" id="page5" >    
+<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page5" >    
     <tr>        
         <td colspan="2">
-        <table width="740px" height="600px" border="0"  cellspacing="0" cellpadding="0" >
+        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >
                <tr>                    
                     <th width="3%" valign="top" >9. </th>
                     <th valign="top" class="question">
@@ -1106,9 +1113,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td valign="top">i. </td>
+                                <td>i. </td>
                                 <td>
-                                    Have you been a happy person?
+                                    Did you feel tired?
                                 </td>
                                 <td align="center" bgcolor="white">
                                     <input type="checkbox"  class="checkbox" name="9iAll" <%= props.getProperty("9iAll", "") %>/>
@@ -1177,10 +1184,10 @@
 </table>
 </td></tr>
 <tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="630px" id="page6" >    
+<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page6" >    
     <tr>        
         <td valign="top" colspan="2">
-        <table width="740px" height="600px" border="0"  cellspacing="0" cellpadding="0" >
+        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >
                <tr>                    
                     <th width="3%" valign="top" >10. </th>
                     <th valign="top" class="question">
@@ -1306,7 +1313,7 @@
     </tr>    
     <tr class="subject">
         <td align="left">
-            <a href="javascript: goToPage4();"><< Previous Page</a>
+            <a href="javascript: goToPage5();"><< Previous Page</a>
         </td>    
         <td>
            &nbsp;
@@ -1315,7 +1322,7 @@
 </table>
 </td></tr>
 <tr><td valign="top">
-<table class="Head" class="hidePrint">
+<table class="Head" class="hidePrint" height="5%">
     <tr>
         <td align="left">
 <%
