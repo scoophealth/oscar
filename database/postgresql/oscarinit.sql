@@ -58,6 +58,8 @@ CREATE TABLE allergies (
   AGCSP numeric(6) DEFAULT NULL,
   AGCCS numeric(6) DEFAULT NULL,
   TYPECODE INT2 NOT NULL DEFAULT '0',
+  reaction text,
+  drugref_id varchar(100) default NULL,
   PRIMARY KEY (allergyid)
 
 );
@@ -98,6 +100,16 @@ CREATE TABLE appointment (
 );
 
 --
+-- Table structure for table batchEligibility
+--
+CREATE TABLE batchEligibility(
+  responseCode numeric(9) NOT NULL ,
+  MOHResponse varchar(100) NOT NULL,
+  reason varchar(100) NOT NULL,
+  PRIMARY KEY  (responseCode)
+);
+
+--
 -- Table structure for table 'billactivity'
 --
 
@@ -126,17 +138,16 @@ CREATE TABLE billcenter (
   billcenter_desc varchar(20) DEFAULT NULL
 );
 
---
--- Table structure for table 'billing'
---
-
-
 
 --
 -- Sequences for table BILLING
 --
 
 CREATE SEQUENCE billing_numeric_seq;
+
+--
+-- Table structure for table 'billing'
+--
 
 CREATE TABLE billing (
   billing_no numeric(10) DEFAULT nextval('billing_numeric_seq'),
@@ -246,6 +257,9 @@ CREATE TABLE billingservice (
   value varchar(8) DEFAULT NULL,
   percentage varchar(8) DEFAULT NULL,
   billingservice_date DATE DEFAULT NULL,
+  specialty varchar(15) default NULL,
+  region varchar(5) default NULL,
+  anaesthesia char(2) default NULL,
   PRIMARY KEY (billingservice_no)
 
 );
@@ -625,6 +639,7 @@ CREATE TABLE diagnosticcode (
   diagnostic_code varchar(5) NOT NULL DEFAULT '',
   description text,
   status char(1) DEFAULT NULL,
+  region varchar(5) default NULL,
   PRIMARY KEY (diagnosticcode_no)
 
 );
@@ -707,6 +722,10 @@ CREATE TABLE drugs (
   prn INT2 NOT NULL DEFAULT '0',
   special varchar(255) NOT NULL DEFAULT '',
   archived INT2 NOT NULL DEFAULT '0',
+  GN varchar(255) default NULL,
+  ATC varchar(20) default NULL,
+  script_no numeric(10) default NULL,
+  regional_identifier varchar(100) default NULL,
   PRIMARY KEY (drugid)
 
 );
@@ -902,6 +921,7 @@ CREATE TABLE encounterForm (
   form_name varchar(30) NOT NULL DEFAULT '',
   form_value varchar(255) NOT NULL DEFAULT '',
   form_table varchar(50) NOT NULL DEFAULT '',
+  hidden char(2) default '1',
   PRIMARY KEY (form_value)
 
 );
@@ -920,16 +940,27 @@ CREATE TABLE encountertemplate (
 );
 
 --
--- Table structure for table 'favorites'
+-- Table structure for table `encounterWindow`
 --
-
-
+                                                                                                                                                             
+CREATE TABLE encounterWindow (
+  provider_no varchar(6) NOT NULL default '',
+  rowOneSize numeric(10) NOT NULL default '60',
+  rowTwoSize numeric(10) NOT NULL default '60',
+  presBoxSize numeric(10) NOT NULL default '30',
+  rowThreeSize numeric(10) NOT NULL default '378',
+  PRIMARY KEY  (provider_no)
+);
 
 --
 -- Sequences for table FAVORITES
 --
 
 CREATE SEQUENCE favorites_numeric_seq;
+
+--
+-- Table structure for table 'favorites'
+--
 
 CREATE TABLE favorites (
   favoriteid numeric(10) DEFAULT nextval('favorites_numeric_seq'),
@@ -948,6 +979,9 @@ CREATE TABLE favorites (
   nosubs INT2 NOT NULL DEFAULT '0',
   prn INT2 NOT NULL DEFAULT '0',
   special varchar(255) NOT NULL DEFAULT '',
+  GN varchar(255) default NULL,
+  ATC varchar(255) default NULL,
+  regional_identifier varchar(100) default NULL,
   PRIMARY KEY (favoriteid)
 
 );
@@ -1666,10 +1700,160 @@ CREATE TABLE formAR (
 
 );
 
+
 --
--- Table structure for table 'formAlpha'
+-- Sequences for table formadf
+--
+CREATE SEQUENCE formadf_numeric_seq;
+
+--
+-- Table structure for table `formAdf`
 --
 
+CREATE TABLE formAdf (
+  ID numeric(10) NOT NULL default nextval('formadf_numeric_seq'),
+  demographic_no numeric(10) NOT NULL default '0',
+  provider_no numeric(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(6) NOT NULL,
+  c_patientname varchar(60) default NULL,
+  residentno varchar(20) default NULL,
+  c_physician varchar(60) default NULL,
+  c_address varchar(80) default NULL,
+  c_phone varchar(20) default NULL,
+  cComplait text,
+  histPresIll text,
+  childhood varchar(80) default NULL,
+  adult varchar(80) default NULL,
+  operations varchar(80) default NULL,
+  injuries varchar(80) default NULL,
+  mentalIll varchar(80) default NULL,
+  familyHist text,
+  socialHist text,
+  general varchar(80) default NULL,
+  histSkin varchar(80) default NULL,
+  headNeck varchar(80) default NULL,
+  respiratory varchar(80) default NULL,
+  cardiovascular varchar(80) default NULL,
+  gi varchar(80) default NULL,
+  gu varchar(80) default NULL,
+  cns varchar(80) default NULL,
+  histExtremities varchar(80) default NULL,
+  allergies text,
+  sensitivityDrug text,
+  currentMedication text,
+  temp varchar(80) default NULL,
+  pulse varchar(80) default NULL,
+  resp varchar(80) default NULL,
+  bp varchar(80) default NULL,
+  height varchar(80) default NULL,
+  weight varchar(80) default NULL,
+  physicalCondition text,
+  mentalCondition text,
+  skin varchar(80) default NULL,
+  eyes varchar(80) default NULL,
+  ears varchar(80) default NULL,
+  nose varchar(80) default NULL,
+  mouthTeeth varchar(80) default NULL,
+  throat varchar(80) default NULL,
+  neck varchar(80) default NULL,
+  chest varchar(80) default NULL,
+  heart varchar(80) default NULL,
+  abdomen varchar(80) default NULL,
+  genitalia varchar(80) default NULL,
+  lymphatics varchar(80) default NULL,
+  bloodVessels varchar(80) default NULL,
+  locomotor varchar(80) default NULL,
+  extremities varchar(80) default NULL,
+  rectal varchar(80) default NULL,
+  vaginal varchar(80) default NULL,
+  neurological varchar(80) default NULL,
+  behaviorProblem text,
+  functionalLimitation text,
+  diagnoses text,
+  sigDate date default NULL,
+  signature varchar(60) default NULL,
+  PRIMARY KEY  (ID)
+);
+
+
+--
+-- Sequences for table formadfv2
+--
+
+CREATE SEQUENCE formadfv2_numeric_seq;
+
+CREATE TABLE formAdfV2(
+  ID numeric(10) NOT NULL  default nextval('formadfv2_numeric_seq'),
+  demographic_no numeric(10) NOT NULL default '0' ,
+  provider_no numeric(10)  default NULL ,
+  formCreated date  default NULL ,
+  formEdited timestamp   ,
+  c_patientname varchar(60),
+  sendFacility varchar(80),
+  poaSdm varchar(80),
+  capTreatDecY smallint,
+  capTreatDecN smallint,
+  advDirective varchar(100),
+  actProblem text,
+  inactProblem text,
+  courseOverYear text,
+  medications text,
+  allergy varchar(255),
+  diet varchar(255),
+  influDate date,
+  pneuDate date,
+  mantDateRes varchar(50),
+  immuOthers varchar(50),
+  pertLabInvest text,
+  communication varchar(100),
+  appetDysphWeight varchar(100),
+  sleepEnergy varchar(100),
+  depreSymptom varchar(100),
+  problemBehav varchar(100),
+  funcStatus varchar(100),
+  fallFracture varchar(100),
+  pain varchar(100),
+  continence varchar(100),
+  sysSkin varchar(100),
+  socialSupp varchar(100),
+  sysOther varchar(100),
+  phyWeight varchar(10),
+  phyHeight varchar(10),
+  phyBPlying varchar(16),
+  phyBPStanding varchar(16),
+  phyGenAppear varchar(100),
+  phyEyes varchar(50),
+  phyEars varchar(50),
+  phyOralHygeine varchar(50),
+  phyBreast varchar(50),
+  phyCardHeartSound varchar(30),
+  phyPeriPulse varchar(30),
+  phyOther varchar(30),
+  phyRespiratory varchar(100),
+  phyNeurological varchar(30),
+  phyReflexes varchar(30),
+  phyBabinski varchar(30),
+  phyPower varchar(30),
+  phyTone varchar(30),
+  phyPowerOther varchar(30),
+  phyMMSE varchar(20),
+  phyComment varchar(80),
+  phySkin varchar(100),
+  phyAbdomen varchar(80),
+  highRiskProb1 varchar(80),
+  investPlanCare1 varchar(80),
+  highRiskProb2 varchar(80),
+  investPlanCare2 varchar(80),
+  highRiskProb3 varchar(80),
+  investPlanCare3 varchar(80),
+  highRiskProb4 varchar(80),
+  investPlanCare4 varchar(80),
+  sigDate date,
+  signature varchar(60),
+  sigName varchar(60),
+  PRIMARY KEY (ID)
+);
 
 
 --
@@ -1678,6 +1862,9 @@ CREATE TABLE formAR (
 
 CREATE SEQUENCE formalpha_numeric_seq;
 
+--
+-- Table structure for table 'formAlpha'
+--
 CREATE TABLE formAlpha (
   ID numeric(10) DEFAULT nextval('formalpha_numeric_seq'),
   demographic_no numeric(10) NOT NULL DEFAULT '0',
@@ -1728,7 +1915,6 @@ CREATE TABLE formAlpha (
   resources INT2 DEFAULT NULL,
   comments text,
   PRIMARY KEY (ID)
-
 );
 
 --
@@ -1868,8 +2054,284 @@ CREATE TABLE formAnnual (
 );
 
 --
--- Table structure for table 'formLabReq'
+-- Sequences for table FORMANNUALv2
 --
+
+CREATE SEQUENCE formannualv2_numeric_seq;
+
+
+--
+-- Table structure for table `formAnnualV2`
+--
+
+CREATE TABLE formAnnualV2 (
+  ID numeric(10) NOT NULL default nextval('formannualv2_numeric_seq'),
+  demographic_no numeric(10) default NULL,
+  provider_no numeric(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(6) NOT NULL,
+  pName varchar(60) default NULL,
+  age char(3) default NULL,
+  formDate date default NULL,
+  pmhxPshxUpdated int2 default NULL,
+  famHxUpdated int2 default NULL,
+  socHxUpdated int2 default NULL,
+  allergiesUpdated int2 default NULL,
+  medicationsUpdated int2 default NULL,
+  weight varchar(4) default NULL,
+  height varchar(4) default NULL,
+  waist varchar(4) default NULL,
+  lmp date default NULL,
+  BP varchar(6) default NULL,
+  smokingNo int2 default NULL,
+  smokingYes int2 default NULL,
+  smoking varchar(100) default NULL,
+  etohNo int2 default NULL,
+  etohYes int2 default NULL,
+  etoh varchar(100) default NULL,
+  caffineNo int2 default NULL,
+  caffineYes int2 default NULL,
+  caffine varchar(100) default NULL,
+  otcNo int2 default NULL,
+  otcYes int2 default NULL,
+  otc varchar(100) default NULL,
+  exerciseNo int2 default NULL,
+  exerciseYes int2 default NULL,
+  exercise varchar(100) default NULL,
+  nutritionNo int2 default NULL,
+  nutritionYes int2 default NULL,
+  nutrition varchar(100) default NULL,
+  dentalNo int2 default NULL,
+  dentalYes int2 default NULL,
+  dental varchar(100) default NULL,
+  occupationalNo int2 default NULL,
+  occupationalYes int2 default NULL,
+  occupational varchar(100) default NULL,
+  travelNo int2 default NULL,
+  travelYes int2 default NULL,
+  travel varchar(100) default NULL,
+  sexualityNo int2 default NULL,
+  sexualityYes int2 default NULL,
+  sexuality varchar(100) default NULL,
+  generalN int2 default NULL,
+  generalAbN int2 default NULL,
+  general varchar(100) default NULL,
+  headN int2 default NULL,
+  headAbN int2 default NULL,
+  head varchar(100) default NULL,
+  chestN int2 default NULL,
+  chestAbN int2 default NULL,
+  chest varchar(100) default NULL,
+  cvsN int2 default NULL,
+  cvsAbN int2 default NULL,
+  cvs varchar(100) default NULL,
+  giN int2 default NULL,
+  giAbN int2 default NULL,
+  gi varchar(100) default NULL,
+  guN int2 default NULL,
+  guAbN int2 default NULL,
+  gu varchar(100) default NULL,
+  cnsN int2 default NULL,
+  cnsAbN int2 default NULL,
+  cns varchar(100) default NULL,
+  mskN int2 default NULL,
+  mskAbN int2 default NULL,
+  msk varchar(100) default NULL,
+  skinN int2 default NULL,
+  skinAbN int2 default NULL,
+  skin varchar(100) default NULL,
+  moodN int2 default NULL,
+  moodAbN int2 default NULL,
+  mood varchar(100) default NULL,
+  otherN int2 default NULL,
+  otherAbN int2 default NULL,
+  other text,
+  eyesN int2 default NULL,
+  eyesAbN int2 default NULL,
+  eyes varchar(100) default NULL,
+  earsN int2 default NULL,
+  earsAbN int2 default NULL,
+  ears varchar(100) default NULL,
+  oropharynxN int2 default NULL,
+  oropharynxAbN int2 default NULL,
+  oropharynx varchar(100) default NULL,
+  thyroidN int2 default NULL,
+  thyroidAbN int2 default NULL,
+  thyroid varchar(100) default NULL,
+  lnodesN int2 default NULL,
+  lnodesAbN int2 default NULL,
+  lnodes varchar(100) default NULL,
+  clearN int2 default NULL,
+  clearAbN int2 default NULL,
+  clear varchar(100) default NULL,
+  bilatN int2 default NULL,
+  bilatAbN int2 default NULL,
+  bilat varchar(100) default NULL,
+  wheezesN int2 default NULL,
+  wheezesAbN int2 default NULL,
+  wheezes varchar(100) default NULL,
+  cracklesN int2 default NULL,
+  cracklesAbN int2 default NULL,
+  crackles varchar(100) default NULL,
+  chestOther varchar(100) default NULL,
+  s1s2N int2 default NULL,
+  s1s2AbN int2 default NULL,
+  s1s2 varchar(100) default NULL,
+  murmurN int2 default NULL,
+  murmurAbN int2 default NULL,
+  murmur varchar(100) default NULL,
+  periphPulseN int2 default NULL,
+  periphPulseAbN int2 default NULL,
+  periphPulse varchar(100) default NULL,
+  edemaN int2 default NULL,
+  edemaAbN int2 default NULL,
+  edema varchar(100) default NULL,
+  jvpN int2 default NULL,
+  jvpAbN int2 default NULL,
+  jvp varchar(100) default NULL,
+  rhythmN int2 default NULL,
+  rhythmAbN int2 default NULL,
+  rhythm varchar(100) default NULL,
+  chestbpN int2 default NULL,
+  chestbpAbN int2 default NULL,
+  chestbp varchar(100) default NULL,
+  cvsOther varchar(100) default NULL,
+  breastLeftN int2 default NULL,
+  breastLeftAbN int2 default NULL,
+  breastLeft varchar(100) default NULL,
+  breastRightN int2 default NULL,
+  breastRightAbN int2 default NULL,
+  breastRight varchar(100) default NULL,
+  softN int2 default NULL,
+  softAbN int2 default NULL,
+  soft varchar(100) default NULL,
+  tenderN int2 default NULL,
+  tenderAbN int2 default NULL,
+  tender varchar(100) default NULL,
+  bsN int2 default NULL,
+  bsAbN int2 default NULL,
+  bs varchar(100) default NULL,
+  hepatomegN int2 default NULL,
+  hepatomegAbN int2 default NULL,
+  hepatomeg varchar(100) default NULL,
+  splenomegN int2 default NULL,
+  splenomegAbN int2 default NULL,
+  splenomeg varchar(100) default NULL,
+  massesN int2 default NULL,
+  massesAbN int2 default NULL,
+  masses varchar(100) default NULL,
+  rectalN int2 default NULL,
+  rectalAbN int2 default NULL,
+  rectal varchar(100) default NULL,
+  cxN int2 default NULL,
+  cxAbN int2 default NULL,
+  cx varchar(100) default NULL,
+  bimanualN int2 default NULL,
+  bimanualAbN int2 default NULL,
+  bimanual varchar(100) default NULL,
+  adnexaN int2 default NULL,
+  adnexaAbN int2 default NULL,
+  adnexa varchar(100) default NULL,
+  papN int2 default NULL,
+  papAbN int2 default NULL,
+  pap varchar(100) default NULL,
+  exammskN int2 default NULL,
+  exammskAbN int2 default NULL,
+  exammsk varchar(100) default NULL,
+  examskinN int2 default NULL,
+  examskinAbN int2 default NULL,
+  examskin varchar(100) default NULL,
+  examcnsN int2 default NULL,
+  examcnsAbN int2 default NULL,
+  examcns text,
+  impressionPlan text,
+  toDoSexualHealth text,
+  toDoObesity text,
+  toDoCholesterol text,
+  toDoOsteoporosis text,
+  toDoPAPs text,
+  toDoMammogram text,
+  toDoColorectal text,
+  toDoElderly text,
+  immunizationtd int2 default NULL,
+  immunizationPneumovax int2 default NULL,
+  immunizationFlu int2 default NULL,
+  immunizationMenjugate int2 default NULL,
+  toDoImmunization text,
+  signature varchar(60) default NULL,
+  examGenitaliaN int2 default NULL,
+  examGenitaliaAbN int2 default NULL,
+  examGenitalia varchar(100) default NULL,
+  toDoProstateCancer text,
+  PRIMARY KEY  (ID)
+);
+
+--
+-- Sequences for table formfalls
+--
+CREATE SEQUENCE formfalls_numeric_seq;
+
+--
+-- Table structure for table formFall
+--
+CREATE TABLE formFalls(
+  ID numeric(10) NOT NULL  default nextval('formfalls_numeric_seq;'),
+  demographic_no numeric(10) NOT NULL,
+  provider_no numeric(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,
+  fallenLast12MY int2,
+  fallenLast12MN int2,
+  fallenLast12MNotRemember int2,
+  injuredY int2,
+  injuredN int2,
+  medAttnY int2,
+  medAttnN int2,
+  hospitalizedY int2,
+  hospitalizedN int2,
+  limitActY int2,
+  limitActN int2,
+  PRIMARY KEY  (ID)
+);
+
+--
+-- Sequences for table formimmunallergy
+--
+CREATE SEQUENCE formimmunallergy_numeric_seq;
+
+--
+-- Table structure for table `formImmunAllergy`
+--
+
+CREATE TABLE formImmunAllergy (
+  ID numeric(10) NOT NULL default nextval('formimmunallergy_numeric_seq'),
+  demographic_no numeric(10) NOT NULL default '0',
+  provider_no numeric(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(6) NOT NULL,
+  c_surname varchar(30) default NULL,
+  c_givenName varchar(30) default NULL,
+  dateAdmin date default NULL,
+  tradeName varchar(50) default NULL,
+  manufacturer varchar(50) default NULL,
+  lot varchar(50) default NULL,
+  expiDate date default NULL,
+  doseAdminSC int2 default NULL,
+  doseAdminIM int2 default NULL,
+  doseAdminml int2 default NULL,
+  doseAdminTxtml varchar(10) default NULL,
+  locLtDel int2 default NULL,
+  locRtDel int2 default NULL,
+  locLtDelOUQ int2 default NULL,
+  locRtDelOUQ int2 default NULL,
+  locOther int2 default NULL,
+  InstrStay20 int2 default NULL,
+  InstrExpectLoc int2 default NULL,
+  InstrFU int2 default NULL,
+  disChNoComp int2 default NULL,
+  PRIMARY KEY  (ID)
+);
+
 
 
 
@@ -1879,6 +2341,9 @@ CREATE TABLE formAnnual (
 
 CREATE SEQUENCE formlabreq_numeric_seq;
 
+--
+-- Table structure for table 'formLabReq'
+--
 CREATE TABLE formLabReq (
   ID numeric(10) DEFAULT nextval('formlabreq_numeric_seq'),
   demographic_no numeric(10) DEFAULT NULL,
@@ -1948,18 +2413,15 @@ CREATE TABLE formLabReq (
 
 );
 
---
--- Table structure for table 'formMMSE'
---
-
-
 
 --
 -- Sequences for table FORMMMSE
 --
-
 CREATE SEQUENCE formmmse_numeric_seq;
 
+--
+-- Table structure for table 'formMMSE'
+--
 CREATE TABLE formMMSE (
   ID numeric(10) DEFAULT nextval('formmmse_numeric_seq'),
   demographic_no numeric(10) DEFAULT NULL,
@@ -1992,21 +2454,16 @@ CREATE TABLE formMMSE (
   i_depression INT2 DEFAULT NULL,
   i_normal INT2 DEFAULT NULL,
   PRIMARY KEY (ID)
-
 );
-
---
--- Table structure for table 'formMentalHealth'
---
-
-
 
 --
 -- Sequences for table FORMMENTALHEALTH
 --
-
 CREATE SEQUENCE formmentalhealth_numeric_seq;
 
+--
+-- Table structure for table 'formMentalHealth'
+--
 CREATE TABLE formMentalHealth (
   ID numeric(10) DEFAULT nextval('formmentalhealth_numeric_seq'),
   demographic_no numeric(10) NOT NULL DEFAULT '0',
@@ -2431,17 +2888,13 @@ CREATE TABLE formPeriMenopausal (
 );
 
 --
--- Table structure for table 'formRourke'
---
-
-
-
---
 -- Sequences for table FORMROURKE
 --
-
 CREATE SEQUENCE formrourke_numeric_seq;
 
+--
+-- Table structure for table 'formRourke'
+--
 CREATE TABLE formRourke (
   ID numeric(10) DEFAULT nextval('formrourke_numeric_seq'),
   demographic_no numeric(10) DEFAULT NULL,
@@ -2873,17 +3326,57 @@ CREATE TABLE formRourke (
 );
 
 --
--- Table structure for table 'formType2Diabetes'
+-- Sequences for table formSelfAdministered
 --
+CREATE SEQUENCE formselfadministered_numeric_seq;
 
-
+--
+-- Table structure for table formSelfAdministered
+--
+CREATE TABLE formSelfAdministered(
+  ID numeric(10) NOT NULL  default nextval('formselfadministered_numeric_seq;'),
+  demographic_no numeric(10) NOT NULL,
+  provider_no numeric(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,
+  sex varchar(1),
+  dob date,
+  healthEx int2,
+  healthVG int2,
+  healthG int2,
+  healthF int2,
+  healthP int2,
+  stayInHospNo int2,
+  stayInHosp1 int2,
+  stayInHosp2Or3 int2,
+  stayInHospMore3 int2,
+  visitPhyNo int2,
+  visitPhy1 int2,
+  visitPhy2Or3 int2,
+  visitPhyMore3 int2,
+  diabetesY int2,
+  diabetesN int2,
+  heartDiseaseY int2,
+  heartDiseaseN int2,
+  anginaPectorisY int2,
+  anginaPectorisN int2,
+  myocardialInfarctionY int2,
+  myocardialInfarctionN int2,
+  anyHeartAttackY int2,
+  anyHeartAttackN int2,
+  relativeTakeCareY int2,
+  relativeTakeCareN int2,
+  PRIMARY KEY  (ID)
+);
 
 --
 -- Sequences for table FORMTYPE2DIABETES
 --
-
 CREATE SEQUENCE formtype2diabetes_numeric_se;
 
+--
+-- Table structure for table 'formType2Diabetes'
+--
 CREATE TABLE formType2Diabetes (
   ID numeric(10) DEFAULT nextval('formtype2diabetes_numeric_se'),
   demographic_no numeric(10) DEFAULT NULL,
@@ -3021,31 +3514,27 @@ CREATE TABLE formType2Diabetes (
   initials3 varchar(30) DEFAULT NULL,
   initials4 varchar(30) DEFAULT NULL,
   initials5 varchar(30) DEFAULT NULL,
+  resource1 int2 default NULL,
+  resource2 int2 default NULL,
   PRIMARY KEY (ID)
-
 );
 
 --
 -- Table structure for table 'groupMembers_tbl'
 --
-
 CREATE TABLE groupMembers_tbl (
   groupID numeric(10) DEFAULT NULL,
   provider_No varchar(6) DEFAULT NULL
 );
 
 --
--- Table structure for table 'groups_tbl'
---
-
-
-
---
 -- Sequences for table GROUPS_TBL
 --
-
 CREATE SEQUENCE groups_tbl_numeric_seq;
 
+--
+-- Table structure for table 'groups_tbl'
+--
 CREATE TABLE groups_tbl (
   groupID numeric(10) DEFAULT nextval('groups_tbl_numeric_seq'),
   parentID numeric(10) DEFAULT NULL,
@@ -3086,6 +3575,318 @@ CREATE TABLE immunizations (
   PRIMARY KEY (ID)
 
 );
+
+
+
+CREATE SEQUENCE mdsmsh_numeric_seq;
+--
+-- Table structure for table `mdsMSH`
+--
+
+CREATE TABLE mdsMSH (
+  segmentID numeric(10) NOT NULL default nextval('mdsmsh_numeric_seq'),
+  sendingApp char(180) default NULL,
+  timestamp timestamp NOT NULL default current_timestamp,
+  type char(7) default NULL,
+  messageConID char(20) default NULL,
+  processingID char(3) default NULL,
+  versionID char(8) default NULL,
+  acceptAckType char(2) default NULL,
+  appAckType char(2) default NULL,
+  demographic_no numeric(10) default '0',
+  PRIMARY KEY  (segmentID)
+);
+
+
+CREATE SEQUENCE mdsnte_numeric_seq;
+--
+-- Table structure for table `mdsNTE`
+--
+
+CREATE TABLE mdsNTE (
+  segmentID numeric(10) default NULL,
+  sourceOfComment varchar(8) default NULL,
+  comment varchar(255) default NULL,
+  associatedOBX numeric(10) default NULL
+);
+
+
+CREATE SEQUENCE mdsobr_numeric_seq;
+--
+-- Table structure for table `mdsOBR`
+--
+CREATE TABLE mdsOBR (
+  segmentID numeric(10) default NULL,
+  obrID numeric(10) default NULL,
+  placerOrderNo char(75) default NULL,
+  universalServiceID char(200) default NULL,
+  observationTimestamp char(26) default NULL,
+  specimenRecTimestamp char(26) default NULL,
+  fillerFieldOne char(60) default NULL,
+  quantityTiming char(200) default NULL
+);
+
+
+CREATE SEQUENCE mdsobx_numeric_seq;
+--
+-- Table structure for table `mdsOBX`
+--
+CREATE TABLE mdsOBX (
+  segmentID numeric(10) default NULL,
+  obxID numeric(10) default '0',
+  valueType char(2) default NULL,
+  observationIden varchar(80) default NULL,
+  observationSubID varchar(255) default NULL,
+  observationValue varchar(255) default NULL,
+  abnormalFlags varchar(5) default NULL,
+  observationResultStatus char(2) default NULL,
+  producersID varchar(60) default NULL,
+  associatedOBR numeric(10) default NULL
+);
+
+
+CREATE SEQUENCE mdspid_numeric_seq;
+--
+-- Table structure for table `mdsPID`
+--
+CREATE TABLE mdsPID (
+  segmentID numeric(10) default NULL,
+  intPatientID char(16) default NULL,
+  altPatientID char(15) default NULL,
+  patientName char(48) default NULL,
+  dOB char(26) default NULL,
+  sex char(1) default NULL,
+  homePhone char(40) default NULL,
+  healthNumber char(16) default NULL
+);
+
+
+CREATE SEQUENCE mdspv1_numeric_seq;
+--
+-- Table structure for table `mdsPV1`
+--
+
+CREATE TABLE mdsPV1 (
+  segmentID numeric(10) default NULL,
+  patientClass char(1) default NULL,
+  patientLocation char(80) default NULL,
+  refDoctor char(60) default NULL,
+  conDoctor char(60) default NULL,
+  admDoctor char(60) default NULL,
+  vNumber char(20) default NULL,
+  accStatus char(2) default NULL,
+  admTimestamp char(26) default NULL
+);
+
+
+CREATE SEQUENCE mdszcl_numeric_seq;
+--
+-- Table structure for table `mdsZCL`
+--
+CREATE TABLE mdsZCL (
+  segmentID numeric(10) default NULL,
+  setID char(4) default NULL,
+  consultDoc char(60) default NULL,
+  clientAddress char(106) default NULL,
+  route char(6) default NULL,
+  stop char(6) default NULL,
+  area char(2) default NULL,
+  reportSet char(1) default NULL,
+  clientType char(5) default NULL,
+  clientModemPool char(2) default NULL,
+  clientFaxNumber char(40) default NULL,
+  clientBakFax char(40) default NULL
+);
+
+CREATE SEQUENCE mdszct_numeric_seq;
+--
+-- Table structure for table `mdsZCT`
+--
+CREATE TABLE mdsZCT (
+  segmentID numeric(10) default NULL,
+  barCodeIdentifier char(14) default NULL,
+  placerGroupNo char(14) default NULL,
+  observationTimestamp char(26) default NULL
+);
+
+CREATE SEQUENCE mdszfr_numeric_seq;
+--
+-- Table structure for table `mdsZFR`
+--
+CREATE TABLE mdsZFR (
+  segmentID numeric(10) default NULL,
+  reportForm char(1) default NULL,
+  reportFormStatus char(1) default NULL,
+  testingLab varchar(5) default NULL,
+  medicalDirector varchar(255) default NULL,
+  editFlag varchar(255) default NULL,
+  abnormalFlag varchar(255) default NULL
+);
+
+CREATE SEQUENCE mdszlb_numeric_seq;
+--
+-- Table structure for table `mdsZLB`
+--
+CREATE TABLE mdsZLB (
+  segmentID numeric(10) default NULL,
+  labID varchar(5) default NULL,
+  labIDVersion varchar(255) default NULL,
+  labAddress varchar(100) default NULL,
+  primaryLab varchar(5) default NULL,
+  primaryLabVersion varchar(5) default NULL,
+  MDSLU varchar(5) default NULL,
+  MDSLV varchar(5) default NULL
+);
+
+CREATE SEQUENCE mdszmc_numeric_seq;
+--
+-- Table structure for table `mdsZMC`
+--
+CREATE TABLE mdsZMC (
+  segmentID numeric(10) default NULL,
+  setID varchar(10) default NULL,
+  messageCodeIdentifier varchar(10) default NULL,
+  messageCodeVersion varchar(255) default NULL,
+  noMessageCodeDescLines varchar(30) default NULL,
+  sigFlag varchar(5) default NULL,
+  messageCodeDesc varchar(255) default NULL
+);
+
+
+CREATE SEQUENCE mdszmn_numeric_seq;
+--
+-- Table structure for table `mdsZMN`
+--
+CREATE TABLE mdsZMN (
+  segmentID numeric(10) default NULL,
+  resultMnemonic varchar(20) default NULL,
+  resultMnemonicVersion varchar(255) default NULL,
+  reportName varchar(255) default NULL,
+  units varchar(60) default NULL,
+  cumulativeSequence varchar(255) default NULL,
+  referenceRange varchar(255) default NULL,
+  resultCode varchar(20) default NULL,
+  reportForm varchar(255) default NULL,
+  reportGroup varchar(10) default NULL,
+  reportGroupVersion varchar(255) default NULL
+);
+
+
+CREATE SEQUENCE mdszrg_numeric_seq;
+--
+-- Table structure for table `mdsZRG`
+--
+CREATE TABLE mdsZRG (
+  segmentID numeric(10) default NULL,
+  reportSequence varchar(255) default NULL,
+  reportGroupID varchar(10) default NULL,
+  reportGroupVersion varchar(10) default NULL,
+  reportFlags varchar(255) default NULL,
+  reportGroupDesc varchar(30) default NULL,
+  MDSIndex varchar(255) default NULL,
+  reportGroupHeading varchar(255) default NULL
+);
+
+
+CREATE SEQUENCE measurements_numeric_seq;
+--
+-- Table structure for table `measurements`
+--
+CREATE TABLE measurements(
+  id int  default nextval('measurements_numeric_seq'),
+  type varchar(4) NOT NULL,
+  demographicNo numeric(10) NOT NULL default '0', 
+  providerNo varchar(6) NOT NULL default '',
+  dataField  varchar(10) NOT NULL,
+  measuringInstruction varchar(255) NOT NULL,  
+  comments varchar(255) NOT NULL, 
+  dateObserved timestamp NOT NULL, 
+  dateEntered timestamp NOT NULL
+);
+
+
+CREATE SEQUENCE measurementcsslocation_numeric_seq;
+--
+-- Table structure for table `measurementCSSLocation`
+--
+CREATE TABLE measurementCSSLocation(
+  cssID numeric(9) NOT NULL default nextval('measurementcsslocation_numeric_seq'),
+  location varchar(255) NOT NULL,  
+  PRIMARY KEY  (cssID) 
+);
+
+CREATE SEQUENCE measurementsdeleted_numeric_seq;
+--
+-- Table structure for table `measurementsDeleted`
+--
+CREATE TABLE measurementsDeleted(
+  id int  default nextval('measurementsdeleted_numeric_seq'),
+  type varchar(4) NOT NULL,
+  demographicNo numeric(10) NOT NULL default '0', 
+  providerNo varchar(6) NOT NULL default '',
+  dataField  varchar(10) NOT NULL,
+  measuringInstruction varchar(255) NOT NULL,  
+  comments varchar(255) NOT NULL, 
+  dateObserved timestamp NOT NULL, 
+  dateEntered timestamp NOT NULL,
+  dateDeleted timestamp NOT NULL,
+  PRIMARY KEY(id)
+);
+
+
+CREATE SEQUENCE measurementgroup_numeric_seq;
+--
+-- Table structure for table `measurementGroup`
+--
+CREATE TABLE measurementGroup(
+  name varchar(100) NOT NULL,
+  typeDisplayName varchar(20) 
+);
+
+
+CREATE SEQUENCE measurementgroupstyle_numeric_seq;
+--
+-- Table structure for table `measurementGroupStyle`
+--
+CREATE TABLE measurementGroupStyle(
+  groupID numeric(9) NOT NULL default nextval('measurementgroupstyle_numeric_seq'),
+  groupName varchar(100) NOT NULL,
+  cssID numeric(9) NOT NULL,
+  PRIMARY KEY  (groupID) 
+);
+
+
+
+CREATE SEQUENCE measurementtype_numeric_seq;
+--
+-- Table structure for table `measurementType`
+--
+CREATE TABLE measurementType (
+  id int  default nextval('measurementtype_numeric_seq'),
+  type varchar(4) NOT NULL,
+  typeDisplayName varchar(20) NOT NULL,
+  typeDescription varchar(255) NOT NULL, 
+  measuringInstruction varchar(255) NOT NULL, 
+  validation varchar(100) NOT NULL,
+  PRIMARY KEY(id)
+);
+
+
+CREATE SEQUENCE measurementtypedeleted_numeric_seq;
+--
+-- Table structure for table `measurementTypeDeleted`
+--
+CREATE TABLE measurementTypeDeleted (
+  id int  default nextval('measurementtypedeleted_numeric_seq'),
+  type varchar(4) NOT NULL,
+  typeDisplayName varchar(20) NOT NULL,
+  typeDescription varchar(255) NOT NULL, 
+  measuringInstruction varchar(255) NOT NULL, 
+  validation varchar(100) NOT NULL,
+  dateDeleted timestamp NOT NULL,
+  PRIMARY KEY(id)
+);
+
 
 --
 -- Table structure for table 'messagelisttbl'
@@ -3152,13 +3953,17 @@ CREATE TABLE oscarcommlocations (
   addressBook text,
   remoteServerURL varchar(30) DEFAULT NULL,
   PRIMARY KEY (locationId)
-
 );
 
 --
--- Table structure for table 'preference'
+-- Table structure for table `patientLabRouting`
 --
 
+CREATE TABLE patientLabRouting (
+  demographic_no numeric(10) NOT NULL default '0',
+  lab_no numeric(10) NOT NULL default '0',
+  PRIMARY KEY  (lab_no)
+);
 
 
 --
@@ -3166,6 +3971,10 @@ CREATE TABLE oscarcommlocations (
 --
 
 CREATE SEQUENCE preference_numeric_seq;
+
+--
+-- Table structure for table 'preference'
+--
 
 CREATE TABLE preference (
   preference_no numeric(6) DEFAULT nextval('preference_numeric_seq'),
@@ -3176,13 +3985,7 @@ CREATE TABLE preference (
   mygroup_no varchar(10) DEFAULT NULL,
   color_template varchar(10) DEFAULT NULL,
   PRIMARY KEY (preference_no)
-
 );
-
---
--- Table structure for table 'prescribe'
---
-
 
 
 --
@@ -3190,6 +3993,10 @@ CREATE TABLE preference (
 --
 
 CREATE SEQUENCE prescribe_numeric_seq;
+
+--
+-- Table structure for table 'prescribe'
+--
 
 CREATE TABLE prescribe (
   prescribe_no numeric(12) DEFAULT nextval('prescribe_numeric_seq'),
@@ -3202,18 +4009,32 @@ CREATE TABLE prescribe (
 
 );
 
+
+CREATE SEQUENCE prescription_numeric_sq;
 --
--- Table structure for table 'professionalSpecialists'
+-- Table structure for table `prescription`
 --
 
+CREATE TABLE prescription (
+  script_no numeric(10) NOT NULL default nextval('prescription_numeric_sq'),
+  provider_no varchar(6) default NULL,
+  demographic_no numeric(10) default NULL,
+  date_prescribed date default NULL,
+  date_printed date default NULL,
+  dates_reprinted text,
+  textView text,
+  PRIMARY KEY  (script_no)
+);
 
 
 --
 -- Sequences for table PROFESSIONALSPECIALISTS
 --
-
 CREATE SEQUENCE professionalspecialists_nume;
 
+--
+-- Table structure for table 'professionalSpecialists'
+--
 CREATE TABLE professionalSpecialists (
   specId numeric(10) DEFAULT nextval('professionalspecialists_nume'),
   fName varchar(32) DEFAULT NULL,
@@ -3277,10 +4098,17 @@ CREATE TABLE providerExt (
 );
 
 --
--- Table structure for table 'radetail'
+-- Table structure for table `providerLabRouting`
 --
 
-
+CREATE TABLE providerLabRouting (
+  provider_no varchar(6) NOT NULL default '',
+  lab_no numeric(10) NOT NULL default '0',
+  status char(1) default '',
+  comment varchar(255) default '',
+  timestamp timestamp NOT NULL,
+  PRIMARY KEY  (provider_no,lab_no)
+);
 
 --
 -- Sequences for table RADETAIL
@@ -3288,6 +4116,9 @@ CREATE TABLE providerExt (
 
 CREATE SEQUENCE radetail_numeric_seq;
 
+--
+-- Table structure for table 'radetail'
+--
 CREATE TABLE radetail (
   radetail_no numeric(6) DEFAULT nextval('radetail_numeric_seq'),
   raheader_no numeric(6) NOT NULL DEFAULT '0',
@@ -3306,17 +4137,14 @@ CREATE TABLE radetail (
 );
 
 --
--- Table structure for table 'raheader'
---
-
-
-
---
 -- Sequences for table RAHEADER
 --
 
 CREATE SEQUENCE raheader_numeric_seq;
 
+--
+-- Table structure for table 'raheader'
+--
 CREATE TABLE raheader (
   raheader_no numeric(6) DEFAULT nextval('raheader_numeric_seq'),
   filename varchar(12) NOT NULL DEFAULT '',
@@ -3394,9 +4222,30 @@ CREATE TABLE reportagesex (
 );
 
 --
+-- Table structure for table reportByExamples
+--
+CREATE TABLE reportByExamples(
+  id numeric(9) default nextval('') ,
+  providerNo varchar(6) NOT NULL,
+  query text NOT NULL,
+  date timestamp NOT NULL,
+  PRIMARY KEY  (id)
+);
+
+--
+-- Table structure for table reportByExamplesFavorite
+--
+CREATE TABLE reportByExamplesFavorite(
+  id numeric(9) default nextval('') ,
+  providerNo varchar(6) NOT NULL,
+  query text NOT NULL,  
+  PRIMARY KEY  (id)
+);
+
+
+--
 -- Table structure for table 'reportprovider'
 --
-
 CREATE TABLE reportprovider (
   provider_no varchar(10) DEFAULT '',
   team varchar(10) DEFAULT '',
@@ -3589,18 +4438,35 @@ CREATE TABLE studydata (
 
 );
 
---
--- Table structure for table 'tickler'
---
 
+CREATE SEQUENCE studylogin_numeric_sq;
+--
+-- Table structure for table `studylogin`
+--
+CREATE TABLE studylogin (
+  id numeric(6) NOT NULL default nextval('studylogin_numeric_sq'),
+  provider_no varchar(6) default NULL,
+  study_no numeric(3) default NULL,
+  remote_login_url varchar(100) default NULL,
+  url_name_username varchar(20) NOT NULL default '',
+  url_name_password varchar(20) NOT NULL default '',
+  username varchar(30) NOT NULL default '',
+  password varchar(100) NOT NULL default '',
+  current int2 default NULL,
+  creator varchar(6) NOT NULL default '',
+  timestamp timestamp(6) NOT NULL,
+  PRIMARY KEY  (id)
+);
 
 
 --
 -- Sequences for table TICKLER
 --
-
 CREATE SEQUENCE tickler_numeric_seq;
 
+--
+-- Table structure for table 'tickler'
+--
 CREATE TABLE tickler (
   tickler_no numeric(10) DEFAULT nextval('tickler_numeric_seq'),
   demographic_no numeric(10) DEFAULT '0',
@@ -3609,32 +4475,41 @@ CREATE TABLE tickler (
   update_date TIMESTAMP DEFAULT '0001-01-01 00:00:00',
   service_date DATE DEFAULT NULL,
   creator varchar(6) DEFAULT NULL,
+  priority varchar(6) default 'Normal',
+  task_assigned_to varchar(255),
   PRIMARY KEY (tickler_no)
-
 );
-
---
--- Table structure for table 'tmpdiagnosticcode'
---
-
 
 
 --
 -- Sequences for table TMPDIAGNOSTICCODE
 --
-
 CREATE SEQUENCE tmpdiagnosticcode_numeric_se;
 
+--
+-- Table structure for table 'tmpdiagnosticcode'
+--
 CREATE TABLE tmpdiagnosticcode (
   diagnosticcode_no numeric(5) DEFAULT nextval('tmpdiagnosticcode_numeric_se'),
   diagnostic_code varchar(5) NOT NULL DEFAULT '',
   description text,
   status char(1) DEFAULT NULL,
   PRIMARY KEY (diagnosticcode_no)
-
 );
 
-
+CREATE SEQUENCE validations_int_sq;
+CREATE TABLE validations(
+  id int default nextval('validations_int_sq'),
+  name varchar(100) NOT NULL,
+  regularExp varchar(100),
+  maxValue double precision, 
+  minValue double precision, 
+  maxLength numeric(3), 
+  minLength numeric(3), 
+  isNumeric bool, 
+  isTrue bool,
+ PRIMARY KEY(id)
+);
 
 ----
 ---- Indexes for table RECYCLEBIN
