@@ -39,9 +39,9 @@
 <%
     ResultSet rsTickler = null;
     ResultSet rsStudy = null;
-    ResultSet rsVer = null;
+    ResultSet rsDemo = null;
     String tickler_no="", textColor="", tickler_note="";
-    String ver = "";
+    String ver = "", roster="";   
     StringBuffer study_no=null, study_link=null,studyDescription=null;
 	String studySymbol = "#", studyColor = "red";
 
@@ -497,11 +497,16 @@ function goZoomView(s, n) {
                       tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
                   }
           	  
-                  rsVer = null;
+                  rsDemo = null;
                   ver = "";
-                  rsVer = apptMainBean.queryResults(demographic_no, "search_demographic_ver");
-                  if(rsVer.next()){
-                    ver = rsVer.getString("ver");
+                  roster = "";
+                  rsDemo = apptMainBean.queryResults(demographic_no, "search_demograph");
+                  if(rsDemo.next()){
+                    ver = rsDemo.getString("ver");
+                    roster = rsDemo.getString("roster_status");
+                    if (roster == null || roster.equalsIgnoreCase("RO")) {
+                        roster = "";
+                    }
                   }
                   study_no = new StringBuffer("");
                   study_link = new StringBuffer("");
@@ -561,7 +566,8 @@ function goZoomView(s, n) {
         			  //System.out.println(name+" / " +demographic_no);
 				%>	<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
 <% if (study_no.toString().compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../form/study/forwardstudyname.jsp?study_link=<%=study_link.toString()%>&demographic_no=<%=demographic_no%>&study_no=<%=study_no%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.study"/>: <%=UtilMisc.htmlEscape(studyDescription.toString())%>"><%="<font color='"+studyColor+"'>"+studySymbol+"</font>"%></a><%} %>
-<% if (ver.toString().compareTo("##") == 0){%> <font color="red">*</font><%}%>
+<% if (ver.toString().compareTo("##") == 0){%> <font color="red">$</font><%}%>
+<% if (roster.toString().compareTo("") != 0){%> <font color="red">*</font><%}%>
 <a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;" title="<%=name%>
 reason: <%=UtilMisc.htmlEscape(reason)%>
 notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
