@@ -37,10 +37,12 @@ public class IncomingMDSFiles {
      */    
     public boolean checkForBusyFile(String busyFile){
         boolean exists = (new File(busyFile)).exists();           
+        logger.info("Checking for Busy File, busy file: "+exists );
         return  exists;
     }
     
     public boolean putWorkingFile(String workingFile){
+        logger.info("Creating Working File");
         boolean success = false;
         try {
             File file = new File(workingFile);
@@ -51,20 +53,26 @@ public class IncomingMDSFiles {
                 // File did not exist and was created
             } else {
                 // File already exists
+               logger.info("Working file already existed");
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+           logger.severe("Error Creating Working File "+e.getMessage());
+        }
         return success;
     }
     
     public boolean removeWorkingFile(String workingFile){
+       logger.info("Removing Working File");
      boolean success = (new File(workingFile)).delete();
      if (!success) {
         // Deletion failed
+        logger.severe("Removing Working File failed");
      }
      return success;
     }
     
     public boolean filesToParse(String incomingHL7dir,String moddedTime){
+       logger.info("Checking for Files to parse");
         boolean parsingToBeDone = false;
         //Check when all files were modified
         
@@ -76,14 +84,15 @@ public class IncomingMDSFiles {
             }
         }catch( NumberFormatException e){
           logger.info("Looks to be the first time Program Runs mod file"+moddedTime+" has not been created :"
-                      +"so we give it the benefit of the doubnt and parse the files");      
+                      +"so we give it the benefit of the doubt and parse the files");      
            parsingToBeDone = true;
         }
         
-        System.out.println("Current Modded time = "+curModdedTime+" Last Modded Time "+lastModdedTime);
+        logger.info("Current Modded time = "+curModdedTime+" Last Modded Time "+lastModdedTime);
         
         return parsingToBeDone;
     }
+    
     public long getCurrentModifiedTime(String incomingHL7dir){
        File file = new File(incomingHL7dir);           
        return file.lastModified(); 
@@ -101,8 +110,7 @@ public class IncomingMDSFiles {
            logger.severe("Can't read from modified file :"+moddedTime);   
            logger.severe(e.getMessage()); 
         }
-        
-        System.out.println("this is what str is "+str);
+                
         long retval = 0;
         
         try{ retval = Long.parseLong(str); }
@@ -122,17 +130,19 @@ public class IncomingMDSFiles {
     }
     
     public ArrayList getFileNamesToParse(String incomingHL7dir){
+        logger.info("Getting Files Names to Parse");
         ArrayList retval = new ArrayList();
         File dir = new File(incomingHL7dir);
     
         String[] children = dir.list();
         if (children == null) {
             // Either dir does not exist or is not a directory
+           logger.severe("Dir "+incomingHL7dir+" does not exist or is not a directory");
         } else {
             for (int i=0; i<children.length; i++) {
             // Get filename of file or directory
             if (!children[i].endsWith("TXT")){
-                //System.out.println("filename :"+children[i]);
+                logger.info("Adding filename :"+children[i] +" to list of files to be parsed");
                 retval.add(children[i]);
             }
             //String filename = children[i];
@@ -143,6 +153,7 @@ public class IncomingMDSFiles {
     
     
     public boolean moveCorruptedFile(String filename,String errorHL7dir){
+       logger.info("Moving Corrupted File: "+filename);
        boolean retval = true;
        // File (or directory) to be moved
        File file = new File(filename);
@@ -177,6 +188,7 @@ public class IncomingMDSFiles {
     }
     
     public boolean moveCompletedFile(String filename,String completedHL7dir){
+       logger.info("Moving Completed File: "+filename);
        boolean retval = true;
        // File (or directory) to be moved
        File file = new File(filename);

@@ -41,7 +41,7 @@ public class IncomingLabManagement {
         try {
             // Create an appending file handler
             boolean append = true;
-            FileHandler handler = new FileHandler("myTest.log", append);
+            FileHandler handler = new FileHandler("LabManagement.log", append);
             handler.setFormatter(new SimpleFormatter());
             logger.setLevel(Level.ALL);             
             // Add to the desired logger
@@ -69,19 +69,21 @@ public class IncomingLabManagement {
        auditLogFile    = labProperties.getProperty("auditLogFile");
     }
     public static void main(String[] args) {
-       
+        initLogger();
+        logger.info("Start ");
         try{
            if ( args[0] == null ){ throw new Exception("Usage Exception"); }
            loadProperties(args[0]);
            
         }catch(Exception loadingEx){
+           logger.severe("Error loading properties file");
            System.out.println("Usage: IncomingLabManagement <properties file>");
            System.exit(2);
         }
             
-        initLogger();
+        
         IncomingMDSFiles inMDS = new IncomingMDSFiles();
-        System.out.println("START, logging set to "+logger.getLevel());
+                
         if (!inMDS.checkForBusyFile(busyFile) ){                                                //CHeck for "BUSY.TXT"
             
             logger.info("Busy File Not Found");
@@ -94,9 +96,9 @@ public class IncomingLabManagement {
                     
                     for (int i = 0 ; i < fileNamesList.size();i++){
                         String filename = (String) fileNamesList.get(i);
-                        System.out.println("file name : "+filename);
+                        logger.info("About to parse file "+filename);
                         BulkFileParse bfp = new BulkFileParse();
-                                                                                    logger.info("About to parse file "+filename);
+                        
                                                                                     
                         if(bfp.parseFile(incomingHL7dir+"/"+filename)){
                              bfp.processResult(auditLogFile,dupsHL7dir);                              
@@ -110,14 +112,14 @@ public class IncomingLabManagement {
                     logger.info("No files To Parse");
                 }
             }catch (Exception e1){
-                logger.severe("Major Mishap");
+                logger.severe("Major Mishap: "+e1.getMessage());
                 e1.printStackTrace();
             }
             inMDS.removeWorkingFile(incomingHL7dir+"/"+workingFile);
             inMDS.setLastModifiedTime(inMDS.getCurrentModifiedTime(incomingHL7dir),moddedTime);
-        }
-        System.out.println("END");
-        
+        }        
+        logger.info("END");        
     }
+        
     
 }
