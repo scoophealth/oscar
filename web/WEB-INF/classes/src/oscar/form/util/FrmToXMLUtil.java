@@ -29,6 +29,7 @@ import java.text.*;
 import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.XmlCalendar;
 import oscar.oscarEncounter.oscarMeasurements.bean.*;
+import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarRx.data.*;
 import oscar.util.UtilDateUtilities;
 import noNamespace.*;
@@ -50,33 +51,37 @@ public class FrmToXMLUtil{
         // TODO code application logic here            
         String _dateFormat = "yyyy-MM-dd hh:mm:ss";
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
-        
+        ProviderData prData = new ProviderData(dataProps.getProperty("provider_no"));
+        String vType = "7"; //Other
+        if(prData.getProvider_type().equalsIgnoreCase("doctor"))
+            vType = "1"; //FamilyMDVisit
+        else if(prData.getProvider_type().equalsIgnoreCase("nurse"))
+            vType = "3"; //NurseVisit        
+
         SitePatientVisitRecordsDocument visitDocument = SitePatientVisitRecordsDocument.Factory.newInstance();
         SitePatientVisitRecordsDocument.SitePatientVisitRecords visitRecord = visitDocument.addNewSitePatientVisitRecords();
-
-        //Vector patientVec = comm.getAllPatientsInStudy();
-
-        //for ( int pVec = 0 ; pVec < patientVec.size();pVec++){
-        //Properties patientProps = (Properties) patientVec.get(pVec);
-
-        //String patientCod = (String) patientProps.get("Patient_cod");         
-        //Vector vec = comm.getElementByDemographicAndDate(patientCod,start,end);
-        SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit visit  = visitRecord.addNewSitePatientVisit();                 
-        try{
-            
-            visit.setPatientCod(dataProps.getProperty("demographic_no"));
-            visit.setVisitCod(dataProps.getProperty("visitCod"));
+        SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit visit  = visitRecord.addNewSitePatientVisit();
+        
+        try{   
             String who = dataProps.getProperty("provider_no");
             String how = "EMR";
             String when = dateEntered;
-                        
             
+            SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SelVisitType visitType = visit.addNewSelVisitType();
+            visitType.setValue(vType);
+            visitType.setSignedWhen(when);
+            visitType.setSignedHow(how);
+            visitType.setSignedWho(who);
+
+            visit.setPatientCod(dataProps.getProperty("demographic_no"));
+            visit.setVisitCod(dataProps.getProperty("visitCod"));            
+                                    
             EctMeasurementTypesBean mt;
             for (int i = 0; i < measurementTypes.size(); i++){        
                 mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
                 String itemName = mt.getType();
                 String methodCall = (String) nameProps.get(itemName+"Value");
-                //System.out.println("method "+methodCall);
+                System.out.println("method "+methodCall);
                 org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
                 
                 if(mt.getType().equalsIgnoreCase("BP") && !gValidator.isBlankOrNull(dataProps.getProperty("SBPValue"))){
@@ -91,9 +96,6 @@ public class FrmToXMLUtil{
                        String value = dataProps.getProperty("SBPValue");
                        //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
-
-                       //String date = dataProps.getProperty(itemName+"Date");
-                       //setWhoWhatWhereWhen(obj,how,who,when,date);
                     }
                     methodCall = (String) nameProps.get("DBPValue");
                     if (methodCall != null){
@@ -106,9 +108,6 @@ public class FrmToXMLUtil{
                        String value = dataProps.getProperty("DBPValue");
                        //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
-
-                       //String date = dataProps.getProperty(itemName+"Date");
-                       //setWhoWhatWhereWhen(obj,how,who,when,date);
                     }
                     methodCall = (String) nameProps.get("BPDate");
                     //System.out.println("method "+methodCall);
@@ -123,9 +122,6 @@ public class FrmToXMLUtil{
                        String value = dataProps.getProperty(itemName+"Date");
                        //System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
-
-                       //String date = dataProps.getProperty(itemName+"Date");
-                       //setWhoWhatWhereWhen(obj,how,who,when,date);
                     } 
                     
                 }                
@@ -139,7 +135,8 @@ public class FrmToXMLUtil{
                    Object obj = addNewMethod.invoke(visit,new Object[]{});
 
                    String value = dataProps.getProperty(itemName+"Value");
-                   //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+                   value = translate(value, methodCall);
+                   System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
                    setWhoWhatWhereWhen(obj,how,who,when,value);
 
                    //String date = dataProps.getProperty(itemName+"Date");
@@ -158,9 +155,6 @@ public class FrmToXMLUtil{
                        value = dataProps.getProperty(itemName+"Date");
                        //System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
-
-                       //String date = dataProps.getProperty(itemName+"Date");
-                       //setWhoWhatWhereWhen(obj,how,who,when,date);
                     } 
                 }
                
@@ -293,6 +287,26 @@ public class FrmToXMLUtil{
            System.out.println(")");
         //}
      }     
-  }    
+  }
+   
+   private static String translate(String input, String xmlName){
+        if(xmlName.startsWith("B")){
+            if(input.equalsIgnoreCase("yes")){
+                return "true";
+            }
+            else
+                return "false";
+        }
+        else if (xmlName.startsWith("Sel")){
+            if(input.equalsIgnoreCase("yes")){
+                return "present";
+            }
+            else{
+                return "absent";
+            }            
+        }
+        return input;
+            
+    }
           
 }
