@@ -144,7 +144,7 @@ span { display:none; }
                                     if(drug.isCurrent() == true && drug.isArchived() ){
 					                        styleColor="style=\"color:red;text-decoration: line-through;\"";  
                                     }else if (drug.isCurrent() && !drug.isArchived())  {
-                                       styleColor="style=\"color:red;\"";
+                                       styleColor="style=\"color:red;font-weight:bold;\"";
 				                        }else if (!drug.isCurrent() && drug.isArchived()){
                                         styleColor="style=\"text-decoration: line-through;\"";
 				                        }
