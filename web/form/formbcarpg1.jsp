@@ -381,6 +381,7 @@ function calByLMP() {
 @oscar.formDB Field="c_lastVisited" Type="char(3)" 
 -->
 <html:form action="/form/formname">
+<input type="hidden" name="commonField" value="ar2_" />
 <input type="hidden" name="c_lastVisited" value="pg1" />
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
@@ -1445,67 +1446,67 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
       <th colspan="2" align="left"><span class="small9">RISK FACTORS</span></th>
 	</tr><tr>
       <td width="1%">
-	  <input type="checkbox" name="c_riskNeonDeath" <%= props.getProperty("c_riskNeonDeath", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskNeonDeath" <%= props.getProperty("ar2_riskNeonDeath", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Neonatal death</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskStillbirth" <%= props.getProperty("c_riskStillbirth", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskStillbirth" <%= props.getProperty("ar2_riskStillbirth", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Stillbirth</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAbortion" <%= props.getProperty("c_riskAbortion", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskAbortion" <%= props.getProperty("ar2_riskAbortion", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Abortion ( 12 - 20 weeks )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskHabitAbort" <%= props.getProperty("c_riskHabitAbort", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskHabitAbort" <%= props.getProperty("ar2_riskHabitAbort", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Habitual abortion ( 3+ )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriPretBirth33" <%= props.getProperty("c_riskPriPretBirth33", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPriPretBirth33" <%= props.getProperty("ar2_riskPriPretBirth33", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Prior preterm birth ( 33 - 36 wks. )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriPretBirth20" <%= props.getProperty("c_riskPriPretBirth20", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPriPretBirth20" <%= props.getProperty("ar2_riskPriPretBirth20", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Prior preterm birth ( 20 - 33 wks. )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriCesBirth" <%= props.getProperty("c_riskPriCesBirth", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPriCesBirth" <%= props.getProperty("ar2_riskPriCesBirth", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Prior Cesarean birth ( uterine surgery )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriIUGR" <%= props.getProperty("c_riskPriIUGR", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPriIUGR" <%= props.getProperty("ar2_riskPriIUGR", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Prior IUGR baby</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriMacr" <%= props.getProperty("c_riskPriMacr", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPriMacr" <%= props.getProperty("ar2_riskPriMacr", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Prior macrosomic baby</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskRhImmu" <%= props.getProperty("c_riskRhImmu", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskRhImmu" <%= props.getProperty("ar2_riskRhImmu", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Rh Immunized ( antibodies present )</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskPriRhNB" <%= props.getProperty("c_riskPriRhNB", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPriRhNB" <%= props.getProperty("ar2_riskPriRhNB", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Prior Rh affected preg. with NB exchange<br>or prem.</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskMajCongAnom" <%= props.getProperty("c_riskMajCongAnom", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskMajCongAnom" <%= props.getProperty("ar2_riskMajCongAnom", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>Major congenital anomalies (eg. Cardiac,<br>CNS, Down's Syndrome.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPPHemo" <%= props.getProperty("c_riskPPHemo", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPPHemo" <%= props.getProperty("ar2_riskPPHemo", "") %> @oscar.formDB dbType="tinyint(1)" />
 	  </td>
       <td>P.P. Hemorrhage</td>
 	</tr>
@@ -1520,98 +1521,98 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
       <th colspan="2" align="left"><span class="small9">DIABETES</span></th>
 	</tr><tr>
       <td width="1%">
-	  <input type="checkbox" name="c_riskConDiet" <%= props.getProperty("c_riskConDiet", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskConDiet" <%= props.getProperty("ar2_riskConDiet", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Controlled by diet only</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskDietMacFetus" <%= props.getProperty("c_riskDietMacFetus", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskDietMacFetus" <%= props.getProperty("ar2_riskDietMacFetus", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Diet only macrosomic fetus</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskInsDepend" <%= props.getProperty("c_riskInsDepend", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskInsDepend" <%= props.getProperty("ar2_riskInsDepend", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Insulin dependent</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskRetDoc" <%= props.getProperty("c_riskRetDoc", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskRetDoc" <%= props.getProperty("ar2_riskRetDoc", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Retinopathy documented</td>
 	</tr><tr>
       <th colspan="2" align="left"><span class="small9">HEART DISEASE</span></th>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAsymt" <%= props.getProperty("c_riskAsymt", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskAsymt" <%= props.getProperty("ar2_riskAsymt", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Asymptomatic (no effect on daily living)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskSymt" <%= props.getProperty("c_riskSymt", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskSymt" <%= props.getProperty("ar2_riskSymt", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Symptomatic ( affects daily living)</td>
 	</tr><tr>
       <th colspan="2" align="left"><span class="small9">HYPERTENSION</span></th>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_risk14090" <%= props.getProperty("c_risk14090", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_risk14090" <%= props.getProperty("ar2_risk14090", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>140 / 90</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskHyperDrug" <%= props.getProperty("c_riskHyperDrug", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskHyperDrug" <%= props.getProperty("ar2_riskHyperDrug", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Hypertensive drugs</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskChroRenalDisease" <%= props.getProperty("c_riskChroRenalDisease", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskChroRenalDisease" <%= props.getProperty("ar2_riskChroRenalDisease", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Chronic renal disease documented</td>
 	</tr><tr>
       <th colspan="2" align="left"><span class="small9">OTHER</span></th>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskUnder18" <%= props.getProperty("c_riskUnder18", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskUnder18" <%= props.getProperty("ar2_riskUnder18", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Age under 18 at delivery</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskOver35" <%= props.getProperty("c_riskOver35", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskOver35" <%= props.getProperty("ar2_riskOver35", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Age 35 or over at delivery</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskObesity" <%= props.getProperty("c_riskObesity", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskObesity" <%= props.getProperty("ar2_riskObesity", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Obesity (equal or more than 90kg. or 200 lbs.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskH157" <%= props.getProperty("c_riskH157", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskH157" <%= props.getProperty("ar2_riskH157", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Height (under 1.57 m 5 ft. 2 in.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskH152" <%= props.getProperty("c_riskH152", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskH152" <%= props.getProperty("ar2_riskH152", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Height (under 1.52 m 5 ft. 0 in.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskDepre" <%= props.getProperty("c_riskDepre", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskDepre" <%= props.getProperty("ar2_riskDepre", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Depression</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAlcoDrug" <%= props.getProperty("c_riskAlcoDrug", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskAlcoDrug" <%= props.getProperty("ar2_riskAlcoDrug", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Alcohol and Drugs</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskSmoking" <%= props.getProperty("c_riskSmoking", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskSmoking" <%= props.getProperty("ar2_riskSmoking", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Smoking any time during pregnancy</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskOtherMedical" <%= props.getProperty("c_riskOtherMedical", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskOtherMedical" <%= props.getProperty("ar2_riskOtherMedical", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Other medical / surgical disorders<br>e.g. epilepsy, severe asthma, Lupus etc.</td>
 	</tr>
@@ -1628,77 +1629,77 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
       <th colspan="2" align="left"><span class="small9">RISK FACTOR</span></th>
 	</tr><tr>
       <td width="1%">
-	  <input type="checkbox" name="c_riskDiagLarge" <%= props.getProperty("c_riskDiagLarge", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskDiagLarge" <%= props.getProperty("ar2_riskDiagLarge", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Diagnosis of large for dates</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskDiagSmall" <%= props.getProperty("c_riskDiagSmall", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskDiagSmall" <%= props.getProperty("ar2_riskDiagSmall", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Diagnosis of small for dates (IUGR)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPolyhyd" <%= props.getProperty("c_riskPolyhyd", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPolyhyd" <%= props.getProperty("ar2_riskPolyhyd", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Polyhydramnios or oligohydramnios</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskMulPreg" <%= props.getProperty("c_riskMulPreg", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskMulPreg" <%= props.getProperty("ar2_riskMulPreg", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Multiple pregnancy</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskMalpres" <%= props.getProperty("c_riskMalpres", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskMalpres" <%= props.getProperty("ar2_riskMalpres", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Malpresentations</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskMemRupt37" <%= props.getProperty("c_riskMemRupt37", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskMemRupt37" <%= props.getProperty("ar2_riskMemRupt37", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Membrane rupture before 37 weeks</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskBleeding" <%= props.getProperty("c_riskBleeding", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskBleeding" <%= props.getProperty("ar2_riskBleeding", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Bleeding</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPregIndHypert" <%= props.getProperty("c_riskPregIndHypert", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPregIndHypert" <%= props.getProperty("ar2_riskPregIndHypert", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Pregnancy induced hypertension</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskProte1" <%= props.getProperty("c_riskProte1", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskProte1" <%= props.getProperty("ar2_riskProte1", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Proteinuria > 1+</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskGesDiabete" <%= props.getProperty("c_riskGesDiabete", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskGesDiabete" <%= props.getProperty("ar2_riskGesDiabete", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Gestational diabetes documented</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskBloodAnti" <%= props.getProperty("c_riskBloodAnti", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskBloodAnti" <%= props.getProperty("ar2_riskBloodAnti", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Blood antibodies (Rh, Anti C, Anti K, etc.) </td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAnemia" <%= props.getProperty("c_riskAnemia", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskAnemia" <%= props.getProperty("ar2_riskAnemia", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Anemia ( < 100g per L ) </td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAdmPreterm" <%= props.getProperty("c_riskAdmPreterm", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskAdmPreterm" <%= props.getProperty("ar2_riskAdmPreterm", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Admission in preterm labour</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPreg42W" <%= props.getProperty("c_riskPreg42W", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskPreg42W" <%= props.getProperty("ar2_riskPreg42W", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Pregnancy >= 42 weeks</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskWtLoss" <%= props.getProperty("c_riskWtLoss", "") %> @oscar.formDB dbType="tinyint(1)" />
+	  <input type="checkbox" name="ar2_riskWtLoss" <%= props.getProperty("ar2_riskWtLoss", "") %> @oscar.formDB dbType="tinyint(1)" />
       </td>
       <td>Poor weight gain 26 - 36 weeks ( <.5 kg / wk )<br>or weight loss</td>
 	</tr>

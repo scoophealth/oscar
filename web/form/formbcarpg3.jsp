@@ -1811,67 +1811,67 @@ function calToday(field) {
       <th colspan="2" align="left"><span class="small9">RISK FACTORS</span></th>
 	</tr><tr>
       <td width="1%">
-	  <input type="checkbox" name="c_riskNeonDeath" <%= props.getProperty("c_riskNeonDeath", "") %> />
+	  <input type="checkbox" name="ar2_riskNeonDeath" <%= props.getProperty("ar2_riskNeonDeath", "") %> />
 	  </td>
       <td>Neonatal death</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskStillbirth" <%= props.getProperty("c_riskStillbirth", "") %> />
+	  <input type="checkbox" name="ar2_riskStillbirth" <%= props.getProperty("ar2_riskStillbirth", "") %> />
 	  </td>
       <td>Stillbirth</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAbortion" <%= props.getProperty("c_riskAbortion", "") %> />
+	  <input type="checkbox" name="ar2_riskAbortion" <%= props.getProperty("ar2_riskAbortion", "") %> />
 	  </td>
       <td>Abortion ( 12 - 20 weeks )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskHabitAbort" <%= props.getProperty("c_riskHabitAbort", "") %> />
+	  <input type="checkbox" name="ar2_riskHabitAbort" <%= props.getProperty("ar2_riskHabitAbort", "") %> />
 	  </td>
       <td>Habitual abortion ( 3+ )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriPretBirth33" <%= props.getProperty("c_riskPriPretBirth33", "") %> />
+	  <input type="checkbox" name="ar2_riskPriPretBirth33" <%= props.getProperty("ar2_riskPriPretBirth33", "") %> />
 	  </td>
       <td>Prior preterm birth ( 33 - 36 wks. )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriPretBirth20" <%= props.getProperty("c_riskPriPretBirth20", "") %> />
+	  <input type="checkbox" name="ar2_riskPriPretBirth20" <%= props.getProperty("ar2_riskPriPretBirth20", "") %> />
 	  </td>
       <td>Prior preterm birth ( 20 - 33 wks. )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriCesBirth" <%= props.getProperty("c_riskPriCesBirth", "") %> />
+	  <input type="checkbox" name="ar2_riskPriCesBirth" <%= props.getProperty("ar2_riskPriCesBirth", "") %> />
 	  </td>
       <td>Prior Cesarean birth ( uterine surgery )</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriIUGR" <%= props.getProperty("c_riskPriIUGR", "") %> />
+	  <input type="checkbox" name="ar2_riskPriIUGR" <%= props.getProperty("ar2_riskPriIUGR", "") %> />
 	  </td>
       <td>Prior IUGR baby</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPriMacr" <%= props.getProperty("c_riskPriMacr", "") %> />
+	  <input type="checkbox" name="ar2_riskPriMacr" <%= props.getProperty("ar2_riskPriMacr", "") %> />
 	  </td>
       <td>Prior macrosomic baby</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskRhImmu" <%= props.getProperty("c_riskRhImmu", "") %> />
+	  <input type="checkbox" name="ar2_riskRhImmu" <%= props.getProperty("ar2_riskRhImmu", "") %> />
 	  </td>
       <td>Rh Immunized ( antibodies present )</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskPriRhNB" <%= props.getProperty("c_riskPriRhNB", "") %> />
+	  <input type="checkbox" name="ar2_riskPriRhNB" <%= props.getProperty("ar2_riskPriRhNB", "") %> />
 	  </td>
       <td>Prior Rh affected preg. with NB exchange<br>or prem.</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskMajCongAnom" <%= props.getProperty("c_riskMajCongAnom", "") %> />
+	  <input type="checkbox" name="ar2_riskMajCongAnom" <%= props.getProperty("ar2_riskMajCongAnom", "") %> />
 	  </td>
       <td>Major congenital anomalies (eg. Cardiac,<br>CNS, Down's Syndrome.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPPHemo" <%= props.getProperty("c_riskPPHemo", "") %> />
+	  <input type="checkbox" name="ar2_riskPPHemo" <%= props.getProperty("ar2_riskPPHemo", "") %> />
 	  </td>
       <td>P.P. Hemorrhage</td>
 	</tr>
@@ -1886,98 +1886,98 @@ function calToday(field) {
       <th colspan="2" align="left"><span class="small9">DIABETES</span></th>
 	</tr><tr>
       <td width="1%">
-	  <input type="checkbox" name="c_riskConDiet" <%= props.getProperty("c_riskConDiet", "") %> />
+	  <input type="checkbox" name="ar2_riskConDiet" <%= props.getProperty("ar2_riskConDiet", "") %> />
       </td>
       <td>Controlled by diet only</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskDietMacFetus" <%= props.getProperty("c_riskDietMacFetus", "") %> />
+	  <input type="checkbox" name="ar2_riskDietMacFetus" <%= props.getProperty("ar2_riskDietMacFetus", "") %> />
       </td>
       <td>Diet only macrosomic fetus</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskInsDepend" <%= props.getProperty("c_riskInsDepend", "") %> />
+	  <input type="checkbox" name="ar2_riskInsDepend" <%= props.getProperty("ar2_riskInsDepend", "") %> />
       </td>
       <td>Insulin dependent</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskRetDoc" <%= props.getProperty("c_riskRetDoc", "") %> />
+	  <input type="checkbox" name="ar2_riskRetDoc" <%= props.getProperty("ar2_riskRetDoc", "") %> />
       </td>
       <td>Retinopathy documented</td>
 	</tr><tr>
       <th colspan="2" align="left"><span class="small9">HEART DISEASE</span></th>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAsymt" <%= props.getProperty("c_riskAsymt", "") %> />
+	  <input type="checkbox" name="ar2_riskAsymt" <%= props.getProperty("ar2_riskAsymt", "") %> />
       </td>
       <td>Asymptomatic (no effect on daily living)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskSymt" <%= props.getProperty("c_riskSymt", "") %> />
+	  <input type="checkbox" name="ar2_riskSymt" <%= props.getProperty("ar2_riskSymt", "") %> />
       </td>
       <td>Symptomatic ( affects daily living)</td>
 	</tr><tr>
       <th colspan="2" align="left"><span class="small9">HYPERTENSION</span></th>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_risk14090" <%= props.getProperty("c_risk14090", "") %> />
+	  <input type="checkbox" name="ar2_risk14090" <%= props.getProperty("ar2_risk14090", "") %> />
       </td>
       <td>140 / 90</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskHyperDrug" <%= props.getProperty("c_riskHyperDrug", "") %> />
+	  <input type="checkbox" name="ar2_riskHyperDrug" <%= props.getProperty("ar2_riskHyperDrug", "") %> />
       </td>
       <td>Hypertensive drugs</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskChroRenalDisease" <%= props.getProperty("c_riskChroRenalDisease", "") %> />
+	  <input type="checkbox" name="ar2_riskChroRenalDisease" <%= props.getProperty("ar2_riskChroRenalDisease", "") %> />
       </td>
       <td>Chronic renal disease documented</td>
 	</tr><tr>
       <th colspan="2" align="left"><span class="small9">OTHER</span></th>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskUnder18" <%= props.getProperty("c_riskUnder18", "") %> />
+	  <input type="checkbox" name="ar2_riskUnder18" <%= props.getProperty("ar2_riskUnder18", "") %> />
       </td>
       <td>Age under 18 at delivery</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskOver35" <%= props.getProperty("c_riskOver35", "") %> />
+	  <input type="checkbox" name="ar2_riskOver35" <%= props.getProperty("ar2_riskOver35", "") %> />
       </td>
       <td>Age 35 or over at delivery</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskObesity" <%= props.getProperty("c_riskObesity", "") %> />
+	  <input type="checkbox" name="ar2_riskObesity" <%= props.getProperty("ar2_riskObesity", "") %> />
       </td>
       <td>Obesity (equal or more than 90kg. or 200 lbs.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskH157" <%= props.getProperty("c_riskH157", "") %> />
+	  <input type="checkbox" name="ar2_riskH157" <%= props.getProperty("ar2_riskH157", "") %> />
       </td>
       <td>Height (under 1.57 m 5 ft. 2 in.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskH152" <%= props.getProperty("c_riskH152", "") %> />
+	  <input type="checkbox" name="ar2_riskH152" <%= props.getProperty("ar2_riskH152", "") %> />
       </td>
       <td>Height (under 1.52 m 5 ft. 0 in.)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskDepre" <%= props.getProperty("c_riskDepre", "") %> />
+	  <input type="checkbox" name="ar2_riskDepre" <%= props.getProperty("ar2_riskDepre", "") %> />
       </td>
       <td>Depression</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAlcoDrug" <%= props.getProperty("c_riskAlcoDrug", "") %> />
+	  <input type="checkbox" name="ar2_riskAlcoDrug" <%= props.getProperty("ar2_riskAlcoDrug", "") %> />
       </td>
       <td>Alcohol and Drugs</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskSmoking" <%= props.getProperty("c_riskSmoking", "") %> />
+	  <input type="checkbox" name="ar2_riskSmoking" <%= props.getProperty("ar2_riskSmoking", "") %> />
       </td>
       <td>Smoking any time during pregnancy</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskOtherMedical" <%= props.getProperty("c_riskOtherMedical", "") %> />
+	  <input type="checkbox" name="ar2_riskOtherMedical" <%= props.getProperty("ar2_riskOtherMedical", "") %> />
       </td>
       <td>Other medical / surgical disorders<br>e.g. epilepsy, severe asthma, Lupus etc.</td>
 	</tr>
@@ -1994,77 +1994,77 @@ function calToday(field) {
       <th colspan="2" align="left"><span class="small9">RISK FACTOR</span></th>
 	</tr><tr>
       <td width="1%">
-	  <input type="checkbox" name="c_riskDiagLarge" <%= props.getProperty("c_riskDiagLarge", "") %> />
+	  <input type="checkbox" name="ar2_riskDiagLarge" <%= props.getProperty("ar2_riskDiagLarge", "") %> />
       </td>
       <td>Diagnosis of large for dates</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskDiagSmall" <%= props.getProperty("c_riskDiagSmall", "") %> />
+	  <input type="checkbox" name="ar2_riskDiagSmall" <%= props.getProperty("ar2_riskDiagSmall", "") %> />
       </td>
       <td>Diagnosis of small for dates (IUGR)</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPolyhyd" <%= props.getProperty("c_riskPolyhyd", "") %> />
+	  <input type="checkbox" name="ar2_riskPolyhyd" <%= props.getProperty("ar2_riskPolyhyd", "") %> />
       </td>
       <td>Polyhydramnios or oligohydramnios</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskMulPreg" <%= props.getProperty("c_riskMulPreg", "") %> />
+	  <input type="checkbox" name="ar2_riskMulPreg" <%= props.getProperty("ar2_riskMulPreg", "") %> />
       </td>
       <td>Multiple pregnancy</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskMalpres" <%= props.getProperty("c_riskMalpres", "") %> />
+	  <input type="checkbox" name="ar2_riskMalpres" <%= props.getProperty("ar2_riskMalpres", "") %> />
       </td>
       <td>Malpresentations</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskMemRupt37" <%= props.getProperty("c_riskMemRupt37", "") %> />
+	  <input type="checkbox" name="ar2_riskMemRupt37" <%= props.getProperty("ar2_riskMemRupt37", "") %> />
       </td>
       <td>Membrane rupture before 37 weeks</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskBleeding" <%= props.getProperty("c_riskBleeding", "") %> />
+	  <input type="checkbox" name="ar2_riskBleeding" <%= props.getProperty("ar2_riskBleeding", "") %> />
       </td>
       <td>Bleeding</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPregIndHypert" <%= props.getProperty("c_riskPregIndHypert", "") %> />
+	  <input type="checkbox" name="ar2_riskPregIndHypert" <%= props.getProperty("ar2_riskPregIndHypert", "") %> />
       </td>
       <td>Pregnancy induced hypertension</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskProte1" <%= props.getProperty("c_riskProte1", "") %> />
+	  <input type="checkbox" name="ar2_riskProte1" <%= props.getProperty("ar2_riskProte1", "") %> />
       </td>
       <td>Proteinuria > 1+</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskGesDiabete" <%= props.getProperty("c_riskGesDiabete", "") %> />
+	  <input type="checkbox" name="ar2_riskGesDiabete" <%= props.getProperty("ar2_riskGesDiabete", "") %> />
       </td>
       <td>Gestational diabetes documented</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskBloodAnti" <%= props.getProperty("c_riskBloodAnti", "") %> />
+	  <input type="checkbox" name="ar2_riskBloodAnti" <%= props.getProperty("ar2_riskBloodAnti", "") %> />
       </td>
       <td>Blood antibodies (Rh, Anti C, Anti K, etc.) </td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAnemia" <%= props.getProperty("c_riskAnemia", "") %> />
+	  <input type="checkbox" name="ar2_riskAnemia" <%= props.getProperty("ar2_riskAnemia", "") %> />
       </td>
       <td>Anemia ( < 100g per L ) </td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskAdmPreterm" <%= props.getProperty("c_riskAdmPreterm", "") %> />
+	  <input type="checkbox" name="ar2_riskAdmPreterm" <%= props.getProperty("ar2_riskAdmPreterm", "") %> />
       </td>
       <td>Admission in preterm labour</td>
 	</tr><tr>
       <td>
-	  <input type="checkbox" name="c_riskPreg42W" <%= props.getProperty("c_riskPreg42W", "") %> />
+	  <input type="checkbox" name="ar2_riskPreg42W" <%= props.getProperty("ar2_riskPreg42W", "") %> />
       </td>
       <td>Pregnancy >= 42 weeks</td>
 	</tr><tr>
       <td valign="top">
-	  <input type="checkbox" name="c_riskWtLoss" <%= props.getProperty("c_riskWtLoss", "") %> />
+	  <input type="checkbox" name="ar2_riskWtLoss" <%= props.getProperty("ar2_riskWtLoss", "") %> />
       </td>
       <td>Poor weight gain 26 - 36 weeks ( <.5 kg / wk )<br>or weight loss</td>
 	</tr>
