@@ -68,7 +68,7 @@ public class MDSResultsData
                              "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=patientLabRouting.lab_no " +
                              "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
                              "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
-                             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
+                             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
                              "mdsPID.sex, mdsZFR.abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
                              "mdsZFR.reportFormStatus, mdsZRG.reportGroupDesc ";
             }
