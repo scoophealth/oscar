@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class RptByExampleQueryBeanHandler {
     
@@ -61,6 +62,14 @@ public class RptByExampleQueryBeanHandler {
             for(rs = db.GetSQL(sql); rs.next(); )
             {
                 if (i<10){
+                    StringEscapeUtils strEscUtils = new StringEscapeUtils();                                                   
+                    String queryWithEscapeChar = strEscUtils.escapeJava(rs.getString("query"));                   
+                    //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
+                    //queryWithEscapeChar = exampleData.replaceSQLString (";","",queryWithEscapeChar);
+                    //queryWithEscapeChar = exampleData.replaceSQLString("\"", "\'", queryWithEscapeChar);            
+
+                    //System.out.println("queryWithEscapeChar" + queryWithEscapeChar);
+                    String queryNameWithEscapeChar = strEscUtils.escapeJava(rs.getString("name"));
                     RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), rs.getString("query"), rs.getString("name"));
                     favoriteVector.add(query);                 
                 }
@@ -90,6 +99,8 @@ public class RptByExampleQueryBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
+                //StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
+                //String queryWithEscapeChar = strEscUtils.escapeJava(rs.getString("query"));
                 RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getString("last_name"), rs.getString("first_name"), rs.getString("query"), rs.getString("date"));
                 allQueryVector.add(query);
             }
@@ -113,6 +124,9 @@ public class RptByExampleQueryBeanHandler {
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
+
+                StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
+                String queryWithEscapeChar = strEscUtils.escapeJava(rs.getString("query"));
                 RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getString("last_name"), rs.getString("first_name"), rs.getString("query"), rs.getString("date"));
                 queryVector.add(query);
             }

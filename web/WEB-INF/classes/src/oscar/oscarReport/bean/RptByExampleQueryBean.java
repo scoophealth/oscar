@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import oscar.oscarDB.DBHandler;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class RptByExampleQueryBean{
 
@@ -49,8 +50,10 @@ public class RptByExampleQueryBean{
             this.id = id;
             this.query = query;
             this.queryName = queryName;
-            this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
-            System.out.println("query with escape char: " + queryWithEscapeChar);
+            //this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
+            StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
+            this.queryWithEscapeChar = strEscUtils.escapeJavaScript(query);
+            System.out.println("query with javascript escape char: " + queryWithEscapeChar);
        }
       
        public RptByExampleQueryBean(String providerLastName, String providerFirstName, String query, String date){            
@@ -59,7 +62,9 @@ public class RptByExampleQueryBean{
             this.providerFirstName = providerFirstName;
             this.query = query;
             this.date = date;
-            this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
+            //this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
+            StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
+            this.queryWithEscapeChar = strEscUtils.escapeJavaScript(query);
        }
        
        public int getId(){
