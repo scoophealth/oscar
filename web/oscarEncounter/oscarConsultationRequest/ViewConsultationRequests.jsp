@@ -192,7 +192,7 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                             <tr>
                                 <td bgcolor="#9999ff">
 
-                                <a href="javascript:popupOscarConsultationConfig(700,960,'<%serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
+                                <a href="javascript:popupOscarConsultationConfig(700,960,'<%=serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
                                     <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/></a>
 
                                 </td>

@@ -30,7 +30,9 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
-<%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp" %>
+<%@ page 
+   import="java.util.*,java.sql.*,java.util.ResourceBundle" errorPage="../provider/errorpage.jsp"
+%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html:html locale="true">
@@ -51,7 +53,9 @@ function setfocus() {
 
 <body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
-  if(request.getParameter("submit").equals("Delete") ) { //delete the group member 
+  ResourceBundle properties = ResourceBundle.getBundle("oscarResources", request.getLocale());
+  
+  if(request.getParameter("submit").equals(properties.getString("admin.admindisplaymygroup.btnSubmit1")) ) { //delete the group member 
     int rowsAffected=0;
     String[] param =new String[2];
     StringBuffer strbuf=new StringBuffer();
