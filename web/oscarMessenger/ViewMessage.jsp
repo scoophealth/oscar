@@ -114,7 +114,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
   if (demographicNo!=null){
       //alert("demographicNo is not null!");
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
-      var page = '/oscar/oscarMessenger/WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo;
+      var page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo;
       var popUp=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
       if (popUp != null) {
         if (popUp.opener == null) {
