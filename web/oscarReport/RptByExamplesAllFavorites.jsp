@@ -81,7 +81,7 @@
         <td class="MainTableRightColumn">
             <table>              
                 <tr class="Header">
-                    <td align="left"  width="200">
+                    <td align="left"  width="150">
                         <bean:message key="oscarReport.RptByExample.MsgName"/>
                     </td>                                                    
                     <td align="left"  width="500">

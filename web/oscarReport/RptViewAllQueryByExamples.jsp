@@ -74,10 +74,10 @@
                     <td align="left"  width="140">
                         <bean:message key="oscarReport.RptByExample.MsgDate"/>
                     </td>                                                    
-                    <td align="left"  width="500">
+                    <td align="left"  width="400">
                         <bean:message key="oscarReport.RptByExample.MsgQuery"/>
                     </td>
-                    <td align="left"  width="150">
+                    <td align="left"  width="100">
                         <bean:message key="oscarReport.RptByExample.MsgProvider"/>
                     </td>
                     <td></td>
