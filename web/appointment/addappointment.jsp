@@ -41,7 +41,7 @@ function onBlockFieldFocus(obj) {
   obj.blur();
   document.ADDAPPT.keyword.focus();
   document.ADDAPPT.keyword.select();
-  window.alert(<bean:message key="Appointment.msgFillNameField"/>);
+  window.alert("<bean:message key="Appointment.msgFillNameField"/>");
 }
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
@@ -64,10 +64,10 @@ function checkTypeNum(typeIn) {
 }
 function checkTimeTypeIn(obj) {
   if(!checkTypeNum(obj.value) ) {
-	  alert (<bean:message key="Appointment.msgFillTimeField"/>);
+	  alert ("<bean:message key="Appointment.msgFillTimeField"/>");
 	} else {
 	  if(obj.value.indexOf(':')==-1) {
-	    if(obj.value.length < 3) alert(<bean:message key="Appointment.msgFillValidTimeField"/>);
+	    if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
 	    obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
 	  } 
 	}
@@ -96,7 +96,7 @@ function calculateEndTime() {
   document.ADDAPPT.end_time.value = shour +":"+ smin;
   
   if(shour > 23) {
-    alert(<bean:message key="Appointment.msgCheckDuration"/>);
+    alert("<bean:message key="Appointment.msgCheckDuration"/>");
     return false;
   }
   
@@ -210,7 +210,7 @@ function calculateEndTime() {
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
               <!--input type="hidden" name="displaymode" value="Search " -->
-              <INPUT TYPE="button" onclick="document.forms['ADDAPPT'].displaymode.value='Search '; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key="appointment.addappointment.btnSearch"/>"></font></div>
+              <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Search '; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key="appointment.addappointment.btnSearch"/>"></font></div>
             </td>
             <td width="20%" > 
               <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>" width="25" height="20" border="0" hspace="2">
