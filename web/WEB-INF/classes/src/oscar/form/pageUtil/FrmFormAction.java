@@ -72,7 +72,7 @@ public class FrmFormAction extends Action {
         ActionErrors errors = new ActionErrors();    
         boolean valid = true;          
         System.out.println("FrmFormAction is called "+currentMem());        
-        System.gc();
+        
         System.out.println("current mem 1 "+currentMem());
         FrmFormForm frm = (FrmFormForm) form;               
         
@@ -169,16 +169,18 @@ public class FrmFormAction extends Action {
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
-                System.out.println("exit "+submit+" inputValue "+inputValue);
-                if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))                    //System.out.println("write to measurement table: " + mt.getType());
-                    write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
+                System.out.println("write2Measurement type: " + type + " inputValue: " + inputValue);
+                if(inputValue!=null){
+                    if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))                    //System.out.println("write to measurement table: " + mt.getType());
+                        write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
+                }
                 
                 //Store all input value as properties for saving to form table
                 if(lastData!=null)
                     props.setProperty(type+"LastData", lastData);
                 if(lastDataEnteredDate!=null)
                     props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
-                System.out.println("type: " + type + " input: " + inputValue);
+                //System.out.println("type: " + type + " input: " + inputValue);
                 
                 props.setProperty(type+"Date", observationDate==null?dateEntered:observationDate);
                 props.setProperty(type+"Comments", comments==null?"":comments);                
