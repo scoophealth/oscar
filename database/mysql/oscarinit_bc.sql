@@ -1763,6 +1763,7 @@ CREATE TABLE wcb (
   w_feeitem varchar(5) NOT NULL default '00000',
   w_extrafeeitem varchar(5) NOT NULL default '00000',
   w_servicelocation char(1) default 'O',
+  formNeeded int(1) default '1',
   PRIMARY KEY  (`ID`),
   KEY billing_no (billing_no),
   KEY demographic_no (demographic_no),
