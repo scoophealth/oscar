@@ -63,7 +63,7 @@ public class RxPrescriptionData {
                 prescription.setSpecial(rs.getString("special"));
                 prescription.setGenericName(rs.getString("GN"));
                 prescription.setAtcCode(rs.getString("ATC"));
-                prescription.setRegionalIdentifier(rs.getString("regionalIdentifier"));
+                prescription.setRegionalIdentifier(rs.getString("regional_Identifier"));
             }
             
             
