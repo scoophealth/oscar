@@ -602,7 +602,7 @@
                         <table width="80%" class="smallTable" border="0"  cellspacing="0" cellpadding="0"> 
                             <tr>                                
                                 <td width="30%" class="row">
-                                    <input type="checkbox" class="checkbox" name="employed" <%= props.getProperty("employed", "") %>/> Employed
+                                    <input type="checkbox" class="checkbox" name="employed" <%= props.getProperty("employed", "") %>/> Employed:
                                 </td>
                                 <td width="20%" class="row">
                                     <input type="checkbox" class="checkbox" name="employedFullTime" <%= props.getProperty("employedFullTime", "") %>/> Full Time
@@ -613,7 +613,7 @@
                             </tr>
                             <tr>                                
                                 <td width="30%" class="row">
-                                    <input type="checkbox" class="checkbox" name="selfEmployed" <%= props.getProperty("selfEmployed", "") %>/> Self-employed
+                                    <input type="checkbox" class="checkbox" name="selfEmployed" <%= props.getProperty("selfEmployed", "") %>/> Self-employed:
                                 </td>
                                 <td width="20%" class="row">
                                     <input type="checkbox" class="checkbox" name="selfEmployedFullTime" <%= props.getProperty("selfEmployedFullTime", "") %>/> Full Time
@@ -624,7 +624,7 @@
                             </tr>
                             <tr>                                
                                 <td width="30%" class="row">
-                                    <input type="checkbox" class="checkbox" name="unemployed" <%= props.getProperty("unemployed", "") %>/> Unemployed
+                                    <input type="checkbox" class="checkbox" name="unemployed" <%= props.getProperty("unemployed", "") %>/> Unemployed:
                                 </td>
                                 <td width="20%" class="row">
                                     <input type="checkbox" class="checkbox" name="unemployedAble" <%= props.getProperty("unemployedAble", "") %>/> Able to work
@@ -635,7 +635,7 @@
                             </tr>
                             <tr>                                
                                 <td width="30%" class="row">
-                                    <input type="checkbox" class="checkbox" name="disability" <%= props.getProperty("disability", "") %>/> On Disability
+                                    <input type="checkbox" class="checkbox" name="disability" <%= props.getProperty("disability", "") %>/> On Disability:
                                 </td>
                                 <td width="20%" class="row">
                                     <input type="checkbox" class="checkbox" name="disabilityShortTerm" <%= props.getProperty("disabilityShortTerm", "") %>/> Short Term
