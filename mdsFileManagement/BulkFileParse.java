@@ -57,7 +57,7 @@ public class BulkFileParse {
         String procDate = null;   //make date up
         String procTime = null;   //make time up
         String logId = "REC";
-        String formStatus = null;   //table mdsZFR column reportFormStatus
+        String[] formStatus;   //table mdsZFR column reportFormStatus
         String formType   = null;     //mySQL table mdsMSH column messageConID   last char of the field have to convert from numeric to Letter version
         String accession  = null;
         String hcNum      = null;
@@ -90,9 +90,10 @@ public class BulkFileParse {
         messageDate = new SimpleDateFormat("dd-MMM-yyyy").format(mdsDate);
         messageTime = new SimpleDateFormat("HH:mm:ss").format(mdsDate);
         
-        al.addToAuditFile(al.getAuditLine(procDate, procTime, logId, formStatus, formType, accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime), auditLogFile);
-        
-        System.out.println(al.getAuditLine(procDate, procTime, logId, formStatus, formType, accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime));
+        for (int i = 0; i < formStatus.length; i++) {
+            al.addToAuditFile(al.getAuditLine(procDate, procTime, logId, formStatus[i], formType, accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime), auditLogFile);        
+            System.out.println(al.getAuditLine(procDate, procTime, logId, formStatus[i], formType, accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime));
+        }
     }
     
     

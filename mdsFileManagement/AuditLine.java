@@ -47,26 +47,27 @@ public class AuditLine {
         }
 
 	
-    public String auditFormStatus(int segID){
-        String retval = null;
+    public String[] auditFormStatus(int segID){
+        ArrayList retval = new ArrayList();
         DBHandler db =null;
         try{
             db = new DBHandler(DBHandler.MDS_DATA);             
             ResultSet rs;
             String sql ="select reportFormStatus from mdsZFR where segmentID = '"+segID+"' ";
             
-            rs = db.GetSQL(sql);
-            if(rs.next()){
+            rs = db.GetSQL(sql);            
+            while(rs.next()){
                 String reportFormStatus = rs.getString("reportFormStatus");
-                if      (reportFormStatus.equals("0")){ retval = "P"; }
-                else if (reportFormStatus.equals("1")){ retval = "F"; }                                
+                if      (reportFormStatus.equals("0")){ retval.add(new String("P")); }
+                else if (reportFormStatus.equals("1")){ retval.add(new String("F")); }                                                
             }
             db.CloseConn();
         }catch(Exception e){
             try{ if(db !=null){ db.CloseConn(); } }
             catch(Exception f){ System.out.println("Inside the auditFormStatus::"+f); f.printStackTrace();  }
-        }        
-        return retval;
+        }
+        String[] retval2 = new String[retval.size()];
+        return (String[]) retval.toArray(retval2);
     }
     
     public String auditFormType(int segID){
