@@ -63,9 +63,8 @@
         font-size:11pt;            
     }
     .blueText{
-        font-size:9pt;
-        color: #0000FF;
-         vertical-align: top;
+        font-size:9pt;        
+        vertical-align: top;
     }
     .subject {
         background-color: #000000;
