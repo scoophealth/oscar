@@ -25,15 +25,14 @@ package oscar.oscarDemographic.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import oscar.oscarDB.DBHandler;
 //import oscar.oscarMessenger.util.*;
 
 import oscar.util.*;
-public class DemographicData {
-    
-    
-    
-    public Demographic getDemographic(String DemographicNo) {
+public class DemographicData {     
+        
+    public Demographic getDemographic(String DemographicNo) {        
         Demographic demographic = null;
         
         try {
@@ -92,36 +91,43 @@ public class DemographicData {
     
     public class Demographic {
         
-        String demographic_no;
-        String last_name;
-        String first_name;
-        String address   ;
-        String city      ;
-        String province  ;
-        String postal    ;
-        String phone     ;
-        String phone2    ;
-        String email     ;
-        String pin       ;
-        String year_of_birth ;
-        String month_of_birth;
-        String date_of_birth ;
-        String hin           ;
-        String ver           ;
-        String roster_status ;
-        String patient_status;
-        String date_joined   ;
-        String chart_no      ;
-        String provider_no   ;
-        String sex           ;
-        String end_date      ;
-        String eff_date      ;
-        String pcn_indicator;
-        String hc_type      ;
-        String hc_renew_date;
-        String family_doctor;
+        protected String demographic_no;
+        protected String last_name;
+        protected String first_name;
+        protected String address   ;
+        protected String city      ;
+        protected String province  ;
+        protected String postal    ;
+        protected String phone     ;
+        protected String phone2    ;
+        protected String email     ;
+        protected String pin       ;
+        protected String year_of_birth ;
+        protected String month_of_birth;
+        protected String date_of_birth ;
+        protected String hin           ;
+        protected String ver           ;
+        protected String roster_status ;
+        protected String patient_status;
+        protected String date_joined   ;
+        protected String chart_no      ;
+        protected String provider_no   ;
+        protected String sex           ;
+        protected String end_date      ;
+        protected String eff_date      ;
+        protected String pcn_indicator;
+        protected String hc_type      ;
+        protected String hc_renew_date;
+        protected String family_doctor;
+        public RxInformation RxInfo;        
+        public EctInformation EctInfo;
         
-        public Demographic(String DemographicNo, String last_name,String first_name, String address,
+        
+        public Demographic(String DemographicNo){
+            init(DemographicNo);
+        }
+        
+        protected Demographic(String DemographicNo, String last_name,String first_name, String address,
         String city, String province, String postal, String phone, String phone2, String email,
         String pin, String year_of_birth, String month_of_birth, String date_of_birth, String hin,
         String ver, String roster_status, String patient_status, String date_joined, String chart_no,
@@ -154,13 +160,61 @@ public class DemographicData {
             this.pcn_indicator= pcn_indicator;
             this.hc_type = hc_type;
             this.hc_renew_date = hc_renew_date;
-            this.family_doctor = family_doctor;
+            this.family_doctor = family_doctor;                                    
+            this.RxInfo = getRxInformation();
+            this.EctInfo = getEctInformation();
+        }        
+                
+        private void init(String DemographicNo) {            
             
-            
-            
+            try {
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs;
+                String sql = "SELECT * FROM demographic WHERE demographic_no = '" + DemographicNo +"'";
+
+                rs = db.GetSQL(sql);
+
+                if (rs.next()) {
+                    this.demographic_no= DemographicNo;
+                    this.last_name = rs.getString("last_name");
+                    this.first_name = rs.getString("first_name");
+                    this.address = rs.getString("address");
+                    this.city = rs.getString("city");
+                    this.province = rs.getString("province");
+                    this.postal = rs.getString("postal");
+                    this.phone= rs.getString("phone");
+                    this.phone2 = rs.getString("phone2");
+                    this.email = rs.getString("email");
+                    this.pin = rs.getString("pin");
+                    this.year_of_birth = rs.getString("year_of_birth");
+                    this.month_of_birth = rs.getString("month_of_birth");
+                    this.date_of_birth = rs.getString("date_of_birth");
+                    this.hin = rs.getString("hin");
+                    this.ver = rs.getString("ver");
+                    this.roster_status=rs.getString("roster_status");
+                    this.patient_status= rs.getString("patient_status");
+                    this.date_joined = rs.getString("date_joined");
+                    this.chart_no = rs.getString("chart_no");
+                    this.provider_no = rs.getString("provider_no");
+                    this.sex = rs.getString("sex");
+                    this.end_date = rs.getString("end_date");
+                    this.eff_date = rs.getString("eff_date");
+                    this.pcn_indicator= rs.getString("pcn_indicator");
+                    this.hc_type = rs.getString("hc_type");
+                    this.hc_renew_date = rs.getString("hc_renew_date");
+                    this.family_doctor = rs.getString("family_doctor");
+                }
+
+                rs.close();
+                db.CloseConn();
+                
+                this.RxInfo = getRxInformation();
+                this.EctInfo = getEctInformation();
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }            
         }
-        
-        
         
         public String getDemographicNo() {
             return demographic_no;
@@ -274,8 +328,99 @@ public class DemographicData {
             return text;
         }
         
+        public RxInformation getRxInformation(){
+            return new RxInformation();
+        }
         
+        public EctInformation getEctInformation(){
+            return new EctInformation();
+        }
+        
+        public class RxInformation{
+            private String currentMedication;
+            private String allergies;
+
+            public String getCurrentMedication(){            
+                oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+                oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
+                arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demographic_no));
+                StringBuffer stringBuffer = new StringBuffer();
+                for (int i = 0; i < arr.length; i++){
+                   if (arr[i].isCurrent()  ){
+                      stringBuffer.append(arr[i].getRxDisplay()+"\n");
+                   }
+                }
+                this.currentMedication = stringBuffer.toString();
+                return this.currentMedication;
+            }
+            
+            public String getAllergies(){
+                try{
+                    oscar.oscarRx.data.RxPatientData pData = new oscar.oscarRx.data.RxPatientData();
+                    oscar.oscarRx.data.RxPatientData.Patient patient = pData.getPatient(Integer.parseInt(demographic_no));
+                    oscar.oscarRx.data.RxPatientData.Patient.Allergy [] allergies = {};
+                    allergies = patient.getAllergies();                 
+                    StringBuffer stringBuffer = new StringBuffer();
+                    for (int i=0; i < allergies.length; i++){
+                       oscar.oscarRx.data.RxAllergyData.Allergy allerg = allergies[i].getAllergy();
+                       stringBuffer.append(allerg.getDESCRIPTION()+"  "+allerg.getTypeDesc()+" \n");
+                    }
+                    this.allergies = stringBuffer.toString();
+                }
+                catch(SQLException e) {
+                    System.out.println(e.getMessage());                    
+                }
+                    return this.allergies;
+            }
+        }
+        
+        public class EctInformation{
+            
+            private oscar.oscarEncounter.data.EctPatientData.Patient patient;
+            private oscar.oscarEncounter.data.EctPatientData.Patient.eChart eChart;
+            
+            EctInformation(){
+                init();
+            }
+            
+            private void init(){
+                try{
+                    oscar.oscarEncounter.data.EctPatientData patientData = new oscar.oscarEncounter.data.EctPatientData();
+                    this.patient = patientData.getPatient(demographic_no);
+                    this.eChart = patient.getEChart();                
+                }
+                catch(SQLException e) {
+                    System.out.println(e.getMessage());                    
+                }
+            }
+            
+            public Date getEChartTimeStamp(){
+                return eChart.getEChartTimeStamp();
+            }            
+            public String getSocialHistory(){
+                return eChart.getSocialHistory();
+            }            
+            public String getFamilyHistory(){
+                return eChart.getFamilyHistory();          
+            }
+            public String getMedicalHistory(){
+                return eChart.getMedicalHistory();
+            }
+            public String getOngoingConcerns(){
+                return eChart.getOngoingConcerns();
+            }
+            public String getReminders(){
+                return eChart.getReminders();
+            }
+            public String getEncounter(){
+                return eChart.getEncounter();
+            }
+            public String getSubject(){
+                return eChart.getSubject();
+            }
+        }        
     }
     
+           
 }
 
