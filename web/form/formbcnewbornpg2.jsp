@@ -379,7 +379,8 @@ function onCheckSlave(a, masterName) {
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"  onLoad="setfocus()">
 
 <html:form action="/form/formname">
-<input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "pg2")%> />
+<input type="hidden" name="commonField" value="ar2_" />
+<input type="hidden" name="c_lastVisited" value="pg2" />
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
 <input type="hidden" name="form_class" value="<%=formClass%>" />

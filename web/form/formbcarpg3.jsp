@@ -18,8 +18,8 @@
 
     FrmData fd = new FrmData();
     String resource = fd.getResource();
-    resource = resource + "ob/riskinfo/";
-    props.setProperty("c_lastVisited", "pg3");
+    //resource = resource + "ob/riskinfo/";
+    //props.setProperty("c_lastVisited", "pg3");
 
 	//get project_home
 	String project_home = getServletContext().getRealPath("/") ;
@@ -556,7 +556,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 <html:form action="/form/formname">
 
 <input type="hidden" name="commonField" value="ar2_" />
-<input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "pg3")%> />
+<input type="hidden" name="c_lastVisited" value="pg3" />
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
 <input type="hidden" name="form_class" value="<%=formClass%>" />

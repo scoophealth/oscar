@@ -269,7 +269,7 @@ var maxYear=9900;
 @oscar.formDB Field="c_lastVisited" Type="char(3)" 
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "pg1")%> />
+<input type="hidden" name="c_lastVisited" value="pg1" />
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
 <input type="hidden" name="form_class" value="<%=formClass%>" />
