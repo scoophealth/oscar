@@ -36,7 +36,7 @@ public class Results
     private String resultInterpret(String rS)
     {
         switch ((char)rS.toUpperCase().charAt(0)) {
-            case 'C' : return "Edited";
+            case 'C' : return "Corrected";
             case 'D' : return "Deleted";
             case 'F' : return "Final";
             case 'I' : return "Pending";
