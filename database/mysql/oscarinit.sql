@@ -2004,6 +2004,158 @@ CREATE TABLE formAnnualV2 (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table formCaregiver
+--
+CREATE TABLE formCaregiver(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,    
+  sexM tinyint(1),
+  sexF tinyint(1),
+  dobYear tinyint(1),
+  dobMonth tinyint(1),
+  dobDay tinyint(1),
+  spouse tinyint(1),
+  child tinyint(1),
+  grandchild tinyint(1),
+  sibling tinyint(1),
+  friend tinyint(1),
+  other tinyint(1),
+  otherRelation varchar(255),
+  resideY tinyint(1),
+  resideN tinyint(1),
+  healthEx tinyint(1),
+  healthVG tinyint(1),
+  healthG tinyint(1),
+  healthF tinyint(1),
+  healthP tinyint(1),  
+  Q1Y tinyint(1),
+  Q1N tinyint(1),
+  Q2Y tinyint(1),
+  Q2N tinyint(1),
+  Q3Y tinyint(1),
+  Q3N tinyint(1),
+  Q4Y tinyint(1),  
+  Q4N tinyint(1),
+  Q5Y tinyint(1),
+  Q5N tinyint(1),
+  Q6Y tinyint(1),
+  Q6N tinyint(1),
+  Q7Y tinyint(1),
+  Q7N tinyint(1),
+  Q8Y varchar(255),
+  Q8N tinyint(1),
+  Q9Y tinyint(1),
+  Q9N tinyint(1),
+  Q10Y tinyint(1),
+  Q10N tinyint(1),
+  Q11Y tinyint(1),
+  Q11N tinyint(1),
+  Q12Y tinyint(1),
+  Q12N tinyint(1),
+  Q13Y tinyint(1),
+  Q13N tinyint(1),
+  score int(2),
+  SRBScore int(3),
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table formCESD
+--
+CREATE TABLE formCESD(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,    
+  Q1Rare tinyint(1),
+  Q1Some tinyint(1),
+  Q1Occ tinyint(1),
+  Q1Most tinyint(1),
+  Q2Rare tinyint(1),
+  Q2Some tinyint(1),
+  Q2Occ tinyint(1),
+  Q2Most tinyint(1),
+  Q3Rare tinyint(1),
+  Q3Some tinyint(1),
+  Q3Occ tinyint(1),
+  Q3Most tinyint(1),
+  Q4Rare tinyint(1),
+  Q4Some tinyint(1),
+  Q4Occ tinyint(1),
+  Q4Most tinyint(1),
+  Q5Rare tinyint(1),
+  Q5Some tinyint(1),
+  Q5Occ tinyint(1),
+  Q5Most tinyint(1),
+  Q6Rare tinyint(1),
+  Q6Some tinyint(1),
+  Q6Occ tinyint(1),
+  Q6Most tinyint(1),
+  Q7Rare tinyint(1),
+  Q7Some tinyint(1),
+  Q7Occ tinyint(1),
+  Q7Most tinyint(1),
+  Q8Rare tinyint(1),
+  Q8Some tinyint(1),
+  Q8Occ tinyint(1),
+  Q8Most tinyint(1),
+  Q9Rare tinyint(1),
+  Q9Some tinyint(1),
+  Q9Occ tinyint(1),
+  Q9Most tinyint(1),
+  Q10Rare tinyint(1),
+  Q10Some tinyint(1),
+  Q10Occ tinyint(1),
+  Q10Most tinyint(1),
+  Q11Rare tinyint(1),
+  Q11Some tinyint(1),
+  Q11Occ tinyint(1),
+  Q11Most tinyint(1),
+  Q12Rare tinyint(1),
+  Q12Some tinyint(1),
+  Q12Occ tinyint(1),
+  Q12Most tinyint(1),
+  Q13Rare tinyint(1),
+  Q13Some tinyint(1),
+  Q13Occ tinyint(1),
+  Q13Most tinyint(1),
+  Q14Rare tinyint(1),
+  Q14Some tinyint(1),
+  Q14Occ tinyint(1),
+  Q14Most tinyint(1),
+  Q15Rare tinyint(1),
+  Q15Some tinyint(1),
+  Q15Occ tinyint(1),
+  Q15Most tinyint(1),
+  Q16Rare tinyint(1),
+  Q16Some tinyint(1),
+  Q16Occ tinyint(1),
+  Q16Most tinyint(1),
+  Q17Rare tinyint(1),
+  Q17Some tinyint(1),
+  Q17Occ tinyint(1),
+  Q17Most tinyint(1),
+  Q18Rare tinyint(1),
+  Q18Some tinyint(1),
+  Q18Occ tinyint(1),
+  Q18Most tinyint(1),
+  Q19Rare tinyint(1),
+  Q19Some tinyint(1),
+  Q19Occ tinyint(1),
+  Q19Most tinyint(1),
+  Q20Rare tinyint(1),
+  Q20Some tinyint(1),
+  Q20Occ tinyint(1),
+  Q20Most tinyint(1),  
+  score int(2),
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table formCostQuestionnaire
 --
 CREATE TABLE formCostQuestionnaire(
@@ -2074,6 +2226,26 @@ CREATE TABLE formCostQuestionnaire(
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+
+--
+-- Table structure for table formGripStrength
+--
+CREATE TABLE formGripStrength(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,    
+  dom1 varchar(5),
+  nonDom1 varchar(5),
+  dom2 varchar(5),
+  nonDom2 varchar(5),
+  dom3 varchar(5),
+  nonDom3 varchar(5),
+  domAvg varchar(5),
+  nonDomAvg varchar(5),
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
 
 --
 -- Table structure for table formLateLifeFDIDisability
@@ -3681,7 +3853,7 @@ CREATE TABLE formRourke (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table formIntakeInfo
+-- Table structure for table formSF36
 --
 CREATE TABLE formSF36(
   ID int(10) NOT NULL  auto_increment ,
@@ -3874,10 +4046,16 @@ CREATE TABLE formSF36(
   Q10dNotSure tinyint(1),
   Q10dMostFalse tinyint(1),
   Q10dDefFalse tinyint(1),  
-  Q10dCmt varchar(255),  
+  Q10dCmt varchar(255), 
+  Q11aNotAns tinyint(1),
+  Q11aNot tinyint(1),
+  Q11aLittle tinyint(1),
+  Q11aSome tinyint(1),
+  Q11aLot tinyint(1),
+  Q11aMuch tinyint(1),
+  Q11aCmt varchar(255),
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
-
 --
 -- Table structure for table formSelfAdministered
 --
