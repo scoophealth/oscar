@@ -179,9 +179,9 @@ public class ExtractBean extends Object implements Serializable {
 		hin = hin.toUpperCase();
 		count = invNo.length();
 		count = 8 - count;
-		//hcHin = hin;
+		hcHin = hin; // need for html content
+		
 		if (hcFlag.compareTo("H") == 0) {
-			hcHin = hin;
 			patientHeader2 = buildHeader2();
 			hin = space(12);
 		} else {
