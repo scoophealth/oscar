@@ -238,10 +238,10 @@ osteFactorFemale[8][5]  = 33.1; // < -2
 				document.second.prediction.value=
 					                  "*****************************************\n"
 									 +"*<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAverage"/>      *\n"
-									 +"<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOsteoporoticFracture"/>                 *\n"
+									 +"*<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOsteoporoticFracture"/>                  *\n"
 									 +"*****************************************\n"	                                
-									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msg10YearProb"/>:         "+retval+" %  \t*\n"
-									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall"/>: "+total+" %  \t*\n"
+									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msg10YearProb"/>:         "+retval+" %  *\n"
+									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall"/>: "+total+" %  \t\t\t*\n"
 									 +"*****************************************\n";
 				
 		
@@ -280,6 +280,18 @@ osteFactorFemale[8][5]  = 33.1; // < -2
 //
 // QueryString
 //
+
+function write2Parent(){
+    var text = document.second.prediction.value;
+
+    pastewin.document.encForm.enTextarea.value = pastewin.document.encForm.enTextarea.value + "\n\n" + text;
+    pastewin.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+    pastewin.document.encForm.enTextarea.focus();
+    
+    
+    window.close();
+ }
+
 
 function QueryString(key)
 {
@@ -439,7 +451,8 @@ function setValues(){
 			
 							<form name="second">
 								<textarea name="prediction" rows="10" cols="42" style="overflow:hidden"></textarea>
-          				    </form>				
+          				    </form>
+				<input type="button" value="Paste" onClick="write2Parent();"/> 
             			</td>
 						<td>&nbsp;</td>
 						<td align="center" valign="top">
