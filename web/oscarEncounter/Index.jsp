@@ -137,11 +137,10 @@
             varpage = "./IncomingEncounter.do?appointmentList=true&appointmentNo="+newAppointmentNo;
             location = varpage;
     }
-    function insertTemplate(templateNo){
+    function insertTemplate(text){
         var x = window.confirm("<bean:message key="oscarEncounter.Index.insertTemplateConfirm"/>");
-        if(x) {
-            varpage = "./IncomingEncounter.do?insertTemplate=true&templateNo="+templateNo;
-            location = varpage;
+        if(x) {            
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
         }
     }
 
@@ -483,6 +482,7 @@ function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
       popup.opener = self;
   popup.focus();
 }
+
 </script>
 
 <style type="text/css">
@@ -678,10 +678,12 @@ border-right: 2px solid #cfcfcf;
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.insertTemplate"/>-
                          <%
                             String encounterTmp ="NONE";
+                            String encounterTmpValue="NONE";
                             for(int j=0; j<bean.templateNames.size(); j++) {
                             encounterTmp = (String)bean.templateNames.get(j);
+                            encounterTmpValue = (String)bean.templateValues.get(j);
                          %>
-                            <option value="<%=j%>"><%=encounterTmp %>
+                            <option value="<%=encounterTmpValue%>"><%=encounterTmp %>
                          <%}%>
                         </select>
                     </td>
@@ -772,8 +774,8 @@ border-right: 2px solid #cfcfcf;
                 </form>                               
             </table>
         </td>        
-        <td valign="top">
-        <form name="encForm" action="SaveEncounter.do" method="POST">
+        <td valign="top">        
+        <form name="encForm" action="SaveEncounter.do" method="POST">             
             <table  name="encounterTableRightCol" >
     <!-- social history row --><!-- start new rows here -->
                 <tr>
