@@ -32,6 +32,10 @@ public class DBHandler {
       this.connPwd    = labProperties.getProperty("connPwd");
    }
    
+   public DBHandler(){
+      init();
+   }
+   
    public DBHandler(String dbName) {
       init();
       try {
