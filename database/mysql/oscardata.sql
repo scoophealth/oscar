@@ -1001,6 +1001,12 @@ INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringI
 INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIET", "Diet", "Diet", "Yes/No", "7");
 
 --
+-- Dumping data for table 'measurementCSSLocation'
+--
+INSERT INTO measurementCSSLocation(location) VALUES ('measurementTemplate1.css');
+INSERT INTO measurementCSSLocation(location) VALUES ('measurementTemplateRed.css');
+
+--
 -- Dumping data for table 'measurementGroup'
 --
 
@@ -1011,6 +1017,14 @@ INSERT INTO measurementGroup VALUES("GroupA", "BP");
 INSERT INTO measurementGroup VALUES("GroupB", "BP");
 INSERT INTO measurementGroup VALUES("GroupC", "BP");
 
+--
+-- Dumping data for table 'measurementGroupStyle'
+--
+INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('General','1');
+INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('GroupA','1');
+INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('GroupB','1');
+INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('GroupC','1');
+INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('Vital','1');
 --
 -- Dumping data for table 'messagelisttbl'
 --

@@ -3324,6 +3324,16 @@ CREATE TABLE measurements(
 ) TYPE=MYISAM;
 
 --
+-- Table structure for table `measurementCSSLocation`
+--
+DROP TABLE IF EXISTS measurementCSSLocation;
+CREATE TABLE measurementCSSLocation(
+  cssID int(9) NOT NULL auto_increment,
+  location varchar(255) NOT NULL,  
+  PRIMARY KEY  (cssID) 
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `measurementsDeleted`
 --
 CREATE TABLE measurementsDeleted(
@@ -3348,6 +3358,18 @@ CREATE TABLE measurementGroup(
   name varchar(100) NOT NULL,
   typeDisplayName varchar(20) 
 ) TYPE =MyISAM;
+
+--
+-- Table structure for table `measurementGroupStyle`
+--
+CREATE TABLE measurementGroupStyle(
+  groupID int(9) NOT NULL auto_increment,
+  groupName varchar(100) NOT NULL,
+  cssID int(9) NOT NULL,
+  PRIMARY KEY  (groupID) 
+) TYPE=MyISAM;
+
+
 
 --
 -- Table structure for table `measurementType`
