@@ -37,6 +37,15 @@ public class FrmSelfAdministeredRecord extends FrmRecord {
                                 props.setProperty("sex", rs.getString("sex"));
 			}
 			rs.close();
+                        sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
+                        rs = db.GetSQL(sql);
+                        if (rs.next()){
+                            props.setProperty("studyID", rs.getString("studyID"));
+                        }
+                        else{
+                            props.setProperty("studyID", "N/A");
+                        }
+                        rs.close();
 			db.CloseConn();
 		} else {
 			sql =

@@ -28,6 +28,24 @@ public class FrmGripStrengthRecord extends FrmRecord {
 				props.setProperty("formCreated",UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
 			}
 			rs.close();
+                        sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
+                        rs = db.GetSQL(sql);
+                        if (rs.next()){
+                            props.setProperty("studyID", rs.getString("studyID"));
+                        }
+                        else{
+                            props.setProperty("studyID", "N/A");
+                        }
+                        rs.close();
+                        sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
+                        rs = db.GetSQL(sql);
+                        if (rs.next()){
+                            props.setProperty("studyID", rs.getString("studyID"));
+                        }
+                        else{
+                            props.setProperty("studyID", "N/A");
+                        }
+                        rs.close();
 			db.CloseConn();
 		} else {
 			sql =   "SELECT * FROM formGripStrength WHERE demographic_no = "
