@@ -6,11 +6,11 @@
 
 %>
 <%@ page import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
 <%  if(!scheduleMainBean.getBDoConfigure()) { %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<!--%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %-->
 <%@ include file="scheduleMainBeanConn.jsp" %>  
 <% } %>
 <%
@@ -67,7 +67,7 @@ function selectrschedule(s) {
 	self.location.href = a + "&sdate=" +s.options[s.selectedIndex].value ;
 }
 function onBtnDelete() {
-  if( confirm('<bean:message key="schedule.scheduletemplateapplying.msgDeleteConfirmation"/>') ) {
+  if( confirm("<bean:message key="schedule.scheduletemplateapplying.msgDeleteConfirmation"/>") ) {
     self.location.href += "&delete=1&deldate=all" ;
   } else {;}
 }
@@ -83,10 +83,10 @@ function checkDate(year,month,day) {
 	else { return true; }
 }
 function onChangeDates() {
-	if(!checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) ) { alert('<bean:message key="schedule.scheduletemplateapplying.msgIncorrectOutput"/>'); }
+	if(!checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) ) { alert("<bean:message key="schedule.scheduletemplateapplying.msgIncorrectOutput"/>"); }
 }
 function onChangeDatee() {
-	if(!checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) ) { alert('<bean:message key="schedule.scheduletemplateapplying.msgIncorrectOutput"/>'); }
+	if(!checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) ) { alert("<bean:message key="schedule.scheduletemplateapplying.msgIncorrectOutput"/>"); }
 }
 function onAlternate() {
   if(document.schedule.alternate.checked) {
@@ -152,7 +152,7 @@ function addDataString() {
 	document.schedule.avail_hour.value = str1; 
 	
 	if(document.schedule.syear.value=="" || document.schedule.smonth.value=="" || document.schedule.sday.value=="") {
-//	  alert("Please input a Date!!!"); return false;
+//	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>"); return false;
 	} else {
 	  return true;
 	}
@@ -204,7 +204,7 @@ function addDataStringB() {
 	document.schedule.day_of_weekB.value = strB; 
 	document.schedule.avail_hourB.value = str1B; 
 	if(document.schedule.syear.value=="" || document.schedule.smonth.value=="" || document.schedule.sday.value=="") {
-//	  alert("Please input a Date!!!"); return false;
+//	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>"); return false;
 	} else {
 	  return true;
 	}
@@ -212,10 +212,10 @@ function addDataStringB() {
 function addDataString1() {
   var str="";
 	if(document.schedule.syear.value=="" || document.schedule.smonth.value=="" || document.schedule.sday.value=="" || document.schedule.eyear.value=="" || document.schedule.emonth.value=="" || document.schedule.eday.value=="") {
-	  alert('<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>');
+	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>");
 	  return false;
 	} else if( !checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) || !checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) || (document.schedule.eyear.value-1)<(document.schedule.syear.value-1) ) {
-	  alert('<bean:message key="schedule.scheduletemplateapplying.msgInputCorrectDate"/>');
+	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputCorrectDate"/>");
 	  return false;
 	} else {
 	  return true;
@@ -335,7 +335,7 @@ function addDataString1() {
  	}
 %>
                   </select>
-                <input type="button" name="command" value='<bean:message key="schedule.scheduletemplateapplying.btnDelete"/>' onClick="onBtnDelete()">
+                <input type="button" name="command" value="<bean:message key="schedule.scheduletemplateapplying.btnDelete"/>" onClick="onBtnDelete()">
               </td>
             </tr>
             <tr> 
@@ -594,9 +594,6 @@ function tranbuttonb7_click() {
    <select size=<%=bOrigAlt||bAlternate?22:11%> name="mytemplate" >
 	<%
    ResultSet rsdemo = null;
-   //String[] param =new String[2];
-   //param[0]="Public";
-   //param[1]=request.getParameter("name");
    String param = "Public";
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
    while (rsdemo.next()) { 
@@ -604,9 +601,7 @@ function tranbuttonb7_click() {
         <option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
   <%
    }
-   //param[0]=request.getParameter("provider_no");
-   //param[1]=request.getParameter("name");
-   param=request.getParameter("provider_no");
+   param =request.getParameter("provider_no");
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
    while (rsdemo.next()) { 
 	%>
@@ -636,7 +631,7 @@ function tranbuttonb7_click() {
                   <input type="hidden" name="available" value="<%=bAlternate||bOrigAlt?"A":"1"%>">
                   <input type="hidden" name="Submit" value=" Next ">
                   <input type="submit" value='<bean:message key="schedule.scheduletemplateapplying.btnNext"/>'>
-                  <input type="button" name='<bean:message key="schedule.scheduletemplateapplying.btnCancel"/>' value="Cancel" onclick="window.close()">
+                  <input type="button" value='<bean:message key="schedule.scheduletemplateapplying.btnCancel"/>' onclick="window.close()">
                 </div>
               </td>
             </tr>
