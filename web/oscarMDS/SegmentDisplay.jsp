@@ -190,7 +190,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
-                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(pd.getPatientName())%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
                 </tr>
