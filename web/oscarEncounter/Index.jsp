@@ -602,7 +602,7 @@ border-right: 2px solid #cfcfcf;
                         <%  if (!vLocale.getCountry().equals("BR")) { %>
                             <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
                         <% } %>
-                        <a href=# onClick="popupOscarCon(700,960,'oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp');return false;"><bean:message key="global.consultations"/></a><br>
+                        <a href=# onClick="popupOscarCon(700,960,'oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a><br>
                         <% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(demoNo)) { %>
                             <a style="color:red" href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
                         <% } else {%>
