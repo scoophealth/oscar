@@ -368,7 +368,7 @@ function findProvider(p,m,d) {
             <td valign="top" width="<%=1*100/numProvider%>%"> <!-- for the first provider's schedule -->
          
         <table border="0" cellpadding="0" bgcolor="#486ebd" cellspacing="0" width="100%"><!-- for the first provider's name -->
-          <tr><td ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
+          <tr><td NOWRAP ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title='<bean:message key="receptionist.appointmentreceptionistadminday.formFlipView"/>' >
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" title='<bean:message key="receptionist.appointmentreceptionistadminday.formZoomView"/>' >
           <%=curProviderName[nProvider]%></a></b></td></tr>
