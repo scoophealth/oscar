@@ -325,9 +325,14 @@ public final class FrmSetupFormAction extends Action {
         Vector data2OSDSF = new Vector();
         data2OSDSF.add("patientCod");
         data2OSDSF.add(demographicNo);
+        String osdsfRPCURL = OscarProperties.getInstance().getProperty("osdsfRPCURL", null);
+        System.out.println("osdsfRPCURL getPatientRlt(): " + osdsfRPCURL);
+        if (osdsfRPCURL == null){
+            return null;
+        }
         //send to osdsf thru XMLRPC
         try{
-            XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
+            XmlRpcClient xmlrpc = new XmlRpcClient(osdsfRPCURL);
             String result = (String) xmlrpc.execute("vt.getPatientRlt", data2OSDSF);
             System.out.println("Reverse result: " + result);
             return result;
@@ -346,9 +351,15 @@ public final class FrmSetupFormAction extends Action {
         Vector ret = new Vector();
             ret.addElement("patientCod");
             ret.addElement(demographicNo);
+            
+        String osdsfRPCURL = OscarProperties.getInstance().getProperty("osdsfRPCURL", null);
+        System.out.println("osdsfRPCURL getMostRecentRecord(): " + osdsfRPCURL);
+        if (osdsfRPCURL == null){
+            return null;
+        }
         //send to osdsf thru XMLRPC
         try{
-            XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
+            XmlRpcClient xmlrpc = new XmlRpcClient(osdsfRPCURL);
             String result = (String) xmlrpc.execute("vt.getMostRecentRecord", ret);
             System.out.println("Reverse result: " + result);
             return result;
@@ -421,6 +432,9 @@ public final class FrmSetupFormAction extends Action {
             else{
                 return "no";
             }            
+        }
+        if(input.equalsIgnoreCase("null")){
+            return "";
         }
         return input;
             
