@@ -10252,20 +10252,21 @@ INSERT INTO diagnosticcode VALUES (528,'998','Of surgical and medical care, e.g.
 -- Dumping data for table 'encounterForm'
 --
 
-INSERT INTO encounterForm VALUES ('Annual','../form/formannual.jsp?demographic_no=','formAnnual');
-INSERT INTO encounterForm VALUES ('ALPHA','../form/formalpha.jsp?demographic_no=','formAlpha');
-INSERT INTO encounterForm VALUES ('Rourke','../form/formrourke.jsp?demographic_no=','formRourke');
-INSERT INTO encounterForm VALUES ('T2Diabetes','../form/formtype2diabete.jsp?demographic_no=','formType2Diabetes');
-INSERT INTO encounterForm VALUES ('Mental Health','../form/formmentalhealth.jsp?demographic_no=','formMentalHealth');
-INSERT INTO encounterForm VALUES ('PeriMenopausal','../form/formperimenopausal.jsp?demographic_no=','formPeriMenopausal');
-INSERT INTO encounterForm VALUES ('Lab Req','../form/formlabreq.jsp?demographic_no=','formLabReq');
-INSERT INTO encounterForm VALUES ('MMSE','../form/formmmse.jsp?demographic_no=','formMMSE');
-INSERT INTO encounterForm VALUES ('Pall. Care','../form/formpalliativecare.jsp?demographic_no=','formPalliativeCare');
-INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','formAR');
-INSERT INTO encounterForm VALUES ('BC-AR','../form/formbcar.jsp?demographic_no=','formBCAR');
-INSERT INTO encounterForm VALUES ('BC-LabourBirth','../form/formbcbirthsummo.jsp?demographic_no=','formBCBirthSumMo');
-INSERT INTO encounterForm VALUES ('BC-NewBorn','../form/formbcnewborn.jsp?demographic_no=','formBCNewBorn');
-INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf');
+INSERT INTO encounterForm VALUES ('Annual','../form/formannual.jsp?demographic_no=','formAnnual', '0');
+INSERT INTO encounterForm VALUES ('Annual V2','../form/formannualV2.jsp?demographic_no=','formAnnualV2', '1');
+INSERT INTO encounterForm VALUES ('ALPHA','../form/formalpha.jsp?demographic_no=','formAlpha', '1');
+INSERT INTO encounterForm VALUES ('Rourke','../form/formrourke.jsp?demographic_no=','formRourke', '1');
+INSERT INTO encounterForm VALUES ('T2Diabetes','../form/formtype2diabete.jsp?demographic_no=','formType2Diabetes', '1');
+INSERT INTO encounterForm VALUES ('Mental Health','../form/formmentalhealth.jsp?demographic_no=','formMentalHealth', '1');
+INSERT INTO encounterForm VALUES ('PeriMenopausal','../form/formperimenopausal.jsp?demographic_no=','formPeriMenopausal', '1');
+INSERT INTO encounterForm VALUES ('Lab Req','../form/formlabreq.jsp?demographic_no=','formLabReq', '1');
+INSERT INTO encounterForm VALUES ('MMSE','../form/formmmse.jsp?demographic_no=','formMMSE', '1');
+INSERT INTO encounterForm VALUES ('Pall. Care','../form/formpalliativecare.jsp?demographic_no=','formPalliativeCare', '1');
+INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','formAR', '1');
+INSERT INTO encounterForm VALUES ('BC-AR','../form/formbcar.jsp?demographic_no=','formBCAR', '1');
+INSERT INTO encounterForm VALUES ('BC-LabourBirth','../form/formbcbirthsummo.jsp?demographic_no=','formBCBirthSumMo', '1');
+INSERT INTO encounterForm VALUES ('BC-NewBorn','../form/formbcnewborn.jsp?demographic_no=','formBCNewBorn', '1');
+INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf', '1');
 
 --
 -- Dumping data for table 'encountertemplate'
