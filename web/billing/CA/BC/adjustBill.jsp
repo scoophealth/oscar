@@ -559,7 +559,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
       <td width="13%"  class="bCellData"> 
         <div align="right">
            <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bill_amount")%>">
-           <input type="text" style="font-size:80%;" size="5" maxlength="5" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>">
+           <input type="text" style="font-size:80%;" size="6" maxlength="6" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>">
         </div>
       </td>
     </tr>
