@@ -2897,7 +2897,7 @@ CREATE TABLE formType2Diabetes (
   lipidsC3 varchar(30) default NULL,
   lipidsC4 varchar(30) default NULL,
   lipidsC5 varchar(30) default NULL,
-  ophthamologist varchar(50) default NULL,
+  ophthalmologist varchar(50) default NULL,
   eyes1 varchar(50) default NULL,
   eyes2 varchar(50) default NULL,
   eyes3 varchar(50) default NULL,
