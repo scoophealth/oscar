@@ -338,28 +338,28 @@ String vGrantdate = "1980-01-07 00:00:00.0";
 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
  
 
- String dateBegin = xml_vdate;
-   String dateEnd = xml_appointment_date;
+  String dateBegin = xml_vdate;
+  String dateEnd = xml_appointment_date;
   if (dateEnd.compareTo("") == 0) dateEnd = "9999-12-31";
-   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
- ResultSet rs=null ;
+  if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+  ResultSet rs=null ;
   String[] param =new String[4];
-   boolean bodd=false;
-   param[0] = ticklerview;
+  boolean bodd=false;
+  param[0] = ticklerview;
  
- param[1] = dateBegin;
+  param[1] = dateBegin;
   param[2] = dateEnd;
-   param[3] = request.getParameter("demoview")==null?"": request.getParameter("demoview");
+  param[3] = request.getParameter("demoview")==null?"": request.getParameter("demoview");
   rs = apptMainBean.queryResults(param, "search_tickler_bydemo");
-   while (rs.next()) {
-       nItems = nItems +1;
-  bodd=bodd?false:true;
-   vGrantdate = rs.getString("service_date")+ " 00:00:00.0";
-   java.util.Date grantdate = dateFormat.parse(vGrantdate); 
-   java.util.Date toDate = new java.util.Date(); 
-    long millisDifference = toDate.getTime() - grantdate.getTime(); 
-long daysDifference = millisDifference / (1000 * 60 * 60 * 24); 
-if (daysDifference > 0){
+  while (rs.next()) {
+     nItems = nItems +1;
+     bodd=bodd?false:true;
+     vGrantdate = rs.getString("service_date")+ " 00:00:00.0";
+     java.util.Date grantdate = dateFormat.parse(vGrantdate); 
+     java.util.Date toDate = new java.util.Date(); 
+     long millisDifference = toDate.getTime() - grantdate.getTime(); 
+     long daysDifference = millisDifference / (1000 * 60 * 60 * 24); 
+     if (daysDifference > 0){
 %>
 
 <tr >
