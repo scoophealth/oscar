@@ -93,15 +93,22 @@ public final class FrmSetupFormAction extends Action {
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         
         List drugLists = getDrugList(demo);
+        List allergyList = getDrugAllegyList(demo);
                                     
         Properties currentRec = getFormRecord(formName, formId, demo);
         
         request.setAttribute("today", today);
         //specifically for VT Form
-        request.setAttribute("drugs", drugLists);        
+        request.setAttribute("drugs", drugLists); 
+        request.setAttribute("allergies", allergyList);
         request.setAttribute("ongoingConcerns", chartBean.ongoingConcerns.equalsIgnoreCase("")?"None":chartBean.ongoingConcerns);
-        if(currentRec!=null)
-            frm.setValue("diagnosisVT", currentRec.getProperty("diagnosis", "None"));
+        if(currentRec!=null){            
+            frm.setValue("diagnosisVT", currentRec.getProperty("Diagnosis", ""));
+            frm.setValue("subjective", currentRec.getProperty("Subjective", ""));            
+            frm.setValue("objective", currentRec.getProperty("Objective", ""));
+            frm.setValue("assessment", currentRec.getProperty("Assessment", ""));
+            frm.setValue("plan", currentRec.getProperty("Plan", ""));
+        }
         
         try {            
             System.out.println("formId=" + formId + "opening " + formName + ".xml");
@@ -257,6 +264,25 @@ public final class FrmSetupFormAction extends Action {
             e.printStackTrace();   
         }
         return drugs;
+    }
+    
+    private List getDrugAllegyList(String demographicNo){
+        RxPatientData pData = new RxPatientData();
+        List allergyLst = new LinkedList();
+        try{
+            RxPatientData.Patient p = pData.getPatient(Integer.parseInt(demographicNo));
+            RxPatientData.Patient.Allergy[] allergies = p.getAllergies();
+            if(allergies.length==0)
+                allergyLst=null;
+            for(int i=0; i<allergies.length; i++){
+                RxAllergyData.Allergy allergy = allergies[i].getAllergy();
+                allergyLst.add(allergies[i].getEntryDate() + " " + allergy.getDESCRIPTION() + " " + allergy.getTypeDesc());            
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();   
+        }
+        return allergyLst;
     }
     
     private Properties getFormRecord(String formName, String formId, String demographicNo){
