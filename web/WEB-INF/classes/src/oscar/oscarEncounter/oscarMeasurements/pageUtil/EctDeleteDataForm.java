@@ -39,6 +39,14 @@ public final class EctDeleteDataForm extends ActionForm {
     
     public void setDeleteCheckbox(String[] deleteCheckbox) {
         this.deleteCheckbox = deleteCheckbox;
-    }    
+    }
+    
+    private String type;
+    public String getType(){
+        return type;
+    }
+    public void setType(String type){
+        this.type = type;
+    }
         
 }

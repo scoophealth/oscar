@@ -53,11 +53,23 @@ public final class EctSetupDisplayHistoryAction extends Action {
 
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         request.getSession().setAttribute("EctSessionBean", bean);
+        String type = (String) request.getParameter("type");
+        System.out.println("Type: " + type);
+        oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = null;
         if (bean!=null){
-            String demo = (String) bean.getDemographicNo();            
-            oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);           
+            String demo = (String) bean.getDemographicNo();
+            if(type!=null){
+                hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, type);
+                request.setAttribute("type", type);
+            }
+            else{
+                hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);           
+            }
             HttpSession session = request.getSession();
             session.setAttribute( "measurementsData", hd );            
+        }
+        else{
+            System.out.println("cannot get the EctSessionBean");
         }
         return (mapping.findForward("continue"));
     }

@@ -41,7 +41,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
-
+import oscar.util.ParameterActionForward;
 
 public class EctDeleteDataAction extends Action {
 
@@ -103,7 +103,12 @@ public class EctDeleteDataAction extends Action {
         {
             System.out.println(e.getMessage());
         }
- 
+                
+        if(frm.getType()!=null){
+            ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
+            forward.addParameter("type", frm.getType());
+            return forward;
+        }
         return mapping.findForward("success");
     }
      
