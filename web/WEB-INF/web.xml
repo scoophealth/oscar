@@ -21,7 +21,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -102,7 +102,14 @@
 	  <servlet-class>OscarDownload</servlet-class>
 	  <load-on-startup>0</load-on-startup>
   </servlet>
-   
+  
+  <servlet>
+	  <servlet-name>Download</servlet-name>
+	  <servlet-class>oscar.util.GenericDownload</servlet-class>
+	  <load-on-startup>0</load-on-startup>
+  </servlet> 
+  
+  
   <servlet>
 	  <servlet-name>BackupDownload</servlet-name>
 	  <servlet-class>BackupDownload</servlet-class>
@@ -166,6 +173,11 @@
   <servlet-mapping>
 	  <servlet-name>OscarDownload</servlet-name>
 	  <url-pattern>/servlet/OscarDownload</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+	  <servlet-name>Download</servlet-name>
+	  <url-pattern>/Download</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>
