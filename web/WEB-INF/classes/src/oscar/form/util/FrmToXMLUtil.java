@@ -51,6 +51,7 @@ public class FrmToXMLUtil{
     * @param args the command line arguments
     */
     public static String convertToXml(Vector measurementTypes, Properties nameProps, Properties dataProps){
+             
         // TODO code application logic here            
         String _dateFormat = "yyyy-MM-dd hh:mm:ss";
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
@@ -67,8 +68,10 @@ public class FrmToXMLUtil{
         String xmlStr="";
       
         SitePatientVisitRecordsDocument visitDocument = SitePatientVisitRecordsDocument.Factory.newInstance();
-        SitePatientVisitRecordsDocument.SitePatientVisitRecords visitRecord = visitDocument.addNewSitePatientVisitRecords();
+        SitePatientVisitRecordsDocument.SitePatientVisitRecords visitRecord = visitDocument.addNewSitePatientVisitRecords();      
         SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit visit  = visitRecord.addNewSitePatientVisit();
+        
+        visitRecord.setVersion(visitRecord.getVersion());
         
         try{   
             String who = dataProps.getProperty("provider_no");
@@ -109,6 +112,14 @@ public class FrmToXMLUtil{
             value = dataProps.getProperty("gender");
             value = translate(value, "SelGender");           
             setWhoWhatWhereWhen(obj,how,who,when,value);
+            
+             ///FLU SHOT
+            if (getFluShotBillingDate((String) dataProps.getProperty("demographic_no"))!=null){               
+               addNewMethod = cls.getMethod("addNewBFluShotDoneThisSeason", new Class[] {});
+               obj = addNewMethod.invoke(visit,new Object[]{});                       
+               setWhoWhatWhereWhen(obj,how,who,when,"true");                 
+            }
+            
                                     
             EctMeasurementTypesBean mt;
             for (int i = 0; i < measurementTypes.size(); i++){        
@@ -192,8 +203,9 @@ public class FrmToXMLUtil{
                     } 
                 }
                
-            }
-                        
+            }                                                            
+            
+            
             //get drug list             
             RxPatientData pData = new RxPatientData();            
             RxPatientData.Patient p = pData.getPatient(Integer.parseInt(dataProps.getProperty("demographic_no")==null?"0":dataProps.getProperty("demographic_no")));
@@ -207,28 +219,7 @@ public class FrmToXMLUtil{
                 drugName.setSignedWhen(when);
                 drugName.setValue(prescribedDrugs[i].getDrugName());
             }
-            if (getFluShotBillingDate((String) dataProps.getProperty("demographic_no"))!=null){
-                SitePatientVisitRecordsDocument visitDocumentFlu = SitePatientVisitRecordsDocument.Factory.newInstance();
-                SitePatientVisitRecordsDocument.SitePatientVisitRecords visitRecordFlu = visitDocumentFlu.addNewSitePatientVisitRecords();
-                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit visitFlu  = visitRecordFlu.addNewSitePatientVisit();
             
-                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SelVisitType visitTypeFlu = visitFlu.addNewSelVisitType();
-                visitTypeFlu.setValue(vType);
-                visitTypeFlu.setSignedWhen(when);
-                visitTypeFlu.setSignedHow(how);
-                visitTypeFlu.setSignedWho(who);
-
-                visitFlu.setPatientCod(dataProps.getProperty("demographic_no"));
-                visitFlu.setVisitCod(getFluShotBillingDate((String) dataProps.getProperty("demographic_no")));  
-                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug drug = visitFlu.addNewSitePatientVisitDrug();                
-                drug.setDrugCod("ATC_J07BB01");
-                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug.TxtDrugName drugName = drug.addNewTxtDrugName();                
-                drugName.setSignedHow(how);
-                drugName.setSignedWho(who);
-                drugName.setSignedWhen(when);
-                drugName.setValue("flu Shot");
-                xmlStr = visitDocumentFlu.xmlText(xmlOptions);
-            }
                         
                                         
         }
