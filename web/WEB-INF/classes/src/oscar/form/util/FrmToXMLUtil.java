@@ -27,6 +27,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import org.apache.xmlbeans.*;
 import oscar.oscarEncounter.oscarMeasurements.bean.*;
+import oscar.oscarRx.data.*;
 import oscar.util.UtilDateUtilities;
 import noNamespace.*;
 
@@ -58,8 +59,7 @@ public class FrmToXMLUtil{
 
         //String patientCod = (String) patientProps.get("Patient_cod");         
         //Vector vec = comm.getElementByDemographicAndDate(patientCod,start,end);
-        SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit visit  = visitRecord.addNewSitePatientVisit();
-         
+        SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit visit  = visitRecord.addNewSitePatientVisit();                 
         try{
             
             visit.setPatientCod(dataProps.getProperty("demographic_no"));
@@ -67,29 +67,62 @@ public class FrmToXMLUtil{
             String who = dataProps.getProperty("provider_no");
             String how = "EMR";
             String when = dateEntered;
+                        
             
             EctMeasurementTypesBean mt;
             for (int i = 0; i < measurementTypes.size(); i++){        
                 mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
                 String itemName = mt.getType();
                 String methodCall = (String) nameProps.get(itemName+"Value");
-                System.out.println("method "+methodCall);
+                //System.out.println("method "+methodCall);
                 if (methodCall != null){                                       
                     
                    Class cls = visit.getClass();
-                   System.out.println("calling addNew"+methodCall);
+                   //System.out.println("calling addNew"+methodCall);
                    Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
                    Object obj = addNewMethod.invoke(visit,new Object[]{});
                    
                    String value = dataProps.getProperty(itemName+"Value");
-                   System.out.println("who "+who+" how "+how+ " when "+when+ " value "+value);            
+                   //System.out.println("who "+who+" how "+how+ " when "+when+ " value "+value);            
                    setWhoWhatWhereWhen(obj,how,who,when,value);
 
                    //String date = dataProps.getProperty(itemName+"Date");
                    //setWhoWhatWhereWhen(obj,how,who,when,date);
-                }                  
+                }
+                methodCall = (String) nameProps.get(itemName+"Date");
+                //System.out.println("method "+methodCall);
+                if (methodCall != null){                                       
+                    
+                   Class cls = visit.getClass();
+                   //System.out.println("calling addNew"+methodCall);
+                   Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+
+                   Object obj = addNewMethod.invoke(visit,new Object[]{});
+                   
+                   String value = dataProps.getProperty(itemName+"Date");
+                   //System.out.println("who "+who+" how "+how+ " when "+when+ " value "+value);            
+                   setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                   //String date = dataProps.getProperty(itemName+"Date");
+                   //setWhoWhatWhereWhen(obj,how,who,when,date);
+                }  
             }
+                        
+            //get drug list             
+            RxPatientData pData = new RxPatientData();            
+            RxPatientData.Patient p = pData.getPatient(Integer.parseInt(dataProps.getProperty("demographic_no")==null?"0":dataProps.getProperty("demographic_no")));
+            RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();            
+            for(int i=0; i<prescribedDrugs.length; i++){                
+                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug drug = visit.addNewSitePatientVisitDrug();                
+                drug.setDrugCod("ATC_"+prescribedDrugs[i].getAtcCode());
+                SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug.TxtDrugName drugName = drug.addNewTxtDrugName();                
+                drugName.setSignedHow(how);
+                drugName.setSignedWho(who);
+                drugName.setSignedWhen(when);
+                drugName.setValue(prescribedDrugs[i].getDrugName());
+            }
+                                        
         }
         catch(NoSuchMethodException e){
             e.printStackTrace();
@@ -149,5 +182,22 @@ public class FrmToXMLUtil{
       }catch (NoSuchMethodException noSuchMethod3){}
       return i;
    }
+   
+   public static void getMembers(Object obj){
+     Class cls = obj.getClass();
+     //Method[] methods = cls.getDeclaredMethods();
+     Method[] methods = cls.getMethods();
+          for (int i=0; i < methods.length; i++){
+                //if(methods[i].getName().startsWith("get")){
+           Class[] params = methods[i].getParameterTypes();
+                   System.out.print(methods[i].getName());
+           System.out.print("(");
+           for (int j=0; j < params.length; j++){
+              System.out.print(" "+params[j].getName());
+           }
+           System.out.println(")");
+        //}
+     }     
+  }    
           
 }
