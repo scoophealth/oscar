@@ -9592,7 +9592,7 @@ INSERT INTO ctl_document VALUES ('demographic',2147483647,4955,'A');
 -- Dumping data for table 'demographic'
 --
 
-INSERT INTO demographic VALUES (2147483647,'TEST','PATIENT','','','ON','','905-','','','','1998','06','15','','','','AC','2003-06-04','','999998','M','0001-01-01','0001-01-01',NULL,'ON','0001-01-01','<rdohip></rdohip><rd></rd>');
+INSERT INTO demographic VALUES (1,'TEST','PATIENT','','','ON','','905-','','','','1998','06','15','','','','AC','2003-06-04','','999998','M','0001-01-01','0001-01-01',NULL,'ON','0001-01-01','<rdohip></rdohip><rd></rd>');
 
 --
 -- Dumping data for table 'demographicaccessory'
@@ -10040,7 +10040,7 @@ INSERT INTO diagnosticcode VALUES (413,'708','Allergic urticaria                
 INSERT INTO diagnosticcode VALUES (414,'709','Other disorders of skin and subcutaneous tissue                                                     ','A');
 INSERT INTO diagnosticcode VALUES (415,'710','Desseminated lupus erythematosus, generalized scleroderma, dermatomyositis, polymyositis            ','A');
 INSERT INTO diagnosticcode VALUES (416,'711','Pyogenic arthritis                                                                                  ','A');
-INSERT INTO diagnosticcode VALUES (417,'714','Rheumatoid arthritis, Still’ s disease, Other inflammatory arthritis                                                               ','A');
+INSERT INTO diagnosticcode VALUES (417,'714','Rheumatoid arthritis, Stillï¿½ s disease, Other inflammatory arthritis                                                               ','A');
 INSERT INTO diagnosticcode VALUES (418,'715','Osteoarthritis                                                                                      ','A');
 INSERT INTO diagnosticcode VALUES (419,'716','Traumatic arthritis                                                                                 ','A');
 INSERT INTO diagnosticcode VALUES (420,'718','Joint derangement, recurrent dislocation, ankylosis, meniscus or cartilage tear, loose body in joint','A');
