@@ -836,7 +836,7 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_fontanelles6m" <%= props.getProperty("p2_fontanelles6m", "") %>></td>
-                    <td><bean:message key="oscarEncounter.formRourke2.form<b>Hearing inquiry</b>"/></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHearing"/></td>
                 </tr><bean:message key="oscarEncounter.formRourke2.formFontanelles"/>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_eyes6m" <%= props.getProperty("p2_eyes6m", "") %>></td>

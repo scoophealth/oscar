@@ -113,14 +113,14 @@ function BackToOscar()
         <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
             <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
 
-            <!----Start new rows here-->
+            <!--Start new rows here-->
                 <tr>
                     <td>
                                 <html:form action="/oscarEncounter/SearchDemographic">
                 <table>
                    <tr>
                         <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgFisrtName"/>:
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgFirstName"/>:
                         </td>
                         <td >
                             <html:text property="firstName"/>
