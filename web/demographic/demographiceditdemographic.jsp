@@ -190,6 +190,16 @@ function checkONReferralNo() {
 function refresh() {
   //history.go(0);
 }
+function rs(n,u,w,h,x) {
+  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+  remote=window.open(u,n,args);
+}
+function referralScriptAttach2(elementName, name2) {
+     var d = elementName;
+     t0 = escape("document.forms[1].elements[\'"+d+"\'].value");
+     t1 = escape("document.forms[1].elements[\'"+name2+"\'].value");
+     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
+}
 
 function newStatus() {
     newOpt = prompt("Please enter the new status:", "");
@@ -314,9 +324,11 @@ function newStatus() {
                     <a href=# onclick="window.open('../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&demo_sex=<%=URLEncoder.encode(rs.getString("sex"))%>&demo_hctype=<%=URLEncoder.encode(rs.getString("hc_type")==null?"null":rs.getString("hc_type"))%>&rd=<%=URLEncoder.encode(rd==null?"null":rd)%>&rdohip=<%=URLEncoder.encode(rdohip==null?"null":rdohip)%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=640,height=400');return false;" title='Add Flu Billing'>Flu Billing</a>
                 </td></tr>
                 <% } %>
+                <% if("ON".equals(prov)) { %>
                 <tr><td>
                     <a href=# onclick="popupPage(700, 1000, '../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Hospital Billing</a>
                 </td></tr>
+                <% } %>
                 <tr><td>
                     <a href=# onclick="window.open('../billing/CA/ON/inr/addINRbilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;" title='Add INR Billing'>Add INR</a></th>
                 </td></tr>
@@ -672,7 +684,10 @@ function newStatus() {
                                   </td>
                                   <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>: </b></td>
                                   <td align="left">
-                                    <input type="text" name="r_doctor_ohip" size="30" maxlength="6" value="<%=rdohip%>">
+                                    <input type="text" name="r_doctor_ohip" size="20" maxlength="6" value="<%=rdohip%>">
+                					<% if("ON".equals(prov)) { %>
+									<a href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')">Search #</a>
+                					<% } %>
                                   </td>
                             </tr>
 
