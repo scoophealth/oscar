@@ -66,8 +66,7 @@ public class DBConnectionPool implements Runnable {
   public synchronized Connection getConnection()
       throws SQLException {
     if (!availableConnections.isEmpty()) {
-      Connection existingConnection =
-        (Connection)availableConnections.lastElement();
+      Connection existingConnection = (Connection)availableConnections.lastElement();
       int lastIndex = availableConnections.size() - 1;
       availableConnections.removeElementAt(lastIndex);
       // If connection on available list is closed (e.g.,
@@ -162,8 +161,10 @@ public class DBConnectionPool implements Runnable {
 
   public synchronized void free(Connection connection) {
 
-    busyConnections.removeElement(connection);
-    availableConnections.addElement(connection);
+    busyConnections.removeElement(connection);    
+    if (!availableConnections.contains(connection)){
+       availableConnections.addElement(connection);   
+    }    
     // Wake up threads that are waiting for a connection
     notifyAll();
   }
