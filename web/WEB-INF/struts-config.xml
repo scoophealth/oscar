@@ -287,18 +287,20 @@
 
 <!-- OscarBilling start For BC-->
     <form-bean      name="BillingForm" 
-                    type="oscar.oscarBilling.pageUtil.BillingForm" />
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingForm" />
     <form-bean      name="BillingCreateBillingForm"
-                    type="oscar.oscarBilling.pageUtil.BillingCreateBillingForm" />
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingForm" />
     <form-bean      name="BillingSaveBillingForm"
-                    type="oscar.oscarBilling.pageUtil.BillingSaveBillingForm" />
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingSaveBillingForm" />
     <form-bean      name="BillingViewForm"
-                    type="oscar.oscarBilling.pageUtil.BillingViewForm" />
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingViewForm" />
 
-    
+    <form-bean      name="WCBForm" type="oscar.oscarBilling.ca.bc.pageUtil.WCBForm" />  
     
     <form-bean      name="ReProcessBilling"
-                    type="oscar.oscarBilling.pageUtil.BillingReProcessBillForm"/>
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingReProcessBillForm"/>
+    <form-bean      name="TeleplanCorrectionFormWCB" type="oscar.oscarBilling.ca.bc.administration.TeleplanCorrectionFormWCB" />                   
+                    
 <!-- OscarBilling stop -->
 
 <!-- OscarBilling BC stop -->
@@ -306,7 +308,7 @@
 
 <!-- OscarBilling ON start-->
     <form-bean      name="BillingDocumentErrorReportUploadForm"
-                    type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadForm"/>    
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingDocumentErrorReportUploadForm"/>    
 
     </form-beans>
 <!-- OscarBilling ON stop -->    
@@ -1516,7 +1518,7 @@
 
     <!-- oscarBilling start for BC -->
     <action   path="/billing"
-              type="oscar.oscarBilling.pageUtil.BillingAction"
+              type="oscar.oscarBilling.ca.bc.pageUtil.BillingAction"
               name="BillingForm"
               scope="request"
               input="/billing/CA/BC/billing.jsp" >
@@ -1526,15 +1528,16 @@
     </action>
 
     <action   path="/billing/CA/BC/CreateBilling"
-              type="oscar.oscarBilling.pageUtil.BillingCreateBillingAction"
+              type="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingAction"
               name="BillingCreateBillingForm"
               scope="session"
               input="/billing/billingBC.jsp">
               <forward name="success" path="/billing/CA/BC/billingCreated.jsp"/>
+              <forward name="WCB"     path="/billing/CA/BC/formwcb.jsp" />  
      </action>
 
      <action  path="/billing/CA/BC/SaveBilling"
-              type="oscar.oscarBilling.pageUtil.BillingSaveBillingAction"
+              type="oscar.oscarBilling.ca.bc.pageUtil.BillingSaveBillingAction"
               name="BillingSaveBillingForm"
               scope="request"
               input="/billing/billingCreated.jsp">
@@ -1542,16 +1545,33 @@
     </action>
     
     <action   path="/billing/CA/BC/billingView"
-              type="oscar.oscarBilling.pageUtil.BillingViewAction"
+              type="oscar.oscarBilling.ca.bc.pageUtil.BillingViewAction"
               name="BillingViewForm"
               scope="request"
               input="/billing/CA/BC/billingView.jsp">
               <forward name="success" path="/billing/CA/BC/billingView.jsp"/>
               <forward name="ON"   path="/billing/CA/ON/billingOB2.jsp"/>
     </action>
-    <!-- oscarBilling end -->
+    <action   path="/billing/CA/BC/formwcb" 
+              type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction" 
+              name="WCBForm" 
+              scope="request" 
+              input="/billing/ca/bc/formwcb.jsp">  
+	<forward name="success" path="/billing/CA/BC/billingCreated.jsp" />   
+	<forward name="failure" path="/billing/CA/BC/formwcb.jsp" />           
+    </action> 
+    
+    <action path="/billing/CA/BC/billingTeleplanCorrectionWCB" 
+            type="oscar.oscarBilling.ca.bc.administration.TeleplanCorrectionActionWCB" 
+            name="TeleplanCorrectionFormWCB" 
+            scope="request" 
+            input="/billing/ca/bc/billingTeleplanCorrectionWCB.jsp">  
+		
+            <forward name="success" path="/billing/CA/BC/billingTeleplanCorrectionList.jsp" />   
+            <forward name="failure" path="/billing/CA/BC/billingTeleplanCorrectionWCB.jsp" />   
+    </action>  
     <action path="/billing/CA/BC/reprocessBill" 
-            type="oscar.oscarBilling.pageUtil.BillingReProcessBillAction"                                              
+            type="oscar.oscarBilling.ca.bc.pageUtil.BillingReProcessBillAction"                                              
             name="ReProcessBilling" 
             scope="request" 
             input="/billing/billingTeleplanCorrection.jsp">
@@ -1565,7 +1585,7 @@
 
     <!-- oscarBilling ON start -->
     <action     path="/oscarBilling/DocumentErrorReportUpload"
-                type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadAction"  
+                type="oscar.oscarBilling.ca.bc.pageUtil.BillingDocumentErrorReportUploadAction"  
                 name="BillingDocumentErrorReportUploadForm"              
                 scope="request"
                 input="/billing/CA/ON/billingOBECEA.jsp">                
