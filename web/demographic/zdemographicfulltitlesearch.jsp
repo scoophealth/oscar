@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">
-	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="checkTypeIn()">
+	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeIn()">
 		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.zdemographicfulltitlesearch.msgSearch"/> 
         </i></b></font></td>
 			
