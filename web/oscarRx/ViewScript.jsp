@@ -54,14 +54,23 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 <style type="text/css">
 @media print{
 span { display:none; }
-td.leftGreyLine {
-    border-left: 0px;
+td.leftGreyLine { border-left: 0px; }    
+td.leftBottomGreyLine { border-bottom:0px solid #ffffff; border-top:0px solid #ffffff; }
 }
 @media screen{
-td.leftGreyLine {
-    border-left: 2px solid #A9A9A9; padding-left: 5;
+td.leftGreyLine { border-left: 2px solid #A9A9A9; padding-left: 5; }
+td.leftBottomGreyLine { border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; }
 }
 </style>
+
+<script type="text/javascript">
+
+function printIframe(){
+   preview.focus();
+   preview.print();
+}
+
+</script>
 </head>
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
@@ -101,7 +110,7 @@ td.leftGreyLine {
     <tr>
     <td></td>
 
-    <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
+    <td width="100%" class="leftGreyLine" height="100%" valign="top">
       <table style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
 
             <!----Start new rows here-->
@@ -157,7 +166,7 @@ td.leftGreyLine {
                                 <tr>
                                     <td width=10px></td>
                                     <td>
-                                        <span><input type=button value="Print" class="ControlPushButton" style="width:200px" onClick="javascript:preview.print();" /></span>
+                                        <span><input type=button value="Print" class="ControlPushButton" style="width:200px" onClick="javascript:printIframe();" /></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -197,8 +206,8 @@ td.leftGreyLine {
     </td>
   </tr>
   <tr>
-    <td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    <td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
+    <td height="0%" class="leftBottomGreyLine"></td>
+    <td height="0%" class="leftBottomGreyLine"></td>
   </tr>
   <tr>
     <td width="100%" height="0%" colspan="2">&nbsp;</td>
