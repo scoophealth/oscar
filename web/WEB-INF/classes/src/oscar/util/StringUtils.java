@@ -128,4 +128,19 @@ public class StringUtils {
     public static String replaceChar(char oldChar, char newChar, String word) {
         return ((word == null) ? null : word.replace(oldChar, newChar));
     }
+
+	public static String getStrIn(String[] ids) {
+		String id = "";
+
+		for (int i = 0; i < ids.length; i++) {
+			if (i == 0) {
+				id = ids[i];
+			} else {
+				id = id + "," + ids[i];
+			}
+		}
+
+		return id;
+	}
+
 }

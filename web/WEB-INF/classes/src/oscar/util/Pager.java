@@ -6,10 +6,10 @@ import java.util.*;
 public class Pager {
     private static int MAX_PAGE_INDEX = 15;
     private static String HEADER = "Result page";
-    private static ResourceBundle prop = ResourceBundle.getBundle("resources.application");
+    private static ResourceBundle prop = ResourceBundle.getBundle("oscarResources");
 
     static {
-        prop = ResourceBundle.getBundle("resources.application");
+        prop = ResourceBundle.getBundle("oscarResources");
 
         try {
             HEADER = prop.getString("pager.header.title");
