@@ -1,0 +1,128 @@
+ c_hospitalName : left, 354, 45, 0, BaseFont.HELVETICA, 8 
+ c_surname  : left, 354, 71, 0, BaseFont.HELVETICA, 8  
+ c_givenName : left, 494, 71, 0, BaseFont.HELVETICA, 8  
+ c_address : left, 354, 93, 0, BaseFont.HELVETICA, 8 
+ c_city : left, 354, 108, 0, BaseFont.HELVETICA, 8 
+ c_province : left, 354, 118, 0, BaseFont.HELVETICA, 8 
+ c_postal : left, 399, 118, 0, BaseFont.HELVETICA, 8 
+ c_phone : left, 494, 92, 0, BaseFont.HELVETICA, 8 
+ c_phyMid : left, 354, 141, 0, BaseFont.HELVETICA, 8 
+ ar2_9Test1 : left, 109, 55, 0, BaseFont.HELVETICA, 8 , X
+ ar2_9Test1Time : left, 245, 53, 0, BaseFont.HELVETICA, 8 
+ ar2_9Date1 : left, 59, 56, 0, BaseFont.HELVETICA, 8 
+ ar2_9Date2 : left, 59, 75, 0, BaseFont.HELVETICA, 8 
+ ar2_9Test2 : left, 109, 72, 0, BaseFont.HELVETICA, 8 , X
+ ar2_9Date3 : left, 59, 92, 0, BaseFont.HELVETICA, 8 
+ ar2_9Test3 : left, 124, 91, 0, BaseFont.HELVETICA, 8 , X
+ ar2_9Date4 : left, 59, 110, 0, BaseFont.HELVETICA, 8 
+ ar2_9Test4 : left, 124, 109, 0, BaseFont.HELVETICA, 8 , X
+ ar2_9Date5 : left, 59, 128, 0, BaseFont.HELVETICA, 8 
+ ar2_9Test5 : left, 109, 127, 0, BaseFont.HELVETICA, 8 , X
+ ar2_9Date6 : left, 59, 144, 0, BaseFont.HELVETICA, 8 
+ ar2_9Test6 : left, 109, 144, 0, BaseFont.HELVETICA, 8 , X
+ pg2_formDate : left, 494, 45, 0, BaseFont.HELVETICA, 8 
+ ar2_10Date1 : left, 59, 176, 0, BaseFont.HELVETICA, 8 
+ ar2_10List1 : left, 109, 176, 0, BaseFont.HELVETICA, 8 
+ ar2_10DateRes1 : left, 547, 176, 0, BaseFont.HELVETICA, 8 
+ ar2_10Date2 : left, 59, 195, 0, BaseFont.HELVETICA, 8 
+ ar2_10List2 : left, 109, 195, 0, BaseFont.HELVETICA, 8 
+ ar2_10DateRes2 : left, 547, 195, 0, BaseFont.HELVETICA, 8 
+ ar2_10Date3 : left, 59, 212, 0, BaseFont.HELVETICA, 8 
+ ar2_10List3 : left, 109, 212, 0, BaseFont.HELVETICA, 8 
+ ar2_10DateRes3 : left, 547, 212, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date1 : left, 59, 243, 0, BaseFont.HELVETICA, 8 
+ pg2_11List1 : left, 109, 243, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date2 : left, 59, 261, 0, BaseFont.HELVETICA, 8 
+ pg2_11List2 : left, 109, 261, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date3 : left, 59, 280, 0, BaseFont.HELVETICA, 8 
+ pg2_11List3 : left, 109, 280, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date4 : left, 59, 297, 0, BaseFont.HELVETICA, 8 
+ pg2_11List4 : left, 109, 297, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date5 : left, 59, 315, 0, BaseFont.HELVETICA, 8 
+ pg2_11List5 : left, 109, 315, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date6 : left, 59, 333, 0, BaseFont.HELVETICA, 8 
+ pg2_11List6 : left, 109, 333, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date7 : left, 59, 351, 0, BaseFont.HELVETICA, 8 
+ pg2_11List7 : left, 109, 351, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date8 : left, 59, 369, 0, BaseFont.HELVETICA, 8 
+ pg2_11List8 : left, 109, 369, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date9 : left, 59, 387, 0, BaseFont.HELVETICA, 8 
+ pg2_11List9 : left, 109, 387, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date10 : left, 59, 405, 0, BaseFont.HELVETICA, 8 
+ pg2_11List10 : left, 109, 405, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date11 : left, 59, 422, 0, BaseFont.HELVETICA, 8 
+ pg2_11List11 : left, 109, 422, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date12 : left, 59, 441, 0, BaseFont.HELVETICA, 8 
+ pg2_11List12 : left, 109, 441, 0, BaseFont.HELVETICA, 8 
+ pg2_11Date13 : left, 59, 458, 0, BaseFont.HELVETICA, 8 
+ pg2_11List13 : left, 109, 458, 0, BaseFont.HELVETICA, 8 
+ ar2_12Done : left, 174, 475, 0, BaseFont.HELVETICA, 8 , X
+ ar2_12Date : left, 59, 484, 0, BaseFont.HELVETICA, 8 
+ ar2_12Method : left, 216, 485, 0, BaseFont.HELVETICA, 8 
+ ar2_12Analg : left, 355, 485, 0, BaseFont.HELVETICA, 8 
+ ar2_12Signature : left, 488, 485, 0, BaseFont.HELVETICA, 8 
+ ar2_13ExamDate : left, 124, 513, 0, BaseFont.HELVETICA, 8 
+ ar2_13Weight : left, 213, 513, 0, BaseFont.HELVETICA, 8 
+ ar2_13HeadLen : left, 309, 513, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal1 : left, 133, 536, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Abnormal1 : left, 163, 536, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Comment1 : left, 188, 533, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal2 : left, 133, 553, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Abnormal2 : left, 163, 553, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Comment2 : left, 188, 552, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal3 : left, 133, 572, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Abnormal3 : left, 163, 572, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Comment3 : left, 188, 570, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal4 : left, 133, 589, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Abnormal4 : left, 163, 589, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Comment4 : left, 188, 588, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal5 : left, 133, 607, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Abnormal5 : left, 163, 607, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Comment5 : left, 188, 606, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal6 : left, 133, 625, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Abnormal6 : left, 163, 625, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Comment6 : left, 188, 624, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal7 : left, 133, 643, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Abnormal7 : left, 163, 643, 0, BaseFont.HELVETICA, 8 , X
+ ar2_13Comment7 : left, 188, 642, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal8 : left, 133, 661, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Abnormal8 : left, 163, 661, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Comment8 : left, 188, 660, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal9 : left, 133, 679, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Abnormal9 : left, 163, 679, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Comment9 : left, 188, 678, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal10 : left, 133, 696, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Abnormal10 : left, 163, 696, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Comment10 : left, 188, 696, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal11 : left, 133, 714, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Abnormal11 : left, 163, 714, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Comment11 : left, 188, 714, 0, BaseFont.HELVETICA, 8 
+ ar2_13Normal12 : left, 133, 732, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Abnormal12 : left, 163, 732, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_13Comment12 : left, 188, 732, 0, BaseFont.HELVETICA, 8 
+ ar2_14 : left, 356, 509, 0, BaseFont.HELVETICA, 8, _, 656, 550, 9
+ ar2_14Problem : left, 356, 571, 0, BaseFont.HELVETICA, 8, _, 656, 613, 9
+ ar2_14Breast : left, 387, 628, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_14VitD : left, 436, 628, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_14Formula : left, 387, 639, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_15Home : left, 355, 665, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_15Adoption : left, 355, 678, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_15Foster : left, 355, 691, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_15OtherHosp : left, 355, 704, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_15OtherHospSpec : left, 356, 711, 0, BaseFont.HELVETICA, 7, _, 436, 742, 8
+ ar2_16FamPhy : left, 446, 663, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_16FamPhyWhen : left, 549, 662, 0, BaseFont.HELVETICA, 8 
+ ar2_16Midwife : left, 446, 676, 0, BaseFont.HELVETICA, 8 , X 
+ ar2_16MidwifeWhen : left, 549, 675, 0, BaseFont.HELVETICA, 8 
+ ar2_16Pediat : left, 446, 689, 0, BaseFont.HELVETICA, 8 , X
+ ar2_16PediatWhen : left, 549, 688, 0, BaseFont.HELVETICA, 8 
+ ar2_16OtherConsul : left, 446, 702, 0, BaseFont.HELVETICA, 8 , X
+ ar2_16OtherConsulWhen : left, 549, 701, 0, BaseFont.HELVETICA, 8 
+ ar2_16ComNurse : left, 446, 715, 0, BaseFont.HELVETICA, 8 , X
+ ar2_16ComNurseWhen : left, 549, 714, 0, BaseFont.HELVETICA, 8 
+ ar2_16Ministry : left, 446, 728, 0, BaseFont.HELVETICA, 8 , X
+ ar2_16MinistryWhen : left, 549, 727, 0, BaseFont.HELVETICA, 8 
+ pg2_Signature : left, 200, 758, 0, BaseFont.HELVETICA, 8 
+ ar2_NeoDeath : left, 362, 753, 0, BaseFont.HELVETICA, 8 , X
+ ar2_Autopsy : left, 475, 753, 0, BaseFont.HELVETICA, 8 , X
+
