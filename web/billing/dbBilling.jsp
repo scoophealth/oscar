@@ -118,11 +118,32 @@
     {"search_billingservice_premium", "select status from ctl_billingservice_premium where service_code=?"},
     {"search_ctlpremium", "select b.service_code, c.description service_desc from ctl_billingservice_premium b, billingservice c where b.service_code=c.service_code and b.status=?"},
     {"save_ctlpremium", "insert into ctl_billingservice_premium values(?,?,?,?)"},
-   {"delete_ctlpremium", "delete from ctl_billingservice_premium where service_code=?"},
+    {"delete_ctlpremium", "delete from ctl_billingservice_premium where service_code=?"},
    
     {"search_billingform","select distinct  servicetype_name, servicetype from ctl_billingservice where servicetype like ?"},
     {"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
-      
+    
+    //NEW FOR BC
+    {"search_teleplanbill", "select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.status, b.billing_date, b.provider_no, b.visitdate, b.visittype from billing b, billingmaster bm where b.billing_no= bm.billing_no and bm.billingmaster_no=?"},
+    {"search_diagnostic_new_code", "select diagnostic_code, description from diagnosticcode where diagnostic_code like ? or diagnostic_code like ? or diagnostic_code like ? or description like ? or description like ? or description like ?"},
+    {"search_referral_code", "select * from billingreferral where referral_no like ? or referral_no like ? or referral_no like ? or (last_name like ? and first_name like ?) or (last_name like ? and first_name like ?)  or (last_name like ? and first_name like ?) "},
+    {"save_tahd", "insert into teleplanS21 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"save_tadt", "insert into teleplanS00 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"save_tadt_s23","insert into teleplanS23 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"save_tadt_s25","insert into teleplanS25 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"save_tadt_s22","insert into teleplanS22 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"search_all_tahd", "select * from teleplanS21 where status <> ? order by t_payment desc"},
+    {"search_taS01", "select * from teleplanS00 where s21_id=? and t_s00type=? and t_practitionerno like ? order by s00_id"},
+    {"search_taS00", "select * from teleplanS00 where s21_id=? and t_s00type<>? and t_practitionerno like ? order by s00_id"},
+    {"search_taS22", "select * from teleplanS22 where s21_id=? and t_s22type<>? and t_payeeno like ? order by s22_id"},
+    {"search_taS23", "select * from teleplanS23 where s21_id=? and t_s23type<>? and t_payeeno like ? order by s23_id"},
+    {"search_taS25", "select * from teleplanS25 where s21_id=? and t_s25type<>? and t_payeeno like ? order by s25_id, t_practitionerno"},
+    {"search_tahd", "select s21_id, t_payment from teleplanS21 where filename=? and t_payment=? and t_payeeno=? order by t_payment"},
+    {"search_taprovider", "select r.t_practitionerno, p.last_name,p.first_name from teleplanS00 r, provider p where p.ohip_no=r.t_practitionerno and r.s21_id=? group by r.t_practitionerno"},
+    {"updatedigcode", "update diagnosticcode set description=? where diagnostic_code=?"},
+     //BC
+    
+    
  
  };
   
