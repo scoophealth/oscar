@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <% 
   if(session.getValue("user") == null)    response.sendRedirect("../logout.htm");
@@ -51,17 +51,31 @@ function setfocus() {
   document.titlesearch.keyword.focus();
   document.titlesearch.keyword.select();
 }
-function checkTypeIn() {
-  var dob = document.titlesearch.keyword ;
+function checkTypeIn() {  
+  var dob = document.titlesearch.keyword;
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
-      //alert(dob.value.length);
     }
     if(dob.value.length != 10) {
       alert("You have a wrong DOB input!!!");
+      return false;
+    } else {
+      return true;
     }
+  } else {
+    return true;
   }
+}
+
+function searchInactive() {
+    document.titlesearch.ptstatus.value="inactive"
+    if (checkTypeIn()) document.forms[0].submit()
+}
+
+function searchAll() {
+    document.titlesearch.ptstatus.value=""
+    if (checkTypeIn()) document.forms[0].submit()
 }
 
 //-->
@@ -79,28 +93,32 @@ function checkTypeIn() {
         </i></b></font></td>
 			
       <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  checked name="search_mode" value="search_name">
+        <input type="radio" name="search_mode" value="search_name" <%=request.getParameter("search_mode").equals("search_name")?"checked":""%>>
         Name </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio"  name="search_mode" value="search_phone">
+          <input type="radio"  name="search_mode" value="search_phone" <%=request.getParameter("search_mode").equals("search_phone")?"checked":""%>>
           Phone</font></td> 
         <td nowrap><font size="1" face="Verdana" color="#0000FF">
-          <input type="radio"  name="search_mode" value="search_dob">
+          <input type="radio"  name="search_mode" value="search_dob" <%=request.getParameter("search_mode").equals("search_dob")?"checked":""%>>
           DOB(yyyymmdd)</font></td> 
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
-				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-				<INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
+      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17"  MAXLENGTH="100">
+        <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" >
+        <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
+        <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
+        <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
         <input type="hidden" name="displaymode" value="Search " >
-        <input type="SUBMIT" name="displaymode" value="Search " size="17">
-		</tr><tr>
+        <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
+        <input type="SUBMIT" name="displaymode" value="Search " size="17" title="Search active patients">
+        &nbsp;&nbsp;
+        <a href="javascript:searchInactive();" title="Search inactive patients">Inactive</a> |
+        <a href="javascript:searchAll();" title="Search all patients">All</a>
+      </td></tr><tr>
 			
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="search_address">
+        <input type="radio" name="search_mode" value="search_address" <%=request.getParameter("search_mode").equals("search_address")?"checked":""%>>
         Address </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_hin">
+          <input type="radio" name="search_mode" value="search_hin" <%=request.getParameter("search_mode").equals("search_hin")?"checked":""%>>
           HIN</font></td>
         <td></td>
 		</tr>
@@ -108,7 +126,7 @@ function checkTypeIn() {
   String temp=null;
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
-		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("search_mode") ||temp.equals("chart_no")) continue;
+		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("search_mode") ||temp.equals("chart_no")  ||temp.equals("ptstatus") ||temp.equals("submit")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
   }
 	%> 
@@ -226,7 +244,7 @@ function next() {
 	<%
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
-		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("submit")  ||temp.equals("chart_no")) continue;
+		if(temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("submit")  ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
          //System.out.println();
   }

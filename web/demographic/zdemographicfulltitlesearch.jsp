@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,42 +22,66 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<script language="JavaScript">
+function searchInactive() {
+    document.titlesearch.ptstatus.value="inactive";
+    if (checkTypeIn()) document.titlesearch.submit();
+}
+
+function searchAll() {
+    document.titlesearch.ptstatus.value="";
+    if (checkTypeIn()) document.titlesearch.submit();
+}
+</script>
 
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">
 	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeIn()">
 		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.zdemographicfulltitlesearch.msgSearch"/> 
         </i></b></font></td>
-			
+
+      <% String searchMode = request.getParameter("search_mode");
+         String keyWord = request.getParameter("keyword");
+         if (searchMode == null || searchMode.equals("")) {
+             searchMode = "search_name";
+         } 
+         if (keyWord == null) {
+             keyWord = "";
+         } %>
       <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  checked name="search_mode" value="search_name">
+        <input type="radio" name="search_mode" value="search_name" <%=searchMode.equals("search_name")?"checked":""%>>
         <bean:message key="demographic.zdemographicfulltitlesearch.formName"/> </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio"  name="search_mode" value="search_phone">
+          <input type="radio"  name="search_mode" value="search_phone" <%=searchMode.equals("search_phone")?"checked":""%>>
           <bean:message key="demographic.zdemographicfulltitlesearch.formPhone"/></font></td> 
         <td nowrap><font size="1" face="Verdana" color="#0000FF">
-          <input type="radio"  name="search_mode" value="search_dob">
+          <input type="radio"  name="search_mode" value="search_dob" <%=searchMode.equals("search_dob")?"checked":""%>>
           <bean:message key="demographic.zdemographicfulltitlesearch.formDOB"/></font></td> 
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
+      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" VALUE="<%=keyWord%>" SIZE="17"  MAXLENGTH="100">
+				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" >
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Search" >
-				<INPUT TYPE="SUBMIT" VALUE="<bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />" SIZE="17" ></td>
-		</tr><tr>
+				<INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
+				<INPUT TYPE="SUBMIT" VALUE="<bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />" SIZE="17" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">				
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"><bean:message key="demographic.search.Inactive"/></a> |
+                                <a href="javascript:searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"><bean:message key="demographic.search.All"/></a>
+		</td></tr><tr>
 			
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="search_address">
+        <input type="radio" name="search_mode" value="search_address" <%=searchMode.equals("search_address")?"checked":""%>>
         <bean:message key="demographic.zdemographicfulltitlesearch.formAddr"/> </font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_hin">
+          <input type="radio" name="search_mode" value="search_hin" <%=searchMode.equals("search_hin")?"checked":""%>>
           <bean:message key="demographic.zdemographicfulltitlesearch.formHIN"/></font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_chart_no">
+          <input type="radio" name="search_mode" value="search_chart_no" <%=searchMode.equals("search_chart_no")?"checked":""%>>
           <bean:message key="demographic.zdemographicfulltitlesearch.formChart"/></font></td>
  		</tr>
 	</form>

@@ -214,6 +214,7 @@ function onButRepeat() {
 				      <INPUT TYPE="hidden" NAME="originalpage" VALUE="../appointment/addappointment.jsp" >
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
+				      <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
               <!--input type="hidden" name="displaymode" value="Search " -->
               <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Search '" VALUE="<bean:message key="appointment.addappointment.btnSearch"/>"></font></div>
             </td>

@@ -240,11 +240,12 @@ function checkTimeTypeIn(obj) {
             </td>
             <td width="5%"  ></td>
             <td width="20%"  ALIGN="LEFT"> 
-				      <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
+				      <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" >
 				      <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name" >
 				      <INPUT TYPE="hidden" NAME="originalpage" VALUE="../appointment/editappointment.jsp" >
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
+				      <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
               <!--input type="hidden" name="displaymode" value="Search " -->
               <div align="right"><input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Search '" value="<bean:message key="appointment.editappointment.btnSearch"/>"></div>
             </td>

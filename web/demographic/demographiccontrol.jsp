@@ -2,11 +2,13 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 
-<%@ page errorPage="errorpage.jsp" %>
+<%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="../admin/dbconnection.jsp" %>  
 
 <%
+  OscarProperties props = OscarProperties.getInstance();
+  
   //operation available to the client -- dboperation
   //construct SQL expression
   String orderby="", limit="", limit1="", limit2="";
@@ -31,11 +33,17 @@
       else fieldname="last_name "+regularexp+" ?"+" and first_name ";
     }
   }
-       
+  
+  String ptstatusexp="";
+  if(request.getParameter("ptstatus")!=null) {
+    if(request.getParameter("ptstatus").equals("active"))   ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+    if(request.getParameter("ptstatus").equals("inactive")) ptstatusexp=" and patient_status in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+  }
+  
   String [][] dbQueries=new String[][] {
-    {"search_titlename", "select *  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},  
-    {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},  
-    {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},  
+    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby+" "+limit},  
+    {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},  
+    {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},  
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
     {"update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?,email=?,pin=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},
@@ -44,7 +52,7 @@
     {"add_record_ptbr","insert into demographic_ptbr (demographic_no,cpf,rg,chart_address,marriage_certificate,birth_certificate,marital_state,partner_name,father_name,mother_name,district,address_no,complementary_address) values (?,?,?,?,?,?,?,?,?,?,?,?,?)" }, 
     {"search_provider", "select * from provider order by last_name"},
     {"search_demographicid", "select * from demographic where demographic_no=?"},
-    {"search*", "select * from demographic "+ orderby + " "+limit }, 
+    {"search*", "select * from demographic "+ ptstatusexp+orderby + " "+limit }, 
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
     {"search_demographiccust", "select * from demographiccust where demographic_no = ?" },

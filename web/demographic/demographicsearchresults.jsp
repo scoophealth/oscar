@@ -27,13 +27,11 @@ function setfocus() {
 }
 
 function checkTypeIn() {
-  var dob = document.titlesearch.keyword; typeInOK = false;
+  var dob = document.titlesearch.keyword; typeInOK = true;
   
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
-      //alert(dob.value.length);
-      typeInOK = true;
     }
     if(dob.value.length != 10) {
       alert("<bean:message key="demographic.search.msgWrongDOB"/>");
@@ -41,6 +39,8 @@ function checkTypeIn() {
     }
     
     return typeInOK ;
+  } else {
+    return true;
   }
 }
 
@@ -161,12 +161,15 @@ function checkTypeIn() {
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnLastPage"/></a> |
+<a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>&ptstatus=<%=request.getParameter("ptstatus")%>"><bean:message key="demographic.demographicsearchresults.btnLastPage"/></a>
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
+      if (nLastPage>=0) {
 %>
-<a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="demographic.demographicsearchresults.btnNextPage"/></a>
+ | 
+<%    } %>
+<a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>&ptstatus=<%=request.getParameter("ptstatus")%>"> <bean:message key="demographic.demographicsearchresults.btnNextPage"/></a>
 <%
 }
 %>
