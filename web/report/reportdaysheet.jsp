@@ -11,7 +11,7 @@
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
-    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
     String [][] dbQueries;
     
     if (vLocale.getCountry().equals("BR")) {
