@@ -61,7 +61,8 @@
   </tr> 
 <%
   boolean bOdd = false;
-  String imgDir = "../../OscarDocument/" + oscarVariables.getProperty("project_home") + "/eform/images/";
+  // String imgDir = "../../OscarDocument/" + oscarVariables.getProperty("project_home") + "/eform/images/";
+  String imgDir = oscarVariables.getProperty("eform_image");
 
 //  EfmImagePath.setEfmImagePath(oscarVariables.getProperty("eform_image"));
   File dir=new File(imgDir); 
@@ -71,12 +72,12 @@
   if(temp !=null) {
     for(int i=0;i<temp.length;i++){ 
       bOdd = bOdd?false:true ;
-	  String imgDir1=imgDir+temp[i]; 
+	  String fileURL="/OscarDocument/" + oscarVariables.getProperty("project_home") + "/eform/images/"+temp[i]; 
 //    File ft=new File(temp[i]); 
 	//File ppp=new File(imgDir1); 
 %>    
   <tr bgcolor="<%=bOdd?weakColor:"white"%>">
-    <td><a href="JavaScript:newWindow('<%=imgDir1%>','_blank')"><%=temp[i]%></a></td>
+    <td><a href="JavaScript:newWindow('<%=fileURL%>','_blank')"><%=temp[i]%></a></td>
     <td width=100 align='center'><input type="button" value="<bean:message key="eform.uploadimages.btnDelete"/>" onclick="DoEmpty('<%=temp[i]%>')"></td>
   </tr>
 <%
