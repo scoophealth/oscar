@@ -1096,6 +1096,20 @@ INSERT INTO provider VALUES ('174','Chan','David','doctor','Family Medicine','TE
 --
 
 --
+-- Dumping data for table 'quickList'
+--
+INSERT INTO quickList VALUES("default", "999997", "000","ichppc");
+INSERT INTO quickList VALUES("default", "999997", "204","ichppc");
+INSERT INTO quickList VALUES("default", "999997", "288","ichppc");
+INSERT INTO quickList VALUES("default", "999997", "053","ichppc");
+INSERT INTO quickList VALUES("default", "999997", "235","ichppc");
+INSERT INTO quickList VALUES("List1", "999998", "235","ichppc");
+INSERT INTO quickList VALUES("List1", "999998", "376","ichppc");
+INSERT INTO quickList VALUES("List1", "999998", "246","ichppc");
+INSERT INTO quickList VALUES("List1", "999998", "105","ichppc");
+INSERT INTO quickList VALUES("List1", "999998", "231","ichppc");
+
+--
 -- Dumping data for table 'radetail'
 --
 
