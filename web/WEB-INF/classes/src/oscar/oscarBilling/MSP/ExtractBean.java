@@ -151,7 +151,7 @@ public class ExtractBean extends Object implements Serializable {
         surl = dbParam[1];
         user = dbParam[2];
         password = dbParam[3];
-        String dataCenterId = OscarProperies.getProperty("dataCenterId");
+        String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
         try{
             
             //htmlClass="class='bodytext'";
