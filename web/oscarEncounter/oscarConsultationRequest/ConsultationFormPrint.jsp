@@ -1,6 +1,5 @@
-<!--  
+<%--  
 /*
- * $RCSfile: AbstractApplication.java,v $ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +20,13 @@
  * Hamilton 
  * Ontario, Canada 
  */
---><%@ page language="java" %>
+--%>
+
+<%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData" %>
 
 <html:html locale="true">
 
@@ -43,6 +45,10 @@
     if (reqFrm.specAddr == null || reqFrm.specAddr.equals("null")){
         reqFrm.specAddr = new String();
     }
+
+    OscarProperties props = OscarProperties.getInstance();
+
+    ClinicData clinic = new ClinicData();
 %>
 <head>
 <html:base/>
@@ -167,14 +173,37 @@ function flipFaxFooter(){
 <table class="printTable" name="headerTable">
 <!--header-->
 <tr>
-    <td>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
-       <br>
+    <td>      
+       <table name="innerTable" border="0">
+            <tr>
+                <td rowspan=3>
+                    &nbsp;&nbsp;  <%-- blank column for spacing --%>
+                </td>
+                <td rowspan=3>                    
+                    <%=props.getProperty("faxLogo", "").equals("")?"":"<img src=\""+props.getProperty("faxLogo", "")+"\">"%>
+                </td>
+                <td rowspan=3>
+                    &nbsp;&nbsp;  <%-- blank column for spacing --%>
+                </td>
+
+                <td colspan="2" class="title4">
+                    <b><%=clinic.getClinicName()%></b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="address">
+                    <%=clinic.getClinicAddress()%>
+                </td>
+            </tr>
+            <tr>
+                <td class="address">
+                    Tel: <%=clinic.getClinicPhone()%>
+                </td>
+                <td class="address">
+                    Fax: <%=clinic.getClinicFax()%>
+                </td>
+            </tr>
+        </table>      
     </td>
 </tr>
 <tr>
