@@ -362,6 +362,7 @@ public String space(int i) {
     
     public String backwardSpace(String y,int i) {
         String returnValue = new String();
+        y = safeString(y);        
         for(int j=y.length(); j < i; j++) {
             returnValue += " ";
         }
@@ -377,6 +378,7 @@ public String space(int i) {
     }
     public String forwardZero(String y, int x) {
         String returnZeroValue = new String();
+        y = safeString(y);        
         for(int i=y.length(); i < x; i++) {
             returnZeroValue += "0";
         }        
@@ -385,6 +387,7 @@ public String space(int i) {
     
     public String backwardZero(String y,int i) {
         String returnValue = new String();
+        y = safeString(y);        
         for(int j=y.length(); j < i; j++) {
             returnValue += "0";
         }
@@ -401,6 +404,7 @@ public String space(int i) {
     
     public String forwardSpace(String y, int x) {
         String returnZeroValue = new String();
+        y = safeString(y);                
         for(int i=y.length(); i < x; i++) {
             returnZeroValue += " ";
         }        
