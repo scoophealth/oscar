@@ -11,7 +11,6 @@ public class RptConsultReportData {
     public ArrayList demoList = null;
     public String days = null;
 
-
     public RptConsultReportData() {
     }
 
@@ -42,9 +41,18 @@ public class RptConsultReportData {
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               ResultSet rs;
               // mysql function for dates = select date_sub(now(),interval 1 month); 
-              String sql = "select distinct c.demographicNo from consultationRequests c , demographic d where "
-                          +" referalDate >= (CURRENT_DATE - interval " + days + " month)"
-                          +" and c.demographicNo = d.demographic_no ";
+
+              /* We need select the correct datbase syntax */
+              /* look at oscar_mcmaster.properties to choose database */
+              String db_type = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+              String sql = "select distinct last_name, c.demographicNo from consultationRequests c , demographic d where referalDate >= ";
+
+              if (db_type.equalsIgnoreCase("mysql"))
+                  sql = sql + " (CURRENT_DATE - interval " + days + " month) ";
+              if (db_type.equalsIgnoreCase("postgresql")){
+                  sql = sql + " (CURRENT_DATE - interval '" + days + " month') ";
+	      }
+              sql = sql + " and c.demographicNo = d.demographic_no ";
               if (!providerNo.equals("-1")){
                  sql = sql +" and d.provider_no = '"+providerNo+"' "; 
               }
