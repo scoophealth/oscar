@@ -470,5 +470,79 @@ public class RxDrugData {
             }
          }
      };
+     
+     
+     public Interaction[] getInteractions(Vector atcCodes) throws Exception{
+        Interaction[] arr = {};
+        ArrayList lst = new ArrayList();
+        Vector v = new Vector();
+        RxDrugRef d = new RxDrugRef();
+        for(int i = 0; i < atcCodes.size(); i++){
+           String ss = (String) atcCodes.get(i);
+           System.out.println(ss);           
+        }
+        
+        v = d.getInteractions(atcCodes);
+        for (int i = 0 ; i < v.size();i++){
+            Hashtable h = (Hashtable) v.get(i);
+            Interaction inact = new Interaction();
+            inact.affectedatc = (String) h.get("affectedatc");
+            inact.affecteddrug = (String) h.get("affecteddrug");
+            inact.affectingatc = (String) h.get("affectingatc");
+            inact.affectingdrug = (String) h.get("affectingdrug");
+	    inact.effect = (String) h.get("effect");
+            inact.evidence = (String) h.get("evidence");
+            inact.significance = (String) h.get("significance");
+            lst.add(inact);
+            System.out.println("affectingDrug"+inact.affectingdrug);
+        }
+        System.out.println(lst.size());
+        arr = (Interaction[])lst.toArray(arr);
+        System.out.println(arr.length);
+        return arr;
+     }
+     
+     
+    public class Interaction implements Comparable {
+        public int compareTo(Object obj) {
+           int retval = 0;
+           int compVal = 0;
+           int thisVal =0;
+           Interaction t = (Interaction) obj;
+           String sig = t.significance;
+           try{
+              compVal = Integer.parseInt(sig);
+           }catch(Exception e1 ){
+              retval = -1;
+           }
+           try{
+              thisVal = Integer.parseInt(significance);
+           }catch(Exception e2){
+              retval = 1;
+           }
+           
+           if ( retval == 0){
+              if ( thisVal < compVal){
+                 retval = 1;
+              }else if ( thisVal > compVal){
+                 retval = -1;
+              }
+              
+           }                                 
+            // If this < obj, return a negative value
+            // If this = obj, return 0
+            // If this > obj, return a positive value
+           return retval;
+        }
+        
+        public String significance =null;
+        public String affectingatc =null;        
+        public String affectingdrug =null;
+        public String evidence =null;
+        public String effect =null;
+        public String affecteddrug =null;
+        public String affectedatc =null;
+        
+     }
     
 }
