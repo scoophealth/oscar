@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import oscar.form.graphic.FrmPdfGraphicAR;
+import oscar.form.graphic.FrmPdfGraphicGrowthChart;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -72,8 +73,8 @@ public class FrmPDFServlet extends HttpServlet {
         super();
     }
 
-    public void doGet(HttpServletRequest req, HttpServletResponse res)
-            throws javax.servlet.ServletException, java.io.IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
+            java.io.IOException {
         doPost(req, res);
     }
 
@@ -81,8 +82,8 @@ public class FrmPDFServlet extends HttpServlet {
      * @param req HTTP request object
      * @param resp HTTP response object
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse res)
-            throws javax.servlet.ServletException, java.io.IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
+            java.io.IOException {
         DocumentException ex = null;
 
         ByteArrayOutputStream baosPDF = null;
@@ -127,8 +128,7 @@ public class FrmPDFServlet extends HttpServlet {
         } catch (DocumentException dex) {
             res.setContentType("text/html");
             PrintWriter writer = res.getWriter();
-            writer.println("Exception from: " + this.getClass().getName() + " "
-                    + dex.getClass().getName() + "<br>");
+            writer.println("Exception from: " + this.getClass().getName() + " " + dex.getClass().getName() + "<br>");
             writer.println("<pre>");
             dex.printStackTrace(writer);
             writer.println("</pre>");
@@ -144,8 +144,8 @@ public class FrmPDFServlet extends HttpServlet {
     /**
      *
      */
-    protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req,
-            final ServletContext ctx) throws DocumentException, java.io.IOException {
+    protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx)
+            throws DocumentException, java.io.IOException {
         final String PAGESIZE = "printPageSize";
         Document document = new Document();
         //document = new Document(psize, 50, 50, 50, 50);
@@ -157,16 +157,9 @@ public class FrmPDFServlet extends HttpServlet {
         try {
             writer = PdfWriter.getInstance(document, baosPDF);
 
-            String title = req.getParameter("__title") != null ? req.getParameter("__title")
-                    : "Unknown";
+            String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
             String[] cfgFile = req.getParameterValues("__cfgfile");
-            String template = req.getParameter("__template") != null ? req
-                    .getParameter("__template")
-                    + ".pdf" : "";
-            //for page 1 picture only
-            String cfgGraphicFile = req.getParameter("__cfgGraphicFile") != null ? req
-                    .getParameter("__cfgGraphicFile")
-                    + ".txt" : "";
+            String template = req.getParameter("__template") != null ? req.getParameter("__template") + ".pdf" : "";
 
             int cfgFileNo = 0;
             Properties[] printCfg = null;
@@ -181,7 +174,18 @@ public class FrmPDFServlet extends HttpServlet {
                 }
             }
 
-            Properties graphicCfg = cfgGraphicFile.equals("") ? null : getCfgProp(cfgGraphicFile);
+            //for page 1 picture only
+            String[] cfgGraphicFile = req.getParameterValues("__cfgGraphicFile");
+            int cfgGraphicFileNo = cfgGraphicFile == null ? 0 : cfgGraphicFile.length;
+            //System.out.println("processed page : " + cfgGraphicFileNo);
+            Properties[] graphicCfg = null;
+            if (cfgGraphicFileNo > 0) {
+                graphicCfg = new Properties[cfgGraphicFileNo];
+                for (int i = 0; i < cfgGraphicFileNo; i++) {
+                    cfgGraphicFile[i] += ".txt";
+                    graphicCfg[i] = getCfgProp(cfgGraphicFile[i]);
+                }
+            }
 
             String[] cfgVal = null;
             StringBuffer tempName = null;
@@ -202,11 +206,14 @@ public class FrmPDFServlet extends HttpServlet {
             document.addAuthor("");
             document.addHeader("Expires", "0");
 
-            // A0-A10, LEGAL, LETTER, HALFLETTER, _11x17, LEDGER, NOTE, B0-B5, ARCH_A-ARCH_E, FLSA and FLSE
+            // A0-A10, LEGAL, LETTER, HALFLETTER, _11x17, LEDGER, NOTE, B0-B5, ARCH_A-ARCH_E, FLSA
+            // and FLSE
             // the following shows a temp way to get a print page size
             Rectangle pageSize = PageSize.LETTER;
-            if("PageSize.HALFLETTER".equals(props.getProperty(PAGESIZE))) pageSize = PageSize.HALFLETTER;
-            if("PageSize.A6".equals(props.getProperty(PAGESIZE))) pageSize = PageSize.A6;
+            if ("PageSize.HALFLETTER".equals(props.getProperty(PAGESIZE)))
+                pageSize = PageSize.HALFLETTER;
+            if ("PageSize.A6".equals(props.getProperty(PAGESIZE)))
+                pageSize = PageSize.A6;
             document.setPageSize(pageSize);
             document.open();
 
@@ -232,8 +239,7 @@ public class FrmPDFServlet extends HttpServlet {
                 cb.addTemplate(page1, 1, 0, 0, 1, 0, 0);
                 //System.err.println(cfgFileNo + "processed page " + i);
 
-                BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252,
-                        BaseFont.NOT_EMBEDDED);
+                BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 cb.setRGBColorStroke(0, 0, 255);
                 //cb.setFontAndSize(bf, 8);
                 // LEFT/CENTER/RIGHT, X, Y,
@@ -255,13 +261,12 @@ public class FrmPDFServlet extends HttpServlet {
                         //ct.addText(new Phrase(15, "xxxx xxxxx xxxxx xxxxx xxx
                         // xxxxx xxxxx xxxx xxxxx xxxxxx xxxx xxxxxxx xxxxx
                         // xxxx", font));
-                        ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()), (height - Integer
-                                .parseInt(cfgVal[2].trim())), Integer.parseInt(cfgVal[7].trim()),
-                                (height - Integer.parseInt(cfgVal[8].trim())), Integer
-                                        .parseInt(cfgVal[9].trim()), Element.ALIGN_LEFT);
-                        ct
-                                .addText(new Phrase(12, props.getProperty(tempName.toString(), ""),
-                                        font)); // page size leading
+                        ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2]
+                                .trim())), Integer.parseInt(cfgVal[7].trim()), (height - Integer.parseInt(cfgVal[8]
+                                .trim())), Integer.parseInt(cfgVal[9].trim()), Element.ALIGN_LEFT);
+                        ct.addText(new Phrase(12, props.getProperty(tempName.toString(), ""), font)); // page
+                        // size
+                        // leading
                         // space between two
                         // lines
                         ct.go();
@@ -276,41 +281,35 @@ public class FrmPDFServlet extends HttpServlet {
                         cb.lineTo(Float.parseFloat(cfgVal[2].trim()), Float.parseFloat(cfgVal[3].trim()));
                         // stroke the lines
                         cb.stroke();
-                    // write text directly
+                        // write text directly
                     } else if (tempName.toString().startsWith("__")) {
                         cb.beginText();
                         cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
                         cb
-                                .showTextAligned(
-                                        (cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
-                                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
-                                                        : PdfContentByte.ALIGN_CENTER)),
-                                        (cfgVal.length >= 7 ? (cfgVal[6].trim()) : props.getProperty(tempName
-                                                .toString(), "")), Integer.parseInt(cfgVal[1]
-                                                .trim()), (height - Integer.parseInt(cfgVal[2]
-                                                .trim())), 0);
+                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+                                        : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
+                                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? (cfgVal[6]
+                                        .trim()) : props.getProperty(tempName.toString(), "")), Integer
+                                        .parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
                         cb.endText();
                     } else { // write prop text
                         cb.beginText();
                         cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
                         cb
-                                .showTextAligned(
-                                        (cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
-                                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
-                                                        : PdfContentByte.ALIGN_CENTER)),
-                                        (cfgVal.length >= 7 ? ((props.getProperty(
-                                                tempName.toString(), "").equals("") ? ""
-                                                : cfgVal[6].trim())) : props.getProperty(tempName
-                                                .toString(), "")), Integer.parseInt(cfgVal[1]
-                                                .trim()), (height - Integer.parseInt(cfgVal[2]
-                                                .trim())), 0);
+                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+                                        : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
+                                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? ((props
+                                        .getProperty(tempName.toString(), "").equals("") ? "" : cfgVal[6].trim()))
+                                        : props.getProperty(tempName.toString(), "")), Integer.parseInt(cfgVal[1]
+                                        .trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
                         cb.endText();
                     }
                 }
 
                 //graphic
-                if (i == 1 && graphicCfg != null) {
-                    System.err.println("processed page " + i);
+                if (i == 1 && cfgGraphicFileNo > 0) {
+                    System.out.println("processed page " + i);
+                    boolean bFormAR = false;
                     int origX = 0;
                     int origY = 0;
                     String nMaxPixX = "0";
@@ -324,64 +323,87 @@ public class FrmPDFServlet extends HttpServlet {
                     String fEDB = null;
                     String className = null;
 
-                    Vector xDate = new Vector();
-                    Vector yHeight = new Vector();
+                    for (int k = 0; k < cfgGraphicFileNo; k++) {
+                        Vector xDate = new Vector();
+                        Vector yHeight = new Vector();
 
-                    for (Enumeration e = graphicCfg.propertyNames(); e.hasMoreElements();) {
-                        tempName = new StringBuffer(e.nextElement().toString());
-                        tempValue = graphicCfg.getProperty(tempName.toString()).trim();
-
-                        if (tempName.toString().equals("__finalEDB"))
-                            fEDB = props.getProperty(tempValue);
-                        else if (tempName.toString().equals("__dateFormat"))
-                            dateFormat = tempValue;
-                        else if (tempName.toString().equals("__nMaxPixX"))
-                            nMaxPixX = tempValue;
-                        else if (tempName.toString().equals("__nMaxPixY"))
-                            nMaxPixY = tempValue;
-                        else if (tempName.toString().equals("__fStartX"))
-                            fStartX = tempValue;
-                        else if (tempName.toString().equals("__fEndX"))
-                            fEndX = tempValue;
-                        else if (tempName.toString().equals("__fStartY"))
-                            fStartY = tempValue;
-                        else if (tempName.toString().equals("__fEndY"))
-                            fEndY = tempValue;
-                        else if (tempName.toString().equals("__origX"))
-                            origX = Integer.parseInt(tempValue);
-                        else if (tempName.toString().equals("__origY"))
-                            origY = Integer.parseInt(tempValue);
-                        else if (tempName.toString().equals("__className"))
-                            className = tempValue;
-                        else {
-                            xDate.add(props.getProperty(tempName.toString()));
-                            yHeight.add(props.getProperty(tempValue));
-                        }
-                    }
-
-                    if (fEDB != null && fEDB.length() >= 8) {
-                        //make the graphic class
-                        FrmPdfGraphicAR myClass = new FrmPdfGraphicAR();
-                        myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY,
-                                dateFormat, fEDB);
-                        Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
-
-                        //draw the pic
-                        cb.setLineWidth(1.5f);
-                        //cb.setRGBColorStrokeF(0f, 255f, 0f); //cb.circle(52f,
-                        // height - 751f, 1f);//cb.circle(52f, height - 609f,
-                        // 1f);
-                        for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
+                        for (Enumeration e = graphicCfg[k].propertyNames(); e.hasMoreElements();) {
                             tempName = new StringBuffer(e.nextElement().toString());
-                            tempValue = gProp.getProperty(tempName.toString(), "");
-                            if (tempValue.equals(""))
-                                continue;
+                            tempValue = graphicCfg[k].getProperty(tempName.toString()).trim();
 
-                            cb.circle((origX + Float.parseFloat(tempName.toString())), (height
-                                    - origY + Float.parseFloat(tempValue)), 1.5f);
-                            cb.stroke();
+                            if (tempName.toString().equals("__finalEDB")) {
+                                bFormAR = true;
+                                fEDB = props.getProperty(tempValue);
+                            } else if (tempName.toString().equals("__dateFormat"))
+                                dateFormat = tempValue;
+                            else if (tempName.toString().equals("__nMaxPixX"))
+                                nMaxPixX = tempValue;
+                            else if (tempName.toString().equals("__nMaxPixY"))
+                                nMaxPixY = tempValue;
+                            else if (tempName.toString().equals("__fStartX"))
+                                fStartX = tempValue;
+                            else if (tempName.toString().equals("__fEndX"))
+                                fEndX = tempValue;
+                            else if (tempName.toString().equals("__fStartY"))
+                                fStartY = tempValue;
+                            else if (tempName.toString().equals("__fEndY"))
+                                fEndY = tempValue;
+                            else if (tempName.toString().equals("__origX"))
+                                origX = Integer.parseInt(tempValue);
+                            else if (tempName.toString().equals("__origY"))
+                                origY = Integer.parseInt(tempValue);
+                            else if (tempName.toString().equals("__className"))
+                                className = tempValue;
+                            else {
+                                xDate.add(props.getProperty(tempName.toString()));
+                                yHeight.add(props.getProperty(tempValue));
+                            }
+                        } // end for read in
+
+                        if (fEDB != null && fEDB.length() >= 8) {
+                            //make the graphic class
+                            FrmPdfGraphicAR myClass = new FrmPdfGraphicAR();
+                            myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY, dateFormat, fEDB);
+                            Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
+
+                            //draw the pic
+                            cb.setLineWidth(1.5f);
+                            //cb.setRGBColorStrokeF(0f, 255f, 0f); //cb.circle(52f,
+                            // height - 751f, 1f);//cb.circle(52f, height - 609f,
+                            // 1f);
+                            for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
+                                tempName = new StringBuffer(e.nextElement().toString());
+                                tempValue = gProp.getProperty(tempName.toString(), "");
+                                if (tempValue.equals(""))
+                                    continue;
+
+                                cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
+                                        .parseFloat(tempValue)), 1.5f);
+                                cb.stroke();
+                            }
                         }
-                    }
+
+                        // general chart
+                        if (!bFormAR) {
+                            //make the graphic class
+                            FrmPdfGraphicGrowthChart myClass = new FrmPdfGraphicGrowthChart();
+                            myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY);
+                            Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
+
+                            //draw the pic
+                            cb.setLineWidth(1.5f);
+                            for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
+                                tempName = new StringBuffer(e.nextElement().toString());
+                                tempValue = gProp.getProperty(tempName.toString(), "");
+                                if (tempValue.equals(""))
+                                    continue;
+
+                                cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
+                                        .parseFloat(tempValue)), 1.5f);
+                                cb.stroke();
+                            }
+                        } // end of first pic
+                    } // end of for loop
                 }
 
             }
@@ -407,18 +429,14 @@ public class FrmPDFServlet extends HttpServlet {
         String propPath = "/WEB-INF/classes/" + "oscar/form/prop/";
 
         try {
-            //InputStream is = cLoader.getResourceAsStream(cfgFilename);
             InputStream is = getServletContext().getResourceAsStream(propPath + cfgFilename);
-
             if (is != null) {
                 ret.load(is);
-
                 is.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return ret;
     }
 

@@ -1,0 +1,18 @@
+age_1	:	weight_1
+age_2	:	weight_2
+age_3	:	weight_3
+age_4	:	weight_4
+age_5	:	weight_5
+age_6	:	weight_6
+age_7	:	weight_7
+
+__origX		:	110
+__origY		:	721
+__nMaxPixX	:	386
+__nMaxPixY	:	400
+__fStartX	:	2
+__fEndX		:	20
+__fStartY	:	6
+__fEndY		:	105
+
+__className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart

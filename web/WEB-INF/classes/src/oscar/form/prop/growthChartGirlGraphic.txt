@@ -1,0 +1,18 @@
+age_1	:	stature_1
+age_2	:	stature_2
+age_3	:	stature_3
+age_4	:	stature_4
+age_5	:	stature_5
+age_6	:	stature_6
+age_7	:	stature_7
+
+__origX		:	110
+__origY		:	583
+__nMaxPixX	:	386
+__nMaxPixY	:	464
+__fStartX	:	2
+__fEndX		:	20
+__fStartY	:	75
+__fEndY		:	190
+
+__className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart

@@ -1,0 +1,18 @@
+age_1	:	bmi_1
+age_2	:	bmi_2
+age_3	:	bmi_3
+age_4	:	bmi_4
+age_5	:	bmi_5
+age_6	:	bmi_6
+age_7	:	bmi_7
+
+__origX		:	82
+__origY		:	692
+__nMaxPixX	:	440
+__nMaxPixY	:	614
+__fStartX	:	2
+__fEndX		:	20
+__fStartY	:	10
+__fEndY		:	37
+
+__className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
