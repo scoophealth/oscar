@@ -111,11 +111,16 @@ function refresh() {
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
   <form name="serviceform" method="get" action="oscarReportVisitControl.jsp">
-    <tr>       
-      <td width="90%" align="left">
-      <input type="hidden" name="reportAction" value="vr">
+    <tr>
+      <td width="30%" align="left"> <font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
+         <input type="radio" name="reportAction" onClick="document.serviceform.providerview.disabled=true" value="lk"  <%=reportAction.equals("lk")?"checked":""%>>
+         <bean:message key="oscarReport.oscarReportVisitControl.msgLarryKainReport"/>
+         <input type="radio" name="reportAction" onClick="document.serviceform.providerview.disabled=false" value="vr"  <%=reportAction.equals("vr")?"checked":""%>>
+         <bean:message key="oscarReport.oscarReportVisitControl.msgVisitReport"/></font>
+      </td>
+      <td width="60%" align="left">
        <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b><bean:message key="oscarReport.oscarReportVisitControl.msgSelectProvider"/> </b></font> 
-          <select name="providerview">
+          <select name="providerview" <%=reportAction.equals("lk")?"disabled":""%>>
             <option value="%"><bean:message key="oscarReport.oscarReportVisitControl.msgSelectProviderAll"/></option>
             <% String proFirst="";
             String proLast="";
