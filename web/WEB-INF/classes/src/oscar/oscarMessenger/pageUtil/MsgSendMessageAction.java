@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 import oscar.oscarDB.DBHandler;
+import oscar.OscarProperties;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -159,11 +160,15 @@ public class MsgSendMessageAction extends Action {
               //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values ('today','now',\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\" ";
               db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now',\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\") ");
 
-
-
-
-
-              rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+	      /* Choose the right command to recover the messageid inserted above */
+	      OscarProperties prop = OscarProperties.getInstance();
+	      String db_type = prop.getProperty("db_type");
+	      if (db_type.equalsIgnoreCase("mysql")) {
+		rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+	      } else if (db_type.equalsIgnoreCase("postgresql")) {
+		rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
+	      } else
+	      throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
               System.out.println(rs.getString(1));
               String messageid = rs.getString(1);
 

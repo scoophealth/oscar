@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.data;
 import oscar.oscarDB.DBHandler;
+import oscar.OscarProperties;
 import org.w3c.dom.*;
 import  oscar.oscarMessenger.util.*;
 
@@ -196,7 +197,15 @@ public class MsgMessageData {
                         +sentToWho+"','"
                         +userNo+"') ");
 
-          rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+	  /* Choose the right command to recover the messageid inserted above */
+	  OscarProperties prop = OscarProperties.getInstance();
+	  String db_type = prop.getProperty("db_type");
+	  if (db_type.equalsIgnoreCase("mysql")) {
+          	rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+	  } else if (db_type.equalsIgnoreCase("postgresql")) {
+		  rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
+	  } else
+		  throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
           if(rs.next()){
              messageid = Integer.toString( rs.getInt(1) );
           }
@@ -242,7 +251,16 @@ public class MsgMessageData {
          System.out.println("here2 "+sql);
          db.RunSQL(sql);
          System.out.println("here3");
-         rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+
+         /* Choose the right command to recover the messageid inserted above */
+	 OscarProperties prop = OscarProperties.getInstance();
+	 String db_type = prop.getProperty("db_type");
+	 if (db_type.equalsIgnoreCase("mysql")) {
+               rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+         } else if (db_type.equalsIgnoreCase("postgresql")) {
+               rs = db.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
+         } else
+               throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
          System.out.println("here4");
          if(rs.next()){
             messageid = Integer.toString( rs.getInt(1) );

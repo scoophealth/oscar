@@ -93,7 +93,7 @@ public  class MsgHandleMessagesAction extends Action {
           try{    //sents this message status to del
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              java.sql.ResultSet rs;
-             String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \""+providerNo+"\" and message = \""+messageNo+"\"");
+             String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\'");
              db.RunSQL(sql);
             
             db.CloseConn();
@@ -112,7 +112,7 @@ public  class MsgHandleMessagesAction extends Action {
           try{   //gets the sender
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              java.sql.ResultSet rs;
-             String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = \""+messageNo+"\"");
+             String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = \'"+messageNo+"\'");
              rs = db.GetSQL(sql);
 
              if ( rs.next()){
@@ -131,7 +131,7 @@ public  class MsgHandleMessagesAction extends Action {
               }
 
               if(replyAll.compareToIgnoreCase("reply All") == 0){  // add every one that got the message
-                 rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = \""+messageNo+"\"");
+                 rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = \'"+messageNo+"\'");
                  while (rs.next()){
                      System.out.println("pro no "+rs.getString("provider_no")+" remo Loco "+rs.getString("remoteLocation"));
                      vector.add(rs.getString("provider_no"));
@@ -164,7 +164,7 @@ public  class MsgHandleMessagesAction extends Action {
            try{   //gets the sender
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
-              String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = \""+messageNo+"\"");
+              String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = \'+messageNo+\'");
               rs = db.GetSQL(sql);
 
               if ( rs.next()){

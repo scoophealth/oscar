@@ -65,14 +65,14 @@ System.out.println("in view message action jackson");
         try{
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            java.sql.ResultSet rs;
-           //rs = db.GetSQL("select count * from messagelisttbl where message = \""+messageNo+"\" and provider_no = \""+providerNo+"\"");
+           //rs = db.GetSQL("select count * from messagelisttbl where message = \'"+messageNo+"\' and provider_no = \'"+providerNo+"\'");
            //int count = rs.getInt(1);
            //if (count == 0){
            //     System.out.println("test from view action \n\n\n" );
            //   return (mapping.findForward("noRights"));
            //}else{
            System.out.println("theres a message  ");
-              String sql = new String("Select * from messagetbl where messageid = \""+messageNo+"\" ");
+              String sql = new String("Select * from messagetbl where messageid = \'"+messageNo+"\' ");
               rs = db.GetSQL(sql);
 
               if (rs.next()) {
@@ -108,7 +108,7 @@ System.out.println("attach "+att);
               }
 
               if (i == 1){
-                 db.RunSQL("update messagelisttbl set status = \"read\" where provider_no = \""+providerNo+"\" and message = \""+messageNo+"\" and status not like 'del'");
+                 db.RunSQL("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\' and status not like 'del'");
               }
 
 
