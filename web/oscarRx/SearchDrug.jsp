@@ -201,7 +201,7 @@ table.hiddenLayer {
                         <tr>
                             <td>
                                 <b><bean:message key="SearchDrug.nameText"/></b>
-                                <jsp:getProperty name="patient" property="surname"/>
+                                <jsp:getProperty name="patient" property="firstName"/> <jsp:getProperty name="patient" property="surname"/>
                             </td>
                             <td></td>
                             <td>
