@@ -1,31 +1,24 @@
-  <%
-  if(session.getValue("user") == null) 
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-//  mygroupno = (String) session.getAttribute("groupno");  
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
+<%
+if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
+String curUser_no = (String) session.getAttribute("user");
+String userfirstname = (String) session.getAttribute("userfirstname");
+String userlastname = (String) session.getAttribute("userlastname");
+%>
 
-%>  
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
 <%
-GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
-  String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
-  String function = request.getParameter("function");
-  String functionid = request.getParameter("functionid");
-  String doctype = request.getParameter("doctype");
+String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd HH:mm:ss"); 
+String function = request.getParameter("function");
+String functionid = request.getParameter("functionid");
+String doctype = request.getParameter("doctype");
 %>
+
 <html:html locale="true"> 
 <head>
 <title><bean:message key="dms.documentReport.title"/></title>
@@ -33,43 +26,38 @@ GregorianCalendar now=new GregorianCalendar();
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
-
 var remote=null;
 function refresh() {
-  history.go(0);
+	history.go(0);
 }
 function rs(n,u,w,h,x) {
-  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
-  remote=window.open(u,n,args);
-  if (remote != null) {
-    if (remote.opener == null)
-      remote.opener = self;
-  }
-  if (x == 1) { return remote; }
+	args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+	remote=window.open(u,n,args);
+	if (remote != null) {
+		if (remote.opener == null)
+		remote.opener = self;
+	}
+	if (x == 1) { return remote; }
 }
-
 
 var awnd=null;
 function popPage(url) {
-  
-  awnd=rs('',url ,400,200,1);
-  awnd.focus();
+	awnd=rs('',url ,400,200,1);
+	awnd.focus();
 }
 
 function checkDelete(url, c, u,n){
-if (c == u || n == '<%=oscarVariables.getProperty("SUPERUSER")%>'){
- if(confirm("<bean:message key="dms.documentReport.msgDelete"/>")) {
-    popPage(url);
-  }
-}else{
-alert("<bean:message key="dms.documentReport.msgNotAllowed"/>");
-}
-
-
+	if (c == u || n == '<%=oscarVariables.getProperty("SUPERUSER")%>'){
+		if(confirm("<bean:message key="dms.documentReport.msgDelete"/>")) {
+			popPage(url);
+		}
+	}else{
+		alert("<bean:message key="dms.documentReport.msgNotAllowed"/>");
+	}
 }
 
 function setfocus() {
-  this.focus();
+	this.focus();
 }
 //-->
 </script>
@@ -224,19 +212,21 @@ if (count0 == 0) {
             <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a>&nbsp; &nbsp;<a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a>&nbsp; &nbsp;</td>
     </tr> 
   
-  <%
-  
-}
-if (count == 0) {
-  %>
+<%
+	}
+	if (count == 0) {
+%>
     <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></td>
-    <%
-    }
-    %> 
+<%
+	}
+%> 
 </table>
 </td>
 </tr></table>
-<% } %>
+<%
+} 
+apptMainBean.closePstmtConn();
+%>
 
 <br>
 <form>
