@@ -200,7 +200,7 @@ public class EctSessionBean {
             rs = db.GetSQL(sql);
             while(rs.next()){
                 demographicNo = rs.getString("demographic_no");
-                appointmentNo = appointmentNo;
+                this.appointmentNo = appointmentNo;
                 reason=rs.getString("reason");
                 appointmentDate=rs.getString("appointment_date");
                 startTime=rs.getString("start_time");
