@@ -1,0 +1,322 @@
+package oscar.oscarBilling.ca.bc.pageUtil;
+import oscar.oscarDB.DBHandler;
+import java.io.*;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.text.*;
+import java.lang.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarBilling.ca.bc.pageUtil.*;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionServlet;
+import org.apache.struts.util.MessageResources;
+import oscar.*;
+
+public class BillingSaveBillingAction extends Action {
+    
+    
+    public ActionForward perform(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException, ServletException {
+        
+        if(request.getSession().getAttribute("user") == null  ){
+            return (mapping.findForward("Logout"));
+        }
+        
+        
+        oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean;
+        bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
+        //  oscar.oscarBilling.data.BillingStoreData bsd = new oscar.oscarBilling.data.BillingStoreDate();
+        //  bsd.storeBilling(bean);
+        oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+        String billStatus = as.billStatus(bean.getApptStatus());
+        
+        java.sql.ResultSet rs;
+        GregorianCalendar now=new GregorianCalendar();
+        int curYear = now.get(Calendar.YEAR);
+        int curMonth = (now.get(Calendar.MONTH)+1);
+        int curDay = now.get(Calendar.DAY_OF_MONTH);
+        String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) + "-" + String.valueOf(curDay);
+        String billingid = "";
+        String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
+        
+        System.out.println("appointment_no: "+ bean.getApptNo());
+        System.out.println("BillStatus:" + billStatus);
+        String sql = "update appointment set status='" + billStatus + "' where appointment_no='" + bean.getApptNo() + "'";
+        
+        try {                        
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db.RunSQL(sql);
+            db.CloseConn();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
+        sql = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)";
+        sql = sql + " values('\\N','" + bean.getPatientNo() + "', '" + bean.getBillingProvider() + "', '" + bean.getApptNo() + "','" + bean.getPatientName() + "','" + bean.getPatientPHN() + "','" + curDate + "','" + bean.getServiceDate() + "','" + bean.getGrandtotal() + "','O','" + bean.getPatientDoB() + "','" + bean.getAdmissionDate() + "','" + oscar.util.UtilMisc.mysqlEscape(bean.getVisitType()) + "','" + bean.getBillingPracNo() + "','" + bean.getApptProviderNo() + "','" + bean.getCreator() + "','"+bean.getBillingType()+"')";
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db.RunSQL(sql);
+            rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+            //      System.out.println(rs.getString(1));
+            if (rs.next()){
+                billingid = rs.getString(1);
+            }
+            rs.close();
+            db.CloseConn();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        
+        
+        ArrayList billItem = bean.getBillItem();
+        char paymentMode = (bean.getEncounter().equals("E") && !bean.getBillingType().equals("ICBC") && !bean.getBillingType().equals("WCB")) ? 'E' : '0';
+        
+        String billedAmount;
+        if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("PRIV")) {
+        
+           for (int i=0; i < billItem.size(); i++){               
+                if (paymentMode == 'E') {
+                    billedAmount = "0000000";
+                }else{
+                    billedAmount = ((BillingBillingManager.BillingItem) billItem.get(i)).getDispPrice();                   
+                }
+                
+                if (bean.getPatientHCType().trim().compareTo(bean.getBillRegion().trim()) == 0){
+
+
+                       //			| billing_unit             | char(3)     | YES  |     | 000                  |                |
+                       //			| clarification_code       | char(2)     | YES  |     | 00                   |                |
+                       //			| anatomical_area          | char(2)     | YES  |     | NULL                 |                |
+                       //			| after_hour               | char(1)     | YES  |     | 0                    |                |
+                       //			| new_program              | char(2)     | YES  |     | 00                   |                |
+                       //			| billing_code             | varchar(5)  | YES  |     | 00000                |                |
+                       //			| bill_amount              | varchar(7)  | YES  |     | 0000000              |                |
+                       //			| payment_mode             | char(1)     | YES  |     | 0                    |                |
+                       //			| service_date             | varchar(8)  | YES  |     | 00000000             |                |
+                       //			| service_to_day           | char(2)     | YES  |     | 00                   |                |
+                       //			| submission_code          | char(1)     | YES  |     | 0                    |                |
+                       //			| extended_submission_code | char(1)     | YES  |     |                      |                |
+                       //			| dx_code1                 | varchar(5)  | YES  |     |                      |                |
+                       //			| dx_code2                 | varchar(5)  | YES  |     |                      |                |
+                       //			| dx_code3                 | varchar(5)  | YES  |     |                      |                |
+                       //			| dx_expansion             | varchar(15) | YES  |     |                      |                |
+                       //			| service_location         | char(1)     | YES  |     | 0                    |                |
+                       //			| referral_flag1           | char(1)     | YES  |     | 0                    |                |
+                       //			| referral_no1             | varchar(5)  | YES  |     | 00000                |                |
+                       //			| referral_flag2           | char(1)     | YES  |     | 0                    |                |
+                       //			| referral_no2             | varchar(5)  | YES  |     | 00000                |                |
+                       //			| time_call                | varchar(4)  | YES  |     | 0000                 |                |
+                       //			| service_start_time       | varchar(4)  | YES  |     | 0000                 |                |
+                       //			| service_end_time         | varchar(4)  | YES  |     | 0000                 |                |
+                       //			| birth_date               | varchar(8)  | YES  |     | 00000000             |                |
+                       //			| office_number            | varchar(7)  | YES  |     | 0000000              |                |
+                       //			| correspondence_code      | char(1)     | YES  |     | 0                    |                |
+                       //			| claim_comment            | varchar(20) | YES  |     | NULL                 |                |
+                       //			| mva_claim_code           | char(1)     | YES  |     | N                    |                |
+                       //			| icbc_claim_no            | varchar(8)  | YES  |     | 00000000             |                |
+                       //			| original_claim           | varchar(20) | YES  |     | 00000000000000000000 |                |
+                       //			| facility_no              | varchar(5)  | YES  |     | 00000                |                |
+                       //			| facility_sub_no          | varchar(5)  | YES  |     | 00000                |                |
+                       //			| filler_claim             | varchar(58) | YES  |     | NULL                 |                |
+                       //			| oin_insurer_code         | char(2)     | YES  |     |                      |                |
+                       //			| oin_registration_no      | varchar(12) | YES  |     |                      |                |
+                       //			| oin_birthdate            | varchar(8)  | YES  |     |                      |                |
+                       //			| oin_first_name           | varchar(12) | YES  |     |                      |                |
+                       //			| oin_second_name          | char(1)     | YES  |     |                      |                |
+                       //			| oin_surname              | varchar(18) | YES  |     |                      |                |
+                       //			| oin_sex_code             | char(1)     | YES  |     |                      |                |
+                       //			| oin_address              | varchar(25) | YES  |     |                      |                |
+                       //			| oin_address2             | varchar(25) | YES  |     |                      |                |
+                       //			| oin_address3             | varchar(25) | YES  |     |                      |                |
+                       //			| oin_address4             | varchar(25) | YES  |     |                      |                |
+                       //			| oin_postalcode           | varcha
+
+
+                       sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,"
+                           + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, "
+                           + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment,mva_claim_code, icbc_claim_no) "
+                           + "values ('\\N',"
+                           +"'"+ billingid+"',"
+                           +"CURRENT_TIMESTAMP(),"
+                           +"'O',"
+                           +"'" + bean.getPatientNo() + "',"
+                           +"'" + bean.getApptNo() + "',"
+                           +"'C02',"
+                           +"'"+dataCenterId+"',"
+                           +"'" + bean.getBillingGroupNo() + "',"
+                           +"'" + bean.getBillingPracNo() + "',"
+                           +"'" + bean.getPatientPHN() + "',"
+                           +"'" + bean.getPatientFirstName().substring(0,1) + " " + bean.getPatientLastName().substring(0,2) + "',"
+                           +"'" + "00" + "',"
+                           +"'" + ((oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getUnit() +"'," 
+                           +"'" + bean.getVisitLocation().substring(0,2) + "',"
+                           +"'00',"
+                           +"'0',"
+                           +"'00',"
+                           +"'" +((oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()  + "',"
+                           +"'" + ((oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getDispLineTotal() + "',"
+                           +"'0',"
+                           +"'" +   convertDate8Char(bean.getServiceDate()) + "',"
+                           +"'" + "00" + "',"
+                           +"'" + "0" + "',"
+                           +"' ',"
+                           +"'" + bean.getDx1() + "',"
+                           +"'" + bean.getDx2() + "',"
+                           +"'" + bean.getDx3() + "',"
+                           +"' ',"
+                           +"'" + bean.getVisitType().substring(0,1) + "',"
+                           +"'" + bean.getReferType1() + "',"
+                           +"'" + bean.getReferral1() + "',"
+                           +"'" + bean.getReferType2() + "',"
+                           +"'" + bean.getReferral2() + "',"
+                           +"'0000',"
+                           +"'" + bean.getStartTime() + "',"
+                           +"'" + bean.getEndTime() + "',"
+                           +"'" + convertDate8Char(bean.getPatientDoB()) + "',"
+                           +"'',"
+                           +"'0',"
+                           +"'',"
+                           +"'"+ bean.getMva_claim_code()+"',"
+                           +"'"+ bean.getIcbc_claim_no()+"'"
+                           +")";
+                       try {
+                           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                           db.RunSQL(sql);
+                           db.CloseConn();
+                       } catch (SQLException e) {
+                           System.out.println(e.getMessage());
+                       }
+                       System.out.println(sql);
+                   }else{
+
+                       //			| oin_insurer_code         | char(2)     | YES  |     |                      |                |
+                       //			| oin_registration_no      | varchar(12) | YES  |     |                      |                |
+                       //			| oin_birthdate            | varchar(8)  | YES  |     |                      |                |
+                       //			| oin_first_name           | varchar(12) | YES  |     |                      |                |
+                       //			| oin_second_name          | char(1)     | YES  |     |                      |                |
+                       //			| oin_surname              | varchar(18) | YES  |     |                      |                |
+                       //			| oin_sex_code             | char(1)     | YES  |     |                      |                |
+                       //			| oin_address              | varchar(25) | YES  |     |                      |                |
+                       //			| oin_address2             | varchar(25) | YES  |     |                      |                |
+                       //			| oin_address3             | varchar(25) | YES  |     |                      |                |
+                       //			| oin_address4             | varchar(25) | YES  |     |                      |                |
+                       //			| oin_postalcode           | varcha
+
+
+                       sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,";
+                       sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
+                       sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment, ";
+                       sql = sql + "oin_insurer_code, oin_registration_no, oin_birthdate, oin_first_name, oin_second_name, oin_surname,oin_sex_code, oin_address, oin_address2, oin_address3, oin_address4, oin_postalcode, mva_claim_code, icbc_claim_no) ";
+                       sql = sql + "values ('\\N','"+ billingid+"',CURRENT_TIMESTAMP(), 'O', '" + bean.getPatientNo() + "', '" + bean.getApptNo() + "','C02','"+dataCenterId+"', '" + bean.getBillingGroupNo() + "','" + bean.getBillingPracNo() + "','" + "0000000000" + "','" + "0000"+ "','" + "00" + "','" + ((oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getUnit() +"'," ;
+                       sql = sql + "'" + bean.getVisitLocation().substring(0,2) + "','00','0','00','" +((oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()  + "','" + ((oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getDispLineTotal() + "','0','" +   convertDate8Char(bean.getServiceDate()) + "','" + "00" + "','" + "0" + "',' ','" + bean.getDx1() + "', '" + bean.getDx2() + "','" + bean.getDx3() + "',";
+                       sql = sql + "' ','" + bean.getVisitType().substring(0,1) + "','" + bean.getReferType1() + "','" + bean.getReferral1() + "','" + bean.getReferType2() + "','" + bean.getReferral2() + "','0000', '" + bean.getStartTime() + "','" + bean.getEndTime() + "','" + "00000000" + "','', '0',''," ;
+                       sql = sql + "'" + bean.getPatientHCType() + "', '" + bean.getPatientPHN() + "', '" + convertDate8Char(bean.getPatientDoB()) + "','" + bean.getPatientFirstName() + "', '" + " " + "','" + bean.getPatientLastName()  + "','" + bean.getPatientSex() + "', '" + bean.getPatientAddress1() + "', '" + bean.getPatientAddress2() + "', '', '', '" + bean.getPatientPostal()+"', '"+ bean.getMva_claim_code()+ "', '"+ bean.getIcbc_claim_no()+ "')";   
+
+                       try {                                                
+                           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                           db.RunSQL(sql);
+                           db.CloseConn();
+                       } catch (SQLException e) {
+                           System.out.println(e.getMessage());
+                       }
+                       System.out.println(sql);                    
+                   }                                
+               
+            }
+        }
+        //////////////
+        if (null != request.getSession().getAttribute("WCBForm")) {
+           WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
+           String insertBillingMaster = 
+            " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no) " +
+            " VALUES ('"+billingid+"',NOW(),'"+wcb.getW_payeeno()+"','W','"+bean.getPatientNo()+"','"+bean.getApptNo()+ "')";
+           
+            wcb.setW_demographic(bean.getPatientNo());
+            wcb.setW_providerno(bean.getBillingProvider());
+            String billamt = "";
+
+            try {
+                double amnt = 0;
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                db.RunSQL(insertBillingMaster);
+                rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+wcb.getW_feeitem()+"'");
+                if (rs.next()) {
+                    amnt = rs.getDouble("value");
+                }
+                rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ wcb.getW_extrafeeitem()+"'");
+                if (rs.next()) {
+                    amnt += rs.getDouble("value");
+                }
+                billamt = String.valueOf(amnt);
+                db.RunSQL(wcb.SQL(billingid, billamt));
+                db.CloseConn();
+            }
+            catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }            
+            request.getSession().putValue("WCBForm", null);
+        }
+
+        ////////////////////
+        //      System.out.println("Service count : "+ billItem.size());
+        
+        return (mapping.findForward("success"));
+    }
+    
+    public String convertDate8Char(String s){
+        String sdate = "00000000", syear="", smonth="", sday="";
+        System.out.println("s=" + s);
+        if (s != null){
+            
+            if (s.indexOf("-") != -1){
+                
+                syear = s.substring(0, s.indexOf("-"));
+                s = s.substring(s.indexOf("-")+1);
+                smonth = s.substring(0, s.indexOf("-"));
+                if (smonth.length() == 1)  {
+                    smonth = "0" + smonth;
+                }
+                s = s.substring(s.indexOf("-")+1);
+                sday = s;
+                if (sday.length() == 1)  {
+                    sday = "0" + sday;
+                }
+                
+                
+                System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
+                sdate = syear + smonth + sday;
+                
+            }else{
+                sdate = s;
+            }
+            System.out.println("sdate:" + sdate);
+        }else{
+            sdate="00000000";
+            
+        }
+        return sdate;
+    }
+    
+}
+
