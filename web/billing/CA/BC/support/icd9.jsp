@@ -33,6 +33,13 @@
 </head>
 <%
 	String form=request.getParameter("form"),field=request.getParameter("field");
+   String searchStr = request.getParameter("searchStr");
+   if (searchStr == null){
+     searchStr = "%";       
+   }else{
+       searchStr = "%" +searchStr + "%";       
+   }
+   searchStr = oscar.Misc.mysqlEscape(searchStr);
 %>
 <script language="JavaScript">
 function posttoText(index){
@@ -64,7 +71,7 @@ function posttoText(index){
 <%
 	boolean color = false;
 	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
-	java.sql.ResultSet rs = db.GetSQL("SELECT diagnostic_code, description FROM diagnosticcode ORDER BY diagnostic_code");
+	java.sql.ResultSet rs = db.GetSQL("SELECT diagnostic_code, description FROM diagnosticcode where diagnostic_code like '"+searchStr+"' or description like '"+searchStr+"' ORDER BY diagnostic_code");
 	while (rs.next()){
 %>
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left" valign="top">

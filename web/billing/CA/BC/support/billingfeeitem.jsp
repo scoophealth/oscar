@@ -34,7 +34,17 @@
 <link rel="stylesheet" href="../../../../share/css/oscar.css">
 </head>
 <%
-	String form=request.getParameter("form"),field=request.getParameter("field"),info=request.getParameter("info");
+	String form=request.getParameter("form");
+   String field=request.getParameter("field");
+   String info=request.getParameter("info");
+   String searchStr = request.getParameter("searchStr");
+   if (searchStr == null){
+     searchStr = "%";       
+   }else{
+       searchStr = "%" +searchStr + "%";       
+   }
+   searchStr = oscar.Misc.mysqlEscape(searchStr);
+   
 %>
 <script language="JavaScript">
 function posttoText(index){
@@ -66,7 +76,8 @@ function posttoText(index){
 <%
 	boolean color = false;
 	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
-	java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description FROM billingservice " + ((null == info) ? "WHERE service_code IN ('19937', '19938', '19939', '19940', '19941', '19943', '19944')" : "") + " ORDER BY service_code, description");
+	//java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description FROM billingservice " + ((null == info) ? "WHERE service_code IN ('19937', '19938', '19939', '19940', '19941', '19943', '19944')" : "") + " ORDER BY service_code, description");
+   java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description FROM billingservice WHERE description like '"+searchStr+"' or service_code like '"+searchStr+"'  ORDER BY service_code, description");
 	while (rs.next()){
 %>
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left" valign="top">
