@@ -38,8 +38,10 @@ import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 import oscar.form.*;
+import oscar.form.data.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
+import oscar.oscarEncounter.data.EctFormData;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.oscarEncounter.oscarMeasurements.bean.*;
@@ -59,15 +61,19 @@ public class FrmFormAction extends Action {
      * Add the form description to encounterForm table of the database
      **/
 
-    private boolean valid = true;
-    private String _dateFormat = "yyyy/MM/dd";
-    ActionErrors errors = new ActionErrors();                   
     
+    private String _dateFormat = "yyyy/MM/dd";
+    ActionErrors errors = new ActionErrors();    
+    boolean valid = true;       
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        FrmFormForm frm = (FrmFormForm) form;
+        
+                     
+        System.out.println("FrmFormAction is called");
+        
+        FrmFormForm frm = (FrmFormForm) form;               
         
         HttpSession session = request.getSession();
         request.getSession().setAttribute("FrmFormForm", frm);        
@@ -75,6 +81,7 @@ public class FrmFormAction extends Action {
         request.getSession().setAttribute("EctSessionBean", bean);
         
         String formName = (String) frm.getValue("formName");                        
+        String formId = (String) frm.getValue("formId");
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
                         
         Properties props = new Properties();
@@ -86,9 +93,12 @@ public class FrmFormAction extends Action {
             demographicNo = bean.getDemographicNo();                        
         
         errors.clear();
+        valid = true;
         
         //Validate each measurement
+        long startTime = System.currentTimeMillis();
         for(int i=0; i<measurementTypes.size(); i++){
+            
             EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
             EctValidationsBean validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
             String inputValue = (String) frm.getValue(mt.getType()+"Value");
@@ -98,20 +108,29 @@ public class FrmFormAction extends Action {
             inputValue = parseCheckBoxValue(inputValue, validation.getName());
             
             //validate
-            valid = validate(inputValue, observationDate, mt, validation, request);
-        }
-        
+            valid = validate( inputValue, observationDate, mt, validation, request);
+            //if(!valid)
+            //    System.out.println("validate each input: " + valid + " " + mt.getType() + " value:" + inputValue);
+        } 
+        long endTime = System.currentTimeMillis();
+        long delTime = endTime - startTime;
+        System.out.println("Time spent on validation: " + Long.toString(delTime));
+
         if(valid){
+            System.out.println("is valid, procede write to table");
             //Store form information as properties for saving to form table
             props.setProperty("demographic_no", demographicNo);
             props.setProperty("provider_no", providerNo);
             props.setProperty("formCreated", dateEntered);
             
+            startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
                 EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
                 EctValidationsBean validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
                 String type = mt.getType();
-                String inputValue = (String) frm.getValue(type+"Value");
+                String inputValue = (String) frm.getValue(type+"Value");                
+                String lastData = (String) frm.getValue(type+"LastData");                
+                String lastDataEnteredDate = (String) frm.getValue(type+"LastDataEnteredDate");
                 String observationDate = (String) frm.getValue(type+"Date");
                 String comments = (String) frm.getValue(type+"Comments");
                 comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
@@ -120,15 +139,22 @@ public class FrmFormAction extends Action {
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
-                write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
+                if(inputValue.equalsIgnoreCase(""))
+                    write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
                 
                 //Store all input value as properties for saving to form table
+                if(lastData!=null)
+                    props.setProperty(type+"LastData", lastData);
+                if(lastDataEnteredDate!=null)
+                    props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
                 props.setProperty(type+"Value", inputValue);
                 props.setProperty(type+"Date", observationDate);
                 props.setProperty(type+"Comments", comments);                
             }
+            endTime = System.currentTimeMillis();
+            delTime = endTime - startTime;
+            System.out.println("Time spent on write2Measurements: " + Long.toString(delTime));
             
-            //Save to formTable
             try{
                 String sql = "SELECT * FROM form"+formName + " WHERE demographic_no='"+demographicNo + "' AND ID=0";
                 FrmRecordHelp frh = new FrmRecordHelp();
@@ -140,16 +166,27 @@ public class FrmFormAction extends Action {
             }
             
             //Send to Mils thru xml-rpc
-            props.setProperty("VisitDate", dateEntered);
-            connect2OSDSF(props, formName);
+            //props.setProperty("VisitDate", dateEntered);
+            //connect2OSDSF(props, formName);
             
         }
-        else{                                 
-            return (new ActionForward("/form/SetupForm.do?formName="+formName));
+        else{                             
+            //return to the orignal form
+            return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId=0"));
         }
         
          //return mapping.findForward("success");
-        return (new ActionForward("/form/SetupForm.do?formName="+formName));
+        //forward to the for with updated formId    
+        EctFormData fData = new EctFormData();
+        String formNameByFormTable = fData.getFormNameByFormTable("../form/SetupForm.do?formName="+formName+"&demographic_no=");
+        String[] formPath = {"","0"};
+        try{
+            formPath = (new FrmData()).getShortcutFormValue(demographicNo, formNameByFormTable);    
+        }
+        catch(SQLException e){            
+            e.printStackTrace();
+        }
+        return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId="+formPath[1]));
     }
         
     private boolean validate(String inputValue, String observationDate, EctMeasurementTypesBean mt, EctValidationsBean validation, HttpServletRequest request ){
@@ -159,45 +196,50 @@ public class FrmFormAction extends Action {
         String inputValueName = mt.getType()+"Value";   
         String inputDateName = mt.getType()+"Date";
         String regExp = validation.getRegularExp();
+        
         //System.out.println("Input Value of " + mt.getType() + ":" + inputValue);
         double dMax = Double.parseDouble(validation.getMaxValue()==null?"0":validation.getMaxValue());
         double dMin = Double.parseDouble(validation.getMinValue()==null?"0":validation.getMinValue());
         int iMax = Integer.parseInt(validation.getMaxLength()==null?"0":validation.getMaxLength());
         int iMin = Integer.parseInt(validation.getMinLength()==null?"0":validation.getMinLength());
         int iIsDate = Integer.parseInt(validation.getIsDate()==null?"0":validation.getIsDate());
+        int iIsNumeric = Integer.parseInt(validation.getIsNumeric()==null?"0":validation.getIsNumeric());
         
-        if(!ectValidation.isInRange(dMax, dMin, inputValue)){                       
-            errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
-            saveErrors(request, errors);            
-            valid = false;
-        }
-        if(!ectValidation.maxLength(iMax, inputValue)){                       
-            errors.add(inputValueName, new ActionError("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
-            saveErrors(request, errors);
-            valid = false;
-        }
-        if(!ectValidation.minLength(iMin, inputValue)){                       
-            errors.add(inputValueName, new ActionError("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
-            saveErrors(request, errors);
-            valid = false;
-        }
-        if(!ectValidation.matchRegExp(regExp, inputValue)){                        
-            errors.add(inputValueName,
-            new ActionError("errors.invalid", inputTypeDisplay));
-            saveErrors(request, errors);
-            valid = false;
-        }
-        if(!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
-            errors.add(inputValueName,
-            new ActionError("error.bloodPressure"));
-            saveErrors(request, errors);
-            valid = false;
-        }
-        if(inputValue.compareTo("")!=0 && iIsDate==1 && !ectValidation.isDate(inputValue)){                        
-            errors.add(inputValueName,
-            new ActionError("errors.invalidDate", inputTypeDisplay));
-            saveErrors(request, errors);
-            valid = false;
+        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+        if(!gValidator.isBlankOrNull(inputValue)){            
+            if(iIsNumeric==1 && !ectValidation.isInRange(dMax, dMin, inputValue)){                       
+                errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
+                saveErrors(request, errors);            
+                valid = false;
+            }
+            if(!ectValidation.maxLength(iMax, inputValue)){                       
+                errors.add(inputValueName, new ActionError("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
+                saveErrors(request, errors);
+                valid = false;
+            }
+            if(!ectValidation.minLength(iMin, inputValue)){                       
+                errors.add(inputValueName, new ActionError("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
+                saveErrors(request, errors);
+                valid = false;
+            }
+            if(!ectValidation.matchRegExp(regExp, inputValue)){                        
+                errors.add(inputValueName,
+                new ActionError("errors.invalid", inputTypeDisplay));
+                saveErrors(request, errors);
+                valid = false;
+            }
+            if(!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
+                errors.add(inputValueName,
+                new ActionError("error.bloodPressure"));
+                saveErrors(request, errors);
+                valid = false;
+            }
+            if(iIsDate==1 && !ectValidation.isDate(inputValue)){                        
+                errors.add(inputValueName,
+                new ActionError("errors.invalidDate", inputTypeDisplay));
+                saveErrors(request, errors);
+                valid = false;
+            }
         }
         if(!ectValidation.isDate(observationDate)&&inputValue.compareTo("")!=0){                        
             errors.add(inputDateName,
@@ -232,9 +274,9 @@ public class FrmFormAction extends Action {
                             + mt.getMeasuringInstrc() +"','"+comments+"','"+dateObserved+"', now())";                           
                     db.RunSQL(sql);
                 }
-                rs.close();
-                db.CloseConn();
+                rs.close();                
             }
+            db.CloseConn();
         }
         catch(SQLException e){
             System.out.println(e.getMessage());

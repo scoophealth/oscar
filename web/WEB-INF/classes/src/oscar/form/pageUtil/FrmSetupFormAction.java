@@ -25,6 +25,7 @@ import java.util.*;
 import java.lang.*;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
@@ -68,22 +69,40 @@ public final class FrmSetupFormAction extends Action {
                 
         FrmFormForm frm = (FrmFormForm) form;        
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+        String formId = request.getParameter("formId");
+        frm.setValue("formId", formId==null?"0":formId);
         String demo = null;
         if (bean!=null){
             request.getSession().setAttribute("EctSessionBean", bean);
             demo = (String) bean.getDemographicNo();                                                          
-        }
+        }        
+        
         String formName = (String) request.getParameter("formName");        
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         List drugLists = getDrugList(demo);
         request.setAttribute("today", today);
         request.setAttribute("drugs", drugLists);
-        InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");
-
+        InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");        
+        Properties currentRec = getFormRecord(formName, formId, demo);
+        
         try {
             Vector measurementTypes = EctFindMeasurementTypeUtil.checkMeasurmentTypes(is);
+            
             for(int i=0; i<measurementTypes.size(); i++){
                 EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
+                
+                if(currentRec!=null){
+                    frm.setValue(mt.getType()+"Value", currentRec.getProperty(mt.getType()+"Value", ""));
+                    frm.setValue(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
+                    frm.setValue(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));                    
+                    //frm.setValue(mt.getType()+"LastData", currentRec.getProperty(mt.getType()+"LastData"));
+                    //frm.setValue(mt.getType()+"LastDataEnteredDate", currentRec.getProperty(mt.getType()+"LastDataEnteredDate"));
+                    //request.setAttribute(mt.getType()+"LastData", currentRec.getProperty(mt.getType()+"LastData"));
+                    //request.setAttribute(mt.getType()+"LastDataEnteredDate", currentRec.getProperty(mt.getType()+"LastDataEnteredDate"));
+                }
+                else{                                        
+                    frm.setValue(mt.getType() + "Date", today);                
+                }                
                 //get last value and its observation date
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
@@ -94,23 +113,25 @@ public final class FrmSetupFormAction extends Action {
                     mt.setLastDateEntered(rs.getString("dateEntered"));
                     request.setAttribute(mt.getType()+"LastData", mt.getLastData());
                     request.setAttribute(mt.getType()+"LastDataEnteredDate", mt.getLastDateEntered());
+                    frm.setValue(mt.getType()+"LastData", mt.getLastData());
+                    frm.setValue(mt.getType()+"LastDataEnteredDate", mt.getLastDateEntered());
                 }
                 rs.close();
                 db.CloseConn();
-                //System.out.println("Type: " + mt.getType() + " " + mt.getTypeDisplayName() + " " + mt.getTypeDesc());
+
                 request.setAttribute(mt.getType(), mt.getType());
                 request.setAttribute(mt.getType() + "Display", mt.getTypeDisplayName());
                 request.setAttribute(mt.getType() + "Desc", mt.getTypeDesc());
                 request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());
                 //request.setAttribute("value("+mt.getType() + "Date)", today);
-                frm.setValue(mt.getType() + "Date", today);
+                                
             }                      
         }
         catch (SQLException e) {
-            System.out.println("Error, file " + formName + ".xml not found.");
-            System.out.println("This file must be placed at web/form");
+            e.printStackTrace();
         }
         catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error, file " + formName + ".xml not found.");
             System.out.println("This file must be placed at web/form");
         }
@@ -123,7 +144,7 @@ public final class FrmSetupFormAction extends Action {
                 e.printStackTrace();
         }                        
                 
-        return (mapping.findForward("continue"));
+        return (new ActionForward("/form/form"+formName+".jsp"));        
     }
     
     private List getDrugList(String demographicNo){
@@ -144,4 +165,34 @@ public final class FrmSetupFormAction extends Action {
         return drugs;
     }
     
+    private Properties getFormRecord(String formName, String formId, String demographicNo){
+        Properties props = new Properties();
+        try{
+            
+            if(formId!=null){
+                if(Integer.parseInt(formId)>0){
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    String sql = "SELECT * FROM form" + formName + " WHERE ID='" + formId + "' AND demographic_no='" + demographicNo + "'";
+                    ResultSet rs = db.GetSQL(sql);
+                    if(rs.next()) {
+                        ResultSetMetaData md = rs.getMetaData();
+                        for(int i = 1; i <= md.getColumnCount(); i++)  {
+                                String name = md.getColumnName(i);
+                                String value = rs.getString(i);
+                                if(value != null)	
+                                    props.setProperty(name, value);
+                        }
+                    }
+                }
+                else
+                    return null;
+            }
+            else
+                return null;
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return props;
+    }
 }
