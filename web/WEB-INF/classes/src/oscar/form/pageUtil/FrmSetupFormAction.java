@@ -382,7 +382,7 @@ public final class FrmSetupFormAction extends Action {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
             //get last value and its observation date                
             String sqlData = "SELECT dataField, dateEntered FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
-                             + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered limit 1";
+                             + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC limit 1";
 
             ResultSet rs = db.GetSQL(sqlData);
             if(rs.next()){
