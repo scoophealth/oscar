@@ -1253,8 +1253,14 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
 </tr>
 </table>
 
-<br>
-<br>
+<table width="100%" border="0"  cellspacing="0" cellpadding="0">
+<tr>
+  <td>
+    <textarea name="pg1_summary" style="width:100%" cols="100" rows="3" @oscar.formDB dbType="text" > <%= props.getProperty("pg1_summary", "") %> </textarea>
+  </td>
+</tr>
+</table>
+
 <table width="100%" border="0"  cellspacing="0" cellpadding="0">
 <tr>
   <td width="60%"></td>

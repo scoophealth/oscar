@@ -238,4 +238,5 @@ pg1_disCSect	: left, 545, 661, 0, BaseFont.HELVETICA, 8  , X
 
   pg1_sumBloodTran	: left, 100, 725, 0, BaseFont.HELVETICA, 8  , X
   pg1_sumSerumScr	: left, 385, 725, 0, BaseFont.HELVETICA, 8  , X
+  pg1_summary	: left, 50, 730, 0, BaseFont.HELVETICA, 8  , _, 578, 765, 10
   pg1_signature	: left, 436, 765, 0, BaseFont.HELVETICA, 8 
