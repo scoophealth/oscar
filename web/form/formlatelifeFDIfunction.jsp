@@ -435,7 +435,7 @@
     }
 
     function calculateScore(){
-        var nbElements = document.forms[0].elements.length;        
+        var nbElements = document.forms[0].elements.length - 45;        
         var element;
         var score = 0;
         for(var i=6; i<nbElements; i++){
