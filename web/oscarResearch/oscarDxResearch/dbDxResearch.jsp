@@ -44,7 +44,7 @@
     {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
     {"save_bill", "insert into billing (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"search_billing_no", "select billing_no from billing where demographic_no=?  order by update_date desc, update_time desc limit 1 offset 0"},
-     {"search_billing_no_by_appt", "select max(billing_no) billing_no from billing where status <> 'D' and demographic_no=? and appointment_no=?  order by update_date desc, update_time desc limit 1 offset 0"},
+     {"search_billing_no_by_appt", "select max(billing_no) as billing_no from billing where status <> 'D' and demographic_no=? and appointment_no=?  order by update_date desc, update_time desc limit 1 offset 0"},
     {"search_bill_location", "select * from clinic_location where clinic_no=1 and clinic_location_no=?"},    
     {"search_clinic_location", "select * from clinic_location where clinic_no=? order by clinic_location_no"},  
     {"search_bill_center", "select * from billcenter where billcenter_desc like ?"},    
