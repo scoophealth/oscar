@@ -103,19 +103,7 @@
             </var>         
          </field> 
          </form>
-         
-         <form name="EctDefineNewMeasurementGroupForm">
-         <field
-            property="groupName"
-            depends="required, mask">
-            <arg0 key="oscarEncounter.Measurements.msgGroupName"/>                                    
-            <msg name="mask" key="error.oscarEncounter.Measurements.invalidCharacter"/>                            
-            <var>
-                <var-name>mask</var-name>
-                <var-value>^[0-9A-Za-z]*$</var-value>
-            </var>         
-         </field> 
-         </form>
+                  
     </formset>    
 </form-validation>
 
