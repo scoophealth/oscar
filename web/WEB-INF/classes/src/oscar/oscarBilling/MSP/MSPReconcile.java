@@ -213,8 +213,7 @@ public class MSPReconcile{
         billSearch.list = new ArrayList();
         billSearch.count = 0;
         billSearch.justBillingMaster = new ArrayList();
-
-        System.out.println("\n"+p+"\n");
+        
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet  rs = db.GetSQL(p);
