@@ -59,10 +59,6 @@ public class EctIncomingEncounterAction extends Action {
                     bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean") ;
                     bean.setUpEncounterPage(request.getParameter("appointmentNo"));
                     bean.template = "";
-            } else if(request.getParameter("insertTemplate")!=null){
-            //Coming in from the insert template select box
-                    bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean") ;
-                    bean.template = (String)bean.templateValues.get(Integer.parseInt(request.getParameter("templateNo")));
             } else if(request.getParameter("demographicSearch")!=null){
             //Coming in from the demographicSearch page
                     bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean") ;
