@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<config>
+    <table name="Demographic Info" 
+    sqlFrom="demographic LEFT JOIN provider ON demographic.provider_no = provider.provider_no"
+    sqlLink="demographic.demographic_no">
+        <item name="Patient" sql="demographic.demographic_no" removable="false">
+            <fld name="Name" sql="CONCAT(demographic.last_name, ', ', demographic.first_name)"/>
+            <fld name="Address" sql="demographic.address"/>
+            <fld name="City" sql="demographic.city"/>
+            <fld name="Province" sql="demographic.province"/>
+            <fld name="Postal" sql="demographic.postal"/>
+            <fld name="Phone" sql="demographic.phone"/>
+            <fld name="Phone2" sql="demographic.phone2"/>
+            <fld name="DOB" sql="CONCAT(demographic.year_of_birth, '-', demographic.month_of_birth, '-', demographic.date_of_birth)"/>
+            <fld name="HIN" sql="demographic.hin"/>
+            <fld name="Provider" sql="CONCAT(provider.last_name, ', ', provider.first_name)"/>
+        </item>
+    </table>
+    <table name="Prescription Info"
+    sqlFrom="drugs LEFT JOIN provider ON drugs.provider_no = provider.provider_no"
+    sqlLink="drugs.demographic_no" sqlWhere="archived=0" sqlOrder="rx_date DESC">
+        <item name="Prescription" sql="rx_date">
+            <fld name="Provider" sql="CONCAT(provider.last_name, ', ', provider.first_name)"/>
+            <fld name="Rx Date" sql="rx_date"/>
+            <fld name="Brand Name" sql="BN"/>
+            <fld name="Take" sql="CONCAT(takemin, ' to ', takemax)"/>
+            <fld name="Frequency" sql="freqcode"/>
+            <fld name="Duration" sql="CONCAT(duration, ' ', durunit)"/>
+            <fld name="Quantity" sql="quantity"/>
+            <fld name="Repeats" sql="repeat"/>
+            <fld name="Nosubs" sql="nosubs"/>
+            <fld name="PRN" sql="prn"/>
+            <fld name="Special Instructions" sql="special"/>
+        </item>
+    </table>
+    <table name="Drug Allergies"
+    sqlFrom="allergies"
+    sqlLink="allergies.demographic_no" sqlOrder="DESCRIPTION">
+        <item name="Allergy" sql="DESCRIPTION">
+            <fld name="Entry Date" sql="entry_date"/>
+            <fld name="Description" sql="DESCRIPTION"/>
+            <fld name="Allergy Type" sql="ELT(TYPECODE, 'Brand Name', 'Generic Name', 'Ingredient', 'Allergy Group', 'Cross-Sensitive Allergy Group')"/>
+        </item>
+    </table>
+    <table name="AR Form"
+    sqlFrom="formAR"
+    sqlLink="formAR.demographic_no" sqlOrder="formEdited desc, ID desc">
+        <item name="AR" sql="formAR.formEdited">
+            <fld name="Provider ID" sql="provider_no"/>
+            <fld name="Form Created Date" sql="formCreated"/>
+            <fld name="Patient Name" sql="c_pName"/>
+            <fld name="Patient Address" sql="c_address"/>
+        </item>
+    </table>
+    <table name="Encounter Info"
+    sqlFrom="eChart"
+    sqlLink="eChart.demographicNo" sqlOrder="timeStamp desc limit 1">
+        <item name="Encounter" sql="eChart.eChartId" removable="false">
+            <fld name="Patient No" sql="demographicNo"/>
+            <fld name="Encounter" sql="encounter"/>
+            <fld name="Provider ID" sql="providerNo"/>
+            <fld name="Time Stamp" sql="timeStamp"/>
+        </item>
+    </table>
+</config>
