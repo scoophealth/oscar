@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,17 +22,34 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
-<%@ page language="java" contentType="text/html" %>
+<%@ page language="java" contentType="text/html" import="oscar.OscarProperties, oscar.util.BuildInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
+<%
+    String propFile = request.getContextPath().substring(1)+".properties";
+    String sep = System.getProperty("file.separator");
+    String propFileName = System.getProperty("user.home")+sep+propFile;
+    OscarProperties props = OscarProperties.getInstance();
+    props.loader(propFileName);
+
+    BuildInfo buildInfo = BuildInfo.getInstance();
+    String buildDate = buildInfo.getBuildDate();
+%>
+
 <html:html locale="true">
 <head>
   <html:base/>
-  <title><bean:message key="loginApplication.title"/></title>
+  <title>
+  <% if (props.getProperty("logintitle", "").equals("")) { %>
+    <bean:message key="loginApplication.title"/>
+  <% } else { %>
+    <%= props.getProperty("logintitle", "")%>    
+  <% } %>
+  </title>
   <!--LINK REL="StyleSheet" HREF="web.css" TYPE="text/css"-->
 
   <script language="JavaScript">
@@ -52,7 +69,7 @@
 
 <body onLoad="setfocus()" bgcolor="#ffffff">
 <table border="0" width="100%">
-<tr><td width="200" bgcolor="#f5fffa">
+<tr><td width="200" bgcolor="#f5fffa" valign="top">
 <!--left column-->
   <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr bgcolor="#486ebd"> 
@@ -112,16 +129,33 @@
 
 </td>
     <td align="center"> 
-      <!--right column-->
-      <table border=0 width='100%'>
-      <tr bgcolor='gold'><td>
-      <h2><bean:message key="loginApplication.alert"/></h2>
+      <!--right column-->            
+      <table border=0 width='100%' cellpadding="3">      
+      <tr><td align="right">
+          <font size="-2" color="#C0C0C0">build date: <%= buildDate %></font>
+      </td></tr>      
+      <tr bgcolor='gold'><td>      
+      <center><font size="+1"><b><%=props.getProperty("logintitle", "")%>
+      <% if (props.getProperty("logintitle", "").equals("")) { %>
+          <bean:message key="loginApplication.alert"/>
+      <% } %>
+      </b></font></center>
       </td></tr></table>
-      <center>
+      <br>
+      <center>        
         <b>
-        <html:img srcKey="loginApplication.image.logo" width="450" height="274"/><br>
+        <% if (props.getProperty("loginlogo", "").equals("")) { %>
+            <html:img srcKey="loginApplication.image.logo" width="450" height="274"/>
+        <% } else { %>
+            <img src="<%=props.getProperty("loginlogo", "")%>">
+        <% } %>
+        <p>
         <font face="Verdana, Arial, Helvetica, sans-serif" size="-1">
-        <bean:message key="loginApplication.image.logoText"/>
+        <% if (props.getProperty("logintext", "").equals("")) { %>
+            <bean:message key="loginApplication.image.logoText"/>
+        <% } else { %>
+            <%=props.getProperty("logintext", "")%>
+        <% } %>
         </font></b>
       </center>
     </td>
