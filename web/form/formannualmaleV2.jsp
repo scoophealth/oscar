@@ -199,9 +199,7 @@ var maxYear=3100;
         if(valDate(document.forms[0].formDate)==false){
             b = false;
         }
-        if(valDate(document.forms[0].lmp)==false){
-            b = false;
-	}
+        
 
         return b;
 
