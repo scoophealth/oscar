@@ -103,9 +103,10 @@
     String[] paramWLChk = new String[2];
     paramWLChk[0] = request.getParameter("demographic_no");
     paramWLChk[1] = request.getParameter("list_id");    
-    //check if patient has already added to the waiting list
+    //check if patient has already added to the waiting list and check if the patient already has an appointment in the future
     rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
-    if(!rs.next()){
+    ResultSet rsfa = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_future_appt");
+    if(!rs.next() || rsfa.next()){
         String[] paramWLPosition = new String[1];
         paramWLPosition[0] = request.getParameter("list_id");
         if(paramWLPosition[0].compareTo("")!=0){
