@@ -31,35 +31,43 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
-<html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
-<head>
-    <title>Antenatal Record 1</title>
-    <link rel="stylesheet" type="text/css" href="arStyle.css">
-    <html:base/>
-</head>
-
 <%
-	String formClass = "AR";
-	String formLink = "formarpg1.jsp";
+    String formClass = "AR";
+    String formLink = "formarpg1.jsp";
 
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
-	int provNo = Integer.parseInt((String) session.getAttribute("user"));
-	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
+    int provNo = Integer.parseInt((String) session.getAttribute("user"));
+    FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
 
     FrmData fd = new FrmData();
     String resource = fd.getResource();
     resource = resource + "ob/riskinfo/";
     props.setProperty("c_lastVisited", "pg1");
+
+    //get project_home
+    String project_home = request.getContextPath().substring(1);    
 %>
+<%
+  boolean bView = false;
+  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+%>
+
+<html:html locale="true">
+<% response.setHeader("Cache-Control","no-cache");%>
+
+<head>
+    <title>Antenatal Record 1</title>
+    <link rel="stylesheet" type="text/css" href="<%=bView?"arStyleView.css" : "arStyle.css"%>">
+    <html:base/>
+</head>
 
 <script type="text/javascript" language="Javascript">
 
     function reset() {
         document.forms[0].target = "apptProviderSearch";
-        document.forms[0].action = "/<%=oscarVariables.getProperty("project_home")%>/form/formname.do" ;
+        document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
 	}
     function onPrint() {
         document.forms[0].submit.value="print"; //printAR1
@@ -110,11 +118,20 @@
             popup.opener = self;
         }
     }
-function popupFixedPage(vheight,vwidth,varpage) { 
-  var page = "" + varpage;
-  windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
-  var popup=window.open(page, "planner", windowprop);
-}
+    function popPage(varpage,pageName) {
+        windowprops = "height=700,width=960"+
+            ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
+        var popup = window.open(varpage,pageName, windowprops);
+        //if (popup.opener == null) {
+        //    popup.opener = self;
+        //}
+        popup.focus();
+    }
+    function popupFixedPage(vheight,vwidth,varpage) { 
+       var page = "" + varpage;
+       windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
+       var popup=window.open(page, "planner", windowprop);
+    }
 
 /**
  * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
@@ -262,10 +279,6 @@ var maxYear=9900;
 <input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
 <input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" />
 <input type="hidden" name="submit" value="exit"/>
-<%
-  boolean bView = false;
-  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
-%>
 
 <table class="Head" class="hidePrint">
     <tr>
@@ -284,6 +297,10 @@ var maxYear=9900;
 <%
   if (!bView) {
 %>
+         <td>
+           <a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+        </td>
+
         <td align="right"><b>View:</b> 
             <a href="javascript: popupPage('formarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.1)</font></a> |
             <a href="javascript: popupPage('formarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.2)</font></a>
@@ -302,7 +319,12 @@ var maxYear=9900;
 
 <table class="title" border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr>
-        <th>ANTENATAL RECORD 1</th>
+        <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>ANTENATAL RECORD 1</th>
+<%
+	if (request.getParameter("historyet") != null) {
+		out.println("<input type=\"hidden\" name=\"historyet\" value=\"" + request.getParameter("historyet") + "\">" );
+	}
+%>
     </tr>
 </table>
 <table width="60%" border="1"  cellspacing="0" cellpadding="0">
@@ -1074,6 +1096,9 @@ var maxYear=9900;
 <%
   if (!bView) {
 %>
+       <td>
+           <a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+        </td>
         <td align="right"><b>View:</b> 
             <a href="javascript: popupPage('formarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.1)</font></a> |
             <a href="javascript: popupPage('formarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.2)</font></a>

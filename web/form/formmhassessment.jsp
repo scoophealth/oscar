@@ -48,8 +48,9 @@
 	int provNo = Integer.parseInt((String) session.getAttribute("user"));
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
-
+    if ( formId ==0 ){
 	props = ((FrmMentalHealthRecord) rec).getFormCustRecord(props, provNo);
+    }
     oscar.oscarEncounter.util.EctFileUtil list = new oscar.oscarEncounter.util.EctFileUtil();
     props.setProperty("c_lastVisited", "assessment");
 

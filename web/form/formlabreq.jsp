@@ -53,6 +53,16 @@
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
 
 	props = ((FrmLabReqRecord) rec).getFormCustRecord(props, provNo);
+
+    if (request.getParameter("labType") != null){
+        if (formId == 0 ){
+           String labPreSet = request.getParameter("labType");
+           props = FrmLabReqPreSet.set(labPreSet,props);
+           //System.out.println(props.toString());
+        }
+    }
+
+
 %>
 
 <script type="text/javascript" language="Javascript">

@@ -77,6 +77,14 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 ff(750,10,50,20,'<span class="title"><a href="javascript: window.print();">Print</a></span>' );
 //<!--ff(750,40,50,20,'<span class="title"><a href="formAR.jsp?demographic_no=&formId=&provNo=">Cancel</a></span>' );-->
 ff(750,40,50,20,'<span class="title"><a href=# onClick="window.close()">Cancel</a></span>' );
+<%
+	if (request.getParameter("historyet") != null) {
+%>
+		ff(750,70,50,20,'<span class="title"><a href="formarpg1sendoc.jsp?formId=<%=request.getParameter("formId")%>&demographic_no=<%=request.getParameter("demographic_no") %>" >Send</a></span>' );
+<%
+	}
+%>
+
 ff(192,0,300,20,'<span class="title">Antenatal Record 1</span>' );
 ff(8,68,100,20,'<span class="tdname">Name</span>' );
 ff(8,90,100,20,'<span class="tdname">Address</span>' );
@@ -128,7 +136,7 @@ ff(13,175,20,20,"<%= props.getProperty("pg1_baObs", "").equals("")?"":"X"  %>" )
 ff(55,175,20,20,"<%= props.getProperty("pg1_baFP", "").equals("")?"":"X" %>" );
 ff(90,175,20,20,"<%= props.getProperty("pg1_baMidwife", "").equals("")?"":"X" %>" );
 ff(10,195,200,20,"<%= UtilMisc.JSEscape(props.getProperty("c_ba", "")) %>" );
-ff(150,175,200,100,"<%= UtilMisc.JSEscape(props.getProperty("pg1_famPhys", "")) %>" );
+ff(150,175,200,100,"<%= UtilMisc.JSEscape(props.getProperty("pg1_famPhys", "")).replace('\r', ' ') %>" );
 ff(324,175,20,20,"<%= props.getProperty("pg1_ncPed", "").equals("")?"":"X" %>" );
 ff(365,175,20,20,"<%= props.getProperty("pg1_ncFP", "").equals("")?"":"X" %>" );
 ff(400,175,20,20,"<%= props.getProperty("pg1_ncMidwife", "").equals("")?"":"X" %>" );

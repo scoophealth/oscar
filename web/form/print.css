@@ -1,8 +1,13 @@
+*
+{
+    font-size: 8pt;
+}
+
 BODY
 {
     background-color: white;
     color: black;
-    width:300pt;
+    width: 300pt;
 }
 
 BODY A

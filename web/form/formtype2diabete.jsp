@@ -38,8 +38,8 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
 <title>Type 2 Diabetes Record</title>
-<link rel="stylesheet" type="text/css" href="../../oscarEncounter/styles.css"/>
-<link rel="stylesheet" type="text/css" media="print" href="../../oscarEncounter/print.css"/>
+<link rel="stylesheet" type="text/css" href="styles.css"/>
+<link rel="stylesheet" type="text/css" media="print" href="print.css"/>
 <html:base/>
 </head>
 
@@ -484,24 +484,24 @@ function checkAllDates()
                 </tr>
                 <tr>
                     <td>1. METFORMIN</td>
-                    <td><input type="checkbox" name="metformin" <%= props.getProperty("metformin", "") %> /></td>
+                    <td><input type="checkbox" name="metformin" <%= props.getProperty("metformin", "") %>></td>
                     <td>5. ACE INHIBITOR</td>
-                    <td nowrap="true"><input type="checkbox" name="aceInhibitor" <%= props.getProperty("aceInhibitor", "") %> />*</td>
+                    <td nowrap="true"><input type="checkbox" name="aceInhibitor" <%= props.getProperty("aceInhibitor", "") %>>*</td>
                 </tr>
                 <tr>
                     <td>2. GLYBURIDE</td>
-                    <td><input type="checkbox" name="glyburide" <%= props.getProperty("glyburide", "") %> /></td>
+                    <td><input type="checkbox" name="glyburide" <%= props.getProperty("glyburide", "") %>></td>
                     <td>6. ASA &gt;30 YR</td>
-                    <td align="left"><input type="checkbox" name="asa" <%= props.getProperty("asa", "") %> /></td>
+                    <td align="left"><input type="checkbox" name="asa" <%= props.getProperty("asa", "") %>></td>
                 </tr>
                 <tr>
                     <td>3. OTHER OHA</td>
-                    <td><input type="checkbox" name="otherOha" <%= props.getProperty("otherOha", "") %> /></td>
+                    <td><input type="checkbox" name="otherOha" <%= props.getProperty("otherOha", "") %>></td>
                     <td colspan="2">7. <input type="text" class="Type2DiabetesInput" name="otherBox7" value="<%= props.getProperty("otherBox7", "") %>" /></td>
                 </tr>
                 <tr>
                     <td>4. INSULIN</td>
-                    <td><input type="checkbox" name="insulin" <%= props.getProperty("insulin", "") %> /></td>
+                    <td><input type="checkbox" name="insulin" <%= props.getProperty("insulin", "") %>></td>
                     <td colspan="2">8. <input type="text" class="Type2DiabetesInput" name="otherBox8" value="<%= props.getProperty("otherBox8", "") %>" /></td>
                 </tr>
             </table>

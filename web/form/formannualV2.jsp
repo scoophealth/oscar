@@ -25,25 +25,23 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*" %>
+<%@ page import="oscar.oscarEncounter.data.EctPatientData" %>
 
 <%
-    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
+    String demoNo = request.getParameter("demographic_no");
     int formId = Integer.parseInt(request.getParameter("formId"));
     //int provNo = Integer.parseInt(request.getParameter("provNo"));
 
-	if(true) {
-        out.clear();
-		if (formId == 0) {
-			pageContext.forward("formrourkep1.jsp?demographic_no=" + demoNo + "&formId=" + formId) ; 
- 		} else {
-			FrmRecord rec = (new FrmRecordFactory()).factory("Rourke");
-			java.util.Properties props = rec.getFormRecord(demoNo, formId);
+	EctPatientData.Patient p = new EctPatientData().getPatient(demoNo);
+    String s = p.getSex();
+    //System.out.println("loading ann health formId"+formId+" prov no = "+provNo+" sex = "+s);
 
-			String pageNum = props.getProperty("c_lastVisited", "p1"); //'p1'
-			pageContext.forward("formrourke" + pageNum
-				+ ".jsp?demographic_no=" + demoNo + "&formId=" + formId) ;
-		}
+    if(true) {
+        out.clear();
+		if (s.equals("F")) 
+			pageContext.forward("formannualfemaleV2.jsp?demographic_no=" + demoNo + "&formId=" + formId) ; // request.getParameter("form_link") + "?demographic_no=" + request.getParameter("demographic_no") ); //+ "&study_no=" + request.getParameter("study_no") ); //forward request&response to the target page "&formId=" + request.getParameter("formId") + 
+		else 
+			pageContext.forward("formannualmaleV2.jsp?demographic_no=" + demoNo + "&formId=" + formId) ;
 
 		return;
     }

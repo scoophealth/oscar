@@ -19,11 +19,7 @@
     //FrmData fd = new FrmData();    String resource = fd.getResource(); resource = resource + "ob/riskinfo/";
 
 	//get project_home
-	String project_home = getServletContext().getRealPath("/") ;
-	String sep = project_home.substring(project_home.length()-1);
-	project_home = project_home.substring(0, project_home.length()-1) ;
-	project_home = project_home.substring(project_home.lastIndexOf(sep)+1) ;
-	//System.out.println(project_home);
+	String project_home = request.getContextPath().substring(1);	
 %>
 <%
   boolean bView = false;

@@ -38,6 +38,7 @@
 <html:base/>
 <link rel="stylesheet" type="text/css" media="screen" href="mhStyles.css" >
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
+<script type="text/javascript" language="Javascript">
 
 <%
 	String formClass = "MentalHealth";
@@ -48,16 +49,19 @@
 	int provNo = Integer.parseInt((String) session.getAttribute("user"));
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
-
-	props = ((FrmMentalHealthRecord) rec).getFormCustRecord(props, provNo);
+    if ( formId ==0 ){
+		props = ((FrmMentalHealthRecord) rec).getFormCustRecord(props, provNo);
+    }
     oscar.oscarEncounter.util.EctFileUtil list = new oscar.oscarEncounter.util.EctFileUtil();
     props.setProperty("c_lastVisited", "referral");
 
     String projecthome = oscarVariables.getProperty("project_home");
     String path = "form/dataFiles";
-%>
 
-<script type="text/javascript" language="Javascript">
+	if (props.getProperty("demo_roster_status")!=null && !props.getProperty("demo_roster_status").equalsIgnoreCase("RO")) 
+		out.println("alert(\"Only rostered patients can be referred to Social Worker.\\n(Roster Status: \\\"" + props.getProperty("demo_roster_status") + "\\\")\");");
+%>
+	
 	function popupFixedPage(vheight,vwidth,varpage) { 
 		var page = "" + varpage;
 		windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";

@@ -1,4 +1,4 @@
-<%--  
+<%--
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -31,34 +31,41 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
-<html:html locale="true">
-<% response.setHeader("Cache-Control","no-cache");%>
-<head>
-    <title>Antenatal Record 2</title>
-    <html:base/>
-    <link rel="stylesheet" type="text/css" href="arStyle.css">
-</head>
-
 <%
-	String formClass = "AR";
-	String formLink = "formarpg2.jsp";
+    String formClass = "AR";
+    String formLink = "formarpg2.jsp";
 
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
-	int provNo = Integer.parseInt((String) session.getAttribute("user"));
-	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
+    int provNo = Integer.parseInt((String) session.getAttribute("user"));
+    FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
 
     FrmData fd = new FrmData();
     String resource = fd.getResource();
     resource = resource + "ob/riskinfo/";
     props.setProperty("c_lastVisited", "pg2");
+
+    //get project_home
+    String project_home = request.getContextPath().substring(1);    
 %>
+<%
+  boolean bView = false;
+  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+%>
+
+<html:html locale="true">
+<% response.setHeader("Cache-Control","no-cache");%>
+<head>
+    <title>Antenatal Record 2</title>
+    <html:base/>
+    <link rel="stylesheet" type="text/css" href="<%=bView?"arStyleView.css" : "arStyle.css"%>">
+</head>
 
 <script type="text/javascript" language="Javascript">
     function reset() {
         document.forms[0].target = "apptProviderSearch";
-        document.forms[0].action = "/<%=oscarVariables.getProperty("project_home")%>/form/formname.do" ;
+        document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
 	}
     function onPrint() {
         document.forms[0].submit.value="print"; //printAR1
@@ -73,6 +80,131 @@
             document.forms[0].target="apptProviderSearch";
         }
        return ret;
+    }
+
+    function getFormEntity(name) {
+		if (name.value.length>0) {
+			return true;
+		} else {
+			return false;
+		}
+		/*
+		for (var j=0; j<document.forms[0].length; j++) { 
+				if (document.forms[0].elements[j] != null && document.forms[0].elements[j].name ==  name ) {
+					 return document.forms[0].elements[j] ;
+				}
+		}*/
+    }
+    function onWtSVG() {
+        var ret = checkAllDates();
+		var param="";
+		var obj = null;
+		if (document.forms[0].c_finalEDB != null && (document.forms[0].c_finalEDB.value).length==10) {
+			param += "?c_finalEDB=" + document.forms[0].c_finalEDB.value;
+		} else {
+			ret = false;
+		}
+		if (document.forms[0].c_ppWt != null && (document.forms[0].c_ppWt.value).length>0) {
+			param += "&c_ppWt=" + document.forms[0].c_ppWt.value;
+		} else {
+			ret = false;
+		}
+
+		obj = document.forms[0].pg2_date1;
+		if (getFormEntity(obj))  param += "&pg2_date1=" + obj.value; 
+		obj = document.forms[0].pg2_date2;
+		if (getFormEntity(obj))  param += "&pg2_date2=" + obj.value; 
+		obj = document.forms[0].pg2_date3;
+		if (getFormEntity(obj))  param += "&pg2_date3=" + obj.value; 
+		obj = document.forms[0].pg2_date4;
+		if (getFormEntity(obj))  param += "&pg2_date4=" + obj.value; 
+		obj = document.forms[0].pg2_date5;
+		if (getFormEntity(obj))  param += "&pg2_date5=" + obj.value; 
+		obj = document.forms[0].pg2_date6;
+		if (getFormEntity(obj))  param += "&pg2_date6=" + obj.value; 
+		obj = document.forms[0].pg2_date7;
+		if (getFormEntity(obj))  param += "&pg2_date7=" + obj.value; 
+		obj = document.forms[0].pg2_date8;
+		if (getFormEntity(obj))  param += "&pg2_date8=" + obj.value; 
+		obj = document.forms[0].pg2_date9;
+		if (getFormEntity(obj))  param += "&pg2_date9=" + obj.value; 
+		obj = document.forms[0].pg2_date10;
+		if (getFormEntity(obj))  param += "&pg2_date10=" + obj.value; 
+		obj = document.forms[0].pg2_date11;
+		if (getFormEntity(obj))  param += "&pg2_date11=" + obj.value; 
+		obj = document.forms[0].pg2_date12;
+		if (getFormEntity(obj))  param += "&pg2_date12=" + obj.value; 
+		obj = document.forms[0].pg2_date13;
+		if (getFormEntity(obj))  param += "&pg2_date13=" + obj.value; 
+		obj = document.forms[0].pg2_date14;
+		if (getFormEntity(obj))  param += "&pg2_date14=" + obj.value; 
+		obj = document.forms[0].pg2_date15;
+		if (getFormEntity(obj))  param += "&pg2_date15=" + obj.value; 
+		obj = document.forms[0].pg2_date16;
+		if (getFormEntity(obj))  param += "&pg2_date16=" + obj.value; 
+		obj = document.forms[0].pg2_date17;
+		if (getFormEntity(obj))  param += "&pg2_date17=" + obj.value; 
+		obj = document.forms[0].pg2_wt1;
+		if (getFormEntity(obj))  param += "&pg2_wt1=" + obj.value; 
+		obj = document.forms[0].pg2_wt2;
+		if (getFormEntity(obj))  param += "&pg2_wt2=" + obj.value; 
+		obj = document.forms[0].pg2_wt3;
+		if (getFormEntity(obj))  param += "&pg2_wt3=" + obj.value; 
+		obj = document.forms[0].pg2_wt4;
+		if (getFormEntity(obj))  param += "&pg2_wt4=" + obj.value; 
+		obj = document.forms[0].pg2_wt5;
+		if (getFormEntity(obj))  param += "&pg2_wt5=" + obj.value; 
+		obj = document.forms[0].pg2_wt6;
+		if (getFormEntity(obj))  param += "&pg2_wt6=" + obj.value; 
+		obj = document.forms[0].pg2_wt7;
+		if (getFormEntity(obj))  param += "&pg2_wt7=" + obj.value; 
+		obj = document.forms[0].pg2_wt8;
+		if (getFormEntity(obj))  param += "&pg2_wt8=" + obj.value; 
+		obj = document.forms[0].pg2_wt9;
+		if (getFormEntity(obj))  param += "&pg2_wt9=" + obj.value; 
+		obj = document.forms[0].pg2_wt10;
+		if (getFormEntity(obj))  param += "&pg2_wt10=" + obj.value; 
+		obj = document.forms[0].pg2_wt11;
+		if (getFormEntity(obj))  param += "&pg2_wt11=" + obj.value; 
+		obj = document.forms[0].pg2_wt12;
+		if (getFormEntity(obj))  param += "&pg2_wt12=" + obj.value; 
+		obj = document.forms[0].pg2_wt13;
+		if (getFormEntity(obj))  param += "&pg2_wt13=" + obj.value; 
+		obj = document.forms[0].pg2_wt14;
+		if (getFormEntity(obj))  param += "&pg2_wt14=" + obj.value; 
+		obj = document.forms[0].pg2_wt15;
+		if (getFormEntity(obj))  param += "&pg2_wt15=" + obj.value; 
+		obj = document.forms[0].pg2_wt16;
+		if (getFormEntity(obj))  param += "&pg2_wt16=" + obj.value; 
+		obj = document.forms[0].pg2_wt17;
+		if (getFormEntity(obj))  param += "&pg2_wt17=" + obj.value; 
+/*
+		for (var i = 1; i < 18; i++) {
+				getFormEntity(("pg2_date"+i)) ;
+			if (obj != null && (obj.value).length>0) {
+				param += "&pg2_date" + i + "=" + obj.value;
+			}
+			obj = getFormEntity(("pg2_wt"+i)) ;
+			if (obj != null && (obj.value).length>0) {
+				param += "&pg2_wt" + i + "=" + obj.value;
+			}
+		}
+		for (var i = 18; i < 35; i++) {
+			var obj = getFormEntity(("pg3_date"+i)) ;
+			if (obj != null && (obj.value).length>0) {
+				param += "&pg3_date" + i + "=" + obj.value;
+			}
+			obj = getFormEntity(("pg3_wt"+i)) ;
+			if (obj != null && (obj.value).length>0) {
+				param += "&pg3_wt" + i + "=" + obj.value;
+			}
+		}
+*/
+
+        if(ret==true)  {
+            popupFixedPage(650,850,'formar2wt.jsp'+param);
+        }
+
     }
     function onSave() {
         document.forms[0].submit.value="save";
@@ -106,6 +238,16 @@
             popup.opener = self;
         }
     }
+    function popPage(varpage,pageName) {
+        windowprops = "height=700,width=960"+
+            ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
+        var popup = window.open(varpage,pageName, windowprops);
+        //if (popup.opener == null) {
+        //    popup.opener = self;
+        //}
+        popup.focus();
+    }
+
 function popupFixedPage(vheight,vwidth,varpage) { 
   var page = "" + varpage;
   windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
@@ -349,6 +491,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <html:form action="/form/formname">
 
+<input type="hidden" name="commonField" value="ar2_" />
 <input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "pg2")%> />
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
@@ -360,8 +503,11 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 <input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" />
 <input type="hidden" name="submit" value="exit"/>
 <%
-  boolean bView = false;
-  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+	String historyet = "";
+	if (request.getParameter("historyet") != null) {
+		out.println("<input type=\"hidden\" name=\"historyet\" value=\"" + request.getParameter("historyet") + "\">" );
+		historyet = "&historyet=" + request.getParameter("historyet");
+	}
 %>
 
 <table class="Head" class="hidePrint">
@@ -378,12 +524,17 @@ if (!fedb.equals("") && fedb.length()==10 ) {
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
         </td>
+
 <%
   if (!bView) {
-%>
+%> 
+        <td>
+           <a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+        </td>
+
         <td align="right"><b>View:</b>
-            <a href="javascript: popupPage('formarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');"> AR1</a> |
-            <a href="javascript: popupPage('formarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.2)</font></a>
+            <a href="javascript: popupPage('formarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');"> AR1</a> |
+            <a href="javascript: popupPage('formarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">AR2 <font size=-2>(pg.2)</font></a>
         </td>
         <td align="right"><b>Edit:</b>
             <a href="formarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a> |
@@ -399,7 +550,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 
 <table class="title" border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr>
-        <th>ANTENATAL RECORD 2 (page 1)</th>
+        <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>ANTENATAL RECORD 2 (page 1)</th>
     </tr>
 </table>
 <table width="60%" border="1"  cellspacing="0" cellpadding="0">
@@ -498,7 +649,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
         <td width="11%">Date<br>(yyyy/mm/dd)</td>
         <td width="7%">G-age<br>wk. </td>
         <td width="7%">S-F<br>Ht. </td>
-        <td width="7%">Wt.<br>(lb/K)</td>
+        <td width="7%"><a href=# onclick="javascript:onWtSVG(); return false;">Wt.<br>(Kg)</a></td>
         <td width="7%">Presn<br>Posn. </td>
         <td width="7%">FHR/Fm</td>
         <td  width="6%" colspan="2">
@@ -895,6 +1046,10 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 <%
   if (!bView) {
 %>
+        <td>
+            <a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+        </td>
+
         <td align="right"><b>View:</b>
             <a href="javascript: popupPage('formarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');"> AR1</a> |
             <a href="javascript: popupPage('formarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.2)</font></a>
