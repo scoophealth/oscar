@@ -577,7 +577,7 @@ function clearAll(yRadio, nRadio){
                                             <td colspan="2">
                                                 <table width="95%">
                                                     <tr>
-                                                        <td width="30%">
+                                                        <td width="25%">
                                                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
                                                         </td>
                                                         <td>
