@@ -87,18 +87,36 @@ function onButDelete() {
 function onButUpdate() {
   saveTemp=2;
 }
+
+function onButCancel(){
+   var aptStat = document.EDITAPPT.status.value;    
+   if (aptStat.indexOf('B') == 0){
+       var agree = confirm("<bean:message key="appointment.editappointment.msgCanceledBilledConfirmation"/>") ; 
+       if (agree){
+          window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>';
+       }              
+   }
+}
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
 }
 function onSub() {
   if( saveTemp==1 ) {
-    return (confirm("<bean:message key="appointment.editappointment.msgDeleteConfirmation"/>")) ; 
+    var aptStat = document.EDITAPPT.status.value;    
+    if (aptStat.indexOf('B') == 0){
+       return (confirm("<bean:message key="appointment.editappointment.msgDeleteBilledConfirmation"/>")) ; 
+    }else{
+       return (confirm("<bean:message key="appointment.editappointment.msgDeleteConfirmation"/>")) ; 
+    }
   } 
   if( saveTemp==2 ) {
     return calculateEndTime() ;
   } else 
       return true;
 }
+
+
+
 function calculateEndTime() {
   var stime = document.EDITAPPT.start_time.value;
   var vlen = stime.indexOf(':')==-1?1:2;
@@ -357,7 +375,7 @@ function checkTimeTypeIn(obj) {
 	<input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt'; onButUpdate();" value="<bean:message key="appointment.editappointment.btnUpdateAppointment"/>">
 	<input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Group Action'; onButUpdate();" value="<bean:message key="appointment.editappointment.btnGroupAction"/>">
 	<input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();" value = "<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">
-	<input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnCancelAppointment"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
+	<input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnCancelAppointment"/>" onClick="onButCancel();">
 	<input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnNoShow"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
 	</td>
 	<td align="right" nowrap> 
