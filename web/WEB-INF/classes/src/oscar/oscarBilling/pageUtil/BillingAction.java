@@ -29,6 +29,10 @@ public final class BillingAction extends Action {
         Locale locale = getLocale(request);
         MessageResources messages = getResources();
         
+        if(request.getSession().getAttribute("user") == null  ){
+            return (mapping.findForward("Logout"));
+        }
+        
         // Setup variables
         ActionErrors errors = new ActionErrors();
         oscar.oscarBilling.pageUtil.BillingSessionBean bean = null;
