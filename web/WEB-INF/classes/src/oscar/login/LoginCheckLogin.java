@@ -85,9 +85,11 @@ public class LoginCheckLogin {
            //This has been used to look in the users home directory that started tomcat 
            propFileName = System.getProperty("user.home")+sep+propFile;	   
            FileInputStream fis = new FileInputStream(propFileName) ;
-  	    
-            pvar.load(fis); 
-            fis.close();
+                      
+  	   oscar.OscarProperties p = oscar.OscarProperties.getInstance();   //Not the best but it works for now
+           p.loader(propFileName);
+           pvar.load(fis);                                            
+           fis.close();           
         } catch(Exception e) {
             System.out.println("*** No Property File ***");
             System.out.println("Property file not found at:");
