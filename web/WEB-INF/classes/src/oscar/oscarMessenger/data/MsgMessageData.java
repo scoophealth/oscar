@@ -111,10 +111,16 @@ public class MsgMessageData {
 
               rs = db.GetSQL(sql);
 
+              boolean first = true;
               while (rs.next()) {
-                sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name")+". ");
+                  if (!first) {
+                      sentToWho.append(", ");
+                  } else {
+                      first = false;
+                  }
+                  sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name"));
               }
-
+              sentToWho.append(".");
 
         rs.close();
         db.CloseConn();
@@ -160,10 +166,16 @@ public class MsgMessageData {
 
               rs = db.GetSQL(sql);
 
+              boolean first = true;
               while (rs.next()) {
-                sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name")+". ");
+                  if (!first) {
+                      sentToWho.append(", ");
+                  } else {
+                      first = false;
+                  }
+                  sentToWho.append(" "+rs.getString("first_name") +" " +rs.getString("last_name"));
               }
-
+              sentToWho.append(".");
 
         rs.close();
         db.CloseConn();
