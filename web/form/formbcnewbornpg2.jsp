@@ -8,7 +8,7 @@
 
 <%
 	String formClass = "BCNewBorn";
-	String formLink = "formbcnewbornpg1.jsp";
+	String formLink = "formbcnewbornpg2.jsp";
 
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
@@ -18,7 +18,7 @@
 
     FrmData fd = new FrmData();
     String resource = fd.getResource();
-    //resource = resource + "ob/riskinfo/";    props.setProperty("c_lastVisited", "pg1");
+    //resource = resource + "ob/riskinfo/";  props.setProperty("c_lastVisited", "pg2");
 
 	//get project_home
 	String project_home = getServletContext().getRealPath("/") ;
@@ -335,18 +335,9 @@ function onCheckSlave(a, masterName) {
 
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"  onLoad="setfocus()">
-<%--
-@oscar.formDB Table="formBCNewBorn" 
-@oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
-@oscar.formDB Field="demographic_no" Type="int(10)" Null="NOT NULL" Default="'0'" 
-@oscar.formDB Field="provider_no" Type="int(10)" Null="" Default="NULL" 
-@oscar.formDB Field="formCreated" Type="date" Null="" Default="NULL" 
-@oscar.formDB Field="formEdited" Type="timestamp"  
-@oscar.formDB Field="c_lastVisited" Type="char(3)" 
---%>
 
 <html:form action="/form/formname">
-<input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "pg1")%> />
+<input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "pg2")%> />
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
 <input type="hidden" name="form_class" value="<%=formClass%>" />
@@ -375,13 +366,14 @@ function onCheckSlave(a, masterName) {
 %>
 
         <td align="right"><b>View:</b> 
-            <a href="javascript: popupPage('formbcnewbornpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">Part2 <font size=-2>(pg.1)</font></a> |
-            <a href="javascript: popupPage('formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">Part2 <font size=-2>(pg.2)</font></a>
+            <a href="javascript: popupPage('formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part1 </a>
+            <a href="javascript: popupPage('formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part2 <font size=-2>(pg.2)</font></a> |
             &nbsp;
         </td>
-        <td align="right"><b>Edit:</b>Part1 |
-            <a href="formbcnewbornpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Part2 <font size=-2>(pg.1)</font></a> |
-            <a href="formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Part2 <font size=-2>(pg.2)</font></a> |
+        <td align="right"><b>Edit:</b>
+			<a href="formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>">Part1</a> |
+            Part2 <font size=-2>(pg.1)</font> |
+            <a href="formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>">Part2 <font size=-2>(pg.2)</font></a> |
         </td>
 <%
   }
@@ -396,13 +388,21 @@ function onCheckSlave(a, masterName) {
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
     <tr>
     <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
-	  British Columbia Newborn Record Part 1</th>
+	  British Columbia Newborn Record Part 2</th>
     </tr>
   </table>
 
   <table width="100%" border="1"  cellspacing="0" cellpadding="0">
     <tr>
-      <td width="60%"><b>1.</b> MOTHER'S NAME<br>
+      <td width="15%" nowrap><b>9.</b> DATE DONE<br>dd/mm/yyyy</td>
+	  <td rowspan="2" valign="bottom">
+	  <input type="checkbox" name="ar2_9Pku" <%= props.getProperty("ar2_9Pku", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
+	  PKU. TSH. GALACTOSEMIA
+
+
+
+
+
       <input type="text" name="c_motherName" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("c_motherName", "") %>" @oscar.formDB />
       </td>
 	  <td width="8%">AGE<br>
@@ -413,54 +413,6 @@ function onCheckSlave(a, masterName) {
     </tr>
   </table>
   
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="40%">SURNAME OF NEWBORN<br>
-      <input type="text" name="c_newBornSurname" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_newBornSurname", "") %>" @oscar.formDB />
-      </td>
-	  <td width="50%">PARTINER'S NAME<br>
-      <input type="text" name="c_partnerName" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("c_partnerName", "") %>" @oscar.formDB />
-      </td><td nowrap>AGE<br>
-      <input type="text" name="c_partnerAge" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_partnerAge", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-  </table>
-  
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <th colspan="5">G
-      <input type="text" name="c_g" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_g", "") %>" @oscar.formDB />
-      </th><th colspan="5">T
-      <input type="text" name="c_t" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_t", "") %>" @oscar.formDB />
-      </th><th colspan="5">P
-      <input type="text" name="c_p" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_p", "") %>" @oscar.formDB />
-      </th><th colspan="5">A
-      <input type="text" name="c_a" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_a", "") %>" @oscar.formDB />
-      </th><th colspan="5">L
-      <input type="text" name="c_l" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_l", "") %>" @oscar.formDB />
-      </th>
-      <td width="20%">EDD dd/mm/yyyy
-      <input type="text" name="pg1_eddByDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" @oscar.formDB dbType="date" />
-      </td>
-	  <td width="20%" nowrap>BLOOD GROUP/Rh<br>
-      <input type="text" name="pg1_bloodGrpRh" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_bloodGrpRh", "") %>" @oscar.formDB  />
-	  </td>
-	  <td nowrap>RH ANTIB<br>
-      <input type="text" name="pg1_RhAntib" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_RhAntib", "") %>" @oscar.formDB  />
-	  </td>
-	  <td nowrap>HBsAg<br>
-      <input type="text" name="pg1_HBsAg" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_HBsAg", "") %>" @oscar.formDB  />
-	  </td>
-    </tr>
-  </table>
-  
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <td>RISK FACTORS FOR INFANT (Refer to Antenatal Record, Part 2)<br>
-      <textarea name="c_riskFactor" style="width:100%" cols="50" rows="2" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("c_riskFactor", "") %> </textarea>
-      </td>
-    </tr>
-  </table>
 
   </td>
   <td>
@@ -1320,13 +1272,14 @@ function onCheckSlave(a, masterName) {
 %>
 
         <td align="right"><b>View:</b> 
-            <a href="javascript: popupPage('formbcnewbornpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">Part2 <font size=-2>(pg.1)</font></a> |
-            <a href="javascript: popupPage('formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">Part2 <font size=-2>(pg.2)</font></a>
+            <a href="javascript: popupPage('formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part1 </a>
+            <a href="javascript: popupPage('formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part2 <font size=-2>(pg.2)</font></a> |
             &nbsp;
         </td>
-        <td align="right"><b>Edit:</b>Part1 |
-            <a href="formbcnewbornpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Part2 <font size=-2>(pg.1)</font></a> |
-            <a href="formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Part2 <font size=-2>(pg.2)</font></a> |
+        <td align="right"><b>Edit:</b>
+			<a href="formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>">Part1</a> |
+            Part2 <font size=-2>(pg.1)</font> |
+            <a href="formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>">Part2 <font size=-2>(pg.2)</font></a> |
         </td>
 <%
   }
