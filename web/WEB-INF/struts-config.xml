@@ -1573,7 +1573,7 @@
               name="BillingCreateBillingForm"
               scope="session"
               input="/billing/billingBC.jsp">
-              <forward name="success" path="/billing/CA/BC/billingCreated.jsp"/>
+              <forward name="success" path="/billing/CA/BC/billingCreated.jsp"/>                            
               <forward name="WCB"     path="/billing/CA/BC/formwcb.jsp" />  
      </action>
 
@@ -1593,6 +1593,7 @@
               input="/billing/CA/BC/billingView.jsp">
               <forward name="success" path="/billing/CA/BC/billingView.jsp"/>
               <forward name="ON"   path="/billing/CA/ON/billingOB2.jsp"/>
+              <forward name="private" path="/billing/CA/BC/billReceipt.jsp"/>
     </action>
     <action   path="/billing/CA/BC/formwcb" 
               type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction" 
