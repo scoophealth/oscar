@@ -154,11 +154,11 @@ function unCheckAll(field){
                                 <td width="2" class="fieldBox" bgcolor="#ddddff"><input type="checkbox" checked="checked" name="patientSeenCheckbox" value="ctr" /></td>
                                 <td width="120" class="fieldBox" bgcolor="#ddddff">
                                     <input type="text" name='startDateA' value='<bean:write name="lastYear"/>'  size="10">
-                                    <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=startDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                    <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=startDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')"/>
                                 </td>
                                 <td width="120" class="fieldBox" bgcolor="#ddddff">
                                     <input type="text" name='endDateA' value='<bean:write name="today"/>'  size="10">
-                                    <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=endDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                    <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=endDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')"/>
                                 </td>
                                 <td width="450" class="fieldBox" bgcolor="#ddddff">
                                 </td>                                
@@ -214,15 +214,22 @@ function unCheckAll(field){
                                         <td width="4"   class="fieldBox" bgcolor="#ddddff" width="5"><bean:write name="measurementType" property="typeDisplayName" /></td>
                                         <td width="200" class="fieldBox" bgcolor="#ddddff"><bean:write name="measurementType" property="typeDesc" /></td>
                                         <td width="200" class="fieldBox" bgcolor="#ddddff"></td>
-                                        <td width="10"  class="fieldBox" bgcolor="#ddddff"><input type="radio" name='<%="value(aboveBelow" + ctr+")"%>' value=">" checked="checked" />  <input type="radio" name='<%="value(aboveBelow" + ctr+")"%>' value="<"/></td>
+                                        <td width="10"  class="fieldBox" bgcolor="#ddddff">
+                                            <table>
+                                                <tr>
+                                                    <td><input type="radio" name='<%="value(aboveBelow" + ctr+")"%>' value=">" checked="checked" /></td>
+                                                    <td><input type="radio" name='<%="value(aboveBelow" + ctr+")"%>' value="<"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
                                         <td width="50"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="guidelineB" size="6" /></td>     
                                         <td width="120" class="fieldBox" bgcolor="#ddddff">
                                             <input type="text" name="startDateB" value='<bean:write name="lastYear"/>'  size="10">
-                                            <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="startDateB[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                            <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="startDateB[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')"/>
                                         </td>
                                         <td width="120" class="fieldBox" bgcolor="#ddddff">
                                             <input type="text" name="endDateB" value='<bean:write name="today"/>'  size="10">
-                                            <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="endDateB[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                            <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="endDateB[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsMetGuidelineCDMReportForm"%>','','width=300,height=300')"/>
                                         </td>
                                         <input type="hidden" name='<%="value(measurementType"+ctr+")"%>' value="<bean:write name="measurementType" property="type" />"/>
                                     </tr>

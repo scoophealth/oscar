@@ -24,7 +24,9 @@
  * Ontario, Canada 
  */
 -->
-
+ <%
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+%>
 <%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -32,9 +34,6 @@
 <%@ page import="oscar.oscarReport.pageUtil.*"%>
 <%@ page import="java.util.*, java.sql.*, java.text.*, java.net.*;"%>
 <%
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
 
     GregorianCalendar now=new GregorianCalendar(); 
     int curYear = now.get(Calendar.YEAR);
@@ -102,6 +101,18 @@ function unCheckAll(field){
         field.checked=false;
     }
  }
+
+    function popupPage(vheight,vwidth,varpage) { //open a new popup window
+      var page = "" + varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+      var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self;
+          alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
+        }
+      }
+    }
 </script>
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
@@ -153,12 +164,12 @@ function unCheckAll(field){
                             <tr>
                                 <td width="2" class="fieldBox" bgcolor="#ddddff"><input type="checkbox" name="patientSeenCheckbox" value="ctr" checked="checked"/></td>
                                 <td width="120" class="fieldBox" bgcolor="#ddddff">
-                                    <input type="text" name='startDateA' value='<bean:write name="lastYear"/>'  size="10">
-                                    <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=startDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                    <input type="text" name='startDateA' value='<bean:write name="lastYear"/>'  size="10">                                    
+                                    <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=startDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')"/>                                    
                                 </td>
                                 <td width="120" class="fieldBox" bgcolor="#ddddff">
                                     <input type="text" name='endDateA' value='<bean:write name="today"/>'  size="10">
-                                    <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=endDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                    <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=endDateA&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')"/>                                    
                                 </td>
                                 <td width="450" class="fieldBox" bgcolor="#ddddff">
                                 </td>                                
@@ -222,11 +233,11 @@ function unCheckAll(field){
                                         <td width="80"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="lessThan" size="6" />  <bean:message key="oscarReport.CDMReport.msgTimes"/></td>     
                                         <td width="120" class="fieldBox" bgcolor="#ddddff">
                                             <input type="text" name="startDateD" value='<bean:write name="lastYear"/>'  size="10">
-                                            <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="startDateD[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                            <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="startDateD[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')"/>                                                                                
                                         </td>
                                         <td width="120" class="fieldBox" bgcolor="#ddddff">
                                             <input type="text" name="endDateD" value='<bean:write name="today"/>'  size="10">
-                                            <a href="#" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="endDateD[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')">Date</a>                                                
+                                            <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="endDateD[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')"/>                                                                                
                                         </td>
                                         <input type="hidden" name='<%="value(measurementTypeD"+ctr+")"%>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>
                                     </tr>
