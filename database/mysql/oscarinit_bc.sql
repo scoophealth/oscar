@@ -92,11 +92,13 @@ CREATE TABLE billingnote (
   billingmaster_no int(10) NOT NULL default '0',
   createdate datetime default NULL,
   provider_no varchar(6) NOT NULL default '',
-  note text default '',    
+  note text default '', 
+  note_type int(2) default '1',   
   PRIMARY KEY  (`billingnote_no`),
   KEY billingmaster_no (billingmaster_no),
   KEY provider_no  (provider_no),
-  KEY createdate (createdate)
+  KEY createdate (createdate),
+  KEY note_type (note_type)
 ) TYPE=MyISAM;
 
 
@@ -1996,6 +1998,7 @@ CREATE TABLE `hl7_pid` (
 create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
 create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
 create index  billingmaster_billing_no on billingmaster (billing_no);
+
 
 
 
