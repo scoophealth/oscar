@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!--  
 /*
  * 
@@ -23,7 +24,6 @@
  * Ontario, Canada 
  */
 -->
-<?xml version="1.0"?>
 <checklist>
   <section number="1">
    <section_title>Problem List</section_title>

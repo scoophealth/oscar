@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!--  
 /*
  * 
@@ -23,7 +24,6 @@
  * Ontario, Canada 
  */
 -->
-<?xml version="1.0"?>
 <riskFactors>
   <section>
     <section_title>Other Risk Factors</section_title>

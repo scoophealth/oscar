@@ -1,3 +1,4 @@
+<?xml version='1.0' ?>
 <!--  
 /*
  * 
@@ -23,7 +24,6 @@
  * Ontario, Canada 
  */
 -->
-<?xml version='1.0' ?>
 <checklist>
   <recommendations>
     <item>Visits every 4 weeks until 32 weeks - weight, blood pressure, urine for protein/glucose,<BR/>
