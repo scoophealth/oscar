@@ -56,12 +56,13 @@ public class MsgWriteToEncounterAction extends Action {
             int curMonth = (now.get(Calendar.MONTH)+1);
             int curDay = now.get(Calendar.DAY_OF_MONTH);
             String dateString = curYear+"-"+curMonth+"-"+curDay;
+            String provider = (String) request.getSession().getValue("user");
                         
             String msgId = request.getParameter("msgId");
             System.out.println("message id is: " +msgId);
             //../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=
             ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
-            forward.addParameter("providerNo", request.getParameter("providerNo"));
+            forward.addParameter("providerNo", provider);
             forward.addParameter("appointmentNo", "");
             forward.addParameter("demographicNo", request.getParameter("demographic_no"));
             forward.addParameter("curProviderNo", "");
