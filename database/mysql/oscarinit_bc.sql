@@ -1703,6 +1703,7 @@ CREATE TABLE wcb_side (
 ) TYPE=MyISAM;
 
 CREATE TABLE wcb (
+  ID int(10) NOT NULL auto_increment,
   billing_no int(10) unsigned NOT NULL default '0',
   demographic_no int(10) unsigned NOT NULL default '0',
   provider_no int(10) unsigned NOT NULL default '0',
@@ -1755,6 +1756,9 @@ CREATE TABLE wcb (
   w_feeitem varchar(5) NOT NULL default '00000',
   w_extrafeeitem varchar(5) NOT NULL default '00000',
   w_servicelocation char(1) default 'O',
-  PRIMARY KEY  (`billing_no`)
+  PRIMARY KEY  (`ID`),
+  KEY billing_no (billing_no),
+  KEY demographic_no (demographic_no),
+  Key provider_no (provider_no)
 ) TYPE=MyISAM;
 
