@@ -6,6 +6,9 @@
 	output: opener.param.substring("&formdatebox=".length()) = year1 + "-" + month1 + "-" + day1
   */
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
@@ -57,7 +60,24 @@ function typeInDate(year1,month1,day1) {
 </head>
 <body bgcolor="ivory" onLoad="setfocus()"  leftmargin="0" rightmargin="0">
 <%
-String[] arrayMonth = new String[] { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" };
+ResourceBundle oscarRec = ResourceBundle.getBundle("oscarResources");
+String jan = oscarRec.getString("share.CalendarPopUp.msgJan");
+String feb = oscarRec.getString("share.CalendarPopUp.msgFeb");
+String mar = oscarRec.getString("share.CalendarPopUp.msgMar");
+String apr = oscarRec.getString("share.CalendarPopUp.msgApr");
+String may = oscarRec.getString("share.CalendarPopUp.msgMay");
+String jun = oscarRec.getString("share.CalendarPopUp.msgJun");
+String jul = oscarRec.getString("share.CalendarPopUp.msgJul");
+String aug = oscarRec.getString("share.CalendarPopUp.msgAug");
+String sep = oscarRec.getString("share.CalendarPopUp.msgSep");
+String oct = oscarRec.getString("share.CalendarPopUp.msgOct");
+String nov = oscarRec.getString("share.CalendarPopUp.msgNov");
+String dec = oscarRec.getString("share.CalendarPopUp.msgDec");
+
+
+String[] arrayMonth = new String[] { jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec };
+
+
 now.add(now.DATE, -1); 
 DateInMonthTable aDate = new DateInMonthTable(year, month-1, 1);
 int [][] dateGrid = aDate.getMonthDateGrid();
@@ -67,16 +87,16 @@ int [][] dateGrid = aDate.getMonthDateGrid();
 <tr BGCOLOR="#CCCCFF" >
 	<td width="5%" align="center" nowrap>
 	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-12">
-	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Last Year" vspace="2">
-	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Last Year" vspace="2">
+	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgNextYear"/>" vspace="2">
+	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgLastYear"/>" vspace="2">
 	</a></td>
 	<td align="center" nowrap>
 	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-1"> 
-	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month
+	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgViewLastMonth"/>" vspace="2"> <bean:message key="share.CalendarPopUp.msgLastMonth"/>
 	</a>
 	<b><span CLASS=title><%=year%>-<%=month%></span></b>
 	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=1"> 
-	next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2"></a></td>
+	<bean:message key="share.CalendarPopUp.msgNextMonth"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgNextMonth"/>" vspace="2"></a></td>
 	<td align='right'>
 	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=12">
 	<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Next Year" vspace="2">
@@ -98,13 +118,13 @@ int [][] dateGrid = aDate.getMonthDateGrid();
 
 <table width="100%" border="0" cellspacing="1" cellpadding="2"  bgcolor="silver" >
 <tr bgcolor="#CCCCFF" align="center"> 
-	<th width="14%"><font color="red">Sun</font></td>
-	<th width="14%">Mon</font></td>
-	<th width="14%">Tue</font></td>
-	<th width="14%">Wed</font></td>
-	<th width="14%">Thu</font></td>
-	<th width="14%">Fri</td>
-	<th width="14%"><font color="green">Sat</font></td>
+	<th width="14%"><font color="red"><bean:message key="share.CalendarPopUp.msgSun"/></font></td>
+	<th width="14%"><bean:message key="share.CalendarPopUp.msgMon"/></font></td>
+	<th width="14%"><bean:message key="share.CalendarPopUp.msgTue"/></font></td>
+	<th width="14%"><bean:message key="share.CalendarPopUp.msgWed"/></font></td>
+	<th width="14%"><bean:message key="share.CalendarPopUp.msgThu"/></font></td>
+	<th width="14%"><bean:message key="share.CalendarPopUp.msgFri"/></td>
+	<th width="14%"><font color="green"><bean:message key="share.CalendarPopUp.msgSat"/></font></td>
 </tr>
             
 <%
