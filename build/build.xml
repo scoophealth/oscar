@@ -69,7 +69,8 @@
  <target name="web" depends="init">
   <javac 
 	 srcdir="${src_web}"
-	 destdir="${classes_web}"
+     excludes="oscar/oscarMessenger/**,oscar/form/study/**"
+     destdir="${classes_web}"
 	 deprecation="on"
 	 debug="on">
    <classpath>
@@ -146,7 +147,7 @@
   <!-- make the webapp clean, so even files that haven't changed get
   their filters updated -->
 
-  <war destfile="${dist}/oscar.war" webxml="../web/WEB-INF/web.xml"> 
+  <war destfile="${build}/oscar.war" webxml="../web/WEB-INF/web.xml"> 
        <fileset dir="${webapp}"/> 
        <lib dir="${webapp}/WEB-INF/lib"/>
        <classes dir="${classes_web}"/>
