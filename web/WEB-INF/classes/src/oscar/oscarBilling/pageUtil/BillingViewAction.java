@@ -26,6 +26,10 @@ public final class BillingViewAction extends Action {
     HttpServletResponse response)
     throws IOException, ServletException {
         
+        
+        if(request.getSession().getAttribute("user") == null  ){
+            return (mapping.findForward("Logout"));
+        }
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources();
