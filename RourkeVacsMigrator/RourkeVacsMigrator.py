@@ -160,7 +160,7 @@ class RourkeVacsMigrator:
 						#if given immunization has been flagged,append textual representation of field to its corresponding free text field
 						if strFlag == "1":
 							freeTextFld = self.pageMappings[colName]
-							freeTextData = rs.getString(freeTextFld) + "\\n" + self.fieldDescMappings[colName]  
+							freeTextData = rs.getString(freeTextFld) + "\n" + self.fieldDescMappings[colName]  
 							qryUpdate = "update " + self.tbl + " set " + freeTextFld + "=? " + "where ID = " + rs.getString("ID")
 							stUpdate = con.prepareStatement(qryUpdate)
 							stUpdate.setString(1,freeTextData)
