@@ -10,6 +10,8 @@
   userlastname = (String) session.getAttribute("userlastname");
   //display the main provider page
   //includeing the provider name and a month calendar
+
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
 %>
 <html:html locale="true">
 <head>
@@ -191,6 +193,16 @@ function upCaseCtrl(ctrl) {
           <input type="text" name="xml_p_billinggroup_no" >
         </td>
       </tr>
+       <% if (vLocale.getCountry().equals("BR")) { %>  
+      <tr>
+        <td align="right"><bean:message key="admin.provider.formProviderActivity"/>: </td>
+        <td>
+          <input type="text" name="provider_activity" size="5" maxlength="3">
+        </td>
+      </tr>
+      <% } else { %>
+          <input type="hidden" name="provider_activity" value="">
+      <% }  %>
       <tr> 
         <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
         <td>

@@ -35,11 +35,11 @@
   }
   //operation available to the client - dboperation
   String [][] dbQueries=new String[][] {
-    {"provider_add_record", "insert into provider values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?)" },
+    {"provider_add_record", "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?, ?)" },
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit}, 
     {"provider_search_detail", "select * from provider where provider_no=?"},
     {"provider_delete", "delete from provider where provider_no=? and provider_no!='super'"},
-    {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex =?,dob=?, address=?,phone=?,work_phone=?,ohip_no =?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=? where provider_no=? and provider_no!='super'"},
+    {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex =?,dob=?, address=?,phone=?,work_phone=?,ohip_no =?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity = ? where provider_no=? and provider_no!='super'"},
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},  
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},

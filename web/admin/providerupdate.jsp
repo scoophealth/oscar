@@ -15,7 +15,7 @@
 </table>
 
 <%
-  String[] param =new String[17];
+  String[] param =new String[18];
   param[0]=request.getParameter("last_name");
   param[1]=request.getParameter("first_name");
   param[2]=request.getParameter("provider_type");
@@ -32,7 +32,8 @@
   param[13]=request.getParameter("hso_no");
   param[14]=request.getParameter("status");
   param[15]=SxmlMisc.createXmlDataString(request,"xml_p");
-  param[16]=request.getParameter("provider_no");
+  param[16]=request.getParameter("provider_activity");
+  param[17]=request.getParameter("provider_no");
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>

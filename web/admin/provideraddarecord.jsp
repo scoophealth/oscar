@@ -15,7 +15,7 @@
   </tr>
 </table>
 <%
-  String[] param =new String[17];
+  String[] param =new String[18];
   param[0]=request.getParameter("provider_no");
   param[1]=request.getParameter("last_name");
   param[2]=request.getParameter("first_name");
@@ -33,6 +33,7 @@
   param[14]=request.getParameter("hso_no");
   param[15]=request.getParameter("status");
   param[16]=SxmlMisc.createXmlDataString(request,"xml_p");
+  param[17]=request.getParameter("provider_activity");
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
