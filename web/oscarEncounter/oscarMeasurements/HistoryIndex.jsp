@@ -74,32 +74,28 @@
         <td>
             <table>
                 <tr>
-                    <th>Old Measurements Index</th>
-                </tr>
-                <tr>
-                    <td>               
-                        <tr>                                                       
-                            <th align="left" class="Header" width="20">
-                                <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingType"/>
-                            </th>
-                            <th align="left" class="Header" width="200">
-                                Type Description
-                            </th>                                                                             
-                            <th align="left" class="Header" width="50">
-                                
-                            </th>
-                         </tr>
-                        <logic:present name="measurementsData">
-                        <logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId = "ctr" >                       
-                        <tr class="data">                            
-                            <td width="20"><bean:write name="data" property="type" /></td>
-                            <td width="200"><bean:write name="data" property="typeDescription" /></td>                                                                                    
-                            <td width="50"><a href="#" name='<bean:message key="oscarEncounter.Index.oldMeasurements"/>' onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="data" property="type" />'); return false;">more...</a></td>
-                        </tr>                        
-                        </logic:iterate>
-                        </logic:present>
-                    </td>
-                </tr>
+                    <th colspan='3'>Old Measurements Index</th>
+                </tr>               
+                <tr>                                                       
+                    <th align="left" class="Header" width="20">
+                        <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingType"/>
+                    </th>
+                    <th align="left" class="Header" width="200">
+                        Type Description
+                    </th>                                                                             
+                    <th align="left" class="Header" width="50">
+
+                    </th>
+                 </tr>
+                <logic:present name="measurementsData">
+                <logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId = "ctr" >                       
+                <tr class="data">                            
+                    <td width="20"><bean:write name="data" property="type" /></td>
+                    <td width="200"><bean:write name="data" property="typeDescription" /></td>                                                                                    
+                    <td width="50"><a href="#" name='<bean:message key="oscarEncounter.Index.oldMeasurements"/>' onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="data" property="type" />'); return false;">more...</a></td>
+                </tr>                        
+                </logic:iterate>
+                </logic:present>                    
             </table>
             <table>
                 <tr>
