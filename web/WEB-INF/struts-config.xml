@@ -231,13 +231,13 @@
     <form-bean      name="ObecForm"
                     type="oscar.oscarReport.pageUtil.ObecForm"/>
     <form-bean      name="RptSelectCDMReportForm"
-                    type="oscar.oscarReport.pageUtil.RptSelectCDMReportForm"/>                    
+                    type="oscar.oscarReport.oscarMeasurements.pageUtil.RptSelectCDMReportForm"/>                    
     <form-bean      name="RptInitializePatientsMetGuidelineCDMReportForm"
-                    type="oscar.oscarReport.pageUtil.RptInitializePatientsMetGuidelineCDMReportForm"/>           
+                    type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsMetGuidelineCDMReportForm"/>           
     <form-bean      name="RptInitializePatientsInAbnormalRangeCDMReportForm"
-                    type="oscar.oscarReport.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportForm"/>           
+                    type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportForm"/>           
     <form-bean      name="RptInitializeFrequencyOfRelevantTestsCDMReportForm"
-                    type="oscar.oscarReport.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportForm"/>                                                                
+                    type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportForm"/>                                                                
 <!-- OscarMaintenance start -->
     <form-bean      name="MaintenanceForm"
                     type="oscar.oscarMaintenance.pageUtil.MaintenanceForm"/>
@@ -1170,47 +1170,42 @@
                 input="/oscarReport/obec.jsp" >
         <forward name="success" path="/oscarReport/obec.jsp"/>
     </action>
-    <action     path="/oscarReport/SetupSelectCDMReport"
-                type="oscar.oscarReport.pageUtil.RptSetupSelectCDMReportAction"                
+    <action     path="/oscarReport/oscarMeasurements/SetupSelectCDMReport"
+                type="oscar.oscarReport.oscarMeasurements.pageUtil.RptSetupSelectCDMReportAction"                
                 scope="request">                
-       <forward name="continue" path="/oscarReport/SelectCDMReport.jsp"/>
+       <forward name="continue" path="/oscarReport/oscarMeasurements/SelectCDMReport.jsp"/>
     </action>
-    <action     path="/oscarReport/SelectCDMReport"
-                type="oscar.oscarReport.pageUtil.RptSelectCDMReportAction"  
+    <action     path="/oscarReport/oscarMeasurements/SelectCDMReport"
+                type="oscar.oscarReport.oscarMeasurements.pageUtil.RptSelectCDMReportAction"  
                 name="RptSelectCDMReportForm"              
                 scope="request"
-                input="/oscarReport/SelectCDMReport.jsp">                
-       <forward name="patientWhoMetGuideline" path="/oscarReport/InitializePatientsMetGuidelineCDMReport.jsp"/>
-       <forward name="patientInAbnormalRange" path="/oscarReport/InitializePatientsInAbnormalRangeCDMReport.jsp"/>
-       <forward name="freqencyOfReleventTests" path="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport.jsp"/>
-       <forward name="medicationsPrescribed" path="/oscarReport/medicationsPrescribedCDMReport.do"/>
+                input="/oscarReport/oscarMeasurements/SelectCDMReport.jsp">                
+       <forward name="patientWhoMetGuideline" path="/oscarReport/oscarMeasurements/InitializePatientsMetGuidelineCDMReport.jsp"/>
+       <forward name="patientInAbnormalRange" path="/oscarReport/oscarMeasurements/InitializePatientsInAbnormalRangeCDMReport.jsp"/>
+       <forward name="freqencyOfReleventTests" path="/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp"/>       
     </action> 
-    <action     path="/oscarReport/InitializePatientsMetGuidelineCDMReport"
-                type="oscar.oscarReport.pageUtil.RptInitializePatientsMetGuidelineCDMReportAction"  
+    <action     path="/oscarReport/oscarMeasurements/InitializePatientsMetGuidelineCDMReport"
+                type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsMetGuidelineCDMReportAction"  
                 name="RptInitializePatientsMetGuidelineCDMReportForm"              
                 scope="request"
-                input="/oscarReport/InitializePatientsMetGuidelineCDMReport.jsp">                
-       <forward name="success" path="/oscarReport/CDMReport.jsp"/>
+                input="/oscarReport/oscarMeasurements/InitializePatientsMetGuidelineCDMReport.jsp">                
+       <forward name="success" path="/oscarReport/oscarMeasurements/CDMReport.jsp"/>
     </action>
-    <action     path="/oscarReport/InitializePatientsInAbnormalRangeCDMReport"
-                type="oscar.oscarReport.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportAction"  
+    <action     path="/oscarReport/oscarMeasurements/InitializePatientsInAbnormalRangeCDMReport"
+                type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportAction"  
                 name="RptInitializePatientsInAbnormalRangeCDMReportForm"              
                 scope="request"
-                input="/oscarReport/InitializePatientsInAbnormalRangeCDMReport.jsp">                
-       <forward name="success" path="/oscarReport/CDMReport.jsp"/>
+                input="/oscarReport/oscarMeasurements/InitializePatientsInAbnormalRangeCDMReport.jsp">                
+       <forward name="success" path="/oscarReport/oscarMeasurements/CDMReport.jsp"/>
     </action>
-    <action     path="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport"
-                type="oscar.oscarReport.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportAction"  
+    <action     path="/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport"
+                type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportAction"  
                 name="RptInitializeFrequencyOfRelevantTestsCDMReportForm"              
                 scope="request"
-                input="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport.jsp">                
-       <forward name="success" path="/oscarReport/CDMReport.jsp"/>
+                input="/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp">                
+       <forward name="success" path="/oscarReport/oscarMeasurements/CDMReport.jsp"/>
     </action>
-    <action     path="/oscarReport/medicationsPrescribedCDMReport"
-                type="oscar.oscarReport.pageUtil.RptMedicationsPrescribedCDMReportAction"                 
-                scope="request">                
-       <forward name="result" path="/oscarReport/CDMReport.jsp"/>
-    </action>        
+      
 <!-- oscarReport End -->  
     
     
