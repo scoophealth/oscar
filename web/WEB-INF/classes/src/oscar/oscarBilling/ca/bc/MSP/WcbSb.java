@@ -124,20 +124,19 @@ public class WcbSb {
          this.w_opcity = rs.getString("w_opcity");
          this.w_rphysician = rs.getString("w_rphysician");
          this.w_duration = rs.getString("w_duration");
-         this.w_ftreatment = rs.getString("w_ftreatment");
+         this.w_ftreatment = this.StripLineBreaks(rs.getString("w_ftreatment"));
          this.w_problem = this.StripLineBreaks(rs.getString("w_problem"));
          this.w_servicedate = rs.getString("w_servicedate");
-         this.w_diagnosis = rs.getString("w_diagnosis");
+         this.w_diagnosis = this.StripLineBreaks(rs.getString("w_diagnosis"));
          this.w_icd9 = rs.getString("w_icd9");
          this.w_bp = rs.getString("w_bp");
          this.w_side = rs.getString("w_side");
          this.w_noi = rs.getString("w_noi");
          this.w_work = rs.getString("w_work");
          this.w_workdate = rs.getString("w_workdate");
-         this.w_clinicinfo =
-         this.StripLineBreaks(rs.getString("w_clinicinfo"));
+         this.w_clinicinfo = this.StripLineBreaks(rs.getString("w_clinicinfo"));
          this.w_capability = rs.getString("w_capability");
-         this.w_capreason = rs.getString("w_capreason");
+         this.w_capreason = this.StripLineBreaks(rs.getString("w_capreason"));
          this.w_estimate = rs.getString("w_estimate");
          this.w_rehab = rs.getString("w_rehab");
          this.w_rehabtype = rs.getString("w_rehabtype");
@@ -158,7 +157,7 @@ public class WcbSb {
    }
    private String StripLineBreaks(String input) {
       if (input != null) {
-         input = input.replaceAll("\\n", "").replaceAll("\\r", "");
+         input = input.replaceAll("\\n", " ").replaceAll("\\r", "");
       }
       return input;
    }
@@ -226,6 +225,8 @@ public class WcbSb {
    private String Claim1(String logNo) {
       return this.Claim(logNo, this.billamountforfeeitem1, this.w_feeitem, "N");
    }
+   
+     
    private String Note1(String logNo) {
       
       return this.Note(
