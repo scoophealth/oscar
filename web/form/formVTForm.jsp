@@ -810,7 +810,7 @@ function clearAll(yRadio, nRadio){
                                                 </tr>                                                
                                             </table></td></tr>
                                             <tr><td>
-                                             <table cellpadding='1' cellspacing='0'>
+                                             <table cellpadding='1' cellspacing='0' width="100%">
                                                 <tr>
                                                     <td class="subTitle"  style="text-align:left" colspan='4'>
                                                         Lifestyle
@@ -857,7 +857,7 @@ function clearAll(yRadio, nRadio){
                                                  </tr>
                                              </table></td></tr>
                                             <tr><td>
-                                             <table cellpadding='1' cellspacing='0'>
+                                             <table cellpadding='1' cellspacing='0' width="100%">
                                                 <tr>
                                                     <td class="subTitle"  style="text-align:left" colspan='4'>
                                                         Psychosocial Screen
@@ -867,7 +867,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="subTitle" width="36%">                                                        
                                                     </td>                                                    
                                                     <td class="subTitle" width="16%">
-                                                        Last Data<br> Entered on
+                                                        Last Data
                                                     </td>
                                                     <td class="subTitle" width="18%">
                                                         New Data
@@ -929,7 +929,7 @@ function clearAll(yRadio, nRadio){
                                                  </tr>
                                              </table></td></tr>
                                             <tr><td>
-                                             <table cellpadding='1' cellspacing='0'>
+                                             <table cellpadding='1' cellspacing='0' width="100%">
                                                 <tr>
                                                     <td class="subTitle"  style="text-align:left" colspan='4'>
                                                         Medication Adherence screen
@@ -939,7 +939,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="subTitle" width="36%">                                                        
                                                     </td>                                                    
                                                     <td class="subTitle" width="16%">
-                                                        Last Data<br> Entered on
+                                                        Last Data
                                                     </td>
                                                     <td class="subTitle" width="18%">
                                                         New Data
