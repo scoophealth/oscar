@@ -782,7 +782,7 @@ CREATE TABLE form2MinWalk(
   2time2 varchar(255),
   2Cmt varchar(255),
   3Unable tinyint(1),
-  3From11To13s varchar(255),
+  3From11To13s tinyint(1),
   3LessThan16s tinyint(1),
   3LessThan11s tinyint(1),
   3From13To16s tinyint(1),
