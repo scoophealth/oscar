@@ -485,8 +485,8 @@ function showHideLayers() { //v3.0
                     <!--<a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>-->                    
                 </td>
                 <td >                  
-                  <font size="-2"><strong>Service to date:</strong></font>
-                   <html:text property="service_to_date" size="2" maxlength="2" />
+                   <a href="javascript: function myFunction() {return false; }" id="serviceToDate"><font size="-2"><strong>Service to date:</strong></font></a>
+                   <html:text property="service_to_date" size="2" maxlength="2" styleId="service_to_date" /> 
                 </td>
                 <td >
                     After Hours:
@@ -550,7 +550,8 @@ function showHideLayers() { //v3.0
            Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
            //Calendar.setup({inputField:"xml_appointment_date", ifFormat:""%d/%m/%Y",",button:"hlSDate", align:"Bl", singleClick:true});
            Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});
-           //Calendar.setup({inputField:"xml_vdate", ifFormat:"y-m-d",button:"hlADate", align:"Bl", singleClick:true});
+           Calendar.setup({inputField:"service_to_date", ifFormat:"%d",button:"serviceToDate", align:"Bl", singleClick:true});
+            
         </script>
         
         <div align="left"></div>
