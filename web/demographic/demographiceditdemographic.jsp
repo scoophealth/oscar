@@ -149,6 +149,9 @@ function checkPhoneNum() {
   document.updatedelete.phone.value = typeIn ;
 }
 
+function refresh() {
+  //history.go(0);
+}
 
 </script>
 
