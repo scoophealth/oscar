@@ -1715,7 +1715,7 @@ CREATE TABLE wcb (
   formCreated datetime NOT NULL default '0000-00-00 00:00:00',
   formEdited datetime NOT NULL default '0000-00-00 00:00:00',
   w_reporttype char(1) NOT NULL default '',
-  bill_amount double default '0',
+  bill_amount varchar (10)  default '0.00',
   w_fname varchar(12) default NULL,
   w_lname varchar(18) default NULL,
   w_mname char(1) default NULL,
