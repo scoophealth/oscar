@@ -11,6 +11,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import oscar.oscarDB.DBHandler;
 import oscar.AppointmentMainBean;
+import oscar.oscarProvider.data.*;
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -43,6 +44,7 @@ extends org.apache.struts.action.Action {
    sql_billingmaster = "update_wcb_billingmaster", // set it to be billed again in billingmaster
    sql_demographic = "update_wcb_demographic", //update demographic information
    sql_wcb = "update_wcb_wcb",  //updates wcb form
+   provider_wcb = "update_provider_wcb",
    CLOSE_RECONCILIATION = "close_reconciliation"; //closes c12 record
    
    public ActionForward perform(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
@@ -58,6 +60,19 @@ extends org.apache.struts.action.Action {
          bean.queryExecuteUpdate(data.getBillingForStatus(), sql_billingmaster);
          bean.queryExecuteUpdate(data.getBilling(), sql_biling);
          bean.queryExecuteUpdate(data.getWcb(this.GetFeeItemAmount(data.getW_feeitem(), data.getW_extrafeeitem())), sql_wcb);
+         
+         String providerNo = data.getProviderNo();
+         ProviderData pd = new ProviderData(providerNo);
+         
+         String payee = pd.getBilling_no();
+         String pracno = pd.getOhip_no();
+         String billingNo = data.getBillingNo();
+         
+         String s[] = {providerNo,payee,pracno,billingNo};
+         
+         bean.queryExecuteUpdate(s,provider_wcb);
+         //{"update_provider_wcb","Update wcb set provider=?, w_payeeno = ?, w_pracno = ? where billing_no=?"},
+         
          //bean.queryExecuteUpdate(data.getBillingMaster(),CLOSE_RECONCILIATION); 
          bean.closePstmtConn();
          
@@ -78,20 +93,20 @@ extends org.apache.struts.action.Action {
    }
    
    private String GetFeeItemAmount(String fee1, String fee2) {
-      String billamt = "";
+      String billamt = "0.00";
       try {
-         double amnt = 0;
+         
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          java.sql.ResultSet rs;        
          rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ fee1+ "'");
          if (rs.next()) {
-            amnt = rs.getDouble("value");
+            billamt = rs.getString("value");
          }
-         rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ fee2 + "'");
-         if (rs.next()) {
-            amnt += rs.getDouble("value");
-         }
-         billamt = String.valueOf(amnt);
+         //rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ fee2 + "'");
+         //if (rs.next()) {
+         //   amnt += rs.getDouble("value");
+         //}
+         //billamt = String.valueOf(amnt);
          db.CloseConn();
       }
       catch (java.sql.SQLException e) {
