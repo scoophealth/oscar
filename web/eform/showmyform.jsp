@@ -106,7 +106,7 @@ function newWindow(file,window) {
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
+            <td class="MainTableTopRowLeftColumn" width="175" >
                 <bean:message key="eform.showmyform.msgMyForm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
@@ -137,14 +137,13 @@ function newWindow(file,window) {
                 <br>
                 <a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.btnDeleted"/> </a>
             </td>
-            <td class="MainTableRightColumn">
-<table border="0" cellspacing="2" cellpadding="2" width="95%">
+            <td class="MainTableRightColumn" valign="top">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
   <tr bgcolor=<%=deepColor%> >
     <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
     <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
-    <th></th> 
+    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>    
+    <th><bean:message key="eform.showmyform.msgAction"/></th>
   </tr> 
 <%
   boolean bodd = true ;
@@ -156,8 +155,7 @@ function newWindow(file,window) {
     <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
         <td><a href="JavaScript:newWindow('showmyformdata.jsp?fdid=<%=rs.getInt("fdid")%>','_blank')"><%=rs.getString("form_name")%></a></td>
         <td><%=rs.getString("subject")%></td>
-        <td align='center'><%=rs.getString("form_date")%></td>
-        <td align='center'><%=rs.getString("form_time")%></td>
+        <td align='center'><%=rs.getString("form_date")%> <%=rs.getString("form_time")%></td>
         <td align='center'><a href="deleteformdata.jsp?fdid=<%=rs.getInt("fdid")%>&demographic_no=<%=demographic_no%>"><bean:message key="eform.uploadimages.btnDelete"/></a></td>
     </tr>
 <%    }  
