@@ -456,7 +456,22 @@ String proFirst="", proLast="", proOHIP="";
               <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=admission","380","300","0");return false;'>Admission 
               Date:</a> </font></td>
             <td width="24%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
-              <input type="text" name="xml_vdate" datafld='xml_vdate'>
+
+              <%String inPatient = oscarVariables.getProperty("inPatient");                
+                String admissionDate = ""; 
+                try{                    
+                    if(inPatient != null && inPatient.trim().equalsIgnoreCase("YES")){
+                        oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
+                        admissionDate = demoData.getDemographicDateJoined(demo_no);
+                       
+                    }
+                }catch(Exception inPatientEx){
+                    inPatientEx.printStackTrace();
+                    admissionDate = ""; 
+                }
+                %>
+                
+              <input type="text" name="xml_vdate" value="<%=admissionDate%>">
               </font></td>
           </tr>
         </table>
