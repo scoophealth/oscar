@@ -218,24 +218,7 @@ function nsgo() {
         </td>
         <td></td>
         <td></td>
-        <td></td>
-    <tr>
-        <td width="2"><%=j%><%j++;%></td>
-        <td width="1"></td>
-        <td width="300">
-            <%
-               // if browser set to pt_BR, do not show following message
-               String country = request.getLocale() .getCountry();
-               if (!country.equals("BR")) {
-            %>
-            <!--a HREF="#" ONCLICK ="popupPage(600,750,'reportnoshowlist.jsp')" --><bean:message key="report.reportindex.formNoShow"/></a></li>
-            <% } %>
-        </td>        
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
+        <td></td>    
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
@@ -385,6 +368,7 @@ function nsgo() {
     </tr>    
     <%
        // If country = Brazil, do not show the following links:
+       String country = request.getLocale() .getCountry();
        if (!country.equals("BR")) {
     %>
     <tr>
