@@ -51,8 +51,11 @@ public class EctDeleteMeasurementTypesAction extends Action {
         EctDeleteMeasurementTypesForm frm = (EctDeleteMeasurementTypesForm) form;                
         request.getSession().setAttribute("EctDeleteMeasurementTypesForm", frm);
         String[] deleteCheckbox = frm.getDeleteCheckbox();
- 
-        boolean valid = true;
+        GregorianCalendar now=new GregorianCalendar(); 
+        int curYear = now.get(Calendar.YEAR);
+        int curMonth = (now.get(Calendar.MONTH)+1);
+        int curDay = now.get(Calendar.DAY_OF_MONTH);
+        String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                 
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                                                                    
@@ -60,15 +63,18 @@ public class EctDeleteMeasurementTypesAction extends Action {
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
                     System.out.println(deleteCheckbox[i]);
-                    String sql = "SELECT typeDisplayName FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'"; 
+                    String sql = "SELECT * FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'"; 
                     ResultSet rs;
                     rs = db.GetSQL(sql);
                     if(rs.next()){
-                        String typeDisplayName = rs.getString("typeDisplayName");
+                        sql = "INSERT INTO measurementTypeDeleted(type, typeDisplayName,  typeDescription, measuringInstruction, validation, dateDeleted)" +
+                              "VALUES('"+ rs.getString("type") + "','" + rs.getString("typeDisplayName")+ "','" +rs.getString("typeDescription")+ "','" +
+                              rs.getString("measuringInstruction")+ "','" + rs.getString("validation") + "','" + dateDeleted +"')";
+                        db.RunSQL(sql);
                         sql = "DELETE  FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'";                                        
                         System.out.println(" sql statement "+sql);
                         db.RunSQL(sql);
-                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + typeDisplayName + "'";
+                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + rs.getString("typeDisplayName") + "'";
                         System.out.println("sql Statement " + sql);
                         db.RunSQL(sql);
                     }
