@@ -289,7 +289,7 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td colspan="3" nowrap="true" >
-                        Requisitioning Physician/Practioner:<br>
+                        Requisitioning Physician/Practitioner:<br>
                          <input type="hidden" style="width:100%" name="provName" value="<%=props.getProperty("provName", "")%>"  />
                          <input type="hidden" style="width:100%" name="reqProvName" value="<%=props.getProperty("reqProvName", "")%>"  />
                         <%=props.getProperty("reqProvName", "").compareTo("")==0?props.getProperty("provName", ""):props.getProperty("reqProvName", "")%>&nbsp;<br>
