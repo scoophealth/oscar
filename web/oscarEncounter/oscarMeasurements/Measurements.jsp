@@ -45,6 +45,7 @@
 <title>
 <logic:present name="groupName"><bean:write name="groupName"/></logic:present> <bean:message key="oscarEncounter.Index.measurements"/>
 </title>
+
 <html:base/>
 
 </head>
@@ -70,7 +71,7 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
 <!--  -->
-    <html:errors/>
+    
     <html:form action="/oscarEncounter/Measurements" enctype="multipart/form-data">
     <link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
@@ -81,18 +82,20 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar" >                 
                     <tr>
-                        <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >                        
+                        <td width=70% class="Header"  NOWRAP >                        
                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
-                        </td>
-                        <td style="text-align:right" NOWRAP>
-                            <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
+                        </td>                        
                     </tr>                  
                 </table>
             </td>
         </tr>
         <tr>
-            <td class="MainTableLeftColumn">             
+            <td class="MainTableLeftColumn"> 
+            <table>
+                <tr>
+                    <td><a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'../calculators.jsp?sex=<bean:write name="EctSessionBean" property="patientSex"/>&age=<bean:write name="EctSessionBean" property="patientAge"/>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a></td>
+                </tr>
+            </table>
             </td>            
             <td class="MainTableRightColumn">
                <table border=0 cellspacing=0 >
@@ -101,45 +104,42 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                         <table>
                             <tr>
                                 <td>
-                                    <table>                                        
+                                    <table>
+                                    <html:errors/>
                                         <tr>
                                             <td>               
                                                 <tr class="Header">
                                                     <td align="left"  width="100">
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
-                                                    </td>
-                                                    <td align="left"  width="200">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingTypeDesc"/>
-                                                    </td>
+                                                    </td>                                                    
                                                     <td align="left"  width="160">
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
                                                     </td>
                                                     <td align="left"  width="50">
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValue"/>
-                                                    </td>
-                                                    <td align="left"  width="140">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
-                                                    </td>
-                                                    <td align="left"  width="150">
+                                                    </td>                                                    
+                                                    <td align="left"  width="130">
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
                                                     </td>
-                                                    <td align="left"  width="20">                                                        
+                                                    <td align="left"  width="300">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td>
+                                                    <td align="left"  width="10">                                                        
                                                     </td>
                                                  </tr>
                                                 <% int i = 0;%>
                                                 <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
                                                 <tr class="data">                          
-                                                    <td width="5"><bean:write name="measurementType" property="typeDisplayName" /></td>
-                                                    <td><bean:write name="measurementType" property="typeDesc" /></td>
+                                                    <td width="5"><a title="<bean:write name="measurementType" property="typeDesc" />"><bean:write name="measurementType" property="typeDisplayName" /></a></td>
                                                     <td>                           
                                                         <html:select property='<%= "value(inputMInstrc-" + ctr + ")" %>' style="width:160">
                                                             <html:options collection='<%="mInstrcs"+ ctr%>' property="measuringInstrc" labelProperty="measuringInstrc" style="width:160"/>
                                                         </html:select>                                
                                                     </td>
-                                                    <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>     
-                                                    <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="20"/></td>
+                                                    <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>                                                         
                                                     <td><html:text property='<%= "value(date-" + ctr + ")" %>' size="20"/></td>
-                                                    <td width="20"></td>                            
+                                                    <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="45"/></td>
+                                                    <td width="10"></td>                            
                                                     <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>
                                                     <input type="hidden" name='<%= "value(inputTypeDisplayName-" + ctr + ")" %>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>                            
                                                     <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/></td>
@@ -147,11 +147,11 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                                                 </tr>
                                                 <logic:present name='measurementType' property='lastMInstrc'>
                                                 <tr class="note">
-                                                    <td colspan="2"><bean:message key="oscarEncoutner.oscarMeasurements.msgTheLast"/> <bean:message key="oscarEncoutner.oscarMeasurements.msgValueWasEnteredBy"/> <bean:write name='measurementType' property='lastProviderFirstName'/> <bean:write name='measurementType' property='lastProviderLastName'/></td>                                                    
+                                                    <td><bean:message key="oscarEncoutner.oscarMeasurements.msgTheLastValue"/>: </td>                                                    
                                                     <td><bean:write name='measurementType' property='lastMInstrc'/></td>
                                                     <td><bean:write name='measurementType' property='lastData'/></td>
-                                                    <td><bean:write name='measurementType' property='lastComments'/></td>
-                                                    <td><bean:write name='measurementType' property='lastDateEntered'/></td>                                                    
+                                                    <td><bean:write name='measurementType' property='lastDateEntered'/></td>
+                                                    <td><bean:write name='measurementType' property='lastComments'/></td>                                                                                                        
                                                     <td><img src="img/history.gif" title='<bean:message key="oscarEncounter.Index.oldMeasurements"/>' onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="measurementType" property="type" />'); return false;" /></td>
                                                 </tr>
                                                 </logic:present>
