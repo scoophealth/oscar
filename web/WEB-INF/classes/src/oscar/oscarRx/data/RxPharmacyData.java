@@ -224,7 +224,7 @@ public class RxPharmacyData {
       try {           
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;            
-            String sql = "select max(recordID) as maxrec from pharmacyInfo where status = 1 group by ID";            
+            String sql = "select max(recordID) as maxrec from pharmacyInfo where status = 1 group by ID order by name";            
             rs = db.GetSQL(sql);            
             while ( rs.next()){
                pharmacyList.add(getPharmacyByRecordID(rs.getString("maxrec")));
