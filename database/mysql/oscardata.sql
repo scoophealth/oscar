@@ -10086,7 +10086,7 @@ INSERT INTO diagnosticcode VALUES (413,'708','Allergic urticaria                
 INSERT INTO diagnosticcode VALUES (414,'709','Other disorders of skin and subcutaneous tissue                                                     ','A');
 INSERT INTO diagnosticcode VALUES (415,'710','Desseminated lupus erythematosus, generalized scleroderma, dermatomyositis, polymyositis            ','A');
 INSERT INTO diagnosticcode VALUES (416,'711','Pyogenic arthritis                                                                                  ','A');
-INSERT INTO diagnosticcode VALUES (417,'714','Rheumatoid arthritis, Still� s disease, Other inflammatory arthritis                                                               ','A');
+INSERT INTO diagnosticcode VALUES (417,'714','Rheumatoid arthritis, Still? s disease, Other inflammatory arthritis                                                               ','A');
 INSERT INTO diagnosticcode VALUES (418,'715','Osteoarthritis                                                                                      ','A');
 INSERT INTO diagnosticcode VALUES (419,'716','Traumatic arthritis                                                                                 ','A');
 INSERT INTO diagnosticcode VALUES (420,'718','Joint derangement, recurrent dislocation, ankylosis, meniscus or cartilage tear, loose body in joint','A');
@@ -10252,16 +10252,20 @@ INSERT INTO diagnosticcode VALUES (528,'998','Of surgical and medical care, e.g.
 -- Dumping data for table 'encounterForm'
 --
 
-INSERT INTO encounterForm VALUES ('Annual','formAnnual.jsp?demographic_no=','formAnnual');
-INSERT INTO encounterForm VALUES ('ALPHA','formAlpha.jsp?demographic_no=','formAlpha');
-INSERT INTO encounterForm VALUES ('Rourke','formRourke.jsp?demographic_no=','formRourke');
-INSERT INTO encounterForm VALUES ('T2Diabetes','formType2Diabetes.jsp?demographic_no=','formType2Diabetes');
-INSERT INTO encounterForm VALUES ('Mental Health','formMentalHealth.jsp?demographic_no=','formMentalHealth');
-INSERT INTO encounterForm VALUES ('PeriMenopausal','formPeriMenopausal.jsp?demographic_no=','formPeriMenopausal');
-INSERT INTO encounterForm VALUES ('Lab Req','formLabReq.jsp?demographic_no=','formLabReq');
-INSERT INTO encounterForm VALUES ('MMSE','formMMSE.jsp?demographic_no=','formMMSE');
-INSERT INTO encounterForm VALUES ('Pall. Care','formPalliativeCare.jsp?demographic_no=','formPalliativeCare');
-INSERT INTO encounterForm VALUES ('AR','formAR.jsp?demographic_no=','formAR');
+INSERT INTO encounterForm VALUES ('Annual','../form/formannual.jsp?demographic_no=','formAnnual');
+INSERT INTO encounterForm VALUES ('ALPHA','../form/formalpha.jsp?demographic_no=','formAlpha');
+INSERT INTO encounterForm VALUES ('Rourke','../form/formrourke.jsp?demographic_no=','formRourke');
+INSERT INTO encounterForm VALUES ('T2Diabetes','../form/formtype2diabete.jsp?demographic_no=','formType2Diabetes');
+INSERT INTO encounterForm VALUES ('Mental Health','../form/formmentalhealth.jsp?demographic_no=','formMentalHealth');
+INSERT INTO encounterForm VALUES ('PeriMenopausal','../form/formperimenopausal.jsp?demographic_no=','formPeriMenopausal');
+INSERT INTO encounterForm VALUES ('Lab Req','../form/formlabreq.jsp?demographic_no=','formLabReq');
+INSERT INTO encounterForm VALUES ('MMSE','../form/formmmse.jsp?demographic_no=','formMMSE');
+INSERT INTO encounterForm VALUES ('Pall. Care','../form/formpalliativecare.jsp?demographic_no=','formPalliativeCare');
+INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','formAR');
+INSERT INTO encounterForm VALUES ('BC-AR','../form/formbcar.jsp?demographic_no=','formBCAR');
+INSERT INTO encounterForm VALUES ('BC-LabourBirth','../form/formbcbirthsummo.jsp?demographic_no=','formBCBirthSumMo');
+INSERT INTO encounterForm VALUES ('BC-NewBorn','../form/formbcnewborn.jsp?demographic_no=','formBCNewBorn');
+INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf');
 
 --
 -- Dumping data for table 'encountertemplate'
