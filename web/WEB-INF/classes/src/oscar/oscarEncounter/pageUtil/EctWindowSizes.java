@@ -29,12 +29,12 @@ public class EctWindowSizes {
             String sql = "select * from encounterWindow where provider_no='"+provNo+"'";
             ResultSet rs = db.GetSQL(sql);
             
-            rs.next();
-           
-            props.setProperty("rowOneSize", rs.getString("rowOneSize"));
-            props.setProperty("rowTwoSize", rs.getString("rowTwoSize"));
-            props.setProperty("rowThreeSize", rs.getString("rowThreeSize"));
-            props.setProperty("presBoxSize", rs.getString("presBoxSize"));                           
+            if (rs.next()) {           
+            	props.setProperty("rowOneSize", rs.getString("rowOneSize"));
+            	props.setProperty("rowTwoSize", rs.getString("rowTwoSize"));
+            	props.setProperty("rowThreeSize", rs.getString("rowThreeSize"));
+            	props.setProperty("presBoxSize", rs.getString("presBoxSize"));
+            }                           
            
         } catch (Exception e) {
             e.printStackTrace(System.out);
