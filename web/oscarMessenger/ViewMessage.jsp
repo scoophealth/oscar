@@ -286,7 +286,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                         <input type="hidden" name="orderby" value="last_name" >
                                         <input type="hidden" name="search_mode" value="search_name" >
                                         <input type="hidden" name="messageId" value="<%=request.getAttribute("viewMessageNo")%>" >
-                                        <input type="hidden" name="originalpage" value="/oscar/oscarMessenger/ViewMessage.do" >
+                                        <input type="hidden" name="originalpage" value="../oscarMessenger/ViewMessage.do" >
                                         <input type="hidden" name="limit1" value="0" >
                                         <input type="hidden" name="limit2" value="5" >
                                         <!--input type="hidden" name="displaymode" value="TicklerSearch" -->
