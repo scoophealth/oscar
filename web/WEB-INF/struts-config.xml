@@ -1124,7 +1124,8 @@
     <action     path="/oscarReport/SelectCDMReport"
                 type="oscar.oscarReport.pageUtil.RptSelectCDMReportAction"  
                 name="RptSelectCDMReportForm"              
-                scope="request">                
+                scope="request"
+                input="/oscarReport/SelectCDMReport.jsp">                
        <forward name="patientWhoMetGuideline" path="/oscarReport/InitializePatientsMetGuidelineCDMReport.jsp"/>
        <forward name="patientInAbnormalRange" path="/oscarReport/InitializePatientsInAbnormalRangeCDMReport.jsp"/>
        <forward name="freqencyOfReleventTests" path="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport.jsp"/>
@@ -1133,19 +1134,22 @@
     <action     path="/oscarReport/InitializePatientsMetGuidelineCDMReport"
                 type="oscar.oscarReport.pageUtil.RptInitializePatientsMetGuidelineCDMReportAction"  
                 name="RptInitializePatientsMetGuidelineCDMReportForm"              
-                scope="request">                
+                scope="request"
+                input="/oscarReport/InitializePatientsMetGuidelineCDMReport.jsp">                
        <forward name="success" path="/oscarReport/CDMReport.jsp"/>
     </action>
     <action     path="/oscarReport/InitializePatientsInAbnormalRangeCDMReport"
                 type="oscar.oscarReport.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportAction"  
                 name="RptInitializePatientsInAbnormalRangeCDMReportForm"              
-                scope="request">                
+                scope="request"
+                input="/oscarReport/InitializePatientsInAbnormalRangeCDMReport.jsp">                
        <forward name="success" path="/oscarReport/CDMReport.jsp"/>
     </action>
     <action     path="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport"
                 type="oscar.oscarReport.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportAction"  
                 name="RptInitializeFrequencyOfRelevantTestsCDMReportForm"              
-                scope="request">                
+                scope="request"
+                input="/oscarReport/InitializeFrequencyOfRelevantTestsCDMReport.jsp">                
        <forward name="success" path="/oscarReport/CDMReport.jsp"/>
     </action>
     <action     path="/oscarReport/medicationsPrescribedCDMReport"
