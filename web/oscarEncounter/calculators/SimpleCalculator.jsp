@@ -212,6 +212,17 @@ function replaceEquationView(str){
 function clearEquationView(){
 	document.getElementById('blah').innerHTML = ""; 
 }
+
+function popupStart(vheight,vwidth,varpage) {
+      var page = varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+      var popup=window.open(varpage, "", windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self;
+        }
+      }
+}
 </SCRIPT>
 
 
@@ -254,7 +265,7 @@ function clearEquationView(){
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                calculators
+               <bean:message key="oscarEncounter.calculators.SimpleCalculator.module"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -266,7 +277,7 @@ function clearEquationView(){
 							
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                                <a href="javascript:popupStart(300,400,'../Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'../About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'../License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
                     </tr>
                 </table>
