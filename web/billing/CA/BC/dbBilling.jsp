@@ -132,6 +132,7 @@
     {"save_tadt_s23","insert into teleplanS23 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"save_tadt_s25","insert into teleplanS25 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"save_tadt_s22","insert into teleplanS22 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"save_tadt_C12","INSERT INTO teleplanC12 (s21_id, filename, t_datacenter, t_dataseq, t_payeeno, t_practitioner_no, t_exp1, t_exp2, t_exp3, t_exp4, t_exp5, t_exp6, t_exp7, t_officefolioclaimno, t_filler) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"},
     {"search_all_tahd", "select * from teleplanS21 where status <> ? order by t_payment desc"},
     {"search_taS01", "select * from teleplanS00 where s21_id=? and t_s00type=? and t_practitionerno like ? order by s00_id"},
     {"search_taS00", "select * from teleplanS00 where s21_id=? and t_s00type<>? and t_practitionerno like ? order by s00_id"},
@@ -141,10 +142,10 @@
     {"search_tahd", "select s21_id, t_payment from teleplanS21 where filename=? and t_payment=? and t_payeeno=? order by t_payment"},
     {"search_taprovider", "select r.t_practitionerno, p.last_name,p.first_name from teleplanS00 r, provider p where p.ohip_no=r.t_practitionerno and r.s21_id=? group by r.t_practitionerno"},
     {"updatedigcode", "update diagnosticcode set description=? where diagnostic_code=?"},
+    {"search_bill_master", "select * from billingmaster where billing_no=? "},
      //BC
     
     
- 
  };
   
   //associate each operation with an output JSP file - displaymode
