@@ -42,6 +42,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">
 <!--
+<%
+      boolean multipage = false;
+      String formName = request.getParameter("formName");
+      String formElement = request.getParameter("formElement");
+      if ( formName != null && !formName.equals("") && formElement != null && !formElement.equals("") ){
+         multipage = true;
+      }    
+
+      if (multipage){%>
+function CodeAttach(File0, File1, File2) {
+     
+      self.close();
+      self.opener.document.<%=formName%>.<%=formElement%>.value = File0;
+}
+      <%}else{%>
 function CodeAttach(File0, File1, File2) {
       
       self.close();
@@ -49,6 +64,7 @@ function CodeAttach(File0, File1, File2) {
       self.opener.document.BillingCreateBillingForm.xml_refer2.value = File1;
       self.opener.document.BillingCreateBillingForm.xml_refer3.value = File2;
 }
+    <%}%>
 -->
 </script>
 
@@ -66,21 +82,18 @@ function CodeAttach(File0, File1, File2) {
 	
 	int Count = 0;
 	
-	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-		temp=e.nextElement().toString();
-		if( temp.indexOf("code_")==-1 ) continue; 
-                 param[Count] = temp.substring(5).toUpperCase(); // + " |" + request.getParameter("codedesc_" + temp.substring(5));
-                 Count = Count + 1;
-                   
-      }
-    
+    for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
+        temp=e.nextElement().toString();
+	if( temp.indexOf("code_")==-1 ) continue; 
+            param[Count] = temp.substring(5).toUpperCase(); // + " |" + request.getParameter("codedesc_" + temp.substring(5));
+            Count = Count + 1;                   
+    }    
     if (Count == 1) {
-    param[1] = "";
-    param[2] = "";
-    }
-        if (Count == 2) {
+        param[1] = "";
         param[2] = "";
-       
+    }
+    if (Count == 2) {
+        param[2] = "";       
     }
     
     if (Count ==0) {
