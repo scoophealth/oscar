@@ -71,7 +71,7 @@ public class EctAddMeasurementTypeAction extends Action {
 
             //Write to database
             String sql = "INSERT INTO measurementType"
-                +"(type, typeDisplayName, typeDescription, measuringInstruction, validation)"
+                +"(type, typeDescription, typeDisplayName, measuringInstruction, validation)"
                 +" VALUES ('"+str.q(typeUp)+"','"+str.q(typeDesc)+"','"+str.q(typeDisplayName)+"','"+str.q(measuringInstrc)+"','"
                 + str.q(validation)+"')";
             System.out.println(" sql statement "+sql);
