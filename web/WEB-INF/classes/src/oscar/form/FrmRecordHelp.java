@@ -10,6 +10,12 @@ import oscar.util.*;
 import oscar.OscarProperties;
 
 public class FrmRecordHelp {
+	private String _dateFormat = "yyyy/MM/dd";
+
+	public void setDateFormat(String s) {// "dd/MM/yyyy" 
+		_dateFormat = s;
+	}
+
     public Properties getFormRecord(String sql) //int demographicNo, int existingID)
         throws SQLException  {
         Properties props = new Properties();
@@ -25,7 +31,7 @@ public class FrmRecordHelp {
 				if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))  {
 					if(rs.getInt(i) == 1)	value = "checked='checked'";
 					else	value = "";
-				} else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))	value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
+				} else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))	value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
 				else if(md.getColumnTypeName(i).equalsIgnoreCase("timestamp")) value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd HH:mm:ss");
 				else	value = rs.getString(i);
 
@@ -53,13 +59,13 @@ public class FrmRecordHelp {
          * but if db_type = postgresql, return a prepared statement, since
          * here we dont know which sequence will be used
          */ 
-        String db_type = OscarProperties.getInstance() .getProperty("db_type");
-        if (db_type.equalsIgnoreCase("mysql")) {
-            sql = "SELECT LAST_INSERT_ID()";
+        String db_type = OscarProperties.getInstance().getProperty("db_type", "");
+        if (db_type.equals("") || db_type.equalsIgnoreCase("mysql")) {
+        	sql = "SELECT LAST_INSERT_ID()";
         } else if (db_type.equalsIgnoreCase("postgresql")) {
-            sql = "SELECT CURRVAL('?')";
+        	sql = "SELECT CURRVAL('?')";
         } else {
-            throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+        	throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
         }
         rs = db.GetSQL(sql);
         if(rs.next())
@@ -98,7 +104,7 @@ public class FrmRecordHelp {
                 if(md.getColumnName(i).equalsIgnoreCase("formEdited"))
                     d = UtilDateUtilities.Today();
                 else
-                    d = UtilDateUtilities.StringToDate(value, "yyyy/MM/dd");
+                    d = UtilDateUtilities.StringToDate(value, _dateFormat);
                 if(d == null)
                     rs.updateNull(name);
                 else
@@ -157,7 +163,7 @@ public class FrmRecordHelp {
                 if(md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1) {
                     if(rs.getInt(i) == 1) value = "on";
                     else value = "off";
-                } else if(md.getColumnTypeName(i).equalsIgnoreCase("date")) value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
+                } else if(md.getColumnTypeName(i).equalsIgnoreCase("date")) value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
                 else value = rs.getString(i);
 
                 if(value != null) props.setProperty(name, value);
