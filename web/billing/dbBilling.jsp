@@ -27,7 +27,7 @@
   //operation available to the client - dboperation
   String orderby="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
-  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1")+", ";
+  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) {
     limit2=request.getParameter("limit2");
     limit="limit "+limit2+" offset " +limit1;
