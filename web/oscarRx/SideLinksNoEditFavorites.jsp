@@ -23,21 +23,34 @@
  * Hamilton 
  * Ontario, Canada 
  */
-%>
+
+        oscar.oscarRx.pageUtil.RxSessionBean bean2 = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        
+        oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = new oscar.oscarRx.data.RxPatientData().getPatient(bean2.getDemographicNo()).getAllergies();
+        String alle = "";
+        if (allergies.length > 0 ){ alle = "Red"; }
+            
+        %>
 
 
     <td width="10%" height="100%" valign="top">
         <div class="PropSheetMenu">
+        <p class="PropSheetLevel1CurrentItem<%=alle%>">Allergies</p>
+        <p class="PropSheetMenuItemLevel1">                
+        <%for (int j=0; j<allergies.length; j++){%>
+            <p class="PropSheetMenuItemLevel1">
+            <a title="<%= allergies[j].getAllergy().getDESCRIPTION() %>">
+                <%=allergies[j].getAllergy().getShortDesc(13,8,"...")%>                                                            
+            </a>
+        <%}%>
+              
+        
         <p class="PropSheetLevel1CurrentItem">Favorites</p>
         <p class="PropSheetMenuItemLevel1">
+        
         <%
-        oscar.oscarRx.pageUtil.RxSessionBean bean2 = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-        %>
-        <%
-        oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites
-            = new oscar.oscarRx.data.RxPrescriptionData().getFavorites(bean2.getProviderNo());
-        int j;
-        for (j=0; j<favorites.length; j++){ %>
+        oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites = new oscar.oscarRx.data.RxPrescriptionData().getFavorites(bean2.getProviderNo());        
+        for (int j=0; j<favorites.length; j++){ %>
             <p class="PropSheetMenuItemLevel1">
             <a href="useFavorite.do?favoriteId=<%= favorites[j].getFavoriteId() %>" title="<%= favorites[j].getFavoriteName() %>">
               <%if(favorites[j].getFavoriteName().length()>13){ %>
