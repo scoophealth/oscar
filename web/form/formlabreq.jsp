@@ -292,7 +292,7 @@ var maxYear=3100;
                         Requisitioning Physician/Practitioner:<br>
                          <input type="hidden" style="width:100%" name="provName" value="<%=props.getProperty("provName", "")%>"  />
                          <input type="hidden" style="width:100%" name="reqProvName" value="<%=props.getProperty("reqProvName", "")%>"  />
-                        <%=props.getProperty("reqProvName", "").compareTo("")==0?props.getProperty("provName", ""):props.getProperty("reqProvName", "")%>&nbsp;<br>
+                        <%=props.getProperty("reqProvName", "")%>&nbsp;<br>
 <%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
      should really be rewritten more elegantly at some later point in time. --%>    
                         <br><%=oscarProps.getProperty("clinic_no", "").startsWith("1022")?"Physician:":"Family Physician:"%><br> <%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>
