@@ -41,7 +41,8 @@ public class DBPreparedHandler  {
   public DBPreparedHandler(String dbDriver,String dbName, String dbUser,String dbPwd ) throws SQLException {      
       try {
           init(dbDriver,dbName,dbUser,dbPwd);      
-      } catch (Exception e) {          
+      } catch (Exception e) {
+          e.printStackTrace(System.out); // dump to the log file for debugging purposes
           if (e.getClass().getName().equals("java.sql.SQLException")) {
               throw new SQLException(e.getMessage());  
           } else {
