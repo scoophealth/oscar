@@ -106,7 +106,25 @@
 </style>
 
 <script language="javascript">
-    function showTbl(tblName)
+    var browserName=navigator.appName; 
+    if (browserName=="Netscape"){ 
+
+        if( document.implementation ){
+            //this detects W3C DOM browsers (IE is not a W3C DOM Browser)
+            if( Event.prototype && Event.prototype.__defineGetter__ ){
+                //this detects Mozilla Based Browsers
+                Event.prototype.__defineGetter__( "srcElement", function(){
+                    var src = this.target;
+                    if( src && src.nodeType == Node.TEXT_NODE )
+                        src = src.parentNode;
+                        return src;
+                    }
+                );
+            }
+        }
+    }
+    
+    function showTbl(tblName,event)
     {
         var i;
 
@@ -234,10 +252,10 @@
 
 %>
 <%!
-    String spanStartRoot = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblRoot');\">"
+    String spanStartRoot = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblRoot',event);\">"
         + "<img class=\"treeNode\" src=\"img/minus.gif\" border=\"0\" />";
 
-    String spanStart = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblNode');\">"
+    String spanStart = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblNode',event);\">"
         + "<img class=\"treeNode\" src=\"img/plus.gif\" border=\"0\" />";
     String spanEnd = "</span>";
 
