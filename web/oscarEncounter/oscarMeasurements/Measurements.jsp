@@ -88,22 +88,22 @@ function write2Parent(text){
                 <tr>
                     <td>               
                         <tr>
-                            <th align="left" class="td.tite" width="5">
+                            <th align="left" class="td.tite" width="100">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
                             </th>
-                            <th align="left" class="td.tite">
+                            <th align="left" class="td.tite" width="200">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingTypeDesc"/>
                             </th>
-                            <th align="left" class="td.tite">
+                            <th align="left" class="td.tite" width="160">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
                             </th>
-                            <th align="left" class="td.tite" width="5">
+                            <th align="left" class="td.tite" width="50">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValue"/>
                             </th>
-                            <th align="left" class="td.tite" width="50">
+                            <th align="left" class="td.tite" width="350">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                             </th>
-                            <th align="left" class="td.tite">
+                            <th align="left" class="td.tite" width="250">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
                             </th>
                          </tr>
@@ -114,7 +114,7 @@ function write2Parent(text){
                             <td><bean:write name="measurementType" property="typeDesc" /></td>
                             <td>                           
                                 <html:select property='<%= "value(inputMInstrc-" + ctr + ")" %>'>
-                                    <html:options collection='<%="mInstrcs"+ ctr%>' property="measuringInstrc" labelProperty="measuringInstrc"/>
+                                    <html:options collection='<%="mInstrcs"+ ctr%>' property="measuringInstrc" labelProperty="measuringInstrc" style="width:150"/>
                                 </html:select>
                             </td>
                             <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" />     
