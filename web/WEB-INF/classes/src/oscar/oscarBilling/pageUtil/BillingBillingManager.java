@@ -96,16 +96,11 @@ public class BillingBillingManager {
         return billingItemsArray;
         
     }
-    public ArrayList getDups(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {
-        
-        ArrayList lst = new ArrayList();
-        
-        
+    public ArrayList getDups(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {        
+        ArrayList lst = new ArrayList();               
         for (int i =0 ; i < service.length ; i++){
-            lst.add(service[i]);
-            
-        }
-        
+            lst.add(service[i]);            
+        }        
         if (service1.compareTo("") != 0){
             if (service1unit.compareTo("")==0){
                 service1unit = "1";
