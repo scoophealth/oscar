@@ -106,7 +106,7 @@ public class LoginCheckLoginBean {
         lastname = temp[1];
         profession = temp[2];
       }
-      if (!(profession.equals("receptionist")||profession.equals("doctor")) ) // *****be careful here
+      if ( profession.equals("admin") ) // DB connection no longer needed if admin
         accessDB.closeConn();
     // } catch (SQLException e) {return;}
   }
