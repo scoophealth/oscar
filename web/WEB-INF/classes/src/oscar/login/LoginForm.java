@@ -24,9 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.login;
 
-import org.apache.struts.action.*;
-import org.apache.struts.util.MessageResources;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
 
 public final class LoginForm extends ActionForm {
   private String username;

@@ -5,8 +5,8 @@
 
 package oscar.login;
 
-import java.io.*;
-import java.util.*;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Class LoginViewTypeHlp : read mapping file from loginView.properties

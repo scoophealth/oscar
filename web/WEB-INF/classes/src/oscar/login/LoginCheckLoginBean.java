@@ -1,9 +1,12 @@
 package oscar.login;
 
-import oscar.oscarDB.*;
-import java.sql.*;
-import java.util.*;
-import java.security.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import oscar.oscarDB.DBPreparedHandler;
 
 public class LoginCheckLoginBean {
   private String username="";

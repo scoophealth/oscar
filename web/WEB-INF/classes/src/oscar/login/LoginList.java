@@ -5,7 +5,7 @@
 
 package oscar.login;
 
-import java.util.*;
+import java.util.Hashtable;
 
 /**
  * Class LoginList : an application level login list: ip/LoginInfoBean 

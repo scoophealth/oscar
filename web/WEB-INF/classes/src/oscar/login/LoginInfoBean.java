@@ -5,7 +5,7 @@
 
 package oscar.login;
 
-import java.util.*;
+import java.util.GregorianCalendar;
 
 /**
  * Class LoginInfoBean : set login status when bWAN = true
