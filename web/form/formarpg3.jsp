@@ -513,7 +513,10 @@ if (!fedb.equals("") && fedb.length()==10 ) {
             &nbsp;|&nbsp;
             <a href="formarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.1)</a>
             &nbsp;|&nbsp;
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a>
+            <!--a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%--=demoNo%>&formId=<%=formId%>&provNo=<%=provNo--%>');">AR Planner</a-->
+<%if(((FrmARRecord)rec).isSendToPing(""+demoNo)) {	%>
+			<a href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
+<% }	%>
         </td>
 <%
   }
