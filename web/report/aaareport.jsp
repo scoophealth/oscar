@@ -52,8 +52,8 @@ busy ...
   String asql="", ectno, timestamp, demographic_no, provider_no;
   String socialhistory, familyhistory, medicalhistory, ongoingconcerns, reminders, encounter="";
 
-  SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-ddHH:mm:ss");
-  SimpleDateFormat outform = new SimpleDateFormat ("yyyyMMddHHmmss");
+  SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-ddHH:mm:ss", request.getLocale());
+  SimpleDateFormat outform = new SimpleDateFormat ("yyyyMMddHHmmss", request.getLocale());
 
   FileWriter inf = new FileWriter("echart.sql");
   ResultSet rsdemo = null ;

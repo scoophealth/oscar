@@ -112,9 +112,20 @@ function calculateEndTime() {
 <meta http-equiv="Cache-Control" content="no-cache" >
 
 <%
-  SimpleDateFormat fullform = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
-  SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd");
-  SimpleDateFormat outform = new SimpleDateFormat ("EEE");
+    SimpleDateFormat fullform;
+    SimpleDateFormat inform;
+     SimpleDateFormat outform;
+  try {
+    java.util.ResourceBundle = prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
+    fullform = new SimpleDateFormat (prop.getString("date.yyyyMMddHHmm"), request.getLocale());
+    inform = new SimpleDateFormat (prop.getString("date.yyyy-MM-dd"), request.getLocale());
+    outform = new SimpleDateFormat (prop.getString("date.EEE"), request.getLocale());
+  } catch (Exception e) {
+    e.printStackTrace();
+    fullform = new SimpleDateFormat (prop.getString("date.yyyyMMddHHmm"), "yyyy-MM-dd HH:mm");
+    inform = new SimpleDateFormat (prop.getString("date.yyyy-MM-dd"), "yyyy-MM-dd");
+    outform = new SimpleDateFormat (prop.getString("date.EEE"), "EEE");
+  }
   java.util.Date apptDate = fullform.parse(bFirstDisp?(request.getParameter("year")+"-"+request.getParameter("month")+"-"+request.getParameter("day")+" "+ request.getParameter("start_time")):(request.getParameter("appointment_date")+" "+ request.getParameter("start_time") )) ;
   String dateString1 = outform.format(apptDate );
   String dateString2 = inform.format(apptDate );

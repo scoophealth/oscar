@@ -335,7 +335,7 @@ function refresh() {
 </TR>
 <%
 String vGrantdate = "1980-01-07 00:00:00.0";
-DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS"); 
+DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
  
 
  String dateBegin = xml_vdate;

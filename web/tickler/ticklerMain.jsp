@@ -375,7 +375,7 @@ String billinggroup_no;
    String dateEnd = xml_appointment_date;
 String redColor = "", lilacColor = "" , whiteColor = "";
 String vGrantdate = "1980-01-07 00:00:00.0";
-DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS"); 
+DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
 
 
   if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);

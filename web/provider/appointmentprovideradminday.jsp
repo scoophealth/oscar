@@ -65,8 +65,15 @@
     day = cal.get(Calendar.DAY_OF_MONTH);
 
     String strDate = year + "-" + month + "-" + day;
-    SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd");
-	String formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");
+    SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd", request.getLocale());
+    String formatDate;
+    try {
+     java.util.ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
+     formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), prop.getString("dateEEEyyyyMMdd"));
+    } catch (Exception e) {
+     e.printStackTrace();
+     formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");
+    }
     String strYear=""+year;
     String strMonth=month>9?(""+month):("0"+month);
     String strDay=day>9?(""+day):("0"+day);

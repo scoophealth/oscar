@@ -90,8 +90,8 @@ function t(s1,s2,s3,s4,s5) {
   int colscode = (nEndTime-nStartTime)*60/nStep;
   String rColor1 = "#FFFFE0", rColor2 = "#FFFFE0", bgcolor = "gold";
   String startDate = request.getParameter("startDate")!=null?request.getParameter("startDate"):"today";
-  SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd");
-  SimpleDateFormat outform = new SimpleDateFormat ("EEE, yyyy/MM/dd");
+  SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd", request.getLocale());
+  SimpleDateFormat outform = new SimpleDateFormat ("EEE, yyyy/MM/dd", request.getLocale());
   GregorianCalendar now = new GregorianCalendar();
 
   if(!startDate.equals("today")) now.setTime(inform.parse(startDate));
