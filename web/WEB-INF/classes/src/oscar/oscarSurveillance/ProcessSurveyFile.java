@@ -93,7 +93,7 @@ public class ProcessSurveyFile {
               fsa = fsa.substring(0,3);
            }
            
-           out.write(qChar+dateSeen+qChar+"\t"+qChar+patientAnswer+qChar+"\t"+qChar+yearOfBirth+qChar+"\t"+qChar+fsa+qChar+"\n");
+           out.write(qChar+surveyDataId+qChar+"\t"+qChar+dateSeen+qChar+"\t"+qChar+patientAnswer+qChar+"\t"+qChar+yearOfBirth+qChar+"\t"+qChar+fsa+qChar+"\n");
            setProcessed(surveyDataId,processedId);
         }
         
