@@ -168,7 +168,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 %>
 <p>
-<%@ include file="../demographic/zfooterbackclose.htm" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp" %> 
 </center>
 </body>
 </html>

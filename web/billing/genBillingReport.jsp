@@ -162,7 +162,7 @@ function onUnbilled(url) {
 %>
 -->
 <p>
-<%@ include file="../demographic/zfooterbackclose.htm" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp" %> 
 </p>
 
 </body>

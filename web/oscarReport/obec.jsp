@@ -163,7 +163,7 @@ function refresh() {
 <a href="../servlet/OscarDownload?homepath=obecdownload&filename=<%=obectxt%>" target="_blank">File Created <%=obectxt%></a>
 <%}%>
 </pre>
-<%@ include file="../demographic/zfooterbackclose.htm" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp" %> 
 
 </body>
 </html>

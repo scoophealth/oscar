@@ -291,7 +291,7 @@ function refresh() {
 }
 %>
 <p>
-<%@ include file="../demographic/zfooterbackclose.htm" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp" %> 
 </center>
 </body>
 </html>

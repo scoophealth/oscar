@@ -283,7 +283,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 </table>
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
   <p>&nbsp; </p>
-<%@ include file="../demographic/zfooterbackclose.htm" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp" %> 
 
 </body>
 </html>

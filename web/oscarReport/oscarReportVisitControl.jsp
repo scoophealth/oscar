@@ -194,7 +194,7 @@ if (reportAction.compareTo("vr") == 0) {
  apptMainBean.closePstmtConn();
   %>
 
-<%@ include file="../demographic/zfooterbackclose.htm" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp" %> 
 
 </body>
 </html>

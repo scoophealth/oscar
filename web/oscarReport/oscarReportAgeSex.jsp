@@ -235,7 +235,7 @@ if (reportAction.compareTo("TO") == 0) {
 %>
 
 
-<%@ include file="../demographic/zfooterbackclose.htm" %>
+<%@ include file="../demographic/zfooterbackclose.jsp" %>
 </body>
 </html>
 
