@@ -175,7 +175,7 @@ function setDemographic(demoNo){
 </head> 
 
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
-   <table width="100%" border="0" cellspacing="0" cellpadding="0">
+   <table width="100%" border="1" cellspacing="0" cellpadding="0">
       <tr bgcolor="#FFFFFF"> 
         <div align="right"><a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')"><font face="Arial, Helvetica, sans-serif" size="1">Manage Provider List </font></a></div>
       </tr>
@@ -186,6 +186,9 @@ function setDemographic(demoNo){
         <td width="90%" align="left"> 
           <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Billing</font></font></b></font> 
           </p>
+        </td>
+        <td nowrap valign="bottom">
+        <font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><%=DateUtils.sumDate("yyyy-M-d","0")%></b></font>
         </td>
       </tr>
    </table>
