@@ -341,9 +341,14 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 		</td>
 		<td width="50%" align="left" valign="top">
 		<table width="100%">
-				<tr>
+				<tr>				
 					<td class="FormLabel">Disabled from Work:</td>
-					<td><html:text  property="w_work" value="<%=form.getW_work()%>" /></td>
+					<td>
+                  <html:select name="w_work" value="<%=form.getW_work()%>" property="w_work">
+					      <html:option value="Y">Yes</html:option>
+					      <html:option value="N">No</html:option>
+                 </html:select>
+               </td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Date Of Injury:</td>
