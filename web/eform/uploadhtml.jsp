@@ -72,7 +72,7 @@
 </table>
 
 <table cellspacing="2" cellpadding="2" width="80%" border="0" BGCOLOR="<%=weakColor%>">
-<FORM NAME="myForm" ENCTYPE="multipart/form-data" ACTION="../servletsoscar.eform.UploadServlet" METHOD="post" onSubmit="return checkHtml()">
+<FORM NAME="myForm" ENCTYPE="multipart/form-data" ACTION="../servlet/oscar.eform.UploadServlet" METHOD="post" onSubmit="return checkHtml()">
   <tr><td align='right'><b><bean:message key="eform.uploadhtml.formName"/> </b></td><td><input type="text" size="50" name="form_name"></td></tr>
   <tr><td align='right'><b><bean:message key="eform.uploadhtml.formSubject"/> </b></td><td><input type="text" size="50" name="subject"></td></tr>
   <tr><td align='right'><b><bean:message key="eform.uploadhtml.formFileName"/> </b></td><td><input type="file" name="FileName" size="80"></td></tr>
