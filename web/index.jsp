@@ -24,7 +24,7 @@
  */
 --%>
 
-<%@ page language="java" contentType="text/html" import="oscar.OscarProperties, oscar.util.BuildInfo" %>
+<%@ page language="java" contentType="text/html" import="oscar.OscarProperties, oscar.util.BuildInfo, javax.servlet.http.Cookie, oscar.oscarSecurity.CookieSecurity" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -38,6 +38,17 @@
 
     BuildInfo buildInfo = BuildInfo.getInstance();
     String buildDate = buildInfo.getBuildDate();
+
+    // clear old cookies
+    Cookie rcpCookie = new Cookie(CookieSecurity.receptionistCookie, "");
+    Cookie prvCookie = new Cookie(CookieSecurity.providerCookie, "");
+    Cookie admCookie = new Cookie(CookieSecurity.adminCookie, "");
+    rcpCookie.setPath("/");
+    prvCookie.setPath("/");
+    admCookie.setPath("/");
+    response.addCookie(rcpCookie);
+    response.addCookie(prvCookie);
+    response.addCookie(admCookie);
 %>
 
 <html:html locale="true">
