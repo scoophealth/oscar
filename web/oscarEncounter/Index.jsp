@@ -669,7 +669,7 @@ border-right: 2px solid #cfcfcf;
                         <a href="#" ONCLICK ="popupPage2('http://67.69.12.117:8080/oscarResource/');return false;" title="Resources" onmouseover="window.status='View Resources';return true">resource</a><br>
                         <a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
                         <a href="#" onClick="popupPage(500,600, '../eform/showmyform.jsp?demographic_no=<%=bean.demographicNo%>');return false;">E-Forms</a><br>
-                 	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;">View Tickler</a>
+                 	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;">View Tickler</a><br>
                         <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');"  id="Calcs" >calculators</a>
                            
                               <div id="Layer1" style="position:absolute; left:1px; top:1px; width:180px; height:311px; visibility: hidden; z-index:1"   >

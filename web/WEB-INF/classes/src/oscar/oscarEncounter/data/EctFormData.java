@@ -95,6 +95,29 @@ public class EctFormData {
         ret = (PatientForm[])forms.toArray(ret);
         return ret;
     }
+    
+     public PatientForm[] getPatientForms(String demoNo, String table, int s, int e) throws SQLException {
+        ArrayList forms = new ArrayList();
+                                                                                                                                                                                                     
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
+                    + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC limit " + s + ", " + e;
+        ResultSet rs = db.GetSQL(sql);
+                                                                                                                                                                                                     
+        while(rs.next()) {
+            PatientForm frm = new PatientForm(rs.getString("ID"), rs.getString("demographic_no"),
+                                UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("formEdited"), "yy/MM/dd"));
+            forms.add(frm);
+        }
+                                                                                                                                                                                                     
+        rs.close();
+        db.CloseConn();
+                                                                                                                                                                                                     
+        PatientForm[] ret = {};
+        ret = (PatientForm[])forms.toArray(ret);
+        return ret;
+    }
+
 
     public class PatientForm {
         private String formId;
