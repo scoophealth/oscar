@@ -77,7 +77,7 @@ function checkTypeNum(typeIn) {
 	return typeInOK;
 }
 
-function checkTypeInSearch() {
+function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = false;
   
   if(document.titlesearch.search_mode[2].checked) {
@@ -92,10 +92,12 @@ function checkTypeInSearch() {
     }
     
     return typeInOK ;
+  } else {
+    return true;
   }
 }
 
-function checkTypeIn() {
+function checkTypeInAdd() {
 	var typeInOK = false;
 	if(document.adddemographic.last_name.value!="" && document.adddemographic.first_name.value!="" && document.adddemographic.sex.value!="") {
       if(checkTypeNum(document.adddemographic.year_of_birth.value) && checkTypeNum(document.adddemographic.month_of_birth.value) && checkTypeNum(document.adddemographic.date_of_birth.value) ){
@@ -122,49 +124,15 @@ function newStatus() {
 <!--<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus();showDate();"  topmargin="0" leftmargin="0" rightmargin="0">-->
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus();"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-	  <tr bgcolor="#CCCCFF"> 
-      <th><font face="Helvetica"><bean:message key="demographic.demographicaddrecordhtm.msgMainLabel"/></font></th>
-	  </tr>
-	</table>
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">
-	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeInSearch();">
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.demographicaddrecordhtm.msgSearch"/>
-        </i></b></font></td>
-			
-      <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  checked name="search_mode" value="search_name">
-        <bean:message key="demographic.demographicaddrecordhtm.formName"/> </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio"  name="search_mode" value="search_phone">
-          <bean:message key="demographic.demographicaddrecordhtm.formPhone"/></font></td> 
-        <td nowrap><font size="1" face="Verdana" color="#0000FF">
-          <input type="radio"  name="search_mode" value="search_dob">
-          <bean:message key="demographic.demographicaddrecordhtm.formDOB"/>(yyyymmdd)</font></td> 
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
-				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
-				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Search" >
-				<INPUT TYPE="SUBMIT" VALUE="<bean:message key="demographic.demographicaddrecordhtm.msgSearch"/>" SIZE="17"></td>
-		</tr><tr>
-			
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="search_address">
-        <bean:message key="demographic.demographicaddrecordhtm.formAddress"/> </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_hin">
-          <bean:message key="demographic.demographicaddrecordhtm.formHIN"/></font></td>
-        
-      <td><font size="1" face="Verdana" color="#0000FF">
-        <input type="radio"  name="search_mode" value="search_chart_no">
-        <bean:message key="demographic.demographicaddrecordhtm.formChartNo"/></font></td>
-		</tr>
-	</form>
+  <tr bgcolor="#CCCCFF"> 
+    <th><font face="Helvetica"><bean:message key="demographic.demographicaddrecordhtm.msgMainLabel"/></font></th>
+  </tr>
 </table>
+	
+<%@ include file="zdemographicfulltitlesearch.jsp" %>	
 
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
-  <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkTypeIn()">
+  <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkTypeInAdd()">
     <tr> 
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left"> 
