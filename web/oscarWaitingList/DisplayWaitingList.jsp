@@ -28,10 +28,13 @@
  */
 -->
  <%
-  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+    response.setHeader("Pragma","no-cache"); //HTTP 1.0
+    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
 <%@ page language="java" %>
-<%@ page import="java.util.*,oscar.util.*" %>
+<%@ page import="java.util.*,oscar.util.*, oscar.oscarWaitingList.bean.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -48,6 +51,7 @@ Waiting List
 function goToPage(){
     window.location = '../oscarWaitingList/SetupDisplayWaitingList.do?waitingListId=' + document.forms[0].selectedWL.options[document.forms[0].selectedWL.selectedIndex].value
 }
+
 function popupPage(ctr, patientName, demographicNo, startDate, vheight,vwidth,varpage) { 
   var nbPatients = "<bean:write name="nbPatients"/>";  
   if(nbPatients>1){    
@@ -66,23 +70,47 @@ function popupPage(ctr, patientName, demographicNo, startDate, vheight,vwidth,va
     popup.focus();
   }
 }
+
+function removePatient(demographicNo, waitingList){
+    var agree=confirm("Are you sure you want to remove this patient from the waiting list?");
+    if (agree){
+        windowprops = "height=50,width=50,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
+        var page = 'RemoveFromWaitingList.jsp?listId='+waitingList+'&demographicNo='+demographicNo; 
+        var popup = window.open(page, "removeWaitingList", windowprops); 
+    }
+    else{
+        return false ;
+    }
+        
+    
+}
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload='window.resizeTo(800,400)' >
+<body class="BodyStyle" vlink="#0000FF" onload='window.resizeTo(900,400)' >
 <!--  -->    
     <html:form action="/oscarWaitingList/WLWaitingList.do">    
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
+            <td class="MainTableTopRowLeftColumn" width="20%">
                 Waiting List
             </td>
-            <td class="MainTableTopRowRightColumn" width="400">
+            <td class="MainTableTopRowRightColumn" width="80%">
                 <table class="TopStatusBar" >                 
                     <tr>    
-                        <td>Current List: <logic:present name="waitingListName"><bean:write name="waitingListName"/></logic:present></td>
-                        <td>Please Select a Waiting List:
+                        <td width="250">Current List: <logic:present name="waitingListName"><bean:write name="waitingListName"/></logic:present></td>
+                        <td align="left">Please Select a Waiting List:                            
                             <html:select property="selectedWL">
                                 <option value=""> </option>
-                                <html:options collection="allWaitingListName" property="id" labelProperty="waitingListName"/>
+                                <%
+                                    WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler();
+                                    Vector allWaitingListName = wlNameHd.getWaitingListNameVector();
+                                    for(int i=0; i<allWaitingListName.size(); i++){
+                                        WLWaitingListNameBean wLBean = (WLWaitingListNameBean) allWaitingListName.elementAt(i);
+                                        String id = wLBean.getId();
+                                        String name = wLBean.getWaitingListName();                                       
+                                        String selected = id.compareTo((String) request.getAttribute("WLId")==null?"0":(String) request.getAttribute("WLId"))==0?"SELECTED":"";                                        
+                                %>
+                                 <option value="<%=id%>" <%=selected%>><%=name%></option>
+                                <%}%>
                             </html:select>                        
                             <INPUT type="button" onClick="goToPage()" value="Generate Report">                            
                         </td>
@@ -94,15 +122,14 @@ function popupPage(ctr, patientName, demographicNo, startDate, vheight,vwidth,va
             <td class="MainTableLeftColumn">             
             </td>
             <td class="MainTableRightColumn">
-               <table border=0 cellspacing=4 width=700>
+               <table border=0 cellspacing=4 width="100%">
                 <tr>
                     <td>
                         <table>                            
                             <tr>
                                 <td>               
                                     <tr>
-                                        <td align="left" class="Header" width="50">
-                                            Position
+                                        <td align="left" class="Header" width="20">                                            
                                         </td>                                        
                                         <td align="left" class="Header" width="100">
                                             Patient Name
@@ -110,28 +137,33 @@ function popupPage(ctr, patientName, demographicNo, startDate, vheight,vwidth,va
                                         <td align="left" class="Header" width="100">
                                             Phone
                                         </td>
-                                        <td align="left" class="Header" width="100">
+                                        <td align="left" class="Header" width="150">
                                             Note
                                         </td>
-                                        <td align="left" class="Header" width="100">
+                                        <td align="left" class="Header" width="130">
                                             On Waiting List Since
                                         </td> 
-                                        <td align="left" class="Header" width="250">
+                                        <td align="left" class="Header" width="300">
                                             Provider
                                         </td> 
+                                        <td align="left" class="Header" width="50">                                        
+                                        </td>
                                      </tr>
                                     <logic:iterate id="waitingListBean" name="waitingList" property="waitingListVector" indexId = "ctr">
                                     <tr class="data">
-                                        <td width="50"><bean:write name="waitingListBean" property="position" /></td>
-                                        <td width="100"><bean:write name="waitingListBean" property="patientName" /></td>
-                                        <td width="100"><bean:write name="waitingListBean" property="phoneNumber" /></td>
-                                        <td width="100"><bean:write name="waitingListBean" property="note" /></td>
-                                        <td width="100"><bean:write name="waitingListBean" property="onListSince" /></td>
-                                        <td width="250" nowrap>
+                                        <td ><bean:write name="waitingListBean" property="position" /></td>
+                                        <td><bean:write name="waitingListBean" property="patientName" /></td>
+                                        <td><bean:write name="waitingListBean" property="phoneNumber" /></td>
+                                        <td><bean:write name="waitingListBean" property="note" /></td>
+                                        <td><bean:write name="waitingListBean" property="onListSince" /></td>
+                                        <td>
                                             <html:select property="selectedProvider">                                                
                                                 <html:options collection="allProviders" property="providerID" labelProperty="providerName"/>
-                                            </html:select>
+                                            </html:select> 
                                             <a href=# onClick ="popupPage(<%=ctr%>,'<bean:write name="waitingListBean" property="patientName" />','<bean:write name="waitingListBean" property="demographicNo"/>','<bean:write name="today"/>',400,780,'../schedule/scheduleflipview.jsp?originalpage=../oscarWaitingList/DisplayWaitingList.jsp');return false;">Make Appointment</a>
+                                        </td>
+                                        <td>
+                                            <a href=# onClick ="removePatient('<bean:write name="waitingListBean" property="demographicNo"/>', '<bean:write name="WLId"/>');">Remove</a>
                                         </td>
                                     </tr>                        
                                     </logic:iterate>                                    
