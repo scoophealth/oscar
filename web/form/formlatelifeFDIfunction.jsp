@@ -173,7 +173,7 @@
             color: #FFFFFF;
             font-weight: bolder;
         }
-
+        
     </style>
 </head>
 
@@ -397,7 +397,8 @@
             </tr>
         </table>
     </td>
-    <td width="83%"><table>
+    <td width="83%">
+    <table border="0" cellspacing="0" cellpadding="0" height="100%" width="100%">
     <tr><td valign="top">
     <table border="0" cellspacing="0" cellpadding="0" height="85%" width="100%" id="instruction">        
         <tr>        
