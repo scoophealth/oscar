@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : VTForm.xml
+    Created on : October 31, 2004, 1:46 PM
+    Author     : root
+    Description:
+        Purpose of the document follows.
+-->
+
+<formProp>
+    <measurement> 
+	<type>BP</type> 
+	<typeDesc>Blood Pressure</typeDesc>
+	<typeDisplayName>Blood Pressure</typeDisplayName>
+	<measuringInstrc>Sitting Position (nnn/nnn)</measuringInstrc>
+	<validationRule>
+	    <name>Blood Pressure</name>
+	    <regularExp>[0-9]{2,3}/{1}[0-9]{2,3}</regularExp>
+	</validationRule>
+    </measurement>
+    <measurement> 
+	<type>HT</type>
+	<typeDesc>Height</typeDesc>
+	<typeDisplayName>Height</typeDisplayName>
+	<measuringInstrc>in cm (0 - 300)</measuringInstrc>
+	<validationRule>
+	   <name>Numeric Value: 0 to 300</name>
+	   <minValue>0</minValue>
+	   <maxValue>300</maxValue>
+	   <isNumeric>1</isNumeric>
+	</validationRule>
+     </measurement>
+     <measurement>
+        <type>WT</type>
+        <typeDesc>Weight</typeDesc>
+        <typeDisplayName>Weight</typeDisplayName>
+        <measuringInstrc>in kg (0 - 300)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0 to 300</name>
+           <minValue>0</minValue>
+           <maxValue>300</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>WC</type>
+        <typeDesc>Waist Circumference</typeDesc>
+        <typeDisplayName>Waist Circumference</typeDisplayName>
+        <measuringInstrc>in cm (40 - 500)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 40 to 500</name>
+           <minValue>40</minValue>
+           <maxValue>500</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>HC</type>
+        <typeDesc>Hip Circumference</typeDesc>
+        <typeDisplayName>Hip Circumference</typeDisplayName>
+        <measuringInstrc>in cm (40 - 700)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 40 to 700</name>
+           <minValue>40</minValue>
+           <maxValue>700</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>HR</type>
+        <typeDesc>Heart Rate</typeDesc>
+        <typeDisplayName>Heart Rate</typeDisplayName>
+        <measuringInstrc>in bpm (40 - 180)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 40 to 180</name>
+           <minValue>40</minValue>
+           <maxValue>180</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>HbA1</type>
+        <typeDesc>HbA1c</typeDesc>
+        <typeDisplayName>HbA1c</typeDisplayName>
+	<measuringInstrc>(0.04 - 0.2)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0.04 to 0.2</name>
+           <minValue>0.04</minValue>
+           <maxValue>0.2</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>BG</type>
+        <typeDesc>Blood Glucose</typeDesc>
+        <typeDisplayName>Blood Glucose</typeDisplayName>
+        <measuringInstrc>in mmol/L (1.5 - 30.0)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 1.5 to 30.0</name>
+           <minValue>1.5</minValue>
+           <maxValue>30.0</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>LDL</type>
+        <typeDesc>Low Density Lipid</typeDesc>
+        <typeDisplayName>LDL</typeDisplayName>
+        <measuringInstrc>in mmol/L (0.5 - 10)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0.5 to 10</name>
+           <minValue>0.5</minValue>
+           <maxValue>10</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>HDL</type>
+        <typeDesc>High Density Lipid</typeDesc>
+        <typeDisplayName>HDL</typeDisplayName>
+        <measuringInstrc>in mmol/L (0.4 - 4.0)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0.4 to 4.0</name>
+           <minValue>0.4</minValue>
+           <maxValue>4.0</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>TCHL</type>
+        <typeDesc>Total Cholestorol</typeDesc>
+        <typeDisplayName>Total Cholestorol</typeDisplayName>
+        <measuringInstrc>in mmol/L (2.0 - 12.0)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 2.0 to 12.0</name>
+           <minValue>2.0</minValue>
+           <maxValue>12.0</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>TRIG</type>
+        <typeDesc>Triglycerides</typeDesc>
+        <typeDisplayName>Triglycerides</typeDisplayName>
+        <measuringInstrc>in mmol/L (0.0 - 35.0)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0.0 to 35.0</name>
+           <minValue>0.0</minValue>
+           <maxValue>35.0</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>UALB</type>
+        <typeDesc>Urine alb: creat ratio</typeDesc>
+        <typeDisplayName>Urine alb: creat ratio</typeDisplayName>
+        <measuringInstrc>in mg/mmol (0 - 100)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0 to 100</name>
+           <minValue>0</minValue>
+           <maxValue>100</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>24UA</type>
+        <typeDesc>24 hour urine albumin</typeDesc>
+        <typeDisplayName>24 hour urine albumin</typeDisplayName>
+        <measuringInstrc>mg/24h (0 - 500)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0 to 500</name>
+           <minValue>0</minValue>
+           <maxValue>500</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>FTNo</type>
+        <typeDesc>No Significan Pathology</typeDesc>
+        <typeDisplayName>Foot Exam: No Significan Pathology</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>FTNe</type>
+        <typeDesc>Neuropathy</typeDesc>
+        <typeDisplayName>Foot Exam: Neuropathy</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>FTIs</type>
+        <typeDesc>Ischemia</typeDesc>
+        <typeDisplayName>Foot Exam: Ischemia</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>FTUl</type>
+        <typeDesc>Ulcer</typeDesc>
+        <typeDisplayName>Foot Exam: Ulcer</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>FTIn</type>
+        <typeDesc>Infection</typeDesc>
+        <typeDisplayName>Foot Exam: Infection</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>FTOt</type>
+        <typeDesc>Other Vascular abnomality</typeDesc>
+        <typeDisplayName>Foot Exam: Other Vascular abnomality</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>FTRe</type>
+        <typeDesc>Referral made</typeDesc>
+        <typeDisplayName>Foot Exam: Referral made</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>iNo</type>
+        <typeDesc>No Significant Pathology</typeDesc>
+        <typeDisplayName>Eye Exam: No Significant Pathology</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>iDia</type>
+        <typeDesc>Diabetic Retinopathy</typeDesc>
+        <typeDisplayName>Eye Exam: Diabetic Retinopathy</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>iHyp</type>
+        <typeDesc>Hypertensive Retinopathy</typeDesc>
+        <typeDisplayName>Eye Exam: Hypertensive Retinopathy</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>iOth</type>
+        <typeDesc>Other Vascular Abnormality</typeDesc>
+        <typeDisplayName>Eye Exam: Other Vascular Abnomality</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>iRef</type>
+        <typeDesc>Refferal Made</typeDesc>
+        <typeDisplayName>Eye Exam: Refferal Made</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>           
+        </validationRule>
+     </measurement>     
+     <measurement>
+        <type>SmkS</type>
+        <typeDesc>Cigarette Smoking Status</typeDesc>
+        <typeDisplayName>Cigarette Smoking Status</typeDisplayName>
+        <measuringInstrc>Average cigarettes per day (0 - 80)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0 to 80</name>
+           <minValue>0</minValue>
+           <maxValue>80</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>SmkH</type>
+        <typeDesc>Cigarette Smoking History</typeDesc>
+        <typeDisplayName>Cigarette Smoking Status</typeDisplayName>
+        <measuringInstrc>Cumulative pack years (0 - 150)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0 to 150</name>
+           <minValue>0</minValue>
+           <maxValue>150</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>SmkC</type>
+        <typeDesc>Cigarette Smoking Cessation</typeDesc>
+        <typeDisplayName>Cigarette Smoking Cessation</typeDisplayName>
+        <measuringInstrc>Date last quit (yyyy-MM-dd)</measuringInstrc>
+        <validationRule>
+           <name>Date</name>
+           <isDate>1</isDate>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>Exer</type>
+        <typeDesc>Exercise</typeDesc>
+        <typeDisplayName>Exercise</typeDisplayName>
+        <measuringInstrc>Minutes of moderate or vigorous exercise per week (0 - 6720)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0 to 6720</name>
+           <minValue>0</minValue>
+           <maxValue>6720</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>Diet</type>
+        <typeDesc>Diet</typeDesc>
+        <typeDisplayName>Diet</typeDisplayName>
+        <measuringInstrc>Servings of fruits and vegetables per day (0 - 20)</measuringInstrc>
+        <validationRule>
+           <name>Numeric Value: 0 to 20</name>
+           <minValue>0</minValue>
+           <maxValue>20</maxValue>
+           <isNumeric>1</isNumeric>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>DpSc</type>
+        <typeDesc>Depression Screen</typeDesc>
+        <typeDisplayName>Depression Screen</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>StSc</type>
+        <typeDesc>Stress Screen</typeDesc>
+        <typeDisplayName>Stress Screen</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>LcCt</type>
+        <typeDesc>Locus of Control Screen</typeDesc>
+        <typeDisplayName>Locus of Control Screen</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>MedG</type>
+        <typeDesc>Medication adherence general problem</typeDesc>
+        <typeDisplayName>Medication adherence general problem</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>MedN</type>
+        <typeDesc>Medication adherence negative beliefs</typeDesc>
+        <typeDisplayName>Medication adherence negative beliefs</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>MedR</type>
+        <typeDesc>Medication adherence recall barriers</typeDesc>
+        <typeDisplayName>Medication adherence recall barriers</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>MedA</type>
+        <typeDesc>Medication adherence access barriers</typeDesc>
+        <typeDisplayName>Medication adherence access barriers</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>NtrC</type>
+        <typeDesc>Diet/Nutrition Counseling Given</typeDesc>
+        <typeDisplayName>Diet/Nutrition Counseling Given</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>ExeC</type>
+        <typeDesc>Exercise Counseling Given</typeDesc>
+        <typeDisplayName>Exercise Counseling Given</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>SmCC</type>
+        <typeDesc>Smoking Cessation Counseling Given</typeDesc>
+        <typeDisplayName>Smoking Cessation Counseling Given</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>DiaC</type>
+        <typeDesc>Diabetes Counseling Given</typeDesc>
+        <typeDisplayName>Diabetes Counseling Given</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>PsyC</type>
+        <typeDesc>Psychosocial Counseling Given</typeDesc>
+        <typeDisplayName>Psychosocial Counseling Given</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>OthC</type>
+        <typeDesc>Other Counseling Given</typeDesc>
+        <typeDisplayName>Other Counseling Given</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+</formProp>
+
+
