@@ -56,6 +56,27 @@
 			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "' ";
 			sql += "where service_code='" + serviceCode + "'";
 			System.out.println(sql);
+			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
+				String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
+				boolean bAdd = true;
+				ResultSet rs1 = dbObj.searchDBRecord(sqlMinMax);
+				if (rs1.next()) {
+					bAdd = false;
+				}
+				if(bAdd) {
+					sqlMinMax = "insert into billingperclimit values('";
+					sqlMinMax += serviceCode + "', '";
+					sqlMinMax += request.getParameter("min") + "', '";
+					sqlMinMax += request.getParameter("max") + "' )";
+					dbObj.updateDBRecord(sqlMinMax);
+				} else {
+					sqlMinMax = "update billingperclimit set min='";
+					sqlMinMax += request.getParameter("min") + "', max='";
+					sqlMinMax += request.getParameter("max") + "' where service_code='";
+					sqlMinMax += serviceCode + "'";
+					dbObj.updateDBRecord(sqlMinMax);
+				}
+			}
 			if(dbObj.updateDBRecord(sql)) {
 	  			msg = serviceCode + " is updated.<br>" + "Type in a service code and search first to see if it is available.";
 	  			action = "search";
@@ -84,7 +105,14 @@
 			sql += request.getParameter("value") + "', '";
 			sql += request.getParameter("percentage") + "', '";
 			sql += request.getParameter("billingservice_date") + "' )";
-			if(dbObj.updateDBRecord(sql)) {
+			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
+				String sqlMinMax = "insert into billingperclimit values('";
+				sqlMinMax += serviceCode + "', '";
+				sqlMinMax += request.getParameter("min") + "', '";
+				sqlMinMax += request.getParameter("max") + "' )";
+				dbObj.updateDBRecord(sqlMinMax);
+			}
+			if(dbObj.updateDBRecord(sql) ) {
 	  			msg = serviceCode + " is added.<br>" + "Type in a service code and search first to see if it is available.";
 	  			action = "search";
 			    prop.setProperty("service_code", serviceCode);
@@ -96,6 +124,8 @@
 			    prop.setProperty("value", request.getParameter("value"));
 			    prop.setProperty("percentage", request.getParameter("percentage"));
 			    prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
+			    prop.setProperty("min", request.getParameter("min"));
+			    prop.setProperty("max", request.getParameter("max"));
 			}
 		} else {
       		msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode + ". Please search the service code first.";
@@ -113,6 +143,7 @@
         String serviceCode = request.getParameter("service_code");
 		String	sql   = "select * from billingservice where service_code='" + serviceCode + "'";
 		ResultSet rs = dbObj.searchDBRecord(sql);
+System.out.println(sql);
 
 		if (rs.next()) {
 		    prop.setProperty("service_code", serviceCode);
@@ -122,6 +153,15 @@
 		    prop.setProperty("billingservice_date", rs.getString("billingservice_date"));
 		    msg = "You can edit the service code.";
 		    action = "edit" + serviceCode;
+
+		    String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
+System.out.println(sqlMinMax);
+			ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
+			if (rs2.next()) {
+		    	prop.setProperty("min", rs2.getString("min"));
+		    	prop.setProperty("max", rs2.getString("max"));
+			}
+
 		} else {
 		    prop.setProperty("service_code", serviceCode);
 		    msg = "It is a NEW service code. You can add it.";
@@ -215,6 +255,12 @@
 		            b = false;
 		            alert ("The percentage should be less than 1.");
 		        }
+		        if(document.forms[0].min.value.length>0 && document.forms[0].max.value.length>0) {
+					if(!isNumber(document.forms[0].min.value) || !isNumber(document.forms[0].max.value)){
+		            	b = false;
+		            	alert ("You must type in a number in the min/max fields.");
+		        	}
+		        }
 	        } else if(document.forms[0].value.value.length==0 && document.forms[0].percentage.value.length==0) {
 	            b = false;
 	            alert ("You must type in a number in the field fee");
@@ -301,6 +347,9 @@
             <td>
               <input type="text" name="percentage" value="<%=prop.getProperty("percentage", "")%>" size='8' maxlength='8'>
               (format: 0.xx, e.g. 0.20)
+              min.
+              <input type="text" name="min" value="<%=prop.getProperty("min", "")%>" size='7' maxlength='8'>
+              max.<input type="text" name="max" value="<%=prop.getProperty("max", "")%>" size='7' maxlength='8'>
             </td>
           </tr>
           <tr bgcolor="#EEEEFF">
