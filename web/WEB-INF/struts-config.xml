@@ -237,7 +237,8 @@
     <form-bean      name="RptInitializePatientsInAbnormalRangeCDMReportForm"
                     type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsInAbnormalRangeCDMReportForm"/>           
     <form-bean      name="RptInitializeFrequencyOfRelevantTestsCDMReportForm"
-                    type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportForm"/>                                                                
+                    type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializeFrequencyOfRelevantTestsCDMReportForm"/>                                                                                                                            
+                    
 <!-- OscarMaintenance start -->
     <form-bean      name="MaintenanceForm"
                     type="oscar.oscarMaintenance.pageUtil.MaintenanceForm"/>
@@ -274,10 +275,14 @@
                     type="oscar.oscarBilling.pageUtil.BillingSaveBillingForm" />
     <form-bean      name="BillingViewForm"
                     type="oscar.oscarBilling.pageUtil.BillingViewForm" />
-<!-- OscarBilling stop -->
+<!-- OscarBilling BC stop -->
 
+<!-- OscarBilling ON start-->
+    <form-bean      name="BillingDocumentErrorReportUploadForm"
+                    type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadForm"/>    
 
-  </form-beans>
+    </form-beans>
+<!-- OscarBilling ON stop -->    
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
@@ -1205,7 +1210,7 @@
                 input="/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp">                
        <forward name="success" path="/oscarReport/oscarMeasurements/CDMReport.jsp"/>
     </action>
-      
+
 <!-- oscarReport End -->  
     
     
@@ -1410,9 +1415,17 @@
               <forward name="success" path="/billing/CA/BC/billingView.jsp"/>
               <forward name="ON"   path="/billing/CA/ON/billingOB2.jsp"/>
     </action>
-    <!-- oscarBilling end -->
+    <!-- oscarBilling BC end -->
 
-    
+    <!-- oscarBilling ON start -->
+    <action     path="/oscarBilling/DocumentErrorReportUpload"
+                type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadAction"  
+                name="BillingDocumentErrorReportUploadForm"              
+                scope="request"
+                input="/billing/CA/ON/billingOBECEA.jsp">                
+       <forward name="success" path="/billing/CA/ON/billingEAreport.jsp"/>
+    </action>          
+    <!-- oscarBilling ON end -->
         
   </action-mappings>
 
