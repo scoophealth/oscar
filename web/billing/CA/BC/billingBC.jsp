@@ -61,9 +61,9 @@ BillingFormData billform = new BillingFormData();
 BillingFormData.BillingService[] billlist1 = billform.getServiceList("Group1", bean.getBillForm(), bean.getBillRegion());
 BillingFormData.BillingService[] billlist2 = billform.getServiceList("Group2", bean.getBillForm(), bean.getBillRegion());
 BillingFormData.BillingService[] billlist3 = billform.getServiceList("Group3", bean.getBillForm(), bean.getBillRegion());
-String group1Header = billform.getServiceGroupName("Group1");
-String group2Header = billform.getServiceGroupName("Group2");
-String group3Header = billform.getServiceGroupName("Group3");
+String group1Header = billform.getServiceGroupName("Group1",bean.getBillForm());
+String group2Header = billform.getServiceGroupName("Group2",bean.getBillForm());
+String group3Header = billform.getServiceGroupName("Group3",bean.getBillForm());
 
 BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
 BillingFormData.BillingVisit[] billvisit = billform.getVisitType(bean.getBillRegion());
