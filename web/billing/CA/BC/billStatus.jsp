@@ -124,6 +124,18 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
    popup.focus();
   }
 }
+
+function popupPage2(vheight,vwidth,varpage,pagename) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, pagename, windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+   popup.focus();
+  }
+}
 function selectprovider(s) {
   if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
   else a = self.location.href;
@@ -307,7 +319,11 @@ if (billTypes == null){
     <td align="center" class="bCellData" ><a href="javascript: setDemographic('<%=b.demoNo%>');"><%=b.demoName%></a></td>
     <td align="center" class="bCellData" ><%=b.reason%></td>
     <td align="center" class="bCellData" ><%=b.code%></td>
-    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.amount%></td>
+    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> >
+        <a href="javascript: function myFunction() {return false; }" onClick="popupPage2(500,1020,'genTAS00ByOfficeNo.jsp?officeNo=<%=b.billMasterNo%>','RecValues');">
+            <%=b.amount%>
+        </a>
+    </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
     <td align="center" class="bCellData" ><%=s(b.dx2)%></td>
     <td align="center" class="bCellData" ><%=s(b.dx3)%></td>
