@@ -79,6 +79,10 @@ public class BillingSessionBean {
     private String service_to_date = "";
     private String shortClaimNote = "";
     private String messageNotes = "";
+    private String mva_claim_code = ""; 
+    private String facilityNum = "";
+    private String facilitySubNum = "";
+    
     public String getIcbc_claim_no(){
         this.icbc_claim_no = (null != this.icbc_claim_no) ? this.icbc_claim_no : "";
         if (icbc_claim_no.compareTo("") == 0 || (this.billingType.compareTo("ICBC") != 0)){
@@ -92,7 +96,11 @@ public class BillingSessionBean {
        this.icbc_claim_no = icbc;
     }
     public String getMva_claim_code(){
-        return (this.billingType.compareTo("ICBC") == 0) ? "Y" : "N";
+        return mva_claim_code;
+    }
+    
+    public void setMva_claim_code(String mva_claim_code){
+       this.mva_claim_code = mva_claim_code;       
     }
     public String getEncounter(){
 	return this.encounter;
@@ -327,6 +335,38 @@ public class BillingSessionBean {
      */
     public void setMessageNotes(java.lang.String messageNotes) {
        this.messageNotes = messageNotes;
+    }
+    
+    /**
+     * Getter for property facilityNum.
+     * @return Value of property facilityNum.
+     */
+    public java.lang.String getFacilityNum() {
+       return facilityNum;
+    }
+    
+    /**
+     * Setter for property facilityNum.
+     * @param facilityNum New value of property facilityNum.
+     */
+    public void setFacilityNum(java.lang.String facilityNum) {
+       this.facilityNum = facilityNum;
+    }
+    
+    /**
+     * Getter for property facilitySubNum.
+     * @return Value of property facilitySubNum.
+     */
+    public java.lang.String getFacilitySubNum() {
+       return facilitySubNum;
+    }
+    
+    /**
+     * Setter for property facilitySubNum.
+     * @param facilitySubNum New value of property facilitySubNum.
+     */
+    public void setFacilitySubNum(java.lang.String facilitySubNum) {
+       this.facilitySubNum = facilitySubNum;
     }
     
     // public void estUserName(){
