@@ -463,6 +463,16 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 </tr>
 
 <% 
+// get the list of checked codes
+Properties checkedCode = new Properties();
+String temp1 = null;
+for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
+	temp=e.nextElement().toString();
+	if( temp.startsWith("xml_") ) { 
+		checkedCode.setProperty(temp, "1") ;
+	}
+}
+
 double dSFee = 0.00;        
 double dFee = 0.00;
 
@@ -470,7 +480,13 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	temp=e.nextElement().toString();
 	if( temp.indexOf("xml_")==-1 ) continue; 
 	//////////////////////////////////////////////////////////////////////////////////////
-	content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
+	if( temp.startsWith("desc_xml_") || temp.startsWith("price_xml_") || temp.startsWith("perc_xml_") ) { 
+		if (checkedCode.getProperty(temp.substring(temp.indexOf("_")+1) , "").equals("1") ) {
+			content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
+		}
+	} else {
+		content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
+	}
 	//////////////////////////////////////////////////////////////////////////////////////  	
 
 	fee = request.getParameter("price_" + temp);
