@@ -102,6 +102,7 @@
            <maxValue>0.2</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>BG</type>
@@ -114,6 +115,7 @@
            <maxValue>30.0</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>LDL</type>
@@ -126,6 +128,7 @@
            <maxValue>10</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>HDL</type>
@@ -138,6 +141,7 @@
            <maxValue>4.0</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>TCHL</type>
@@ -150,6 +154,7 @@
            <maxValue>12.0</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>TRIG</type>
@@ -162,6 +167,7 @@
            <maxValue>35.0</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>UALB</type>
@@ -174,6 +180,7 @@
            <maxValue>100</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>24UA</type>
@@ -186,6 +193,7 @@
            <maxValue>500</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>FTNo</type>
@@ -504,6 +512,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>ACS</type>
@@ -514,6 +523,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>Ang</type>
@@ -524,6 +534,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>RVTN</type>
@@ -534,6 +545,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>CVD</type>
@@ -544,6 +556,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
         <type>PVD</type>
@@ -554,6 +567,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>     
      <measurement>
         <type>DM</type>
@@ -564,6 +578,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>    
      <measurement>
         <type>HTN</type>
@@ -574,6 +589,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>    
      <measurement>
         <type>Hchl</type>
@@ -584,6 +600,7 @@
            <name>Yes/No</name>
            <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
         </validationRule>
+        <canPrefill>true</canPrefill>
      </measurement>
 </formProp>
 
