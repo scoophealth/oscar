@@ -161,6 +161,8 @@ TH {
 {
     background-color:#003399;   
     border-right: 2px solid #A9A9A9;
+    border-left: 2px solid #A9A9A9;
+    border-top: 2px solid #A9A9A9;
     height:34px;
     max-width:130px;
     font-size: 110%;
@@ -170,6 +172,8 @@ TH {
 .MainTableBottomRowLeftColumn
 {    
     border-right: 2px solid #A9A9A9;
+    border-left: 2px solid #A9A9A9;
+    border-bottom: 2px solid #A9A9A9;
     height:4px;
     max-width:130px;
 
@@ -177,20 +181,26 @@ TH {
 .MainTableLeftColumn
 {   
     border-right: 2px solid #A9A9A9;
+    border-left: 2px solid #A9A9A9;
     max-width:130px;
 }
 
 .MainTableTopRowRightColumn
 {
+    border-right: 2px solid #A9A9A9;
+    border-top: 2px solid #A9A9A9;
     background-color:#003399;   
     height:34px;
 }
 .MainTableBottomRowRightColumn
 {
+    border-bottom: 2px solid #A9A9A9;
+    border-right: 2px solid #A9A9A9;
     height:4px;
 }
 .MainTableRightColumn
 {    
+    border-right: 2px solid #A9A9A9;
     height:34px;
 }
 .TopStatusBar
