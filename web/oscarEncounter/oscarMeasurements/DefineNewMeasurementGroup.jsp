@@ -97,7 +97,7 @@
                                         </th>
                                     </tr> 
                                     <tr>
-                                        <td><html:text property="value(groupName)"/></td>
+                                        <td><html:text property="groupName"/></td>
                                     </tr>
                                     <tr>
                                         <td>
