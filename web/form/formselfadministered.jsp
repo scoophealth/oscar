@@ -85,6 +85,8 @@
 <script type="text/javascript" language="Javascript">
     
     var choiceFormat  = new Array(6,10,11,14,15,18,19,20,21,22,23,24,25,26,27,28,29,30);    
+    var allMatch = null;
+    var allNumericField = null;
     var action = "/<%=project_home%>/form/formname.do";
 
 </script>
