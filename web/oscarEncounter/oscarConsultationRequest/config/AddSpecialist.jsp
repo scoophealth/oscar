@@ -35,8 +35,10 @@
   ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
   
   String transactionType = new String(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.addOperation"));
+  int whichType = 1;
   if ( request.getAttribute("upd") != null){
       transactionType = new String(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.updateOperation"));
+      whichType=2;
   }
 %>
 
@@ -205,6 +207,7 @@ function BackToOscar() {
                         </tr>
                         <tr>
                            <td colspan="6">
+                                    <input type="hidden" name="whichType" value="<%=whichType%>"/>
                                     <input type="submit" name="transType" value="<%=transactionType%>"/>
                            </td>
                         </tr>
