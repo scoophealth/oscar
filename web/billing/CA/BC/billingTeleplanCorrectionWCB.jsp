@@ -33,8 +33,10 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
 <%
+
 TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.queryResults(request.getParameter("billing_no"), "select_user_bill_report_wcb"));
 
+   
    Properties codes = new MspErrorCodes();           
 %>
 <html:html>
@@ -202,12 +204,12 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 					<td class="FormLabel">Billing Unit:</td>
 					<td><html:text property="billingUnit" value="<%=form.getBillingUnit()%>" /></td>
 				</tr>
-				<tr>
+				<!--<tr>
 					<td class="FormLabel">Billing Code:</td>
 					<td><html:text property="billingCode" value="<%=form.getBillingCode()%>" />
 					<a onClick="popup('400', '600', 'support/billingcodes.jsp?form=TeleplanCorrectionFormWCB&field=billingCode', 'Code');">Service</a>
 					</td>
-				</tr>
+				</tr>-->
 				<tr>
 					<td class="FormLabel">Bill Amount:</td>
 					<td><html:text property="billingAmount" readonly="true" value="<%=form.getBillingAmount()%>" /></td>
@@ -366,6 +368,28 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
 <table width="100%">
 	<tr>
 		<td colspan="2" align="right" class="LightBG">
+		<% String status = form.getStatus(); %>
+		<select style="font-size:80%;" name="status">
+                <option value="">--- Select Bill Type ---</option>
+      		<!--<option value="H" <%=status.equals("H")?"selected":""%>>H | Capitated</option>-->
+                <option value="O" <%=status.equals("O")?"selected":""%>>O | Bill MSP</option>
+                <option value="P" <%=status.equals("P")?"selected":""%>>P | Bill Patient</option>
+                <option value="N" <%=status.equals("N")?"selected":""%>>N | Do Not Bill</option>
+                <option value="W" <%=status.equals("W")?"selected":""%>>W | Bill Worker's Compensation Board</option>
+                <option value="B" <%=status.equals("B")?"selected":""%>>B | Summitted MSP</option>
+                <option value="S" <%=status.equals("S")?"selected":""%>>S | Settled/Paid by MSP</option>
+                <option value="X" <%=status.equals("X")?"selected":""%>>X | Bad Debt</option>
+                <option value="D" <%=status.equals("D")?"selected":""%>>D | Deleted Bill</option>          
+
+                <option value="R" <%=status.equals("R")?"selected":""%>>R | Rejected Bill</option>          
+                <option value="Z" <%=status.equals("Z")?"selected":""%>>Z | Held Bill</option>          
+                <option value="C" <%=status.equals("C")?"selected":""%>>C | Data Center Changed</option>                            
+                <option value="E" <%=status.equals("E")?"selected":""%>>E | Paid With Explanation</option>          
+                <option value="F" <%=status.equals("F")?"selected":""%>>F | Refused Bill</option>              
+      </select>
+		
+		
+		
 		<a href="billingTeleplanCorrectionWCB.jsp?billing_no=<%=form.getId()%>">Refresh</a> | 
 		<input type="button" name="Button" value="Close" onClick="window.close();"> | 
 		<input type="button" name="Button" value="Print" onClick="window.print();"> | 
