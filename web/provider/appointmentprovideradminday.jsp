@@ -577,7 +577,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
     <%}%>
 
       <% if (!vLocale.getCountry().equals("BR")) { %>
-      <!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|Rx</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=<bean:message key="global.oscarRx"/>')">|<bean:message key="global.rx"/></a>
+      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message key="global.rx"/></a>      
       <% } %>
 <% } %>
         		</font></td>
