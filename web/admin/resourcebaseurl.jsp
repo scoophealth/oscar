@@ -41,7 +41,7 @@
   baseurlBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
 <%
-  if(request.getParameter("submit")!=null && request.getParameter("submit").equals(" Save ") ) {
+  if(request.getParameter("submit_form")!=null && request.getParameter("submit_form").equals(" Save ") ) {
 
 	  int rowsAffected = baseurlBean.queryExecuteUpdate("resource_baseurl", "delete_baseurl");
 	  int rowsAffected1 = baseurlBean.queryExecuteUpdate("resource", "delete_baseurl");
@@ -54,10 +54,11 @@
     baseurlBean.closePstmtConn();  
   }
 %>
-
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>BASE URL</title>
+<title><bean:message key="admin.resourcebaseurl.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
@@ -74,7 +75,7 @@ function setfocus() {
 <body bgcolor="ivory" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
   <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 		<tr BGCOLOR="#CCCCFF">
-   	  <th>RESOURCE BASE URL</th>
+   	  <th><bean:message key="admin.resourcebaseurl.msgTitle"/></th>
 		</tr>
   </table>
 
@@ -85,7 +86,7 @@ function setfocus() {
     </tr>
     <tr bgcolor="#EEEEFF">
     <td><p>
-      &nbsp;Base URL: <font size='-2'>(e.g. http://oscar.mcmaster.ca)</a><br>
+      &nbsp;<bean:message key="admin.resourcebaseurl.formBaseUrl"/></a><br>
       &nbsp;<input type="text" name="resource_baseurl" value="" size='30'>
     </td>
     </tr>
@@ -94,11 +95,13 @@ function setfocus() {
     </tr>
     <tr> 
       <td align="center" bgcolor="#CCCCFF"> 
-      <input type="submit" name="submit" value=" Save "><input type="button" name="Cancel" value=" Exit " onClick="window.close()">
+      <input type="hidden" name="submit_form" value="">
+      <input type="button" name="submit_form" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="document.forms['baseurl'].submit_form.value=' Save '; document.forms['baseurl'].submit();">
+<input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
       </td>
     </tr>
   </form>
   </table>
 
 </body>
-</html>
+</html:html>

@@ -34,10 +34,11 @@
       rowsAffected = apptMainBean.queryExecuteUpdate(param,"add_template");
   }
 %>
-              
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title> ADD/DELETE A TEMPLATE</title>
+<title><bean:message key="admin.providertemplate.title"/></title>
 <link rel="stylesheet" href="../web.css" >
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
@@ -53,13 +54,13 @@ function setfocus() {
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica">ADD/EDIT A TEMPLATE</font></th>
+  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica"><bean:message key="admin.providertemplate.msgTitle"/></font></th>
   </tr>
 </table>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" >
 <form name="edittemplate" method="post" action="providertemplate.jsp">
-  <tr bgcolor=<%=weakcolor%>><td width="95%" align='right'>Edit Template: 
+  <tr bgcolor=<%=weakcolor%>><td width="95%" align='right'><bean:message key="admin.providertemplate.formEdit"/>: 
     <select name="name" >
 <%
   ResultSet rsdemo = null;
@@ -71,7 +72,8 @@ function setfocus() {
   }
 %>
     </select>
-    <input type="submit" value=" Edit " name="dboperation">
+    <input type="hidden" value=" Edit " name="dboperation">
+    <input type="button" value="<bean:message key="admin.providertemplate.btnEdit"/>" name="dboperation" onclick="document.forms['edittemplate'].dboperation.value=' Edit '; document.forms['edittemplate'].submit();">
   </td>
   <td>&nbsp;</td></tr>
 </form>
@@ -93,6 +95,7 @@ function setfocus() {
 <center>
 <table width="90%" border="0"  cellspacing="2" cellpadding="2">
 <form name="template" method="post" action="providertemplate.jsp">
+  <input type="hidden" name="dboperation" value="">
   <tr>
     <td valign="top" width="20%" align="right" title='no symbol "'> Template Name:</td> 
     <td>  <input type="text" name="name" value="<%=bEdit?tName:""%>" style="width:100%" maxlength="20"></td>
@@ -104,15 +107,15 @@ function setfocus() {
   
 <table width="100%" border="0" cellspacing="0" cellpadding="0" >
   <tr bgcolor=<%=weakcolor%>>
-    <td width="23%" align='right'><input type="submit" name="dboperation" value="Delete"> </td>
+    <td width="23%" align='right'><input type="button" value="<bean:message key="admin.providertemplate.btnDelete"/>" onClick="document.forms['template'].dboperation.value='Delete'; document.forms['template'].submit();"> </td>
     <td width="72%" align='right'>
           <INPUT TYPE="hidden" NAME="creator" VALUE="<%=curUser_no%>">
-          <input type="submit" name="dboperation" value=" Save ">
-          <input type="button" name="Button" value=" Exit " onClick="window.close()">
+          <input type="button" value="<bean:message key="admin.providertemplate.btnSave"/>" onClick="document.forms['template'].dboperation.value=' Save '; document.forms['template'].submit();">
+          <input type="button" name="Button" value="<bean:message key="admin.providertemplate.btnExit"/>" onClick="window.close();">
 	</td>
 	<td>&nbsp;</td></tr>
 </form>
 </table>
 </center>
 </body>
-</html>
+</html:html>
