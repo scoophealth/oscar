@@ -91,7 +91,7 @@ public final class WCBForm extends ActionForm {
         boolean isValid = true;
         return isValid;
     }
-    public String SQL(String billingno, String amount) {
+    public String SQL(String billingno, String amount) {       
         return sql
         + "'"
         + oscar.Misc.mysqlEscape(billingno)
@@ -192,6 +192,7 @@ public final class WCBForm extends ActionForm {
         + "', '"
         + oscar.Misc.mysqlEscape(this.w_servicelocation)
         + "')";
+        
     }
     public void Set(oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean) {
         oscar.oscarBilling.ca.bc.data.BillingFormData billform =
@@ -200,6 +201,13 @@ public final class WCBForm extends ActionForm {
         this.w_pracname = billform.getProviderName(bean.getBillingProvider());
         this.w_pracno = billform.getPracNo(bean.getBillingProvider());
         this.w_icd9 = bean.getDx1();
+        try{           
+           String fee =    ( (BillingBillingManager.BillingItem)  bean.getBillItem().get(0) ).getServiceCode();            
+           if (fee != null){
+              this.w_feeitem = fee;
+           }
+        }catch(Exception efee){}
+        
         this.demographic_no = bean.getPatientNo();
         this.w_servicedate = bean.getServiceDate();
         this.w_servicelocation = bean.getVisitType();
@@ -207,8 +215,7 @@ public final class WCBForm extends ActionForm {
         new oscar.oscarDemographic.data.DemographicData().getDemographic(
         bean.getPatientNo()));
     }
-    private void Set(
-    oscar.oscarDemographic.data.DemographicData.Demographic demo) {
+    private void Set(oscar.oscarDemographic.data.DemographicData.Demographic demo) {
         this.w_fname = demo.getFirstName();
         this.w_lname = demo.getLastName();
         this.w_gender = demo.getSex();
