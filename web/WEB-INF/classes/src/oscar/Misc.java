@@ -382,6 +382,16 @@ public String space(int i) {
         }        
         return cutFrontString(returnZeroValue+y,x);
     }
+    
+    public String backwardZero(String y,int i) {
+        String returnValue = new String();
+        for(int j=y.length(); j < i; j++) {
+            returnValue += "0";
+        }
+        return cutBackString(y+returnValue,i);
+    }    
+    
+    
     public String cutFrontString(String str,int len){
         return str.substring(str.length() - len, str.length());
     }
