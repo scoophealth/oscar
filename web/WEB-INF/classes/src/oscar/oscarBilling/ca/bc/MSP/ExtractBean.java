@@ -215,7 +215,13 @@ public class ExtractBean extends Object implements Serializable {
                                  bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
                                  BigTotal = BigTotal.add(bdFee);
                                                                  
-                                 htmlContent += htmlLine(rs2.getString("billingmaster_no"),invNo,demoName, rs2.getString("phn"), rs2.getString("service_date"),rs2.getString("billing_code") ,rs2.getString("bill_amount"),rs2.getString("dx_code1"),rs2.getString("dx_code2"),rs2.getString("dx_code3"));                           
+                                 if (isMSPInsurer(rs2)){                                    
+                                    htmlContent += htmlLine(rs2.getString("billingmaster_no"),invNo,demoName, rs2.getString("phn"), rs2.getString("service_date"),rs2.getString("billing_code") ,rs2.getString("bill_amount"),rs2.getString("dx_code1"),rs2.getString("dx_code2"),rs2.getString("dx_code3"));                           
+                                 }else{                                    
+                                    htmlContent += htmlLine(rs2.getString("billingmaster_no"),invNo,demoName, rs2.getString("oin_registration_no"), rs2.getString("service_date"),rs2.getString("billing_code") ,rs2.getString("bill_amount"),rs2.getString("dx_code1"),rs2.getString("dx_code2"),rs2.getString("dx_code3"));                           
+                                 }
+                                    
+                                 
                            
                                  errorMsg = checkData.checkC02(rs2.getString("billingmaster_no"), rs2); 
                                  htmlContent += errorMsg;
@@ -625,4 +631,13 @@ public class ExtractBean extends Object implements Serializable {
       }
       return tosubmit;
    }
+    
+    public boolean isMSPInsurer(ResultSet rs2) throws SQLException{
+       boolean retval = true;       
+       String insurer = rs2.getString("oin_insurer_code");       
+       if ( insurer != null && (insurer.trim().length() > 0) ){
+          retval = false;
+       }                        
+       return retval;
+    }
 }
