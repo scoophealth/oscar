@@ -176,12 +176,27 @@
 	    }
 		function checkServiceCode() {
 	        var b = true;
-	        if(document.forms[0].service_code.value.length!=5){
+	        if(document.forms[0].service_code.value.length!=5 || !isServiceCode(document.forms[0].service_code.value)){
 	            b = false;
-	            alert ("You must type in a service code with 5 letters/digits. The service code ends with \'A\' or \'B\'...");
+	            alert ("You must type in a service code with 5 (upper case) letters/digits. The service code ends with \'A\' or \'B\'...");
 	        }
 	        return b;
 	    }
+    function isServiceCode(s){
+        // temp for 0.
+    	if(s.length==0) return true;
+    	if(s.length!=5) return false;
+        if((s.charAt(0) < "A") || (s.charAt(0) > "Z")) return false;
+        if((s.charAt(4) < "A") || (s.charAt(4) > "Z")) return false;
+
+        var i;
+        for (i = 1; i < s.length-1; i++){
+            // Check that current character is number.
+            var c = s.charAt(i);
+            if (((c < "0") || (c > "9"))) return false;
+        }
+        return true;
+    }
 		function checkAllFields() {
 	        var b = true;
 	        if(document.forms[0].value.value.length>0 && document.forms[0].percentage.value.length>0){
