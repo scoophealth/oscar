@@ -1,0 +1,85 @@
+<%--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+--%>
+
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
+<head>
+ <link rel="stylesheet" type="text/css" href="encounterStyles.css">
+ <html:base/>
+ <script type="text/javascript" language=javascript>
+   function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
+     var page = varpage;
+     windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
+     var popup=window.open(varpage, pageName, windowprops);
+     popup.opener = self;
+     popup.focus();
+     close();
+   }
+  </script>
+</head>
+
+<body>
+<table border=0 cellpadding="0" cellspacing="1"  width="100%" class="layerTable" bgcolor="#FFFFFF"  >
+  <tr>
+    <td align="center" class="menuLayer">
+      <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.intmed.mcw.edu/clincalc/body.html','BodyMassIndex');">
+        <bean:message key="oscarEncounter.Index.bodyMass"/>
+      </a>
+  </td></tr>
+  <tr><td align="center" class="menuLayer">
+      <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%= request.getParameter("sex") %>&age=<%= request.getParameter("age")%>','CoronaryArteryDiseaseRisk');">
+         <bean:message key="oscarEncounter.Index.coronary"/>
+       </a>
+  </td></tr>
+   <tr><td align="center" class="menuLayer">
+       <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.jsp?sex=<%= request.getParameter("sex") %>&age=<%= request.getParameter("age") %>','OsteoporoticFracture');">
+         Osteoporotic Fracture
+       </a>
+   </td></tr>
+   <tr>
+   <td align="center" class="menuLayer">
+       <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.intmed.mcw.edu/clincalc/pregnancy.html','PregancyCalculator');">
+         <bean:message key="oscarEncounter.Index.pregnancy"/>
+       </a>
+   </td></tr>
+    <tr>
+    <td align="center" class="menuLayer">
+      <a href="javascript: function myFunction() {return false; }" onclick="popperup(400,500,'calculators/SimpleCalculator.jsp','SimpleCalc');">
+       <bean:message key="oscarEncounter.Index.simpleCalculator"/>
+      </a>
+    </td></tr>
+    <tr><td align="center" class="menuLayer">
+       <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'calculators/GeneralCalculators.jsp','GeneralConversions'); ">
+         <bean:message key="oscarEncounter.Index.generalConversions"/>
+       </a>
+    </td>
+    </tr>
+</table>
+</body>
+</html:html>
