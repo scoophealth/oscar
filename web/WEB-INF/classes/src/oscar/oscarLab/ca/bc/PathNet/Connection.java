@@ -56,9 +56,9 @@ public class Connection {
    NegativeAckQuery       = "Page=HL7&ACK=Negative",
    LogoutQuery            = "Logout=Yes";
    private HTTP http;
-   
+
    public Connection() {
-      this.url = OscarProperties.getInstance().getProperty("PathNetUrl");
+      this.url = OscarProperties.getInstance().getProperty("pathnet_url");
       this.http = new HTTP(this.url);
    }
    
@@ -70,6 +70,7 @@ public class Connection {
       }
       catch (Exception ex) {
          System.err.println("Error - oscar.PathNet.Connection.Open - Message: "+ ex.getMessage());
+         ex.printStackTrace();
          success = false;
       }
       return success;
