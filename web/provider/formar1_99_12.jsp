@@ -137,12 +137,12 @@ function onSubmitForm() {
 	  }
   }
   if(saveTemp==0) {
-    document.serviceform.target="apptProvider";
+    // document.serviceform.target="apptProvider";
     document.serviceform.cmd.value="Save & Exit";
     document.serviceform.submit();
   }
   if(saveTemp==1) {
-    popupPage(30,200,'notice.htm');
+    popupPage(30,200,'../provider/notice.htm');
     document.serviceform.target="printlocation";
     document.serviceform.cmd.value="Save";
     document.serviceform.submit();
@@ -167,7 +167,7 @@ function onSubmitForm() {
 </SCRIPT>
 </head>
 <body onLoad="setfocus()" bgcolor="#c4e9f6" bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
-<form name="serviceform" action="providercontrol.jsp"  method="POST" onSubmit="return (onSubmitForm());">
+<form name="serviceform" action="../provider/providercontrol.jsp"  method="POST" onSubmit="return (onSubmitForm());">
 
 <%
   //if bNewForm is false (0), then it should be able to display xml data.
@@ -257,7 +257,7 @@ function onSubmitForm() {
 	<%--=bNewList?"<a href=# onClick='onSave()'><img src='../images/buttonsave.gif' align='top' width='75' height='25' ></a> ":""--%>
 	<%=bNewList?"<input type='button' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
 	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
-	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%></th>
+	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & Exit' onClick='onSaveExit()'> ":""%></th>
       <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Antenatal 
         Record 1 </font></th>
       <th width="25%" nowrap> 
@@ -1350,7 +1350,7 @@ function onSubmitForm() {
           <input type="hidden" name="displaymode" value="saveform">
           <table width='100%' border=0><tr><td width='90%' align='center'>
 	        <%=bNewList&&(request.getParameter("patientmaster")!=null)?"<input type='submit' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
-	        <%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%>
+	        <%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & Exit' onClick='onSaveExit()'> ":""%>
         	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
           </td><td align='right'><%=bNewList?"<input type='button' name='Button' value=' Exit ' onClick='onExit();'>":"<input type='button' name='Button' value=' Exit ' onClick='window.close();'>" %>
           </td></table>

@@ -101,12 +101,12 @@ function onSubmitForm() {
     return false;
   }
   if(saveTemp==0) {
-    document.serviceform.target="apptProvider";
+    // document.serviceform.target="apptProvider";
     document.serviceform.cmd.value="Save & Exit";
     document.serviceform.submit();
   }
   if(saveTemp==1) {
-    popupPage(30,200,'notice.htm');
+    popupPage(30,200,'../provider/notice.htm');
     document.serviceform.target="printlocation";
     document.serviceform.cmd.value="Save";
     document.serviceform.submit();
@@ -127,7 +127,7 @@ function onSubmitForm() {
 </SCRIPT>
 </head>
 <body onLoad="setfocus()"  bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" bgcolor="#c4e9f6">
-<form name="serviceform" action="providercontrol.jsp"  method="POST" onSubmit="return (onSubmitForm());">
+<form name="serviceform" action="../provider/providercontrol.jsp"  method="POST" onSubmit="return (onSubmitForm());">
 
 <%
   //if bNewForm is false (0), then it should be able to display xml data.
@@ -223,7 +223,7 @@ function onSubmitForm() {
 	<%--=bNewList?"<a href=# onClick='onSave()'><img src='../images/buttonsave.gif' align='top' width='75' height='25' ></a> ":""--%>
 	<%=bNewList?"<input type='button' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
 	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
-	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%></th>
+	<%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & Exit' onClick='onSaveExit()'> ":""%></th>
       <th align=CENTER  ><font face="Helvetica" color="#FFFFFF">ANTENATAL RECORD 2</font> <font color="orange">page
       <input type="text" name="xml_pageno" size="1" maxlength="1" <%=bNewList?("value='"+pageno+"'"):"datafld='xml_pageno'"%> ></font></th>
       <th width="25%" nowrap> 
@@ -232,11 +232,11 @@ function onSubmitForm() {
   //if(bNewList&&!(request.getParameter("patientmaster")!=null) ) {
   if(bNewList || (request.getParameter("patientmaster")!=null) ) {
 %>        
-<a href=# onClick="popupPage(600,900,'providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=&bNewForm=1&username=&reason=<%=URLEncoder.encode(request.getParameter("reason")==null?"":request.getParameter("reason"))%>&displaymode=ar1&dboperation=search_demograph');return false;" title="Antenatal Record 1">
+<a href=# onClick="popupPage(600,900,'../provider/providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=&bNewForm=1&username=&reason=<%=URLEncoder.encode(request.getParameter("reason")==null?"":request.getParameter("reason"))%>&displaymode=ar1&dboperation=search_demograph');return false;" title="Antenatal Record 1">
             <font color='yellow'>View AR1</font></a> | 
 <a href=# onClick="popupPage(500,600,'../demographic/formhistory.jsp?demographic_no=<%=request.getParameter("demographic_no")%>')" title="Previous Antenatal Record 2">
             <font color='yellow'>Prev. AR2</font></a>
-		  | <a href="providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=request.getParameter("curProvider_no")%>&username=<%=request.getParameter("username")%>&reason=<%=request.getParameter("reason")%>&displaymode=ar2&dboperation=search_demograph&template=&bNext=1"  title="Next AR2 Form">
+		  | <a href="../provider/providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=request.getParameter("curProvider_no")%>&username=<%=request.getParameter("username")%>&reason=<%=request.getParameter("reason")%>&displaymode=ar2&dboperation=search_demograph&template=&bNext=1"  title="Next AR2 Form">
 		  <font color='yellow'> Next AR2 </font></a>
 <% } %>
           <%=bNewList?"<input type='button' name='Button' value=' Exit ' onClick='onExit();'>":"<input type='button' name='Button' value=' Exit ' onClick='window.close();'>" %>
@@ -1296,7 +1296,7 @@ if (fedb != null && fedb.length() == 10 ) {
         <input type="hidden" name="displaymode" value="saveform">
           <table width='100%' border=0><tr><td width='90%' align='center'>
 	        <%=bNewList&&(request.getParameter("patientmaster")!=null)?"<input type='submit' name='savetemp' value=' Save ' onClick='onSave()'> ":""%>
-	        <%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & GoTo Encounter' onClick='onSaveEnc()'> ":""%>
+	        <%=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save & Exit' onClick='onSaveExit()'> ":""%>
         	<%--=bNewList&&!(request.getParameter("patientmaster")!=null)?"<input type='submit' name='saveexit' value='Save to Enc.& Exit' onClick='onSaveExit()'> ":""--%>
           </td><td align='right'><%=bNewList?"<input type='button' name='Button' value=' Exit ' onClick='onExit();'>":"<input type='button' name='Button' value=' Exit ' onClick='window.close();'>" %>
           </td></table>
