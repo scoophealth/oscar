@@ -1,0 +1,107 @@
+ /* styles.css -- Style sheet for the UI prototype.
+*/
+
+BODY
+{
+    FONT-SIZE: Normal;
+    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif; 
+}
+
+TABLE
+{
+	FONT-SIZE: x-small;
+}
+
+.Header
+{
+        font-weight:bold;
+        background-color:#6699cc;
+}
+
+
+TH {
+    font-size: small;
+    font-weight: bold;
+}
+
+
+.BodyStyle
+{
+    margin-left:0;
+    margin-right:0;
+    margin-top:0;
+}
+
+.MainTable
+{
+    border-collapse: collapse;
+    border-color:#111111;
+    border-width:0;
+    padding-bottom:0;
+    padding-top:0;
+    padding-left:0;
+    padding-right:0;
+    width:100%;
+    font-size:80%;
+}
+.MainTableTopRowLeftColumn
+{
+    background-color:#003399;   
+    border-right: 2px solid #A9A9A9;
+    height:34px;
+    max-width:130px;
+    font-size: 110%;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+.MainTableBottomRowLeftColumn
+{    
+    border-right: 2px solid #A9A9A9;
+    height:4px;
+    max-width:130px;
+
+}
+.MainTableLeftColumn
+{   
+    border-right: 2px solid #A9A9A9;
+    max-width:130px;
+}
+
+.MainTableTopRowRightColumn
+{
+    background-color:#003399;   
+    height:34px;
+}
+.MainTableBottomRowRightColumn
+{
+    height:4px;
+}
+.MainTableRightColumn
+{    
+    height:34px;
+}
+.TopStatusBar
+{
+    font-weight:bold;
+    background-color:#6699cc;
+    color:black;
+    height:23px;
+    width:900;
+}
+.TopStatusBarShort
+{
+    font-weight:bold;
+    background-color:#6699cc;
+    color:black;
+    height:23px;
+    width:750;
+}
+.data {
+    background-color:#F7F7F7;
+}
+.note {
+    font-size:80%; 
+    background-color:#CCCCFF;
+    color:#555555;
+}
+
