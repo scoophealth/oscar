@@ -1,9 +1,9 @@
-<% 
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+<%
+if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
-%> 
+%>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -19,13 +19,13 @@ String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + St
 String[] yearArray = new String[5];
 String thisyear = (request.getParameter("year")==null || request.getParameter("year").compareTo("")==0) ? String.valueOf(curYear) : request.getParameter("year");
 
-String yearColor = "";  
+String yearColor = "";
 yearArray[0] = String.valueOf(curYear);
 yearArray[1] = String.valueOf(curYear-1);
 yearArray[2] = String.valueOf(curYear-2);
 yearArray[3] = String.valueOf(curYear-3);
 yearArray[4] = String.valueOf(curYear-4);
-          
+
 if (thisyear.compareTo(yearArray[0])==0) yearColor="#B1D3EF";
 if (thisyear.compareTo(yearArray[1])==0) yearColor="#BBBBBB";
 if (thisyear.compareTo(yearArray[2])==0) yearColor="#CCCCCC";
@@ -46,32 +46,32 @@ if (curMonth == 10) monthCode = "J";
 if (curMonth == 11) monthCode = "K";
 if (curMonth == 12) monthCode = "L";
 String ohipdownload = oscarVariables.getProperty("HOME_DIR") ;;
-session.setAttribute("ohipdownload", ohipdownload);      
+session.setAttribute("ohipdownload", ohipdownload);
 %>
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html>
@@ -84,6 +84,15 @@ session.setAttribute("ohipdownload", ohipdownload);
 function setfocus() {
   this.focus();
 }
+var checkSubmitFlg = false;
+function checkSubmit() {
+	if (checkSubmitFlg == true) {
+		return false;
+	}
+	checkSubmitFlg = true;
+	document.forms[0].Submit.disabled = true;
+	return true;
+}
 
 function findObj(n, d) { //v4.0
   var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
@@ -95,14 +104,14 @@ function findObj(n, d) { //v4.0
 
 function showHideLayers() { //v3.0
     var i,p,v,obj,args=showHideLayers.arguments;
-    for (i=0; i<(args.length-2); i+=3){ 
-    if ((obj=findObj(args[i]))!=null) {    
+    for (i=0; i<(args.length-2); i+=3){
+    if ((obj=findObj(args[i]))!=null) {
         v=args[i+2];
-        if (obj.style) { 
-            obj=obj.style; 
-            v=(v=='show')?'visible':(v='hide')?'hidden':v; 
+        if (obj.style) {
+            obj=obj.style;
+            v=(v=='show')?'visible':(v='hide')?'hidden':v;
         }
-        obj.visibility=v; 
+        obj.visibility=v;
     }
   }
 }
@@ -112,14 +121,14 @@ function showHideLayers() { //v3.0
 
 <body bgcolor="#FFFFFF" text="#000000">
  <div id="Layer1" style="position:absolute; left:90px; top:35px; width:0px; height:12px; z-index:1"></div>
- <div id="Layer2" style="position:absolute; left:45px; top:61px; width:129px; height:123px; z-index:2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;"> 
+ <div id="Layer2" style="position:absolute; left:45px; top:61px; width:129px; height:123px; z-index:2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
-     <tr bgcolor="#DDDDEE"> 
-       <td align='CENTER'><font size="2" face="Tahoma, Geneva, Arial, Helvetica, san-serif"><strong>Last 
+     <tr bgcolor="#DDDDEE">
+       <td align='CENTER'><font size="2" face="Tahoma, Geneva, Arial, Helvetica, san-serif"><strong>Last
          5 Years</strong></font></td>
      </tr>
  <% for (int i=0; i<5;i++) { %>
-     <tr> 
+     <tr>
        <td align='CENTER'><font size="2" face="Tahoma, Geneva, Arial, Helvetica, san-serif"><a href="billingTeleplanGroupReport.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
      </tr>
      <% } %>
@@ -128,8 +137,8 @@ function showHideLayers() { //v3.0
 <table border="0" cellspacing="0" cellpadding="0" width="100%"  onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
     <tr bgcolor="#486ebd">
      <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"> 
+		<input type='button' name='print' value='Print' onClick='window.print()'> </th>
+    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
      Teleplan Group Report - <%=thisyear%></font></th>
       <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
   </tr>
@@ -137,19 +146,19 @@ function showHideLayers() { //v3.0
 
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-  <form name="form1" method="post" action="genTeleplanGroupReport.jsp">
-    <tr> 
-     <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="#" onClick="showHideLayers('Layer2','','show');">Show 
+  <form name="form1" method="post" action="genTeleplanGroupReport.jsp" onsubmit="return checkSubmit();">
+    <tr>
+     <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="#" onClick="showHideLayers('Layer2','','show');">Show
         Archive</a> </font></b></td>
-      <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Select 
+      <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Select
         provider </font></b></td>
-      <td width="254"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
+      <td width="254"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">
         <select name="provider">
           <option value="all">All Providers</option>
            <%String proFirst="";
              String proLast="";
              String proOHIP="";
-             String specialty_code; 
+             String specialty_code;
              String billinggroup_no;
              int Count = 0;
              ResultSet rslocal;
@@ -158,26 +167,26 @@ function showHideLayers() { //v3.0
              while(rslocal.next()){
                 proFirst = rslocal.getString("first_name");
                 proLast = rslocal.getString("last_name");
-                proOHIP = rslocal.getString("ohip_no"); 
+                proOHIP = rslocal.getString("ohip_no");
                 billinggroup_no= rslocal.getString("billing_no");//SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
                 specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
            %>
            <option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>" ><%=proLast%>,<%=proFirst%></option>
-           <% 
+           <%
 
              }
 // apptMainBean.closePstmtConn();
   %>
         </select>
         </font></b></td>
-      <td width="181"><b><!--<font face="Arial, Helvetica, sans-serif" size="2">Select 
+      <td width="181"><b><!--<font face="Arial, Helvetica, sans-serif" size="2">Select
         billing center</font>--></b></td>
-      <td width="254"><font face="Arial, Helvetica, sans-serif" size="2"> 
+      <td width="254"><font face="Arial, Helvetica, sans-serif" size="2">
      <!--   <select name="billcenter">
-        
+
         <%-- String centerCode="";
            String centerDesc="";
-           
+
            int Count1 = 0;
            ResultSet rsCenter;
            rsCenter = null;
@@ -185,13 +194,13 @@ function showHideLayers() { //v3.0
            while(rsCenter.next()){
               centerCode = rsCenter.getString("billcenter_code");
               centerDesc = rsCenter.getString("billcenter_desc");
-  
+
        %>
             <option value="<%=centerCode%>" <%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
         <% } --%>
  </select>-->
       </td>
- <td width="277"> <font color="#003366"> 
+ <td width="277"> <font color="#003366">
         <input type="submit" name="Submit" value="Create Report">
         <input type="hidden" name="monthCode" value="<%=monthCode%>">
         <input type="hidden" name="verCode" value="V03">
@@ -199,7 +208,7 @@ function showHideLayers() { //v3.0
         <input type="hidden" name="curDate" value="<%=nowDate%>">
         </font></td>
     </tr>
-    <tr> 
+    <tr>
       <td colspan="4">
             <font color="#003366">
                 <b><font face="Arial, Helvetica, sans-serif" size="2"></font></b>
@@ -208,27 +217,28 @@ function showHideLayers() { //v3.0
             <font color="#003366">
                 <b><font face="Arial, Helvetica, sans-serif" size="2"></font></b>
                 <font face="Arial, Helvetica, sans-serif" size="2"> </font>
-            </font> 
+            </font>
       </td>
     </tr>
   </form>
 </table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="<%=yearColor%>">
-  <tr> 
-    <td colspan="6"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
+<table width="100%" border="1" cellspacing="0" cellpadding="0">
+  <tr bgcolor="<%=yearColor%>">
+    <td colspan="6"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">
       <b>Activity List </b></font></td>
   </tr>
-  <tr> 
+  <tr bgcolor="<%=yearColor%>">
     <th width="12%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Provider</font></th>
     <th width="14%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Group Number</font></th>
     <th width="20%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Creation Date </font></th>
     <th width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Claims/Records</font></th>
-    <th width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">MSP Filename</font></th>
+    <th width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="blue">MSP Filename</font></th>
     <th><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">HTML Filename</font></th>
   </tr>
-  
+
 <%
 	String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
+	String strToday = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
 
 	String[] paramYear = new String[2];
 	paramYear[0] = thisyear+"/01/01";
@@ -237,7 +247,7 @@ function showHideLayers() { //v3.0
 	rslocal = null;
 	rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
 	while(rslocal.next()){
-		pro_ohip = rslocal.getString("providerohipno"); 
+		pro_ohip = rslocal.getString("providerohipno");
 		pro_group = rslocal.getString("groupno");
 		updatedate = rslocal.getString("updatedatetime");
 		cr = rslocal.getString("claimrecord");
@@ -245,15 +255,15 @@ function showHideLayers() { //v3.0
 		hFile = rslocal.getString("htmlfilename");
 %>
 
-  <tr> 
+  <tr bgcolor="<%=updatedate.startsWith(strToday)? "#E6F0F7" : yearColor %>" align="center">
     <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_ohip%></font></td>
     <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_group%></font></td>
     <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=updatedate%></font></td>
     <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=cr%></font><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"></font></td>
    <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
     <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
-  </tr>            
-<% 
+  </tr>
+<%
 }
 apptMainBean.closePstmtConn();
 %>
