@@ -22,8 +22,9 @@ public class RptByExampleData {
     }
 
 
-
-
+    public String exampleTextGenerate (String sql, Properties oscarVariables ){
+	return exampleReportGenerate(sql, oscarVariables);
+    }
 
     public String exampleReportGenerate( String sql, Properties oscarVariables ){
 
@@ -40,7 +41,7 @@ public class RptByExampleData {
 
        try{
 
-accessDB = new DBPreparedHandler(oscarVariables.getProperty("db_driver"),oscarVariables.getProperty("db_uri")+oscarVariables.getProperty("db_name"),oscarVariables.getProperty("db_selectuser"),oscarVariables.getProperty("db_selectpassword") );
+accessDB = new DBPreparedHandler(oscarVariables.getProperty("db_driver"),oscarVariables.getProperty("db_uri")+oscarVariables.getProperty("db_name"),oscarVariables.getProperty("db_username"),oscarVariables.getProperty("db_password") );
 
 //accessDB = new DBPreparedHandler("org.gjt.mm.mysql.Driver","jdbc:mysql:///oscar_sfhc","oscarsql","sfhc96");
 
