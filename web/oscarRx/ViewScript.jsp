@@ -51,21 +51,32 @@
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
 <link rel="stylesheet" type="text/css" href="styles.css" />
+<style type="text/css">
+@media print{
+span { display:none; }
+td.leftGreyLine {
+    border-left: 0px;
+}
+@media screen{
+td.leftGreyLine {
+    border-left: 2px solid #A9A9A9; padding-left: 5;
+}
+</style>
 </head>
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
       <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
+        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> <span> | </span>
+        <span class="FakeLink"><a href="About.htm">About</a></span><span> | </span><span class="FakeLink">
         <a href="Disclaimer.htm">Disclaimer</a></span></p>
       </td>
     </tr>
 
     <tr>
       <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-      <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
+      <td width="100%" bgcolor="#000000" class="leftGreyLine" height="0%">
         <table>
         <tr>
         <td>
@@ -127,31 +138,31 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
                             <table cellpadding=10 cellspacing=0>
                                 <tr>
-                                    <td colspan=2 style="font-weight:bold;">
-                                        Actions
+                                    <td colspan=2 style="font-weight:bold; ">
+                                         <span>Actions</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td width=10px></td>
                                     <td>
-                                        <input type=button value="Create a New Prescription" class="ControlPushButton" style="width:200px" onClick="javascript:clearPending('');" />
+                                        <span><input type=button value="Create a New Prescription" class="ControlPushButton" style="width:200px" onClick="javascript:clearPending('');" /></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td width=10px></td>
                                     <td>
-                                        <input type=button value="Back to Oscar" class="ControlPushButton" style="width:200px" onClick="javascript:clearPending('close');" />
+                                        <span><input type=button value="Back to Oscar" class="ControlPushButton" style="width:200px" onClick="javascript:clearPending('close');" /></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td width=10px></td>
                                     <td>
-                                        <input type=button value="Print" class="ControlPushButton" style="width:200px" onClick="javascript:preview.print();" />
+                                        <span><input type=button value="Print" class="ControlPushButton" style="width:200px" onClick="javascript:preview.print();" /></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan=2 style="font-weight: bold">
-                                        Drug Information
+                                        <span>Drug Information</span>
                                     </td>
                                 </tr>
                         <%
@@ -164,9 +175,9 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                 <tr>
                                     <td width=10px></td>
                                     <td>
-                                        <a href="javascript:ShowDrugInfo('<%= rx.getGenericName() %>');">
+                                        <span><a href="javascript:ShowDrugInfo('<%= rx.getGenericName() %>');">
                                             <%= rx.getGenericName() %> (<%= rx.getBrandName() %>)
-                                        </a>
+                                        </a></span>
                                     </td>
                                 </tr>
                             <%
