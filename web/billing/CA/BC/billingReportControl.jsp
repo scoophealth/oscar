@@ -157,12 +157,12 @@ function refresh() {
         Unbilled 
         <input type="radio" name="reportAction" value="billed"  <%=reportAction.equals("billed")?"checked":""%>>
         Billed 
-        <input type="radio" name="reportAction" value="unsettled"  <%=reportAction.equals("unsettled")?"checked":""%>>
+        <!--<input type="radio" name="reportAction" value="unsettled"  <%=reportAction.equals("unsettled")?"checked":""%>>
         Unsettled
         <input type="radio" name="reportAction" value="billob"  <%=reportAction.equals("billob")?"checked":""%>>
         OB
           <input type="radio" name="reportAction" value="flu" <%=reportAction.equals("flu")?"checked":""%>>
-        FLU</font> </td>
+        FLU</font>--> </td>
       <td width="50%"> 
         <div align="right"></div>
         <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select 

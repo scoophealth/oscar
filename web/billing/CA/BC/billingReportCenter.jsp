@@ -136,12 +136,12 @@ function refresh() {
         Unbilled 
         <input type="radio" name="reportAction" value="billed">
         Billed 
-        <input type="radio" name="reportAction" value="unsettled">
+        <!--<input type="radio" name="reportAction" value="unsettled">
         Unsettled
         <input type="radio" name="reportAction" value="billob">
         OB
          <input type="radio" name="reportAction" value="flu">
-        FLU</font></td>
+        FLU</font>--></td>
       <td width="50%">
         <div align="right"></div>
         <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select 
