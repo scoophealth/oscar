@@ -201,6 +201,9 @@ public class MSPReconcile{
     }
     
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate){
+       return getBills(statusType,providerNo,startDate,endDate,null);
+    }
+    public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate,String demoNo){
         
         
         BillSearch billSearch = new BillSearch();
@@ -208,6 +211,7 @@ public class MSPReconcile{
         String providerQuery = "";
         String startDateQuery = "";
         String endDateQuery = "";
+        String demoQuery = "";
         
         if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")){
             providerQuery = " and provider_no = '"+providerNo+"'" ; 
@@ -220,15 +224,18 @@ public class MSPReconcile{
         if (endDate != null && !endDate.trim().equalsIgnoreCase("")){
             endDateQuery = " and ( to_days(service_date) < to_days('"+endDate+"')) ";
         }
-        
+        if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")){
+            demoQuery = " and b.demographic_no = '"+demoNo+"' ";
+        }
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.billingtype,"
                  +" b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
                  +" bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
                  +" b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no from billing b, "
-                 +" billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus = '"+statusType+"' "
+                 +" billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus like '"+statusType+"' "
                  +  providerQuery
                  +  startDateQuery
-                 +  endDateQuery;
+                 +  endDateQuery
+                 +  demoQuery;
         
         
         //String 
@@ -270,6 +277,9 @@ public class MSPReconcile{
         }
         return billSearch;
     }
+    
+    
+    
     
     public ArrayList getBillsMaster(String statusType){        
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, "
