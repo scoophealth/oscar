@@ -420,7 +420,9 @@ function showHideLayers() { //v3.0
             
             if(request.getParameter("billType") != null){
                thisForm.setXml_billtype(request.getParameter("billType"));    
-            }            
+            }      
+            thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
+                     
         }
         %>
         
@@ -978,8 +980,9 @@ function showHideLayers() { //v3.0
                 <tr>
                     <td colspan="2">
                     <div id="CORRESPONDENCENOTE">
-                        &nbsp;<textarea cols="60" rows="5"name="notes" onkeyup="checkTextLimit(this.form.notes,400);" ></textarea>
+                        &nbsp;<html:textarea cols="60" rows="5" property="notes" onkeyup="checkTextLimit(this.form.notes,400);" ></html:textarea>
                         <br>
+                        
                         &nbsp;400 characters max. 
                     </div>
                     <br/>
