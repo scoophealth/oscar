@@ -594,7 +594,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
    
     <th><a href=# onclick="window.open('../billing/inr/addINRbilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;" title='Add INR Billing'>Add INR</a></th>
         <th><a href=# onclick="window.open('../billing/inr/reportINR.jsp?provider_no=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600');return false;" title='INR Billing'>Bill INR</a></th>
-     <th><!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')">Prescription</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx')">Prescription</a></th>
+     <th><a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message key="global.prescriptions"/></a></th>
      <% } %>  
 <th>
 <a href="javascript: function myFunction() {return false; }" onclick="popupPage(100,355,'../oscarEncounter/oscarConsultationRequest/ConsultChoice.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')"><bean:message key="demographic.demographiceditdemographic.btnConsultation"/></a></th>
