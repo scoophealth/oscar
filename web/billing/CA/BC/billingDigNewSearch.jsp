@@ -119,11 +119,11 @@ function CodeAttach(File0) {
 </table>
  <form name="servicecode" id="servicecode" method="post" action="billingDigNewUpdate.jsp">
 <input type="hidden" name="formName" value="<%=formName%>" />
- <input type="hidden" name="formElement" value="<%=formElement%>" />
-<table width="600" border="1">
+<input type="hidden" name="formElement" value="<%=formElement%>" />
+<table width="800" border="1">
   <tr bgcolor="#CCCCFF"> 
-    <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>
-    <td width="88%"><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
+    <td ><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>
+    <td ><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
   </tr> 
    
   <%  ResultSet rslocal = null;  
@@ -155,8 +155,21 @@ String Dcode="", DcodeDesc="";
  %>
   
   <tr bgcolor="<%=color%>"> 
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %><input type="checkbox" name="code_<%=Dcode%>" checked><%}else{%><input type="checkbox" name="code_<%=Dcode%>"><%}%><%=Dcode%></font></td>
-    <td width="88%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>"><input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="50"><input type="submit" name="update" value="update <%=Dcode%>"></font></td>
+    <td >
+       <font face="Arial, Helvetica, sans-serif" size="2">
+         <% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %>
+            <input type="checkbox" name="code_<%=Dcode%>" checked>
+         <%}else{%>
+            <input type="checkbox" name="code_<%=Dcode%>"><%}%><%=Dcode%>
+       </font>
+    </td>
+    <td >
+       <font face="Arial, Helvetica, sans-serif" size="2">
+          <input type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>">
+          <input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="80">
+          <input type="submit" name="update" value="update <%=Dcode%>">
+       </font>
+    </td>
   </tr>
   <% 
   }
