@@ -144,10 +144,10 @@ public class EctSessionBean {
             }
             rs.close();
             
-            sql = "SELECT DISTINCT name from measurementGroup ORDER BY name";
+            sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
             rs = db.GetSQL(sql);
             while(rs.next()){
-                measurementGroupNames.add(rs.getString("name"));
+                measurementGroupNames.add(rs.getString("groupName"));
             }
             rs.close();
             
@@ -405,4 +405,21 @@ public class EctSessionBean {
     public boolean isValid() {
         return demographicNo.length() > 0 && providerNo != null && providerNo.length() > 0;
     }
+    
+    public String getPatientLastName(){
+        return patientLastName;
+    }
+    
+    public String getPatientFirstName(){
+        return patientFirstName;
+    }
+    
+    public String getPatientSex(){
+        return patientSex;
+    }
+    
+    public String getPatientAge(){
+        return patientAge;
+    }
+        
 }
