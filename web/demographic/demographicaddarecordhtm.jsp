@@ -380,9 +380,17 @@ function checkTypeIn() {
           <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
         </select>
       </td>
-      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formNurse"/>: </b></td>
-      <td> 
-        <select name="cust1">
+      <td>
+          &nbsp;
+      </td>
+      <td>
+          &nbsp;
+      </td>
+    </tr>
+    <tr valign="top">
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDoctor"/>: </b></td>
+      <td align="left" > 
+        <select name="staff">
           <option value="" ></option>
           <%
   ResultSet rsdemo = addDemoBean.queryResults("search_provider");
@@ -395,14 +403,29 @@ function checkTypeIn() {
 %>
         </select>
       </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDoctor"/>: </b></td>
-      <td align="left" > 
-        <select name="staff">
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formNurse"/>: </b></td>
+      <td> 
+        <select name="cust1">
           <option value="" ></option>
           <%
-  rsdemo = addDemoBean.queryResults("search_provider");
+  rsdemo.beforeFirst();
+  while (rsdemo.next()) { 
+%>
+          <option value="<%=rsdemo.getString("provider_no")%>"> 
+          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+          <%
+  }
+%>
+        </select>
+      </td>
+    </tr>
+    <tr valign="top"> 
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formMidwife"/>: </b></td>
+      <td> 
+        <select name="cust4">
+          <option value="" ></option>
+          <%
+  rsdemo.beforeFirst();
   while (rsdemo.next()) { 
 %>
           <option value="<%=rsdemo.getString("provider_no")%>"> 
@@ -417,7 +440,7 @@ function checkTypeIn() {
         <select name="cust2">
           <option value="" ></option>
           <%
-  rsdemo = addDemoBean.queryResults("search_provider");
+  rsdemo.beforeFirst();
   while (rsdemo.next()) { 
 %>
           <option value="<%=rsdemo.getString("provider_no")%>"> 

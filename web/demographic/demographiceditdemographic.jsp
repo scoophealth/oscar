@@ -166,13 +166,14 @@ function checkPhoneNum() {
 	//----------------------------REFERRAL DOCTOR------------------------------
 	String rdohip="", rd="", fd="", family_doc = "";
  
-	String resident="", nurse="", alert="", notes="";
+	String resident="", nurse="", alert="", notes="", midwife="";
 	ResultSet rs = null;
 	rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
 	while (rs.next()) {
 		resident = rs.getString("cust1");
 		nurse = rs.getString("cust2");
 		alert = rs.getString("cust3");
+                midwife = rs.getString("cust4");
 		notes = SxmlMisc.getXmlContent(rs.getString("content"),"unotes") ;
 		notes = notes==null?"":notes; 
 	}
@@ -433,13 +434,30 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
           <option value="SK"<%=hctype.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=hctype.equals("YT")?" selected":""%>>YT-Yukon</option>                                       
         </select>
-		      </td>
-      <td align="right" nowrap  bgcolor='ivory'><b><bean:message key="demographic.demographiceditdemographic.formNurse"/>: </b> </td>
-      <td align="left" bgcolor='ivory'>
-        <select name="resident">
+      </td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr valign="top"> 
+      <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDoctor"/>: </b></td>
+      <td align="left" > 
+        <select name="provider_no">
           <option value="" ></option>
 <%
   ResultSet rsdemo = apptMainBean.queryResults("search_provider");
+  while (rsdemo.next()) { 
+%>
+  <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(rs.getString("provider_no"))?"selected":""%> >
+  <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+<% } %>
+        </select>
+      </td>
+      <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formNurse"/>: </b> </td>
+      <td align="left">
+        <select name="resident">
+          <option value="" ></option>
+<%
+  rsdemo.beforeFirst();
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(resident)?"selected":""%> >
@@ -448,16 +466,16 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         </select>
       </td>
     </tr>
-    <tr valign="top" bgcolor='ivory'> 
-      <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDoctor"/>: </b></td>
+    <tr valign="top"> 
+      <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formMidwife"/>: </b></td>
       <td align="left" > 
-        <select name="provider_no">
+        <select name="midwife">
           <option value="" ></option>
 <%
-  rsdemo = apptMainBean.queryResults("search_provider");
+  rsdemo.beforeFirst();
   while (rsdemo.next()) { 
 %>
-  <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(rs.getString("provider_no"))?"selected":""%> >
+  <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(midwife)?"selected":""%> >
   <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
 <% } %>
         </select>
@@ -467,7 +485,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         <select name="nurse">
           <option value="" ></option>
 <%
-  rsdemo = apptMainBean.queryResults("search_provider");
+  rsdemo.beforeFirst();
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%> >
@@ -524,8 +542,8 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         </select>
         <% } %>
       </td>
-      <td align="right" bgcolor='<%=deepcolor%>'><b><bean:message key="demographic.demographiceditdemographic.formChartNo"/>:</b> </td>
-      <td align="left" bgcolor='<%=deepcolor%>'> 
+      <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formChartNo"/>:</b> </td>
+      <td align="left"> 
         <input type="text" name="chart_no" value="<%=rs.getString("chart_no")%>">
       </td>
     </tr>

@@ -55,12 +55,13 @@
     //find the democust record for update
     rs = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_custrecordno");
     if(rs.next() ) { //update
-      String[] param1 =new String[5];
+      String[] param1 =new String[6];
 	    param1[0]=request.getParameter("resident");
 	    param1[1]=request.getParameter("nurse");
 	    param1[2]=request.getParameter("alert");
-	    param1[3]="<unotes>"+ request.getParameter("notes")+"</unotes>";
-	    param1[4]=request.getParameter("demographic_no");
+            param1[3]=request.getParameter("midwife");
+	    param1[4]="<unotes>"+ request.getParameter("notes")+"</unotes>";
+	    param1[5]=request.getParameter("demographic_no");
         rowsAffected = apptMainBean.queryExecuteUpdate(param1, "update_custrecord");
         
     } else { //add
@@ -69,7 +70,7 @@
 	    param2[1]=request.getParameter("resident");
 	    param2[2]=request.getParameter("nurse");
 	    param2[3]=request.getParameter("alert");
-	    param2[4]="";
+	    param2[4]=request.getParameter("midwife");
 	    param2[5]="<unotes>"+ request.getParameter("notes")+"</unotes>";
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord");
     }

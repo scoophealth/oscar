@@ -52,7 +52,7 @@
     {"search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_custrecordno", "select demographic_no from demographiccust  where demographic_no=?" }, 
     {"add_custrecord", "insert into demographiccust values(?,?,?,?,?, ?)" }, 
-    {"update_custrecord", "update demographiccust set cust1=?,cust2=?,cust3=?,content=? where demographic_no=?" }, 
+    {"update_custrecord", "update demographiccust set cust1=?,cust2=?,cust3=?,cust4=?,content=? where demographic_no=?" }, 
     {"appt_history", "select appointment_no, appointment_date, start_time, end_time, reason, appointment.status, provider.last_name, provider.first_name from appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? "+ orderby + " desc "+limit },
    };
    
