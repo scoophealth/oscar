@@ -35,6 +35,7 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 import org.apache.commons.validator.*;
+import org.apache.commons.lang.StringEscapeUtils.*;
 import org.apache.struts.util.MessageResources;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
@@ -83,20 +84,9 @@ public class EctMeasurementsAction extends Action {
                 EctValidation ectValidation = new EctValidation();                    
                 ActionErrors errors = new ActionErrors();   
                 
-                String inputValueName;
-                String inputTypeName;
-                String inputTypeDisplayName;
-                String mInstrcName;
-                String commentsName;
-                String dateName;
-                String validationName;
-                String inputValue;
-                String inputType;
-                String inputTypeDisplay;
-                String mInstrc;
-                String comments;
-                String dateObserved; 
-                String validation;
+                String inputValueName, inputTypeName, inputTypeDisplayName, mInstrcName, commentsName;
+                String dateName,validationName, inputValue, inputType, inputTypeDisplay, mInstrc;
+                String comments, dateObserved, validation;
                 String msg = null;
                 String regExp = null;
                 double dMax = 0;
@@ -167,12 +157,6 @@ public class EctMeasurementsAction extends Action {
                         saveErrors(request, errors);
                         valid = false;
                     }
-                    if(!ectValidation.matchRegExp(regCharExp, comments)){                        
-                        errors.add(commentsName,
-                        new ActionError("errors.invalidComments", inputTypeDisplay));
-                        saveErrors(request, errors);
-                        valid = false;
-                    }
                     if(!ectValidation.isDate(dateObserved)&&inputValue.compareTo("")!=0){                        
                         errors.add(dateName,
                         new ActionError("errors.invalidDate", inputTypeDisplay));
@@ -196,20 +180,28 @@ public class EctMeasurementsAction extends Action {
                         inputType = (String) frm.getValue(inputTypeName);
                         mInstrc = (String) frm.getValue(mInstrcName);
                         comments = (String) frm.getValue(commentsName);
+                        comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
                         validation = (String) frm.getValue(validationName);
                         dateObserved = (String) frm.getValue(dateName);                        
                         
                         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
                         if(!gValidator.isBlankOrNull(inputValue)){
-                            //Write to the Dababase if all input values are valid                        
-                            String sql = "INSERT INTO measurements"
-                                    +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
-                                    +" VALUES ('"+str.q(inputType)+"','"+str.q(demographicNo)+"','"+str.q(providerNo)+"','"+str.q(inputValue)+"','"
-                                    + str.q(mInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";                           
-                            db.RunSQL(sql);
-                            //prepare input values for writing to the encounter form
-                            textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";                             
-                            
+                            //Find if the same data has already been entered into the system
+                            String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo+ "' AND dataField='"+inputValue
+                                        +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments
+                                        + "' AND dateObserved='" + dateObserved + "'";
+                            rs = db.GetSQL(sql);
+                            if(!rs.next()){
+                                //Write to the Dababase if all input values are valid                        
+                                sql = "INSERT INTO measurements"
+                                        +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
+                                        +" VALUES ('"+str.q(inputType)+"','"+str.q(demographicNo)+"','"+str.q(providerNo)+"','"+str.q(inputValue)+"','"
+                                        + str.q(mInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";                           
+                                db.RunSQL(sql);
+                                //prepare input values for writing to the encounter form
+                                textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";
+                            }
+                            rs.close();                            
                         }
                                             
                     }
