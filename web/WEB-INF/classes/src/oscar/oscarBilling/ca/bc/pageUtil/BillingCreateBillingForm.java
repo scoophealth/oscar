@@ -18,6 +18,12 @@ public final class BillingCreateBillingForm extends ActionForm {
     private String xml_refer1, xml_refer2, refertype1, refertype2;
     private String xml_diagnostic_detail1, xml_diagnostic_detail2, xml_diagnostic_detail3;
     private String xml_encounter,notes = "",icbc_claim_no;
+    private String correspondenceCode;
+    private String dependent=null;
+    private String afterHours =null;
+    private String timeCall = null;
+    private String submissionCode = null;
+    private String service_to_date = null;
     
     /**
      * The get method for the message String
@@ -462,6 +468,102 @@ public final class BillingCreateBillingForm extends ActionForm {
      */
     public void setIcbc_claim_no(java.lang.String icbc_claim_no) {
         this.icbc_claim_no = icbc_claim_no;
+    }
+    
+    /**
+     * Getter for property correspondenceCode.
+     * @return Value of property correspondenceCode.
+     */
+    public java.lang.String getCorrespondenceCode() {
+       return correspondenceCode;
+    }
+    
+    /**
+     * Setter for property correspondenceCode.
+     * @param correspondenceCode New value of property correspondenceCode.
+     */
+    public void setCorrespondenceCode(java.lang.String correspondenceCode) {
+       this.correspondenceCode = correspondenceCode;
+    }
+    
+    /**
+     * Getter for property dependent.
+     * @return Value of property dependent.
+     */
+    public java.lang.String getDependent() {
+       return dependent;
+    }
+    
+    /**
+     * Setter for property dependent.
+     * @param dependent New value of property dependent.
+     */
+    public void setDependent(java.lang.String dependent) {
+       this.dependent = dependent;
+    }
+    
+    /**
+     * Getter for property afterHours.
+     * @return Value of property afterHours.
+     */
+    public java.lang.String getAfterHours() {
+       return afterHours;
+    }
+    
+    /**
+     * Setter for property afterHours.
+     * @param afterHours New value of property afterHours.
+     */
+    public void setAfterHours(java.lang.String afterHours) {
+       this.afterHours = afterHours;
+    }
+    
+    /**
+     * Getter for property timeCall.
+     * @return Value of property timeCall.
+     */
+    public java.lang.String getTimeCall() {
+       return timeCall;
+    }
+    
+    /**
+     * Setter for property timeCall.
+     * @param timeCall New value of property timeCall.
+     */
+    public void setTimeCall(java.lang.String timeCall) {
+       this.timeCall = timeCall;
+    }
+    
+    /**
+     * Getter for property submissionCode.
+     * @return Value of property submissionCode.
+     */
+    public java.lang.String getSubmissionCode() {
+       return submissionCode;
+    }
+    
+    /**
+     * Setter for property submissionCode.
+     * @param submissionCode New value of property submissionCode.
+     */
+    public void setSubmissionCode(java.lang.String submissionCode) {
+       this.submissionCode = submissionCode;
+    }
+    
+    /**
+     * Getter for property service_to_date.
+     * @return Value of property service_to_date.
+     */
+    public java.lang.String getService_to_date() {
+       return service_to_date;
+    }
+    
+    /**
+     * Setter for property service_to_date.
+     * @param service_to_date New value of property service_to_date.
+     */
+    public void setService_to_date(java.lang.String service_to_date) {
+       this.service_to_date = service_to_date;
     }
     
     /**
