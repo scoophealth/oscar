@@ -47,7 +47,8 @@ public class dxResearchUpdateAction extends Action {
     {
         String status = request.getParameter("status");
         String did = request.getParameter("did");
-        String demographicNo = request.getParameter("demographicNo");
+        String demographicNo = request.getParameter("demographicNo");        
+        String providerNo = request.getParameter("providerNo");
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
         
         try{
@@ -73,6 +74,7 @@ public class dxResearchUpdateAction extends Action {
         
         ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
         forward.addParameter("demographicNo", demographicNo);
+        forward.addParameter("providerNo", providerNo);
         forward.addParameter("quickList", "");
         
         
