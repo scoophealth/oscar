@@ -24,10 +24,12 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.data;
 
-import oscar.oscarDB.*;
-import oscar.util.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class EctFormData {
 
@@ -97,7 +99,7 @@ public class EctFormData {
 
             while(rs.next()) {
                 PatientForm frm = new PatientForm(rs.getString("ID"), rs.getString("demographic_no"),
-                                    UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("formEdited"), "yy/MM/dd"));
+                                    UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getTimestamp("formEdited"), "yy/MM/dd"));
                 forms.add(frm);
             }
             rs.close();
