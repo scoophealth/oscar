@@ -54,29 +54,6 @@
 </style>
 
 <script type="text/javascript">
-   var remote=null;
-
-   function rs(n,u,w,h,x) {
-      args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
-      remote=window.open(u,n,args);
-     // if (remote != null) {
-     //    if (remote.opener == null)
-     //        remote.opener = self;
-     // }
-     // if (x == 1) { return remote; }
-   }
-
-   function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new popup window
-     var page = varpage;
-     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-     var popup=window.open(varpage, "OscarConsultationConfig", windowprops);
-     if (popup != null) {
-       if (popup.opener == null) {
-        popup.opener = self;
-       }
-    }
-  }
-
     function set(target) {
          document.forms[0].forward.value=target;
     };
