@@ -65,12 +65,12 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     </tr>
     <tr>
         <td >
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
             <a href=# onClick="popupOscarConS(300,1000,'SetupStyleSheetList.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
             </td></tr></table>
         </td>
         <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
             <a href=# onClick="popupOscarConS(300,1000,'SetupGroupList.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.editMeasurementGroup"/></a>
             </td></tr></table>
         </td>
@@ -80,12 +80,12 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     </tr>
     <tr>
          <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
             <a href=# onClick="popupOscarConS(700,1000,'SetupDisplayMeasurementTypes.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementType"/></a>
             </td></tr></table>
         </td>
          <td >
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
             <a href=# onClick="popupOscarConS(300,1000,'SetupAddMeasurementType.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementType"/></a>
             </td></tr></table>
         </td>
@@ -95,7 +95,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     </tr>
     <tr>
         <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
             <a href=# onClick="popupOscarConS(300,1000,'SetupAddMeasuringInstruction.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasuringInstruction"/></a>
             </td></tr></table>
         </td>
@@ -105,12 +105,12 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     </tr>
     <tr>
         <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
             <a href=# onClick="popupOscarConS(300,1000,'SetupDisplayMeasurementStyleSheet.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementStyleSheet"/></a>
             </td></tr></table>
         </td>
         <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
             <a href=# onClick="popupOscarConS(300,1000,'AddMeasurementStyleSheet.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementStyleSheet"/></a>
             </td></tr></table>
         </td>
