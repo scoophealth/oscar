@@ -79,7 +79,7 @@ public class EctConTitlebar
         int ind = uri.lastIndexOf("/");
         uri = uri.substring(ind + 1);
         //System.out.println("uri".concat(String.valueOf(String.valueOf(uri))));
-        for(int i = 0; i < jspVect.size(); i++)
+        for(int i = 0; i < jspVect.size(); i++){
             if(uri.equals(jspVect.elementAt(i)) && request.getAttribute("upd") == null)
             {
                 strBuf.append("      <td bgcolor=\"#ccccff\">\n");
@@ -91,8 +91,8 @@ public class EctConTitlebar
                 strBuf.append(String.valueOf(String.valueOf((new StringBuffer("         <a href=")).append((String)jspVect.elementAt(i)).append(" class=\"consultButtonsActive\">").append((String)displayNameVect.elementAt(i)).append("</a>\n"))));
                 strBuf.append("      </td>\n");
             }
-
-        strBuf.append("   </tr>\n");
+            strBuf.append("   </tr>\n");
+        }
         strBuf.append("</table>\n");
         return strBuf.toString();
     }
