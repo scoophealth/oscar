@@ -103,6 +103,8 @@ public class EctMeasurementsAction extends Action {
                 String regExp = null;
                 double dMax = 0;
                 double dMin = 0;
+                int iMax = 0;
+                int iMin = 0;
                 
                 ResultSet rs;
                 String regCharExp;
@@ -125,6 +127,8 @@ public class EctMeasurementsAction extends Action {
                     regExp = null;
                     dMax = 0;
                     dMin = 0;
+                    iMax = 0;
+                    iMin = 0;
                                                        
                     rs = ectValidation.getValidationType(inputType, mInstrc);
                     regCharExp = ectValidation.getRegCharacterExp();
@@ -132,11 +136,23 @@ public class EctMeasurementsAction extends Action {
                     if (rs.next()){
                         dMax = rs.getDouble("maxValue");
                         dMin = rs.getDouble("minValue");
+                        iMax = rs.getInt("maxLength");
+                        iMin = rs.getInt("minLength");
                         regExp = rs.getString("regularExp");
                     }                                                                                                                        
 	
                     if(!ectValidation.isInRange(dMax, dMin, inputValue)){                       
                         errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
+                        saveErrors(request, errors);
+                        valid = false;
+                    }
+                    if(!ectValidation.maxLength(iMax, inputValue)){                       
+                        errors.add(inputValueName, new ActionError("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
+                        saveErrors(request, errors);
+                        valid = false;
+                    }
+                    if(!ectValidation.minLength(iMin, inputValue)){                       
+                        errors.add(inputValueName, new ActionError("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
                         saveErrors(request, errors);
                         valid = false;
                     }
