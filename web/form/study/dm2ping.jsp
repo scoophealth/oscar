@@ -93,6 +93,7 @@ if(connected){
 		form.setProperty("formType2Diabetes.date", rsdemo.getString("date" + k));
 		form.setProperty("formType2Diabetes.bp", rsdemo.getString("bp" + k)==null?"":rsdemo.getString("bp" + k));
 		form.setProperty("formType2Diabetes.glucoseA", rsdemo.getString("glucoseA" + k)==null?"":rsdemo.getString("glucoseA" + k));
+		form.setProperty("formType2Diabetes.glucoseC", rsdemo.getString("glucoseC" + k)==null?"":rsdemo.getString("glucoseC" + k));
 		form.setProperty("formType2Diabetes.lifestyle", rsdemo.getString("lifestyle" + k)==null?"":rsdemo.getString("lifestyle" + k));
 		form.setProperty("formType2Diabetes.exercise", rsdemo.getString("exercise" + k)==null?"":rsdemo.getString("exercise" + k));
 		
@@ -111,7 +112,7 @@ if(connected){
 
 
 
-	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria", "footCheck", "eyeCheck"} ;
+	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "glucose", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria", "footCheck", "eyeCheck"} ;
 	String nodeName = "DMRecord";
 	String dtdFileName = "ping_dm_1_0.dtd";
 
@@ -121,17 +122,17 @@ if(connected){
 	DMRecord.setFpVisit(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[0]), ""));
 	DMRecord.setBloodPressure(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[1]), ""));
 	DMRecord.setHbA1C(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[2]), ""));
-	DMRecord.setSmoking(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[3]), ""));
-	DMRecord.setExercise(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[4]), ""));
-	DMRecord.setWeight(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[5]), ""));
-	DMRecord.setMedsACE(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[6]), ""));
-	DMRecord.setMedsASA(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[7]), ""));
-	DMRecord.setLipids(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[8]), ""));
-	DMRecord.setAlbuminuria(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[9]), ""));
-	DMRecord.setFootCheck(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[10]), ""));
-	DMRecord.setEyeCheck(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[11]), ""));
-        DMRecord.setGlucose("");
-        DMRecord.setImmunization("");
+	DMRecord.setGlucose(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[3]), ""));
+	DMRecord.setSmoking(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[4]), ""));
+	DMRecord.setExercise(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[5]), ""));
+	DMRecord.setWeight(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[6]), ""));
+	DMRecord.setMedsACE(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[7]), ""));
+	DMRecord.setMedsASA(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[8]), ""));
+	DMRecord.setLipids(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[9]), ""));
+	DMRecord.setAlbuminuria(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[10]), ""));
+	DMRecord.setFootCheck(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[11]), ""));
+	DMRecord.setEyeCheck(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[12]), ""));
+	DMRecord.setImmunization("");
 
 	DataType dataType = ping.getDataType(DMRecord);
 	CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);

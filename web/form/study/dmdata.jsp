@@ -65,6 +65,7 @@ studyBean.doConfigure(dbParams,dbQueries);
 		form.setProperty("formType2Diabetes.date", rsdemo.getString("date" + k));
 		form.setProperty("formType2Diabetes.bp", rsdemo.getString("bp" + k)==null?"":rsdemo.getString("bp" + k));
 		form.setProperty("formType2Diabetes.glucoseA", rsdemo.getString("glucoseA" + k)==null?"":rsdemo.getString("glucoseA" + k));
+		form.setProperty("formType2Diabetes.glucoseC", rsdemo.getString("glucoseC" + k)==null?"":rsdemo.getString("glucoseC" + k));
 		form.setProperty("formType2Diabetes.lifestyle", rsdemo.getString("lifestyle" + k)==null?"":rsdemo.getString("lifestyle" + k));
 		form.setProperty("formType2Diabetes.exercise", rsdemo.getString("exercise" + k)==null?"":rsdemo.getString("exercise" + k));
 		
@@ -174,7 +175,7 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
 	UtilXML.addNode(dt, "encounter");
 */
 
-	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria", "footCheck", "eyeCheck"} ;
+	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "glucose", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria", "footCheck", "eyeCheck"} ;
 	String nodeName = "DMRecord";
 	String dtdFileName = "ping_dm_1_0.dtd";
 

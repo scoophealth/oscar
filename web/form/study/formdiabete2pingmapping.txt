@@ -20,6 +20,7 @@ contact.conEHRpatient.conEHRpatient_EHRpatient_id	:demographic.demographic_no
 DMRecord.fpVisit						:formType2Diabetes.date
 DMRecord.bloodPressure				:formType2Diabetes.bp
 DMRecord.hbA1c						:formType2Diabetes.glucoseA
+DMRecord.glucose						:formType2Diabetes.glucoseC
 DMRecord.smoking						:formType2Diabetes.lifestyle
 DMRecord.exercise						:formType2Diabetes.exercise
 

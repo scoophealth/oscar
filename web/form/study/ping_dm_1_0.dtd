@@ -2,6 +2,7 @@
 <!ELEMENT fpVisit (#PCDATA)>
 <!ELEMENT bloodPressure (#PCDATA)>
 <!ELEMENT hbA1c (#PCDATA)>
+<!ELEMENT glucose (#PCDATA)>
 <!ELEMENT smoking (#PCDATA)>
 <!ELEMENT exercise (#PCDATA)>
 <!ELEMENT weight (#PCDATA)>
