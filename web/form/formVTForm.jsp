@@ -146,7 +146,11 @@ Vascular Tracker (Draft)
             border-color: #BBBBBB;
             border-collapse: collapse;
             empty-cells: show; 
-            font-size:7pt;
+            font-size:80%;
+        }
+        .clearButton{
+            text-decoration: underline;
+            color: blue;
         }
         
 
@@ -161,12 +165,12 @@ Vascular Tracker (Draft)
     var waist, hip, ratio;    
     var smkSDate, smkHDate, smkCDate;
     var smkSCmt, smkHCmt, smkCCmt;
-    var ftNoId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
-    var ftNoDate, ftNeDate, ftIsDate, ftInDate, ftUlDate, ftOtDate, ftReDate;
-    var ftNoCmt, ftNeCmt, ftIsCmt, ftInCmt, ftUlCmt, ftOtCmt, ftReCmt;
-    var eyeNoId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
-    var eyeNoCmt, eyeHypCmt, eyeDiaCmt, eyeOthCmt, eyeRefCmt;    
-    var eyeNoDate, eyeHypDate, eyeDiaDate, eyeOthDate, eyeRefDate;
+    var FTExId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
+    var FTExDate, ftNeDate, ftIsDate, ftInDate, ftUlDate, ftOtDate, ftReDate;
+    var FTExCmt, ftNeCmt, ftIsCmt, ftInCmt, ftUlCmt, ftOtCmt, ftReCmt;
+    var eyeExId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
+    var eyeExCmt, eyeHypCmt, eyeDiaCmt, eyeOthCmt, eyeRefCmt;    
+    var eyeExDate, eyeHypDate, eyeDiaDate, eyeOthDate, eyeRefDate;
     var MIValue, AngValue, ACSValue, RVTNValue, CADValue, DMValue, PVDValue;
     var HbA1Value, HbA1Date, HbA1Cmt;
     var DMCValue, DMCDate, DMCCmt;
@@ -261,7 +265,7 @@ function storeSMKSupportData(){
 
 function storeFTExamSupportData(){    
 
-    document.forms[0].elements[ftNoDate].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[FTExDate].value = document.getElementById('FTDate').value;
     document.forms[0].elements[ftNeDate].value = document.getElementById('FTDate').value;
     document.forms[0].elements[ftIsDate].value = document.getElementById('FTDate').value;
     document.forms[0].elements[ftUlDate].value = document.getElementById('FTDate').value;
@@ -269,7 +273,7 @@ function storeFTExamSupportData(){
     document.forms[0].elements[ftOtDate].value = document.getElementById('FTDate').value;
     document.forms[0].elements[ftReDate].value = document.getElementById('FTDate').value;
     
-    document.forms[0].elements[ftNoCmt].value = document.forms[0].FTComments.value;
+    document.forms[0].elements[FTExCmt].value = document.forms[0].FTComments.value;
     document.forms[0].elements[ftNeCmt].value = document.forms[0].FTComments.value;
     document.forms[0].elements[ftIsCmt].value = document.forms[0].FTComments.value;
     document.forms[0].elements[ftUlCmt].value = document.forms[0].FTComments.value;
@@ -280,7 +284,7 @@ function storeFTExamSupportData(){
 
 function controlFTExam(){
             
-    if(document.forms[0].elements[ftNoId-1].checked == false){
+    if(document.forms[0].elements[FTExId].checked == false){
         //enable all foot exam checkbox        
         //alert("enable all foot exam checkboxes");
         document.forms[0].elements[ftNeId-1].disabled= false;
@@ -319,13 +323,13 @@ function controlFTExam(){
 
 function storeEyeExamSupportData(){
     
-    document.forms[0].elements[eyeNoDate].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeExDate].value = document.forms[0].iDate.value;
     document.forms[0].elements[eyeHypDate].value = document.forms[0].iDate.value;
     document.forms[0].elements[eyeDiaDate].value = document.forms[0].iDate.value;
     document.forms[0].elements[eyeOthDate].value = document.forms[0].iDate.value;
     document.forms[0].elements[eyeRefDate].value = document.forms[0].iDate.value;
     
-    document.forms[0].elements[eyeNoCmt].value = document.forms[0].iComments.value;
+    document.forms[0].elements[eyeExCmt].value = document.forms[0].iComments.value;
     document.forms[0].elements[eyeHypCmt].value = document.forms[0].iComments.value;
     document.forms[0].elements[eyeDiaCmt].value = document.forms[0].iComments.value;
     document.forms[0].elements[eyeOthCmt].value = document.forms[0].iComments.value;
@@ -335,7 +339,7 @@ function storeEyeExamSupportData(){
 
 function controlEyeExam(){
     
-    if(document.forms[0].elements[eyeNoId-1].checked == false){
+    if(document.forms[0].elements[eyeExId].checked == false){
         //enable all foot exam checkbox        
         //alert("enable all foot exam checkboxes");
         document.forms[0].elements[eyeHypId-1].disabled= false;
@@ -347,7 +351,7 @@ function controlEyeExam(){
         //document.forms[0].elements[eyeOthId].disabled= false;
         //document.forms[0].elements[eyeRefId].disabled= false;
     }
-    else if(document.forms[0].elements[eyeNoId-1].checked == true){
+    else if(document.forms[0].elements[eyeExId].checked == true){
         //uncheck and disable all foot exam checkbox        
         //alert("uncheck all foot exam checkboxes");
         document.forms[0].elements[eyeHypId-1].checked= false;
@@ -383,7 +387,7 @@ function initialize(){
             case 'value(SmkHComments)': smkHCmt = i;  break;
             case 'value(SmkCComments)': smkCCmt = i;  break;
             
-            case 'value(FTNoValue)': ftNoId = i;  break;
+            case 'value(FTExValue)': FTExId = i;  break;
             case 'value(FTNeValue)': ftNeId = i;  break;
             case 'value(FTIsValue)': ftIsId = i;  break;
             case 'value(FTUlValue)': ftUlId = i;  break;
@@ -391,7 +395,7 @@ function initialize(){
             case 'value(FTOtValue)': ftOtId = i;  break;
             case 'value(FTReValue)': ftReId = i;  break;
             
-            case 'value(FTNoDate)': ftNoDate = i;  break;
+            case 'value(FTExDate)': FTExDate = i;  break;
             case 'value(FTNeDate)': ftNeDate = i;  break;
             case 'value(FTIsDate)': ftIsDate = i;  break;
             case 'value(FTUlDate)': ftUlDate = i;  break;
@@ -399,7 +403,7 @@ function initialize(){
             case 'value(FTOtDate)': ftOtDate = i;  break;
             case 'value(FTReDate)': ftReDate = i;  break;
             
-            case 'value(FTNoComments)': ftNoCmt = i;  break;
+            case 'value(FTExComments)': FTExCmt = i;  break;
             case 'value(FTNeComments)': ftNeCmt = i;  break;
             case 'value(FTIsComments)': ftIsCmt = i;  break;
             case 'value(FTUlComments)': ftUlCmt = i;  break;
@@ -407,19 +411,19 @@ function initialize(){
             case 'value(FTOtComments)': ftOtCmt = i;  break;
             case 'value(FTReComments)': ftReCmt = i;  break;
             
-            case 'value(iNoDate)': eyeNoDate = i;  break;
+            case 'value(iExDate)': eyeExDate = i;  break;
             case 'value(iHypDate)': eyeHypDate = i;  break;
             case 'value(iDiaDate)': eyeDiaDate = i;  break;
             case 'value(iOthDate)': eyeOthDate = i;  break;
             case 'value(iRefDate)': eyeRefDate = i;  break;
             
-            case 'value(iNoComments)': eyeNoCmt = i;  break;
+            case 'value(iExComments)': eyeExCmt = i;  break;
             case 'value(iHypComments)': eyeHypCmt = i;  break;
             case 'value(iDiaComments)': eyeDiaCmt = i;  break;
             case 'value(iOthComments)': eyeOthCmt = i;  break;
             case 'value(iRefComments)': eyeRefCmt = i;  break;
             
-            case 'value(iNoValue)': eyeNoId = i ; break;
+            case 'value(iExValue)': eyeExId = i ; break;
             case 'value(iHypValue)': eyeHypId = i;  break;
             case 'value(iDiaValue)': eyeDiaId = i;  break;
             case 'value(iOthValue)': eyeOthId = i;  break;
@@ -454,7 +458,7 @@ function initialize(){
 }
 
 function disableFTExam(control){
-    document.forms[0].elements[ftNoId-1].disabled= control;
+    document.forms[0].elements[FTExId-1].disabled= control;
     document.forms[0].elements[ftNeId-1].disabled= control;
     document.forms[0].elements[ftIsId-1].disabled= control;
     document.forms[0].elements[ftUlId-1].disabled= control;
@@ -462,7 +466,7 @@ function disableFTExam(control){
     document.forms[0].elements[ftOtId-1].disabled= control;
     document.forms[0].elements[ftReId-1].disabled= control;
     
-    document.forms[0].elements[ftNoId].disabled= control;
+    document.forms[0].elements[FTExId].disabled= control;
     document.forms[0].elements[ftNeId].disabled= control;
     document.forms[0].elements[ftIsId].disabled= control;
     document.forms[0].elements[ftUlId].disabled= control;
@@ -503,6 +507,11 @@ function PVDCheck(){
     else{
         disableFTExam(false);
     }
+}
+
+function clearAll(yRadio, nRadio){    
+    document.forms[0].elements[yRadio].checked=false;
+    document.forms[0].elements[nRadio].checked=false;
 }
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport(); initialize();">
@@ -615,7 +624,7 @@ function PVDCheck(){
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                                                     </td>                                                    
                                                 </tr>
-                                                <tr class="dataEntryTable">
+                                                <tr>
                                                     <td class="dataEntryTable">Last Data</td>
                                                     <td class="dataEntryTable"><font style="font-size:80%">
                                                             <%=request.getAttribute("SmkSLastData")%>                                                       
@@ -636,7 +645,7 @@ function PVDCheck(){
                                                     </td>
                                                     <td class="dataEntryTable">&nbsp;</td>
                                                 </tr>
-                                                <tr class="dataEntryTable">
+                                                <tr>
                                                     <td class="dataEntryTable">New Data</td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(SmkSValue)" size="8%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(SmkHValue)" size="8%" /></td>
@@ -943,23 +952,21 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>                                                 
-                                                 <tr class="dataEntryTable">
+                                                 <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("WTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WTMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="WTLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WTLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WTLastData")%></td></tr>
-                                                            
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WTLastData")%></td></tr>                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        
+                                                        </logic:present>                                                        
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
-                                                 <tr class="dataEntryTable">                                                    
+                                                 <tr>                                                    
                                                     <td class="dataEntryTable"><%=request.getAttribute("HTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HTMeasuringInstrc")%></font></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -997,46 +1004,47 @@ function PVDCheck(){
                                             <td></td>
                                             <td><table style="display:none" cellpadding='1' cellspacing='0' id="examination">
                                                 <tr>
-                                                    <td class="subTitle" width="30%">                                                        
+                                                    <td class="subTitle" width="28%">                                                        
                                                     </td>                                                    
                                                     <td class="subTitle" width="17%">
                                                         Last Data<br>Entered on
                                                     </td>
-                                                    <td class="subTitle" width="20%">
+                                                    <td class="subTitle" width="22%">
                                                         New Data
                                                     </td>                                                    
                                                     <td class="subTitle" width="10%">
                                                         Ob. Date<br> (yyyy-MM-dd)
                                                     </td>
-                                                    <td class="subTitle" width="24%">
+                                                    <td class="subTitle" width="23%">
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                                                     </td>                                                    
                                                 </tr>
-                                                <tr class="dataEntryTable">
+                                                <tr>
                                                     <th class="dataEntryTable" colspan="3">Foot Exam</th>                                                    
                                                     <td class="dataEntryTable" valign="top" align="center"><input type="text" id="FTDate" name="FTDate" value="<%=request.getAttribute("FTNeDate")%>" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" rowspan="8" valign="top" align="center">
-                                                        <textarea name="FTComments" wrap="hard" cols="24" style="height:180" tabindex="9999"><logic:present name="FTNoComments"><%=request.getAttribute("FTNoComments")%></logic:present></textarea>
+                                                        <textarea name="FTComments" wrap="hard" cols="24" style="height:180" tabindex="9999"><logic:present name="FTExComments"><%=request.getAttribute("FTExComments")%></logic:present></textarea>
                                                     </td>
                                                 </tr>
-                                                <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><%=request.getAttribute("FTNoDesc")%></td>   
+                                                <tr>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("FTExDesc")%></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTNoLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTNoLastData")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTExLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTExLastData")%></td></tr>
                                                             
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(FTNoValue)" onclick="javascript:controlFTExam();" value="yes" />Yes
-                                                        <html:radio property="value(FTNoValue)" onclick="javascript:controlFTExam();" value="no"/>No
+                                                        <html:radio property="value(FTExValue)" onclick="javascript:controlFTExam();" value="yes" />Yes
+                                                        <html:radio property="value(FTExValue)" onclick="javascript:controlFTExam();" value="no"/>No
+                                                        <a title="clear all" href="javascript:clearAll(FTExId, FTExId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <td class="dataEntryTable" rowspan="7" valign="top" align="center">&nbsp;</td>
-                                                    <html:hidden property="value(FTNoDate)"/>
-                                                    <html:hidden property="value(FTNoComments)"/>
+                                                    <html:hidden property="value(FTExDate)"/>
+                                                    <html:hidden property="value(FTExComments)"/>
                                                  </tr>
-                                                 <tr class="dataEntryTable">
+                                                 <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("FTNeDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -1048,6 +1056,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTNeValue)" value="yes" />Yes
                                                         <html:radio property="value(FTNeValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(ftNeId, ftNeId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(FTNeDate)" />
                                                     <html:hidden property="value(FTNeComments)"/>
@@ -1064,6 +1073,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTIsValue)" value="yes" />Yes
                                                         <html:radio property="value(FTIsValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(ftIsId, ftIsId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(FTIsDate)" />
                                                     <html:hidden property="value(FTIsComments)" />
@@ -1080,6 +1090,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTUlValue)" value="yes" />Yes
                                                         <html:radio property="value(FTUlValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(ftUlId, ftUlId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(FTUlDate)" />
                                                     <html:hidden property="value(FTUlComments)" />
@@ -1096,6 +1107,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTInValue)" value="yes" />Yes
                                                         <html:radio property="value(FTInValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(ftInId, ftInId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(FTInDate)" />
                                                     <html:hidden property="value(FTInComments)" />
@@ -1112,6 +1124,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTOtValue)" value="yes" />Yes
                                                         <html:radio property="value(FTOtValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(ftOtId, ftOtId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(FTOtDate)" />
                                                     <html:hidden property="value(FTOtComments)" />
@@ -1128,35 +1141,37 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTReValue)" value="yes" />Yes
                                                         <html:radio property="value(FTReValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(ftReId, ftReId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(FTReDate)" />
                                                     <html:hidden property="value(FTReComments)" />
                                                  </tr>
-                                                 <tr class="dataEntryTable">
+                                                 <tr>
                                                     <th class="dataEntryTable" colspan="3">Eye Exam</th>                                                    
                                                     <td class="dataEntryTable" valign="top" align="center"><input type="text" name="iDate" value="<%=request.getAttribute("iDiaDate")%>" size="10%"/></td>
                                                     <td class="dataEntryTable" rowspan="8" valign="top" align="center">
-                                                        <textarea name="iComments" wrap="hard" cols="24" style="height:180"><logic:present name="iNoComments"><%=request.getAttribute("iNoComments")%></logic:present></textarea>
+                                                        <textarea name="iComments" wrap="hard" cols="24" style="height:180"><logic:present name="iExComments"><%=request.getAttribute("iExComments")%></logic:present></textarea>
                                                     </td>
                                                 </tr>
-                                                <tr class="dataEntryTable">
-                                                    <td class="dataEntryTable"><%=request.getAttribute("iNoDesc")%></td>   
+                                                <tr>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("iExDesc")%></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iNoLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iNoLastData")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iExLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iExLastData")%></td></tr>
                                                             
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(iNoValue)" onclick="javascript:controlEyeExam();" value="yes"/>Yes
-                                                        <html:radio property="value(iNoValue)" onclick="javascript:controlEyeExam();" value="no"/>No
+                                                        <html:radio property="value(iExValue)" onclick="javascript:controlEyeExam();" value="yes"/>Yes
+                                                        <html:radio property="value(iExValue)" onclick="javascript:controlEyeExam();" value="no"/>No
+                                                        <a title="clear all" href="javascript:clearAll(eyeExId, eyeExId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <td class="dataEntryTable" rowspan="7" valign="top" align="center">&nbsp;</td>
-                                                    <html:hidden property="value(iNoDate)" />
-                                                    <html:hidden property="value(iNoComments)" />
+                                                    <html:hidden property="value(iExDate)" />
+                                                    <html:hidden property="value(iExComments)" />
                                                  </tr>
-                                                 <tr class="dataEntryTable">
+                                                 <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("iHypDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -1168,6 +1183,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iHypValue)" value="yes" />Yes
                                                         <html:radio property="value(iHypValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(eyeHypId, eyeHypId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(iHypDate)" />
                                                     <html:hidden property="value(iHypComments)" />
@@ -1184,6 +1200,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iDiaValue)" value="yes" />Yes
                                                         <html:radio property="value(iDiaValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(eyeDiaId, eyeDiaId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(iDiaDate)"/>
                                                     <html:hidden property="value(iDiaComments)"/>
@@ -1200,6 +1217,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iOthValue)" value="yes" />Yes
                                                         <html:radio property="value(iOthValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(eyeOthId, eyeOthId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(iOthDate)"/>
                                                     <html:hidden property="value(iOthComments)"/>
@@ -1216,6 +1234,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iRefValue)" value="yes" />Yes
                                                         <html:radio property="value(iRefValue)" value="no" />No
+                                                        <a title="clear all" href="javascript:clearAll(eyeRefId, eyeRefId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
                                                     </td>
                                                     <html:hidden property="value(iRefDate)"/>
                                                     <html:hidden property="value(iRefComments)"/>
@@ -1247,7 +1266,7 @@ function PVDCheck(){
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                                                     </td>                                                    
                                                 </tr>
-                                                <tr class="dataEntryTable">
+                                                <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("HbA1Desc")%><br><font class="eightyPercent"><%=request.getAttribute("HbA1MeasuringInstrc")%></font></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -1260,7 +1279,7 @@ function PVDCheck(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Date)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Comments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
-                                                 <tr class="dataEntryTable">
+                                                 <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("BGDesc")%><br><font class="eightyPercent"><%=request.getAttribute("BGMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -1409,7 +1428,7 @@ function PVDCheck(){
                                         <tr>
                                             <th></th>
                                             <th class="title" width="98%">
-                                            <a href="javascript: showHideItem('medicationAllergies');">Medication Allergies>> </a>
+                                            <a href="javascript: showHideItem('medicationAllergies');">Medication Allergies >> </a>
                                             </th>
                                         </tr>
                                          <tr>
@@ -1451,7 +1470,7 @@ function PVDCheck(){
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                                                     </td>                                                    
                                                 </tr>
-                                                <tr class="dataEntryTable">
+                                                <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("NtrCDesc")%></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
@@ -1464,7 +1483,7 @@ function PVDCheck(){
                                                     <html:hidden property="value(NtrCDate)"/>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(NtrCComments)" size="45" tabindex="9999"/></td>
                                                  </tr>
-                                                 <tr class="dataEntryTable">
+                                                 <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("ExeCDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
