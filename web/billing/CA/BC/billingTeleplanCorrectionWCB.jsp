@@ -412,8 +412,8 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 		
 		<td>Rehab Type:
 		<html:select name="w_rehabtype" value="<%=form.getW_rehabtype()%>" property="w_rehabtype">
-					<html:option value="Y">Yes</html:option>
-					<html:option value="N">No</html:option>
+					<html:option value="C">Work Conditioning</html:option>
+					<html:option value="O">Other</html:option>
 		</html:select></td>
 		
 		<td>To Follow:
