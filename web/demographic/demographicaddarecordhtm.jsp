@@ -455,7 +455,9 @@ function checkTypeIn() {
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPatientStatus"/>:</b></td>
       <td align="left" > 
-        <!-- <input type="text" name="patient_status" value="AC" onBlur="upCaseCtrl(this)"> -->
+        <% if (vLocale.getCountry().equals("BR")) { %>
+          <input type="text" name="patient_status" value="AC" onBlur="upCaseCtrl(this)">
+        <% } else { %>
         <select name="patient_status">
           <option value="AC">AC - Active</option>
           <option value="IN">IN - Inactive</option>
@@ -463,6 +465,7 @@ function checkTypeIn() {
           <option value="MO">MO - Moved</option>
           <option value="FI">FI - Fired</option>
         </select>
+        <% } %>
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartNo"/>:</b></td>
       <td align="left"> 
