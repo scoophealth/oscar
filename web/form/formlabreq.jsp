@@ -73,7 +73,7 @@
         if(ret==true)
         {
             //ret = confirm("Do you wish to save this form and view the print preview?");
-            popupFixedPage(650,850,'../provider/notice.htm');
+            //popupFixedPage(650,850,'../provider/notice.htm');
             document.forms[0].action = "formlabreqprint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>";
             document.forms[0].target="labReqPrint";            
         }
