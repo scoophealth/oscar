@@ -111,8 +111,9 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
         <script language="JavaScript">
 
 		function setfocus() {
-		  document.form1.billing_no.focus();
-		  document.form1.billing_no.select();
+			this.focus();
+		  //document.form1.billing_no.focus();
+		  //document.form1.billing_no.select();
 		}
 		function rs(n,u,w,h,x) {
 		  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
@@ -282,7 +283,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 <input type="hidden" name="update_date" value="<%=UpdateDate%>"/>
 <input type="hidden" name="demoNo" value="<%=DemoNo%>"/>
 <input type="hidden" name="billNumber" value="<%=allFields.getProperty("billing_no")%>"/>
-<table width="600" border="0">
+<table width="100%" border="0">
   <tr bgcolor="#CCCCFF"> 
      <td height="21" colspan="2" class="bCellData">Patient Information<input type="hidden" name ="billingmasterNo" value="<%=billNo%>" /></td>
     
@@ -336,7 +337,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 </table>
 
 
-<table width="600" border="0">
+<table width="100%" border="0">
   <tr bgcolor="#CCCCFF"> 
     <td colspan="2"  class="bCellData">
        Billing Information  Data Center <%=allFields.getProperty("datacenter")%> Payee Number: <%=allFields.getProperty("payee_no")%>
@@ -504,7 +505,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
        </tr>
 </table>
   
-<table width="700" border=1>
+<table width="100%" border=1>
   <tr bgcolor="#CCCCFF"> 
     <td width="25%"  class="bCellData">Service Code</td>      
     <td width="50%"  class="bCellData">Description</td>         
@@ -534,7 +535,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
       </td>
     </tr>
  </table>
- <table width="700" border=1>
+ <table width="100%" border=1>
   <%
  
    apptMainBean.closePstmtConn();
