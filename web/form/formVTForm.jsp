@@ -261,13 +261,13 @@ function storeSMKSupportData(){
 
 function storeFTExamSupportData(){    
 
-    document.forms[0].elements[ftNoId].value = document.getElementById('FTDate').value;
-    document.forms[0].elements[ftNeId].value = document.getElementById('FTDate').value;
-    document.forms[0].elements[ftIsId].value = document.getElementById('FTDate').value;
-    document.forms[0].elements[ftUlId].value = document.getElementById('FTDate').value;
-    document.forms[0].elements[ftInId].value = document.getElementById('FTDate').value;
-    document.forms[0].elements[ftOtId].value = document.getElementById('FTDate').value;
-    document.forms[0].elements[ftReId].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftNoDate].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftNeDate].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftIsDate].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftUlDate].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftInDate].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftOtDate].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftReDate].value = document.getElementById('FTDate').value;
     
     document.forms[0].elements[ftNoCmt].value = document.forms[0].FTComments.value;
     document.forms[0].elements[ftNeCmt].value = document.forms[0].FTComments.value;
@@ -319,11 +319,11 @@ function controlFTExam(){
 
 function storeEyeExamSupportData(){
     
-    document.forms[0].elements[eyeNoId].value = document.forms[0].iDate.value;
-    document.forms[0].elements[eyeHypId].value = document.forms[0].iDate.value;
-    document.forms[0].elements[eyeDiaId].value = document.forms[0].iDate.value;
-    document.forms[0].elements[eyeOthId].value = document.forms[0].iDate.value;
-    document.forms[0].elements[eyeRefId].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeNoDate].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeHypDate].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeDiaDate].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeOthDate].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeRefDate].value = document.forms[0].iDate.value;
     
     document.forms[0].elements[eyeNoCmt].value = document.forms[0].iComments.value;
     document.forms[0].elements[eyeHypCmt].value = document.forms[0].iComments.value;
