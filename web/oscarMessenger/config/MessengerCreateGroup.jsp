@@ -34,7 +34,7 @@
 <html>
 <head>
 <title>
-Group Configurator
+<bean:message key="oscarMessenger.config.MessengerCreateGroup.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -103,12 +103,12 @@ function BackToOscar()
                                       style=1;
                                       levelOrGroup = (String) request.getParameter("Level");
                                 %>
-                                Add a group
+                                <bean:message key="oscarMessenger.config.MessengerCreateGroup.msgAddGroup"/>
                                 <%}else if(request.getParameter("Group") != null){
                                       style =2;
                                       levelOrGroup = (String) request.getParameter("Group");
                                 %>
-                                Rename this Group
+                                <bean:message key="oscarMessenger.config.MessengerCreateGroup.msgRenameGroup"/>
                                 <%}else{
                                       style=3;
                                 %>
@@ -120,7 +120,7 @@ function BackToOscar()
                 <tr>
                     <td>
                         <div class="DivContentSectionHead">
-                            <a href="MessengerAdmin.jsp?groupNo=<%=levelOrGroup%>">Cancel</a>
+                            <a href="MessengerAdmin.jsp?groupNo=<%=levelOrGroup%>"><bean:message key="oscarMessenger.config.MessengerCreateGroup.cancel"/></a>
                         </div>
                     </td>
                 </tr>
@@ -138,17 +138,17 @@ function BackToOscar()
                         <html:form action="/oscarMessenger/AddGroup">
                           <br><br>
                           <% if (style == 1){%>
-                             New Group's Name:
+                             <bean:message key="oscarMessenger.config.MessengerCreateGroup.newGroupsName"/>
                           <%}else{%>
-                             Change Group's Name:
+                             <bean:message key="oscarMessenger.config.MessengerCreateGroup.changeGroupsName"/>
                           <%}%>
                           <br>
                           <input type="text"   name="groupName">
                           <html:hidden property="type2" value="<%=Integer.toString(style)%>"/>
                           <input type="hidden" name="parentID" value="<%=levelOrGroup%>">
 
-                          <input type="submit" name="Submit" class="ControlPushButton" value="Submit">
-                          <input type="reset" class="ControlPushButton" value="Reset">
+                          <input type="submit" name="Submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.config.MessengerCreateGroup.btnSubmit"/>">
+                          <input type="reset" class="ControlPushButton" value="<bean:message key="oscarMessenger.config.MessengerCreateGroup.btnReset"/>">
                         </html:form>
                         <br><br><br><br><br>
                     </td>

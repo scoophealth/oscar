@@ -33,7 +33,7 @@
 
 <head>
 <title>
-Group Configurator
+<bean:message key="oscarMessenger.config.MessengerAdmin.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -110,7 +110,7 @@ function BackToOscar()
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><bean:message key="application.title.admin"/></p>
+        <p class="ScreenTitle"><bean:message key="oscarMessenger.config.MessengerAdmin.2ndTitle"/></p>
         </td>
     </tr>
     <tr>
@@ -140,10 +140,10 @@ function BackToOscar()
                         <table>
                            <tr>
                               <td class=cellButtonLook >
-                              <a href="MessengerCreateGroup.jsp?Level=<%=grpNo%>">New Group</a>
+                              <a href="MessengerCreateGroup.jsp?Level=<%=grpNo%>"><bean:message key="oscarMessenger.config.MessengerAdmin.newGroup"/></a>
                               </td>
                               <td>
-                              - Click here to create a new group on this Level
+                              <bean:message key="oscarMessenger.config.MessengerAdmin.msgCreateNewGroup"/>
                               </td>
                            </tr>
                            <%
@@ -153,18 +153,18 @@ function BackToOscar()
                            %>
                               <tr>
                                  <td class=cellButtonLook >
-                                   <a href="MessengerAdmin.jsp?groupNo=<%=par%>">Go Back</a>
+                                   <a href="MessengerAdmin.jsp?groupNo=<%=par%>"><bean:message key="oscarMessenger.config.MessengerAdmin.goBack"/></a>
                                  </td>
                                  <td>
-                                 - Click here to go the parent group
+                                 <bean:message key="oscarMessenger.config.MessengerAdmin.msgGoToParent"/>
                                  </td>
                               </tr>
                               <tr>
                                  <td class=cellButtonLook >
-                                   <a href="MessengerCreateGroup.jsp?Group=<%=grpNo%>">Rename</a>
+                                   <a href="MessengerCreateGroup.jsp?Group=<%=grpNo%>"><bean:message key="oscarMessenger.config.MessengerAdmin.rename"/></a>
                                  </td>
                                  <td>
-                                 - Click here to change the current groups name
+                                 <bean:message key="oscarMessenger.config.MessengerAdmin.msgChangeGroupsName"/>
                                  </td>
                               </tr>
                            <%}%>
@@ -182,7 +182,7 @@ function BackToOscar()
                         int numGroups = adminUtil.numGroups;
                         if ( numGroups > 0 ){%>
                            <table><tr><td>
-                              All the groups In this Level - click to explore the lower level groups
+                              <bean:message key="oscarMessenger.config.MessengerAdmin.msgExploreLowerLevel"/>
                            </td></tr></table>
                        <%    out.print (groupList);
                         }
@@ -198,9 +198,9 @@ function BackToOscar()
                         %>
                         <html:form action="/oscarMessenger/UpdateMembers">
                         <input type=hidden name="grpNo" value=<%=grpNo%> >
-                        <input type=submit name="update" class="ControlPushButton" value="Update group members">
-                        <input type=submit name="delete" class="ControlPushButton" value="Delete This group">
-                        <br>All the Members that are in this group are checked.
+                        <input type=submit name="update" class="ControlPushButton" value="<bean:message key="oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"/>">
+                        <input type=submit name="delete" class="ControlPushButton" value="<bean:message key="oscarMessenger.config.MessengerAdmin.btnDeleteThisGroup"/>">
+                        <br><bean:message key="oscarMessenger.config.MessengerAdmin.msgAllMembersChecked"/>
                         <div class="ChooseRecipientsBox1">
                           <table>
                             <tr>
@@ -208,17 +208,17 @@ function BackToOscar()
                                 &nbsp;
                               </th>
                               <th bgcolor=#eeeeff>
-                                last name
+                                <bean:message key="oscarMessenger.config.MessengerAdmin.lastName"/>
                               </th>
                               <th bgcolor=#eeeeff>
-                                 first name
+                                <bean:message key="oscarMessenger.config.MessengerAdmin.firstName"/>
                               </th>
                               <th bgcolor=#eeeeff>
-                                 provider type
+                                <bean:message key="oscarMessenger.config.MessengerAdmin.providerType"/>
                               </th>
                            </tr>
                            <%
-                            adminUtil.printAllProvidersWithMembers(grpNo,out);
+                            adminUtil.printAllProvidersWithMembers(request.getLocale(),grpNo,out);
                            %>
                           </table>
                         </div>
