@@ -368,7 +368,7 @@ var maxYear=9900;
   }
 %>
             <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
+            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
         </td>
     </tr>
 </table>
@@ -1296,7 +1296,7 @@ var maxYear=9900;
   }
 %>
             <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
+            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
         </td>
     </tr>
 </table>
