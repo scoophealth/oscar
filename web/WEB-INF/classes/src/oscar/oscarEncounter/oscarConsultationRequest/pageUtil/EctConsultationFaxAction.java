@@ -65,21 +65,21 @@ public class EctConsultationFaxAction extends Action {
 
     public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
-    {
-        EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        if(bean == null)
-            return mapping.findForward("eject");
-        
-        OscarProperties props = OscarProperties.getInstance();
-        
+    {                
         String curUser_no = (String) request.getSession().getAttribute("user");
         
+        if(curUser_no == null){
+            System.out.println("EJECTING");
+            return mapping.findForward("eject");
+        }
+        
+        OscarProperties props = OscarProperties.getInstance();
+                        
         FaxClientLog faxClientLog = new FaxClientLog(curUser_no);    
             
         EctConsultationFaxForm frm = (EctConsultationFaxForm)form;
-        System.out.println("Provider = "+bean.providerNo+" has requested to send a fax");
-        String requestId          = frm.getRequestId();
-        //String sendingProvider    = bean.providerNo;
+        System.out.println("Provider = "+curUser_no+" has requested to send a fax");
+        String requestId          = frm.getRequestId();        
         String sendingProvider    = curUser_no;
         String locationId         = getLocationId();        
         String identifier         = props.getProperty("faxIdentifier", "zwf4t%8*9@s");
