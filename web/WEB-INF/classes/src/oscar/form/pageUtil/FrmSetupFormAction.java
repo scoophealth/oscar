@@ -134,14 +134,14 @@ public final class FrmSetupFormAction extends Action {
                                       "<dat_LDL signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2004-12-31\"/>"+
                                       "<dbl_HDL_mM signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2\"/>"+
                                       "<dat_HDL signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"2004-12-31\"/>"+
-                                      "<dbl_TotalCholesterol_mM signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
-                                      "<dat_TotalCholesterol signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dbl_Triglycerides_mM signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dat_Triglycerides signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dbl_UrineAlbuminCreatinineRatio_mgPermmol signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dat_UrineAlbuminCreatinineRatio signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dbl_UrineAlbumin_mgPerDay signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
-                                      "<dat_UrineAlbumin signed_when=\"2004/12/02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
+                                      "<dbl_TotalCholesterol_mM signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\" value=\"123\"/>"+
+                                      "<dat_TotalCholesterol signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
+                                      "<dbl_Triglycerides_mM signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
+                                      "<dat_Triglycerides signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
+                                      "<dbl_UrineAlbuminCreatinineRatio_mgPermmol signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
+                                      "<dat_UrineAlbuminCreatinineRatio signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
+                                      "<dbl_UrineAlbumin_mgPerDay signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
+                                      "<dat_UrineAlbumin signed_when=\"2004-12-02\" signed_who=\"999998\" signed_how=\"EMR\"/>"+
                                    "</SitePatientVisit>"+
                                 "</SitePatientVisit_Records>";
             nameProps = convertName(formName);
@@ -158,9 +158,9 @@ public final class FrmSetupFormAction extends Action {
                 request.setAttribute(mt.getType() + "Desc", mt.getTypeDesc());
                 request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());
                 
-                addLastData(mt, demo);
-                request.setAttribute(mt.getType()+"LastData", mt.getLastData());
-                request.setAttribute(mt.getType()+"LastDataEnteredDate", mt.getLastDateEntered());
+                addLastData(mt, demo);                
+                request.setAttribute(mt.getType()+"LastData", mt.getLastData()==null?"":mt.getLastData());
+                request.setAttribute(mt.getType()+"LDDate", mt.getLastDateEntered()==null?"":mt.getLastDateEntered());
                 
                 if(currentRec!=null){
                     frm.setValue(mt.getType()+"Value", currentRec.getProperty(mt.getType()+"Value", ""));
@@ -191,7 +191,7 @@ public final class FrmSetupFormAction extends Action {
                         else{
                             vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});
                             value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                            frm.setValue(mt.getType() + "Date", value);    
+                            frm.setValue(mt.getType() + "Date", value.replaceAll("/", "-"));    
                             request.setAttribute(mt.getType() + "Date", value);
                         }  
                     }
