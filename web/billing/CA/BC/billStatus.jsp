@@ -273,10 +273,10 @@ if (billTypes == null){
   <tr bgcolor="#CCCCFF"> 
     <th align="center" class="bHeaderData" >SERVICE DATE</th>
     <th align="center" class="bHeaderData" >PATIENT</th>
-    <th align="center" class="bHeaderData" >STAT</th>
-    <th align="center" class="bHeaderDate" >CODE</th>
-    <th align="center" class="bHeaderDate" >AMOUNT</th>
-    <th align="center" class="bHeaderDate" >PAID</th>
+    <th align="center" class="bHeaderData" title="Status">STAT</th>
+    <th align="center" class="bHeaderDate" title="Code Billed">CODE</th>
+    <th align="center" class="bHeaderDate" title="Amount Billed">BILLED</th>
+    <th align="center" class="bHeaderDate" title="Amount Paid"  >PAID</th>
     <th align="center" class="bHeaderDate" >DX1</th>
     <th align="center" class="bHeaderDate" >DX2</th>
     <th align="center" class="bHeaderDate" >DX3</th>
