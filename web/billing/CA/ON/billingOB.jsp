@@ -12,7 +12,7 @@ String service_form="";
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
 
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%@ include file="dbBilling.jsp" %>
@@ -122,7 +122,7 @@ function showHideLayers() { //v3.0
 
 <%
 boolean bNew = false; //Is that a new file?
-if( request.getParameter("bNewForm")!=null ) &&  ) 
+if( request.getParameter("bNewForm")!=null ) 
 	bNew = request.getParameter("bNewForm").compareTo("0")==0 ? false : true ;
 
 String content="", billingdatetime="";
@@ -241,7 +241,7 @@ while (rsctlcode.next()){
 	ctlCount++;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
-		<td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
+		<td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
 	</tr>
 <% } %>
 	</table>
@@ -614,7 +614,7 @@ while(rslocal.next()){
 					<input type="text" name="xml_other3_unit" size="5" maxlength="2" datafld='xml_other3_unit'>
 					</font></td>
 				</tr><tr> 
-					<td colspan="2"><a href="javascript:OtherScriptAttach()"><img src="../images/search_code.jpg" border="0"></a></td>
+					<td colspan="2"><a href="javascript:OtherScriptAttach()"><img src="images/search_code.jpg" border="0"></a></td>
 				</tr>
 				</table>
 
@@ -652,7 +652,7 @@ while(rslocal.next()){
 				<a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">
 				Diagnostic </a></font></b> <font face="Verdana, Arial, Helvetica" size="1"> 
 				<input name="xml_diagnostic_detail" value="" size="25" datafld='xml_diagnostic_detail'>
-				<a href="javascript:ScriptAttach()"><img src="../images/search_dx_code.jpg" border="0"></a> 
+				<a href="javascript:ScriptAttach()"><img src="images/search_dx_code.jpg" border="0"></a> 
 				&nbsp; &nbsp; 
 				<input type="hidden" name="xml_dig_search1" >
 				</font></td>
