@@ -91,6 +91,7 @@ public final class FrmSetupFormAction extends Action {
         String ongoingConcern = chartBean.ongoingConcerns;
         String formName = (String) request.getParameter("formName");        
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
+        
         List drugLists = getDrugList(demo);
                                     
         Properties currentRec = getFormRecord(formName, formId, demo);
@@ -113,8 +114,8 @@ public final class FrmSetupFormAction extends Action {
             Properties nameProps = new Properties();
             props.setProperty("demographic_no", demo);
             props.setProperty("provider_no", providerNo);
-            String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
-            String decisionSupportURL = connect2OSDSF(xmlData);
+            //String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
+            String decisionSupportURL = getPatientRlt(demo);
             System.out.println("decisionSupportURL" + decisionSupportURL);
             request.setAttribute("decisionSupportURL", StringEscapeUtils.escapeHtml(decisionSupportURL));
             
@@ -147,29 +148,38 @@ public final class FrmSetupFormAction extends Action {
                 }
                 else{                                        
                                                             
-                    String valueMethodCall = (String) nameProps.get(mt.getType()+"Value");
-                    //System.out.println("method "+methodCall);
+                    //prefill data from Miles if its dataentered date is > than the one in measurements                    
+                    String valueMethodCall = (String) nameProps.get(mt.getType()+"Value");                    
                     if (vtDataC!=null && valueMethodCall != null){                      
                         Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});
                         String value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                        frm.setValue(mt.getType()+"Value", value);
-                        //System.out.println(mt.getType()+"value from miles: " + value);                    
-                    
-                        String dateMethodCall = (String) nameProps.get(mt.getType()+"Date");
-                        //System.out.println("method "+methodCall);
-                        if (dateMethodCall != null){                      
-                            vtGetMethods = vtDataC.getMethod("get"+dateMethodCall, new Class[] {});
-                            value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                            frm.setValue(mt.getType() + "Date", value);
-                            request.setAttribute(mt.getType() + "Date", value);
-                            //System.out.println(mt.getType()+"date from miles: " + value);
+                        vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});
+                        System.out.println("data date " + (String) vtGetMethods.invoke(vtData, new Object[]{}));
+                        String dMiles = (String) vtGetMethods.invoke(vtData, new Object[]{});
+                        String dMeas = mt.getLastDateEntered();
+                        
+                        if(dMiles!=null && dMeas!=null){
+                            if(dMiles.compareTo(dMeas)>0){
+                                frm.setValue(mt.getType()+"Value", value);                           
+                                String dateMethodCall = (String) nameProps.get(mt.getType()+"Date");
+
+                                if (dateMethodCall != null){                      
+                                    vtGetMethods = vtDataC.getMethod("get"+dateMethodCall, new Class[] {});
+                                    value = (String) vtGetMethods.invoke(vtData, new Object[]{});
+                                    frm.setValue(mt.getType() + "Date", value);
+                                    request.setAttribute(mt.getType() + "Date", value);                                
+                                }
+                                else{
+
+                                    frm.setValue(mt.getType() + "Date", dMiles==null?"":value.replaceAll("/", "-"));    
+                                    request.setAttribute(mt.getType() + "Date", dMiles);
+                                } 
+                            }
+                            else{
+                                frm.setValue(mt.getType() + "Date", today);    
+                                request.setAttribute(mt.getType() + "Date", today);
+                            }
                         }
-                        else{
-                            vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});
-                            value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                            frm.setValue(mt.getType() + "Date", value==null?"":value.replaceAll("/", "-"));    
-                            request.setAttribute(mt.getType() + "Date", value);
-                        }  
                     }
                     else{
                         frm.setValue(mt.getType() + "Date", today);    
@@ -246,14 +256,14 @@ public final class FrmSetupFormAction extends Action {
         return props;
     }
     
-    private String connect2OSDSF(String xmlResult){
+    private String getPatientRlt(String demographicNo){
         Vector data2OSDSF = new Vector();
-        data2OSDSF.add(xmlResult);
-        data2OSDSF.add("dummy");
+        data2OSDSF.add("patientCod");
+        data2OSDSF.add(demographicNo);
         //send to osdsf thru XMLRPC
         try{
             XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
-            String result = (String) xmlrpc.execute("vt.saveAndGetRlt", data2OSDSF);
+            String result = (String) xmlrpc.execute("vt.getPatientRlt", data2OSDSF);
             System.out.println("Reverse result: " + result);
             return result;
         }
@@ -270,7 +280,7 @@ public final class FrmSetupFormAction extends Action {
     
     private String getMostRecentRecord(String demographicNo){
         Vector ret = new Vector();
-            ret.addElement("getMostRecentRecord");
+            ret.addElement("patientCod");
             ret.addElement(demographicNo);
         //send to osdsf thru XMLRPC
         try{
