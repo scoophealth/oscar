@@ -292,6 +292,7 @@
               <forward name="provider" path="/provider/providercontrol.jsp" redirect="true"/>
               <forward name="admin" path="/admin/admin.jsp" redirect="true"/>
               <forward name="failure" path="/logout.jsp?login=failed"/>
+              <forward name="error" path="/loginfailed.jsp"/>
     </action>
 
     <!-- Edit oscarMessenger -->
