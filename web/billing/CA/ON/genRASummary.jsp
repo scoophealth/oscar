@@ -167,13 +167,15 @@ proNo = request.getParameter("proNo");
 //raNo = request.getParameter("rano");
 if (raNo.compareTo("") == 0 || raNo == null){
 	flag = "0";
+	return;
 } else {
 %>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
 <tr bgcolor="#333333">
 	<th align='CENTRE'><form action="genRASummary.jsp"><input type="hidden" name="rano" value="<%=raNo%>">
-	<select name="proNo"><option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
+	<select name="proNo">
+	<!--option value="all"  <%--=proNo.equals("all")?"selected":""--%>>All Providers</option-->
 	
 <%
 	ResultSet rsdemo = null;
@@ -185,13 +187,15 @@ if (raNo.compareTo("") == 0 || raNo == null){
 		plast = rsdemo.getString("last_name");
 		pfirst = rsdemo.getString("first_name");
 %>
-	<option value="<%=pohipno%>" <%=proNo.equals(pohipno)?"selected":""%>><%=plast%>,<%=pfirst%></option>
+	<option value="<%=pohipno%>" "selected"><%=plast%>,<%=pfirst%></option>
 <%	} %>
-	</select><input type=submit name=submit value=Generate></form></th></tr>
+	</select>
+	<input type="submit" name="submit" value="Generate"></form></th>
+</tr>
 </table>
       
 <% 
-	if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){ 
+	if (proNo == null || proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){ 
 %>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
 <tr> 
@@ -311,7 +315,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 
 <tr> 
 	<td height="16"><%=account%></td>
-	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_docname%></td>
 	<td height="16"><%=demo_name%></td>
 	<td height="16"><%=demo_hin%></td>
 	<td height="16"><%=servicedate%></td>
@@ -335,7 +339,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 %>
 <tr> 
 	<td height="16"><%=account%></td>
-	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_docname%></td>
 	<td height="16"><%=demo_name%></td>
 	<td height="16"><%=demo_hin%></td>
 	<td height="16"><%=servicedate%></td>
@@ -357,7 +361,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 %>
 <tr> 
 	<td height="16"><%=account%></td>
-	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_docname%></td>
 	<td height="16"><%=demo_name%></td>
 	<td height="16"><%=demo_hin%></td>
 	<td height="16"><%=servicedate%></td>
@@ -492,7 +496,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 %>
 <tr> 
 	<td height="16"><%=account%></td>
-	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_docname%></td>
 	<td height="16"><%=demo_name%></td>
 	<td height="16"><%=demo_hin%></td>
 	<td height="16"><%=servicedate%></td>
@@ -515,7 +519,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 %>   
 <tr> 
 	<td height="16"><%=account%></td>
-	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_docname%></td>
 	<td height="16"><%=demo_name%></td>
 	<td height="16"><%=demo_hin%></td>
 	<td height="16"><%=servicedate%></td>
@@ -537,7 +541,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 %>
 <tr> 
 	<td height="16"><%=account%></td>
-	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_docname%></td>
 	<td height="16"><%=demo_name%></td>
 	<td height="16"><%=demo_hin%></td>
 	<td height="16"><%=servicedate%></td>
