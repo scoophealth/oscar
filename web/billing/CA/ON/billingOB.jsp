@@ -356,6 +356,7 @@ if (appt_no.compareTo("0") == 0) {
 			<option value="02| Hospital Visit" <%=visitType.equals("Hospital Visit")?"selected":""%>>02 | Hospital Visit</option>
 			<option value="03| ER" <%=visitType.equals("ER")?"selected":""%>>03 | ER</option>
 			<option value="04| Nursing Home" <%=visitType.equals("Nursing Home")?"selected":""%>>04 | Nursing Home</option>
+			<option value="05| Home Visit" <%=visitType.equals("Home Visit")?"selected":""%>>05 | Home Visit</option>
 		</select>
 		</font></td>
 	</tr><tr> 
