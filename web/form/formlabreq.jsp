@@ -291,7 +291,7 @@ var maxYear=3100;
                     <td colspan="3" nowrap="true" >
                         Requisitioning Physician/Practioner:<br>
                          <input type="hidden" style="width:100%" name="provName" value="<%=props.getProperty("provName", "")%>"  />
-                     
+                         <input type="hidden" style="width:100%" name="apptProvName" value="<%=props.getProperty("apptProvName", "")%>"  />
                         <%=props.getProperty("apptProvName", "").compareTo("")==0?props.getProperty("provName", ""):props.getProperty("apptProvName", "")%>&nbsp;<br>
 <%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
      should really be rewritten more elegantly at some later point in time. --%>    
