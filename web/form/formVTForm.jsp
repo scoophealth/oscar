@@ -239,6 +239,14 @@ function showHideItem(id){
         document.getElementById(id).style.display = 'none'; 
 }
 
+function showItem(id){
+        document.getElementById(id).style.display = 'block'; 
+}
+
+function hideItem(id){
+        document.getElementById(id).style.display = 'none'; 
+}
+
 function showHideDetail(){
     showHideItem('subjective');
     showHideItem('objective');
@@ -269,7 +277,9 @@ function showHideDetail(){
     showHideItem('medHead2');
     showHideItem('medHead3');
     showHideItem('medHead4');
-    
+    showHideItem('vitalHead1');
+    showHideItem('vitalHead2');
+    showHideItem('vitalHead3');
     
     
 }
@@ -584,11 +594,14 @@ function disableEyeExam(control){
 function DMCheck(){
     if(document.forms[0].elements[DMValue].checked==false && document.forms[0].elements[PVDValue].checked==false){
         disableFTExam(true);
+        hideItem('examinationFoot');
     }    
     else{
-        disableFTExam(false);        
+        disableFTExam(false);    
+        showItem('examinationFoot');
     }    
     if(document.forms[0].elements[DMValue].checked==false){
+        hideItem('examinationEye');
         disableEyeExam(true);
         document.forms[0].elements[HbA1Value].disabled= true;
         document.forms[0].elements[HbA1Date].disabled= true;
@@ -598,6 +611,7 @@ function DMCheck(){
         document.forms[0].elements[DMCCmt].disabled= true;
     }
     else{        
+        showItem('examinationEye');
         disableEyeExam(false);
         document.forms[0].elements[HbA1Value].disabled= false;
         document.forms[0].elements[HbA1Date].disabled= false;
@@ -1060,19 +1074,19 @@ function clearAll(yRadio, nRadio){
                                             <td></td>                                            
                                             <td><table cellpadding='0' cellspacing='0' id="vital">                                                
                                                 <tr>
-                                                    <td class="subTitle" width="34%">                                                        
+                                                    <td class="subTitle" width="36%">                                                        
                                                     </td>                                                    
                                                     <td class="subTitle" width="16%">
-                                                        Last Data<br> Entered on
+                                                        <span id="vitalHead1" style="display:none;" >Last Data<br> Entered on</span>
                                                     </td>
-                                                    <td class="subTitle" width="7%">
-                                                        New Data
+                                                    <td class="subTitle" width="18%">
+                                                        <span id="vitalHead2" style="display:none;" >New Data</span>
                                                     </td>                                                    
-                                                    <td class="subTitle" width="10%">
+                                                    <!--td class="subTitle" width="10%">
                                                         Ob. Date<br> (yyyy-MM-dd)
-                                                    </td>
-                                                    <td class="subTitle" width="33%">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td-->
+                                                    <td class="subTitle" width="30%">
+                                                        <span id="vitalHead3" style="display:none;" ><bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/></span>
                                                     </td>                                                    
                                                 </tr>
                                                 <tr>
@@ -1084,7 +1098,7 @@ function clearAll(yRadio, nRadio){
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPValue)" size="5%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(BPDate)" size="10%" tabindex="9999"/></td>
+                                                    <!--td class="dataEntryTable" align="center">html:text property="value(BPDate)" size="10%" tabindex="9999"/</td-->
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
@@ -1100,7 +1114,7 @@ function clearAll(yRadio, nRadio){
                                                         
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%" onchange="javascript: updateWaistHip();"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WHRDate)" size="10%" tabindex="9999"/></td>
+                                                    <!--td class="dataEntryTable" align="center">html:text property="value(WHRDate)" size="10%" tabindex="9999"/></td-->
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
@@ -1116,7 +1130,7 @@ function clearAll(yRadio, nRadio){
                                                         
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%" onchange="javascript: updateHipAndRatio();"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCDate)" size="10%" tabindex="9999"/></td>
+                                                    <!--td class="dataEntryTable" align="center">html:text property="value(WCDate)" size="10%" tabindex="9999"/></td-->
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr><td colspan="5"><table cellpadding="0" cellspacing="0" width="100%" style="display:none" id="detailVital">
@@ -1132,7 +1146,7 @@ function clearAll(yRadio, nRadio){
                                                         
                                                     </td>
                                                     <td width="7%" class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistAndRatio();"/></td>
-                                                    <td width="10%" class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
+                                                    <!--td width="10%" class="dataEntryTable" align="center">html:text property="value(HCDate)" size="10%" tabindex="9999"/></td-->
                                                     <td width="33%" class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
@@ -1145,7 +1159,7 @@ function clearAll(yRadio, nRadio){
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRValue)" size="5%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HRDate)" size="10%" tabindex="9999"/></td>
+                                                    <!--td class="dataEntryTable" align="center">html:text property="value(HRDate)" size="10%" tabindex="9999"/></td-->
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>                                                 
                                                  <tr>                                                    
@@ -1158,7 +1172,7 @@ function clearAll(yRadio, nRadio){
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HTValue)" size="5%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTDate)" size="10%" tabindex="9999"/></td>
+                                                    <!--td class="dataEntryTable" align="center">html:text property="value(HTDate)" size="10%" tabindex="9999"/></td-->
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  </table></td></tr>                                                 
@@ -1173,7 +1187,7 @@ function clearAll(yRadio, nRadio){
                                                         </logic:present>                                                        
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTValue)" size="5%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTDate)" size="10%" tabindex="9999"/></td>
+                                                    <!--td class="dataEntryTable" align="center">html:text property="value(WTDate)" size="10%" tabindex="9999"/></td-->
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>                                                 
                                             </table></td>
@@ -1181,27 +1195,19 @@ function clearAll(yRadio, nRadio){
                                        <tr>
                                             <th></th>
                                             <th class="title">
-                                            <span id="examLabel" style="display:none;"><a href="javascript: showHideItem('examination');" >Examination >> </a></span>
+                                            <span id="examLabel" style="display:none;"><a href="javascript: showHideItem('examinationFoot'); showHideItem('examinationEye');" >Examination >> </a></span>
                                             </th>
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table cellpadding='0' cellspacing='0' id="examination" border="0">
+                                            <td>
+                                                <table cellpadding='0' cellspacing='0'  border="0" width="100%" id="examinationFoot">
                                                 <tr>
-                                                    <td class="subTitle" width="28%">                                                        
-                                                    </td>                                                    
-                                                    <td class="subTitle" width="17%">
-                                                        Last Data<br>Entered on
-                                                    </td>
-                                                    <td class="subTitle" width="22%">
-                                                        New Data
-                                                    </td>                                                    
-                                                    <td class="subTitle" width="10%">
-                                                        Ob. Date<br> (yyyy-MM-dd)
-                                                    </td>
-                                                    <td class="subTitle" width="23%">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
-                                                    </td>                                                    
+                                                    <td class="subTitle" width="28%">&nbsp;</td>                                                    
+                                                    <td class="subTitle" width="17%">Last Data<br>Entered on</td>
+                                                    <td class="subTitle" width="22%">New Data</td>                                                    
+                                                    <td class="subTitle" width="10%">Ob. Date<br> (yyyy-MM-dd)</td>
+                                                    <td class="subTitle" width="23%"><bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/></td>                                                    
                                                 </tr>
                                                 <tr>
                                                     <th class="dataEntryTable" colspan="3">Foot Exam</th>                                                    
@@ -1335,6 +1341,16 @@ function clearAll(yRadio, nRadio){
                                                     <html:hidden property="value(FTReDate)" />
                                                     <html:hidden property="value(FTReComments)" />
                                                  </tr>
+                                                 </table>
+                                                 <table cellpadding='0' cellspacing='0'  border="1" width="100%" id="examinationEye">
+                                                 <tr>
+                                                    <td class="subTitle" width="28%">&nbsp;</td>                                                    
+                                                    <td class="subTitle" width="17%">Last Data<br>Entered on</td>
+                                                    <td class="subTitle" width="22%">New Data</td>                                                    
+                                                    <td class="subTitle" width="10%">Ob. Date<br> (yyyy-MM-dd)</td>
+                                                    <td class="subTitle" width="23%"><bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/></td>                                                    
+                                                </tr>
+                                                 
                                                  <tr>
                                                     <th class="dataEntryTable" colspan="3">Eye Exam</th>                                                    
                                                     <td class="dataEntryTable" valign="top" align="center"><input type="text" name="iDate" value="<%=request.getAttribute("iDiaDate")%>" size="10%"/></td>
