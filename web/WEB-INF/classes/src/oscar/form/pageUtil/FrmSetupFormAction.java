@@ -42,6 +42,7 @@ import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.bean.*;
 import oscar.oscarEncounter.oscarMeasurements.prop.*;
 import oscar.oscarEncounter.oscarMeasurements.util.*;
+import oscar.oscarRx.data.*;
 import oscar.util.UtilDateUtilities;
 
 
@@ -74,7 +75,9 @@ public final class FrmSetupFormAction extends Action {
         }
         String formName = (String) request.getParameter("formName");        
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
+        List drugLists = getDrugList(demo);
         request.setAttribute("today", today);
+        request.setAttribute("drugs", drugLists);
         InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");
 
         try {
@@ -101,7 +104,7 @@ public final class FrmSetupFormAction extends Action {
                 request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());
                 //request.setAttribute("value("+mt.getType() + "Date)", today);
                 frm.setValue(mt.getType() + "Date", today);
-            }                
+            }                      
         }
         catch (SQLException e) {
             System.out.println("Error, file " + formName + ".xml not found.");
@@ -123,5 +126,22 @@ public final class FrmSetupFormAction extends Action {
         return (mapping.findForward("continue"));
     }
     
+    private List getDrugList(String demographicNo){
+        RxPatientData pData = new RxPatientData();
+        List drugs = new LinkedList();
+        try{
+            RxPatientData.Patient p = pData.getPatient(Integer.parseInt(demographicNo));
+            RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();
+            if(prescribedDrugs.length==0)
+                drugs=null;
+            for(int i=0; i<prescribedDrugs.length; i++){
+                drugs.add(prescribedDrugs[i].getRxDate().toString() + "    " + prescribedDrugs[i].getRxDisplay());            
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();   
+        }
+        return drugs;
+    }
     
 }
