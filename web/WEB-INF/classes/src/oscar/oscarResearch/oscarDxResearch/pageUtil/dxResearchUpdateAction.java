@@ -73,6 +73,8 @@ public class dxResearchUpdateAction extends Action {
         
         ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
         forward.addParameter("demographicNo", demographicNo);
+        forward.addParameter("quickList", "");
+        
         
         return forward;
     }
