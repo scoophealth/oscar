@@ -505,7 +505,7 @@ function isformNeeded(){
 	<tr id="forthSection6">
 		<td>
 		Do you wish to consult with WCB physician or nurse advisor?</td>
-                <td><input type="radio" name="w_wcbadvisor" value="Y" <%=checked("Y",form.getW_wcbadvisor(),true)%>> Yes <input type="radio" name="w_wcbadvisor" value="N" <%=checked("N",form.getW_wcbadvisor(),false)%>> No
+                <td><input type="radio" name="w_wcbadvisor" value="Y" <%=checked("Y",form.getW_wcbadvisor(),false)%>> Yes <input type="radio" name="w_wcbadvisor" value="N" <%=checked("N",form.getW_wcbadvisor(),true)%>> No
 		</td>
 	</tr>
 	<tr id="forthSection7">
@@ -518,7 +518,7 @@ function isformNeeded(){
 	<tr id="forthSection8">
 		<td>
 		Further Correspondence to Follow: (2nd electronic form or paper) </td>
-                <td><input type="radio" name="w_tofollow" value="Y" <%=checked("Y",form.getW_tofollow(),true)%> > Yes <input type="radio" name="w_tofollow" value="N" <%=checked("N",form.getW_tofollow(),false)%>>  No
+                <td><input type="radio" name="w_tofollow" value="Y" <%=checked("Y",form.getW_tofollow(),false)%> > Yes <input type="radio" name="w_tofollow" value="N" <%=checked("N",form.getW_tofollow(),true)%>>  No
 		</td>
 	</tr>
     <tr > 
