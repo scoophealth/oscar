@@ -64,6 +64,7 @@ if (rsdemo.next()) {
         
         // for "_a", to change to "A"
         String jaxbName = "" ;
+        /*
         if (name.indexOf("_")>0) {
         	//int j = name.indexOf("_");
         	String[] aName = name.split("_");
@@ -75,11 +76,32 @@ if (rsdemo.next()) {
         } else {
         	jaxbName = name ;
         }
+        */
+		int N = name.length();
+		boolean bCap = false;
+		StringBuffer sb = new StringBuffer(N);
+		for (int j = 0; j < N; j++) {
+			char c = name.charAt(j);
+			if (c == '_' ) { //skip it
+				bCap = true;
+			} else if ( Character.isDigit(c)) {
+				bCap = true;
+				sb.append(c);
+			} else if ( Character.isLetter(c) && bCap ) {
+				bCap = false;
+				sb.append(Character.toUpperCase(c));
+			} else 
+				sb.append(c);
+		}
+		jaxbName = sb.toString();
+        
         
         String type = md.getColumnTypeName(i);
 		//System.out.println(demoNo + " l :" + name);
 		if (type.equals("TINY") || name.equals("ID")) {
 			prop.setProperty(jaxbName, "" + rsdemo.getInt(name) );
+			//if (name.equals("pg1Yes37off")) System.out.println(" l :" + rsdemo.getString("pg1_yes37off"));
+			System.out.println(jaxbName + "  : :" + name);
 		} else {
 			prop.setProperty(jaxbName, (rsdemo.getString(name)==null?"":rsdemo.getString(name) ) );
 			//if (name.equals("pg1DateOfBirth")) System.out.println(" l :" + rsdemo.getString("pg1_dateOfBirth"));
@@ -118,7 +140,7 @@ if(connected){
                         .getProperty(fieldNameU, "") : prop
                         .getProperty(fieldNameL);
                 //if (fieldValue.length() >= 1) System.out.println("Name: " + methodString + " | " + fieldValue);
-                //if (fieldNameL.equalsIgnoreCase("pg1_dateOfBirth") ) System.out.println("N  ame: " + methodString + " | " + fieldValue);
+                //if (fieldNameL.equalsIgnoreCase("pg1Yes37off") ) System.out.println("N  ame: " + methodString + " | " + fieldValue);
                 //String returnString =
                 // theMethods[i].getReturnType().getName();
                 //System.out.println(" Return Type: " + returnString);
