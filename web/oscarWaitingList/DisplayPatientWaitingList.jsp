@@ -60,7 +60,7 @@ Waiting List
         </tr>
         <tr>
             <td class="MainTableLeftColumn">   
-                <a href="javascript: window.back()"> Back</a>
+                <a href="../demographic/demographiccontrol.jsp?demographic_no=<bean:write name="demographicNo"/>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
             </td>
             <td class="MainTableRightColumn">
                <table border=0 cellspacing=4 width=700>
