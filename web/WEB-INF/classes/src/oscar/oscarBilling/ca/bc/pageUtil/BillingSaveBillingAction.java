@@ -226,10 +226,10 @@ public class BillingSaveBillingAction extends Action {
                            +"'" + bean.getEndTime()    + "',"
                            +"'" + convertDate8Char(bean.getPatientDoB()) + "',"
                            +"'',"   //office number
-                           +"'"+bean.getCorrespondenceCode()+"',"  //correspondence code
-                           +"'',"   //claim short comment
-                           +"'"+ bean.getMva_claim_code()+"',"
-                           +"'"+ bean.getIcbc_claim_no()+"'"
+                           +"'" + bean.getCorrespondenceCode()+"',"  //correspondence code
+                           +"'" + bean.getShortClaimNote()    +"',"   //claim short comment
+                           +"'" + bean.getMva_claim_code()    +"',"
+                           +"'" + bean.getIcbc_claim_no()     +"'"
                            +")";
                        try {
                            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -299,22 +299,22 @@ public class BillingSaveBillingAction extends Action {
                        "'"  + bean.getEndTime()    + "'," +
                        "'"  + "00000000"           + "'," +  //birth_date
                        "'',"+   //office_number
-                       " '" + bean.getCorrespondenceCode()+"'," +  //correspondence code
-                       "'',"+  //claim_comment
-                       "'"  + bean.getPatientHCType() + "'," +
-                       " '" + bean.getPatientPHN() + "'," +
-                       " '" + convertDate8Char(bean.getPatientDoB()) + "'," +
-                       "'"  + bean.getPatientFirstName() + "'," +
-                       " '" + " " + "'," + //oin_second_name
-                       "'"  + bean.getPatientLastName()  + "'," +
-                       "'"  + bean.getPatientSex() + "'," +
-                       " '" + bean.getPatientAddress1() + "'," +
-                       " '" + bean.getPatientAddress2() + "'," +
-                       " ''," + //oin_address3
-                       " ''," + //oin_address3
-                       " '" + bean.getPatientPostal()+"'," +
-                       " '" + bean.getMva_claim_code()+ "'," +
-                       " '" + bean.getIcbc_claim_no()+ "" +
+                       " '" + bean.getCorrespondenceCode()+ "'," +  //correspondence code
+                       "'"  + bean.getShortClaimNote()    + "'," +  //claim_comment
+                       "'"  + bean.getPatientHCType()     + "'," +
+                       "'"  + bean.getPatientPHN()        + "'," +
+                       "'"  + convertDate8Char(bean.getPatientDoB()) + "'," +
+                       "'"  + bean.getPatientFirstName()  + "'," +
+                       "'"  + " " + "'," + //oin_second_name
+                       "'"  + bean.getPatientLastName()   + "'," +
+                       "'"  + bean.getPatientSex()        + "'," +
+                       "'"  + bean.getPatientAddress1()   + "'," +
+                       "'"  + bean.getPatientAddress2()   + "'," +
+                       "''," + //oin_address3
+                       "''," + //oin_address3
+                       "'"  + bean.getPatientPostal()     +"'," +
+                       "'"  + bean.getMva_claim_code()    + "'," +
+                       "'"  + bean.getIcbc_claim_no()     + "" +
                        "')";   
 
                        try {                                                
