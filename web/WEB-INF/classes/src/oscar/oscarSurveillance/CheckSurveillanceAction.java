@@ -94,7 +94,7 @@ public class CheckSurveillanceAction extends Action {
          }
       }           
       long endTime = System.currentTimeMillis();
-      System.out.println("Surveillance took "+ (endTime - startTime) /(1000) +"seconds forwarding to: "+forward.getPath());
+      System.out.println("Surveillance took "+ (endTime - startTime) +" milli-seconds forwarding to: "+forward.getPath());
       
       return forward;                                
    }
