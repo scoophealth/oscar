@@ -13,6 +13,7 @@
 <%@ page import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
 <%@ page import="oscar.OscarPingTalk"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
+<%@ page import="oscar.oscarProvider.data.*"%>
 
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -42,6 +43,17 @@ actorTicket = ping.connect(actor,actorPassword);
 }catch(Exception eCon){
     connectErrorMsg = eCon.getMessage();
     connected = false;
+}
+
+
+oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
+ProSignatureData sig = new ProSignatureData();
+boolean hasSig = sig.hasSignature(bean.getProviderNo());
+String doctorName = "";
+if (hasSig){
+   doctorName = sig.getSignature(bean.getProviderNo());
+}else{
+   doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
 }
 
 
@@ -134,7 +146,7 @@ String level2 = CddmLevels.MEDICATIONS;
                             oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();
                             OscarPrescriptions oscarPres = _respFactory.createOscarPrescriptions();
                             List drugList = oscarPres.getPrescription();
-                            oscarPres.setSubject("Clinic Prescription");
+                            oscarPres.setSubject("Prescription from "+doctorName);
                             for(int i=0; i<prescribedDrugs.length; i++) {
                                 oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
                                 if(drug.isCurrent() == true && !drug.isArchived() ){                                                                                                        
