@@ -43,10 +43,14 @@ String service_form="", service_name="";
   String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
    String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
  
-%> 
-<html>
+%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
-<title>oscarBilling :: manage billing form  ::</title>
+<title><bean:message key="billing.manageBillingLocation.title"/></title>
 <link rel="stylesheet" href="billing.css" >
  
 <style type="text/css">
@@ -141,7 +145,7 @@ else{}
 }
 function validateServiceType() {
   if (document.servicetypeform.typeid.value == "MFP") {
-alert("Service Type ID exists, please verify!");
+alert("<bean:message key="billing.manageBillingLocation.msgServiceTypeExists"/>");
 	return false;
  }
  else{
@@ -159,7 +163,7 @@ function refresh() {
 }
 
 function onUnbilled(url) {
-  if(confirm("You are about to delete the billing form, are you sure?")) {
+  if(confirm("<bean:message key="billing.manageBillingLocation.msgDeleteBillingConfirm"/>")) {
     popupPage(700,720, url);
   }
 }
@@ -174,7 +178,7 @@ function onUnbilled(url) {
   <tr bgcolor="#000000"> 
     <td height="40" width="10%"> </td>
     <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Billing</font></font></b></font> 
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.manageBillingLocation.msgBilling"/></font></font></b></font> 
       </p>
     </td>
   </tr>
@@ -183,7 +187,7 @@ function onUnbilled(url) {
  
     <tr>  <td width="27%" align="left">
 	  <form name="serviceform" method="post" action="dbManageBillingLocation.jsp">
-        <p>Code &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description</p>
+        <p><bean:message key="billing.manageBillingLocation.msgCodeDescription"/></p>
         <p>
           <input type="text" name="location1" size="10">
           <input type="text" name="location1desc" size="30">
@@ -200,7 +204,7 @@ function onUnbilled(url) {
           <input type="text" name="location5" size="10">
           <input type="text" name="location5desc" size="30">
           <br>
-          <input type="submit" name="action" value="Add">
+          <input type="submit" name="action" value="<bean:message key="billing.manageBillingLocation.btnAdd"/>">
           <br>
         </p>
       </form></td>
@@ -208,8 +212,8 @@ function onUnbilled(url) {
     <td width="39%" valign="top">
 <table width="90%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td>Clinic Location</td>
-          <td>Description</td>
+          <td><bean:message key="billing.manageBillingLocation.msgClinicLocation"/></td>
+          <td><bean:message key="billing.manageBillingLocation.msgDescription"/></td>
         </tr>
         
           <% 
@@ -258,4 +262,4 @@ function onUnbilled(url) {
 
 </table>
 </body>
-</html>
+</html:html>

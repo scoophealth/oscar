@@ -30,41 +30,41 @@
     <td width="74%" valign="top">
         <table width="100%" border="0">
           <tr> 
-          <td colspan="2" class="white">Adding New Form</td>
+          <td colspan="2" class="white"><bean:message key="billing.manageBillingform_add.msgAdd"/></td>
         </tr>
         <tr> 
-          <td width="26%" class="white">Service Type ID:</td>
+          <td width="26%" class="white"><bean:message key="billing.manageBillingform_add.formServiceID"/>:</td>
           <td width="74%" class="white">
               <input type="text" name="typeid" maxlength="3">
             </td>
         </tr>
         <tr> 
-          <td width="26%" class="white">Service Type Name:</td>
+          <td width="26%" class="white"><bean:message key="billing.manageBillingform_add.formServiceName"/>:</td>
           <td width="74%" class="white">
-              <input type="text" name="type" value="Service Type Name">
+              <input type="text" name="type" value=""<bean:message key="billing.manageBillingform_add.formServiceName"/>>
             </td>
         </tr>
         <tr> 
-          <td width="26%" class="white">Group1 Name:</td>
+          <td width="26%" class="white"><bean:message key="billing.manageBillingform_add.formGroup1Name"/>:</td>
           <td width="74%" class="white">
-              <input type="text" name="group1" value="Group 1 Description">
+              <input type="text" name="group1" value="<bean:message key="billing.manageBillingform_add.formGroup1Name"/>">
             </td>
         </tr>
         <tr> 
-          <td width="26%" class="white">Group 2 Name:</td>
+          <td width="26%" class="white"><bean:message key="billing.manageBillingform_add.formGroup2Name"/>:</td>
           <td width="74%" class="white">
-              <input type="text" name="group2" value="Group 2 Description">
+              <input type="text" name="group2" value="<bean:message key="billing.manageBillingform_add.formGroup2Name"/>">
             </td>
         </tr>
         <tr> 
-          <td width="26%" class="white">Group 3 Name:</td>
+          <td width="26%" class="white"><bean:message key="billing.manageBillingform_add.formGroup3Name"/>:</td>
           <td width="74%" class="white">
-              <input type="text" name="group3" value="Group 3 Description">
+              <input type="text" name="group3" value="<bean:message key="billing.manageBillingform_add.formGroup3Name"/>">
             </td>
         </tr>
         <tr> 
           <td width="26%" class="white">
-              <input type="button" name="addForm" value="Add Form" onClick="valid(this.form)">
+              <input type="button" name="addForm" value="<bean:message key="billing.manageBillingform_add.btnAdd"/>" onClick="valid(this.form)">
             </td>
           <td width="74%" class="white">&nbsp;</td>
         </tr>
@@ -73,7 +73,7 @@
     <td width="26%" bgcolor="#336699" valign="top"> 
       <table width="100%" border="0">
         <tr> 
-          <td colspan="2" valign="top" class="black">Delete Existing Type</td>
+          <td colspan="2" valign="top" class="black"><bean:message key="billing.manageBillingform_add.msgDeleteType"/></td>
         </tr>
 
   <% 

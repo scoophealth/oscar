@@ -55,7 +55,7 @@
   <tr>
     <td class="allborder" valign="top">    <table width="100%" border="0" cellspacing="0" cellpadding="0"><form method="post" name="form1" action="dbManageBillingform_premium.jsp">
         <tr> 
-          <td>Add Premium</td>
+          <td><bean:message key="billing.manageBillingform_premium.msgAdd"/></td>
         </tr>
    <% for (int x=0; x<10 ; x++) { %>
         <tr> 
@@ -64,15 +64,15 @@
         </tr>
    <%}%>
       <tr> 
-             <td><input type="submit" name="submit" value="Add Code"></td>
+             <td><input type="submit" name="submit" value="<bean:message key="billing.manageBillingform_premium.btnAdd"/>"></td>
         </tr>
        </form></table></td>
     <td class="allborder">
       <table width="100%" border="0" cellspacing="0" cellpadding="0"><form method="post" name="form1" action="dbManageBillingform_premium_delete.jsp">
         <tr> 
-          <td class="rightBorder">Service Description</td>
-          <td class="rightBorder">Service Description</td>
-          <td>Service Description</td>
+          <td class="rightBorder"><bean:message key="billing.manageBillingform_premium.msgDescription"/></td>
+          <td class="rightBorder"><bean:message key="billing.manageBillingform_premium.msgDescription"/></td>
+          <td><bean:message key="billing.manageBillingform_premium.msgDescription"/></td>
    
         </tr>
           <% tCount = 0;
@@ -96,7 +96,7 @@
 	  
         <tr> 
       
-          <td><input type="submit" name="submit" value="Delete Code"></td>
+          <td><input type="submit" name="submit" value="<bean:message key="billing.manageBillingform_premium.btnDelete"/>"></td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
         </tr></form>

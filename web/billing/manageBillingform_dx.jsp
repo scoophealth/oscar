@@ -99,7 +99,7 @@ int rCount = 0;
      
    </tr>
    <tr>
-   <td colspan="3"><input type="submit" name="submit" value="Update"><input type="hidden" name="typeid" value="<%=request.getParameter("billingform")%>"></td>
+   <td colspan="3"><input type="submit" name="submit" value="<bean:message key="billing.manageBillingform_service.btnUpdate"/>"><input type="hidden" name="typeid" value="<%=request.getParameter("billingform")%>"></td>
    </tr>
  </table>
  </form>
