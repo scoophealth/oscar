@@ -242,12 +242,12 @@ function showHideLayers() { //v3.0
           <td width="24%"><%=bean.getVisitLocation()%></td>
         </tr>
         <tr> 
-          <td height="16">Service Date:</td>
+          <td height="16">Service Date: </td>
           <td><%=bean.getServiceDate()%></td>
+          <td>Service To Date: <%=bean.getService_to_date()%></td>
+          <td>Time Call: <%=bean.getTimeCall()%></td>
           <td>StartTime: <%=bean.getStartTime()%></td>
-          <td>EndTime: <%=bean.getEndTime()%></td>
-          <td>Admission Date:</td>
-          <td><%=bean.getAdmissionDate()%></td>
+          <td>EndTime: <%=bean.getEndTime()%></td>          
         </tr>
         <tr> 
           <td height="16">Billing Provider:</td>
@@ -257,15 +257,21 @@ function showHideLayers() { //v3.0
           <td>Creator:</td>
           <td><%=billform.getProviderName(bean.getCreator())%></td>
         </tr>
-        <tr> 
-          <td height="16">Referral Doctor1:</td>
-          <td><%=bean.getReferral1()%></td>
-          <td>Referral Type1: <%=bean.getReferType1()%></td>
-          <td>Referral Doctor 2:</td>
-          <td><%=bean.getReferral2()%></td>
-          <td>Referral Type2:<%=bean.getReferType2()%></td>
+        <tr>           
+          <td height="16"><%=getReferralString(bean.getReferType1())%> <%=bean.getReferral1()%></td>                    
+          <td><%=getReferralString(bean.getReferType2())%><%=bean.getReferral2()%></td>
+          
+          <td>&nbsp;</td>
+          <td>Dependent: <%=bean.getDependent()%></td>
+                    
+          <td>Sub Code: <%=bean.getSubmissionCode()%></td>
+          <td>Alt Payment: <%=bean.getEncounter()%></td>
         </tr>
-      </table>
+        <tr>
+          <td>Short Note:</td>
+          <td colspan="5"><%=bean.getShortClaimNote()%></td>
+        </tr>
+      </table>      
       <div align="left"></div>
         
       <table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
@@ -346,6 +352,7 @@ function showHideLayers() { //v3.0
               </tr>
                 <td align="right" colspan="4">  
                   <html:form action="/billing/CA/BC/SaveBilling" >
+                    <input type="submit" name="submit" value="Print Receipt" />
                     <% if (request.getAttribute("GOBACKWCB") != null && request.getAttribute("GOBACKWCB").equals("true")){%>
                     <input type="button" name="Submit3" value="Go Back" onClick="location.href='formwcb.jsp'"/>
                     <%}else{%>
@@ -374,3 +381,17 @@ function showHideLayers() { //v3.0
 <p>&nbsp; </p>
 </body>
 </html>
+<%!
+
+  String getReferralString(String type){
+    String retval = "";
+    if ( type != null && type.equals("T")){
+        retval = "Referred To:";
+    }else if ( type != null && type.equals("B")){
+        retval = "Referred By:";
+    }
+    return retval;
+  }
+
+
+%>
