@@ -1322,7 +1322,7 @@ Calendar.prototype.showAtElement = function (el, opts) {
 		if (tmp > 0) box.y -= tmp;
 	};
 	this.element.style.display = "block";
-	Calendar.continuation_for_the_fucking_khtml_browser = function() {
+	Calendar.continuation_for_the_khtml_browser = function() {
 		var w = self.element.offsetWidth;
 		var h = self.element.offsetHeight;
 		self.element.style.display = "none";
@@ -1354,9 +1354,9 @@ Calendar.prototype.showAtElement = function (el, opts) {
 		self.showAt(p.x, p.y);
 	};
 	if (Calendar.is_khtml)
-		setTimeout("Calendar.continuation_for_the_fucking_khtml_browser()", 10);
+		setTimeout("Calendar.continuation_for_the_khtml_browser()", 10);
 	else
-		Calendar.continuation_for_the_fucking_khtml_browser();
+		Calendar.continuation_for_the_khtml_browser();
 };
 
 /** Customizes the date format. */
@@ -1466,7 +1466,7 @@ Calendar.prototype.parseDate = function (str, fmt) {
 
 Calendar.prototype.hideShowCovered = function () {
 	var self = this;
-	Calendar.continuation_for_the_fucking_khtml_browser = function() {
+	Calendar.continuation_for_the_khtml_browser = function() {
 		function getVisib(obj){
 			var value = obj.style.visibility;
 			if (!value) {
@@ -1521,9 +1521,9 @@ Calendar.prototype.hideShowCovered = function () {
 		}
 	};
 	if (Calendar.is_khtml)
-		setTimeout("Calendar.continuation_for_the_fucking_khtml_browser()", 10);
+		setTimeout("Calendar.continuation_for_the_khtml_browser()", 10);
 	else
-		Calendar.continuation_for_the_fucking_khtml_browser();
+		Calendar.continuation_for_the_khtml_browser();
 };
 
 /** Internal function; it displays the bar with the names of the weekday. */
