@@ -250,7 +250,7 @@ function showHideLayers() { //v3.0
       <td width="18%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Dx 
         Code</font></b></td>
       <td width="76%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Description</font></b></td>
-      <td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide')">X</a></td>
+      <td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide'); return false;">X</a></td>
     </tr>
    <% for (int i=0; i< diaglist.length; i++){ 
 	                         
@@ -295,7 +295,7 @@ function showHideLayers() { //v3.0
     <tr bgcolor="#393764"> 
       <td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000">Billing 
         Form</font></b></font></td>
-      <td width="3%" bgcolor="#FFCC00" height="7"><font face="Verdana, Arial, Helvetica, sans-serif" ><b><a href="#" onClick="showHideLayers('Layer1','','hide')">x</a></b></font></td>
+      <td width="3%" bgcolor="#FFCC00" height="7"><font face="Verdana, Arial, Helvetica, sans-serif" ><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">x</a></b></font></td>
     </tr>
      <% for (int i=0; i< billformlist.length; i++){ 
     	                         
