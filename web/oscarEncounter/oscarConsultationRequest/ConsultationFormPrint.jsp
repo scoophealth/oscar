@@ -236,7 +236,7 @@ function faxNumSelect() {
             </tr>
             <tr>
                 <td colspan="2" class="address">
-                    <%=clinic.getClinicAddress()%>
+                <%=clinic.getClinicAddress()%>, <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%>  <%=clinic.getClinicPostal()%>
                 </td>
             </tr>
             <tr>
