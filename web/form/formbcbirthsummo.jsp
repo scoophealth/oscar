@@ -553,7 +553,6 @@ var maxYear=9900;
     <input type="checkbox" name="labIupc" <%= props.getProperty("labIupc", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 	IUPC <br>
     <B>FETAL BLOOD SAMPLING:</B>
-    <input type="checkbox" name="labMemRupSpont" <%= props.getProperty("labMemRupSpont", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 	NO. OF TIMES
     <input type="text" name="labFetalBldNo" size="5" maxlength="5" value="<%= props.getProperty("labFetalBldNo", "") %>" @oscar.formDB />
 	LOWEST: pH
@@ -689,15 +688,15 @@ var maxYear=9900;
 	FOOTLING<br>
 	</td>
 	<td valign="top">
-	<input type="checkbox" name="delFrank" <%= props.getProperty("delFrank", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	<input type="checkbox" name="delSpont" <%= props.getProperty("delSpont", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 	SPONTANEOUS<br>
-	<input type="checkbox" name="delComplete" <%= props.getProperty("delComplete", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	<input type="checkbox" name="delAssit" <%= props.getProperty("delAssit", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 	ASSISTED<br>
-	<input type="checkbox" name="delIncomplete" <%= props.getProperty("delIncomplete", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	<input type="checkbox" name="delForHead" <%= props.getProperty("delForHead", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 	FORCEPS TO HEAD<br>
-	<input type="checkbox" name="delFootling" <%= props.getProperty("delFootling", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	<input type="checkbox" name="delExtracted" <%= props.getProperty("delExtracted", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 	EXTRACTED<br>
-	<input type="checkbox" name="delFootling" <%= props.getProperty("delFootling", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	<input type="checkbox" name="delVersion" <%= props.getProperty("delVersion", "") %>  @oscar.formDB dbType="tinyint(1)"/>
 	VERSION
 	</td>
   </tr><tr>
@@ -904,9 +903,66 @@ var maxYear=9900;
 
     </td><td colspan="2" valign="top">
 
+	<table  class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
+	<tr>
+	  <td><B>ESTIMATED BLOOD LOSS</B></td>
+	</tr><tr>
+	  <td>
+		<input type="checkbox" name="delEstBld1" <%= props.getProperty("delEstBld1", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		&lt;500 cc &nbsp;&nbsp;
+		<input type="checkbox" name="delEstBld2" <%= props.getProperty("delEstBld2", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		&lt;500-1000 cc &nbsp;&nbsp;
+		<input type="checkbox" name="delEstBld3" <%= props.getProperty("delEstBld3", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		&gt;1000 cc
+		<BR>
+		BLOOD TRANSFUSION
+		<BR>
+		<input type="checkbox" name="delEstBldN" <%= props.getProperty("delEstBldN", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		NO
+		<input type="checkbox" name="delEstBldY" <%= props.getProperty("delEstBldY", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		YES &nbsp;&nbsp;
+		No. of units
+		<input type="text" name="delEstBldUnit" size="6" maxlength="8" value="<%= props.getProperty("delEstBldUnit", "") %>" @oscar.formDB />
+		<BR>
+		<input type="checkbox" name="delEstBldOther" <%= props.getProperty("delEstBldOther", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		OTHER (specify):
+		<input type="text" name="delEstBldOtherSpec" size="15" maxlength="30" value="<%= props.getProperty("delEstBldOtherSpec", "") %>" @oscar.formDB />
+	  </td>
+	</tr>
+	</table>
+
+
 	</td>
   </tr><tr>
-    <td>
+    <td colspan="2">
+
+	<table  class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
+	<tr>
+	  <td></td>
+	  <td>NO</td>
+	  <td>YES</td>
+	  <td>INITIALS:</td>
+	</tr><tr>
+	  <td align="right">SPONGE COUNT CORRECT</td>
+	  <td>
+		<input type="checkbox" name="delEstSpoN1" <%= props.getProperty("delEstSpoN1", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	  </td><td>
+		<input type="checkbox" name="delEstSpoY1" <%= props.getProperty("delEstSpoY1", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	  </td><td>
+		<input type="text" name="delEstSpoInit1" size="10" maxlength="50" value="<%= props.getProperty("delEstSpoInit1", "") %>" @oscar.formDB />
+	  </td>
+	</tr><tr>
+	  <td align="right">NEEDLE COUNT CORRECT</td>
+	  <td>
+		<input type="checkbox" name="delEstSpoN2" <%= props.getProperty("delEstSpoN2", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	  </td><td>
+		<input type="checkbox" name="delEstSpoY2" <%= props.getProperty("delEstSpoY2", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	  </td><td>
+		<input type="text" name="delEstSpoInit2" size="10" maxlength="50" value="<%= props.getProperty("delEstSpoInit2", "") %>" @oscar.formDB />
+	  </td>
+	</tr>
+	</table>
+
 
 	</td>
   </tr>
@@ -918,6 +974,13 @@ var maxYear=9900;
 
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
   <tr>
+    <td colspan="2"><B>INDICATION FOR OPERATIVE DELIVERY:</B></td>
+  </tr><tr>
+    <td width="50%">PRINCIPAL
+	<input type="text" name="delIndPrinc" style="width:100%" size="60" maxlength="80" value="<%= props.getProperty("delIndPrinc", "") %>" @oscar.formDB />
+    </td><td>OTHER:
+	<input type="text" name="delIndOther" style="width:100%" size="60" maxlength="80" value="<%= props.getProperty("delIndOther", "") %>" @oscar.formDB />
+	</td>
   </tr>
   </table>
 
@@ -927,372 +990,256 @@ var maxYear=9900;
 
 
 
-
-
-
-
-
-
-
-
-<table width="100%" border="0"  cellspacing="3" cellpadding="0">
+<table width="100%" border="1"  cellspacing="0" cellpadding="2">
 <tr>
-	<th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
-	BIRTH SUMMARY (Mother: <%= props.getProperty("c_surname", "") %>, <%= props.getProperty("c_givenName", "") %> )</th>
-    <input type="hidden" name="c_surname" size="30" value="<%= props.getProperty("c_surname", "") %>" maxlength="30" @oscar.formDB /> 
-    <input type="hidden" name="c_givenName" size="30" value="<%= props.getProperty("c_givenName", "") %>" maxlength="30" @oscar.formDB /> 
-</tr>
-</table>
+  <td width="50%" valign="top">
 
+  <table width="100%" border="0"  cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><B><div class="small10">4. BIRTH AND NEWBORN</div></B></td>
+  </tr><tr>
+    <td width="60%" valign="top">
 
-
-
-
-<table width="100%" border="0"  cellspacing="3" cellpadding="0">
-<tr><td width="14%" valign="top">
-
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <td><b>Baby Seq</b> 
-      </td>
-	</tr><tr>
-	  <td>
-      <input type="radio" name="babySeqSingleton" <%= props.getProperty("babySeqSingleton", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "babySeq")' />Singleton
-      </td>
-	</tr><tr>
-	  <td>
-      <input type="radio" name="babySeqTwinA" <%= props.getProperty("babySeqTwinA", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "babySeq")' />Twin A
-      </td>
-	</tr><tr>
-	  <td>
-      <input type="radio" name="babySeqTwinB" <%= props.getProperty("babySeqTwinB", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "babySeq")' />Twin B
-      </td>
-	</tr><tr>
-	  <td>
-      <input type="radio" name="babySeqTriA" <%= props.getProperty("babySeqTriA", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "babySeq")' />Triplet A
-      </td>
-	</tr><tr>
-	  <td>
-      <input type="radio" name="babySeqTriB" <%= props.getProperty("babySeqTriB", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "babySeq")' />Triplet B
-      </td>
-	</tr><tr>
-	  <td>
-      <input type="radio" name="babySeqTriC" <%= props.getProperty("babySeqTriC", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "babySeq")' />Triplet C
-      </td>
-
-	</tr><tr>
-	  <td>
-      <input type="radio" name="babySeqOther" <%= props.getProperty("babySeqOther", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "babySeq")' />Other
-      </td>
-	</tr><tr>
-	  <td align="right" nowrap>
-      <input type="text" name="babySeqOf1" size="2" maxlength="2" value="<%= props.getProperty("babySeqOf1", "") %>" @oscar.formDB /> 
-	  of
-      <input type="text" name="babySeqOf2" size="2" maxlength="2" value="<%= props.getProperty("babySeqOf2", "") %>" @oscar.formDB /> 
-      </td>
-    </tr>
-  </table>
-  
-
-  </td><td valign="top" width="20%">
-
-
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <td nowrap>*R.O.M. Date/Time<br>
-      <input type="text" name="romDate" size="10" maxlength="10" value="<%= props.getProperty("romDate", "") %>" @oscar.formDB  dbType="date" />
-      <input type="text" name="romTime" size="5" maxlength="5" value="<%= props.getProperty("romTime", "") %>" @oscar.formDB  />
-      </td>
-    </tr>
-    <tr>
-      <td>1st Stq Date/Time<br>
-      <input type="text" name="fstStqDate" size="10" maxlength="10" value="<%= props.getProperty("fstStqDate", "") %>" @oscar.formDB  dbType="date" />
-      <input type="text" name="fstStqTime" size="5" maxlength="5" value="<%= props.getProperty("fstStqTime", "") %>" @oscar.formDB  />
-      </td>
-    </tr>
-    <tr>
-      <td>2nd Stq Date/Time<br>
-      <input type="text" name="secStqDate" size="10" maxlength="10" value="<%= props.getProperty("secStqDate", "") %>" @oscar.formDB  dbType="date" />
-      <input type="text" name="secStqTime" size="5" maxlength="5" value="<%= props.getProperty("secStqTime", "") %>" @oscar.formDB  />
-      </td>
-    </tr>
-    <tr>
-      <td>Delivery Date/Time<br>
-      <input type="text" name="deliDate" size="10" maxlength="10" value="<%= props.getProperty("deliDate", "") %>" @oscar.formDB  dbType="date" />
-      <input type="text" name="deliTime" size="5" maxlength="5" value="<%= props.getProperty("deliTime", "") %>" @oscar.formDB  />
-      </td>
-    </tr>
-    <tr>
-      <td>Placenta Date/Time<br>
-      <input type="text" name="placentaDate" size="10" maxlength="10" value="<%= props.getProperty("placentaDate", "") %>" @oscar.formDB  dbType="date" />
-      <input type="text" name="placentaTime" size="5" maxlength="5" value="<%= props.getProperty("placentaTime", "") %>" @oscar.formDB  />
-      </td>
-    </tr>
-  </table>
-  
-
-  </td><td valign="top" width="33%">
-
-
-
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <td>Labour Position/Presentation<br>
-      <input type="text" name="labourPosition" size="15" maxlength="15" value="<%= props.getProperty("labourPosition", "") %>" @oscar.formDB />
-      <input type="text" name="labourPresentation" size="20" maxlength="20" value="<%= props.getProperty("labourPresentation", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-    <tr>
-      <td>Delivery Position/Presentation<br>
-      <input type="text" name="deliveryPosition" size="15" maxlength="15" value="<%= props.getProperty("deliveryPosition", "") %>" @oscar.formDB />
-      <input type="text" name="deliveryPresentation" size="20" maxlength="20" value="<%= props.getProperty("deliveryPresentation", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-    <tr>
-      <td>Delivered By<br>
-      <input type="text" name="deliveredBy" size="40" maxlength="60" value="<%= props.getProperty("deliveredBy", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-    <tr>
-      <td>Primary Indic. Operative Deliv<br>
-      <input type="text" name="priIndicOpeDeliv" size="40" maxlength="60" value="<%= props.getProperty("priIndicOpeDeliv", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-  </table>
-
-  </td><td valign="top">
-
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <td>Cesarean Section Type<br>
-      <input type="text" name="cesaSectType" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("cesaSectType", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-    <tr>
-      <td>Cesarean Incision<br>
-      <input type="text" name="cesaIncision" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("cesaIncision", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-    <tr><td>&nbsp;<br>&nbsp;</td></tr>
-	<tr>
-	  <td>
-
-      <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-      <tr>
-        <th colspan="3" align="left">VBAC Attempted</th>
-      </tr><tr>
-        <td>
-        <input type="radio" name="vbacYes" <%= props.getProperty("vbacYes", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheck(this, "vbac")' />Yes
-        </td>
-        <td>
-        <input type="radio" name="vbacNo" <%= props.getProperty("vbacNo", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheck(this, "vbac")'/>No
-        </td>
-        <td>
-        <input type="radio" name="vbacNA" <%= props.getProperty("vbacNA", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheck(this, "vbac")'/>N/A
-        </td>
-      </tr><tr>
-        <td colspan="3">
-        <input type="radio" name="vbacUnknown" <%= props.getProperty("vbacUnknown", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheck(this, "vbac")'/>Unknown
-        </td>
+	  <table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="2">
+	  <tr>
+		<th colspan="3">TIME SUMMARY</th>
+	  </tr><tr>
+		<td width="20%" valign="top"></td>
+		<th width="30%" valign="top">HOURS:MINS</th>
+		<th >DAY/MONTH/YEAR</th>
+	  </tr><tr>
+		<td align="right">MEMBERANES RUPTURED</td>
+		<td>
+		<input type="text" name="birTimeHour1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour1", "") %>" @oscar.formDB />
+		</td>
+		<td>
+		<input type="text" name="birTimeDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate1", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td align="right">1st STAGE STARTED</td>
+		<td>
+		<input type="text" name="birTimeHour2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour2", "") %>" @oscar.formDB />
+		</td>
+		<td>
+		<input type="text" name="birTimeDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate2", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td align="right">2nd STAGE STARTED</td>
+		<td>
+		<input type="text" name="birTimeHour3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour3", "") %>" @oscar.formDB />
+		</td>
+		<td>
+		<input type="text" name="birTimeDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate3", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td align="right">NEWBORN DELIVERED</td>
+		<td>
+		<input type="text" name="birTimeHour4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour4", "") %>" @oscar.formDB />
+		</td>
+		<td>
+		<input type="text" name="birTimeDate4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate4", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td align="right">PLACENTA DELIVERED</td>
+		<td>
+		<input type="text" name="birTimeHour5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour5", "") %>" @oscar.formDB />
+		</td>
+		<td>
+		<input type="text" name="birTimeDate5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate5", "") %>" @oscar.formDB />
+		</td>
 	  </tr>
 	  </table>
 
-      </td>	
-	</tr>
-  </table>
-  
-  </td>
+	</td><td align="center">
+
+	  <table class="small8" width="70%" border="0"  cellspacing="0" cellpadding="2">
+	  <tr>
+		<th colspan="3">DURATION</th>
+	  </tr><tr>
+		<td width="33%"></td>
+		<th>HOURS</th><th>MINS</th>
+	  </tr><tr>
+		<td align="right">1st STAGE</td>
+		<td>
+		<input type="text" name="birDurHour1" size="2" maxlength="2" value="<%= props.getProperty("birDurHour1", "") %>" @oscar.formDB />
+		</td><td>
+		<input type="text" name="birDurMin1" size="2" maxlength="2" value="<%= props.getProperty("birDurMin1", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td align="right">2nd STAGE</td>
+		<td>
+		<input type="text" name="birDurHour2" size="2" maxlength="2" value="<%= props.getProperty("birDurHour2", "") %>" @oscar.formDB />
+		</td><td>
+		<input type="text" name="birDurMin2" size="2" maxlength="2" value="<%= props.getProperty("birDurMin2", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td align="right">3rd STAGE</td>
+		<td>
+		<input type="text" name="birDurHour3" size="2" maxlength="2" value="<%= props.getProperty("birDurHour3", "") %>" @oscar.formDB />
+		</td><td>
+		<input type="text" name="birDurMin3" size="2" maxlength="2" value="<%= props.getProperty("birDurMin3", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td align="right" colspan="2" rowspan="2">DURATION OF RUPTURED MEMBRANES</td>
+		<td>HOURS</td>
+	  </tr><tr>
+		<td>
+		<input type="text" name="birDurRupHour" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birDurRupHour", "") %>" @oscar.formDB />
+		</td>
+	  </tr>
+	  </table>
+
+	</td>
+  </tr><tr>
+    <td colspan="2">
+
+	  <table class="small8" width="100%" border="1"  cellspacing="0" cellpadding="0">
+	  <tr>
+		<td width="20%" rowspan="2" nowrap>
+		<input type="checkbox" name="birMale" <%= props.getProperty("birMale", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		MALE<BR>
+		<input type="checkbox" name="birFemale" <%= props.getProperty("birFemale", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		FEMALE<BR>
+		<input type="checkbox" name="birAmbiguous" <%= props.getProperty("birAmbiguous", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+		AMBIGUOUS
+		</td>
+		<td width="33%" colspan="3">APGAR <I>(see criteria on Newborn Record)</I></td>
+		<td width="10%" rowspan="2" nowrap>WEIGHT (g)<BR>
+		<input type="text" name="birWeight" style="width:100%" size="5" maxlength="6" value="<%= props.getProperty("birWeight", "") %>" @oscar.formDB />
+		</td>
+		<td align="center" rowspan="2"><B>STILLBIRTH</B> (dd/mm/yyyy)<br>
+		Last FHR
+		<input type="text" name="birFHR" size="10" maxlength="10" value="<%= props.getProperty("birFHR", "") %>" @oscar.formDB />
+		</td>
+	  </tr><tr>
+		<td width="10%">
+		at 1 min.<br>
+		<input type="text" name="birApgar1" size="6" maxlength="10" value="<%= props.getProperty("birApgar1", "") %>" @oscar.formDB />
+		</td><td width="10%">
+		at 5 min.<br>
+		<input type="text" name="birApgar5" size="6" maxlength="10" value="<%= props.getProperty("birApgar5", "") %>" @oscar.formDB />
+		</td><td width="20%">
+		at 10 min.<br>
+		<input type="text" name="birApgar10" size="10" maxlength="20" value="<%= props.getProperty("birApgar10", "") %>" @oscar.formDB />
+		</td>
+	  </tr>
+	  </table>
+
+
+	</td>
   </tr>
-</table>
-
-
-
-<table width="100%" border="0"  cellspacing="3" cellpadding="0">
-<tr>
-  <td valign="top" width="34%">
-  
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <th colspan="2" align="left">Labour Initiation
-      </th>
-	</tr>
-    <tr>
-	  <td width="50%">
-      <input type="checkbox" name="labInitNoLab" <%= props.getProperty("labInitNoLab", "") %> @oscar.formDB  dbType="tinyint(1)"/> No Labour
-	  </td>
-	  <td>
-      <input type="checkbox" name="labInitUnknown" <%= props.getProperty("labInitUnknown", "") %> @oscar.formDB  dbType="tinyint(1)"/> Unknown
-	  </td>
-	</tr>
-    <tr>
-      <td colspan="2">
-      <input type="checkbox" name="labInitSpontan" <%= props.getProperty("labInitSpontan", "") %> @oscar.formDB  dbType="tinyint(1)"/> Spontaneous
-      </td>
-    </tr>
-    <tr>
-	  <td>
-      <input type="checkbox" name="labInitAugmented" <%= props.getProperty("labInitAugmented", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheckMaster(this, "labInitAugmented")' /> Augmented
-	  </td>
-	  <td>
-      <input type="checkbox" name="labInitInduced" <%= props.getProperty("labInitInduced", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckMaster(this, "labInitInduced")' /> Induced
-	  </td>
-	</tr>
-
-    <tr>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitAugmentedARM" <%= props.getProperty("labInitAugmentedARM", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitAugmented")' /> ARM
-	  </td>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitInducedARM" <%= props.getProperty("labInitInducedARM", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitInduced")' /> ARM
-	  </td>
-	</tr>
-    <tr>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitAugmentedOxytocin" <%= props.getProperty("labInitAugmentedOxytocin", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitAugmented")' /> Oxytocin
-	  </td>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitInducedOxytocin" <%= props.getProperty("labInitInducedOxytocin", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitInduced")' /> Oxytocin
-	  </td>
-	</tr>
-    <tr>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitAugmentedProst" <%= props.getProperty("labInitAugmentedProst", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitAugmented")' /> Prost.
-	  </td>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitInducedProst" <%= props.getProperty("labInitInducedProst", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitInduced")' /> Prost.
-	  </td>
-	</tr>
-    <tr>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitAugmentedOther" <%= props.getProperty("labInitAugmentedOther", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitAugmented")' /> Other
-	  </td>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" name="labInitInducedOther" <%= props.getProperty("labInitInducedOther", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "labInitInduced")' /> Other
-	  </td>
-	</tr>
-    <tr>
-	  <td colspan="2" align="right">
-      Indication For Induction<br>
-      <input type="text" name="labInitIndicInduc" size="30" maxlength="60" value="<%= props.getProperty("labInitIndicInduc", "") %>" @oscar.formDB />
-	  </td>
-	</tr>
   </table>
 
 
-  </td><td valign="top" width="33%">
-
-
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <th colspan="2" align="left">Perineum/Vagina/Cervix
-      </th>
-	</tr>
-    <tr>
-	  <td width="50%">
-      <input type="checkbox" name="periVagCerIntact" <%= props.getProperty("periVagCerIntact", "") %> @oscar.formDB  dbType="tinyint(1)"/> Intact
-	  </td>
-	  <td>
-      <input type="checkbox" name="periVagCerUnknown" <%= props.getProperty("periVagCerUnknown", "") %> @oscar.formDB  dbType="tinyint(1)"/> Unknown
-	  </td>
-	</tr>
-    <tr>
-	  <td>
-      <input type="checkbox" name="periVagCerEpisiotomy" <%= props.getProperty("periVagCerEpisiotomy", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckMaster(this, "pvcEpis")' /> Episiotomy
-	  </td>
-	  <td>
-      <input type="checkbox" name="periVagCerLace" <%= props.getProperty("periVagCerLace", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckMaster(this, "pvcLace")' /> Laceration
-	  </td>
-	</tr>
-
-    <tr>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="radio" name="pvcEpisMedian" <%= props.getProperty("pvcEpisMedian", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheckSlave(this, "periVagCerEpisiotomy"); onCheck(this, "pvcEpis")' /> Median
-	  </td>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="radio" name="pvcLace1st" <%= props.getProperty("pvcLace1st", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheckSlave(this, "periVagCerLace"); onCheck(this, "pvcLace")'/> 1st
-      <input type="radio" name="pvcLace3rd" <%= props.getProperty("pvcLace3rd", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheckSlave(this, "periVagCerLace"); onCheck(this, "pvcLace")'/> 3rd
-	  </td>
-	</tr>
-    <tr>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="radio" name="pvcEpisMediol" <%= props.getProperty("pvcEpisMediol", "") %> @oscar.formDB  dbType="tinyint(1)"  onclick='onCheckSlave(this, "periVagCerEpisiotomy"); onCheck(this, "pvcEpis")'/> Mediolateral
-	  </td>
-	  <td>&nbsp;&nbsp;&nbsp;
-      <input type="radio" name="pvcLace2nd" <%= props.getProperty("pvcLace2nd", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "periVagCerLace"); onCheck(this, "pvcLace")'/> 2nd
-      <input type="radio" name="pvcLace4th" <%= props.getProperty("pvcLace4th", "") %> @oscar.formDB  dbType="tinyint(1)" onclick='onCheckSlave(this, "periVagCerLace"); onCheck(this, "pvcLace")'/> 4th
-	  </td>
-	</tr>
-    <tr>
-	  <td colspan="2">
-      <input type="checkbox" name="periVagCerCerv" <%= props.getProperty("periVagCerCerv", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	  Cervical tear
-	  </td>
-	</tr>
-    <tr>
-	  <td colspan="2">
-      <input type="checkbox" name="periVagCerOther" <%= props.getProperty("periVagCerOther", "") %> @oscar.formDB  dbType="tinyint(1)"/> 
-	  Other tear
-	  </td>
-	</tr>
-  </table>
 
   </td><td valign="top">
 
-  
-  <table width="100%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-      <th colspan="2" align="left">Anesthetic / Analgesia
-      </th>
-	</tr>
-    <tr>
-	  <td width="50%">
-      <input type="checkbox" name="aneAnaNone" <%= props.getProperty("aneAnaNone", "") %> @oscar.formDB  dbType="tinyint(1)"/> None
-	  </td>
-	  <td>
-      <input type="checkbox" name="aneAnaSpinal" <%= props.getProperty("aneAnaSpinal", "") %> @oscar.formDB  dbType="tinyint(1)"/> Spinal
-	  </td>
-	</tr>
-    <tr>
-	  <td>
-      <input type="checkbox" name="aneAnaEntonox" <%= props.getProperty("aneAnaEntonox", "") %> @oscar.formDB  dbType="tinyint(1)"/> Entonox
-	  </td>
-	  <td>
-      <input type="checkbox" name="aneAnaGeneral" <%= props.getProperty("aneAnaGeneral", "") %> @oscar.formDB  dbType="tinyint(1)"/> General
-	  </td>
-	</tr>
-    <tr>
-	  <td>
-      <input type="checkbox" name="aneAnaLocal" <%= props.getProperty("aneAnaLocal", "") %> @oscar.formDB  dbType="tinyint(1)"/> Local
-	  </td>
-	  <td>
-      <input type="checkbox" name="aneAnaNarcotics" <%= props.getProperty("aneAnaNarcotics", "") %> @oscar.formDB  dbType="tinyint(1)"/> Narcotics
-	  </td>
-	</tr>
-    <tr>
-	  <td>
-      <input type="checkbox" name="aneAnaPudendal" <%= props.getProperty("aneAnaPudendal", "") %> @oscar.formDB  dbType="tinyint(1)"/> Pudendal
-	  </td>
-	  <td>
-      <input type="checkbox" name="aneAnaOther" <%= props.getProperty("aneAnaOther", "") %> @oscar.formDB  dbType="tinyint(1)"/> Other
-	  </td>
-	</tr>
-    <tr>
-	  <td>
-      <input type="checkbox" name="aneAnaEpidural" <%= props.getProperty("aneAnaEpidural", "") %> @oscar.formDB  dbType="tinyint(1)"/> Epidural
-	  </td>
-	  <td>
-      <input type="checkbox" name="aneAnaUnknown" <%= props.getProperty("aneAnaUnknown", "") %> @oscar.formDB  dbType="tinyint(1)"/> Unknown
-	  </td>
-	</tr>
+  <table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="10%">DELIVERED<br>BY:</td>
+    <td>
+	<input type="text" name="birDelBy" style="width:100%" size="60" maxlength="80" value="<%= props.getProperty("birDelBy", "") %>" @oscar.formDB />
+    </td>
+  </tr><tr>
+    <td></td>
+	<td>
+	<input type="checkbox" name="birDelMD" <%= props.getProperty("birDelMD", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	MD &nbsp;&nbsp;
+	<input type="checkbox" name="birDelRM" <%= props.getProperty("birDelRM", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	RM &nbsp;&nbsp;
+	<input type="checkbox" name="birDelRN" <%= props.getProperty("birDelRN", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	RN &nbsp;&nbsp;
+	<input type="checkbox" name="birDelOther" <%= props.getProperty("birDelOther", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	OTHER <I>(specify):</I>
+	<input type="text" name="birDelOtherSpec" size="6" maxlength="15" value="<%= props.getProperty("birDelOtherSpec", "") %>" @oscar.formDB />
+	</td>
+  </tr><tr>
+    <td>MD/RMS<br>PRESENT:</td>
+    <td>
+    <textarea name="birMDPres" style="width:100%" cols="30" rows="3" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("birMDPres", "") %> </textarea>
+    </td>
+  </tr><tr>
+    <td>NURSES<br>PRESENT:</td>
+    <td>
+    <textarea name="birNurPres" style="width:100%" cols="30" rows="3" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("birNurPres", "") %> </textarea>
+    </td>
+  </tr><tr>
+    <td>OTHERS<br>PRESENT:</td>
+    <td>
+    <textarea name="birOtherPres" style="width:100%" cols="30" rows="3" @oscar.formDB dbType="varchar(255)" > <%= props.getProperty("birOtherPres", "") %> </textarea>
+    </td>
+  </tr>
   </table>
-
-  
 
   </td>
 </tr>
-</table>  
+</table>
 
-* Date format:  <span class="small8">(dd/mm/yyyy)</span>
+
+<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
+<tr>
+  <td width="60%"><B>COMMENTS ON LABOUR AND BIRTH:</B>
+  <input type="checkbox" name="comLabNormal" <%= props.getProperty("comLabNormal", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  NORMAL &nbsp;&nbsp; IF NOT (SPECIFY):
+  <input type="text" name="comLabNormalSpec" size="10" maxlength="20" value="<%= props.getProperty("comLabNormalSpec", "") %>" @oscar.formDB />
+  </td><td>
+  PLACE OF BIRTH:
+  <input type="checkbox" name="comLabPlaHosp" <%= props.getProperty("comLabPlaHosp", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  HOSPITAL &nbsp;&nbsp;
+  <input type="checkbox" name="comLabPlaHome" <%= props.getProperty("comLabPlaHome", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  HOME &nbsp;&nbsp;
+  <input type="checkbox" name="comLabPlaTran" <%= props.getProperty("comLabPlaTran", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  TRANSFER IN LABOUR
+  </td>
+</tr><tr>
+  <td colspan="2">
+  <textarea name="comLabBirth" style="width:100%" cols="100" rows="2" @oscar.formDB dbType="text" > <%= props.getProperty("comLabBirth", "") %> </textarea>
+  </td>
+</tr>
+</table>
+
+<hr>
+<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
+<tr>
+  <td colspan="2"><B>CONSULT TO:</B></td>
+  <td width="25%">SIGNATURE</td>
+  <td width="25%">SIGNATURE</td>
+</tr><tr>
+  <td width="20%">
+  <input type="checkbox" name="conObste" <%= props.getProperty("conObste", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  OBSTETRICIAN
+  </td><td>
+  <input type="checkbox" name="conPedia" <%= props.getProperty("conPedia", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  PEDIATRICIAN
+  </td><td> 
+  <input type="text" name="conRmSignat" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("conRmSignat", "") %>" @oscar.formDB />
+  </td><td> 
+  <input type="text" name="conMdSignat" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("conMdSignat", "") %>" @oscar.formDB />
+  </td>
+</tr><tr>
+  <td width="20%">
+  <input type="checkbox" name="conFamPhy" <%= props.getProperty("conFamPhy", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  FAMILY PHYSICIAN
+  </td><td>
+  <input type="checkbox" name="conOther" <%= props.getProperty("conOther", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+  OTHER:
+  </td><td align="right"> 
+  RM/RN
+  </td><td align="right"> 
+  MD/RM
+  </td>
+</tr>
+</table>
+
+<table class="small8" width="100%" border="1"  cellspacing="0" cellpadding="0">
+<tr>
+  <td>
+  HLTH 1588 Rev. 02/03 Prepared by the B.C Reproductive Care Program
+  <br>
+  * Date format:  <span class="small8">(dd/mm/yyyy)</span>
+  </td>
+</tr>
+</table>
 
 
 </html:form>
