@@ -30,25 +30,25 @@
   </section>
   <section number="2">
    <section_title>Risk Assessment</section_title>
-   <risk riskname="AGE 65-85" riskno="999">
+   <risk riskname="Fall">
     <item clname="0299901"><i><b>Falls/Injury: Multidisciplinary post-fall assessment</b></i></item>
     <item clname="0299902"><font color="red">
-       <a href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+       <a href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
        Safety aids, stairs, bathtubs</a></font></item>
     <item clname="0299903"><i>Non-flammable fabrics, self-extinguishing cigarettes</i></item>
     <item clname="0299904"><b>Elder Abuse (questionnaire/specific subgroups)</b></item>
     <item clname="0299905"><font color="red">Other noted risk factors</font></item> 
    </risk>
-   <risk riskname="007" riskno="93">
+   <risk riskname="OA">
     <item clname="0200701">OA: Assess Pain and Function</item>
    </risk>
-   <risk riskname="008" riskno="94">
+   <risk riskname="CHF">
     <item clname="0200801">CHD:Assess and treat CHD risk factors</item>
    </risk>   
   </section>
   <section  number="3">
    <section_title>Physical Examination</section_title>
-   <risk riskname="AGE 65-85" riskno="999">
+   <risk riskname="All">
     <item clname="0399901">Height:                Weight:     </item>
     <item clname="0399902">BP sitting:   /standing (high risk group):</item>
     <item clname="0399903">Heart sound and rhythm</item>
@@ -63,46 +63,46 @@
     <item clname="0399912">Foot care</item>
     <item clname="0399913" >Other important physical findings:</item>
    </risk>
-   <risk riskname="AGE 65-85 SEX F" riskno="998">
+   <risk riskname="All">
      <item clname="0399801">Breast examination</item> 
      <item clname="0399802">Pap smear</item>
    </risk>
-   <risk riskname="AGE 65-85 SEX M" riskno="997">
+   <risk riskname="998">
      <item clname="0399701">Prostate Cancer (Digital rectal examination)</item> 
      <item clname="0399702">Testicular Cancer</item>
    </risk>
-   <risk riskname="001" riskno="4">
+   <risk riskname="PVD">
      <item clname="0300101">Peripheral vascular examination</item> 
    </risk>
-   <risk riskname="003" riskno="6">
+   <risk riskname="Cog_Intact">
      <item clname="0300301">Pain (if not cognitively impaired)</item> 
    </risk>
-   <risk riskname="006" riskno="92">
+   <risk riskname="HTN">
      <item clname="0300601">Hypertension:BP ( / ) monthly</item> 
    </risk> 
-   <risk riskname="009" riskno="95">
+   <risk riskname="CHF">
      <item clname="0300901">CHF:Weekly weight</item> 
    </risk>
   </section>
   <section number="4">
     <section_title>Immunization</section_title>
-    <risk riskname="AGE 65-85" riskno="999">
+    <risk riskname="All">
      <item clname="0499901">Single dose of 23-valent pneumococcal vaccine</item> 
      <item clname="0499902">Flu Shot (+high risk)/(yearly FOR high risk)</item>  
     </risk>
   </section>
   <section number="5">
     <section_title>Nutrition</section_title>
-    <risk riskname="AGE 65-85" riskno="999">
+    <risk riskname="All">
      <item clname="0599901">Vitamin D and Calcium</item>  
     </risk>
-     <risk riskname="AGE 65-69 SEX M" riskno="996">
+     <risk riskname="All">
      <item clname="0599601">General dietary advice on fat and cholesterol(Males up to 69 years)</item>  
     </risk>
   </section>
   <section number="6">
   <section_title>Investigation</section_title>
-  <risk riskname="AGE 65-85" riskno="999">
+  <risk riskname="All">
      <item clname="0699901">Fasting BS</item> 
      <item clname="0699902">EKG</item>  
      <item clname="0699903">Bone densitometry</item> 
@@ -115,44 +115,44 @@
      <item clname="0699910">PSA/ Transrectal ultrasound for Prostate Cancer</item> 
      <item clname="0699911">Other investigations</item>
     </risk>
-    <risk riskname="004" riskno="12">
+    <risk riskname="CAD">
      <item clname="0600401">Lipids Profile every 5 years</item> 
     </risk>
-    <risk riskname="005" riskno="91">
+    <risk riskname="DM2">
      <item clname="0600501">DM:HbA1C every 3 months</item> 
     </risk>
    </section>
    <section number="7">
     <section_title>Other</section_title>
-    <risk riskname="AGE 65-85" riskno="999">
+    <risk riskname="All">
      <item clname="0799901">Advanced Directive</item>  
      <item clname="0799902">Medication Review</item>  
     </risk>
-    <risk riskname="010" riskno="96">
+    <risk riskname="COPD">
      <item clname="0701001">COPD:Chest Physio</item>  
     </risk>
-    <risk riskname="011" riskno="97">
+    <risk riskname="Dementia">
      <item clname="0701101">Dementia:Assess cognitive function monthly</item>  
     </risk>
-    <risk riskname="012" riskno="98">
+    <risk riskname="UI">
      <item clname="0701201">U.Incont:Incontinence Program</item>  
     </risk>
    </section>
    <section number="8">
     <section_title>Management Plan</section_title>
-    <risk riskname="AGE 65-85" riskno="999">
+    <risk riskname="All">
      <item clname="0899901">Family Conference</item>
     </risk>
-    <risk riskname="AGE 65-85 SEX F" riskno="998">
+    <risk riskname="All">
      <item clname="0899801">HRT</item> 
     </risk>
-    <risk riskname="002" riskno="5">
+    <risk riskname="CAD">
      <item clname="0800201">Prescribe ASA</item> 
     </risk>
    </section>
    <section number="9">
    <section_title>Medication list</section_title>
-   <risk riskname="AGE 65-85" riskno="999">
+   <risk riskname="All">
      <item clname="0999901">Medication Review:</item> 
     </risk>
    </section>
@@ -163,24 +163,3 @@
     <section_title>Allergies</section_title>
    </section>
 </checklist>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

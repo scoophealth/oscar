@@ -23,161 +23,213 @@
  * Ontario, Canada 
  */
 -->
-
-
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
-  String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
-  String curUser_no = (String) session.getAttribute("user");
-%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*,java.net.*" errorPage="../../appointment/errorpage.jsp" %>
-<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
-<!--jsp:useBean id="risks" class="oscar.decision.DesAnnualReviewPlannerRisk" scope="page" /-->
-<jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
-<jsp:useBean id="checklist" class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
-<%@ include file="../../admin/dbconnection.jsp" %>
-<% 
-String [][] dbQueries=new String[][] { 
-//{"search_formarrisk", "select * from formAR where ID = ?" }, 
-{"search_demographic", "select sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?" }, 
-{"search_des", "select * from desannualreviewplan where form_no <= ? and demographic_no = ? order by form_no desc, des_date desc, des_time desc limit 1 " }, 
-{"save_des", "insert into desannualreviewplan (des_date,des_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) " }, 
-};
-plannerBean.doConfigure(dbParams,dbQueries);
-%>
- 
-<html>
-<% response.setHeader("Cache-Control","no-cache");%>
-<head>
-    <title>ANNUAL HEALTH REVIEW PLANNER</title>
-<script type="text/javascript" language="Javascript">
-function onExit() {
-  if(confirm("Are you sure you wish to exit without saving your changes?")==true)  {
-    window.close();
+  if (session.getAttribute("user") == null) {
+    response.sendRedirect("../logout.jsp");
   }
-  return(false);
-}
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
-  var popup=window.open(page, "editxml", windowprops);
-}
-</script>
-</head>
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
-<form name="planner" method="post" action="annualreviewplanner.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>" >
-<!--%@ include file="zgetarriskdata.jsp" % --> 
+
+  String demographic_no = request.getParameter("demographic_no") != null
+                          ? request.getParameter("demographic_no")
+                          : ("null");
+  String form_no        = request.getParameter("formId") != null
+                          ? request.getParameter("formId")
+                          : ("0");
+  String curUser_no     = (String)session.getAttribute("user");
+%>
+  <%@ page errorPage="../../appointment/errorpage.jsp"import="java.util.*,
+                                                              java.sql.*,
+                                                              oscar.*,
+                                                              oscar.util.*" %>
+  <jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
+  <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
+  <!--jsp:useBean id="risks" class="oscar.decision.DesAnnualReviewPlannerRisk" scope="page" /-->
+  <jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
+  <jsp:useBean id="checklist" class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
+  <%@ include file="../../admin/dbconnection.jsp" %>
 <%
-  //save risk&checklist data if required
-  if(request.getParameter("submit")!=null && (request.getParameter("submit").equals(" Save ") || request.getParameter("submit").equals("Save and Exit")) ) {
-    GregorianCalendar now=new GregorianCalendar();
-    String form_date =now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
-    String form_time =now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
-    String risk_content="", checklist_content="";
-    risk_content=SxmlMisc.createXmlDataString(request, "risk_");
-    checklist_content=SxmlMisc.createXmlDataString(request, "checklist_");
-    String[] param = {form_date,form_time,curUser_no,risk_content,checklist_content,demographic_no,form_no};
-    int rowsAffected = plannerBean.queryExecuteUpdate(param, "save_des" );
-  }
+  String[][] dbQueries = new String[][]{{"search_demographic", 
+          "select sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?"}, {"search_des", 
+          "select * from desannualreviewplan where form_no <= ? and demographic_no = ? order by form_no desc, des_date desc, des_time desc limit 1 "
+          }, {"save_des", 
+          "insert into desannualreviewplan (des_date,des_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) "
+          }};
 
-  //save & exit if required
-  if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Save and Exit") ) {
-    out.print("<script type='text/javascript' language='Javascript'>window.close();</script>");
-    return;
-  }
-
-  //initial prop bean with "0" 
-//  for(int i=0;i<riskdataname.length;i++) {
-//	  riskDataBean.setProperty(riskdataname[i][0],"0");
-//  }
-
-  //get the risk data from table desaprisk for other risk factors
-  String[] param2 = {form_no, demographic_no};
-  ResultSet rsdemo = plannerBean.queryResults(param2, "search_des");
-  while (rsdemo.next()) { 
-    String risk_content = rsdemo.getString("risk_content");
-    String checklist_content = rsdemo.getString("checklist_content");
+  plannerBean.doConfigure(dbParams, dbQueries);
 %>
-  <xml id="xml_list">
-    <planner>
-      <%=risk_content%>
-      <%=checklist_content%>
-    </planner>
-  </xml> 
+  <html>
 <%
-    //set the riskdata bean from xml file
-    Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/decision/annualreview/desannualreviewplannerrisk.xml"); 
-  	StringBuffer tt; 
-    for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
-      tt = new StringBuffer().append(e.nextElement());
-      if(SxmlMisc.getXmlContent(risk_content, savedar1risk1.getProperty(tt.toString()))!= null) 
-        riskDataBean.setProperty(tt.toString(), savedar1risk1.getProperty(tt.toString()));  //set riskno
-    }
-  }
-  //find the age and sex of the patient from demographic table
-  rsdemo = plannerBean.queryResults(demographic_no, "search_demographic");
-  int age = 0;
-  String sex = null;
-  while (rsdemo.next()) { 
-    age = UtilDateUtilities.calcAge(rsdemo.getString("year_of_birth"), rsdemo.getString("month_of_birth"),rsdemo.getString("date_of_birth"));
-    sex = rsdemo.getString("sex");
-  }
-  if (age>=65 && age <=85){
-    riskDataBean.setProperty("999", "checked" ); 
-    if (sex.equals("f") || sex.equals("F"))
-      riskDataBean.setProperty("998", "checked" ); 
-    if (sex.equals("m") || sex.equals("M"))
-      riskDataBean.setProperty("997", "checked" ); 
-    if (age>=65 && age<=69)
-      riskDataBean.setProperty("996", "checked" ); 
-  }
-  plannerBean.closePstmtConn();
+    response.setHeader("Cache-Control", "no-cache");
 %>
-<table bgcolor='silver' width='100%'>
-  <tr>
-    <td align="left">
-    <input type="submit" name="submit" value=" Save "  />
-    <input type="submit" name="submit" value="Save and Exit"  />
-    <input type="button" value="  Exit  "  onclick="javascript:return onExit();" />
-    <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
-    </td>
-    <td align="right">
-      <a href=# onClick ="popupPage(600,930,'riskedit.jsp');return false;">Edit Risk</a> | 
-      <a href=# onClick ="popupPage(600,930,'checklistedit.jsp');return false;">Edit CheckList</a>
-    </td>
-  </tr>
-</table>
+    <head>
+      <title>
+        ANNUAL HEALTH REVIEW PLANNER
+      </title>
+      <script type="text/javascript" language="Javascript">
+        function onExit() {
+          if (confirm("Are you sure you wish to exit without saving your changes?") == true) {
+            window.close();
+          }
 
-<table bgcolor='silver' width='100%'>
-  <tr>
-    <td width="20%" valign='top'>
+          return (false);
+        }
+
+        function popupPage(vheight, vwidth, varpage) {
+          //open a new popup window
+          var page = "" + varpage;
+
+          windowprops = "height=" + vheight + ",width=" + vwidth + 
+                  ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";
+
+          //360,680
+          var popup = window.open(page, "editxml", windowprops);
+        }
+      </script>
+    </head>
+    <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+      <form name="planner" method="post" action="annualreviewplanner.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>">
+      <!--%@ include file="zgetarriskdata.jsp" % -->
 <%
-    out.println(risks.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/decision/annualreview/desannualreviewplannerrisk.xml")));
+      //save risk&checklist data if required
+      if (request.getParameter("submit") != null && 
+              (request.getParameter("submit").equals(" Save ") || request.getParameter("submit").equals("Save and Exit"))) {
+        GregorianCalendar now          = new GregorianCalendar();
+        String            form_date    = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(
+                Calendar.DAY_OF_MONTH);
+        String            form_time    = now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(
+                Calendar.SECOND);
+        String            risk_content = "", checklist_content = "";
+
+        risk_content = SxmlMisc.createXmlDataString(request, "risk_");
+        checklist_content = SxmlMisc.createXmlDataString(request, "checklist_");
+
+        String[] param        = {form_date, form_time, curUser_no, risk_content, checklist_content, demographic_no, form_no};
+        int      rowsAffected = plannerBean.queryExecuteUpdate(param, "save_des");
+      }
+
+      //save & exit if required
+      if (request.getParameter("submit") != null && request.getParameter("submit").equals("Save and Exit")) {
+        out.print("<script type='text/javascript' language='Javascript'>window.close();</script>");
+
+        return;
+      }
+
+      //initial prop bean with "0"
+      //  for(int i=0;i<riskdataname.length;i++) {
+      //	  riskDataBean.setProperty(riskdataname[i][0],"0");
+      //  }
+      //get the risk data from table desaprisk for other risk factors
+      String[]  param2 = {form_no, demographic_no};
+      ResultSet rsdemo = plannerBean.queryResults(param2, "search_des");
+
+      while (rsdemo.next()) {
+        String risk_content      = rsdemo.getString("risk_content");
+        String checklist_content = rsdemo.getString("checklist_content");
 %>
-    </td><td>
+        <xml id="xml_list">
+          <planner>
+            <%= risk_content %>
+            <%= checklist_content %>
+          </planner>
+        </xml>
 <%
-  out.println(checklist.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/decision/annualreview/desannualreviewplannerriskchecklist.xml"), riskDataBean));
-%>    
-  </tr>
-</table>
-<table bgcolor='silver' width='100%'>
-  <tr>
-    <td align="left">
-    <input type="submit" name="submit" value=" Save "  />
-    <input type="submit" name="submit" value="Save and Exit"  />
-    <input type="button" value="  Exit  "  onclick="javascript:return onExit();" />
-    <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
-    </td>
-    <td align="right">
-      <a href=# onClick ="popupPage(600,930,'riskedit.jsp');return false;">Edit Risks</a> | 
-      <a href=# onClick ="popupPage(600,930,'checklistedit.jsp');return false;">Edit CheckList</a>
-    </td>
-  </tr>
-</table>
+        //set the riskdata bean from xml file
+        Properties   savedar1risk1 = risks.getRiskName("../webapps/" + oscarVariables.getProperty("project_home") + 
+                "/decision/annualreview/desannualreviewplannerrisk.xml");
+        StringBuffer tt;
+        System.out.println("jsp :" + "../webapps/" + oscarVariables.getProperty("project_home") + 
+                "/decision/annualreview/desannualreviewplannerrisk.xml");
 
-</form>
+        for (Enumeration e = savedar1risk1.propertyNames(); e.hasMoreElements(); ) {
+          tt = new StringBuffer().append(e.nextElement());
 
-</body>
-</html>
+          if (SxmlMisc.getXmlContent(risk_content, "risk_"+tt.toString()) != null) {
+            riskDataBean.setProperty(tt.toString(), savedar1risk1.getProperty(tt.toString()));
+          }
+        }
+      }
+      //find the age and sex of the patient from demographic table
+      rsdemo = plannerBean.queryResults(demographic_no, "search_demographic");
+
+      int    age = 0;
+      String sex = null;
+
+      while (rsdemo.next()) {
+        age = UtilDateUtilities.calcAge(rsdemo.getString("year_of_birth"), rsdemo.getString("month_of_birth"), 
+                rsdemo.getString("date_of_birth"));
+        sex = rsdemo.getString("sex");
+      }
+
+      if (age >= 65 && age <= 85) {
+        riskDataBean.setProperty("999", "checked");
+
+        if (sex.equals("f") || sex.equals("F")) {
+          riskDataBean.setProperty("998", "checked");
+        }
+
+        if (sex.equals("m") || sex.equals("M")) {
+          riskDataBean.setProperty("997", "checked");
+        }
+
+        if (age >= 65 && age <= 69) {
+          riskDataBean.setProperty("996", "checked");
+        }
+      }
+
+      plannerBean.closePstmtConn();
+%>
+      <table bgcolor='silver' width='100%'>
+        <tr>
+          <td align="left">
+            <input type="submit" name="submit" value=" Save " />
+            <input type="submit" name="submit" value="Save and Exit" />
+            <input type="button" value="  Exit  " onclick="javascript:return onExit();" />
+            <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
+          </td>
+          <td align="right">
+            <a href=# onClick="popupPage(600,930,'riskedit.jsp');return false;">
+              Edit Risk
+            </a>
+            |
+            <a href=# onClick="popupPage(600,930,'checklistedit.jsp');return false;">
+              Edit CheckList
+            </a>
+          </td>
+        </tr>
+      </table>
+      <table bgcolor='silver' width='100%'>
+        <tr>
+          <td width="20%" valign='top'>
+<%
+            out.println(risks.doStuff(new String("../webapps/" + oscarVariables.getProperty("project_home") + 
+                    "/decision/annualreview/desannualreviewplannerrisk.xml")));
+%>
+          </td>
+          <td>
+<%
+            out.println(checklist.doStuff(new String("../webapps/" + oscarVariables.getProperty("project_home") + 
+                    "/decision/annualreview/desannualreviewplannerriskchecklist.xml"), riskDataBean));
+%>
+          </tr>
+        </table>
+        <table bgcolor='silver' width='100%'>
+          <tr>
+            <td align="left">
+              <input type="submit" name="submit" value=" Save " />
+              <input type="submit" name="submit" value="Save and Exit" />
+              <input type="button" value="  Exit  " onclick="javascript:return onExit();" />
+              <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
+            </td>
+            <td align="right">
+              <a href=# onClick="popupPage(600,930,'riskedit.jsp');return false;">
+                Edit Risks
+              </a>
+              |
+              <a href=# onClick="popupPage(600,930,'checklistedit.jsp');return false;">
+                Edit CheckList
+              </a>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </body>
+  </html>
