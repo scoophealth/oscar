@@ -338,7 +338,7 @@
                             In this set of questions, I will ask you about everyday things you do at this time in your life. 
                             <br>There are <font style="text-decoration:underline">two</font> parts to each question.                            
                             <br>First, I will ask you <font style="font-style:italic">How often</font> you do a certain activity.
-                            <br>Next, I will ask you <font style="font-style:italic">To waht extent do you feel limited</font> in doing this activity.
+                            <br>Next, I will ask you <font style="font-style:italic">To what extent do you feel limited</font> in doing this activity.
                             <br>
                         </td>
                     </tr> 
