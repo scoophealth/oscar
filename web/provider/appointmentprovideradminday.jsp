@@ -26,6 +26,9 @@
 	boolean bShortcutForm = oscarVariables.getProperty("appt_formview", "").equalsIgnoreCase("on") ? true : false;
 	String formName = bShortcutForm ? oscarVariables.getProperty("appt_formview_name") : ""; 
 	String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName; 
+        String formName2 = bShortcutForm ? oscarVariables.getProperty("appt_formview_name2", "") : ""; 
+	String formName2Short = formName2.length() > 3 ? (formName2.substring(0,2)+".") : formName2; 
+        boolean bShortcutForm2 = bShortcutForm && !formName2.equals("");
 
     //String userprofession = (String) session.getAttribute("userprofession");
     int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
@@ -573,8 +576,10 @@ reason: <%=UtilMisc.htmlEscape(reason)%>
 notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 <a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="<bean:message key="global.encounter"/>">
-            |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a><%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%><% if(status.indexOf('B')==-1) { %>
-             <% 
+            |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
+            <%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%>
+            <%= bShortcutForm2?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName2+"&demographic_no="+demographic_no+"\")' title='form'>|"+formName2Short+"</a>" : ""%>
+             <% if(status.indexOf('B')==-1) {             
                 //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
                 if (vLocale.getCountry().equals("BR")) { %>  
                <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=rs.getString("appointment_no")%>");return false;' title="Faturamento">|FAT|</a>
