@@ -617,4 +617,27 @@ public class BillingFormData {
     }
     
     
+    public String getServiceGroupName(String serviceGroup,String serviceType) {
+        String ret = "";
+        
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT service_group_name FROM ctl_billingservice WHERE service_group='"+ serviceGroup +"' and servicetype = '"+serviceType+"'";
+
+            rs = db.GetSQL(sql);
+            
+            if(rs.next()) {
+                ret = rs.getString("service_group_name");
+            }
+            
+            rs.close();
+            db.CloseConn();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return ret;
+    }
+    
 }
