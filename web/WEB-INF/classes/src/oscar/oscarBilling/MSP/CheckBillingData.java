@@ -75,8 +75,11 @@ public class CheckBillingData {
         return ret;
     }
 
-    public String printErrorMsg(String m) {
-        String ret = "<tr bgcolor='red'><td>" + m + "</td></tr>";
+    public String printErrorMsg(String billingNo, String m) {
+        String ret = "<tr bgcolor='red'><td>"
+                + "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no="
+                + billingNo + "','','top=0,left=0,width=600,height=600')\">"
+                + m + "</a>" + "</td></tr>";
         return ret;
     }
 
@@ -279,7 +282,7 @@ public class CheckBillingData {
         return ret;
     }
 
-    public String checkC02(ResultSet rs2) throws SQLException {
+    public String checkC02(String billingNo, ResultSet rs2) throws SQLException {
         String ret = checkLength(rs2.getString("claimcode"), 3,
                 "C02:P00 Rec Code In Wrong! "); //P00
         // 3
@@ -368,7 +371,7 @@ public class CheckBillingData {
          * backwardSpace(rs2.getString("oin_address4"),25) //P120 25 +
          * backwardSpace(rs2.getString("oin_postalcode"),6); //P122 6
          */
-        ret = printWarningMsg(ret);
+        ret = printErrorMsg(billingNo, ret);
         return ret;
     }
 }
