@@ -701,7 +701,7 @@ border-right: 2px solid #cfcfcf;
                     <td style="font-weight:bold" colspan="2"><bean:message key="oscarEncounter.Index.measurements"/></td>
                 </tr>
                 <tr>
-                    <td colspan="2">
+                    <td>
                         <form name="measurementGroupForm">
                         <select name="measurementGroupSelect" class="ControlSelect" onchange="popupPage(500,1000,'./oscarMeasurements/SetupMeasurements.do?groupName='+document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
@@ -712,13 +712,14 @@ border-right: 2px solid #cfcfcf;
                          <option value="<%=tmp%>"><%=tmp %>
                          <%}%>
                         </select>
-                        </form>
+                        
                     </td>
                 </tr>                
                 <tr>                    
-                    <td><input type="button" style="height:20px" name="displayHistoryButton" value="<bean:message key="oscarEncounter.Index.btnViewHistory"/>" class="ControlPushButton" onClick="popupPage(600,1000,'oscarMeasurements/ProcessDisplayHistoryAction.jsp');"/></td>                
-                    <td><input type="button" style="height:20px" name="editMeasurementButton" value="<bean:message key="oscarEncounter.Index.btnCustomize"/>" class="ControlPushButton" onClick="popupPage(200,350,'oscarMeasurements/EditMeasurementTypes.jsp');"/></td>
-                </tr>                
+                    <td><a href=# onClick="popupPage(600,1000,'oscarMeasurements/SetupDisplayHistory.do'); return false;" >-<bean:message key="oscarEncounter.Index.oldMeasurements"/>-</a>
+                    </td>                                    
+                </tr> 
+                </form>
             </table>
             <table class="LeftTable">
                 <tr class="Header">
