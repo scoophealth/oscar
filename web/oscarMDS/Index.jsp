@@ -212,9 +212,21 @@ function checkSelected() {
                             <td align="center" valign="center" width="40%" class="Nav">
                                 &nbsp;&nbsp;&nbsp;
                                 <% if (demographicNo == null) { %>
-                                    <span class="white"><%= ( ackStatus.equals("N") ? "New" : ( ackStatus.equals("A") ? "Acknowledged" : "All" )) %>
-                                     lab reports for
-                                     <%= ( searchProviderNo.equals("") ? "all physicians" : ( searchProviderNo.equals("0") ? "unclaimed" : ProviderData.getProviderName(searchProviderNo) ) ) %>
+                                    <span class="white">
+                                     <% if (ackStatus.equals("N")) {%>
+                                           <bean:message key="oscarMDS.index.msgNewLabReportsFor"/>
+                                        <%} else if (ackStatus.equals("A")) {%>
+                                           <bean:message key="oscarMDS.index.msgAcknowledgedLabReportsFor"/>
+                                        <%} else {%>
+                                           <bean:message key="oscarMDS.index.msgAllLabReportsFor"/>
+                                        <%}%>&nbsp;
+                                     <% if (searchProviderNo.equals("")) {%>
+                                            <bean:message key="oscarMDS.index.msgAllPhysicians"/>
+                                        <%} else if (searchProviderNo.equals("0")) {%>
+                                            <bean:message key="oscarMDS.index.msgUnclaimed"/>
+                                        <%} else {%>
+                                            <%=ProviderData.getProviderName(searchProviderNo)%>
+                                        <%}%>
                                      </span>                                
                                 <% } %>
                             </td>                            
