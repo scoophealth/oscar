@@ -19,7 +19,7 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
-        var ret = is1CheckboxChecked(startElement,0, choiceFormat);
+        var ret = is1CheckboxChecked(0, choiceFormat);
         if(ret==true) {
             reset();
             ret = confirm("Are you sure you want to save this form?");
@@ -34,7 +34,7 @@
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
-        var ret = is1CheckboxChecked(startElement,0, choiceFormat);
+        var ret = is1CheckboxChecked(0, choiceFormat);
         if(ret == true) {
             reset();
             ret = confirm("Are you sure you wish to save and close this window?");
@@ -65,27 +65,29 @@
     }
 
 
-    function is1CheckboxChecked(startElement, formNb, nbcheckboxes){
-        var element=startElement;
+    /*
+        nbcheckboxes is an array list which stores the start and end element nb of each question
+    */
+    function is1CheckboxChecked(formNb, nbcheckboxes){        
         var isValid=true;
         
-        for(var i=0; i < nbcheckboxes.length; i++)
+        for(var i=0; i < nbcheckboxes.length; i=i+2)
         {                        
-            if (numCheckboxChecked(formNb,element,nbcheckboxes[i])>1)
-                isValid=false; 
-             element = element+nbcheckboxes[i];  
+            if (numCheckboxChecked(formNb,nbcheckboxes[i],nbcheckboxes[i+1])>1)
+                isValid=false;              
         }
         if(isValid==false)
             alert("Please select one item only for each question");        
         
         return isValid;
     }
+               
     
-    function numCheckboxChecked(formNb, startElement, nbElements){
+    function numCheckboxChecked(formNb, startElement, endElements){
         var numCheck = 0;
 
-        for(var element = startElement; element < startElement+nbElements; element++){
-            
+        for(var element = startElement; element <= endElements; element++){
+            //alert("element: " + element + " is " + document.forms[formNb].elements[element].checked);
             if (document.forms[formNb].elements[element].checked == true){                
                 numCheck++;
             }

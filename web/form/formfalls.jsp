@@ -84,8 +84,7 @@
 
 <script type="text/javascript" language="Javascript">
 
-    var choiceFormat  = new Array(3,2,2,2,2);
-    var startElement = 6;
+    var choiceFormat  = new Array(6,8,9,10,11,12,13,14,15,16);    
     var action = "/<%=project_home%>/form/formname.do";
 
 </script>
