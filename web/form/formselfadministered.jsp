@@ -59,7 +59,7 @@
         }
         
         TD{
-            font-size:13.5pt;
+            font-size:13pt;
         }
 
         TH{
@@ -67,8 +67,8 @@
         }
 
         INPUT.checkbox{
-            height: 25px;
-            width: 25px;            
+            height: 22px;
+            width: 22px;            
         }
         .title {
             background-color: #486ebd;
@@ -270,9 +270,17 @@
                             </tr>
                         </table>
                     </td>
-                </tr>                
+                </tr>  
                 <tr>
                     <td align="right" valign="top" >6. </td>
+                    <td>Your sex is: <%= props.getProperty("sex", "") %></td>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">&nbsp;</td>
+                    <td></td>
+                </tr>                
+                <tr>
+                    <td align="right" valign="top" >7. </td>
                     <td>Is there a friend, relative neighbour who would take care of you for a few days if neccessary?</td>
                 </tr>
                 <tr bgcolor="white">
@@ -286,7 +294,11 @@
                         <input type="checkbox"  class="checkbox" name="relativeTakeCareN" <%= props.getProperty("relativeTakeCareN", "") %>/>
                     </td>
                     <td>No</td>
-                </tr>                   
+                </tr> 
+                <tr>
+                    <td align="right" valign="top" >8. </td>
+                    <td>Your birth date is: <%= props.getProperty("dob", "") %></td>
+                </tr>
             </table>
     </td>
 </tr>
@@ -308,6 +320,8 @@
         <td align="right">
             Study ID: <%= props.getProperty("studyID", "N/A") %>
             <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
+            <input type="hidden" name="sex" value="<%= props.getProperty("sex", "") %>"/>
+            <input type="hidden" name="dob" value="<%= props.getProperty("dob", "") %>"/>
         </td>
     </tr>
 </table>
