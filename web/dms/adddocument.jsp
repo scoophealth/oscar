@@ -55,7 +55,7 @@ GregorianCalendar now=new GregorianCalendar();
    int Count = 0;
    ResultSet rslocal=null;
     rslocal = null;
-   rslocal = apptMainBean.queryResults(request.getParameter("creator"), "search_provider_name");
+   rslocal = apptMainBean.queryResults(user_no, "search_provider_name");
    while(rslocal.next()){
    
    proFirst = rslocal.getString("first_name");
@@ -176,7 +176,7 @@ function ScriptAttach() {
                 </font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="dispcreator"  readonly value="<%=proLast%>, <%=proFirst%>" size="20">
-                <input type="hidden" name="doccreator" value="<%=request.getParameter("creator")%>" size="20">
+                <input type="hidden" name="doccreator" value="<%=user_no%>" size="20">
                 <input type="hidden" name="orderby" value="updatedatetime desc" size="20">
                 </font></td>
             </tr>
