@@ -36,6 +36,10 @@
   <property name="webapp" location="../web" />
   <property name="jspbasedir" location="${catalina}/webapps/oscar" />
   <property name="mdsfiledir" location="../mdsFileManagement" />
+  
+  <property name="src_document" location="../oscar_document" />
+  <property name="root_document" location="${build}/document" />
+  <property name="classes_document" location="${root_document}/classes" />
 
   <mkdir dir="${build}" />
   <mkdir dir="${root_web}" />
@@ -44,6 +48,8 @@
   <mkdir dir="${root_web}/WEB-INF"/>
   <mkdir dir="${root_web}/WEB-INF/lib"/>
   <mkdir dir="${test}" />
+  <mkdir dir="${root_document}"/>
+  <mkdir dir="${classes_document}"/>
 
   <!-- webapp filtering - splice version etc. into web files -->
   <filter token="project" value="${project}" />
@@ -82,6 +88,18 @@
    </classpath>
   </javac>
  </target>-->
+ 
+ <target name="document" depends="init">
+   <javac
+          srcdir="${src_document}"
+          destdir="${classes_document}"
+          deprecation="off"
+          debug="on">
+     <classpath>     
+       <path refid="classpath.path"/>
+     </classpath>
+   </javac>   
+ </target>
 
  <target name="web" depends="init">
   <javac 
@@ -166,7 +184,7 @@
   </copy>
  </target>
 
- <target name="dist" depends="web">
+ <target name="dist" depends="web, document">
   <!-- make the webapp clean, so even files that haven't changed get
   their filters updated -->
   <propertyfile file="../web/WEB-INF/classes/build.properties">
@@ -174,10 +192,25 @@
   </propertyfile>
   
   <war destfile="${build}/oscar.war" webxml="../web/WEB-INF/web.xml"> 
-       <fileset dir="${webapp}"/> 
+       <fileset dir="${webapp}"> 
+         <exclude name="WEB-INF/lib/**"/>
+         <exclude name="WEB-INF/classes/src/**"/>
+         <exclude name="WEB-INF/classes/oscar/**"/>
+         <exclude name="WEB-INF/classes/bean/**"/>
+         <exclude name="WEB-INF/web.xml"/>
+       </fileset>
        <lib dir="${webapp}/WEB-INF/lib"/>
        <classes dir="${classes_web}"/>
   </war>
+  
+  <war destfile="${build}/OscarDocument.war" webxml="${src_document}/WEB-INF/web.xml">
+    <fileset dir="${src_document}">
+      <exclude name="WEB-INF/classes/**"/>
+      <exclude name="WEB-INF/web.xml"/>
+    </fileset>
+    <classes dir="${classes_document}"/>
+  </war>
+  
  </target>
 
  
