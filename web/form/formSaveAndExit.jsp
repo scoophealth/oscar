@@ -50,18 +50,24 @@
 <script language="javascript">
 
 function write2Parent(text){
+    
     self.window.close();    
     opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + "\n" + text;
     opener.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
     opener.document.encForm.enTextarea.focus();
  }
 
-
+ function closePopup(){
+    if(self.window && self.open.window && !self.closed){
+        self.open.window.close();
+        self.close();        
+    }
+ }
 </script>
 
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<body topmargin="0" leftmargin="0" vlink="#0000FF"  onunload="javascript: closePopup()">
 <table>
     <tr>
         <td>
