@@ -1,3 +1,7 @@
+<%      
+  if(session.getValue("user") == null)
+    response.sendRedirect("../../../logout.jsp");
+%>
 <!--  
 /*
  * 
@@ -24,7 +28,7 @@
  */ 
 -->
 <%@ page language="java" contentType="text/html" %>
-<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.MSP.*" %>
+<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -35,9 +39,7 @@
 <%@ include file="dbBilling.jsp" %>
 
 
-<%      
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
+<%
   String user_no; 
   user_no = (String) session.getAttribute("user");
   int  nItems=0;    
@@ -275,8 +277,8 @@ if (billTypes == null){
         MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records                           
-      String rejected = isRejected(b.billMasterNo,p); 
-      String rejected2  = isRejected(b.billMasterNo,p2);      
+      String rejected = isRejected(b.billMasterNo,p,b.isWCB()); 
+      String rejected2  = isRejected(b.billMasterNo,p2,b.isWCB());      
       
       total = total.add(new BigDecimal(b.amount).setScale(2, BigDecimal.ROUND_HALF_UP));
    %>
@@ -295,9 +297,12 @@ if (billTypes == null){
         </a>
     </td>                                     
     <td>
-        <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>')" >Edit</a>
-        <%=rejected%>
-        <%=rejected2%>
+        <%if (!b.isWCB()){%>
+        <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>')" >Edit </a>
+        <%}else{%>
+        <a href="javascript: popupPage(700,700,'billingTeleplanCorrectionWCB.jsp?billing_no=<%=b.billMasterNo%>')" >Edit </a>
+        <%}%>
+        <%=rejected%><%=rejected2%>
     </td>
     
     
@@ -338,10 +343,14 @@ String getReasonEx(String reason){
     return reason;
 }
 
-String isRejected(String billingNo,Properties p){
+String isRejected(String billingNo,Properties p,boolean wcb){
     String s = "&nbsp;";
     if (p.containsKey(billingNo)){
+        if (!wcb){
         s = "<a href=\"javascript: popupPage(700,700,'adjustBill.jsp?billing_no="+billingNo+"')\" > "+p.getProperty(billingNo)+"</a>";
+        }else{
+        s = "<a href=\"javascript: popupPage(700,700,'billingTeleplanCorrectionWCB.jsp?billing_no="+billingNo+"')\" > "+p.getProperty(billingNo)+"</a>";
+        }        
     }
     return s;
 }
