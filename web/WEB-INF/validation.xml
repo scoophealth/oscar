@@ -12,57 +12,73 @@
         <field
             property="type"
             depends="required,maxlength,mask">
+            <msg name="mask" key="error.oscarEncounter.Measurements.invalidCharacter"/>
             <arg0 key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
             <arg1
                 name="maxlength"
                 key="${var:maxlength}"
-                resource="false"/>
+                resource="false"/>                        
             <var>
                 <var-name>maxlength</var-name>
                 <var-value>4</var-value>
             </var>
             <var>
                 <var-name>mask</var-name>
-                <var-value>^[0-9A-Z]{1,2,3,4}$</var-value>
+                <var-value>^[0-9A-Z]*$</var-value>
             </var>            
          </field>
          <field
             property="typeDesc"
-            depends="required,maxlength">
-            <arg0 key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
+            depends="required,maxlength,mask">
+            <msg name="mask" key="error.oscarEncounter.Measurements.invalidCharacter"/>
+            <arg0 key="oscarEncounter.oscarMeasurements.Measurements.headingTypeDesc"/>
             <arg1
                 name="maxlength"
                 key="${var:maxlength}"
-                resource="false"/>
+                resource="false"/>                        
             <var>
                 <var-name>maxlength</var-name>
                 <var-value>255</var-value>
+            </var>
+            <var>
+                <var-name>mask</var-name>
+                <var-value>^[0-9a-zA-Z]*$</var-value>
             </var>         
          </field>
          <field
             property="typeDisplayName"
-            depends="required,maxlength">
-            <arg0 key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
+            depends="required,maxlength,mask">
+            <arg0 key="oscarEncounter.oscarMeasurements.Measurements.headingDisplayName"/>
             <arg1
                 name="maxlength"
                 key="${var:maxlength}"
-                resource="false"/>
+                resource="false"/>            
+            <msg name="mask" key="error.oscarEncounter.Measurements.invalidCharacter"/>            
             <var>
                 <var-name>maxlength</var-name>
                 <var-value>100</var-value>
-            </var>         
+            </var> 
+            <var>
+                <var-name>mask</var-name>
+                <var-value>^[0-9A-Za-z]*$</var-value>
+            </var>        
          </field> 
          <field
             property="measuringInstrc"
-            depends="required,maxlength">
-            <arg0 key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
+            depends="required,maxlength,mask">
+            <arg0 key="oscarEncounter.oscarMeasurements.displayHistory.headingMeasuringInstruction"/>
             <arg1
                 name="maxlength"
                 key="${var:maxlength}"
-                resource="false"/>
+                resource="false"/> 
+            <msg name="mask" key="error.oscarEncounter.Measurements.invalidCharacter"/>                        
             <var>
                 <var-name>maxlength</var-name>
                 <var-value>255</var-value>
+            </var>
+            <var>
+                <var-name>mask</var-name>
+                <var-value>^[0-9A-Za-z]*$</var-value>
             </var>         
          </field>                 
          </form>
@@ -70,14 +86,19 @@
          <field
             property="measuringInstrc"
             depends="required,maxlength">
-            <arg0 key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
+            <arg0 key="oscarEncounter.oscarMeasurements.displayHistory.headingMeasuringInstruction"/>
             <arg1
                 name="maxlength"
                 key="${var:maxlength}"
                 resource="false"/>
+            <msg name="mask" key="error.oscarEncounter.Measurements.invalidCharacter"/>                
             <var>
                 <var-name>maxlength</var-name>
                 <var-value>255</var-value>
+            </var>
+            <var>
+                <var-name>mask</var-name>
+                <var-value>^[0-9A-Za-z]*$</var-value>
             </var>         
          </field> 
          </form>
