@@ -134,6 +134,13 @@
     var choiceFormat  = new Array(11,15,16,22,24,26,27,31,32,36,37,45,46,53,54,56,62,63,65,66,67,68,69,72,73,76,77,80,81,84,85,88,89,92,93,96,97,100,101,104,105,108,109,112,113,116,117,120,121,124);    
     var allNumericField = new Array(23,57,58,59,60,64);
     var allMatch = null;
+    var msg2 = "Are you sure that there are more than 5 people living in your household?"
+    var a2 = new Array(0,5, 23);
+    var allInputs2 = new Array(a2);
+    var a3 = new Array(0,50, 57,58,59,60);
+    var msg3 = "Are you sure that you work more than 50 hours for any of the listed activity?"
+    var allInputs3 = new Array(a3);
+    
     var action = "/<%=project_home%>/form/formname.do";
     
     function goToPage1(){             
@@ -145,8 +152,8 @@
     }
     
     function goToPage2(){      
-        var checkboxes = new Array(11,15,16,22,24,26,27,31,32,36);
-        if (oneFieldIsNumeric(0,'23')==true && is1CheckboxChecked(0, checkboxes)==true){
+        var checkboxes = new Array(11,15,16,22,24,26,27,31,32,36);                                
+        if (oneFieldIsNumeric(0,'23')==true && is1CheckboxChecked(0, checkboxes)==true && confirmRange(0, allInputs2,msg2)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -158,7 +165,8 @@
     function goToPage3(){      
         var checkboxes = new Array(37,45,46,53,54,56);
         var numericFields = new Array(57,58,59,60);
-        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true){
+        
+        if (allAreNumeric(0, numericFields)==true && is1CheckboxChecked(0, checkboxes)==true && confirmRange(0, allInputs3,msg3)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
             document.getElementById('page3').style.display = 'block';  
@@ -189,6 +197,11 @@
         }
     }
 
+    function checkBeforeSave(){
+        if(confirmRange(0, allInputs2,msg2)==true&&confirmRange(0, allInputs3,msg3)==true)
+            return true;
+        return false;
+    }
 </script>
 <script type="text/javascript" src="formScripts.js">
 </script>
@@ -271,7 +284,7 @@
                     <td width="5%" align="right">
                         <input type="checkbox"  class="checkbox" name="accommodationSen" <%= props.getProperty("accommodationSen", "") %>/>
                     </td>
-                    <td width="45%">Senior's House</td>                
+                    <td width="45%">Senior's Home</td>                
                     <td width="5%" align="right">
                         <input type="checkbox"  class="checkbox" name="accommodationNur" <%= props.getProperty("accommodationNur", "") %>/>
                     </td>
@@ -1257,8 +1270,8 @@
 <%
   if (!bView) {
 %>
-            <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="Save" onclick="javascript: if(checkBeforeSave()==true) return onSave(); else return false;" />
+            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
 <%
   }
 %>
