@@ -148,6 +148,12 @@ function checkPhoneNum() {
   }
   document.updatedelete.phone.value = typeIn ;
 }
+function checkONReferralNo() {
+  var referralNo = document.updatedelete.r_doctor_ohip.value ;
+  if (document.updatedelete.hc_type.options[8].selected && referralNo.length > 0 && referralNo.length != 6) {
+    alert("The referral doctor's no. is wrong. Please correct it!") ;
+  }
+}
 
 function refresh() {
   //history.go(0);
@@ -156,7 +162,7 @@ function refresh() {
 </script>
 
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus(); checkONReferralNo();" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="demographic.demographiceditdemographic.msgPatientDetailRecord"/></font></th></tr>
 </table>
@@ -333,7 +339,7 @@ function refresh() {
           <option value="BC"<%=province.equals("BC")?" selected":""%>>BC-British Columbia</option>
           <option value="MB"<%=province.equals("MB")?" selected":""%>>MB-Manitoba</option>          
           <option value="NB"<%=province.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-          <option value="NF"<%=province.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NL"<%=province.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
           <option value="NT"<%=province.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
           <option value="NS"<%=province.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
           <option value="NU"<%=province.equals("NU")?" selected":""%>>NU-Nunavut</option>
@@ -420,14 +426,13 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formHCType"/>:</b> </td>
       <td align="left" > 
-        <!--input type="text" name="hc_type" value=""-->
 		<% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
         <select name="hc_type">
           <option value="AB"<%=hctype.equals("AB")?" selected":""%>>AB-Alberta</option>
           <option value="BC"<%=hctype.equals("BC")?" selected":""%>>BC-British Columbia</option>
           <option value="MB"<%=hctype.equals("MB")?" selected":""%>>MB-Manitoba</option>          
           <option value="NB"<%=hctype.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-          <option value="NF"<%=hctype.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NL"<%=hctype.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
           <option value="NT"<%=hctype.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
           <option value="NS"<%=hctype.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
           <option value="NU"<%=hctype.equals("NU")?" selected":""%>>NU-Nunavut</option>
