@@ -120,18 +120,18 @@ public class OBRisksHandler_99_12 extends DefaultHandler {
 			results += "<tr><td align='center'><font size=-2><b>\n";
 		}
 		for (int i=0; i < atts.getLength(); i++) {
-			if (atts.getLocalName(i) == "name") {
+			if (atts.getQName(i) == "name") {
 				riskName = atts.getValue(i);
         results += "<input type=checkbox name=\"xml_" + riskName + "\" value='checked' datafld='xml_" +riskName+ "'></font></td><td width="+100/numcols+"% >"; 
 			}
-			if (atts.getLocalName(i) == "href") {
+			if (atts.getQName(i) == "href") {
 				results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
 				href = 1; //there is a href there
 			}
 			// System.out.println(" Attribute: " + atts.getrawName(i) + "=" + atts.getValue(i));
 		}
 		for (int i=0; i < atts.getLength(); i++) {
-		  if (atts.getLocalName(i) == "riskno") {
+		  if (atts.getQName(i) == "riskno") {
 		  	riskNameObj.setProperty(atts.getValue(i), "xml_"+riskName);
         break;
 		  }
