@@ -3586,7 +3586,7 @@ CREATE SEQUENCE mdsmsh_numeric_seq;
 CREATE TABLE mdsMSH (
   segmentID numeric(10) NOT NULL default nextval('mdsmsh_numeric_seq'),
   sendingApp char(180) default NULL,
-  timestamp timestamp NOT NULL default current_timestamp,
+  datetime timestamp NOT NULL default current_timestamp,
   type char(7) default NULL,
   messageConID char(20) default NULL,
   processingID char(3) default NULL,
@@ -3864,7 +3864,7 @@ CREATE SEQUENCE measurementtype_numeric_seq;
 CREATE TABLE measurementType (
   id int  default nextval('measurementtype_numeric_seq'),
   type varchar(4) NOT NULL,
-  typeDisplayName varchar(20) NOT NULL,
+  typeDisplayName varchar(255) NOT NULL,
   typeDescription varchar(255) NOT NULL, 
   measuringInstruction varchar(255) NOT NULL, 
   validation varchar(100) NOT NULL,
@@ -4221,24 +4221,29 @@ CREATE TABLE reportagesex (
   date_joined DATE DEFAULT '0001-01-01'
 );
 
+
+CREATE SEQUENCE reportbyexamples_numeric_sq;
 --
 -- Table structure for table reportByExamples
 --
 CREATE TABLE reportByExamples(
-  id numeric(9) default nextval('') ,
+  id numeric(9) default nextval('reportbyexamples_numeric_sq') ,
   providerNo varchar(6) NOT NULL,
   query text NOT NULL,
   date timestamp NOT NULL,
   PRIMARY KEY  (id)
 );
 
+
+CREATE SEQUENCE reportbyexamplesfavorite_numeric_sq;
 --
 -- Table structure for table reportByExamplesFavorite
 --
 CREATE TABLE reportByExamplesFavorite(
-  id numeric(9) default nextval('') ,
+  id numeric(9) default nextval('reportbyexamplesfavorite_numeric_sq') ,
   providerNo varchar(6) NOT NULL,
   query text NOT NULL,  
+  name varchar(255) NOT NULL,  
   PRIMARY KEY  (id)
 );
 
