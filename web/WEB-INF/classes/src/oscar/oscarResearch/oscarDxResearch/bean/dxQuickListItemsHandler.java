@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarResearch.oscarDxResearch.util.*;
 
 public class dxQuickListItemsHandler {
     
@@ -49,6 +50,10 @@ public class dxQuickListItemsHandler {
         try {
             ResultSet rs;
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            
+            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+            String codingSystem = codingSys.getCodingSystem();        
+            
             //need to put the providerID as well
             String sql = "Select quickListName, providerNo from quickListUser where quickListName='"+quickListName + "' AND providerNo ='"+providerNo+"'";
             rs = db.GetSQL(sql);
@@ -61,7 +66,7 @@ public class dxQuickListItemsHandler {
                 db.RunSQL(sql);
             }
 
-            sql = "Select q.dxResearchCode, i.description FROM quickList q, ichppccode i where quickListName='"+ quickListName +"' AND i.ichppccode = q.dxResearchCode order by i.description";
+            sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
             rs = db.GetSQL(sql);            
             while(rs.next()){                
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),
@@ -83,8 +88,10 @@ public class dxQuickListItemsHandler {
         boolean verdict = true;
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                        
-            String sql = "Select q.dxResearchCode, i.description FROM quickList q, ichppccode i where quickListName='"+ quickListName +"' AND i.ichppccode = q.dxResearchCode order by i.description";
+            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+            String codingSystem = codingSys.getCodingSystem();        
+            
+            String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
             ResultSet rs = db.GetSQL(sql);            
             while(rs.next()){                
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),

@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarResearch.oscarDxResearch.util.*;
 
 public class dxResearchBeanHandler {
     
@@ -44,7 +45,11 @@ public class dxResearchBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "select d.start_date, d.update_date, i.description, i.ichppccode, d.dxresearch_no, d.status from dxresearch d, ichppccode i where d.dxresearch_code=i.ichppccode and d.status<>'D' and d.demographic_no ='" + demographicNo 
+            
+            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+            String codingSystem = codingSys.getCodingSystem();        
+            
+            String sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='" + demographicNo 
                         +"' order by d.start_date desc, d.update_date desc";
             //System.out.println("Sql Statement: " + sql);
             ResultSet rs;
@@ -52,11 +57,11 @@ public class dxResearchBeanHandler {
             {                
                 dxResearchBean bean = new dxResearchBean(   rs.getString("description"), 
                                                             rs.getString("dxresearch_no"),
-                                                            rs.getString("ichppccode"),
+                                                            rs.getString(codingSystem),
                                                             rs.getString("update_date"),
                                                             rs.getString("start_date"),
                                                             rs.getString("status"),
-                                                            "ichppcode");
+                                                            codingSystem);
                 dxResearchBeanVector.add(bean);
                 //System.out.println("ichppcode obtained: " + rs.getString("ichppccode") + " " + rs.getString("description"));                
             }

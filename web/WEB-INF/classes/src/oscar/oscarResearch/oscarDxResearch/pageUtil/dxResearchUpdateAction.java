@@ -67,16 +67,14 @@ public class dxResearchUpdateAction extends Action {
             db.CloseConn();
         }
 
-        catch(SQLException e)
-        {
+        catch(SQLException e){
             System.out.println(e.getMessage());
         }                                    
         
         ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
         forward.addParameter("demographicNo", demographicNo);
         forward.addParameter("providerNo", providerNo);
-        forward.addParameter("quickList", "");
-        
+        forward.addParameter("quickList", "");        
         
         return forward;
     }

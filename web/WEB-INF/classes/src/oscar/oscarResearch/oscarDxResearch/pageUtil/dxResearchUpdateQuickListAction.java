@@ -39,6 +39,7 @@ import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
 import oscar.util.*;
 import oscar.oscarResearch.oscarDxResearch.bean.*;
+import oscar.oscarResearch.oscarDxResearch.util.*;
 
 public class dxResearchUpdateQuickListAction extends Action {
 
@@ -57,6 +58,8 @@ public class dxResearchUpdateQuickListAction extends Action {
             
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+            String codingSystem = codingSys.getCodingSystem();        
             String sql;
             
             if(forward.equals("add")){
@@ -74,14 +77,14 @@ public class dxResearchUpdateQuickListAction extends Action {
                     if (xml_research[i].compareTo("")!=0){
 
                         //need to validate the dxresearch code before write to the database
-                        sql = "select * from ichppccode where ichppccode like '" + xml_research[i] +"'";
+                        sql = "select * from "+codingSystem+" where "+codingSystem+" like '" + xml_research[i] +"'";
                         //System.out.println("Validate: " + sql);
                         ResultSet rsCode = db.GetSQL(sql);
 
                         if(!rsCode.next() || rsCode==null){
                             valid = false;
                             errors.add(errors.GLOBAL_ERROR,
-                            new ActionError("errors.codeNotFound", xml_research[i], "ICHPPC"));
+                            new ActionError("errors.codeNotFound", xml_research[i], codingSystem));
                             saveErrors(request, errors);   
                         }
                         else{
@@ -89,7 +92,7 @@ public class dxResearchUpdateQuickListAction extends Action {
                             ResultSet rs = db.GetSQL(sql);                            
                             if(!rs.next()){                                                            
                                 sql = "insert into quickList (quickListName, dxResearchCode, createdByProvider, codingSystem) values('"
-                                        + quickListName +"','" + xml_research[i] + "','" + curUser +"', 'ichppc')";
+                                        + quickListName +"','" + xml_research[i] + "','" + curUser +"', '"+codingSystem+"')";
                                 db.RunSQL(sql);
                             }
                         }
@@ -107,6 +110,9 @@ public class dxResearchUpdateQuickListAction extends Action {
                     }
                 }
             }
+            
+            HttpSession session = request.getSession();
+            session.setAttribute("codingSystem", codingSystem);
         }
         catch(SQLException e)
         {

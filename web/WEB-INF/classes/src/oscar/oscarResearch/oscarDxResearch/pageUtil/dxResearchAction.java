@@ -35,9 +35,9 @@ import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 import org.apache.commons.validator.*;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
 import oscar.util.*;
+import oscar.oscarResearch.oscarDxResearch.util.*;
 
 
 public class dxResearchAction extends Action {
@@ -45,9 +45,11 @@ public class dxResearchAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        dxResearchForm frm = (dxResearchForm) form;                
+        dxResearchForm frm = (dxResearchForm) form; 
         request.getSession().setAttribute("dxResearchForm", frm);
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+        String codingSystem = codingSys.getCodingSystem();
         String demographicNo = frm.getDemographicNo();
         String providerNo = frm.getProviderNo();
         String forward = frm.getForward();
@@ -91,14 +93,14 @@ public class dxResearchAction extends Action {
 
                         if (Count == 0){
                                 //need to validate the dxresearch code before write to the database
-                                sql = "select * from ichppccode where ichppccode like '" + xml_research[i] +"'";
+                                sql = "select * from "+ codingSystem +" where "+ codingSystem + " like '" + xml_research[i] +"'";
                                 //System.out.println("Validate: " + sql);
                                 ResultSet rsCode = db.GetSQL(sql);
                                
                                 if(!rsCode.next() || rsCode==null){
                                     valid = false;
                                     errors.add(errors.GLOBAL_ERROR,
-                                    new ActionError("errors.codeNotFound", xml_research[i], "ICHPPC"));
+                                    new ActionError("errors.codeNotFound", xml_research[i], codingSystem));
                                     saveErrors(request, errors);   
                                 }
                                 else{

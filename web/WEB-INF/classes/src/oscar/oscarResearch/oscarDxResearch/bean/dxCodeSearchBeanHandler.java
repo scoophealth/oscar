@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarResearch.oscarDxResearch.util.*;
 
 public class dxCodeSearchBeanHandler {
     
@@ -40,7 +41,8 @@ public class dxCodeSearchBeanHandler {
     }
     
     public boolean init(String[] keywords) {
-        
+        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+        String codingSystem = codingSys.getCodingSystem();        
         boolean verdict = true;
         try {
             ResultSet rs;
@@ -50,20 +52,20 @@ public class dxCodeSearchBeanHandler {
             for(int i=0; i<keywords.length; i++){
                 if(!keywords[i].equals("")){
                     if (!orFlag){
-                        sql = "select ichppccode, description from ichppccode where ichppccode like '%" + keywords[i] + "%' or description like '%" + keywords[i] +"%' ";
+                        sql = "select "+codingSystem+", description from "+codingSystem+" where "+codingSystem+" like '%" + keywords[i] + "%' or description like '%" + keywords[i] +"%' ";
                         orFlag = true;
                     }
                     else
-                        sql = sql + "or ichppccode like '%" + keywords[i] + "%' or description like '%" + keywords[i] +"%' ";
+                        sql = sql + "or "+codingSystem+" like '%" + keywords[i] + "%' or description like '%" + keywords[i] +"%' ";
                 }
             }
             System.out.println("Sql Statement: " + sql);  
             rs = db.GetSQL(sql);
             while(rs.next()){
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),                                                                 
-                                                             rs.getString("ichppccode"));
+                                                             rs.getString(codingSystem));
                 for(int i=0; i<keywords.length; i++){
-                    if(keywords[i].equals(rs.getString("ichppccode")))
+                    if(keywords[i].equals(rs.getString(codingSystem)))
                         bean.setExactMatch("checked");                    
                 }
                 

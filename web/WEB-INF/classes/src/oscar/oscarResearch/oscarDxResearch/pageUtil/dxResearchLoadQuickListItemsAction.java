@@ -25,20 +25,17 @@
 package oscar.oscarResearch.oscarDxResearch.pageUtil;
 import java.io.*;
 import java.util.*;
-import java.lang.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
-import org.apache.struts.validator.*;
-import org.apache.commons.validator.*;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
 import oscar.util.*;
 import oscar.oscarResearch.oscarDxResearch.bean.*;
+import oscar.oscarResearch.oscarDxResearch.util.*;
 
 public class dxResearchLoadQuickListItemsAction extends Action {
 
@@ -47,16 +44,19 @@ public class dxResearchLoadQuickListItemsAction extends Action {
     {        
         dxResearchLoadQuickListItemsForm frm = (dxResearchLoadQuickListItemsForm) form;                        
         request.getSession().setAttribute("dxResearchLoadQuickListItemsFrm", frm);
-        
         String quickListName = frm.getQuickListName();
+        
+        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+        String codingSystem = codingSys.getCodingSystem();        
+        
         //System.out.println("the quick list Name in loadQuicListItem Action: " + quickListName);
         dxQuickListItemsHandler quicklistItemsHd = new dxQuickListItemsHandler(quickListName);
         
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession();        
+        session.setAttribute("codingSystem", codingSystem);
         session.setAttribute("allQuickListItems", quicklistItemsHd);
         session.setAttribute("quickListName", quickListName);
         
         return mapping.findForward("success");
-    }
-     
+    }     
 }
