@@ -363,6 +363,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
                             otherdbcode1.compareTo("P041A")==0 || otherdbcode1.compareTo("P018A")==0 || 
                             otherdbcode1.compareTo("P038A")==0 || otherdbcode1.compareTo("P020A")==0 || 
                             otherdbcode1.compareTo("P031A")==0 || otherdbcode1.compareTo("Z552A")==0 || 
+                            otherdbcode1.compareTo("P022A")==0 || otherdbcode1.compareTo("P023A")==0 || 
                             otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") || 
                             (otherdbcode1.endsWith("B") && !otherdbcode1.endsWith("C988B") && !otherdbcode1.endsWith("C998B") && !otherdbcode1.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee);
@@ -443,6 +444,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
                             otherdbcode2.compareTo("P041A")==0 || otherdbcode2.compareTo("P018A")==0 || 
                             otherdbcode2.compareTo("P038A")==0 || otherdbcode2.compareTo("P020A")==0 || 
                             otherdbcode2.compareTo("P031A")==0 || otherdbcode2.compareTo("Z552A")==0 || 
+                            otherdbcode2.compareTo("P022A")==0 || otherdbcode2.compareTo("P023A")==0 || 
                             otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") || 
                             (otherdbcode2.endsWith("B") && !otherdbcode2.endsWith("C988B") && !otherdbcode2.endsWith("C998B") && !otherdbcode2.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee02);
@@ -522,6 +524,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
                             otherdbcode3.compareTo("P041A")==0 || otherdbcode3.compareTo("P018A")==0 || 
                             otherdbcode3.compareTo("P038A")==0 || otherdbcode3.compareTo("P020A")==0 || 
                             otherdbcode3.compareTo("P031A")==0 || otherdbcode3.compareTo("Z552A")==0 || 
+                            otherdbcode3.compareTo("P022A")==0 || otherdbcode3.compareTo("P023A")==0 || 
                             otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") || 
                             (otherdbcode3.endsWith("B") && !otherdbcode3.endsWith("C988B") && !otherdbcode3.endsWith("C998B") && !otherdbcode3.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee03);
@@ -616,6 +619,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
                             scode.compareTo("P041A")==0 || scode.compareTo("P018A")==0 || 
                             scode.compareTo("P038A")==0 || scode.compareTo("P020A")==0 || 
                             scode.compareTo("P031A")==0 || scode.compareTo("Z552A")==0 || 
+                            scode.compareTo("P022A")==0 || scode.compareTo("P023A")==0 || 
                             scode.compareTo("Z716A")==0 || scode.startsWith("S") || 
                             (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(bdFee);
