@@ -290,7 +290,7 @@ function showHideLayers() { //v3.0
     </td>
   </tr>
 </table>
-<div id="Layer1" style="position:absolute; left:1px; top:159px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden"> 
+<div id="Layer1" style="position:absolute; left:1px; top:159px; width:410px; height:300px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden"> 
   <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
     <tr bgcolor="#393764"> 
       <td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000">Billing 
@@ -372,8 +372,8 @@ function showHideLayers() { //v3.0
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><bean:message key="billing.patient.age"/>:</font></b><br>
               </font></td>
             <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getAge()%></font></b></td>
-            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show')"><bean:message key="billing.billingform"/>
-              </a>:</font></b>
+            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show');">
+                    <bean:message key="billing.billingform"/></a>:</font></b>
               
               General Practice
               
