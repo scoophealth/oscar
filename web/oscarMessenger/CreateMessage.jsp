@@ -469,7 +469,7 @@ function BackToOscar()
                                                                 <%if (xmlVector.size() > 0){%><!--the remotes-->
                                                                 <tr>
                                                                     <td>
-                                                                            <span class="treeNode" onclick="javascript:showTbl('tblREMO');">
+                                                                            <span class="treeNode" onclick="javascript:showTbl('tblREMO', event);">
                                                                                 <img class="treeNode" src="img/plusblue.gif" border="0" />
                                                                                     <bean:message key="oscarMessenger.CreateMessage.msgRemoteLocations"/>
                                                                             </span>
