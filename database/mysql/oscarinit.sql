@@ -755,7 +755,7 @@ CREATE TABLE form (
 CREATE TABLE formAR (
   ID int(10) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL default '0',
-  provider_no int(10) default NULL,
+  provider_no varchar(6) default NULL,
   formCreated date default NULL,
   formEdited timestamp(14) NOT NULL,
   c_lastVisited char(3) default NULL,
