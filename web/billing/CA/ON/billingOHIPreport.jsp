@@ -139,7 +139,7 @@ obj.visibility=v; }
 
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-<form name="form1" method="post" action="genreport.jsp">
+<form name="form1" method="post" action="<%=oscarVariables.getProperty("group_billing", "").trim().equals("on")?"genGroupReport.jsp" : "genreport.jsp"%>">
 <tr> 
 	<td width="220">
 	<a href="#" onClick="showHideLayers('Layer2','','show')">Show Archive</a>
