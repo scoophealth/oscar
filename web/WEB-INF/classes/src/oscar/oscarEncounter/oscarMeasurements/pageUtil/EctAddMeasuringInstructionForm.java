@@ -31,9 +31,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 
-public final class EctAddMeasuringInstructionForm extends DynaValidatorForm {
+public final class EctAddMeasuringInstructionForm extends ActionForm {
 
     String typeDisplayName;
+    String measuringInstrc;
+    String validation;
+    
     public String getTypeDisplayName(){
         return this.typeDisplayName;
     }
@@ -42,25 +45,21 @@ public final class EctAddMeasuringInstructionForm extends DynaValidatorForm {
         this.typeDisplayName = typeDisplayName;
     }
     
-/*    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
-    {
-        ActionErrors errors = new ActionErrors();
-        if(service == null || service.length() == 0)
-            errors.add("service", new ActionError("Errors.service.null"));
-        try
-        {
-            int temp = Integer.parseInt(service);
-            if(temp < 0)
-                errors.add("service", new ActionError("Errors.service.noServiceSelected"));
-        }
-        catch(Exception e)
-        {
-            errors.add("fName", new ActionError("Errors.service.notNum"));
-        }
-        if(!errors.empty())
-            request.setAttribute("validateError", "blah");
-        return errors;
+    public String getMeasuringInstrc(){
+        return this.measuringInstrc;
     }
-    */
+   
+    public void setMeasuringInstrc(String measuringInstrc){
+        this.measuringInstrc = measuringInstrc;
+    }
+    
+    public String getValidation(){
+        return this.validation;
+    }
+   
+    public void setValidation(String validation){
+        this.validation = validation;
+    }
+    
     
 }

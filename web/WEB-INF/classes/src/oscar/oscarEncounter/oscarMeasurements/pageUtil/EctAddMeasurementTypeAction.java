@@ -59,12 +59,12 @@ public class EctAddMeasurementTypeAction extends Action {
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
-            String type = (String) frm.get("type");
+            String type = frm.getType();
             String typeUp = type.toUpperCase();
-            String typeDesc = (String) frm.get("typeDesc");
-            String typeDisplayName = (String) frm.get("typeDisplayName");
-            String measuringInstrc = (String) frm.get("measuringInstrc");
-            String validation = (String) frm.get("validation");
+            String typeDesc = frm.getTypeDesc();
+            String typeDisplayName = frm.getTypeDisplayName();
+            String measuringInstrc = frm.getMeasuringInstrc();
+            String validation = frm.getValidation();
             if (!allInputIsValid(request, type, typeDesc, typeDisplayName, measuringInstrc)){
                 return (new ActionForward(mapping.getInput()));
             }
@@ -124,11 +124,23 @@ public class EctAddMeasurementTypeAction extends Action {
             saveErrors(request, errors);
             isValid = false;
         }
+        if(!validate.maxLength(4, type)){
+            errors.add(type,
+            new ActionError("errors.maxlength", errorField, "4"));
+            saveErrors(request, errors);
+            isValid = false;
+        }
 
         errorField = "The type description " + typeDesc;
         if(!validate.matchRegExp(regExp, typeDesc)){
             errors.add(typeDesc,
             new ActionError("errors.invalid", errorField));
+            saveErrors(request, errors);
+            isValid = false;
+        }
+        if(!validate.maxLength(255, type)){
+            errors.add(type,
+            new ActionError("errors.maxlength", errorField, "255"));
             saveErrors(request, errors);
             isValid = false;
         }
@@ -140,11 +152,23 @@ public class EctAddMeasurementTypeAction extends Action {
             saveErrors(request, errors);
             isValid = false;
         }
+        if(!validate.maxLength(255, type)){
+            errors.add(type,
+            new ActionError("errors.maxlength", errorField, "255"));
+            saveErrors(request, errors);
+            isValid = false;
+        }
         
         errorField = "The measuring instruction " + measuringInstrc;
         if(!validate.matchRegExp(regExp, measuringInstrc)){
             errors.add(measuringInstrc,
             new ActionError("errors.invalid", errorField));
+            saveErrors(request, errors);
+            isValid = false;
+        }
+        if(!validate.maxLength(255, type)){
+            errors.add(type,
+            new ActionError("errors.maxlength", errorField, "255"));
             saveErrors(request, errors);
             isValid = false;
         }

@@ -60,10 +60,11 @@ public class EctAddMeasuringInstructionAction extends Action {
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
-            String typeDisplayName = (String) frm.get("typeDisplayName");
-            String measuringInstrc = (String) frm.get("measuringInstrc");
-            String validation = (String) frm.get("validation");
-                        
+            String typeDisplayName = frm.getTypeDisplayName();
+            String measuringInstrc = frm.getMeasuringInstrc();
+            String validation = frm.getValidation();
+            boolean isValid = true;
+            
             ActionErrors errors = new ActionErrors();  
             EctValidation validate = new EctValidation();
             String regExp = validate.getRegCharacterExp();
@@ -72,9 +73,16 @@ public class EctAddMeasuringInstructionAction extends Action {
                 errors.add(measuringInstrc,
                 new ActionError("errors.invalid", errorField));
                 saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
+                isValid = false;                
             }
-                        
+            if(!validate.maxLength(255, measuringInstrc)){
+                errors.add(measuringInstrc,
+                new ActionError("errors.maxlength", errorField, "255"));
+                saveErrors(request, errors);
+                isValid = false;
+            } 
+            if(!isValid)
+                return (new ActionForward(mapping.getInput()));
             
             String sql = "SELECT measuringInstruction FROM measurementType WHERE measuringInstruction='" + str.q(measuringInstrc) +"' AND typeDisplayName='" + str.q(typeDisplayName) + "'";
             ResultSet rs = db.GetSQL(sql);

@@ -31,10 +31,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 
-public final class EctAddMeasurementTypeForm extends DynaValidatorForm {
+public final class EctAddMeasurementTypeForm extends ActionForm {
 
     
     String type;
+    String typeDesc;
+    String typeDisplayName;
+    String measuringInstrc;
+    String validation;
+    
     public String getType(){
         return this.type;
     }
@@ -44,25 +49,36 @@ public final class EctAddMeasurementTypeForm extends DynaValidatorForm {
     }
     
     
-/*    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
-    {
-        ActionErrors errors = new ActionErrors();
-        if(service == null || service.length() == 0)
-            errors.add("service", new ActionError("Errors.service.null"));
-        try
-        {
-            int temp = Integer.parseInt(service);
-            if(temp < 0)
-                errors.add("service", new ActionError("Errors.service.noServiceSelected"));
-        }
-        catch(Exception e)
-        {
-            errors.add("fName", new ActionError("Errors.service.notNum"));
-        }
-        if(!errors.empty())
-            request.setAttribute("validateError", "blah");
-        return errors;
+    public String getTypeDesc(){
+        return this.typeDesc;
     }
-    */
+    
+    public void setTypeDesc(String typeDesc){
+        this.typeDesc = typeDesc;
+    }
+    
+    public String getTypeDisplayName(){
+        return this.typeDisplayName;
+    }
+    
+    public void setTypeDisplayName(String typeDisplayName){
+        this.typeDisplayName = typeDisplayName;
+    }
+    
+    public String getMeasuringInstrc(){
+        return this.measuringInstrc;
+    }
+    
+    public void setMeasuringInstrc(String measuringInstrc){
+        this.measuringInstrc = measuringInstrc;
+    }
+    
+    public String getValidation(){
+        return this.validation;
+    }
+    
+    public void setValidation(String validation){
+        this.validation = validation;
+    }
     
 }
