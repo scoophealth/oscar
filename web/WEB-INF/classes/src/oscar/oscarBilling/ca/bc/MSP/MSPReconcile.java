@@ -201,9 +201,14 @@ public class MSPReconcile{
     }
     
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate){
-       return getBills(statusType,providerNo,startDate,endDate,null);
+       return getBills(statusType,providerNo,startDate,endDate,null,false,false,false);
     }
+    
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate,String demoNo){
+       return getBills(statusType,providerNo,startDate,endDate,demoNo,false,false,false);
+    }
+    
+    public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate,String demoNo,boolean excludeWCB,boolean excludeMSP, boolean excludePrivate){
         
         
         BillSearch billSearch = new BillSearch();
@@ -212,6 +217,7 @@ public class MSPReconcile{
         String startDateQuery = "";
         String endDateQuery = "";
         String demoQuery = "";
+        String billingType= "";
         
         if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")){
             providerQuery = " and provider_no = '"+providerNo+"'" ; 
@@ -226,7 +232,20 @@ public class MSPReconcile{
         }
         if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")){
             demoQuery = " and b.demographic_no = '"+demoNo+"' ";
+        }                        
+        
+        if (excludeWCB){
+           billingType += " and b.billingType != 'WCB' ";
         }
+        
+        if (excludeMSP){
+           billingType += " and b.billingType != 'MSP' ";
+        }
+        
+        if (excludePrivate){
+           billingType += " and b.billingType != 'PRIV' ";
+        }
+        //
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.billingtype,"
                  +" b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
                  +" bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
@@ -235,9 +254,10 @@ public class MSPReconcile{
                  +  providerQuery
                  +  startDateQuery
                  +  endDateQuery
-                 +  demoQuery;
+                 +  demoQuery
+                 +  billingType;
         
-        
+        //System.out.println(p);
         //String 
         billSearch.list = new ArrayList();
         billSearch.count = 0;
