@@ -248,7 +248,7 @@ function updateWaistHip(){
     }
     else if (document.forms[0].elements[hip].value!="" && document.forms[0].elements[ratio].value!="" && document.forms[0].elements[hip].value!=0 && document.forms[0].elements[ratio].value!=0){
         document.forms[0].elements[ratio].readOnly = true; 
-        document.forms[0].elements[waist].value = parseInt(parseFloat(r) / parseInt(h));
+        document.forms[0].elements[waist].value = parseInt(parseFloat(r) * parseInt(h));
     }
     else{                
         document.forms[0].elements[ratio].readOnly = false;        
@@ -266,7 +266,7 @@ function updateWaistAndRatio(){
     }
     else if (document.forms[0].elements[hip].value!="" && document.forms[0].elements[ratio].value!="" && document.forms[0].elements[hip].value!=0 && document.forms[0].elements[ratio].value!=0){
         document.forms[0].elements[ratio].readOnly = false; 
-        document.forms[0].elements[waist].value = parseInt(parseFloat(r) / parseInt(h));
+        document.forms[0].elements[waist].value = parseInt(parseFloat(r) * parseInt(h));
     }
     else{                
         document.forms[0].elements[ratio].readOnly = false;        
