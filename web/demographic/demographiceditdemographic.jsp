@@ -126,6 +126,8 @@ function checkTypeIn() {
     }
     
     return typeInOK ;
+  } else {
+    return true;
   }
 }
 
