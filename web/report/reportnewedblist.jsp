@@ -123,6 +123,7 @@ function setfocus() {
     nItems++; 
 %>
 <tr bgcolor="<%=bodd?weakcolor:"white"%>">
+      <td><%=nItems%></td>
       <td align="center" nowrap><%=rs.getString("c_finalEDB")!=null?rs.getString("c_finalEDB").replace('-','/'):"0001/01/01"%></td>
       <td><%=rs.getString("c_pName")%></td>
       <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
