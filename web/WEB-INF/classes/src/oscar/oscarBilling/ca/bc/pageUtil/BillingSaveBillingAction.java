@@ -50,6 +50,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 import oscar.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
+import oscar.oscarBilling.ca.bc.data.*;
 
 
 public class BillingSaveBillingAction extends Action {
@@ -360,6 +361,16 @@ public class BillingSaveBillingAction extends Action {
                  System.out.println(e.getMessage());
               }
            }
+           if (bean.getMessageNotes() != null || !bean.getMessageNotes().trim().equals("")){
+              try{
+              BillingNote n = new BillingNote();
+              n.addNote(billingMasterId,bean.getCreator(),bean.getMessageNotes());
+              } catch (SQLException e) {
+                 System.out.println(e.getMessage());
+              }
+              
+           }
+           
         }
         //////////////
         if (null != request.getSession().getAttribute("WCBForm")) {

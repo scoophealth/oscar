@@ -53,6 +53,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 import oscar.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
+import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDemographic.data.*;
 
 public class BillingReProcessBillAction extends Action {
@@ -148,6 +149,8 @@ public class BillingReProcessBillAction extends Action {
         String oinPostalcode = demo.getPostal();//d
         
         String hcType = demo.getHCType(); //d
+        
+        String messageNotes = frm.getMessageNotes();
         String billRegion =OscarProperties.getInstance().getProperty("billregion");
         ////
             String billType = request.getParameter("billType");  
@@ -260,7 +263,13 @@ public class BillingReProcessBillAction extends Action {
                  n.addNote(billingmasterNo,(String) request.getSession().getAttribute("user"),frm.getNotes());              
                }   
                
-               System.out.println("sql "+sql);
+               if(messageNotes != null ){
+                  BillingNote n = new BillingNote();
+                  if (n.hasNote(billingmasterNo) || !messageNotes.trim().equals("")){
+                     n.addNote(billingmasterNo, (String) request.getSession().getAttribute("user"),messageNotes);
+                  }                                    
+               }
+
                db.CloseConn();
             } catch (SQLException e3) {
                System.out.println(e3.getMessage());
