@@ -438,7 +438,7 @@ function findProvider(p,m,d) {
 			  //ApptStatusData as = new ApptStatusData();
 			    as.setApptStatus(status);
         %>	    
-            <td bgcolor='<%=as.getBgColor()%>' rowspan="<%=iRows%>" <%=view==0?(len==lenLimitedL?"nowrap":""):"nowrap"%> >
+            <td bgcolor='<%=as.getBgColor()%>' rowspan="<%=iRows%>" <%--=view==0?(len==lenLimitedL?"nowrap":""):"nowrap"--%> nowrap>
 <%
 			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
 %>
