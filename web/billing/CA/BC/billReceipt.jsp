@@ -431,7 +431,7 @@ function showHideLayers() { //v3.0
                     <html:hidden property="billingNo"/>
                     <html:textarea cols="60" rows="5" property="messageNotes" styleClass="header"></html:textarea></td>
                  <td colspan="1" valign="top">
-                    <html:select style="font-size:80%;" property="status" styleClass="header">                        
+                    <html:select style="font-size:110%;" property="status" styleClass="header">                        
                        <html:option value="O" >O | Bill MSP</html:option>
                        <html:option value="P" >P | Bill Patient</html:option>
                        <html:option value="A" >A | Paid Private</html:option>
