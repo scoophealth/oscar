@@ -233,63 +233,62 @@ public class ExtractBean extends Object implements Serializable {
                            db.GetSQL("SELECT *, billingservice.value As `feeitem1` FROM billingservice, wcb JOIN billing ON wcb.billing_no=billing.billing_no WHERE wcb.billing_no='"
                            + invNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') AND billingservice.service_code=wcb.w_feeitem");
 
+
+                           
                            if (rs2.next()) {
                                                             
                               WcbSb sb = new WcbSb(rs2);
                               htmlContent += sb.getHtmlLine();
                               htmlContent += checkData.printWarningMsg("");
-                                                            
-                              logNo = getSequence();
-                              String lines = sb.Line1(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
-                                                            
-                              logNo = getSequence();
-                              lines = sb.Line2(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
-                              
-                              logNo = getSequence();
-                              lines = sb.Line3(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
-                              
-                              logNo = getSequence();
-                              lines = sb.Line4(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
-                                                            
-                              logNo = getSequence();
-                              lines = sb.Line5(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
-                                                            
-                              logNo = getSequence();
-                              lines = sb.Line6(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
-                                                            
-                              logNo = getSequence();
-                              lines = sb.Line7(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
-                                                            
-                              logNo = getSequence();
-                              lines = sb.Line8(String.valueOf(logNo));                              
-                              value += "\n"+ lines +"\r";
-                              setLog(logNo, lines);
 
-                              if (sb.HasSecondFeeItem()) {
-                                 ResultSet rs3 = db.GetSQL("SELECT value FROM billingservice WHERE service_code='" + sb.getW_extrafeeitem() + "'");
-                                 if (rs3.next()) {                                    
-                                    sb.SetSecondFeeAmount(rs3.getString("value"));
-                                    logNo = getSequence();
-                                    lines = sb.Line9(String.valueOf(logNo));                                    
-                                    value += "\n"+ lines +"\r";
-                                    setLog(logNo, lines);
-                                 }
-                                 rs3.close();
-                              }                              
+                              if (sb.isFormNeeded()){
+                                 logNo = getSequence();
+                                 String lines = sb.Line1(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+
+                                 logNo = getSequence();
+                                 lines = sb.Line2(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+
+                                 logNo = getSequence();
+                                 lines = sb.Line3(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+
+                                 logNo = getSequence();
+                                 lines = sb.Line4(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+
+                                 logNo = getSequence();
+                                 lines = sb.Line5(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+
+                                 logNo = getSequence();
+                                 lines = sb.Line6(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+
+                                 logNo = getSequence();
+                                 lines = sb.Line7(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+
+                                 logNo = getSequence();
+                                 lines = sb.Line8(String.valueOf(logNo));                              
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+                              }else{
+                               
+                                 logNo = getSequence();
+                                 String lines = sb.Line9(String.valueOf(logNo));                                    
+                                 value += "\n"+ lines +"\r";
+                                 setLog(logNo, lines);
+                                                                
+                              }
                            }
                            
                            rs2.close();
