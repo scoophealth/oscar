@@ -69,7 +69,7 @@
       <meta http-equiv="Pragma" content="no-cache">
 </head>
 <script language="JavaScript">
-<!--
+
 function setfocus() {
   this.focus();
   document.findprovider.providername.focus();
@@ -130,6 +130,7 @@ function changeGroup(s) {
 	  newGroupNo = s.options[s.selectedIndex].value;
 	  popupPage(10,10, "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
 	}
+	document.location.reload();
 }
 function ts1(s) {
   popupPage(400,680,('../appointment/addappointment.jsp?'+s));
@@ -146,7 +147,7 @@ function goZoomView(s, n) {
 function findProvider(p,m,d) {
   popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ document.findprovider.providername.value );
 }
-//-->
+
 </SCRIPT>
 <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
