@@ -19,6 +19,7 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 String [][] dbQueries=new String[][] { 
 	//{"search_demographic", "select * from demographic where demographic_no=? "}, 
     {"search_formar", "select * from formAR where demographic_no= ? order by formEdited desc, ID desc limit 0,1"}, 
+	{"search_desaprisk", "select risk_content, checklist_content from desaprisk where form_no <= ? and demographic_no = ? order by form_no desc, desaprisk_date desc, desaprisk_time desc limit 1 " }, 
 };
 studyBean.doConfigure(dbParams,dbQueries);
 %>
@@ -49,7 +50,8 @@ String level1 = CddmLevels.CUMULATIVE;
 String level2 = CddmLevels.HEALTH_MAINTENANCE;
 
 
-String className = request.getParameter("classname");;
+String className = request.getParameter("classname");
+String riskContent = "";
 Properties prop = new Properties();
 Object obj = null ;
 
@@ -107,6 +109,14 @@ if (rsdemo.next()) {
 			//if (name.equals("pg1DateOfBirth")) System.out.println(" l :" + rsdemo.getString("pg1_dateOfBirth"));
 		}
 	}
+	
+	//get ar plan data
+	String formNo = "" + rsdemo.getInt("ID");
+	ResultSet rsrisk = studyBean.queryResults((new String[]{formNo, demoNo}), "search_desaprisk");
+	if (rsrisk.next()) { 
+		riskContent = rsrisk.getString("risk_content");
+		riskContent += rsrisk.getString("checklist_content");
+	}
 }
 
 studyBean.closePstmtConn();
@@ -116,6 +126,8 @@ oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();
 ARRecord ARRecord = _respFactory.createARRecord();
 //ARRecord.setSubject("Antenatal Record");
 prop.setProperty("subject", "Antenatal Record" );
+//set ar planner
+prop.setProperty("arPlanner", riskContent );
 
 
 if(connected){
