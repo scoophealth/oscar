@@ -50,8 +50,8 @@ public class MDSResultsData
             // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
             // for the provider number if unable to find correct provider
                 sql = "SELECT mdsMSH.segmentID, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
-                             "mdsPID.sex, mdsZFR.abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
-                             "mdsZFR.reportFormStatus, mdsZRG.reportGroupDesc " + 
+                             "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+                             "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " + 
                              "FROM mdsMSH,mdsPID,providerLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
                              "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=providerLabRouting.lab_no " +
                              "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
@@ -60,8 +60,8 @@ public class MDSResultsData
                              "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
             } else {
                    sql = "SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
-                             "mdsPID.sex, mdsZFR.abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
-                             "mdsZFR.reportFormStatus, mdsZRG.reportGroupDesc " + 
+                             "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+                             "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " + 
                              "FROM mdsMSH,mdsPID,patientLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
                              "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=patientLabRouting.lab_no " +
                              "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +

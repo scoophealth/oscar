@@ -22,7 +22,7 @@ public class MDSSegmentData
   public void populateMDSSegmentData(String SID) {
     this.segmentID=SID;    
     String sql;
-    String associatedOBR;
+    String associatedOBR = "";
     String queryString = "";
     String labID = "";
     int mdsOBXNum = 0;
@@ -32,7 +32,7 @@ public class MDSSegmentData
             
       // Get the header info
       
-      sql = "select mdsMSH.dateTime, mdsMSH.messageConID, mdsZFR.reportFormStatus from mdsMSH, mdsZFR where "+
+      sql = "select mdsMSH.dateTime, mdsMSH.messageConID, min(mdsZFR.reportFormStatus) as reportFormStatus from mdsMSH, mdsZFR where "+
             "mdsMSH.segmentID = mdsZFR.segmentID and mdsMSH.segmentID='"+segmentID+"' group by mdsMSH.segmentID";
       
       rs = db.GetSQL(sql);
@@ -134,7 +134,7 @@ public class MDSSegmentData
       
       // Get the report section names
       
-      sql = "select reportGroupDesc,reportGroupID from mdsZRG where segmentID='"+this.segmentID+"' group by reportGroupDesc, reportGroupID";
+      sql = "select reportGroupDesc,reportGroupID, reportSequence from mdsZRG where segmentID='"+this.segmentID+"' group by reportGroupDesc, reportGroupID order by reportSequence";
 
       
       rs = db.GetSQL(sql);
@@ -162,7 +162,7 @@ public class MDSSegmentData
         sql = "select distinct mdsOBX.associatedOBR, mdsOBR.observationDateTime from mdsOBX, mdsOBR where mdsOBX.segmentID = mdsOBR.segmentID and mdsOBX.associatedOBR = mdsOBR.obrID and mdsOBX.segmentID='"+this.segmentID+"' and ("+queryString+") order by associatedOBR";
         rs=db.GetSQL(sql);
         while(rs.next()){
-          ((Headers)headersArray.get(i)).groupedReportsArray.add(new GroupedReports(rs.getString("associatedOBR"), rs.getString("observationDateTime")));
+          ((Headers)headersArray.get(i)).groupedReportsArray.add(new GroupedReports(rs.getString("associatedOBR"), rs.getString("observationDateTime"), queryString));
         }
         rs.close();
       }
@@ -170,16 +170,17 @@ public class MDSSegmentData
       // Get the actual results
       
       Mnemonics thisOBXMnemonics = new Mnemonics();
-      
-      for(int i=0 ; i< (headersArray.size());i++){
+            
+      for(int i=0 ; i< (headersArray.size());i++){      
         for (int j =0 ; j< ((Headers)headersArray.get(i)).groupedReportsArray.size();j++){
           associatedOBR =((GroupedReports)((Headers)headersArray.get(i)).groupedReportsArray.get(j)).associatedOBR;
-          sql = "select * from mdsOBX where segmentID='"+this.segmentID+"' and associatedOBR='"+associatedOBR+"'";
+          queryString =((GroupedReports)((Headers)headersArray.get(i)).groupedReportsArray.get(j)).queryString;          
+          sql = "select * from mdsOBX where segmentID='"+this.segmentID+"' and associatedOBR='"+associatedOBR+"' and ("+queryString+")";
           rs = db.GetSQL(sql);
           while(rs.next()){
               
               mdsOBXNum=Integer.parseInt(rs.getString("obxID"));                                        
-              thisOBXMnemonics.update((Mnemonics)mnemonics.get(rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf("^"))));
+              thisOBXMnemonics.update((Mnemonics)mnemonics.get(rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'))));
               
               
                   ((GroupedReports)((Headers)headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.add(
@@ -191,7 +192,7 @@ public class MDSSegmentData
                                   rs.getString("observationIden"),
                                   rs.getString("observationResultStatus"),
                                   (ArrayList)notes.get(Integer.toString(mdsOBXNum)),
-                                  labID));
+                                  rs.getString("producersID").substring(0,rs.getString("producersID").indexOf('^')) ));
               
           }
           rs.close();

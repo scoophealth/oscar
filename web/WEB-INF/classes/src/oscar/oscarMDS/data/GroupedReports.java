@@ -11,10 +11,11 @@ import java.text.SimpleDateFormat;
 public class GroupedReports
 {
 
-    GroupedReports(String oBR, String hL7TimeStamp)
+    GroupedReports(String oBR, String hL7TimeStamp, String qString)
     {
         resultsArray = new ArrayList();
         associatedOBR = oBR;
+        queryString = qString;
         GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
         
@@ -28,4 +29,5 @@ public class GroupedReports
     public String associatedOBR;
     public ArrayList resultsArray;
     public String timeStamp;
+    public String queryString;
 }
