@@ -218,6 +218,22 @@ public class EctConsultationFormRequestUtil {
         }
         return retval;
     }
+    
+    public String getClinicName() {
+        String retval = new String();
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select clinic_name from clinic";
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.next())
+                retval = rs.getString("clinic_name");
+            rs.close();
+            db.CloseConn();
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return retval;
+    }
 
     public String patientName;
     public String patientAddress;
