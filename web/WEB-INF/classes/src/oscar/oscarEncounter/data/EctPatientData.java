@@ -32,6 +32,31 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.*;
 
 public class EctPatientData {
+    
+    public Patient getPatient(String demographicNo) throws SQLException {
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        Patient p = null;
+        try {
+            ResultSet rs = db.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, month_of_birth, date_of_birth, address, city, postal, phone, roster_status FROM demographic WHERE demographic_no = "+demographicNo );
+            if(rs.next())
+                p = new Patient(rs.getInt("demographic_no"), 
+                                rs.getString("last_name"), 
+                                rs.getString("first_name"), 
+                                rs.getString("sex"), 
+                                UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")), 
+                                rs.getString("address"), 
+                                rs.getString("city"), 
+                                rs.getString("postal"), 
+                                rs.getString("phone"), 
+                                rs.getString("roster_status"));
+            rs.close();
+            db.CloseConn();
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return p;
+    }
+    
     public class Patient {
         int demographicNo;
         String surname;
@@ -42,8 +67,22 @@ public class EctPatientData {
         String city;
         String postal;
         String phone;
-        String roster;
+        String roster;        
 
+        public Patient(int demographicNo, String surname, String firstName, String sex, Date DOB, String address, 
+                String city, String postal, String phone, String roster) {
+            this.demographicNo = demographicNo;
+            this.surname = surname;
+            this.firstName = firstName;
+            this.sex = sex;
+            this.DOB = DOB;
+            this.address = address;
+            this.city = city;
+            this.postal = postal;
+            this.phone = phone;
+            this.roster = roster;            
+        }   
+        
         public int getDemographicNo() {
             return demographicNo;
         }
@@ -86,35 +125,78 @@ public class EctPatientData {
 
         public String getRosterStatus() {
             return roster;
+        }        
+        
+        public eChart getEChart(){
+            return new eChart();
         }
+        
+        
+        /*********************************
+         *class eChart
+         ********************************/
+        public class eChart{
+            private Date eChartTimeStamp = null;
+            private String socialHistory = "";
+            private String familyHistory = "";
+            private String medicalHistory = "";
+            private String ongoingConcerns = "";
+            private String reminders = "";
+            private String encounter = "";
+            private String subject = "";
+            
+            eChart(){
+                init();
+            }
+             private void init(){
+                try {
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    ResultSet rs;
 
-        public Patient(int demographicNo, String surname, String firstName, String sex, Date DOB, String address, 
-                String city, String postal, String phone, String roster) {
-            this.demographicNo = demographicNo;
-            this.surname = surname;
-            this.firstName = firstName;
-            this.sex = sex;
-            this.DOB = DOB;
-            this.address = address;
-            this.city = city;
-            this.postal = postal;
-            this.phone = phone;
-            this.roster = roster;
-        }
-    }
-
-    public Patient getPatient(String demographicNo) throws SQLException {
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Patient p = null;
-        try {
-            ResultSet rs = db.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, month_of_birth, date_of_birth, address, city, postal, phone, roster_status FROM demographic WHERE demographic_no = "+demographicNo );
-            if(rs.next())
-                p = new Patient(rs.getInt("demographic_no"), rs.getString("last_name"), rs.getString("first_name"), rs.getString("sex"), UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")), rs.getString("address"), rs.getString("city"), rs.getString("postal"), rs.getString("phone"), rs.getString("roster_status"));
-            rs.close();
-            db.CloseConn();
-        } catch(SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return p;
-    }
+                    String sql = "select * from eChart where demographicNo="+demographicNo+" ORDER BY eChartId DESC limit 1";
+                    rs = db.GetSQL(sql);
+                    if(rs.next()){
+                        this.eChartTimeStamp = rs.getDate("timeStamp");
+                        this.socialHistory = rs.getString("socialHistory");
+                        this.familyHistory = rs.getString("familyHistory");
+                        this.medicalHistory = rs.getString("medicalHistory");
+                        this.ongoingConcerns =rs.getString("ongoingConcerns");
+                        this.reminders = rs.getString("reminders");
+                        this.encounter = rs.getString("encounter");
+                        this.subject = rs.getString("subject");
+                    }
+                    rs.close();
+                    db.CloseConn();                    
+                } 
+                catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }                 
+            }
+             
+            public Date getEChartTimeStamp(){
+            return this.eChartTimeStamp;
+            }            
+            public String getSocialHistory(){
+                return this.socialHistory;
+            }            
+            public String getFamilyHistory(){
+                return this.familyHistory;            
+            }
+            public String getMedicalHistory(){
+                return this.medicalHistory;            
+            }
+            public String getOngoingConcerns(){
+                return this.ongoingConcerns;
+            }
+            public String getReminders(){
+                return this.reminders;
+            }
+            public String getEncounter(){
+                return this.encounter;
+            }
+            public String getSubject(){
+                return this.subject;
+            }
+        }             
+    }              
 }
