@@ -333,7 +333,9 @@
     <form-bean      name="BillingEditCodeForm"
                     type="oscar.oscarBilling.ca.bc.pageUtil.BillingEditCodeForm"/>                    
     <form-bean      name="BillingAddCodeForm"
-                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingAddCodeForm"/>                                       
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingAddCodeForm"/>    
+    <form-bean      name="BillingUpdateBillingForm"
+                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingUpdateBillingForm"/>                                                       
                                         
 <!-- OscarBilling stop -->
 
@@ -1650,6 +1652,17 @@
                 <forward name="private"          path="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>
                 <forward name="privateCodeError" path="/billing/CA/BC/billingAddPrivateCode.jsp"/>
     </action>
+    
+    <action path="/billing/CA/BC/UpdateBilling" 
+            type="oscar.oscarBilling.ca.bc.pageUtil.BillingUpdateBillingAction"                                              
+            name="BillingUpdateBillingForm" 
+            scope="request" 
+            input="/billing/CA/BC/billReceipt.jsp">
+            <forward name="success"         path="/billing/CA/BC/billReceipt.jsp" />
+            <forward name="successAndClose" path="/billing/CA/BC/billingSaved.jsp" />
+    </action>
+    
+    
     <!-- oscarBilling BC end -->
 
     <!-- oscarBilling ON start -->
