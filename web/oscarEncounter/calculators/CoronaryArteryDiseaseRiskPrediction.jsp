@@ -579,7 +579,7 @@ function setValues(){
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                calculators
+                <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgCalculators"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -686,10 +686,10 @@ function setValues(){
 										<td><input type="checkbox" name="ECG"/></td>
 								</tr>
 								<tr >
-										<td colspan="2"><input type="button" value="Calculate" onClick="calculate();"/> </td>
+										<td colspan="2"><input type="button" value="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnCalculate"/>" onClick="calculate();"/> </td>
 								</tr>
 									<!--<tr>
-										<td><input type="text" name="totalVal" visible="false"/></td>
+										<td><input type="text" name="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnTotalVal"/>" visible="false"/></td>
 									</tr>-->
 							</table>
 							</form>
