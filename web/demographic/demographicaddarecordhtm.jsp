@@ -231,7 +231,7 @@ function checkTypeIn() {
           <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
           <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
           <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-          <option value="NF"<%=billregion.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
           <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
           <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
           <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
@@ -369,7 +369,7 @@ function checkTypeIn() {
           <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
           <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>          
           <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-          <option value="NF"<%=billregion.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
           <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
           <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
           <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
