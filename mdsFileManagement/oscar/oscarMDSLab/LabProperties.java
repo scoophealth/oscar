@@ -29,6 +29,7 @@ package oscar.oscarMDSLab;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  *
@@ -36,10 +37,13 @@ import java.util.*;
  */
 public class LabProperties extends Properties {
    
+   Logger logger = Logger.getLogger("mdsFileManagement.LabProperties");
+   
    static LabProperties labProperties = new LabProperties();
    static boolean loaded = false;
    
    private  LabProperties() {
+      
    }
    
    public static LabProperties getInstance() {
@@ -54,9 +58,11 @@ public class LabProperties extends Properties {
       if (!loaded){
          try{
             FileInputStream fis2 = new FileInputStream(propFileName) ;
+            
             load(fis2);           
             fis2.close();
             loaded = true;
+            logger.info(this.toString());
          } catch (Exception e) {              
               System.err.println("Error, file "+propFileName+" could not be loaded - "+e.getMessage());              
               e.printStackTrace();
@@ -64,6 +70,7 @@ public class LabProperties extends Properties {
 
       }
       return loaded;
+      
   }
    
    
