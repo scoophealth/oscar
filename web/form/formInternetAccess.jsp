@@ -155,8 +155,8 @@
 
 <script type="text/javascript" language="Javascript">
     
-    var choiceFormat  = new Array(6,7);        
-    var allNumericField = null;
+    var choiceFormat  = new Array(6,7,8,9,12,13);        
+    var allNumericField = new Array(10,11);
     var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";        
 
@@ -197,9 +197,32 @@
         <td colspan="2" valign="top">
             <table width="740px" height="200px" border="0"  cellspacing="0" cellpadding="0" >                  
                 <tr>
-                    <td width="5%" valign="top" align="right"></td>
+                    <td width="5%" valign="top" align="right">1.</td>
                     <td valign="top">                        
-                        1. Do you have access to the internet?
+                        Do you have a computer at home?
+                    </td>
+                </tr>
+                <tr>                                                
+                <tr bgcolor="white">                                    
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td width="95%">
+                        <input type="checkbox"  class="checkbox" name="computerY" <%= props.getProperty("computerY", "") %>/>
+                        Yes
+                    </td>                                  
+                </tr>
+                <tr bgcolor="white">                                    
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td width="95%">
+                        <input type="checkbox"  class="checkbox" name="computerN" <%= props.getProperty("computerN", "") %>/>
+                        No
+                    </td>                                  
+                </tr>  
+                <tr>
+                    <td width="5%" valign="top" align="right">2.</td>
+                    <td valign="top">                        
+                        Do you have regular access to the internet (at home, or through work, the library, a friend or relative, etc)?
                     </td>
                 </tr>
                 <tr>                                                
@@ -220,9 +243,9 @@
                     </td>                                  
                 </tr>                
                 <tr>
-                    <td width="5%" valign="top" align="right"></td>
+                    <td width="5%" valign="top" align="right">3.</td>
                     <td valign="top">                        
-                        2. If yes, where do you access the internet?
+                        How much time do you spend on the internet?
                     </td>
                 </tr>
                 <tr>                                                
@@ -230,35 +253,40 @@
                     <td width="5%" align="right">                        
                     </td>
                     <td width="95%">
-                        <input type="checkbox"  class="checkbox" name="internetHome" <%= props.getProperty("internetHome", "") %>/>
-                        at home
+                        a. Daily: <input type="text" size="10" name="timeDaily" value='<%= props.getProperty("timeDaily", "") %>'/> Hours
+                        
                     </td>                                  
                 </tr>
                 <tr bgcolor="white">                                    
                     <td width="5%" align="right">                        
                     </td>
                     <td width="95%">
-                        <input type="checkbox"  class="checkbox" name="internetWork" <%= props.getProperty("internetWork", "") %>/>
-                        at work
+                        b. Weekly: <input type="text" size="10" name="timeWeekly" value='<%= props.getProperty("timeWeekly", "") %>'/> Hours                       
+                    </td>                                  
+                </tr>                
+                <tr>
+                    <td width="5%" valign="top" align="right">4.</td>
+                    <td valign="top">                        
+                        Would you use a free health information website provided through Stonechurch Family Health Center?
+                    </td>
+                </tr>
+                <tr>                                                
+                <tr bgcolor="white">                                    
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td width="95%">
+                        <input type="checkbox"  class="checkbox" name="infoY" <%= props.getProperty("infoY", "") %>/>
+                        Yes
                     </td>                                  
                 </tr>
                 <tr bgcolor="white">                                    
                     <td width="5%" align="right">                        
                     </td>
                     <td width="95%">
-                        <input type="checkbox"  class="checkbox" name="internetFriend" <%= props.getProperty("internetFriend", "") %>/>
-                        at friend/relative's home
+                        <input type="checkbox"  class="checkbox" name="infoN" <%= props.getProperty("infoN", "") %>/>
+                        No
                     </td>                                  
-                </tr>
-                <tr bgcolor="white">                                    
-                    <td width="5%" align="right">                        
-                    </td>
-                    <td width="95%">
-                        <input type="checkbox"  class="checkbox" name="internetOther" <%= props.getProperty("internetOther", "") %>/>
-                        other 
-                        <input type="text" name="internetOtherTx" value="<%= props.getProperty("internetOtherTx", "") %>"/>
-                    </td>                                  
-                </tr>
+                </tr>  
             </table>            
         </td>
     </tr>   
