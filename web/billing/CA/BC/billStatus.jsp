@@ -115,6 +115,7 @@
 	SPAN.bold             {font-weight: bold  ;                                                                        background-color: #666699   ;}
 	-->
         td.bCellData{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; }
+        a.billType{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; text-decoration: none;} 
         th.bHeaderData{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; }
 </style> 
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
@@ -168,7 +169,17 @@ function setDemographic(demoNo){
 //alert(demoNo);
     document.serviceform.demographicNo.value = demoNo;
 }
+
+
 //-->
+
+function billTypeOnly(showEle){
+   document.serviceform.showMSP.checked = false;
+   document.serviceform.showWCB.checked = false;
+   document.serviceform.showPRIV.checked = false;
+   document.serviceform.showICBC.checked = false;
+   document.serviceform.elements[showEle].checked = true;
+}
 </script>
 
  
@@ -199,16 +210,24 @@ function setDemographic(demoNo){
     <td rowspan="2">
     <table>
         <tr>
-            <td class="bCellData" ><input type="checkbox" name="showMSP" value="show"  <%=showMSP?"checked":""%> />MSP</td>
+            <td class="bCellData" ><input type="checkbox" name="showMSP" value="show"  <%=showMSP?"checked":""%> />
+               <a   onclick="billTypeOnly('showMSP')">MSP</a>
+            </td>
         </tr>
         <tr>
-            <td class="bCellData" ><input type="checkbox" name="showWCB" value="show"  <%=showWCB?"checked":""%> />WCB</td>
+            <td class="bCellData" ><input type="checkbox" name="showWCB" value="show"  <%=showWCB?"checked":""%> />
+               <a   onclick="billTypeOnly('showWCB')">WCB</a>
+            </td>
         </tr>
         <tr>
-            <td class="bCellData" ><input type="checkbox" name="showPRIV" value="show" <%=showPRIV?"checked":""%>  />Private</td>            
+            <td class="bCellData" ><input type="checkbox" name="showPRIV" value="show" <%=showPRIV?"checked":""%>  />
+               <a onclick="billTypeOnly('showPRIV')">Private</a>
+            </td>            
         </tr>
         <tr>
-            <td class="bCellData" ><input type="checkbox" name="showICBC" value="show" <%=showICBC?"checked":""%>  />ICBC</td>            
+            <td class="bCellData" ><input type="checkbox" name="showICBC" value="show" <%=showICBC?"checked":""%>  />
+               <a onclick="billTypeOnly('showICBC')">ICBC</a>
+            </td>            
         </tr>
     </table>
     </td>
