@@ -5176,7 +5176,7 @@ CREATE TABLE security (
   provider_no varchar(6) default NULL,
   pin varchar(6) default NULL,
   PRIMARY KEY  (security_no),
-  KEY user_name (user_name)
+  UNIQUE user_name (user_name)
 ) TYPE=MyISAM;
 
 --
