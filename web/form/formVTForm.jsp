@@ -1122,6 +1122,8 @@ function clearAll(yRadio, nRadio){
                                                 <html:hidden property="value(BPDate)" />
                                                 <td class="dataEntryTable" align="center"><html:text property="value(BPComments)" size="30%" tabindex="9999"/></td>
                                             </tr>
+                                                 
+                                            
                                             <tr>
                                                 <td class="dataEntryTable"><%=request.getAttribute("WHRDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WHRMeasuringInstrc")%></font></td>
                                                 <td class="dataEntryTable" align="center">
@@ -1148,22 +1150,25 @@ function clearAll(yRadio, nRadio){
                                                 <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%" onchange="javascript: updateHipAndRatio();"/></td>                                                    
                                                 <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="30%" tabindex="9999"/></td>
                                             </tr>
+                                            <!--new-->
+                                            <tr>
+                                                <td width="36%" class="dataEntryTable"><%=request.getAttribute("HCDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HCMeasuringInstrc")%></font></td>
+                                                <td width="16%" class="dataEntryTable" align="center">
+                                                    <logic:present name="HCLastData">
+                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                    <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HCLDDate")%></td></tr>
+                                                    <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HCLastData")%></td></tr>                                                            
+                                                    </table>
+                                                    </logic:present>
+                                                </td>
+                                                <td width="18%" class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistAndRatio();"/></td>                                                    
+                                                <td width="33%" class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
+                                            </tr>
+                                            
                                             <tr>
                                                 <td colspan="5">
                                                     <table cellpadding="1" cellspacing="0" width="100%" style="display:none" id="detailVital">
-                                                        <tr>
-                                                            <td width="36%" class="dataEntryTable"><%=request.getAttribute("HCDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HCMeasuringInstrc")%></font></td>
-                                                            <td width="16%" class="dataEntryTable" align="center">
-                                                                <logic:present name="HCLastData">
-                                                                <table cellpadding='0' cellspacing='0'>                                                            
-                                                                <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HCLDDate")%></td></tr>
-                                                                <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HCLastData")%></td></tr>                                                            
-                                                                </table>
-                                                                </logic:present>
-                                                            </td>
-                                                            <td width="18%" class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistAndRatio();"/></td>                                                    
-                                                            <td width="33%" class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
-                                                        </tr>
+                                                        
                                                         <tr>
                                                             <td class="dataEntryTable"><%=request.getAttribute("HRDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HRMeasuringInstrc")%></font></td>
                                                             <td class="dataEntryTable" align="center">
