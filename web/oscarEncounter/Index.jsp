@@ -29,7 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
-<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*"%>
+<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.Properties"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
@@ -61,6 +61,7 @@
   MDSResultsData labResults =  new MDSResultsData();    
   labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+  Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes();
 %>
 
 <html:html locale="true">
@@ -70,7 +71,7 @@
 
 <style type="text/css">
 	div.presBox {
-		height: 30;
+		height: <%=windowSizes.getProperty("presBoxSize")%>;
 		overflow: auto;
 	}
 </style>
@@ -95,8 +96,7 @@
     var textValue3;
 
     function closeEncounterWindow() {
-        var x = window.confirm("<bean:message key="oscarEncounter.Index.closeEncounterWindowConfirm"/>");
-        if(x) {window.close();}
+        return window.confirm("<bean:message key="oscarEncounter.Index.closeEncounterWindowConfirm"/>");        
     }
     //function saveAndCloseEncounterWindow() {
     //    var x = window.confirm("<bean:message key="oscarEncounter.Index.confirmExit"/>");
@@ -216,14 +216,17 @@ function reset() {
     document.encForm.shTextarea.style.height=small;
     document.encForm.fhTextarea.style.height=small;
     document.encForm.mhTextarea.style.height=small;
+    document.encForm.rowOneSize.value=small;
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=small;
     document.encForm.reTextarea.style.height=small;
+    document.encForm.rowTwoSize.value=small;
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=large;
-    document.getElementById("presBox").style.height=30;
-    // setBoxesFullWidth();
+    document.encForm.rowThreeSize.value=large;
+    document.getElementById("presBox").style.height=pBSmall;
+    document.encForm.presBoxSize.value=pBSmall;
 }
 function rowOneX(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -232,7 +235,7 @@ function rowOneX(){
     document.encForm.shTextarea.style.height=X;
     document.encForm.fhTextarea.style.height=X;
     document.encForm.mhTextarea.style.height=X;
-    setBoxesFullWidth();
+    document.encForm.rowOneSize.value=X;    
 }
 function rowOneSmall(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -241,7 +244,7 @@ function rowOneSmall(){
     document.encForm.shTextarea.style.height=small;
     document.encForm.fhTextarea.style.height=small;
     document.encForm.mhTextarea.style.height=small;
-    setBoxesFullWidth();
+    document.encForm.rowOneSize.value=small;    
 }
 function rowOneNormal(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -250,7 +253,7 @@ function rowOneNormal(){
     document.encForm.shTextarea.style.height=normal;
     document.encForm.fhTextarea.style.height=normal;
     document.encForm.mhTextarea.style.height=normal;
-    setBoxesFullWidth();
+    document.encForm.rowOneSize.value=normal;
 }
 function rowOneLarge(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -259,7 +262,7 @@ function rowOneLarge(){
     document.encForm.shTextarea.style.height=large;
     document.encForm.fhTextarea.style.height=large;
     document.encForm.mhTextarea.style.height=large;
-    setBoxesFullWidth();
+    document.encForm.rowOneSize.value=large;   
 }
 function rowOneFull(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -269,35 +272,35 @@ function rowOneFull(){
     document.encForm.fhTextarea.style.height=full;
     document.encForm.mhTextarea.style.height=full;
     document.encForm.shInput.scrollIntoView(top);
-    setBoxesFullWidth();
+    document.encForm.rowOneSize.value=full;
 }
 function rowTwoX(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=X;
     document.encForm.reTextarea.style.height=X;
-    setBoxesFullWidth();
+    document.encForm.rowTwoSize.value=X;
 }
 function rowTwoSmall(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=small;
     document.encForm.reTextarea.style.height=small;
-    setBoxesFullWidth();
+    document.encForm.rowTwoSize.value=small;
 }
 function rowTwoNormal(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=normal;
     document.encForm.reTextarea.style.height=normal;
-    setBoxesFullWidth();
+    document.encForm.rowTwoSize.value=normal;
 }
 function rowTwoLarge(){
     document.encForm.ocTextarea.style.overflow="auto";
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=large;
     document.encForm.reTextarea.style.height=large;
-    setBoxesFullWidth();
+    document.encForm.rowTwoSize.value=large;
 }
 function rowTwoFull(){
     document.encForm.ocTextarea.style.overflow="auto";
@@ -305,89 +308,63 @@ function rowTwoFull(){
     document.encForm.ocTextarea.style.height=full;
     document.encForm.reTextarea.style.height=full;
     document.encForm.ocInput.scrollIntoView(top);
-    setBoxesFullWidth();
+    document.encForm.rowTwoSize.value=full;
 }
 
 function rowThreeX(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=X;
-    setBoxesFullWidth();
+    document.encForm.rowThreeSize.value=X;
 }
 function rowThreeSmall(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=small;
-    setBoxesFullWidth();
+    document.encForm.rowThreeSize.value=small;
 }
 function rowThreeNormal(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=normal;
-    setBoxesFullWidth();
+    document.encForm.rowThreeSize.value=normal;
 }
 function rowThreeMedium(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=medium;
-    setBoxesFullWidth();
+    document.encForm.rowThreeSize.value=medium;
 }
 function rowThreeLarge(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=large;
-    setBoxesFullWidth();
+    document.encForm.rowThreeSize.value=large;
 }
 function rowThreeFull(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=full;
     document.encForm.enInput.scrollIntoView(top);
-    setBoxesFullWidth();
+    document.encForm.rowThreeSize.value=full;
 }
 
-<!--new function from Jay Nov 17 2002-->
-//Function resets the widths of the text boxes and tables 
-<!-- question and return statement added by Jeremie Mar 5 2004 -->
-// Why do we need this function?  It just messes up the width of everything.  Am I missing something...?
-function setBoxesFullWidth(){
-    return;
-    document.encForm.enTextarea.style.width="100%";   
-    document.encForm.shTextarea.style.width="100%";
-    document.encForm.fhTextarea.style.width="100%";
-    document.encForm.mhTextarea.style.width="100%";   
-    document.encForm.ocTextarea.style.width="100%";
-    document.encForm.reTextarea.style.width="100%";
-    document.getElementById("rowOne").style.width="100%";
-    document.getElementById("rowTwo").style.width="100%";
-    document.getElementById("rowThree").style.width="100%";
-}
 function presBoxX(){
     document.getElementById("presBox").style.height=X;    
-    setBoxesFullWidth();    
+    document.encForm.presBoxSize.value=X; 
 }
 function presBoxSmall(){   
     document.getElementById("presBox").style.height=pBSmall;
-    setBoxesFullWidth();
+    document.encForm.presBoxSize.value=pBSmall;
 }
 function presBoxNormal(){
-
-
     document.getElementById("presBox").style.height=normal;
-    setBoxesFullWidth();
+    document.encForm.presBoxSize.value=normal;
 }
 function presBoxLarge(){
-
-
     document.getElementById("presBox").style.height=large;
-    setBoxesFullWidth();
+    document.encForm.presBoxSize.value=large;
 }
 function presBoxFull(){
-
-
     document.getElementById("presBox").style.height=full;
     document.getElementById("presTopTable").scrollIntoView(top);
-    setBoxesFullWidth();
+    document.encForm.presBoxSize.value=full;
 }
 <!--new functions end from jay--> 
-
-
-
-
 
 function popupSearchPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
@@ -481,10 +458,6 @@ function loader(){
     tmp = document.encForm.enTextarea.value; // what the heck is this supposed to do?
     document.encForm.enTextarea.value = tmp;
 }
-function testt(){
-	document.getElementById("blahh").style.height=large;
-}
-
 </script>
 <script language="javascript">
 
@@ -828,15 +801,15 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                 <!----This is the Social History cell ...sh...-->
                                 <td  valign="top">
                                     <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
-                                       <textarea name='shTextarea' wrap="hard"  cols= "31" style="height:60;overflow:auto"><%=bean.socialHistory%></textarea>
+                                       <textarea name='shTextarea' wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
                                 </td>
                                 <!----This is the Family History cell ...fh...-->
                                 <td  valign="top">
-                                       <textarea name='fhTextarea' wrap="hard"  cols= "31" style="height:60;overflow:auto"><%=bean.familyHistory%></textarea>
+                                       <textarea name='fhTextarea' wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
                                 </td>
                                 <!----This is the Medical History cell ...mh...-->
                                 <td  valign="top" colspan="2">
-                                       <textarea name='mhTextarea' wrap="hard"  cols= "31" style="height:60;overflow:auto"><%=bean.medicalHistory%></textarea>
+                                       <textarea name='mhTextarea' wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -873,10 +846,10 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                             </tr>
                             <tr width="100%">
                                 <td valign="top" style="border-right:2px solid #ccccff">
-                                       <textarea name='ocTextarea' wrap="hard" cols="48" style="height:60;overflow:auto"><%=bean.ongoingConcerns%></textarea>
+                                       <textarea name='ocTextarea' wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.ongoingConcerns%></textarea>
                                 </td>
                                 <td colspan= "2" valign="top">
-                                       <textarea name='reTextarea' wrap="hard" cols="48" style="height:60;overflow:auto"><%=bean.reminders%></textarea>
+                                       <textarea name='reTextarea' wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -946,9 +919,9 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
     <!-- encounter row -->
                 <tr>
                     <td>
-                        <table bgcolor="#CCCCFF" id="rowThree">
+                        <table bgcolor="#CCCCFF" width="100%" id="rowThree">
                            <tr>
-                                <td nowrap width='80%' >
+                                <td nowrap>
                                     <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
 									  <tr><td width='75%' >
                                     <a href=# onClick="popupPage2('../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><div class="RowTop" ><bean:message key="global.encounter"/>: <%=bean.reason%></div></a><input type="hidden" name="enInput"/>
@@ -990,8 +963,9 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" valign="top" style="text-align:right">
-                                    <textarea name='enTextarea' wrap="hard" cols="99" style="border-right:6px solid #ccccff;border-right:6px solid #ccccff;height:378;overflow:auto"><% if(!bSplit) out.print(bean.encounter); else if(bTruncate) out.print(bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n"); else out.print(bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n");%><%if(bean.eChartTimeStamp==null){%><%="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
+                                <td colspan="2" valign="top" style="text-align:left">
+                                    <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><% if(!bSplit) out.print(bean.encounter); else if(bTruncate) out.print(bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n"); else out.print(bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n");%><%if(bean.eChartTimeStamp==null){%><%="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
+                                    // border-right:6px solid #ccccff;border-right:6px solid #ccccff;
                                         else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0)
                                         {%><%="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
                                         if(!bean.template.equals("")){%><%=bean.template%><%}%></textarea>
@@ -1013,8 +987,12 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
-                                    <input type="button" style="height:20px" onclick="javascript:closeEncounterWindow()" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton">
+                                    <input type="button" style="height:20px" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
                                     <!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="btnPressed" value="Search New Patient" class="ControlPushButton"-->
+                                    <input type="hidden" name="rowOneSize" value="<%=windowSizes.getProperty("rowOneSize")%>">
+                                    <input type="hidden" name="rowTwoSize" value="<%=windowSizes.getProperty("rowTwoSize")%>">
+                                    <input type="hidden" name="presBoxSize" value="<%=windowSizes.getProperty("presBoxSize")%>">
+                                    <input type="hidden" name="rowThreeSize" value="<%=windowSizes.getProperty("rowThreeSize")%>">
                                 </td>
                             </tr>
                         </table>
