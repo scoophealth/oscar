@@ -19,7 +19,7 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
-        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(allNumericField);                
+        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);                
         if(ret==true) {            
             reset();
             ret = confirm("Are you sure you want to save this form?");
@@ -34,7 +34,7 @@
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
-        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(allNumericField);
+        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);
         if(ret == true) {
             reset();
             ret = confirm("Are you sure you wish to save and close this window?");
@@ -67,14 +67,20 @@
 
     /*
         nbcheckboxes is an array list which stores the start and end element nb of each question
+        need to include css class checkboxError
     */
     function is1CheckboxChecked(formNb, nbcheckboxes){        
         var isValid=true;
         
         for(var i=0; i < nbcheckboxes.length; i=i+2)
         {                        
-            if (numCheckboxChecked(formNb,nbcheckboxes[i],nbcheckboxes[i+1])>1)
+            if (numCheckboxChecked(formNb,nbcheckboxes[i],nbcheckboxes[i+1])>1){                
                 isValid=false;              
+                for(var j=nbcheckboxes[i]; j<=nbcheckboxes[i+1]; j++){
+                    if (document.forms[formNb].elements[j].checked==true)
+                        document.forms[formNb].elements[j].className = 'checkboxError';                        
+                }
+            }
         }
         if(isValid==false)
             alert("Please select one item only for each question");        
@@ -82,11 +88,12 @@
         return isValid;
     }
                
-    
+    //Need to include css class checkbox in the jsp file
     function numCheckboxChecked(formNb, startElement, endElements){
         var numCheck = 0;
 
-        for(var element = startElement; element <= endElements; element++){
+        for(var element = startElement; element <= endElements; element++){            
+            document.forms[formNb].elements[element].className = 'checkbox';
             //alert("element: " + element + " is " + document.forms[formNb].elements[element].checked);
             if (document.forms[formNb].elements[element].checked == true){                
                 numCheck++;
@@ -106,15 +113,15 @@
 
     }
 
-    function allAreNumeric(allNumericField){
+    function allAreNumeric(formNb,allNumericField){
         var isValid = true;
         var needAlert = false;
         if(allNumericField!=null){
             for(var i=0; i<allNumericField.length; i++){
-                document.forms[0].elements[allNumericField[i]].style.backgroundColor = 'white';  
-                isValid = isNumeric(document.forms[0].elements[allNumericField[i]].value);
+                document.forms[formNb].elements[allNumericField[i]].style.backgroundColor = 'white';  
+                isValid = isNumeric(document.forms[formNb].elements[allNumericField[i]].value);
                 if(isValid == false){
-                    document.forms[0].elements[allNumericField[i]].style.backgroundColor = 'red';                    
+                    document.forms[formNb].elements[allNumericField[i]].style.backgroundColor = 'red';                    
                     needAlert = true;
                 }                    
             }
@@ -126,12 +133,12 @@
         return true; 
     }
 
-    function oneFieldIsNumeric(id){
+    function oneFieldIsNumeric(formNb,id){
         var isValid = true;
-        isValid = isNumeric(document.forms[0].elements[id].value);
-        document.forms[0].elements[id].style.backgroundColor = 'white'; 
+        isValid = isNumeric(document.forms[formNb].elements[id].value);
+        document.forms[formNb].elements[id].style.backgroundColor = 'white'; 
         if(isValid == false){
-            document.forms[0].elements[id].style.backgroundColor = 'red'; 
+            document.forms[formNb].elements[id].style.backgroundColor = 'red'; 
             alert("Only numeric value is valid in the highlighted field(s)");  
             return false;
         }
