@@ -13,7 +13,7 @@
 	<type>BP</type> 
 	<typeDesc>Blood Pressure</typeDesc>
 	<typeDisplayName>Blood Pressure</typeDisplayName>
-	<measuringInstrc>Sitting Position (nnn/nnn)</measuringInstrc>
+	<measuringInstrc>Sitting Position (nnn/nnn) Target:<130/80 Interval:3mo.</measuringInstrc>
 	<validationRule>
 	    <name>Blood Pressure</name>
 	    <regularExp>[0-9]{2,3}/{1}[0-9]{2,3}</regularExp>
@@ -23,7 +23,7 @@
 	<type>HT</type>
 	<typeDesc>Height</typeDesc>
 	<typeDisplayName>Height</typeDisplayName>
-	<measuringInstrc>in cm (0 - 300)</measuringInstrc>
+	<measuringInstrc>in cm (nnn) Range:0-300 Interval:3mo.</measuringInstrc>
 	<validationRule>
 	   <name>Numeric Value: 0 to 300</name>
 	   <minValue>0</minValue>
@@ -35,7 +35,7 @@
         <type>WT</type>
         <typeDesc>Weight</typeDesc>
         <typeDisplayName>Weight</typeDisplayName>
-        <measuringInstrc>in kg (0 - 300)</measuringInstrc>
+        <measuringInstrc>in kg (nnn.n) Range:0-300 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 300</name>
            <minValue>0</minValue>
@@ -47,7 +47,7 @@
         <type>WC</type>
         <typeDesc>Waist Circumference</typeDesc>
         <typeDisplayName>Waist Circumference</typeDisplayName>
-        <measuringInstrc>in cm (40 - 500)</measuringInstrc>
+        <measuringInstrc>in cm (nnn) Range:40-500 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 40 to 500</name>
            <minValue>40</minValue>
@@ -59,7 +59,7 @@
         <type>HC</type>
         <typeDesc>Hip Circumference</typeDesc>
         <typeDisplayName>Hip Circumference</typeDisplayName>
-        <measuringInstrc>in cm (40 - 700)</measuringInstrc>
+        <measuringInstrc>in cm (nnn) Range:40-700 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 40 to 700</name>
            <minValue>40</minValue>
@@ -71,7 +71,7 @@
         <type>HR</type>
         <typeDesc>Heart Rate</typeDesc>
         <typeDisplayName>Heart Rate</typeDisplayName>
-        <measuringInstrc>in bpm (40 - 180)</measuringInstrc>
+        <measuringInstrc>in bpm (nnn) Range:40-180</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 40 to 180</name>
            <minValue>40</minValue>
@@ -83,7 +83,7 @@
         <type>HbA1</type>
         <typeDesc>HbA1c</typeDesc>
         <typeDisplayName>HbA1c</typeDisplayName>
-	<measuringInstrc>(0.04 - 0.2)</measuringInstrc>
+	<measuringInstrc>(n.nn) Range:0.04-0.20 Target:<0.07 Interval:3-6mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0.04 to 0.2</name>
            <minValue>0.04</minValue>
@@ -95,7 +95,7 @@
         <type>BG</type>
         <typeDesc>Blood Glucose</typeDesc>
         <typeDisplayName>Blood Glucose</typeDisplayName>
-        <measuringInstrc>in mmol/L (1.5 - 30.0)</measuringInstrc>
+        <measuringInstrc>in mmol/L (nn.n) Range:1.5-30.0</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 1.5 to 30.0</name>
            <minValue>1.5</minValue>
@@ -107,7 +107,7 @@
         <type>LDL</type>
         <typeDesc>Low Density Lipid</typeDesc>
         <typeDisplayName>LDL</typeDisplayName>
-        <measuringInstrc>in mmol/L (0.5 - 10)</measuringInstrc>
+        <measuringInstrc>in mmol/L (nn.n) Range:0.5-10  Target:<2.5 Interval:6-12mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0.5 to 10</name>
            <minValue>0.5</minValue>
@@ -119,7 +119,7 @@
         <type>HDL</type>
         <typeDesc>High Density Lipid</typeDesc>
         <typeDisplayName>HDL</typeDisplayName>
-        <measuringInstrc>in mmol/L (0.4 - 4.0)</measuringInstrc>
+        <measuringInstrc>in mmol/L (n.n) Range:0.4-4.0</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0.4 to 4.0</name>
            <minValue>0.4</minValue>
@@ -131,7 +131,7 @@
         <type>TCHL</type>
         <typeDesc>Total Cholestorol</typeDesc>
         <typeDisplayName>Total Cholestorol</typeDisplayName>
-        <measuringInstrc>in mmol/L (2.0 - 12.0)</measuringInstrc>
+        <measuringInstrc>in mmol/L (nn.n) Range:2.0-12.0</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 2.0 to 12.0</name>
            <minValue>2.0</minValue>
@@ -143,7 +143,7 @@
         <type>TRIG</type>
         <typeDesc>Triglycerides</typeDesc>
         <typeDisplayName>Triglycerides</typeDisplayName>
-        <measuringInstrc>in mmol/L (0.0 - 35.0)</measuringInstrc>
+        <measuringInstrc>in mmol/L (nn.n) Range:0.0-35.0</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0.0 to 35.0</name>
            <minValue>0.0</minValue>
@@ -155,7 +155,7 @@
         <type>UALB</type>
         <typeDesc>Urine alb: creat ratio</typeDesc>
         <typeDisplayName>Urine alb: creat ratio</typeDisplayName>
-        <measuringInstrc>in mg/mmol (0 - 100)</measuringInstrc>
+        <measuringInstrc>in mg/mmol (nnn.n) Rnage:0-100 Interval:12mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 100</name>
            <minValue>0</minValue>
@@ -167,7 +167,7 @@
         <type>24UA</type>
         <typeDesc>24 hour urine albumin</typeDesc>
         <typeDisplayName>24 hour urine albumin</typeDisplayName>
-        <measuringInstrc>mg/24h (0 - 500)</measuringInstrc>
+        <measuringInstrc>mg/24h (nnn.n) Range:0-500 Interval:12mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 500</name>
            <minValue>0</minValue>
@@ -178,7 +178,7 @@
      <measurement>
         <type>FTNo</type>
         <typeDesc>No Significan Pathology</typeDesc>
-        <typeDisplayName>Foot Exam: No Significan Pathology</typeDisplayName>
+        <typeDisplayName>Foot Exam: No Significant Pathology</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -299,7 +299,7 @@
         <type>SmkS</type>
         <typeDesc>Cigarette Smoking Status</typeDesc>
         <typeDisplayName>Cigarette Smoking Status</typeDisplayName>
-        <measuringInstrc>Average cigarettes per day (0 - 80)</measuringInstrc>
+        <measuringInstrc>Average cigarettes per day (nn) Range:0-80</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 80</name>
            <minValue>0</minValue>
@@ -311,7 +311,7 @@
         <type>SmkH</type>
         <typeDesc>Cigarette Smoking History</typeDesc>
         <typeDisplayName>Cigarette Smoking Status</typeDisplayName>
-        <measuringInstrc>Cumulative pack years (0 - 150)</measuringInstrc>
+        <measuringInstrc>Cumulative pack years (nnn) Range:0-150</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 150</name>
            <minValue>0</minValue>
@@ -333,7 +333,7 @@
         <type>Exer</type>
         <typeDesc>Exercise</typeDesc>
         <typeDisplayName>Exercise</typeDisplayName>
-        <measuringInstrc>Minutes of moderate or vigorous exercise per week (0 - 6720)</measuringInstrc>
+        <measuringInstrc>Minutes of moderate or vigorous exercise per week (nnnn) Range:0-6720 Target:>240 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 6720</name>
            <minValue>0</minValue>
@@ -345,7 +345,7 @@
         <type>Diet</type>
         <typeDesc>Diet</typeDesc>
         <typeDisplayName>Diet</typeDisplayName>
-        <measuringInstrc>Servings of fruits and vegetables per day (0 - 20)</measuringInstrc>
+        <measuringInstrc>Servings of fruits and vegetables per day (nn) Range:0-20 Interval:3mo.</measuringInstrc>
         <validationRule>
            <name>Numeric Value: 0 to 20</name>
            <minValue>0</minValue>
