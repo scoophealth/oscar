@@ -1,0 +1,332 @@
+<%@ page language="java" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*" %>
+<% response.setHeader("Cache-Control","no-cache");%>
+
+<logic:notPresent name="RxSessionBean" scope="session">
+    <logic:redirect href="error.html" />
+</logic:notPresent>
+<logic:present name="RxSessionBean" scope="session">
+    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
+    <logic:equal name="bean" property="valid" value="false">
+        <logic:redirect href="error.html" />
+    </logic:equal>
+</logic:present>
+
+
+
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<html:html locale="true">
+<head>
+<title>Drug Search Results</title>
+<html:base/>
+
+
+
+<%
+RxSessionBean bean = (RxSessionBean)pageContext.findAttribute("bean");
+RxDrugData.DrugSearch drugSearch = (RxDrugData.DrugSearch) request.getAttribute("drugSearch");
+String demoNo = (String) request.getAttribute("demoNo");
+ArrayList brand = drugSearch.getBrand();
+ArrayList gen = drugSearch.getGen();
+ArrayList afhcClass = drugSearch.getAfhcClass();
+int i;
+%>
+
+
+<link rel="stylesheet" type="text/css" href="styles.css">
+
+<script language=javascript>
+    function ShowDrugInfoBN(drug){
+        window.open("drugInfo.do?BN=" + escape(drug), "_blank",
+            "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
+    }
+    function ShowDrugInfo(drug){
+        window.open("DrugInfoRedirect.jsp?drugId=" + escape(drug), "_blank",
+            "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
+    }
+    function ShowDrugInfoGN(drug){
+        window.open("drugInfo.do?GN=" + escape(drug), "_blank",
+            "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
+    }
+
+    
+</script>
+<script type="text/javascript">
+
+    function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
+      var page = varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=40,screenY=10,top=10,left=60";
+      var popup=window.open(varpage, "oscarDoc", windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self;
+        }
+      }
+    }
+
+    function isEmpty(){  
+        if (document.RxSearchDrugForm.searchString.value.length == 0){
+            alert("Search Field is Empty");
+            document.RxSearchDrugForm.searchString.focus();
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</head>
+<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<% if (drugSearch != null && drugSearch.failed){  out.write(drugSearch.errorMessage); } %>
+
+
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
+  <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
+  <tr>
+      <%@ include file="SideLinksNoEditFavorites.jsp" %><!-- <td></td>Side Bar File --->
+        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
+                <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+                  <tr>
+            	    <td width="0%" valign="top">
+            	    <div class="DivCCBreadCrumbs">
+              	    <a href="SearchDrug.jsp">
+                    <bean:message key="SearchDrug.title"/></a>
+                    <b><bean:message key="ChooseDrug.title"/></b>
+                    </div>
+                    </td>
+            	  </tr>
+            <!----Start new rows here-->
+                  <tr>
+                    <td>
+ 		      <div class="DivContentTitle"><bean:message key="ChooseDrug.title"/></div>
+                    </td>
+		  </tr>
+                  <tr>
+                    <td>
+                      <div class="DivContentSectionHead"><bean:message key="ChooseDrug.section1Title"/></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                    <html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="return isEmpty()">
+      
+                    <html:hidden property="demographicNo" />
+                    <table>
+                        <tr>
+                          <td>
+                            <bean:message key="ChooseDrug.searchAgain"/>
+                          </td>
+                          <td>
+                            <html:text property="searchString" size="16" maxlength="16"/> <a href="javascript:popupDrugOfChoice(720,700,'http://67.69.12.117:8080/oscarResour
+ce/DoC/')">Drug Of Choice</a>
+                            
+                            <!--<html:hidden property="otcExcluded" value="true"/>OTC Excluded-->
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <html:submit property="submit" value="Search" styleClass="ControlPushButton" />
+                          </td>
+                          <td>
+                            <input type=button class="ControlPushButton"  onclick="javascript:document.forms.RxSearchDrugForm.searchString.value='';document.forms.RxSearchDrugForm.searchString.focus();" value="Reset" />
+                            <input type=button class="ControlPushButton"  onclick="javascript:customWarning();" value="Custom Drug" />                            
+                          </td>
+                          
+                        </tr>
+                     </table>
+                    </html:form>
+                    </td>
+                  </tr>
+                  <tr>
+ 		    <td>
+ 		      <div class="DivContentSectionHead"><bean:message key="ChooseDrug.section2Title"/></div>
+		    </td>
+		  </tr>
+                  <tr>
+                    <td>
+                        <%
+                        if(brand.size() > 0 || gen.size() > 0){
+                            %>
+                          <table width="100%" border=0>
+                            <tr>
+                              <td width="50%">
+                                <div class="LeftMargin"><bean:message key="ChooseDrug.genericDrugBox"/></div>
+                              </td>
+                              <td width="50%">
+                                <div class="LeftMargin"><bean:message key="ChooseDrug.brandDrugBox"/></div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <div class="ChooseDrugBox">
+                                <table width="100%" border=0>
+                                  <%
+                                    boolean grey = false;
+                                    String bgColor="WHITE";
+                                    for(i=0; i<gen.size(); i++){                                     
+                                       bgColor=getColor(grey);                                        
+                                       RxDrugData.MinDrug t = (RxDrugData.MinDrug) gen.get(i);                                     
+                                  %>
+                                  <tr>
+                                    <td bgcolor="<%=bgColor%>">
+                                      <a href="searchDrug.do?genericSearch=<%= response.encodeURL( t.pKey ) %>&demographicNo=<%= response.encodeURL(demoNo) %>" title="<%=t.name%>">
+                                      <%= getMaxVal(t.name)%>  
+                                      </a>
+                                      <span>&nbsp;&nbsp;(<a href="javascript:ShowDrugInfoGN('<%= response.encodeURL(t.name)%>');">Info</a>)</span>
+                                    </td>
+                                  </tr>
+                                  <%
+                                    grey =!grey;
+                                   }%>
+                                </table>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="ChooseDrugBox">
+                                <table width="100%" border=0>
+                                  <%                                  
+                                  for(i=0; i<brand.size(); i++){
+                                      bgColor=getColor(grey);                                        
+                                      RxDrugData.MinDrug t = (RxDrugData.MinDrug) brand.get(i);
+                                       String brandName =  t.name;
+                                    %>
+                                    <tr>                                    
+                                      <td bgcolor="<%=bgColor%>">                                        
+                                        <a href="chooseDrug.do?BN=<%=java.net.URLEncoder.encode(brandName )%>&drugId=<%= response.encodeURL(t.pKey) %>&demographicNo=<%= response.encodeURL(demoNo) %>" title="<%=brandName %>" >
+                                        <%=brandName%> 
+                                        </a>                                             
+                                        <span>&nbsp;&nbsp;(<a href="javascript:ShowDrugInfoBN('<%=response.encodeURL(t.pKey) %>');">Info</a>)</span>
+                                      </td>
+                                    </tr>
+                                  <%                                     
+                                      grey =! grey;
+                                   }%>
+                                </table>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                            <%
+                        } else {
+                            %>
+                            <div class="LeftMargin">
+                                Search returned no results. Revise your search and try again.
+                            </div>
+                            <%
+                        }
+                        %>
+                        <br/>
+                        <script language="javascript">
+                            function customWarning(){
+                                if (confirm('This feature will allow you to manually enter a drug.'
+                                       + '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
+                                       + '\n  *  Known Dosage Forms / Routes'
+                                       + '\n  *  Drug Allergy Information'
+                                       + '\n  *  Drug-Drug Interaction Information'
+                                       + '\n  *  Drug Information'
+                                       + '\n\nAre you sure you wish to use this feature?')==true) {
+                                    window.location.href = 'chooseDrug.do?demographicNo=<%= response.encodeURL(demoNo) %>';
+                                }
+                            }
+                        </script>
+                        <div class="LeftMargin">
+                            <a href="javascript:customWarning();">
+                                I can't find the drug I'm looking for...
+                            </a>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                        <div class="ChooseDrugBox">
+                                <table width="100%" border=0>
+                                  <%
+                                    boolean grey2 = false;
+                                    String bgColor="WHITE";                                    
+                                    for(i=0; i<afhcClass.size(); i++){
+                                      bgColor=getColor(grey2);                                        
+                                      RxDrugData.MinDrug t = (RxDrugData.MinDrug) afhcClass.get(i);
+                                  %>
+                                  <tr>
+                                    <td bgcolor="<%=bgColor%>">
+                                      <a href="searchDrug.do?genericSearch=<%= response.encodeURL(t.pKey) %>&demographicNo=<%= response.encodeURL(demoNo) %>">
+                                      <%= t.name%> 
+                                      </a>
+                                      <span>&nbsp;&nbsp;(<a href="javascript:ShowDrugInfo('<%= response.encodeURL(t.pKey)  %>');">Info</a>)</span>
+                                    </td>
+                                  </tr>
+                                  <%
+                                    grey2 =!grey2;
+                                   } %>
+                                </table>
+                                </div>
+                    </td>
+                  </tr>
+            <!----End new rows here-->
+		  <tr height="100%">
+                    <td>
+                    </td>
+                  </tr>
+                </table>
+      </td>
+    </tr>
+    <tr>
+    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
+    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
+  	</tr>
+  	<tr>
+    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
+  	</tr>
+  	<tr>
+    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
+  	</tr>
+</table>
+
+</body>
+
+</html:html>
+<%!
+
+String getColor(boolean t){
+    String bgColor = "";
+    if(t){
+        bgColor="#F5F5F5";
+    } else {
+        bgColor="WHITE";
+    }
+    return bgColor;
+}
+String getMaxVal(String name){
+    if ( name.length() > 47 ){
+        name = name.substring(0,47)+"...";
+    }
+    return name;
+}
+%>

@@ -1,0 +1,52 @@
+<%/*
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+%>
+
+
+    <td width="10%" height="100%" valign="top">
+        <div class="PropSheetMenu">
+        <p class="PropSheetLevel1CurrentItem">Favorites</p>
+        <p class="PropSheetMenuItemLevel1">
+        <%
+        oscar.oscarRx.pageUtil.RxSessionBean bean2 = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        %>
+        <%
+        oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites
+            = new oscar.oscarRx.data.RxPrescriptionData().getFavorites(bean2.getProviderNo());
+        int j;
+        for (j=0; j<favorites.length; j++){ %>
+            <p class="PropSheetMenuItemLevel1">
+            <a href="useFavorite.do?favoriteId=<%= favorites[j].getFavoriteId() %>" title="<%= favorites[j].getFavoriteName() %>">
+              <%if(favorites[j].getFavoriteName().length()>13){ %>
+                    <%= favorites[j].getFavoriteName().substring(0, 10) + "..." %>
+              <%} else {%>
+                    <%= favorites[j].getFavoriteName() %>
+              <%}%>
+            </a>
+            
+       <%}%>
+        </div>
+    </td>
