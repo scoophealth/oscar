@@ -322,7 +322,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc1)).setScale(4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal otherperc01 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);   
 
-			if (otherdbcode1.compareTo("E411A") == 0) {
+			if (otherdbcode1.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0) {
 				eCode = otherdbcode1;
 				eDesc = otherdesc1;
 				ePerc = otherperc01.toString();
@@ -350,7 +350,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 			sotherBuffer.insert(f,"");
 			otherstr = sotherBuffer.toString();   
 
-			if (otherdbcode1.compareTo("Z776A")==0 || otherdbcode1.compareTo("P042A")==0 || otherdbcode1.compareTo("S768A")==0 || otherdbcode1.compareTo("S756A")==0 || otherdbcode1.compareTo("S757A")==0 || otherdbcode1.compareTo("S784A")==0 || otherdbcode1.compareTo("S745A")==0 || otherdbcode1.compareTo("P010A")==0 || otherdbcode1.compareTo("P009A")==0 || otherdbcode1.compareTo("P006A") == 0 || otherdbcode1.compareTo("P011A")==0 || otherdbcode1.compareTo("P041A") == 0 || otherdbcode1.compareTo("P018A") == 0 || otherdbcode1.compareTo("P038A") == 0 || otherdbcode1.compareTo("P020A") == 0 || otherdbcode1.compareTo("P031A") == 0 || otherdbcode1.compareTo("Z552A")==0 || otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") || (otherdbcode1.endsWith("B") && !otherdbcode1.endsWith("C988B") && !otherdbcode1.endsWith("C998B") && !otherdbcode1.endsWith("C999B") ) ){
+			if (otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || otherdbcode1.compareTo("P028A")==0 || otherdbcode1.compareTo("Z776A")==0 || otherdbcode1.compareTo("P042A")==0 || otherdbcode1.compareTo("S768A")==0 || otherdbcode1.compareTo("S756A")==0 || otherdbcode1.compareTo("S757A")==0 || otherdbcode1.compareTo("S784A")==0 || otherdbcode1.compareTo("S745A")==0 || otherdbcode1.compareTo("P010A")==0 || otherdbcode1.compareTo("P009A")==0 || otherdbcode1.compareTo("P006A") == 0 || otherdbcode1.compareTo("P011A")==0 || otherdbcode1.compareTo("P041A") == 0 || otherdbcode1.compareTo("P018A") == 0 || otherdbcode1.compareTo("P038A") == 0 || otherdbcode1.compareTo("P020A") == 0 || otherdbcode1.compareTo("P031A") == 0 || otherdbcode1.compareTo("Z552A")==0 || otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") || (otherdbcode1.endsWith("B") && !otherdbcode1.endsWith("C988B") && !otherdbcode1.endsWith("C998B") && !otherdbcode1.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee);
 				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
 				pCode =otherdbcode1;
@@ -388,7 +388,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc2)).setScale(4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal otherperc02 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
 
-			if (otherdbcode2.compareTo("E411A") == 0) {
+			if (otherdbcode2.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0) {
 				eCode = otherdbcode2;
 				eDesc = otherdesc2;
 				ePerc = otherperc02.toString();
@@ -416,7 +416,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 			sotherBuffer.insert(f,"");
 			otherstr2 = sotherBuffer.toString();
 
-			if (otherdbcode2.compareTo("Z776A")==0 || otherdbcode2.compareTo("P042A")==0 || otherdbcode2.compareTo("S768A")==0 || otherdbcode2.compareTo("S756A")==0 || otherdbcode2.compareTo("S757A")==0 || otherdbcode2.compareTo("S784A")==0 || otherdbcode2.compareTo("S745A")==0 || otherdbcode2.compareTo("P010A")==0 || otherdbcode2.compareTo("P009A")==0 || otherdbcode2.compareTo("P006A") == 0 || otherdbcode2.compareTo("P011A")==0 || otherdbcode2.compareTo("P041A") == 0 || otherdbcode2.compareTo("P018A") == 0 || otherdbcode2.compareTo("P038A") == 0 || otherdbcode2.compareTo("P020A") == 0 || otherdbcode2.compareTo("P031A") == 0 || otherdbcode2.compareTo("Z552A")==0 || otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") || (otherdbcode2.endsWith("B") && !otherdbcode2.endsWith("C988B") && !otherdbcode2.endsWith("C998B") && !otherdbcode2.endsWith("C999B") ) ){
+			if (otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || otherdbcode1.compareTo("P028A")==0 || otherdbcode2.compareTo("Z776A")==0 || otherdbcode2.compareTo("P042A")==0 || otherdbcode2.compareTo("S768A")==0 || otherdbcode2.compareTo("S756A")==0 || otherdbcode2.compareTo("S757A")==0 || otherdbcode2.compareTo("S784A")==0 || otherdbcode2.compareTo("S745A")==0 || otherdbcode2.compareTo("P010A")==0 || otherdbcode2.compareTo("P009A")==0 || otherdbcode2.compareTo("P006A") == 0 || otherdbcode2.compareTo("P011A")==0 || otherdbcode2.compareTo("P041A") == 0 || otherdbcode2.compareTo("P018A") == 0 || otherdbcode2.compareTo("P038A") == 0 || otherdbcode2.compareTo("P020A") == 0 || otherdbcode2.compareTo("P031A") == 0 || otherdbcode2.compareTo("Z552A")==0 || otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") || (otherdbcode2.endsWith("B") && !otherdbcode2.endsWith("C988B") && !otherdbcode2.endsWith("C998B") && !otherdbcode2.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee02);
 				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
 				pCode =otherdbcode2;
@@ -453,7 +453,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc3)).setScale(4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal otherperc03 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
 
-			if (otherdbcode3.compareTo("E411A") == 0) {
+			if (otherdbcode3.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0) {
 				eCode = otherdbcode3;
 				eDesc = otherdesc3;
 				ePerc = otherperc03.toString();
@@ -481,7 +481,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 			sotherBuffer.insert(f,"");
 			otherstr3 = sotherBuffer.toString();
 
-			if (otherdbcode3.compareTo("Z776A")==0 || otherdbcode3.compareTo("P042A")==0 || otherdbcode3.compareTo("S768A")==0 || otherdbcode3.compareTo("S756A")==0 || otherdbcode3.compareTo("S757A")==0 || otherdbcode3.compareTo("S784A")==0 || otherdbcode3.compareTo("S745A")==0 || otherdbcode3.compareTo("P010A")==0 || otherdbcode3.compareTo("P009A")==0 || otherdbcode3.compareTo("P006A") == 0 || otherdbcode3.compareTo("P011A")==0 || otherdbcode3.compareTo("P041A") == 0 || otherdbcode3.compareTo("P018A") == 0 || otherdbcode3.compareTo("P038A") == 0 || otherdbcode3.compareTo("P020A") == 0 || otherdbcode3.compareTo("P031A") == 0 || otherdbcode3.compareTo("Z552A")==0 || otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") || (otherdbcode3.endsWith("B") && !otherdbcode3.endsWith("C988B") && !otherdbcode3.endsWith("C998B") && !otherdbcode3.endsWith("C999B") ) ){
+			if (otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || otherdbcode1.compareTo("P028A")==0 || otherdbcode3.compareTo("Z776A")==0 || otherdbcode3.compareTo("P042A")==0 || otherdbcode3.compareTo("S768A")==0 || otherdbcode3.compareTo("S756A")==0 || otherdbcode3.compareTo("S757A")==0 || otherdbcode3.compareTo("S784A")==0 || otherdbcode3.compareTo("S745A")==0 || otherdbcode3.compareTo("P010A")==0 || otherdbcode3.compareTo("P009A")==0 || otherdbcode3.compareTo("P006A") == 0 || otherdbcode3.compareTo("P011A")==0 || otherdbcode3.compareTo("P041A") == 0 || otherdbcode3.compareTo("P018A") == 0 || otherdbcode3.compareTo("P038A") == 0 || otherdbcode3.compareTo("P020A") == 0 || otherdbcode3.compareTo("P031A") == 0 || otherdbcode3.compareTo("Z552A")==0 || otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") || (otherdbcode3.endsWith("B") && !otherdbcode3.endsWith("C988B") && !otherdbcode3.endsWith("C998B") && !otherdbcode3.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee03);
 				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
 				pCode =otherdbcode3;
@@ -541,7 +541,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		fee = "";
 	}else{ 
 		if (fee.compareTo(".00")==0) {
-			if (scode.compareTo("E411A") == 0) {
+			if (scode.compareTo("E411A") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0) {
 				eCode = scode;
 				eDesc = desc;
 				ePerc = request.getParameter("perc_"+temp);
@@ -561,7 +561,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 			BigDecimal bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigTotal = BigTotal.add(bdFee);
 
-			if (scode.compareTo("Z776A")==0 || scode.compareTo("P042A")==0 || scode.compareTo("S768A")==0 || scode.compareTo("S756A")==0 || scode.compareTo("S757A")==0 || scode.compareTo("S784A")==0 || scode.compareTo("S745A")==0 || scode.compareTo("P010A")==0 || scode.compareTo("P009A")==0 || scode.compareTo("P006A") == 0 || scode.compareTo("P011A")==0 || scode.compareTo("P041A") == 0 || scode.compareTo("P018A") == 0 || scode.compareTo("P038A") == 0 || scode.compareTo("P020A") == 0 || scode.compareTo("P031A") == 0 || scode.compareTo("Z552A")==0 || scode.compareTo("Z716A")==0 || scode.startsWith("S") || (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
+			if (otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || scode.compareTo("P028A")==0 || scode.compareTo("Z776A")==0 || scode.compareTo("P042A")==0 || scode.compareTo("S768A")==0 || scode.compareTo("S756A")==0 || scode.compareTo("S757A")==0 || scode.compareTo("S784A")==0 || scode.compareTo("S745A")==0 || scode.compareTo("P010A")==0 || scode.compareTo("P009A")==0 || scode.compareTo("P006A") == 0 || scode.compareTo("P011A")==0 || scode.compareTo("P041A") == 0 || scode.compareTo("P018A") == 0 || scode.compareTo("P038A") == 0 || scode.compareTo("P020A") == 0 || scode.compareTo("P031A") == 0 || scode.compareTo("Z552A")==0 || scode.compareTo("Z716A")==0 || scode.startsWith("S") || (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(bdFee);
 				pValue1PerUnit = pValue1PerUnit.add(bdFee);
 				pCode = scode;
