@@ -17,7 +17,7 @@
 // * <OSCAR TEAM>
 // * This software was written for the 
 // * Department of Family Medicine 
-// * McMaster Unviersity 
+// * McMaster University 
 // * Hamilton 
 // * Ontario, Canada 
 // *
@@ -44,7 +44,7 @@ import org.apache.struts.util.MessageResources;
 
 public class MsgViewMessageAction extends Action {
 
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
 				 HttpServletRequest request,
 				 HttpServletResponse response)
@@ -52,7 +52,7 @@ public class MsgViewMessageAction extends Action {
         // System.out.println("in view message action jackson");
         // Extract attributes we will need
         Locale locale = getLocale(request);
-        MessageResources messages = getResources();
+        MessageResources messages = getResources(request);
 
         oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
         String providerNo= null;

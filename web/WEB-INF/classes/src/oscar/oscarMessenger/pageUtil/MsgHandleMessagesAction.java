@@ -44,14 +44,14 @@ import org.apache.struts.util.MessageResources;
 
 public  class MsgHandleMessagesAction extends Action {
 
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
         // Extract attributes we will need
         Locale locale = getLocale(request);
-        MessageResources messages = getResources();
+        MessageResources messages = getResources(request);
         MsgSessionBean bean = (MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
         String providerNo = bean.getProviderNo();
         MsgHandleMessagesForm frm = (MsgHandleMessagesForm) form;
