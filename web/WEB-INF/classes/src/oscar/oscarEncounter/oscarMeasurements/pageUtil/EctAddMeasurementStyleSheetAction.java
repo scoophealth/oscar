@@ -83,16 +83,18 @@ public class EctAddMeasurementStyleSheetAction extends Action {
         boolean isAdded = true;
         
         try {
+            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT * FROM measurementCSSLocation WHERE location='" + file.getFileName() + "'";
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.next()){
+                return false;
+            }
             //retrieve the file data
             ByteArrayOutputStream baos = new
             ByteArrayOutputStream();
-            InputStream stream = file.getInputStream();
-            Properties props = new Properties();
-
-            //properties must exist
-
-            props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar_mcmaster.properties"));            
-            String place= props.getProperty("oscarMeasurement_css_upload_path");
+            InputStream stream = file.getInputStream();                    
+            String place= OscarProperties.getInstance().getProperty("oscarMeasurement_css_upload_path");
             
             if(!place.endsWith("/"))
                     place = new StringBuffer(place).insert(place.length(),"/").toString();
@@ -121,7 +123,9 @@ public class EctAddMeasurementStyleSheetAction extends Action {
             ioe.printStackTrace();
             return isAdded=false;
         }
-
+        catch(SQLException e) {
+            System.out.println(e.getMessage());            
+        } 
         return isAdded;
     }
     

@@ -189,12 +189,8 @@ public class EctValidation{
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
                 rs = db.GetSQL(sql);
                 if(rs.next()){
-                    Properties props = new Properties();
-
-                    //properties must exist
-
-                    props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar_mcmaster.properties"));
-                    String place= props.getProperty("oscarMeasurement_css");
+                    
+                    String place= OscarProperties.getInstance().getProperty("oscarMeasurement_css");
 
                     if(!place.endsWith("/"))
                             place = new StringBuffer(place).insert(place.length(),"/").toString();
@@ -207,9 +203,7 @@ public class EctValidation{
         catch(SQLException e) {
             System.out.println(e.getMessage());            
         }
-        catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+
         return cssLocation;
     }
     
