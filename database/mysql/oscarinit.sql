@@ -1974,6 +1974,30 @@ CREATE TABLE formAnnualV2 (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table formFall
+--
+DROP TABLE IF EXISTS formFalls;
+CREATE TABLE formFalls(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,
+  fallenLast12MY tinyint(1),
+  fallenLast12MN tinyint(1),
+  fallenLast12MNotRemember tinyint(1),
+  injuredY tinyint(1),
+  injuredN tinyint(1),
+  medAttnY tinyint(1),
+  medAttnN tinyint(1),
+  hospitalizedY tinyint(1),
+  hospitalizedN tinyint(1),
+  limitActY tinyint(1),
+  limitActN tinyint(1),
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `formImmunAllergy`
 --
 
@@ -2959,6 +2983,46 @@ CREATE TABLE formRourke (
   p3_signature18m varchar(50) default NULL,
   p3_signature2y varchar(50) default NULL,
   p3_signature4y varchar(50) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table formSelfAdministered
+--
+DROP TABLE IF EXISTS formSelfAdministered;
+CREATE TABLE formSelfAdministered(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,
+  sex varchar(1),
+  dob date,
+  healthEx tinyint(1),
+  healthVG tinyint(1),
+  healthG tinyint(1),
+  healthF tinyint(1),
+  healthP tinyint(1),
+  stayInHospNo tinyint(1),
+  stayInHosp1 tinyint(1),
+  stayInHosp2Or3 tinyint(1),
+  stayInHospMore3 tinyint(1),
+  visitPhyNo tinyint(1),
+  visitPhy1 tinyint(1),
+  visitPhy2Or3 tinyint(1),
+  visitPhyMore3 tinyint(1),
+  diabetesY tinyint(1),
+  diabetesN tinyint(1),
+  heartDiseaseY tinyint(1),
+  heartDiseaseN tinyint(1),
+  anginaPectorisY tinyint(1),
+  anginaPectorisN tinyint(1),
+  myocardialInfarctionY tinyint(1),
+  myocardialInfarctionN tinyint(1),
+  anyHeartAttackY tinyint(1),
+  anyHeartAttackN tinyint(1),
+  relativeTakeCareY tinyint(1),
+  relativeTakeCareN tinyint(1),
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
