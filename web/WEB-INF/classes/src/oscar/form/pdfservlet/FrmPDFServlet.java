@@ -1,29 +1,29 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 /*
- * 
- *  
+ *
+ *
  */
 // javac -classpath .;..\lib\itext-1.01.jar -d . FrmPDFServlet.java
 // form/createpdf?__title=British+Columbia+Antenatal+Record+Part+1&__cfgfile=bcar1PrintCfgPg1&__cfgfile=bcar1PrintCfgPg2&__template=bcar1
@@ -59,14 +59,14 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 /**
- * 
- *  
+ *
+ *
  */
 public class FrmPDFServlet extends HttpServlet {
 
     /**
-     * 
-     *  
+     *
+     *
      */
     public FrmPDFServlet() {
         super();
@@ -142,10 +142,11 @@ public class FrmPDFServlet extends HttpServlet {
     }
 
     /**
-     *  
+     *
      */
     protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req,
             final ServletContext ctx) throws DocumentException, java.io.IOException {
+        final String PAGESIZE = "printPageSize";
         Document document = new Document();
         //document = new Document(psize, 50, 50, 50, 50);
 
@@ -201,7 +202,12 @@ public class FrmPDFServlet extends HttpServlet {
             document.addAuthor("");
             document.addHeader("Expires", "0");
 
-            document.setPageSize(PageSize.LETTER);
+            // A0-A10, LEGAL, LETTER, HALFLETTER, _11x17, LEDGER, NOTE, B0-B5, ARCH_A-ARCH_E, FLSA and FLSE
+            // the following shows a temp way to get a print page size
+            Rectangle pageSize = PageSize.LETTER;
+            if("PageSize.HALFLETTER".equals(props.getProperty(PAGESIZE))) pageSize = PageSize.HALFLETTER;
+            if("PageSize.A6".equals(props.getProperty(PAGESIZE))) pageSize = PageSize.A6;
+            document.setPageSize(pageSize);
             document.open();
 
             // create a reader for a certain document
@@ -284,7 +290,7 @@ public class FrmPDFServlet extends HttpServlet {
                                                 .trim()), (height - Integer.parseInt(cfgVal[2]
                                                 .trim())), 0);
                         cb.endText();
-                    } else { // write prop text 
+                    } else { // write prop text
                         cb.beginText();
                         cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
                         cb
