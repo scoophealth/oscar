@@ -2,19 +2,16 @@
 	
 */
 
-        A:link{
-            font-size: 10pt ; 
+        A:link{            
             font-family: 
             verdana,arial,helvetica; 
             color: #336666;
             cursor: hand }
-	A:visited{
-            font-size: 10pt ; 
+	A:visited{            
             font-family: verdana,arial,helvetica; 
             color: #336666; }
 	A:hover{
-            font-weight: bold  ; 
-            font-size: 10pt; 
+            font-weight: bold; 
             font-family: verdana,arial,helvetica; 
             color: #000000; 
             background-color: #FFFFFF;}
@@ -25,13 +22,13 @@
             color: #000000; 
             background-color: #FFFFFF;
         }
-	TD{
-            font-size: 10pt ; 
-            font-family: verdana,arial,helvetica;             
+	TD{             
+            font-size: 10pt;
+            font-family: verdana,arial,helvetica;
+            height: 15pt;
         }
 	TD.black{
-            font-weight: bold  ; 
-            font-size: 11pt ; 
+            font-weight: bold; 
             font-family: verdana,arial,helvetica; 
             color: #FFFFFF; 
             background-color: #666699;
@@ -45,7 +42,11 @@
             height: 20pt;
         }
         .notResolved{
+            font-size: 10pt;
             color: blue;
+        }
+        .quickList{
+            font-size: 9pt;
         }
         .subject{
             font-size: 18pt;
