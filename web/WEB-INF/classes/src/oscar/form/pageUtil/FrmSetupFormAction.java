@@ -84,95 +84,67 @@ public final class FrmSetupFormAction extends Action {
         request.setAttribute("today", today);
         request.setAttribute("drugs", drugLists);
         
-        if(!formId.equals("0")){
-            System.out.println("formID: " + formId);
-            Properties currentRec = getFormRecord(formName, formId, demo);
-            Vector measurementTypes = EctFindMeasurementTypeUtil.getMeasurementsType(formName, demo);
+                    
+        Properties currentRec = getFormRecord(formName, formId, demo);
+        
+        try {
+            System.out.println("formId=" + formId + "opening " + formName + ".xml");
+            InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");
+            Vector measurementTypes = EctFindMeasurementTypeUtil.checkMeasurmentTypes(is, formName);
             EctMeasurementTypesBean mt;
+
+            
             for(int i=0; i<measurementTypes.size(); i++){
-                mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);                                        
-                frm.setValue(mt.getType()+"Value", currentRec.getProperty(mt.getType()+"Value", ""));
-                frm.setValue(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
-                frm.setValue(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));  
+                mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
                 request.setAttribute(mt.getType(), mt.getType());
                 request.setAttribute(mt.getType() + "Display", mt.getTypeDisplayName());
                 request.setAttribute(mt.getType() + "Desc", mt.getTypeDesc());
                 request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());                
                 
-                /*try{
-                    //get last value and its observation date
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                    String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
-                                     + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC LIMIT 1";
-                    ResultSet rs = db.GetSQL(sqlData);
-                    if(rs.next()){                                            
-                        request.setAttribute(mt.getType()+"LastData", rs.getString("dataField"));
-                        request.setAttribute(mt.getType()+"LastDataEnteredDate", rs.getString("dateEntered"));
-                        frm.setValue(mt.getType()+"LastData",rs.getString("dateEntered"));
-                        frm.setValue(mt.getType()+"LastDataEnteredDate",rs.getString("dateEntered"));
-                    }
-                    rs.close();
-                    db.CloseConn();
-                    System.out.println("Set attribute for Type: " + mt.getType() + " value: " + currentRec.getProperty(mt.getType()+"Value", ""));
+                if(currentRec!=null){
+                    frm.setValue(mt.getType()+"Value", currentRec.getProperty(mt.getType()+"Value", ""));
+                    frm.setValue(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
+                    frm.setValue(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));                      
+                    request.setAttribute(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
+                    request.setAttribute(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", "")); 
                 }
-                catch (SQLException e) {
-                    e.printStackTrace();
-                }*/
-            }
-                    
-        }
-        else{
-            try {
-                System.out.println("formId=" + formId + "opening " + formName + ".xml");
-                InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");
-                Vector measurementTypes = EctFindMeasurementTypeUtil.checkMeasurmentTypes(is, formName);
-                EctMeasurementTypesBean mt;
-                
-                for(int i=0; i<measurementTypes.size(); i++){
-                    mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);                                                            
-                    frm.setValue(mt.getType() + "Date", today);                
-                    
-                    /*
-                    //get last value and its observation date
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                    String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
-                                     + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC LIMIT 1";
-                    ResultSet rs = db.GetSQL(sqlData);
-                    if(rs.next()){                    
-                        //mt.setLastData(rs.getString("dataField"));
-                        //mt.setLastDateEntered(rs.getString("dateEntered"));
-                        request.setAttribute(mt.getType()+"LastData", rs.getString("dataField"));
-                        request.setAttribute(mt.getType()+"LastDataEnteredDate", rs.getString("dateEntered"));
-                        frm.setValue(mt.getType()+"LastData",rs.getString("dateEntered"));
-                        frm.setValue(mt.getType()+"LastDataEnteredDate",rs.getString("dateEntered"));
-                    }
-                    rs.close();
-                    db.CloseConn();
-                    */
-                    request.setAttribute(mt.getType(), mt.getType());
-                    request.setAttribute(mt.getType() + "Display", mt.getTypeDisplayName());
-                    request.setAttribute(mt.getType() + "Desc", mt.getTypeDesc());
-                    request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());
-                    //request.setAttribute("value("+mt.getType() + "Date)", today);
+                else{
+                    frm.setValue(mt.getType() + "Date", today);
+                }
 
-                }    
-                is.close();
-            }
-            /*
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
-            /*catch (Exception e) {
-                e.printStackTrace();            
-            } */       
-            catch (IOException e) {
-                    System.out.println("IO error.");
-                    System.out.println("Error, file " + formName + ".xml not found.");
-                    System.out.println("This file must be placed at web/form");
-                    e.printStackTrace();
-            }
+                /*
+                //get last value and its observation date
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
+                                 + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC LIMIT 1";
+                ResultSet rs = db.GetSQL(sqlData);
+                if(rs.next()){                    
+                    //mt.setLastData(rs.getString("dataField"));
+                    //mt.setLastDateEntered(rs.getString("dateEntered"));
+                    request.setAttribute(mt.getType()+"LastData", rs.getString("dataField"));
+                    request.setAttribute(mt.getType()+"LastDataEnteredDate", rs.getString("dateEntered"));
+                    frm.setValue(mt.getType()+"LastData",rs.getString("dateEntered"));
+                    frm.setValue(mt.getType()+"LastDataEnteredDate",rs.getString("dateEntered"));
+                }
+                rs.close();
+                db.CloseConn();
+                */                
+            }    
+            is.close();
         }
-                
+        /*
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        /*catch (Exception e) {
+            e.printStackTrace();            
+        } */       
+        catch (IOException e) {
+                System.out.println("IO error.");
+                System.out.println("Error, file " + formName + ".xml not found.");
+                System.out.println("This file must be placed at web/form");
+                e.printStackTrace();
+        }                        
         return (new ActionForward("/form/form"+formName+".jsp"));        
     }
     
