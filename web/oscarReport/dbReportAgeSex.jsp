@@ -42,10 +42,6 @@ GregorianCalendar now=new GregorianCalendar();
   String demo_no="", demo_sex="", provider_no="", roster="", patient_status="", date_joined="";
   String demographic_dob="1800";
 
-%>
-<%
-
-
    ResultSet rsdemo2 = null;
 	int count1 = 0;
 	int param4 = Integer.parseInt(demographic_dob);
@@ -80,8 +76,5 @@ GregorianCalendar now=new GregorianCalendar();
 
  	    
 %>
-<jsp:forward page='oscarReportAgeSex.jsp' >
-</jsp:forward>
-<%
+<jsp:forward page='oscarReportAgeSex.jsp'/>
 
-%> 
