@@ -127,7 +127,7 @@ Adjust Private Billing Codes
                   
                 <table border=1>
                 <tr>
-                    <td>codeID</td>
+                    
                     <td>code</td>
                     <td>desc</td>
                     <td>price</td>
@@ -139,10 +139,9 @@ Adjust Private Billing Codes
                 
                   <tr>
                      <td><a href="billingEditCode.jsp?codeId=<%=bcd.getBillingserviceNo()%>&code=<%=bcd.getServiceCode()%>&desc=<%=bcd.getDescription()%>&value=<%=bcd.getValue()%>&whereTo=private">
-                            <%=bcd.getBillingserviceNo()%>
+                           <%=bcd.getServiceCode()%>
                          </a>
-                     </td>
-                     <td><%=bcd.getServiceCode()%></td>
+                     </td>                    
                      <td><%=bcd.getDescription()%></td>
                      <td><%=bcd.getValue()%></td>
                   </tr>
