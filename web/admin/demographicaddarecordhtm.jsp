@@ -24,9 +24,12 @@
  */
 -->
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
-<title> ADD PATIENT INFO</title>
+<title><bean:message key="admin.demographicaddrecordhtm.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -47,34 +50,34 @@ function upCaseCtrl(ctrl) {
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
 	  <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ADD A DEMOGRAPHIC RECORD</font></th>
+      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.demographicaddrecordhtm.msgTitle"/></font></th>
 	  </tr>
 	</table>
 <p>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
 	<form method="post" name="updatedelete" action="admincontrol.jsp">
   <tr> 
-      <td align="right"> <b>Last Name<font color="red">:</font> </b></td>
+      <td align="right"> <b><bean:message key="admin.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">  <input type="text" name="last_name" onBlur="upCaseCtrl(this)">      </td>
-      <td align="right"><b>First Name<font color="red">:</font> </b> </td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
       <td align="left"> <input type="text" name="first_name" onBlur="upCaseCtrl(this)">  </td>
   </tr><tr valign="top"> 
-      <td  align="right"> <b>Address: </b></td>
+      <td  align="right"> <b><bean:message key="admin.demographicaddrecordhtm.formAddr"/>: </b></td>
       <td align="left" > <input type="text" name="address" onBlur="upCaseCtrl(this)"> </td>
-      <td align="right"><b>City: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formCity"/>: </b></td>
       <td align="left"> <input type="text" name="city" onBlur="upCaseCtrl(this)"> </td>
   </tr><tr valign="top"> 
-      <td align="right"><b>Province: </b> </td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formProvince"/>: </b> </td>
       <td  align="left"> <input type="text" name="province" onBlur="upCaseCtrl(this)"> </td>
-      <td  align="right"><b>Postal: </b> </td>
+      <td  align="right"><b><bean:message key="admin.demographicaddrecordhtm.formPostal"/>: </b> </td>
       <td  align="left"> <input type="text" name="postal" onBlur="upCaseCtrl(this)"></td>
   </tr><tr valign="top"> 
-      <td  align="right"><b>Phone(H): </b> </td>
+      <td  align="right"><b><bean:message key="admin.demographicaddrecordhtm.formPhoneH"/>: </b> </td>
       <td align="left" > <input type="text" name="phone" value=""></td>
-      <td  align="right"><b>Phone(O):</b> </td>
+      <td  align="right"><b><bean:message key="admin.demographicaddrecordhtm.formPhoneW"/>:</b> </td>
       <td  align="left"> <input type="text" name="phone2" value=""></td>
   </tr><tr valign="top"> 
-      <td  align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b><font color="red">:</font></b></td>
+      <td  align="right"><b><bean:message key="admin.demographicaddrecordhtm.formDOB"/><font color="red">:</font></b></td>
       <td  align="left" > 
         <table border="0" cellpadding="0" cellspacing="0">
           <tr> 
@@ -92,29 +95,29 @@ function upCaseCtrl(ctrl) {
           </tr>
         </table>
       </td>
-      <td  align="right"><b>Age: </b></td>
+      <td  align="right"><b><bean:message key="admin.demographicaddrecordhtm.formAge"/>: </b></td>
       <td align="left"><input type="text" name="age"> </td>
   </tr><tr valign="top"> 
-      <td align="right"><b>HIN: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formHIN"/>: </b></td>
       <td align="left" ><input type="text" name="hin"></td>
-      <td align="right"><b>Ver:</b> </td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formVer"/>:</b> </td>
       <td align="left"><input type="text" name="ver" value=""> </td>
   </tr><!--tr valign="top"> 
-      <td align="right"><b>Roster Status: </b> </td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formRoster"/>: </b> </td>
       <td align="left" > 
         <input type="text" name="roster_status" onBlur="upCaseCtrl(this)">
       </td>
-      <td align="right"> <b>Patient Status:</b> <b> </b></td>
+      <td align="right"> <b><bean:message key="admin.demographicaddrecordhtm.formPatientStatus"/>:</b> <b> </b></td>
       <td align="left"> 
         <input type="text" name="patient_status" onBlur="upCaseCtrl(this)">
       </td>
     </tr-->
     <tr valign="top"> 
-      <td align="right"><b>Date Joined: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formDatejoined"/>: </b></td>
       <td align="left" > 
         <input type="text" name="date_joined" value="0000-00-00">
       </td>
-      <td align="right"><b>HC Type: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formHCType"/>: </b></td>
       <td align="left">
         <select name="hc_type">
           <option value="ON" selected>Ontario</option>
@@ -131,40 +134,43 @@ function upCaseCtrl(ctrl) {
       </td>
     </tr>
     <tr valign="top"> 
-      <td align="right"><b>Staff: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formStaff"/>: </b></td>
       <td align="left" > 
         <input type="text" name="staff">
       </td>
-      <td align="right"><b>Sex </b><font size="-2">(F/M)</font><b><font color="red">:</font> </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formSex"/> </b><b><font color="red">:</font> </b></td>
       <td align="left"> 
-        <input type="text" name="sex" maxlength="1" onBlur="upCaseCtrl(this)">
+        <select name="sex">
+          <option value="F" selected><bean:message key="admin.demographicaddrecordhtm.formF"/></option>
+          <option value="M"><bean:message key="admin.demographicaddrecordhtm.formM"/></option>
+	</select>
       </td>
     </tr>
     <tr valign="top"> 
-      <td align="right"><b>End Date: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formEndDate"/>: </b></td>
       <td align="left" > 
         <input type="text" name="end_date" value="0000-00-00">
       </td>
-      <td align="right"> <b>EFF Date: </b></td>
+      <td align="right"> <b><bean:message key="admin.demographicaddrecordhtm.formEFF"/>: </b></td>
       <td align="left"> 
         <input type="text" name="eff_date" value="0000-00-00">
       </td>
     </tr>
     <tr valign="top"> 
-      <td align="right"><b>PCN Indicator: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formPCNInd"/>: </b></td>
       <td align="left" > 
         <input type="text" name="pcn_indicator" onBlur="upCaseCtrl(this)">
       </td>
-      <td align="right"><b>Chart No.:</b> </td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formChartNo"/>:</b> </td>
       <td align="left">
         <input type="text" name="chart_no" value="">
       </td>
     <tr valign="top"> 
-      <td align="right"><b>HC Renew Date: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formHCRenewDate"/>: </b></td>
       <td align="left" > 
         <input type="text" name="hc_renew_date" value="0000-00-00">
       </td>
-      <td align="right"><b>Family Doctor: </b></td>
+      <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formFamilyDoc"/>: </b></td>
       <td align="left">
         <input type="text" name="family_doctor">
       </td>
@@ -177,8 +183,8 @@ function upCaseCtrl(ctrl) {
         <div align="center"> 
           <input type="hidden" name="dboperation" value="demographic_add_record">
           <input type="hidden" name="displaymode" value="Demographic_Add_Record">
-          <input type="submit" name="subbutton" value="Add Record">
-          <input type="reset" name="Reset" value="Cancel" >
+          <input type="submit" name="subbutton" value="<bean:message key="admin.demographicaddrecordhtm.btnAdd"/>">
+          <input type="reset" name="Reset" value="<bean:message key="global.btnCancel"/>">
         </div>
       </td>
     </tr>
@@ -189,10 +195,10 @@ function upCaseCtrl(ctrl) {
   <table border="0" cellspacing="0" cellpadding="0" width="100%">
     <tr>
       <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+        <bean:message key="admin.demographicaddrecordhtm.btnBack"/></a></td>
+      <td align="right"><a href="../logout.jsp"> <bean:message key="admin.demographicaddrecordhtm.btnLogOut"/><img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
     </tr>
   </table>
 
 </body>
-</html>
+</html:html>
