@@ -55,10 +55,11 @@ if (dateBegin.compareTo("") == 0){
 }else{
 	dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
 }
-
+System.out.println(request.getParameter("provider"));
 ResultSet rslocal = apptMainBean.queryResults(request.getParameter("provider"), "search_provider_ohip_dt");
 while(rslocal.next()){
 	proOHIP = rslocal.getString("ohip_no"); 
+   
 	billinggroup_no= rslocal.getString("billing_no"); //SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
 
 	if (billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0 ){
@@ -78,7 +79,7 @@ while(rslocal.next()){
 	extract.setBatchCount(String.valueOf(bCount));
 	extract.dbQuery();
 
-	htmlValue = "<font color='red'>" + errorMsg + "</font>" + extract.getHtmlCode();
+	htmlValue += "<font color='red'>" + errorMsg + "</font>" + extract.getHtmlCode()+ "<hr/><br/><br/>";
 }
 rslocal.close();
 apptMainBean.closePstmtConn();

@@ -77,10 +77,10 @@ function checkData() {
 	if(document.forms[0].provider.value=="000000"){
 		alert("Please select a provider!");
 		b = false;
-	}else if(document.forms[0].xml_vdate.value==""){
-		alert("Please give a date!");
-		b = false;
-	}
+	}//else if(document.forms[0].xml_vdate.value==""){
+		//alert("Please give a date!");
+		//b = false;
+	//}
 
 	return b;
 }
@@ -105,6 +105,7 @@ function checkData() {
 
 <%
 String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
+System.out.println("providerview "+providerview);
 String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
 String xml_appointment_date = request.getParameter("xml_appointment_date")==null? nowDate : request.getParameter("xml_appointment_date");
 %>
@@ -117,9 +118,7 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 	</td>
 	<td width="254">
 	<select name="provider">
-		<option value="000000" <%=providerview.equals("000000")?"selected":""%>><b>Select Provider</b></option>
-
-
+	   <option value="%" ><b>All Providers</b></option>		
 <% 
 String proFirst="";
 String proLast="";
