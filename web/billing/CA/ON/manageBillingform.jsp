@@ -1,5 +1,5 @@
 <%      
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 String asstProvider_no = "";
 String color ="";
