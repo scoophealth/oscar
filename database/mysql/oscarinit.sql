@@ -76,7 +76,7 @@ CREATE TABLE billactivity (
   htmlfilename varchar(50) default NULL,
   ohipfilename varchar(50) default NULL,
   providerohipno varchar(6) default NULL,
-  groupno varchar(4) default NULL,
+  groupno varchar(6) default NULL,
   creator varchar(6) default NULL,
   htmlcontext text,
   ohipcontext text,
