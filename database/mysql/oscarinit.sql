@@ -3092,7 +3092,8 @@ CREATE TABLE immunizations (
   immunizations text,
   save_date date NOT NULL default '0001-01-01',
   archived tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (ID)
+  PRIMARY KEY (ID),
+  KEY demographic_no (demographic_no)
 ) TYPE=MyISAM;
 
 --
