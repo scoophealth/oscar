@@ -271,6 +271,9 @@ INSERT INTO encounterForm VALUES ('Self Management', '../form/formselfmanagement
 INSERT INTO encounterForm VALUES ('Self Efficacy', '../form/formselfefficacy.jsp?demographic_no=','formSelfEfficacy',1);
 INSERT INTO encounterForm VALUES ('HomeFalls', '../form/formhomefalls.jsp?demographic_no=','formHomeFalls',1);
 INSERT INTO encounterForm VALUES ('Cost Questionnaire', '../form/formcostquestionnaire.jsp?demographic_no=','formCostQuestionnaire',1);
+INSERT INTO encounterForm VALUES ('FDI Function', '../form/formlatelifeFDIfunction.jsp?demographic_no=','formLateLifeFDIFunction',1); 
+INSERT INTO encounterForm VALUES ('FDI Disability', '../form/formlatelifeFDIdisability.jsp?demographic_no=','formLateLifeFDIDisability',1);
+
 --
 -- Dumping data for table 'encountertemplate'
 --
