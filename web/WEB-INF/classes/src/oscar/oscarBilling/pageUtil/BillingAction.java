@@ -21,9 +21,7 @@ public final class BillingAction extends Action {
     HttpServletResponse response)
     throws IOException, ServletException {
         
-        // Extract attributes we will need
         Locale locale = getLocale(request);
-        //MessageResources messages = request.getResources();
         
         if(request.getSession().getAttribute("user") == null  ){
             return (mapping.findForward("Logout"));
@@ -35,8 +33,11 @@ public final class BillingAction extends Action {
         if(request.getParameter("billRegion").equals("ON")){                        
             String newURL = mapping.findForward("ON").getPath();
             newURL = newURL + "?"+request.getQueryString();                            
-            //return (new ActionForward(newURL));                
-            return (mapping.findForward(newURL));                
+            
+            ActionForward ON = new ActionForward();
+            ON.setPath(newURL);
+            ON.setRedirect(true);
+            return ON;
         }else{
                 
             if(request.getParameter("demographic_no")!=null & request.getParameter("appointment_no")!=null) {
