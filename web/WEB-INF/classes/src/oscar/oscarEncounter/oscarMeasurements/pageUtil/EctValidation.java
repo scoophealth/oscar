@@ -24,7 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 import java.lang.*;
 import java.sql.ResultSet;
@@ -34,7 +34,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 import org.apache.commons.validator.*;
 import oscar.oscarDB.DBHandler;
-
+import oscar.OscarProperties;
 
 public class EctValidation{
 
@@ -166,5 +166,80 @@ public class EctValidation{
         return validation;
      }
      
-     
+     /*****************************************************************************************
+     * find the css path from the database and properties file
+     *
+     * @return String
+     ******************************************************************************************/
+    public String getCssPath(String inputGroupName){
+        String cssLocation = null;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
+            System.out.println("Sql Statement: " + sql);
+            ResultSet rs;
+            rs = db.GetSQL(sql);
+            if(rs.next()){
+                String cssId = rs.getString("cssID");
+                rs.close();   
+                
+                sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
+                rs = db.GetSQL(sql);
+                if(rs.next()){
+                    Properties props = new Properties();
+
+                    //properties must exist
+
+                    props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar_mcmaster.properties"));
+                    String place= props.getProperty("oscarMeasurement_css");
+
+                    if(!place.endsWith("/"))
+                            place = new StringBuffer(place).insert(place.length(),"/").toString();
+                    cssLocation = place+rs.getString("location");
+                }
+            }                                 
+            
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());            
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return cssLocation;
+    }
+    
+         /*****************************************************************************************
+     * find the css name from the database
+     *
+     * @return String
+     ******************************************************************************************/
+    public String getCssName(String inputGroupName){
+        String cssName = null;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
+            System.out.println("Sql Statement: " + sql);
+            ResultSet rs;
+            rs = db.GetSQL(sql);
+            if(rs.next()){
+                String cssId = rs.getString("cssID");
+                rs.close();   
+                
+                sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
+                rs = db.GetSQL(sql);
+                if(rs.next()){                    
+                    cssName = rs.getString("location");
+                }
+            }                                 
+            
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());            
+        }
+
+        return cssName;
+    }
 }
