@@ -29,6 +29,8 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.zip.*;
+import org.apache.commons.fileupload.*;
+import oscar.*;
 import oscar.DocumentBean;
 
 public class DocumentTeleplanReportUploadServlet extends HttpServlet{
@@ -52,18 +54,48 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         String userHomePath = System.getProperty("user.home", "user.dir");
         System.out.println(userHomePath);
         
-        File pFile = new File(userHomePath, backupfilepath+".properties");
-        
-        
-        //   File pFile = new File(userHomePath, "oscar_sfhc.properties");
-        FileInputStream pStream = new FileInputStream(pFile.getPath());
-        
-        Properties ap = new Properties();
-        ap.load(pStream);
+        Properties ap = OscarProperties.getInstance();
         
         forwardTo  = ap.getProperty("TA_FORWARD");
-        foldername = ap.getProperty("DOCUMENT_DIR");
-        pStream.close();
+        foldername = ap.getProperty("DOCUMENT_DIR");        
+        
+        //
+         if (forwardTo == null || forwardTo.length() < 1) return;
+
+        boolean isMultipart = FileUpload.isMultipartContent(request);
+        //		 Create a new file upload handler
+        DiskFileUpload upload = new DiskFileUpload();
+
+        try {
+            //		 Parse the request
+            List  items = upload.parseRequest(request);
+//          Process the uploaded items
+            Iterator iter = items.iterator();
+            while (iter.hasNext()) {
+                FileItem item = (FileItem) iter.next();
+
+                if (item.isFormField()) {
+                    //String name = item.getFieldName();
+                    //String value = item.getString(); 
+                    //System.out.println("Fieldname: " + item.getFieldName());
+                } else {
+                    String pathName = item.getName();  
+                    String [] fullFile = pathName.split("[/|\\\\]");
+            		File savedFile = new File(foldername, fullFile[fullFile.length-1]);
+                    //System.out.println(item.getName() + "fullFile: " + fullFile[fullFile.length-1]);
+                    fileheader = fullFile[fullFile.length-1];
+            		
+            		item.write(savedFile);
+                }
+            }
+        } catch (FileUploadException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //
         
         
         // function = request.getParameter("function");
@@ -71,7 +103,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         // filedesc = request.getParameter("filedesc");
         // creator = request.getParameter("creator");
         
-        ServletInputStream sis = request.getInputStream();
+  /*      ServletInputStream sis = request.getInputStream();
         BufferedOutputStream dest = null;
         FileOutputStream fos = null;
         boolean bwri = false;
@@ -132,7 +164,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         //dest.flush();
         dest.close();
         sis.close();
-        
+    */    
         
         DocumentBean documentBean = new DocumentBean();
         
