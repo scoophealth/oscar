@@ -113,7 +113,7 @@ function checkTotal() {
       phone2 = rs.getString("phone2");
       dob=dob_year+"/"+dob_month+"/"+dob_date;
       sex = rs.getString("sex");
-      hin = "HN "+ rs.getString("hc_type") +" "+rs.getString("hin")+ " " +rs.getString("ver");
+      hin = "HN "+ rs.getString("hc_type") +" "+rs.getString("hin")+ " " +rs.getString("ver");      
     }
   }
   phone2 = phone2.equals("")?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
@@ -125,19 +125,19 @@ function checkTotal() {
 
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <form method="post" name="labelprint" action="demographicprintdemographic.jsp">
-    <input type="hidden" name="address" value=<%=address%>>
-    <input type="hidden" name="chart_no" value=<%=chart_no%>>
-    <input type="hidden" name="city" value=<%=city%>>
-    <input type="hidden" name="dob" value=<%=dob%>>
-    <input type="hidden" name="first_name" value=<%=first_name%>>
-    <input type="hidden" name="hin" value=<%=hin%>>
-    <input type="hidden" name="last_name" value=<%=last_name%>>
-    <input type="hidden" name="phone" value=<%=phone%>>
-    <input type="hidden" name="phone2" value=<%=phone2%>>
-    <input type="hidden" name="postal" value=<%=postal%>>
-    <input type="hidden" name="providername" value=<%=providername%>>
-    <input type="hidden" name="province" value=<%=province%>>
-    <input type="hidden" name="sex" value=<%=sex%>>
+    <input type="hidden" name="address" value="<%=address%>" >
+    <input type="hidden" name="chart_no" value="<%=chart_no%>" >
+    <input type="hidden" name="city" value="<%=city%>">
+    <input type="hidden" name="dob" value="<%=dob%>">
+    <input type="hidden" name="first_name" value="<%=first_name%>">
+    <input type="hidden" name="hin" value="<%=hin%>">
+    <input type="hidden" name="last_name" value="<%=last_name%>">
+    <input type="hidden" name="phone" value="<%=phone%>">
+    <input type="hidden" name="phone2" value="<%=phone2%>">
+    <input type="hidden" name="postal" value="<%=postal%>">
+    <input type="hidden" name="providername" value="<%=providername%>">
+    <input type="hidden" name="province" value="<%=province%>">
+    <input type="hidden" name="sex" value="<%=sex%>">
     <tr bgcolor="gold" align="center"> 
       <td><bean:message key="demographic.demographiclabelprintsetting.msgLabel"/></td>
       <td><bean:message key="demographic.demographiclabelprintsetting.msgNumeberOfLabel"/>
