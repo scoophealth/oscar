@@ -1,0 +1,64 @@
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * Jason Gallagher
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */ 
+
+/*
+ * RxLinkPharmacyAction.java
+ *
+ * Created on September 29, 2004, 8:53 PM
+ */
+
+package oscar.oscarRx.pageUtil;
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+import oscar.oscarRx.data.*;
+
+/**
+ *
+ * @author  Jay Gallagher
+ */
+public class RxLinkPharmacyAction extends Action {
+
+    public ActionForward perform(ActionMapping mapping,
+				 ActionForm form,
+				 HttpServletRequest request,
+				 HttpServletResponse response)
+	throws IOException, ServletException {
+       
+       String demoId = request.getParameter("DemoId"); 
+       String id = request.getParameter("ID");
+       
+       RxPharmacyData pharmacy = new RxPharmacyData();
+       
+       pharmacy.addPharmacyToDemographic(id,demoId);
+           
+       return mapping.findForward("success");
+    }
+   /** Creates a new instance of RxLinkPharmacyAction */
+   public RxLinkPharmacyAction() {
+   }
+   
+}
