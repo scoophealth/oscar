@@ -1,3 +1,16 @@
+<%
+  if(session.getValue("user") == null) 
+    response.sendRedirect("../logout.htm");
+  String curUser_no,userfirstname,userlastname;
+  curUser_no = (String) session.getAttribute("user");
+  userfirstname = (String) session.getAttribute("userfirstname");
+  userlastname = (String) session.getAttribute("userlastname");
+%>    
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
+<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
+<%@ include file="dbBilling.jsp" %>
+
 <!--  
 /*
  * 
@@ -23,20 +36,6 @@
  * Ontario, Canada 
  */
 -->
-  <%
-  if(session.getValue("user") == null) 
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-//  mygroupno = (String) session.getAttribute("groupno");  
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
-
-%>    
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
 <html>
 <head>
 <title>Billing Summary</title>
