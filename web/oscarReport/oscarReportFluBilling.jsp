@@ -38,10 +38,17 @@ if(session.getValue("user") == null)
 int count = 0;
 
 String bgcolor = "#ddddff";
-String years = "2003";
+String years = null;
+int curYear = 0; 
+
 String pros = "";
 if (request.getParameter("numMonth") != null ){
-years = (String) request.getParameter("numMonth");
+	years = (String) request.getParameter("numMonth");
+	curYear = Integer.parseInt(years);
+} else {
+	GregorianCalendar cal = new GregorianCalendar();
+	curYear = cal.get(Calendar.YEAR);
+	years = "" + curYear; //"2003";
 }
 
 if (request.getParameter("proNo") != null ){
@@ -128,11 +135,12 @@ ArrayList proList = fluData.providerList();
                         <td ><bean:message key="oscarReport.oscarReportFluBilling.msgFluReport"/></td>
                         <td>
                            <select name="numMonth">
-                              <option value="2001" <%=selled("2001",years)%> >2001</option>
-                              <option value="2002" <%=selled("2002",years)%> >2002</option>
-                              <option value="2003" <%=selled("2003",years)%> >2003</option>
-                              <option value="2004" <%=selled("2004",years)%> >2004</option>
-                              <option value="2005" <%=selled("2005",years)%> >2005</option>
+<%
+							for (int i = curYear-2; i <= curYear+2 ; i++) {
+%>
+								<option value="<%=i%>" <%=selled((""+i),years)%> ><%=i%></option>
+<%							}
+%>
 
                            </select>
                            <select name="proNo">
@@ -193,7 +201,7 @@ bgcolor = "#ddddff";
 	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.demoPatientStatus %></td>
 	          
 	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getDemoPhone() %></td>
-	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getBillingDate() %></td>
+						 <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getBillingDate(fluData.years) %></td>
 	                  </tr>
 	                  <%
 	                  }

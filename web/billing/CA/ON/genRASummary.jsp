@@ -59,7 +59,7 @@ String transactiontype="", providerno="", specialty="", account="", patient_last
 String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
 String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime="", checkAccount="", proName="";
 String sqlRACO="",sqlRAOB="", OBflag="0",COflag="0", amountOB="", amountCO="";
-String demo_name ="",demo_hin="";
+String demo_name ="",demo_hin="", demo_docname="";
 int accountno=0 ;
 
 raNo = request.getParameter("rano");
@@ -130,6 +130,7 @@ while (rsdemo01.next()) {
 Properties propProvierName = new Properties();
 rsdemo1 = apptMainBean.queryResults("%", "search_provider_ohip_dt");
 while (rsdemo1.next()){
+	propProvierName.setProperty( ("no_" + rsdemo1.getString("provider_no")), (rsdemo1.getString("last_name") + "," + rsdemo1.getString("first_name")) );
 	propProvierName.setProperty(rsdemo1.getString("ohip_no"), (rsdemo1.getString("last_name") + "," + rsdemo1.getString("first_name")) );
 }
 
@@ -216,11 +217,11 @@ if (raNo.compareTo("") == 0 || raNo == null){
 	rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
 	while (rsdemo.next()) {   
 		account = rsdemo.getString("billing_no");
-		location="";  
-		demo_name ="";
+		location = "";  
+		demo_name = "";
+		demo_docname = "";
 		demo_hin = rsdemo.getString("hin") != null? rsdemo.getString("hin") : "";
-		rsdemo3 = null;
-		rsdemo3 = apptMainBean.queryResults(account, "search_bill_short"); // change search_bill to a small sql
+		rsdemo3 = apptMainBean.queryResults(account, "search_bill_short"); 
 		while (rsdemo3.next()){
 			demo_name = rsdemo3.getString("demographic_name");
 			if (rsdemo3.getString("hin") != null) {
@@ -235,6 +236,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			location = rsdemo3.getString("visittype");
 			localServiceDate = rsdemo3.getString("billing_date");
 			localServiceDate = localServiceDate.replaceAll("-*", "");
+			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
 		}
 
 		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
@@ -308,19 +310,19 @@ if (raNo.compareTo("") == 0 || raNo == null){
 %>
 
 <tr> 
-	<td width="7%" height="16"><%=account%></td>
-	<td width="14%" height="16"><%=proName%></td>
-	<td width="15%" height="16"><%=demo_name%></td>
-	<td width="7%" height="16"><%=demo_hin%></td>
-	<td width="10%" height="16"><%=servicedate%></td>
-	<td width="7%" height="16"><%=servicecode%></td>
+	<td height="16"><%=account%></td>
+	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_name%></td>
+	<td height="16"><%=demo_hin%></td>
+	<td height="16"><%=servicedate%></td>
+	<td height="16"><%=servicecode%></td>
 	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td width="7%" height="16" align=right><%=amountsubmit%></td>
-	<td width="7%" height="16" align=right><%=amountpay%></td>
-	<td width="7%" height="16" align=right>N/A</td>
-	<td width="7%" height="16" align=right><%=amountpay%></td>
-	<td width="7%" height="16" align=right><%=amountOB%></td>
-	<td width="5%" height="16"  align=right><%=explain%></td>
+	<td height="16" align=right><%=amountsubmit%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right><%=amountOB%></td>
+	<td height="16"  align=right><%=explain%></td>
 </tr>
 
 
@@ -332,19 +334,19 @@ if (raNo.compareTo("") == 0 || raNo == null){
 				BigTotal = BigTotal.add(bdFee);
 %>
 <tr> 
-	<td width="7%" height="16"><%=account%></td>
-	<td width="14%" height="16"><%=proName%></td>
-	<td width="15%" height="16"><%=demo_name%></td>
-	<td width="7%" height="16"><%=demo_hin%></td>
-	<td width="10%" height="16"><%=servicedate%></td>
-	<td width="7%" height="16"><%=servicecode%></td>
+	<td height="16"><%=account%></td>
+	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_name%></td>
+	<td height="16"><%=demo_hin%></td>
+	<td height="16"><%=servicedate%></td>
+	<td height="16"><%=servicecode%></td>
 	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td width="7%" height="16" align=right><%=amountsubmit%></td>
-	<td width="7%" height="16" align=right><%=amountpay%></td>
-	<td width="7%" height="16" align=right><%=amountpay%></td>
-	<td width="7%" height="16" align=right>N/A</td>
-	<td width="7%" height="16" align=right><%=amountOB%></td>
-	<td width="5%" height="16"  align=right><%=explain%></td>
+	<td height="16" align=right><%=amountsubmit%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right><%=amountOB%></td>
+	<td height="16" align=right><%=explain%></td>
 </tr>
 
 <%
@@ -354,19 +356,19 @@ if (raNo.compareTo("") == 0 || raNo == null){
 				BigOTotal = BigOTotal.add(bdOFee);
 %>
 <tr> 
-	<td width="7%" height="16"><%=account%></td>
-	<td width="14%" height="16"><%=proName%></td>
-	<td width="15%" height="16"><%=demo_name%></td>
-	<td width="7%" height="16"><%=demo_hin%></td>
-	<td width="10%" height="16"><%=servicedate%></td>
-	<td width="7%" height="16"><%=servicecode%></td>
+	<td height="16"><%=account%></td>
+	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_name%></td>
+	<td height="16"><%=demo_hin%></td>
+	<td height="16"><%=servicedate%></td>
+	<td height="16"><%=servicecode%></td>
 	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td width="7%" height="16" align=right><%=amountsubmit%></td>
-	<td width="7%" height="16" align=right><%=amountpay%></td>
-	<td width="7%" height="16" align=right>N/A</td>
-	<td width="7%" height="16" align=right>N/A</td>
-	<td width="7%" height="16" align=right><%=amountOB%></td>
-	<td width="5%" height="16"  align=right><%=explain%></td>
+	<td height="16" align=right><%=amountsubmit%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right><%=amountOB%></td>
+	<td height="16" align=right><%=explain%></td>
 </tr>
 <%
 			}
@@ -391,197 +393,190 @@ if (raNo.compareTo("") == 0 || raNo == null){
 	<td width="7%" height="16" align=right>OB </td>
 	<td width="5%" height="16"  align=right>Error</td>
 </tr>
-            <%
-            
-            
-               String[] param = new String[2];
-                      param[0] = raNo;
-                      param[1] = proNo+"%";
-            rsdemo = null;
-                  	    rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
-                  	     while (rsdemo.next()) {   
-                  	    account = rsdemo.getString("billing_no");
-                          location = "";
-                 demo_name ="";
-				 demo_hin = "";
-		          		    rsdemo3 = null;
-		          		    rsdemo3 = apptMainBean.queryResults(account, "search_bill");
-		                        while (rsdemo3.next()){
-		                         demo_name = rsdemo3.getString("demographic_name");
-		                	     demo_hin = rsdemo3.getString("hin");
-		                	             location = rsdemo3.getString("visittype");
-            	     }
-         
-        	          		    rsdemo2 = null;
-		          		    rsdemo2 = apptMainBean.queryResults(rsdemo.getString("providerohip_no"), "search_provider_ohip_dt");
-		                        while (rsdemo2.next()){
-	 
-         
-         
-         proName = rsdemo2.getString("last_name") + "," + rsdemo2.getString("first_name");
-      	 }   	
-                	   servicecode = rsdemo.getString("service_code");
-                   	   servicedate = rsdemo.getString("service_date");
-                   	   serviceno = rsdemo.getString("service_count");
-            	           explain = rsdemo.getString("error_code");
-            	           amountsubmit = rsdemo.getString("amountclaim");
-            	           amountpay = rsdemo.getString("amountpay");
-                 
-       //k     location = rsdemo.getString("visittype");
-            dCFee = Double.parseDouble(amountsubmit);
-	                     bdCFee = new BigDecimal(dCFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-	    		        	BigCTotal = BigCTotal.add(bdCFee);
-      	    
-      	    dPFee = Double.parseDouble(amountpay);
-	    	                     bdPFee = new BigDecimal(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-	    	    		        	BigPTotal = BigPTotal.add(bdPFee);
-      	      COflag="0";
-            OBflag="0";
-         for (int i=0; i<OBbilling_no.size(); i++){
-	      	    sqlRAOB = (String)OBbilling_no.get(i);
-	      	    if(sqlRAOB.compareTo(account)==0)OBflag = "1";
-	      	     	    
-	      	    }
-	      	         for (int j=0; j<CObilling_no.size(); j++){
-			      	    sqlRACO = (String)CObilling_no.get(j);
-			      	    if(sqlRACO.compareTo(account)==0)COflag = "1";
-			      	     	    
-	      	    }
-	      	    
-	      	        if(OBflag.equals("1")) {
-	      	        amountOB=amountpay;
-	      	         dOBFee = Double.parseDouble(amountOB);
-			  				               	          
-			  				               	bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-					               	BigOBTotal = BigOBTotal.add(bdOBFee);
-	      	        }else{
-	      	        amountOB="N/A";
-	      	        } 
-	      	       
-	      	        if(COflag.equals("1")) {
-		             	        amountCO=amountpay;
-		             	         dCOFee = Double.parseDouble(amountCO);
-		       		  				               	          
-		       		  				               	bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-		       				               	BigCOTotal = BigCOTotal.add(bdCOFee);
-		             	        }else{
-		             	        amountCO="N/A";
-		             	        } 
-      	       
-            	         
-            //	           proName = rsdemo.getString("last_name") + "," + rsdemo.getString("first_name");
-            	           
-                                             if (explain.compareTo("") == 0 || explain == null){
-      	           explain = "**";
-      	           }      
 
-            	           if (location.compareTo("02") == 0) {
-            	           
-			   				               dHFee = Double.parseDouble(amountpay);
-			   				               	          
-			   				               	bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-			   				               	BigHTotal = BigHTotal.add(bdHFee);
-				              	
-	                                         
-	         %>
-	<tr> 
-               <td width="7%" height="16"><%=account%></td>
-               <td width="14%" height="16"><%=proName%></td>
-              <td width="15%" height="16"><%=demo_name%></td>
-              <td width="7%" height="16"><%=demo_hin%></td>
-              <td width="10%" height="16"><%=servicedate%></td>
-               <td width="7%" height="16"><%=servicecode%></td>
-              <!--<td width="8%" height="16"><%=serviceno%></td>-->
-               <td width="7%" height="16" align=right><%=amountsubmit%></td>
-                              <td width="7%" height="16" align=right><%=amountpay%></td>
-               <td width="7%" height="16" align=right>N/A</td>
-               <td width="7%" height="16" align=right><%=amountpay%></td>
-               <td width="7%" height="16" align=right><%=amountOB%></td>
-               <td width="5%" height="16"  align=right><%=explain%></td>
-  </tr>         
-	         
-	         <%
-	         } 
-	         else {     if (location.compareTo("00") == 0) {
-	         
-		     		     dFee = Double.parseDouble(amountpay);
-		 		  				               	          
-		 	      bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-				               	BigTotal = BigTotal.add(bdFee);
-          %>   <tr> 
-                    <td width="7%" height="16"><%=account%></td>
-                    <td width="14%" height="16"><%=proName%></td>
-                   <td width="15%" height="16"><%=demo_name%></td>
-                    <td width="7%" height="16"><%=demo_hin%></td>
-                              <td width="10%" height="16"><%=servicedate%></td>
-                    <td width="7%" height="16"><%=servicecode%></td>
-                   <!-- <td width="8%" height="16"><%=serviceno%></td>-->
-                    <td width="7%" height="16" align=right><%=amountsubmit%></td>
-                    <td width="7%" height="16" align=right><%=amountpay%></td>
-                    <td width="7%" height="16" align=right><%=amountpay%></td>
-                    
-                    <td width="7%" height="16" align=right>N/A</td>
-                       <td width="7%" height="16" align=right><%=amountOB%></td>
-                    <td width="5%" height="16"  align=right><%=explain%></td>
-  </tr>
-	     
-	     <%
-  }
-  else{ 
-  
-       dOFee = Double.parseDouble(amountpay);
-  		 		  				               	          
-  		 	      bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-				               	BigOTotal = BigOTotal.add(bdOFee);
-  %>
-  <tr> 
-                        <td width="7%" height="16"><%=account%></td>
-                        <td width="14%" height="16"><%=proName%></td>
-                        <td width="15%" height="16"><%=demo_name%></td>
-                        <td width="7%" height="16"><%=demo_hin%></td>
-                        <td width="10%" height="16"><%=servicedate%></td>
-                        <td width="7%" height="16"><%=servicecode%></td>
-                     <!-- <td width="8%" height="16"><%=serviceno%></td>-->
-                        <td width="7%" height="16" align=right><%=amountsubmit%></td>
-                        <td width="7%" height="16" align=right><%=amountpay%></td>
-                        <td width="7%" height="16" align=right>N/A</td>
-			<td width="7%" height="16" align=right>N/A</td>
-                        <td width="7%" height="16" align=right><%=amountOB%></td>
-	                <td width="5%" height="16"  align=right><%=explain%></td>
-  </tr>
-  
-  <%
-  }
-  }          
-            
-           
-            }
-      %>
+<%
+	String[] param = new String[2];
+	param[0] = raNo;
+	param[1] = proNo+"%";
+	rsdemo = apptMainBean.queryResults(param, "search_rasummary_dt");
+	while (rsdemo.next()) {   
+		account = rsdemo.getString("billing_no");
+		location = "";
+		demo_name ="";
+		demo_docname = "";
+		demo_hin = rsdemo.getString("hin") != null? rsdemo.getString("hin") : "";
+		rsdemo3 = apptMainBean.queryResults(account, "search_bill_short");
+		while (rsdemo3.next()){
+			demo_name = rsdemo3.getString("demographic_name");
+			if (rsdemo3.getString("hin") != null) {
+				if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
+					demo_hin = "";
+					demo_name ="";
+				}
+			} else {
+				demo_hin = "";
+				demo_name ="";
+			}
+			location = rsdemo3.getString("visittype");
+			localServiceDate = rsdemo3.getString("billing_date");
+			localServiceDate = localServiceDate.replaceAll("-*", "");
+			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
+		}
 
-      <%
-      }
-       
-  }
- %>  
+		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
+		servicecode = rsdemo.getString("service_code");
+		servicedate = rsdemo.getString("service_date");
+		serviceno = rsdemo.getString("service_count");
+		explain = rsdemo.getString("error_code");
+		amountsubmit = rsdemo.getString("amountclaim");
+		amountpay = rsdemo.getString("amountpay");
 
-<% 
+		//k     location = rsdemo.getString("visittype");
+		dCFee = Double.parseDouble(amountsubmit);
+		bdCFee = new BigDecimal(dCFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigCTotal = BigCTotal.add(bdCFee);
+
+		dPFee = Double.parseDouble(amountpay);
+		bdPFee = new BigDecimal(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigPTotal = BigPTotal.add(bdPFee);
+		COflag="0";
+		OBflag="0";
+
+		for (int i=0; i<OBbilling_no.size(); i++){
+			sqlRAOB = (String)OBbilling_no.get(i);
+			if(sqlRAOB.compareTo(account)==0) {
+				OBflag = "1";
+				break;
+			}
+		}
+
+		for (int j=0; j<CObilling_no.size(); j++){
+			sqlRACO = (String)CObilling_no.get(j);
+			if(sqlRACO.compareTo(account)==0) {
+				COflag = "1";
+				break;
+			}
+		}
+
+		if(OBflag.equals("1")) {
+			amountOB=amountpay;
+			dOBFee = Double.parseDouble(amountOB);
+			bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+			BigOBTotal = BigOBTotal.add(bdOBFee);
+		}else{
+			amountOB="N/A";
+		} 
+
+		if(COflag.equals("1")) {
+			amountCO=amountpay;
+			dCOFee = Double.parseDouble(amountCO);
+			bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+			BigCOTotal = BigCOTotal.add(bdCOFee);
+		}else{
+			amountCO="N/A";
+		} 
+
+		if (explain.compareTo("") == 0 || explain == null){
+			explain = "**";
+		}      
+
+		if (location.compareTo("02") == 0) {
+			dHFee = Double.parseDouble(amountpay);
+			bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+			BigHTotal = BigHTotal.add(bdHFee);
+			
+			// is local for hospital
+			if (demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
+				BigLocalHTotal = BigLocalHTotal.add(bdHFee);
+			}
+%>
+<tr> 
+	<td height="16"><%=account%></td>
+	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_name%></td>
+	<td height="16"><%=demo_hin%></td>
+	<td height="16"><%=servicedate%></td>
+	<td height="16"><%=servicecode%></td>
+	<!--<td width="8%" height="16"><%=serviceno%></td>-->
+	<td height="16" align=right><%=amountsubmit%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right><%=amountOB%></td>
+	<td height="16" align=right><%=explain%></td>
+</tr>         
+
+<%
+		} else {     
+			if (location.compareTo("00") == 0 && billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
+				dFee = Double.parseDouble(amountpay);
+				bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+				BigTotal = BigTotal.add(bdFee);
+%>   
+<tr> 
+	<td height="16"><%=account%></td>
+	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_name%></td>
+	<td height="16"><%=demo_hin%></td>
+	<td height="16"><%=servicedate%></td>
+	<td height="16"><%=servicecode%></td>
+	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+	<td height="16" align=right><%=amountsubmit%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right><%=amountOB%></td>
+	<td height="16" align=right><%=explain%></td>
+</tr>
+
+<%
+			} else{ 
+				dOFee = Double.parseDouble(amountpay);
+				bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+				BigOTotal = BigOTotal.add(bdOFee);
+%>
+<tr> 
+	<td height="16"><%=account%></td>
+	<td height="16"><%=proName%></td>
+	<td height="16"><%=demo_name%></td>
+	<td height="16"><%=demo_hin%></td>
+	<td height="16"><%=servicedate%></td>
+	<td height="16"><%=servicecode%></td>
+	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+	<td height="16" align=right><%=amountsubmit%></td>
+	<td height="16" align=right><%=amountpay%></td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right>N/A</td>
+	<td height="16" align=right><%=amountOB%></td>
+	<td height="16" align=right><%=explain%></td>
+</tr>
+
+<%
+			}
+		}
+
+	}
+}
+
+}
+
 BigLTotal = BigLTotal.add(BigTotal);
 //BigLTotal = BigLTotal.add(BigHTotal);
 BigLTotal = BigLTotal.add(BigLocalHTotal);
 %>
 <tr bgcolor='#FFFF3E'> 
-	<td width="7%" height="16"></td>
-	<td width="14%" height="16"></td>
-	<td width="15%" height="16"></td>
-	<td width="7%" height="16"></td>
-	<td width="10%" height="16"></td>
-	<td width="7%" height="16">Total</td>
-	<td width="7%" height="16" align=right><%=BigCTotal%></td>
-	<td width="7%" height="16" align=right><%=BigPTotal%><!-- <%=BigOTotal%>--></td>
-	<td width="7%" height="16" align=right><%=BigTotal%><!--<%=BigLTotal%>--></td>
-	<td width="7%" height="16" align=right><%=BigHTotal%></td>
-	<td width="7%" height="16" align=right><%=BigOBTotal%></td>
-	<td width="5%" height="16"></td>
+	<td height="16"></td>
+	<td height="16"></td>
+	<td height="16"></td>
+	<td height="16"></td>
+	<td height="16"></td>
+	<td height="16">Total</td>
+	<td height="16" align=right><%=BigCTotal%></td>
+	<td height="16" align=right><%=BigPTotal%><!-- <%=BigOTotal%>--></td>
+	<td height="16" align=right><%=BigTotal%><!--<%=BigLTotal%>--></td>
+	<td height="16" align=right><%=BigHTotal%></td>
+	<td height="16" align=right><%=BigOBTotal%></td>
+	<td height="16"></td>
 </tr>
 </table>
 

@@ -26,8 +26,8 @@ GregorianCalendar now=new GregorianCalendar();
    ResultSet rslocal2;
           rslocal2 = null;
     int[] itemp1 = new int[2];
-    itemp1[1] = Integer.parseInt(strLimit1);
-  itemp1[0] = Integer.parseInt(strLimit2);
+    itemp1[0] = Integer.parseInt(strLimit1);
+  itemp1[1] = Integer.parseInt(strLimit2);
   
   
   %><% 
