@@ -13,9 +13,11 @@
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title> APPOINTMENT HISTORY</title>
+<title> <bean:message key="demographic.demographicappthistory.title"/></title>
 <link rel="stylesheet" href="../web.css" >
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
@@ -43,22 +45,22 @@ function refresh() {
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="<%=deepColor%>">
-    <th><font face="Helvetica">APPOINTMENT HISTORY </font></th>
+    <th><font face="Helvetica"><bean:message key="demographic.demographicappthistory.msgTitle"/> </font></th>
   </tr>
 </table>
 
 <table width="95%" border="0">
-  <tr bgcolor="<%=weakColor%>"><td align="left"><i>Results for Demographic</i> :<%=demolastname%>,<%=demofirstname%> (<%=request.getParameter("demographic_no")%>)</td></tr>
+  <tr bgcolor="<%=weakColor%>"><td align="left"><i><bean:message key="demographic.demographicappthistory.msgResults"/></i> :<%=demolastname%>,<%=demofirstname%> (<%=request.getParameter("demographic_no")%>)</td></tr>
 </table>
 <CENTER>
 <table width="95%" border="0" bgcolor="#ffffff"> 
 <tr bgcolor="<%=deepColor%>">
-      <TH width="10%"><b>APPT DATE</b></TH>
-      <TH width="10%"><b>FROM</b></TH>      
-      <TH width="10%"><b>TO</b></TH>
-      <TH width="15%"><b>REASON</b></TH>
-      <TH width="15%"><b>PROVIDER</b></TH>
-      <TH width="10%"><b>COMMENTS</b></TH>
+      <TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgApptDate"/></b></TH>
+      <TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgFrom"/></b></TH>      
+      <TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgTo"/></b></TH>
+      <TH width="15%"><b><bean:message key="demographic.demographicappthistory.msgReason"/></b></TH>
+      <TH width="15%"><b><bean:message key="demographic.demographicappthistory.msgProvider"/></b></TH>
+      <TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgComments"/></b></TH>
 </tr>
 <%
   ResultSet rs=null ;
@@ -98,12 +100,12 @@ function refresh() {
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicappthistory.btnLastPage"/></a> |
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="demographic.demographicappthistory.btnNextPage"/></a>
 <%
 }
 %>
@@ -111,4 +113,4 @@ function refresh() {
 <%@ include file="zfooterbackclose.jsp" %> 
 </center>
 </body>
-</html>
+</html:html>
