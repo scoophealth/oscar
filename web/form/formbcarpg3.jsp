@@ -683,9 +683,9 @@ function calToday(field) {
 </div>
 <div ID="Instrdiv" class="demo1">
 	<center>
-   <table bgcolor='orange' width='99%'>
+   <table bgcolor='#007FFF' width='99%'>
      <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;">X</a></th></tr>
-     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="green">Double click pink fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
+     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click pink fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
    </table>
    </center>
 </div>
@@ -1023,13 +1023,13 @@ function calToday(field) {
           <input type="text" name="ar2_age" style="width:100%" size="3" maxlength="5" value="<%= props.getProperty("ar2_age", "") %>"  />
 		  </td>
 		  <td width="12%" nowrap><span class="small8">PREPREGNANT WEIGHT</span><br>
-          <input type="text" name="c_ppWt" style="background-color: #FFCCCC; width:100%;" onDblClick="wtEnglish2Metric();" size="5" maxlength="5" value="<%= props.getProperty("c_ppWt", "") %>"  />
+          <input type="text" name="c_ppWt" class="spe" style="width:100%;" onDblClick="wtEnglish2Metric();" size="5" maxlength="5" value="<%= props.getProperty("c_ppWt", "") %>"  />
 		  </td>
 		  <td width="10%">HEIGHT<br>
-          <input type="text" name="c_ppHt" onDblClick="htEnglish2Metric();" style="background-color: #FFCCCC; width:100%;" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>"  />
+          <input type="text" name="c_ppHt" onDblClick="htEnglish2Metric();" class="spe" style="width:100%;" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>"  />
 		  </td>
 		  <td width="12%">BMI<br>
-          <input type="text" name="c_ppBMI" onDblClick="calcBMIMetric();" style="background-color: #FFCCCC; width:100%;" size="5" maxlength="5" value="<%= props.getProperty("c_ppBMI", "") %>" />
+          <input type="text" name="c_ppBMI" onDblClick="calcBMIMetric();" class="spe" style="width:100%;" size="5" maxlength="5" value="<%= props.getProperty("c_ppBMI", "") %>" />
 		  </td>
 		  <td width="25%">LMP <span class="small8">DD/MM/YYYY</span><br>
           <input type="text" name="ar2_lmpDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_lmpDate", "") %>" />
@@ -1060,7 +1060,7 @@ function calToday(field) {
           </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date1" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date1", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date1" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date1", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt1", "") %>" @oscar.formDB />
@@ -1069,11 +1069,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp1", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine1" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine1", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG1" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG1", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine1" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine1", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG1" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest1" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest1", "") %>"  onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest1" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest1", "") %>"  onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht1", "") %>" @oscar.formDB />
@@ -1082,7 +1082,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos1" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos1", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos1" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos1", "") %>" @oscar.formDB />
   </td>
   <td width="38%">
   <input type="text" name="pg3_comment1" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment1", "") %>" @oscar.formDB />
@@ -1092,7 +1092,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date2" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date2", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date2" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date2", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt2", "") %>" @oscar.formDB />
@@ -1101,11 +1101,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp2", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine2" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine2", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG2" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG2", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine2" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine2", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG2" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest2" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest2", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest2" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest2", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht2", "") %>" @oscar.formDB />
@@ -1114,7 +1114,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos2" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos2", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos2" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos2", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment2" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment2", "") %>" @oscar.formDB />
@@ -1124,7 +1124,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date3" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date3", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date3" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date3", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt3", "") %>" @oscar.formDB />
@@ -1133,11 +1133,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp3", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine3" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine3", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG3" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG3", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine3" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine3", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG3" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest3" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest3", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest3" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest3", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht3", "") %>" @oscar.formDB />
@@ -1146,7 +1146,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos3" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos3", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos3" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos3", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment3" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment3", "") %>" @oscar.formDB />
@@ -1156,7 +1156,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date4" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date4", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date4" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date4", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt4", "") %>" @oscar.formDB />
@@ -1165,11 +1165,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp4", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine4" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine4", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG4" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG4", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine4" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine4", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG4" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG4", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest4" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest4", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest4" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest4", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht4", "") %>" @oscar.formDB />
@@ -1178,7 +1178,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct4", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos4" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos4", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos4" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos4", "") %>" @oscar.formDB />
   </td>
   <td><span class="small8"><font color="red">NOTE: SEND A PHOTOCOPY OF ANTENATAL PARTS 1&2 TO<br>
   HOSPITAL AT 20 WEEKS</font>
@@ -1193,7 +1193,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date5" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date5", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date5" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date5", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt5", "") %>" @oscar.formDB />
@@ -1202,11 +1202,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp5", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine5" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine5", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG5" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG5", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine5" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine5", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG5" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest5" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest5", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest5" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest5", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht5", "") %>" @oscar.formDB />
@@ -1215,7 +1215,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos5" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos5", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos5" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos5", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment5" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment5", "") %>" @oscar.formDB />
@@ -1225,7 +1225,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date6" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date6", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date6" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date6", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt6" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt6", "") %>" @oscar.formDB />
@@ -1234,11 +1234,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp6" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp6", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine6" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine6", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG6" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG6", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine6" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine6", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG6" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG6", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest6" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest6", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest6" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest6", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht6" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht6", "") %>" @oscar.formDB />
@@ -1247,7 +1247,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct6" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct6", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos6" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos6", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos6" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos6", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment6" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment6", "") %>" @oscar.formDB />
@@ -1257,7 +1257,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date7" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date7", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date7" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date7", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt7" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt7", "") %>" @oscar.formDB />
@@ -1266,11 +1266,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp7" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp7", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine7" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine7", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG7" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG7", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine7" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine7", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG7" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG7", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest7" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest7", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest7" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest7", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht7" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht7", "") %>" @oscar.formDB />
@@ -1279,7 +1279,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct7" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct7", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos7" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos7", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos7" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos7", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment7" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment7", "") %>" @oscar.formDB />
@@ -1289,7 +1289,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date8" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date8", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date8" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date8", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt8" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt8", "") %>" @oscar.formDB />
@@ -1298,11 +1298,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp8" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp8", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine8" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine8", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG8" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG8", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine8" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine8", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG8" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG8", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest8" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest8", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest8" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest8", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht8" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht8", "") %>" @oscar.formDB />
@@ -1311,7 +1311,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct8" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct8", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos8" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos8", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos8" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos8", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment8" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment8", "") %>" @oscar.formDB />
@@ -1321,7 +1321,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date9" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date9", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date9" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date9", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt9" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt9", "") %>" @oscar.formDB />
@@ -1330,11 +1330,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp9" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp9", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine9" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine9", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG9" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG9", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine9" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine9", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG9" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG9", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest9" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest9", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest9" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest9", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht9" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht9", "") %>" @oscar.formDB />
@@ -1343,7 +1343,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct9" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct9", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos9" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos9", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos9" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos9", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment9" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment9", "") %>" @oscar.formDB />
@@ -1353,7 +1353,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date10" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date10", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date10" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date10", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt10", "") %>" @oscar.formDB />
@@ -1362,11 +1362,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp10" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp10", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine10" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine10", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG10" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG10", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine10" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine10", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG10" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG10", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest10" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest10", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest10" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest10", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht10" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht10", "") %>" @oscar.formDB />
@@ -1375,7 +1375,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct10" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct10", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos10" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos10", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos10" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos10", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment10" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment10", "") %>" @oscar.formDB />
@@ -1385,7 +1385,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date11" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date11", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date11" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date11", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt11" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt11", "") %>" @oscar.formDB />
@@ -1394,11 +1394,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp11" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp11", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine11" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine11", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG11" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG11", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine11" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine11", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG11" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG11", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest11" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest11", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest11" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest11", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht11" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht11", "") %>" @oscar.formDB />
@@ -1407,7 +1407,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct11" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct11", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos11" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos11", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos11" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos11", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment11" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment11", "") %>" @oscar.formDB />
@@ -1417,7 +1417,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date12" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date12", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date12" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date12", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt12" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt12", "") %>" @oscar.formDB />
@@ -1426,11 +1426,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp12" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp12", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine12" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine12", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG12" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG12", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine12" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine12", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG12" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG12", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest12" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest12", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest12" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest12", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht12" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht12", "") %>" @oscar.formDB />
@@ -1439,7 +1439,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct12" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct12", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos12" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos12", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos12" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos12", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment12" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment12", "") %>" @oscar.formDB />
@@ -1449,7 +1449,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date13" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date13", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date13" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date13", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt13" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt13", "") %>" @oscar.formDB />
@@ -1458,11 +1458,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp13" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp13", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine13" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine13", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG13" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG13", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine13" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine13", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG13" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG13", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest13" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest13", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest13" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest13", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht13" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht13", "") %>" @oscar.formDB />
@@ -1471,7 +1471,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct13" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct13", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos13" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos13", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos13" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos13", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment13" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment13", "") %>" @oscar.formDB />
@@ -1481,7 +1481,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date14" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date14", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date14" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date14", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt14" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt14", "") %>" @oscar.formDB />
@@ -1490,11 +1490,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp14" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp14", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine14" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine14", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG14" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG14", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine14" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine14", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG14" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG14", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest14" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest14", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest14" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest14", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht14" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht14", "") %>" @oscar.formDB />
@@ -1503,7 +1503,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct14" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct14", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos14" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos14", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos14" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos14", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment14" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment14", "") %>" @oscar.formDB />
@@ -1513,7 +1513,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date15" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date15", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date15" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date15", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt15" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt15", "") %>" @oscar.formDB />
@@ -1522,11 +1522,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp15" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp15", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine15" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine15", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG15" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG15", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine15" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine15", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG15" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG15", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest15" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest15", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest15" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest15", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht15" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht15", "") %>" @oscar.formDB />
@@ -1535,7 +1535,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct15" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct15", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos15" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos15", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos15" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos15", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment15" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment15", "") %>" @oscar.formDB />
@@ -1545,7 +1545,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date16" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date16", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date16" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date16", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt16" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt16", "") %>" @oscar.formDB />
@@ -1554,11 +1554,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp16" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp16", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine16" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine16", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG16" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG16", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine16" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine16", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG16" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG16", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest16" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest16", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest16" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest16", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht16" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht16", "") %>" @oscar.formDB />
@@ -1567,7 +1567,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct16" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct16", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos16" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos16", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos16" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos16", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_comment16" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment16", "") %>" @oscar.formDB />
@@ -1577,7 +1577,7 @@ function calToday(field) {
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg3_date17" style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date17", "") %>" @oscar.formDB  dbType="date"/>
+  <input type="text" name="pg3_date17" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date17", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
   <input type="text" name="pg3_wt17" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt17", "") %>" @oscar.formDB />
@@ -1586,11 +1586,11 @@ function calToday(field) {
   <input type="text" name="pg3_bp17" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp17", "") %>" @oscar.formDB />
   </td>
   <td nowrap>
-  <input type="text" name="pg3_urine17" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine17", "") %>" @oscar.formDB />
-  <input type="text" name="pg3_urineG17" style="background-color: #FFCCCC;" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG17", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urine17" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urine', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urine17", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_urineG17" class="spe" onDblClick="showPGBox('UrineDiv',1, this, event, 'pg3_urineG', 200, 481, 26);" size="2" maxlength="8" value="<%= props.getProperty("pg3_urineG17", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_gest17" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest17", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
+  <input type="text" name="pg3_gest17" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_gest17", "") %>" onDblClick="calcWeek(this)" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_ht17" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_ht17", "") %>" @oscar.formDB />
@@ -1599,7 +1599,7 @@ function calToday(field) {
   <input type="text" name="pg3_fhrAct17" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_fhrAct17", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg3_pos17" onDblClick="showBox('Langdiv',1, this, event);" style="background-color: #FFCCCC; width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos17", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_pos17" onDblClick="showBox('Langdiv',1, this, event);" class="spe" style="width:100%;" size="8" maxlength="8" value="<%= props.getProperty("pg3_pos17", "") %>" @oscar.formDB />
   </td>
   <td><span class="small8"><font color="red">NOTE: SEND HOSPITAL COPY AT 36 WEEKS</font></span><br>
   <input type="text" name="pg3_comment17" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg3_comment17", "") %>" @oscar.formDB />
