@@ -465,7 +465,6 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 <% 
 // get the list of checked codes
 Properties checkedCode = new Properties();
-String temp1 = null;
 for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	temp=e.nextElement().toString();
 	if( temp.startsWith("xml_") ) { 
@@ -751,16 +750,16 @@ if (errorFlag.compareTo("1")==0){
 <input type="hidden" name="diagcode" value="<%=diagcode%>">
 <input type="hidden" name="visittype" value="<%=request.getParameter("xml_visittype").substring(0,2)%>">
 <input type="hidden" name="billtype" value="<%=billtype.substring(0,1)%>">
-<input type="hidden" name="content" value="<%=content%>">
+<!--input type="hidden" name="content" value="<%--=content--%>"-->
 <input type="hidden" name="provider_no" value="<%=proNO%>">
 <input type="hidden" name="clinic_no" value="<%=request.getParameter("clinic_no")%>">
 <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
 <input type="hidden" name="billing_name" value="OB2">
-<input type="hidden" name="user_no" value="<%=request.getParameter("user_no")%>">
+<!--input type="hidden" name="user_no" value="<%=request.getParameter("user_no")%>"-->
 <input type="hidden" name="apptProvider_no" value="<%=request.getParameter("apptProvider_no")%>">
 <input type="hidden" name="asstProvider_no" value="<%=request.getParameter("asstProvider_no")%>">
-<input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>">
-<input type="hidden" name="billing_time" value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>">
+<!--input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>"-->
+<!--input type="hidden" name="billing_time" value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>"-->
 <input type="hidden" name="billingservice_code" value="">
 <input type="hidden" name="dboperation" value="save_bill">
 <input type="hidden" name="appointment_date" value="<%=request.getParameter("xml_appointment_date")%>">
@@ -775,7 +774,7 @@ if (errorFlag.compareTo("1")==0){
 <input type="hidden" name="total" value="<%=BigTotal%>">
 <input type="hidden" name="clinic_ref_code" value="<%=location1%>">
 <input type="hidden" name="visitdate" value="<%=visitdate%>">
-<input type="button" name="Submit" value="Confirm" onDblClick="" onClick="form.submit()">
+<input type="submit" name="Submit" value="Confirm" onDblClick="" >
 <a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
 
 <% 
