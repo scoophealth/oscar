@@ -192,20 +192,14 @@ while(rslocal.next()){
 
 <% 
 String ctldiagcode="", ctldiagcodename="";
+ctlCount = 0;
 ResultSet rsdiagcode = apptMainBean.queryResults(ctlBillForm, "search_ctl_diagnostic_code");
 
 while (rsdiagcode.next()){
 	ctldiagcode = rsdiagcode.getString("dcode");
 	ctldiagcodename = rsdiagcode.getString("des");
-	if (ctlCount == 0){
-		ctlCount = 1;
-		color = "#FFFFFF";
-	} else {
-		ctlCount = 0;
-		color="#EEEEFF";
-	}
 %>
-	<tr bgcolor=<%=color%>> 
+	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
 		<td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D"><a href="#" onClick="document.serviceform.xml_diagnostic_detail.value='<%=ctldiagcode%>|<%=ctldiagcodename%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
 		<td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D">
 		<%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0,55)%></font></td>
@@ -236,6 +230,7 @@ while (rsdiagcode.next()){
 
 <% 
 ResultSet rs3= null;
+ctlCount = 0;
 String ctlcode="", ctlcodename="";
 
 ResultSet rsctlcode = apptMainBean.queryResults("%", "search_ctlbillservice");
@@ -243,16 +238,10 @@ while (rsctlcode.next()){
 	ctlcode = rsctlcode.getString("servicetype");
 	ctlcodename = rsctlcode.getString("servicetype_name");
 
-	if (ctlCount == 0){
-		ctlCount = 1;
-		color = "#FFFFFF";
-	} else {
-		ctlCount = 0;
-		color="#EEEEFF";
-	}
+	ctlCount++;
 %>
-	<tr bgcolor=<%=color%>> 
-		<td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
+	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
+		<td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
 	</tr>
 <% } %>
 	</table>
@@ -525,230 +514,172 @@ while(rslocal.next()){
 	CountService++;
 }
 %>
-              </table></td>
-            <td valign="top" width="36%"> 
-              <%       param1[0]=ctlBillForm;
-			              param1[1]="Group3";
-            %>
-              <table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
-                <% 
+
+		</table>
+		
+		</td><td valign="top" width="36%">
+		
+		<table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
+<% 
+param1[0]=ctlBillForm;
+param1[1]="Group3";
             
-         // String serviceCode, serviceDesc, serviceValue, servicePercentage, serviceType,serviceDisp="";
-          CountService = 0;
-          // String[] param1 =new String[2];
-          int Count1 = 0;
-            rslocal = null;
- rslocal = apptMainBean.queryResults(param1, "search_servicecode");
- while(rslocal.next()){
- serviceCode = rslocal.getString("service_code");
- serviceDesc = rslocal.getString("description");
- serviceValue = rslocal.getString("value");
- servicePercentage = rslocal.getString("percentage");
- headerTitle = rslocal.getString("service_group_name");
-serviceDisp = serviceValue;
+CountService = 0;
+rslocal = apptMainBean.queryResults(param1, "search_servicecode");
+while(rslocal.next()){
+	serviceCode = rslocal.getString("service_code");
+	serviceDesc = rslocal.getString("description");
+	serviceValue = rslocal.getString("value");
+	servicePercentage = rslocal.getString("percentage");
+	headerTitle = rslocal.getString("service_group_name");
+	serviceDisp = serviceValue;
 
-  premiumFlag = "";
-  rs3 = apptMainBean.queryResults(serviceCode, "search_billingservice_premium");
-  while(rs3.next()){
-  premiumFlag = rs3.getString("status");
-  }
-  if (CountService == 0) {
-  %>
-                <tr bgcolor="#CCCCFF"> 
-                  <td width="25%"><b></b> 
-                    <div align="left"><font face="Verdana, Arial, Helvetica"><b><font size="1" color="#000000"><%=headerTitle%></font></b></font></div>
-                  </td>
-                  <td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica" size="1" color="#000000">Description</font></b></td>
-                  <td width="14%"> 
-                    <div align="right"><b><font face="Verdana, Arial, Helvetica" size="1" color="#000000">$ 
-                      Fee</font></b></div>
-                  </td>
-                </tr>
-                <%
-                CountService = 1;
-  } 
-  else{
-  serviceType = "";
-  }
-  if (Count1 == 0){
-  Count1 = 1;
-  color = "#FFFFFF";
-  } else {
-  Count1 = 0;
-  color="#EEEEFF";
- }
-  
-%>
-                <tr bgcolor=<%=color%>> 
-                  <td width="25%" height="1"><b></b> <font face="Verdana, Arial, Helvetica"> 
-                    <input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
-                    <font size="1"><% if (premiumFlag.equals("A")) { %><b><font color="#993333"><%=serviceCode%></font></b><%}else{%><%=serviceCode%><%}%></font></font></td>
-                  <td width="61%" height="1"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDesc%></font> 
-                    <font face="Verdana, Arial, Helvetica"> 
-                    <input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
-                    </font></td>
-                  <td width="14%" height="1"> 
-                    <div align="right"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDisp%></font> 
-                      <font face="Verdana, Arial, Helvetica"> 
-                      <input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
-                      <input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
-                      </font></div>
-                  </td>
-                </tr>
-                <%
-           CountService = CountService +1;
- }
- // apptMainBean.closePstmtConn();
-          %>
-                <tr bgcolor="#CCCCFF"> 
-                  <td align="center" valign="top" height="71" colspan="3"> 
-                    <div align="left"><font size="1" face="Verdana, Arial, Helvetica"></font></div>
-                    <div align="left"> </div>
-                    <table width="100%" border="0" cellspacing="2" cellpadding="2">
-                      <tr> 
-                        <td width="91%"> 
-                          <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
-                            <tr> 
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica">Other 
-                                service/procedure/premium codes</font></b></td>
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica"># 
-                                units</font></b></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="text" name="xml_other1" size="40" datafld='xml_other1'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="text" name="xml_other1_unit" size="5" maxlength="2" datafld='xml_other1_unit'>
-                                </font></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="text" name="xml_other2" size="40" datafld='xml_other2'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="text" name="xml_other2_unit" size="5" maxlength="2" datafld='xml_other2_unit'>
-                                </font></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="text" name="xml_other3" size="40"  datafld='xml_other3'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="text" name="xml_other3_unit" size="5" maxlength="2" datafld='xml_other3_unit'>
-                                </font></td>
-                            </tr>
-                            <tr> 
-                              <td colspan="2"><a href="javascript:OtherScriptAttach()"><img src="../images/search_code.jpg" border="0"></a> 
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                        <td width="9%"> 
-                          <!--
-                          <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
-                            <tr> 
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica">Research 
-                                <font color="#FF0000">(optional)</font></font></b></td>
-                              <td><b></b></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                </font></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                </font></td>
-                            </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica" size="1"> 
-                                </font></td>
-                            </tr>
-                            <tr> 
-                              <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a> 
-                              </td>
-                            </tr>
-                          </table> -->
-                        </td>
-                      </tr>
-                    </table>
-                    <table width="100%" border="0" cellspacing="2" cellpadding="2">
-                      <tr bgcolor="#CCCCFF"> 
-                        <td colspan="4"><b><font face="Verdana, Arial, Helvetica" size="1" color="#000000">Diagnostic 
-                          Codes</font></b></td>
-                      </tr>
-                    
-                          <%
-//  if( bNew ) {
+	premiumFlag = "";
+	rs3 = apptMainBean.queryResults(serviceCode, "search_billingservice_premium");
+	while(rs3.next()){
+		premiumFlag = rs3.getString("status");
+	}
 
+	if (CountService == 0) {
+%>
+		<tr bgcolor="#CCCCFF"> 
+			<td width="25%" align="left"> 
+			<b><font face="Verdana, Arial, Helvetica" size="1" color="#000000"><%=headerTitle%></b></font>
+			</td>
+			<td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica" size="1">Description</font></b></td>
+			<td width="14%" align="right"> 
+			<b><font face="Verdana, Arial, Helvetica" size="1" >$ Fee</font></b>
+			</td>
+		</tr>
+<%
+		CountService = 1;
+	} else{
+		serviceType = "";
+	}
+%>
+		<tr bgcolor=<%=CountService%2==0 ? "#FFFFFF" : "#EEEEFF"%>> 
+			<td width="25%" height="1"><b></b> <font face="Verdana, Arial, Helvetica"> 
+			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
+			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b></td>
+			<td width="61%" height="1"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDesc%></font> 
+			<font face="Verdana, Arial, Helvetica"> 
+			<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
+			</font></td>
+			<td width="14%" height="1"> 
+			<div align="right"><font size="1" face="Verdana, Arial, Helvetica"><%=serviceDisp%></font> 
+			<font face="Verdana, Arial, Helvetica"> 
+			<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
+			<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
+			</font></div>
+			</td>
+		</tr>
+<%
+	CountService++;
+}
+%>
 
-%>
-                          <input type="hidden" name="xml_diagnostic_code" value="000|Select a diagnosis">
-                                    <input type="hidden" name="status" value="<%=request.getParameter("status")%>">
-       
-                        
-                          <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-                          <input type="hidden" name="billing_name" value="obstetric">
-                          <input type="hidden" name="user_no" value="<%=request.getParameter("user_no")%>">
-                          <input type="hidden" name="apptProvider_no" value="<%=apptProvider_no%>">
-                          <input type="hidden" name="asstProvider_no" value="<%=asstProvider_no%>">
-                          <input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>">
-                          <input type="hidden" name="billing_time" value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>">
-                          <input type="hidden" name="billingservice_code" value="">
-                          <input type="hidden" name="dboperation" value="save_bill">
-                          <!-- <input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>"> -->
-                          <input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
-                          <input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
-                          <input type="hidden" name="displaymode" value="savebill">
-                          <input type="hidden" name="demographic_name" value="<%=demoname%>">
-                          <input type="hidden" name="clinic_no" value="<%=clinicNo%>">
-                          <input type="hidden" name="billForm" value="<%=ctlBillForm%>">
-                          <%
-//  } else {
-%>
-                          <!--            <input type="text"  style="width:70%" size='50' name="xml_diagnostic_code" value="" datafld='xml_diagnostic_code'> -->
-                          <%
- //  } 
-%>
+		<tr bgcolor="#CCCCFF"> 
+			<td align="center" valign="top" height="71" colspan="3"> 
+			
+			<table width="100%" border="0" cellspacing="2" cellpadding="2">
+			<tr> 
+				<td width="91%"> 
+
+				<table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
+				<tr> 
+					<td><b><font size="1" face="Verdana, Arial, Helvetica">
+					Other service/procedure/premium codes</font></b></td>
+					<td><b><font size="1" face="Verdana, Arial, Helvetica">
+					# units</font></b></td>
+				</tr><tr> 
+					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<input type="text" name="xml_other1" size="40" datafld='xml_other1'>
+					</font></td>
+					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<input type="text" name="xml_other1_unit" size="5" maxlength="2" datafld='xml_other1_unit'>
+					</font></td>
+				</tr><tr> 
+					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<input type="text" name="xml_other2" size="40" datafld='xml_other2'>
+					</font></td>
+					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<input type="text" name="xml_other2_unit" size="5" maxlength="2" datafld='xml_other2_unit'>
+					</font></td>
+					</tr>
+					<tr> 
+					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<input type="text" name="xml_other3" size="40"  datafld='xml_other3'>
+					</font></td>
+					<td><font face="Verdana, Arial, Helvetica" size="1"> 
+					<input type="text" name="xml_other3_unit" size="5" maxlength="2" datafld='xml_other3_unit'>
+					</font></td>
+				</tr><tr> 
+					<td colspan="2"><a href="javascript:OtherScriptAttach()"><img src="../images/search_code.jpg" border="0"></a></td>
+				</tr>
+				</table>
+
+				</td><td width="9%"> </td>
+
+			</tr>
+			</table>
+
+			<table width="100%" border="0" cellspacing="2" cellpadding="2">
+			<tr bgcolor="#CCCCFF"> 
+				<td colspan="4"><b><font face="Verdana, Arial, Helvetica" size="1" color="#000000">
+				Diagnostic Codes</font></b></td>
+			</tr>
+
+			<input type="hidden" name="xml_diagnostic_code" value="000|Select a diagnosis">
+			<input type="hidden" name="status" value="<%=request.getParameter("status")%>">
+			<input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
+			<input type="hidden" name="billing_name" value="obstetric">
+			<input type="hidden" name="user_no" value="<%=user_no%>">
+			<input type="hidden" name="apptProvider_no" value="<%=apptProvider_no%>">
+			<input type="hidden" name="asstProvider_no" value="<%=asstProvider_no%>">
+			<input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>">
+			<input type="hidden" name="billing_time" value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>">
+			<input type="hidden" name="billingservice_code" value="">
+			<input type="hidden" name="dboperation" value="save_bill">
+			<input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
+			<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
+			<input type="hidden" name="displaymode" value="savebill">
+			<input type="hidden" name="demographic_name" value="<%=demoname%>">
+			<input type="hidden" name="clinic_no" value="<%=clinicNo%>">
+			<input type="hidden" name="billForm" value="<%=ctlBillForm%>">
            
-                      <tr bgcolor="#EEEEFF"> 
-                        <td align="left" colspan="4" height="9"> <b><font face="Verdana, Arial, Helvetica" size="1"><a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Diagnostic 
-                          </a></font></b> <font face="Verdana, Arial, Helvetica" size="1"> 
-                          <input name="xml_diagnostic_detail" value="" size="25" datafld='xml_diagnostic_detail'>
-                          <a href="javascript:ScriptAttach()"><img src="../images/search_dx_code.jpg" border="0"></a> 
-                          &nbsp; &nbsp; 
-                          <input type="hidden" name="xml_dig_search1" >
-                          </font></td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <% apptMainBean.closePstmtConn();%>
-              </table>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr> 
-          <td align="right"> 
-            <input type="submit" name="Submit" value="Continue">
-            <input type="button" name="Button" value="Cancel" onClick="window.close();">
-          </td>
-        </tr>
-      </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+			<tr bgcolor="#EEEEFF"> 
+				<td align="left" colspan="4" height="9"> <b><font face="Verdana, Arial, Helvetica" size="1">
+				<a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">
+				Diagnostic </a></font></b> <font face="Verdana, Arial, Helvetica" size="1"> 
+				<input name="xml_diagnostic_detail" value="" size="25" datafld='xml_diagnostic_detail'>
+				<a href="javascript:ScriptAttach()"><img src="../images/search_dx_code.jpg" border="0"></a> 
+				&nbsp; &nbsp; 
+				<input type="hidden" name="xml_dig_search1" >
+				</font></td>
+			</tr>
+			</table>
+
+			</td>
+		</tr>
+		</table>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr> 
+			<td align="right"> 
+			<input type="submit" name="Submit" value="Continue">
+			<input type="button" name="Button" value="Cancel" onClick="window.close();">
+			</td>
+		</tr>
+		</table>
+
+		</td>
+	</tr>
+	</table>
+	</td>
+</tr>
+</table>
 </form>
-<p>&nbsp; </p>
+
+<% apptMainBean.closePstmtConn();%>
+
 </body>
 </html>
