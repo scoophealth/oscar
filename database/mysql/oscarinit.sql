@@ -2948,13 +2948,18 @@ CREATE TABLE formInternetAccess(
   formCreated date,
   formEdited timestamp NOT NULL, 
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
+  computerY tinyint(1),
+  computerN tinyint(1),
   internetY tinyint(1),
   internetN tinyint(1),
   internetHome tinyint(1),
-  internetWork tinyint(1),
-  internetFriend tinyint(1),
+  internetWork tinyint(1),  
   internetOther tinyint(1),
   internetOtherTx varchar(255),
+  timeDaily varchar(2),
+  timeWeekly varchar(3),
+  infoY tinyint(1),
+  infoN tinyint(1),
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
 
