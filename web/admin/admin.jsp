@@ -150,13 +150,14 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
                    	         
         </td>
     </tr>
-    <tr bgcolor="#CCCCFF"> 
+    <%-- removed the add demographic button because it was never used, it was out of sync with the 
+         doctor/receptionist version, and it was too much of a pain to keep it up to date --%>
+    <%-- <tr bgcolor="#CCCCFF"> 
       <td colspan="2"><bean:message key="admin.admin.demographic"/></td>
     </tr>
     <tr bgcolor="#EEEEFF">
-      <td> <a href="demographicaddarecordhtm.jsp"><bean:message key="admin.admin.btnAddDemographicRecord"/></a><br>
-        <!--a href="demographicsearch.htm"><bean:message key="admin.admin.btnSearchDemographicRecord"/></a--> </td>
-    </tr>
+      <td> <a href="demographicaddarecordhtm.jsp"><bean:message key="admin.admin.btnAddDemographicRecord"/></a></td>
+    </tr>--%>
     <tr bgcolor="#CCCCFF"> 
       <td> 
         <p><bean:message key="admin.admin.resource"/></p>
