@@ -672,9 +672,9 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
                     <option value="D" <%=allFields.getProperty("submission_code").equals("D")?"selected":""%>>Duplicate</option>            
                     <option value="E" <%=allFields.getProperty("submission_code").equals("E")?"selected":""%>>Debit Request</option>            
                     <option value="I" <%=allFields.getProperty("submission_code").equals("I")?"selected":""%>>ICBC Claim</option>            
-                    <option value="R" <%=allFields.getProperty("submission_code").equals("I")?"selected":""%>>Resubmit Claim</option>            
-                    <option value="A" <%=allFields.getProperty("submission_code").equals("I")?"selected":""%>>Pre-approved claim</option>            
-                    <option value="X" <%=allFields.getProperty("submission_code").equals("I")?"selected":""%>>Resubmitting refused or part paid</option>            
+                    <option value="R" <%=allFields.getProperty("submission_code").equals("R")?"selected":""%>>Resubmit Claim</option>            
+                    <option value="A" <%=allFields.getProperty("submission_code").equals("A")?"selected":""%>>Pre-approved claim</option>            
+                    <option value="X" <%=allFields.getProperty("submission_code").equals("X")?"selected":""%>>Resubmitting refused or part paid</option>            
                 </select>                        
             </td>
        </tr> 
