@@ -98,7 +98,7 @@ function changeList(){
 function openNewPage(vheight,vwidth,varpage) { 
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "<bean:message key="oscarEncounter.Index.msgOscarConsultation"/>", windowprops);
+  var popup=window.open(varpage, "<bean:message key="global.oscarComm"/>", windowprops);
   popup.focus();
 }
 
@@ -115,7 +115,7 @@ function openNewPage(vheight,vwidth,varpage) {
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr bgcolor="#000000"> 
                 <td class="subject" colspan="2">
-                &nbsp;&nbsp;&nbsp;<bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch"/>
+                &nbsp;&nbsp;&nbsp;<bean:message key="global.disease"/>
                 </td>
         </tr>
         </table>
