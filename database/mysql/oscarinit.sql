@@ -5799,6 +5799,7 @@ CREATE TABLE validations(
   minLength int(3), 
   isNumeric bool, 
   isTrue bool,
+  isDate bool,
  PRIMARY KEY(id)
 ) TYPE =MyISAM;
 
