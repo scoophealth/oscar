@@ -6,6 +6,7 @@ import org.apache.struts.action.*;
 
 import oscar.billing.cad.dao.CadProcedimentoDAO;
 import oscar.billing.cad.dao.CidDAO;
+import oscar.billing.cad.dao.TipoAtendimentoDAO;
 import oscar.billing.cad.model.CadCid;
 import oscar.billing.cad.model.CadProcedimentos;
 import oscar.billing.dao.AppointmentDAO;
@@ -13,9 +14,11 @@ import oscar.billing.dao.DiagnosticoDAO;
 import oscar.billing.dao.ProcedimentoRealizadoDAO;
 
 import oscar.billing.fat.dao.FatFormulariosDAO;
+import oscar.billing.model.ProcedimentoRealizado;
 
 import oscar.util.OscarAction;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.servlet.http.*;
@@ -101,12 +104,12 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             form.clear();
             cat.info(" [ProcedimentoRealizadoAction] Limpou form");
 
-            FatFormulariosDAO formDAO = new FatFormulariosDAO(getPropertiesDb(
-                        request));
+            FatFormulariosDAO formDAO = new FatFormulariosDAO(getPropertiesDb(request));
             AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(request));
-            ProcedimentoRealizadoDAO prDAO = new ProcedimentoRealizadoDAO(getPropertiesDb(
-                        request));
+            ProcedimentoRealizadoDAO prDAO = new ProcedimentoRealizadoDAO(
+            	getPropertiesDb(request));
             DiagnosticoDAO diagDAO = new DiagnosticoDAO(getPropertiesDb(request));
+            TipoAtendimentoDAO tpAtendDAO = new TipoAtendimentoDAO(getPropertiesDb(request));
 
             //Obter appointment
             form.setAppointment(appDAO.retrieve(appId));
@@ -115,7 +118,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             form.setFormularios(formDAO.list());
             session.setAttribute("FORMULARIOS", form.getFormularios());
             cat.info("size = " + form.getFormularios().size());
-
+            
             //Obter procedimentos realizados
             form.getAppointment().setProcedimentoRealizado(prDAO.list(appId));
 
@@ -123,6 +126,17 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             form.getAppointment().setDiagnostico(diagDAO.list(appId));
             cat.info(
                 " [ProcedimentoRealizadoAction] setou procedimentos e diagnosticos no form");
+                
+            // get attendance types
+            session.setAttribute("TPATENDIMENTO", tpAtendDAO.list());
+            List procs = form.getAppointment().getProcedimentoRealizado();
+            if (procs.size() > 0) {
+            	// types should be all the same, so take the first one
+            	ProcedimentoRealizado proc = (ProcedimentoRealizado) procs.get(0);
+	            form.setTpAtendimento(
+	            	Long.toString(proc.getTpAtendimento().getCoTipoatendimento()));
+            }
+			
         } catch (Exception e) {
             generalError(request, e, "error.general");
             cat.error("erro: ", e);
@@ -267,9 +281,17 @@ public class ProcedimentoRealizadoAction extends OscarAction {
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
         try {
 			AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(request));
+			ProcedimentoRealizadoDAO procRDAO = 
+				new ProcedimentoRealizadoDAO(getPropertiesDb(request));
 			
-            //gravar procedimentos realizados e diagnosticos
+            // gravar procedimentos realizados e diagnosticos - save
             appDAO.billing(form.getAppointment());
+            
+            // after saving, updates the attendance types
+            procRDAO.updateAttendanceType(
+            	Long.toString(form.getAppointment().getAppointmentNo()), 
+            	form.getTpAtendimento());
+            
         } catch (Exception e) {
             generalError(request, e, "error.general");
 
