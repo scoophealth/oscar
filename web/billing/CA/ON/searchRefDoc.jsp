@@ -30,6 +30,7 @@
   Vector vec = new Vector();
   Properties prop = null;
   String param = request.getParameter("param")==null?"":request.getParameter("param") ;
+  String param2 = request.getParameter("param2")==null?"":request.getParameter("param2") ;
   String keyword = request.getParameter("keyword");
 
 	if (request.getParameter("submit") != null && (request.getParameter("submit").equals("Search")
@@ -138,12 +139,13 @@
 		  self.close();
 		  opener.<%=param%> = data;
 		}
+		<%if(param2.length()>0) {%>
 		function typeInData2(data1, data2) {
-		  self.close();
 		  opener.<%=param%> = data1;
-		  opener.<%=param%> = data2;
+		  opener.<%=param2%> = data2;
+		  self.close();
 		}
-		<%}%>
+		<%}}%>
 -->
 
       </script>
@@ -174,6 +176,7 @@
             </td>
           </tr>
           <input type='hidden' name='param' value="<%=StringEscapeUtils.escapeHtml(param)%>">
+          <input type='hidden' name='param2' value="<%=StringEscapeUtils.escapeHtml(param2)%>">
         </form>
       </table>
 		<table width="95%" border="0">
@@ -216,10 +219,12 @@
         <%for(int i=0; i<vec.size(); i++) {
         	prop = (Properties) vec.get(i);
 			String bgColor = i%2==0?"#EEEEFF":"ivory";
+			String strOnClick = param2.length()>0? "typeInData2('" + prop.getProperty("referral_no", "") + "','"+prop.getProperty("last_name", "")+ "," + prop.getProperty("first_name", "") + "')"
+				: "typeInData1('" + prop.getProperty("referral_no", "") + "')";
         %>
 		<tr align="center"  bgcolor="<%=bgColor%>" align="center"
 onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
-onClick="typeInData1('<%=prop.getProperty("referral_no", "")%>')" >
+onClick="<%=strOnClick%>" >
 		  <td><%=prop.getProperty("referral_no", "")%></td>
 		  <td><%=prop.getProperty("last_name", "")%></td>
 		  <td><%=prop.getProperty("first_name", "")%></td>

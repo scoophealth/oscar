@@ -304,6 +304,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE">
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8">
   <title>OscarBilling - shortcut</title>
   <!-- calendar stylesheet -->
   <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
@@ -436,11 +438,11 @@ var remote=null;
 function rs(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
   remote=window.open(u,n,args);
-  if (remote != null) {
-    if (remote.opener == null)
-      remote.opener = self;
-  }
-  if (x == 1) { return remote; }
+  //if (remote != null) {
+  //  if (remote.opener == null)
+  //    remote.opener = self;
+  //}
+  //if (x == 1) { return remote; }
 }
 var awnd=null;
 function referralScriptAttach(elementName) {
@@ -450,6 +452,13 @@ function referralScriptAttach(elementName) {
      //alert(('searchRefDoc.jsp?param='+t0));
      awnd=rs('att',('searchRefDoc.jsp?param='+t0),600,600,1);
      awnd.focus();
+}
+function referralScriptAttach2(elementName, name2) {
+     var d = elementName;
+     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
+     t1 = escape("document.forms[0].elements[\'"+name2+"\'].value");
+     rs('att',('searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
+     //awnd.focus();
 }
 
 //-->
@@ -547,31 +556,35 @@ ctlCount = 0;
               <table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="ivory">
               <tr><td nowrap width="30%" align="center">
                 <a id="trigger" href="#">[Service Date]</a><br>
-                <textarea name="billDate" cols="11" rows="5" readonly></textarea>
+                <textarea name="billDate" cols="11" rows="5" readonly><%=request.getParameter("billDate")!=null?request.getParameter("billDate"):""%></textarea>
               </td>
               <td align="center" width="33%">
                 Service Code x Unit<br>
-                <input type="text" name="serviceDate0" size="5" maxlength="5" value="">x<input type="text" name="serviceUnit0" size="2" maxlength="2" value=""><br>
-                <input type="text" name="serviceDate1" size="5" maxlength="5" value="">x<input type="text" name="serviceUnit1" size="2" maxlength="2" value=""><br>
-                <input type="text" name="serviceDate2" size="5" maxlength="5" value="">x<input type="text" name="serviceUnit2" size="2" maxlength="2" value=""><br>
+                <input type="text" name="serviceDate0" size="5" maxlength="5" value="<%=request.getParameter("serviceDate0")!=null?request.getParameter("serviceDate0"):""%>">x
+                <input type="text" name="serviceUnit0" size="2" maxlength="2" style="width=20px" value="<%=request.getParameter("serviceUnit0")!=null?request.getParameter("serviceUnit0"):""%>"><br>
+                <input type="text" name="serviceDate1" size="5" maxlength="5" value="<%=request.getParameter("serviceDate1")!=null?request.getParameter("serviceDate1"):""%>">x
+                <input type="text" name="serviceUnit1" size="2" maxlength="2" style="width=20px" value="<%=request.getParameter("serviceUnit1")!=null?request.getParameter("serviceUnit1"):""%>"><br>
+                <input type="text" name="serviceDate2" size="5" maxlength="5" value="<%=request.getParameter("serviceDate2")!=null?request.getParameter("serviceDate2"):""%>">x
+                <input type="text" name="serviceUnit2" size="2" maxlength="2" style="width=20px" value="<%=request.getParameter("serviceUnit2")!=null?request.getParameter("serviceUnit2"):""%>"><br>
               </td>
               <td valign="top">
               	<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td>
 	                <a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a><br>
-	                <input type="text" name="dxCode" size="5" maxlength="5" value="<%=dxCode%>">
+	                <input type="text" name="dxCode" size="5" maxlength="5" value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>">
 	                </td><td>
 	                Cal.% mode<br>
 					<select name="rulePerc" >
-					<option value="onlyAboveCode" >Only Above</option>
-					<option value="allAboveCode" >All</option>
+					<% String rulePerc= request.getParameter("rulePerc")!=null?request.getParameter("rulePerc"):""; %>
+					<option value="onlyAboveCode" <%="onlyAboveCode".equals(rulePerc)?"selected":""%> >Only Above</option>
+					<option value="allAboveCode" <%="allAboveCode".equals(rulePerc)?"selected":""%> >All</option>
 	                </select>
 	                </td></tr>
                 </table>
 
                 <hr>
-                Refer. Doctor<br>
-                <input type="text" name="referralCode" size="5" maxlength="6" value="<%=r_doctor_ohip%>" title="<%=r_doctor%>">
-                <a href="javascript:referralScriptAttach('referralCode')">Code search</a>
+                <a href="javascript:referralScriptAttach2('referralCode','referralDocName')">Refer. Doctor #</a>
+                <input type="text" name="referralCode" size="5" maxlength="6" value="<%=request.getParameter("referralCode")!=null?request.getParameter("referralCode"):r_doctor_ohip%>" ><br>
+                <input type="text" name="referralDocName" size="22" maxlength="30" value="<%=request.getParameter("referralDocName")!=null?request.getParameter("referralDocName"):r_doctor%>" >
               </td>
               </tr>
               </table>
@@ -608,33 +621,35 @@ ctlCount = 0;
 				<td width="30%"><b>Visit Type</b></td>
 				<td width="20%">
 				<select name="xml_visittype" datafld='xml_visittype'>
-					<option value="00| Clinic Visit" <%=visitType.equals("00")?"selected":""%>>00 | Clinic Visit</option>
-					<option value="01| Outpatient Visit" <%=visitType.equals("01")?"selected":""%>>01 | Outpatient Visit</option>
-					<option value="02| Hospital Visit" <%=visitType.equals("02")?"selected":""%>>02 | Hospital Visit</option>
-					<option value="03| ER" <%=visitType.equals("03")?"selected":""%>>03 | ER</option>
-					<option value="04| Nursing Home" <%=visitType.equals("04")?"selected":""%>>04 | Nursing Home</option>
-					<option value="05| Home Visit" <%=visitType.equals("05")?"selected":""%>>05 | Home Visit</option>
+					<option value="00| Clinic Visit" <%=visitType.startsWith("00")?"selected":""%>>00 | Clinic Visit</option>
+					<option value="01| Outpatient Visit" <%=visitType.startsWith("01")?"selected":""%>>01 | Outpatient Visit</option>
+					<option value="02| Hospital Visit" <%=visitType.startsWith("02")?"selected":""%>>02 | Hospital Visit</option>
+					<option value="03| ER" <%=visitType.startsWith("03")?"selected":""%>>03 | ER</option>
+					<option value="04| Nursing Home" <%=visitType.startsWith("04")?"selected":""%>>04 | Nursing Home</option>
+					<option value="05| Home Visit" <%=visitType.startsWith("05")?"selected":""%>>05 | Home Visit</option>
 				</select>
 				</td>
 
 				<td width="30%"><b>Billing Type</b></td>
 				<td width="20%">
+				<% String srtBillType = request.getParameter("xml_billtype")!=null? request.getParameter("xml_billtype"):""; %>
 				<select name="xml_billtype" datafld='xml_billtype' >
-					<option value="ODP | Bill OHIP" selected>Bill OHIP</option>
-					<option value="PAT | Bill Patient">Bill Patient</option>
-					<option value="WCB | Worker's Compensation Board">WSIB</option>
+					<option value="ODP | Bill OHIP" <%=srtBillType.startsWith("ODP")?"selected" : ""%> >Bill OHIP</option>
+					<option value="PAT | Bill Patient" <%=srtBillType.startsWith("PAT")?"selected" : ""%>>Bill Patient</option>
+					<option value="WCB | Worker's Compensation Board" <%=srtBillType.startsWith("WCB")?"selected" : ""%>>WSIB</option>
 				</select>
 				</td>
               </tr>
               <tr>
 				<td><b>Visit Location</b></td>
 				<td colspan="3">
-				<select name="xml_location" datafld='xml_location'>
+				<select name="xml_location">
 				<%
 				for(int i=0; i<vecLocation.size(); i++) {
 					propT = (Properties) vecLocation.get(i);
+					String strLocation = request.getParameter("xml_location")!=null? request.getParameter("xml_location"):clinicview;
 				%>
-					<option value="<%=propT.getProperty("clinic_location_no") + "|" + propT.getProperty("clinic_location_name")%>" <%=clinicview.equals(propT.getProperty("clinic_location_no"))?"selected":""%>>
+					<option value="<%=propT.getProperty("clinic_location_no") + "|" + propT.getProperty("clinic_location_name")%>" <%=strLocation.startsWith(propT.getProperty("clinic_location_no"))?"selected":""%>>
 					<%=propT.getProperty("clinic_location_name")%></option>
 				<%
 				}
@@ -644,7 +659,7 @@ ctlCount = 0;
               <tr>
 				<td><b>Admission Date</b></td>
 				<td >
-				<input type="text" name="xml_vdate" value="<%=visitdate%>" size='10' maxlength='10' readonly>
+				<input type="text" name="xml_vdate" value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate%>" size='10' maxlength='10' readonly>
               	<img src="../../../images/cal.gif" id="xml_vdate_cal">
 				</td>
 				<td colspan="2">
@@ -693,9 +708,9 @@ ctlCount = 0;
 			%>
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" >
+				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
 				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="" size="1" maxlength="2" style="width:20px; height:20px;">
+				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:20px;">
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
 				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
@@ -736,9 +751,9 @@ ctlCount = 0;
 			%>
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" >
+				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
 				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="" size="1" maxlength="2" style="width:20px; height:20px;">
+				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:20px;">
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
 				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
@@ -780,9 +795,9 @@ ctlCount = 0;
 			%>
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" >
+				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
 				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="" size="1" maxlength="2" style="width:20px; height:20px;">
+				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:20px;">
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
 				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">

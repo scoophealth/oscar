@@ -376,7 +376,9 @@ System.out.println(sql);
           <tr>
             <td align="center" bgcolor="#CCCCFF" colspan="2">
               <input type="hidden" name="action" value='<%=action%>'>
+              <% if(!"search".equals(action)) {%>
               <input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="javascript:return onSave();">
+              <% }%>
               <input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
             </td>
           </tr>

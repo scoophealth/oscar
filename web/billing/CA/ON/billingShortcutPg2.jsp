@@ -22,6 +22,11 @@
   <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
   <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%
+  if(request.getParameter("submit")!=null && "Back to Edit".equals(request.getParameter("button")  ) ) {
+%>
+<jsp:forward page="billingShortcutPg1.jsp" />
+<%}%>
+<%
   String            clinicview        = oscarVariables.getProperty("clinic_view", "");
   String            clinicNo          = oscarVariables.getProperty("clinic_no", "");
   String            visitType         = oscarVariables.getProperty("visit_type", "");
@@ -42,7 +47,7 @@
   String total = "";
 
   BillingONDataHelp dbObj             = new BillingONDataHelp();
-  String            msg               = "The calculation:<br>";
+  String            msg               = "<tr><td colspan='2'>Calculation</td></tr>";
   String            action            = "edit";
   Properties        propHist          = null;
   Vector            vecHist           = new Vector();
@@ -214,7 +219,7 @@
     	bdTotal = bdTotal.add(price.multiply(unit).setScale(2, BigDecimal.ROUND_HALF_UP));
     	if(i==rulePercLabelNum) bdPercBase = bdTotal;
 System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
-		msg += vecServiceCode.get(i) + ": + " + price + " x " + unit + " = " + bdTotal + "<br>";
+		msg += "<tr bgcolor='#EEEEFF'><td align='right' width='20%'>" + vecServiceCode.get(i) + " ("+Math.round(unit.floatValue())+")</td><td align='right'>" + (i==0?"":" + ") + price + " x " + unit + " = " + bdTotal + "</td></tr>";
 	}
 	if(vecServiceCodePerc.size()>1) {
 		// calculate perc base
@@ -225,21 +230,20 @@ System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
 		BigDecimal perc = new BigDecimal(Double.parseDouble((String)vecServiceCodePerc.get(1))).setScale(2, BigDecimal.ROUND_HALF_UP);
 		bdPerc = bdPercBase.multiply(perc).setScale(2, BigDecimal.ROUND_HALF_UP);
 System.out.println("Percentage :" + bdPercBase + " x " + perc + " = " + bdPerc);
-		msg += "Percentage :" + bdPercBase + " x " + perc + " = " + bdPerc + "<br>";
+		msg += "<tr bgcolor='#EEEEFF'><td align='right'>"+vecServiceCodePerc.get(0)+" (1)</td><td align='right'>Percentage : " + bdPercBase + " x " + perc + " = " + bdPerc + "</td></tr>";
 		// adjust perc by min/max
 		if(bLimit) {
 			bdPerc = bdPerc.min(new BigDecimal(Double.parseDouble(maxFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
 			bdPerc = bdPerc.max(new BigDecimal(Double.parseDouble(minFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
 System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
-		msg += "Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc + "<br>";
+		msg += "<tr bgcolor='ivory'><td align='right' colspan='2'>Adjust to (" + minFee + ", " + maxFee + "): </td><td align='right'>" + bdPerc + "</td></tr>";
 		}
     	bdTotal = bdTotal.add(bdPerc);
 	}
 
     total = "" + bdTotal;
     System.out.println("***************total****************:" + bdTotal);
-		msg += "Total: " + bdTotal + "<br>";
-		msg += "<input type=\"button\" name=\"submit\" value=\" Re-Edit \" onclick=\"history.go(-1)\" />";
+		msg += "<tr><td align='right' colspan='2'>Total: " + bdTotal + "</td></tr>";
 	// referral
     content = "";
     String referalCode = (request.getParameter("referralCode")!=null&&request.getParameter("referralCode").length()==6)?request.getParameter("referralCode"):null;
@@ -271,7 +275,7 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
 			//param[8]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("billing_time"));
 			param[9]= tempDate[k] ; // parse(billingDate) ;//request.getParameter("appointment_date");
 			param[10]=request.getParameter("start_time");
-			param[11]=request.getParameter("xml_location"); //request.getParameter("clinic_ref_code");
+			param[11]=request.getParameter("xml_location").substring(0,request.getParameter("xml_location").indexOf("|")).trim(); //request.getParameter("clinic_ref_code");
 			param[12]=content; //request.getParameter("content");
 			param[13]=total; // calculate total; //request.getParameter("total");
 			param[14]=request.getParameter("xml_billtype").substring(0,1);
@@ -341,23 +345,15 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
 
 
   // create msg
-  msg += errorMsg + warningMsg;
+  String wrongMsg = errorMsg + warningMsg;
+  //msg += errorMsg + warningMsg;
 System.out.println(" * ******************************" + sql);
 
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>OscarBilling - shortcut</title>
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../../../share/calendar/lang/calendar-en.js"></script>
-  <!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+  <title>OscarBilling</title>
 	<script language="JavaScript">
 	<!--
 	    function onSave() {
@@ -365,7 +361,7 @@ System.out.println(" * ******************************" + sql);
 	        var ret = true;
 	        if(ret==true)
 	        {
-	            ret = confirm("Are you sure you want to save this form?");
+	            ret = confirm("Are you sure you want to do the action?");
 	        }
 	        return ret;
 	    }
@@ -381,10 +377,9 @@ System.out.println(" * ******************************" + sql);
         <td>
           <table border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr><td>
-          	<b>OscarBilling </b>
+          	<b>Confirmation </b>
         	</td>
 			<td align="right">
-            <input type="submit" name="submit" value="Save" />
             <input type="hidden" name="addition" value="Confirm" />
             </td>
 			</tr>
@@ -396,13 +391,99 @@ System.out.println(" * ******************************" + sql);
           <table border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr bgcolor="#33CCCC">
               <td nowrap bgcolor="#FFCC99" width="10%" align="center">
-                <%= demoname %>
+                <%= demoname %> <%= demoSex.equals("1")?"Male":"Female" %> <%= " DOB: " + demoDOBYY + "/" + demoDOBMM + "/" + demoDOBDD + " HIN: " + demoHIN %>
               </td>
-              <td bgcolor="#99CCCC" align="center">
-                <font color="black"><%= msg %></font>
+              <td bgcolor="#99CCCC" align="center"><%= wrongMsg %>
               </td>
             </tr>
           </table>
+
+          <table border="1" cellspacing="0" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="#FFFFFF">
+            <tr >
+              <td width="50%">
+
+              <table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="ivory">
+              <tr><td nowrap width="30%" align="center" valign="top">
+                <b>Service Date</b><br>
+                <%=request.getParameter("billDate").replaceAll("\\n", "<br>")%>
+              </td>
+              <td align="center" width="33%">
+                <b>Diagnostic Code</b><br>
+                <%=request.getParameter("dxCode")%>
+                <hr>
+	                <b>Cal.% mode</b><br>
+					<%=request.getParameter("rulePerc")%>
+              </td>
+              <td valign="top">
+                <b>Refer. Doctor</b><br><%=request.getParameter("referralDocName")%><br>
+                <b>Refer. Doctor #</b><br><%=request.getParameter("referralCode")%>
+              </td>
+              </tr>
+              </table>
+
+              </td><td valign="top">
+
+              <table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="#EEEEFF">
+              <tr><td nowrap width="30%">
+				<b>Billing Physician</b></td>
+				<td width="20%">
+				<%=providerBean.getProperty(request.getParameter("xml_provider"), "")%></td>
+				<td nowrap width="30%"><b>Assig. Physician</b></td>
+				<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%>
+              	</td>
+              </tr>
+              <tr>
+
+				<td width="30%"><b>Visit Type</b></td>
+				<td width="20%">
+				<%=request.getParameter("xml_visittype").substring(request.getParameter("xml_visittype").indexOf("|")+1)%>
+				</td>
+
+				<td width="30%"><b>Billing Type</b></td>
+				<td width="20%">
+				<%=request.getParameter("xml_billtype").substring(request.getParameter("xml_billtype").indexOf("|")+1)%>
+				</td>
+              </tr>
+              <tr>
+				<td><b>Visit Location</b></td>
+				<td colspan="3">
+				<%=request.getParameter("xml_location").substring(request.getParameter("xml_location").indexOf("|")+1)%></td>
+              </tr>
+              <tr>
+				<td><b>Admission Date</b></td>
+				<td >
+				<%=request.getParameter("xml_vdate")%>
+				</td>
+				<td colspan="2">
+				</td>
+
+              </tr>
+              </table>
+
+
+              </td>
+            </tr>
+          </table>
+
+        </td>
+
+      </tr>
+      <tr><td align="center">
+			<table border = "1" width="50%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
+
+                <%= msg %>
+
+			  <tr>
+
+                <td colspan='2' align='center' bgcolor="silver">
+                <input type="submit" name="button" value="Back to Edit"  style="width: 120px;" />
+                <input type="submit" name="submit" value="Save"  style="width: 120px;"/>
+				</td>
+              </tr>
+            </table>
+		</td>
+	  </tr>
+
 
 <%
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
