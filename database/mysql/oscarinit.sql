@@ -1961,6 +1961,39 @@ CREATE TABLE formAnnualV2 (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table `formImmunAllergy`
+--
+
+CREATE TABLE formImmunAllergy (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  c_surname varchar(30) default NULL,
+  c_givenName varchar(30) default NULL,
+  dateAdmin date default NULL,
+  tradeName varchar(50) default NULL,
+  manufacturer varchar(50) default NULL,
+  lot varchar(50) default NULL,
+  expiDate date default NULL,
+  doseAdminSC tinyint(1) default NULL,
+  doseAdminIM tinyint(1) default NULL,
+  doseAdminml tinyint(1) default NULL,
+  doseAdminTxtml varchar(10) default NULL,
+  locLtDel tinyint(1) default NULL,
+  locRtDel tinyint(1) default NULL,
+  locLtDelOUQ tinyint(1) default NULL,
+  locRtDelOUQ tinyint(1) default NULL,
+  locOther tinyint(1) default NULL,
+  InstrStay20 tinyint(1) default NULL,
+  InstrExpectLoc tinyint(1) default NULL,
+  InstrFU tinyint(1) default NULL,
+  disChNoComp tinyint(1) default NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `formLabReq`
 --
 

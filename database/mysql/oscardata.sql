@@ -261,6 +261,7 @@ INSERT INTO encounterForm VALUES ('Pall. Care','../form/formpalliativecare.jsp?d
 INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','formAR', '1');
 INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf', '1');
 INSERT INTO encounterForm VALUES ('ADFv2', '../form/formadfv2.jsp?demographic_no=', 'formAdfV2', '1');
+INSERT INTO encounterForm VALUES ('ImmunAllergies', '../form/formimmunallergy.jsp?demographic_no=', 'formImmunAllergy', '0');
 
 --
 -- Dumping data for table 'encountertemplate'
