@@ -26,7 +26,7 @@ GregorianCalendar now=new GregorianCalendar();
    
 
 %>
-<html>
+<html:html locale="true">
 <head>
 <title><bean:message key="dms.documentList.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
