@@ -246,8 +246,6 @@ var maxYear=9900;
             b = false;
         } else if(valDate(document.forms[0].pg1_stopDate)==false){
             b = false;
-        } else if(valDate(document.forms[0].pg1_foliAcidDate)==false){
-            b = false;
         } else if(valDate(document.forms[0].pg1_quitDate)==false){
             b = false;
         } else if(valDate(document.forms[0].pg1_examination)==false){
@@ -980,7 +978,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
 	  <td><span class="small8">FOLIC ACID</span>
       <input type="text" name="pg1_foliAcidSpec" size="10" maxlength="15" value="<%= props.getProperty("pg1_foliAcidSpec", "") %>" @oscar.formDB />
 	  <span class="small8">start date:</span>
-      <input type="text" name="pg1_foliAcidDate" size="10" maxlength="15" value="<%= props.getProperty("pg1_foliAcidDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg1_foliAcidDate" size="10" maxlength="15" value="<%= props.getProperty("pg1_foliAcidDate", "") %>" @oscar.formDB />
 	  </td>
     </tr><tr>
       <td><input type="checkbox" name="pg1_alco" <%= props.getProperty("pg1_alco", "") %>  @oscar.formDB dbType="tinyint(1)"/></td>
