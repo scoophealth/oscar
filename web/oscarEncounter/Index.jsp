@@ -755,7 +755,7 @@ border-right: 2px solid #cfcfcf;
                         <a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;"><bean:message key="oscarEncounter.Index.msgDocuments"/></a><br>
                         <a href="#" onClick="popupPage(500,600, '../eform/showmyform.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="global.eForms"/></a><br>
                  	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a><br>
-                        <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(200,100,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a><br>
+                        <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a><br>
                         <select name="selectCurrentForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View <%=patientName%>\'s lab results'; return true;">
                             <option value="null" selected>-lab results-</option>
                             <% for(int j=0; j<labResults.segmentID.size(); j++) { %>                                
