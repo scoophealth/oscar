@@ -108,7 +108,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
                     bos.write(buffer, 0, bytesRead);
             }
             bos.close();
-
+            db.CloseConn();
             //close the stream
             stream.close();
         }

@@ -111,6 +111,7 @@ public class EctAddMeasurementTypeAction extends Action {
                 saveErrors(request, errors);
                 isValid = false;                
             }
+            db.CloseConn();
         }
         catch(SQLException e)
         {
