@@ -3309,7 +3309,6 @@ CREATE TABLE mdsZRG (
 --
 -- Table structure for table `measurements`
 --
-DROP TABLE IF EXISTS measurements;
 CREATE TABLE measurements(
   id int UNSIGNED AUTO_INCREMENT,
   type varchar(4) NOT NULL,
@@ -3320,6 +3319,23 @@ CREATE TABLE measurements(
   comments varchar(255) NOT NULL, 
   dateObserved datetime NOT NULL, 
   dateEntered datetime NOT NULL,
+  PRIMARY KEY(id)
+) TYPE=MYISAM;
+
+--
+-- Table structure for table `measurementsDeleted`
+--
+CREATE TABLE measurementsDeleted(
+  id int UNSIGNED AUTO_INCREMENT,
+  type varchar(4) NOT NULL,
+  demographicNo int(10) NOT NULL default '0', 
+  providerNo varchar(6) NOT NULL default '',
+  dataField  varchar(10) NOT NULL,
+  measuringInstruction varchar(255) NOT NULL,  
+  comments varchar(255) NOT NULL, 
+  dateObserved datetime NOT NULL, 
+  dateEntered datetime NOT NULL,
+  dateDeleted datetime NOT NULL,
   PRIMARY KEY(id)
 ) TYPE=MYISAM;
 
@@ -3346,7 +3362,19 @@ CREATE TABLE measurementType (
   PRIMARY KEY(id)
 ) TYPE =MyISAM;
 
-
+--
+-- Table structure for table `measurementTypeDeleted`
+--
+CREATE TABLE measurementTypeDeleted (
+  id int UNSIGNED AUTO_INCREMENT,
+  type varchar(4) NOT NULL,
+  typeDisplayName varchar(20) NOT NULL,
+  typeDescription varchar(255) NOT NULL, 
+  measuringInstruction varchar(255) NOT NULL, 
+  validation varchar(100) NOT NULL,
+  dateDeleted datetime NOT NULL,
+  PRIMARY KEY(id)
+) TYPE =MyISAM;
 --
 -- Table structure for table `messagelisttbl`
 --
