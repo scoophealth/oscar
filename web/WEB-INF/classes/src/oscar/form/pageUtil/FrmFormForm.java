@@ -27,12 +27,16 @@ import org.apache.struts.action.*;
 
 public final class FrmFormForm extends ActionForm {
 
+   public FrmFormForm(){
+      System.out.println("FrmFormForm gets instantiated");
+   }
     //Using map-backed method to get the value of each field
     //key: the field property
     //value: the value of the associated key
     private final Map values = new HashMap();
 
     public void setValue(String key, Object value) {
+       System.out.println("Size of FrmFormForm "+values.size());
         values.put(key, value);
     }
 
