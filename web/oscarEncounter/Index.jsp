@@ -433,10 +433,29 @@ function testt(){
 <script language="javascript">
 
 function showpic(picture){
-        if (document.getElementById){ // Netscape 6 and IE 5+
-                var targetElement = document.getElementById(picture);
-        targetElement.style.visibility = 'visible';
-    }
+   if (document.getElementById){ // Netscape 6 and IE 5+
+      
+      var targetElement = document.getElementById(picture);                
+      var bal = document.getElementById("Calcs");
+
+      var offsetTrail = document.getElementById("Calcs");
+      var offsetLeft = 0;
+      var offsetTop = 0;
+      while (offsetTrail) {
+         offsetLeft += offsetTrail.offsetLeft;
+         offsetTop += offsetTrail.offsetTop;
+         offsetTrail = offsetTrail.offsetParent;
+      }
+      if (navigator.userAgent.indexOf("Mac") != -1 && 
+         typeof document.body.leftMargin != "undefined") {
+         offsetLeft += document.body.leftMargin;
+         offsetTop += document.body.topMargin;
+      }
+            
+      targetElement.style.left = offsetLeft +bal.offsetWidth;        
+      targetElement.style.top = offsetTop;	
+      targetElement.style.visibility = 'visible';        
+   }
 }
 
 function hidepic(picture){
@@ -651,8 +670,8 @@ border-right: 2px solid #cfcfcf;
                         <a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
                         <a href="#" onClick="popupPage(500,600, '../eform/showmyform.jsp?demographic_no=<%=bean.demographicNo%>');return false;">E-Forms</a><br>
                  	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;">View Tickler</a>
-                        <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');" >calculators</a>
-                           <span style="position:relative;">
+                        <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');"  id="Calcs" >calculators</a>
+                           
                               <div id="Layer1" style="position:absolute; left:1px; top:1px; width:180px; height:311px; visibility: hidden; z-index:1"   >
                                  <table border=0 cellpadding="0" cellspacing="1"  width="100%" class="layerTable" bgcolor="#FFFFFF"  >
                                    <tr>
@@ -696,11 +715,9 @@ border-right: 2px solid #cfcfcf;
                                           </a>
                                        </td>
                                    </tr>
-
-
-                                                          </table>
-                                                        </div>
-                                                </span>
+                                 </table>
+                              </div>
+                           
 
                  </td>
                 </tr>
