@@ -91,15 +91,12 @@ public class EctAddMeasurementStyleSheetAction extends Action {
 
             //properties must exist
 
-            props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar_mcmaster.properties"));
-            String docDir = props.getProperty("DOCUMENT_DIR");
+            props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar_mcmaster.properties"));            
             String place= props.getProperty("oscarMeasurement_css_upload_path");
-
-            if(!docDir.endsWith("/"))
-                    docDir = new StringBuffer(docDir).insert(docDir.length(),"/").toString();
+            
             if(!place.endsWith("/"))
                     place = new StringBuffer(place).insert(place.length(),"/").toString();
-            retVal = docDir+place+file.getFileName();
+            retVal = place+file.getFileName();
 
             //write the file to the file specified
             OutputStream bos = new FileOutputStream(retVal);
