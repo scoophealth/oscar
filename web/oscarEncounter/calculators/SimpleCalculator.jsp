@@ -23,13 +23,17 @@
  * Ontario, Canada 
  */
 -->
-<html>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html>
 
 
 
 <head>
 <title>
-Simple Calculator
+<bean:message key="oscarEncounter.calculators.SimpleCalculator.title"/>
 </title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <SCRIPT LANGUAGE="JavaScript">
@@ -256,13 +260,13 @@ function clearEquationView(){
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-						Simple Calculator
+						<bean:message key="oscarEncounter.calculators.SimpleCalculator.msgTitle"/>
                         </td>
                         <td  >&nbsp;
 							
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
                     </tr>
                 </table>
@@ -283,7 +287,7 @@ function clearEquationView(){
 		<td id="blah"></td>
 	</tr>
 </table>
-Use * to multiply
+<bean:message key="oscarEncounter.calculators.SimpleCalculator.MsgUsage"/>
 
 <FORM NAME="rcform">
 
@@ -345,4 +349,4 @@ Use * to multiply
         </tr>
     </table>
 </body>
-</html>
+</html:html>

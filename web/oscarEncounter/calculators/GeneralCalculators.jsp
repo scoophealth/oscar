@@ -23,13 +23,17 @@
  * Ontario, Canada 
  */
 -->
-<html>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 
 
 
 <head>
 <title>
-General Conversions
+<bean:message key="oscarEncounter.calculators.GeneralCalculators.title"/>
 </title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 
@@ -161,19 +165,19 @@ function clearform(form) {
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                calculators
+                <bean:message key="oscarEncounter.calculators.GeneralCalculators.msgCalculators"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-						General Conversions
+						<bean:message key="oscarEncounter.calculators.GeneralCalculators.msgTitle"/>
                         </td>
                         <td  >&nbsp;
 							
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
                     </tr>
                 </table>
@@ -181,13 +185,13 @@ function clearform(form) {
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
-          	  <a href="#distance">Distance</A> 
+          	  <a href="#distance"><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgDistance"/></A>
 
-			  <a href="#weight">Weight</A> 
+			  <a href="#weight"><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgWeight"/></A>
 
-			  <a href="#volume">Volume</A> 
+			  <a href="#volume"><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgVolume"/></A>
 
-			  <a href="#temps">Temperatures</A>              
+			  <a href="#temps"><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgTemperatures"/></A>
 
               
             </td>
@@ -197,18 +201,16 @@ function clearform(form) {
           <td style="text-align: center"> <FORM method="post">
               <TABLE BORDER=2 cellpadding=3 cellspacing=0>
                 <TR class="Header"> 
-                  <TD COLSPAN=7 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="distance"><b>Distance 
-                    Unit Conversion Calculator</b></A> </TD>
+                  <TD COLSPAN=7 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="distance"><b><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgDistanceConversion"/></b></A> </TD>
                 </TR>
                 <TR> 
-                  <TD ALIGN=CENTER>Meters</TD>
-                  <TD ALIGN=CENTER>Inches</TD>
-                  <TD ALIGN=CENTER>Feet</TD>
-                  <TD ALIGN=CENTER>Yards</TD>
-                  <TD ALIGN=CENTER>Miles</TD>
-                  <TD ALIGN=CENTER>Nautical<BR>
-                    Miles</TD>
-                  <TD><INPUT TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)"></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgMeters"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgInches"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgFeet"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgYards"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgMiles"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgNauticalMiles"/></TD>
+                  <TD><INPUT TYPE="button" VALUE="<bean:message key="oscarEncounter.calculators.GeneralCalculators.btnCalibrate"/>" onclick="resetform(this.form)"></TD>
                 </TR>
                 <TR> 
                   <TD><INPUT TYPE=TEXT NAME=val1 SIZE=7 onfocus="clearform(this.form)"></TD>
@@ -217,7 +219,7 @@ function clearform(form) {
                   <TD><INPUT TYPE=TEXT NAME=val4 SIZE=7 onfocus="clearform(this.form)"></TD>
                   <TD><INPUT TYPE=TEXT NAME=val5 SIZE=7 onfocus="clearform(this.form)"></TD>
                   <TD><INPUT TYPE=TEXT NAME=val6 SIZE=7 onfocus="clearform(this.form)"></TD>
-                  <TD><INPUT TYPE="button"  VALUE="Calculate" onclick="convertform(this.form)"></TD>
+                  <TD><INPUT TYPE="button"  VALUE="<bean:message key="oscarEncounter.calculators.GeneralCalculators.btnCalculate"/>" onclick="convertform(this.form)"></TD>
                 </TR>
               </TABLE>
             </FORM>
@@ -225,21 +227,18 @@ function clearform(form) {
               <TABLE BORDER=2 cellpadding=3 cellspacing=0>
                 <TR class="Header"> 
                   <TD COLSPAN=8 ALIGN=CENTER VALIGN=MIDDLE style="font-weight:bold"> 
-                    <A NAME="weight"><b>Weight Unit Conversion Calculator</b></A> 
+                    <A NAME="weight"><b><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgWightConversion"/></b></A> 
                   </TD>
                 </TR>
                 <TR> 
-                  <TD ALIGN=CENTER>Kilograms</TD>
-                  <TD ALIGN=CENTER>Ounces</TD>
-                  <TD ALIGN=CENTER>Pounds</TD>
-                  <TD ALIGN=CENTER>Troy<BR>
-                    Pounds</TD>
-                  <TD ALIGN=CENTER>Stones</TD>
-                  <TD ALIGN=CENTER>Short<BR>
-                    Tons</TD>
-                  <TD ALIGN=CENTER>Long<BR>
-                    Tons</TD>
-                  <TD><INPUT TYPE="button" VALUE="Calibrate" onClick="resetform(this.form)"></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgKilograms"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgOunces"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgPounds"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgTroyPounds"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgStones"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgShortTons"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgLongTons"/></TD>
+                  <TD><INPUT TYPE="button" VALUE="<bean:message key="oscarEncounter.calculators.GeneralCalculators.btnCalibrate"/>" onClick="resetform(this.form)"></TD>
                 </TR>
                 <TR> 
                   <TD><INPUT TYPE=TEXT NAME=val1 SIZE=6 onFocus="clearform(this.form)"></TD>
@@ -249,25 +248,22 @@ function clearform(form) {
                   <TD><INPUT TYPE=TEXT NAME=val5 SIZE=6 onFocus="clearform(this.form)"></TD>
                   <TD><INPUT TYPE=TEXT NAME=val6 SIZE=6 onFocus="clearform(this.form)"></TD>
                   <TD><INPUT TYPE=TEXT NAME=val7 SIZE=6 onFocus="clearform(this.form)"></TD>
-                  <TD><INPUT TYPE="button"  VALUE="Calculate"  onclick="convertform(this.form)"></TD>
+                  <TD><INPUT TYPE="button"  VALUE="<bean:message key="oscarEncounter.calculators.GeneralCalculators.btnCalculate"/>"  onclick="convertform(this.form)"></TD>
                 </TR>
               </TABLE>
             </FORM>
             <FORM method="post">
               <TABLE border=2  cellpadding=3 cellspacing=0>
                 <TR class="Header"> 
-                  <TD COLSPAN=7 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="volume"><b>Volume 
-                    Unit Conversion Calculator</b></A> </TD>
+                  <TD COLSPAN=7 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="volume"><b><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgVolumeConversion"/></b></A> </TD>
                 </TR>
                 <TR> 
-                  <TD ALIGN=CENTER>Litres</TD>
-                  <TD ALIGN=CENTER>Fluid<BR>
-                    Ounces</TD>
-                  <TD ALIGN=CENTER>Quarts</TD>
-                  <TD ALIGN=CENTER>Gallons</TD>
-                  <TD ALIGN=CENTER>Imperial<BR>
-                    Gallons</TD>
-                  <TD><INPUT TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)"></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgLitres"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgFluid"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgQuarts"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgGallons"/></TD>
+                  <TD ALIGN=CENTER><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgImperialGallons"/></TD>
+                  <TD><INPUT TYPE="button" VALUE="<bean:message key="oscarEncounter.calculators.GeneralCalculators.btnCalibrate"/>" onclick="resetform(this.form)"></TD>
                 </TR>
                 <TR> 
                   <TD><INPUT TYPE=TEXT NAME=val1 SIZE=6 onfocus="clearform(this.form)"></TD>
@@ -275,28 +271,28 @@ function clearform(form) {
                   <TD><INPUT TYPE=TEXT NAME=val3 SIZE=6 onfocus="clearform(this.form)"></TD>
                   <TD><INPUT TYPE=TEXT NAME=val4 SIZE=6 onfocus="clearform(this.form)"></TD>
                   <TD><INPUT TYPE=TEXT NAME=val5 SIZE=6 onfocus="clearform(this.form)"></TD>
-                  <TD><INPUT TYPE="button"  VALUE="Calculate" onclick="convertform(this.form)"></TD>
+                  <TD><INPUT TYPE="button"  VALUE="<bean:message key="oscarEncounter.calculators.GeneralCalculators.btnCalculate"/>" onclick="convertform(this.form)"></TD>
                 </TR>
               </TABLE>
             </FORM>
             <TABLE border=2  cellpadding=3 cellspacing=0 >
               <TR class="Header"> 
-                <TD COLSPAN=3 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="temps"><b>Temperatures</b></A> 
+                <TD COLSPAN=3 ALIGN=CENTER VALIGN=MIDDLE> <A NAME="temps"><b><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgTemperaturesConversion"/></b></A>
                 </TD>
               </TR>
               <TR> 
-                <TD >1. Click mouse in a box.</TD>
-                <TD>2. Type in temperature.</TD>
-                <TD>3. Click on the other box to calculate.</TD>
+                <TD ><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgInstructions1"/></TD>
+                <TD><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgInstructions2"/></TD>
+                <TD><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgInstructions3"/></TD>
               </TR>
 			  </table>
 			  
 				 	<form method="post">
                     	<table border=2  cellpadding=3 cellspacing=0 width="100%" height="100%">
                       	<tr> 
-                       		<td width="50%" style="text-align: center;" nowrap>Fahrenheit... 
+                       		<td width="50%" style="text-align: center;" nowrap><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgFahrenheit"/>
                           		<input type="text" name="F" value="32" onChange="C.value = 100/(212-32) * (this.value - 32 )"></td>
-                        	<td width="50%" style="text-align: center;" nowrap>Celsius........ 
+                        	<td width="50%" style="text-align: center;" nowrap><bean:message key="oscarEncounter.calculators.GeneralCalculators.msgCelsius"/>
                           		<input type="text" name="C" value="0" onChange="F.value = (212-32)/100 * this.value + 32"></td>
                       	</tr>
                     	</table>
@@ -404,4 +400,4 @@ document.forms[2].val5.factor = 0.2200433;
 </SCRIPT>
 
 
-</html>
+</html:html>

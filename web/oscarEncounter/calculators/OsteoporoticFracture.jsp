@@ -23,13 +23,17 @@
  * Ontario, Canada 
  */
 -->
-<html>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 
 
 
 <head>
 <title>
-Average 10-Year probability (%) of an osteoporotic fracture
+<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.title"/>
 </title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <script type="text/javascript">
@@ -233,11 +237,11 @@ osteFactorFemale[8][5]  = 33.1; // < -2
 				
 				document.second.prediction.value=
 					                  "*****************************************\n"
-									 +"*Average 10-Year Probability of         *\n"
-									 +"Osteoporotic fracture                   *\n"
+									 +"*<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAverage"/>      *\n"
+									 +"<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOsteoporoticFracture"/>                 *\n"
 									 +"*****************************************\n"	                                
-									 +"* 10 Year Probability:         "+retval+" %  \t*\n"
-									 +"* Overall average Probability: "+total+" %  \t*\n"
+									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msg10YearProb"/>:         "+retval+" %  \t*\n"
+									 +"* <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall"/>: "+total+" %  \t*\n"
 									 +"*****************************************\n";
 				
 		
@@ -372,19 +376,19 @@ function setValues(){
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                calculators
+                <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgCalculators"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-						Average 10-Year probability (%) of an osteoporotic fracture
+						<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.title"/>
                         </td>
                         <td  >&nbsp;
 							
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
                     </tr>
                 </table>
@@ -401,19 +405,19 @@ function setValues(){
 							<form name="calCorArDi">
 							<table>
 								<tr>
-									<td>Female:</td>
+									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgFemale"/>:</td>
 									<td><input type="radio" name="sex" value="F" checked onClick="switchData();"/></td>
 								</tr>
 								<tr>
-									<td>Male:</td>
+									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgMale"/>:</td>
 									<td><input type="radio" name="sex" value="M"  onClick="switchData();"/></td>
 								</tr>
 								<tr>
-									<td>Age:</td>
+									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAge"/>:</td>
 									<td><input type="text" name="age" size="4"/></td>
 								</tr>
 								<tr>
-									<td>T-Score:</td>										
+									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgTScore"/>:</td>										
 	                                <td> <select name="tScore">
 										  <option value="1">1</option>
 										  <option value="2">0</option>
@@ -425,10 +429,10 @@ function setValues(){
 								</tr>
 								
 								<tr >
-										<td colspan="2"><input type="button" value="Calculate" onClick="calculate();"/> </td>
+										<td colspan="2"><input type="button" value="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnCalculate"/>" onClick="calculate();"/> </td>
 								</tr>
 									<!--<tr>
-										<td><input type="text" name="totalVal" visible="false"/></td>
+										<td><input type="text" name="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnTotalVal"/>" visible="false"/></td>
 									</tr>-->
 							</table>
 							</form>
@@ -442,25 +446,25 @@ function setValues(){
 							<table class="outline">
 								<tr>
 									<td>
-										Compare To Average 10 Year Risk 
+										<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgCompare"/>
 									</td>
 								</tr>
 								<tr>
 									<td align="center">
-										Probability %
+										<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgProbability"/>
 									</td>
 								</tr>
 								<tr>
 									<td  >
 										<table class="grid" width="100%"  align="center" cellspacing="0">
 											<tr>
-												<td rowspan=2  class="gridTitles">Age</td>
-												<td   class="gridTitlesWOBottom"  >Overall</td>
-												<td colspan=5 class="gridTitlesWOBottom" >T-score</td>
+												<td rowspan=2  class="gridTitles"><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAge"/></td>
+												<td   class="gridTitlesWOBottom"  ><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall"/></td>
+												<td colspan=5 class="gridTitlesWOBottom" ><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgTScore"/></td>
 												
 											</tr>
 											<tr>
-												<td  align="center" class="gridTitles"> Avg</td>
+												<td  align="center" class="gridTitles"> <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAvg"/></td>
 												<td class="gridTitles" >1</td>
 												<td class="gridTitles">0</td>
 												<td class="gridTitles">-1</td>
@@ -559,4 +563,4 @@ function setValues(){
         </tr>
     </table>
 </body>
-</html>
+</html:html>

@@ -59,7 +59,7 @@
   </td></tr>
    <tr><td align="center" class="menuLayer">
        <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.jsp?sex=<%= request.getParameter("sex") %>&age=<%= request.getParameter("age") %>','OsteoporoticFracture');">
-         Osteoporotic Fracture
+         <bean:message key="oscarEncounter.Index.msgOsteoporotic"/>
        </a>
    </td></tr>
    <tr>

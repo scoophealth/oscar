@@ -23,13 +23,16 @@
  * Ontario, Canada 
  */
 -->
-<html>
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 
 
 <head>
 <title>
-Coronary Artery Disease Risk Prediction
+<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.title"/>
 </title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <script type="text/javascript">
@@ -378,12 +381,12 @@ function calculate(){
 	pro10 = prob10[Total];
 	}                                   
 	document.second.prediction.value="*****************************************\n"
-									 +"*Coronary Artery Disease Risk Prediction*\n"
+									 +"*<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgCoronaryRiskPrediction"/>*\n"
 									 +"*****************************************\n"
-	                                 +"* Total Point Count:           "+Total+             "    \t*\n"
-									 +"* 5 Year Probability:          "+pro5+              " %  \t*\n"
-									 +"* 10 Year Probability:         "+pro10+             " %  \t*\n"
-									 +"* Average 10 Year Probability: "+getTenAverage(age)+" %  \t*\n"
+	                                 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgTotalPointCount"/>:           "+Total+             "    \t*\n"
+									 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msg5YearProbability"/>:          "+pro5+              " %  \t*\n"
+									 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msg10YearProbability"/>:         "+pro10+             " %  \t*\n"
+									 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgAvg10YearProbability"/>: "+getTenAverage(age)+" %  \t*\n"
 									 +"*****************************************\n";
 }
 
@@ -582,13 +585,13 @@ function setValues(){
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-						Coronary Artery Disease Risk Prediction
+						<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.title"/>
                         </td>
                         <td  >&nbsp;
 							
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
                     </tr>
                 </table>
@@ -605,19 +608,19 @@ function setValues(){
 							<form name="calCorArDi">
 							<table>
 								<tr>
-									<td>Female:</td>
+									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgFemale"/>:</td>
 									<td><input type="radio" name="sex" value="F" checked /></td>
 								</tr>
 								<tr>
-									<td>Male:</td>
+									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgMale"/>:</td>
 									<td><input type="radio" name="sex" value="M"/></td>
 								</tr>
 								<tr>
-									<td>Age:</td>
+									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgAge"/>:</td>
 									<td><input type="text" name="age" size="4"/></td>
 								</tr>
 								<tr>
-									<td>HDL-Cholesterol:</td>										
+									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgHDLCholesterol"/>:</td>										
 	                                <td> <select name="HDL">
 										  <option value="1">.65-.69</option>
 										  <option value="2">.70-.77</option>
@@ -638,7 +641,7 @@ function setValues(){
 									</td>
 								</tr>
 								<tr>
-										<td>Total-Cholesterol:</td>
+										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgTotalCholesterol"/>:</td>
 										<td>
 											<select name="TCh">
 												<option value="1">3.59-3.92</option>
@@ -655,7 +658,7 @@ function setValues(){
 										</td>
 								</tr>
 								<tr>
-										<td>Systolic BP:</td>
+										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgSystolic"/>:</td>
 										<td>
 											<select name="BP">
 												<option value="1">98-104</option>
@@ -671,15 +674,15 @@ function setValues(){
 										</td>
 								</tr>
 								<tr>
-										<td>Smoker:</td>
+										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgSmoker"/>:</td>
 										<td><input type="checkbox" name="cigs"/></td>
 								</tr>
 								<tr>
-										<td>Diabetic:</td>
+										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgDiabetic"/>:</td>
 										<td><input type="checkbox" name="diabetic"/></td>
 								</tr>
 								<tr>
-										<td>ECG-LVH:</td>
+										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgECG-LVH"/>:</td>
 										<td><input type="checkbox" name="ECG"/></td>
 								</tr>
 								<tr >
@@ -700,21 +703,21 @@ function setValues(){
 							<table class="outline">
 								<tr>
 									<td>
-										Compare To Average 10 Year Risk 
+										<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgCompare10Year"/>
 									</td>
 								</tr>
 								<tr>
 									<td align="center">
-										Probability %
+										<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgProbability"/>
 									</td>
 								</tr>
 								<tr>
 									<td  >
 										<table class="grid" width="100%"  align="center" cellspacing="0">
 											<tr>
-												<td  align="center" class="gridTitles">Age</td>
-												<td  align="center" class="gridTitles">Female</td>
-												<td  align="center" class="gridTitles">Male</td>
+												<td  align="center" class="gridTitles"><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgAge"/></td>
+												<td  align="center" class="gridTitles"><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgFemale"/></td>
+												<td  align="center" class="gridTitles"><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgMale"/></td>
 											</tr>
 											<tr>
 												<td id="cellL1" align="center">30-34</td>
@@ -780,4 +783,4 @@ function setValues(){
         </tr>
     </table>
 </body>
-</html>
+</html:html>
