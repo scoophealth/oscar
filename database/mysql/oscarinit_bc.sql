@@ -337,6 +337,7 @@ CREATE TABLE formBCAR (
   pg1_disPain tinyint(1) default NULL,
   pg1_sumBloodTran tinyint(1) default NULL,
   pg1_sumSerumScr tinyint(1) default NULL,
+  pg1_summary text default NULL,
   pg1_signature varchar(40) default NULL,
   c_riskNeonDeath tinyint(1) default NULL,
   c_riskStillbirth tinyint(1) default NULL,
