@@ -131,6 +131,7 @@ public class MSPBillingNote {
    Seventh - NOTE-DATA-LINE (400)
    */
    public static String getN01(String dataCenterNum,String dataCenterSeqNum,String payeeNum,String practitionerNum,String noteType,String note){
+      System.out.println("LOOKATME:"+note);
       Misc misc = new Misc();
       String s = "N01" + misc.forwardZero(dataCenterNum,5)
                        + misc.forwardZero(dataCenterSeqNum, 7)
