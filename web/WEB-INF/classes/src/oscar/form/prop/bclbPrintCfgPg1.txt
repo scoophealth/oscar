@@ -198,3 +198,6 @@ c_newBornID     : left, 41, 88, 0, BaseFont.HELVETICA, 8
  conMdSignat     : left, 459, 761, 0, BaseFont.HELVETICA, 8
  conFamPhy       : left, 44, 764, 0, BaseFont.HELVETICA, 8 , X
  conOther        : left, 116, 764, 0, BaseFont.HELVETICA, 8 , X
+ conOtherTxt	 : left, 150, 763, 0, BaseFont.HELVETICA, 8
+ conLos			 : left, 280, 763, 0, BaseFont.HELVETICA, 8
+ 
