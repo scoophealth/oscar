@@ -83,6 +83,7 @@ H3 {
 .Header
 {
         font-weight:bold;
+        font-size: 80%;
         background-color:#6699cc;
 }
 /*These are my additions************************/
@@ -224,4 +225,5 @@ TH {
 }
 .data {
     background-color:#F7F7F7;
+    font-size:80%;
 }
