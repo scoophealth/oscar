@@ -242,9 +242,9 @@ function showHideLayers() { //v3.0
           <td width="24%"><%=bean.getVisitLocation()%></td>
         </tr>
         <tr> 
-          <td height="16">Service Date: </td>
-          <td><%=bean.getServiceDate()%></td>
+          <td height="16" nowrap>Service Date: <%=bean.getServiceDate()%> </td>          
           <td>Service To Date: <%=bean.getService_to_date()%></td>
+          <td>After Hours: <%=getAHDisplay(bean.getAfterHours())%></td>
           <td>Time Call: <%=bean.getTimeCall()%></td>
           <td>StartTime: <%=bean.getStartTime()%></td>
           <td>EndTime: <%=bean.getEndTime()%></td>          
@@ -394,5 +394,18 @@ function showHideLayers() { //v3.0
     return retval;
   }
 
+  String getAHDisplay(String s){
+     String retval = "No";
+     try{
+         if(s.equals("E")){
+            retval = "Evening";
+         }else if (s.equals("N")){
+             retval = "Night";
+         }else if (s.equals("W")){
+             retval = "Weekend";
+         }
+     }catch(Exception ahEx){}
+     return retval;
+  }
 
 %>
