@@ -277,7 +277,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       <td><bean:message key="admin.admin.oscarEncounter"/></td>
     </tr>
     <tr bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(250,450,'../form/setupSelect.do');return false;" ><bean:message key="admin.admin.btnSelectForm"/></a></td>
+      <td><a href="#" ONCLICK ="popupPage(500,1000,'../form/setupSelect.do');return false;" ><bean:message key="admin.admin.btnSelectForm"/></a></td>
     </tr>
     <tr bgcolor="#EEEEFF">
       <td><a href="#" ONCLICK ="popupPage(250,450,'../oscarEncounter/oscarMeasurements/Customization.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/> <bean:message key="admin.admin.oscarMeasurements"/></a></td>
