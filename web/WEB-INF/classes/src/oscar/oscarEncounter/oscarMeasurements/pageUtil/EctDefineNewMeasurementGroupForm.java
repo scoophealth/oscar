@@ -32,7 +32,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 //import org.apache.regexp.*;
 
-public final class EctDefineNewMeasurementGroupForm extends DynaValidatorForm{
+public final class EctDefineNewMeasurementGroupForm extends ActionForm{
 
     
     private String groupName;
@@ -43,26 +43,12 @@ public final class EctDefineNewMeasurementGroupForm extends DynaValidatorForm{
         this.groupName = groupName;
     }
     
-    
-/*    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
-    {
-        ActionErrors errors = new ActionErrors();
-        if(service == null || service.length() == 0)
-            errors.add("service", new ActionError("Errors.service.null"));
-        try
-        {
-            int temp = Integer.parseInt(service);
-            if(temp < 0)
-                errors.add("service", new ActionError("Errors.service.noServiceSelected"));
-        }
-        catch(Exception e)
-        {
-            errors.add("fName", new ActionError("Errors.service.notNum"));
-        }
-        if(!errors.empty())
-            request.setAttribute("validateError", "blah");
-        return errors;
+    private String styleSheet;
+    public String getStyleSheet(){
+        return this.styleSheet;
     }
-    */
+    public void setStyleSheet(String styleSheet){
+        this.styleSheet = styleSheet;
+    }
     
 }

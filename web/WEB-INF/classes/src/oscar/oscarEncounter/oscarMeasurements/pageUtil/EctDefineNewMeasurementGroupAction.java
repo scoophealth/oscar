@@ -53,25 +53,67 @@ public class EctDefineNewMeasurementGroupAction extends Action {
         EctDefineNewMeasurementGroupForm frm = (EctDefineNewMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctDefineNewMeasurementGroupForm", frm);
         
-        String groupName = (String) frm.get("groupName");
+        String groupName = (String) frm.getGroupName();
+        String styleSheet = (String) frm.getStyleSheet();
         
         ActionErrors errors = new ActionErrors();  
         EctValidation validate = new EctValidation();
         String regExp = validate.getRegCharacterExp();
-        String errorField = "The Group Name " + groupName;
+        
         if(!validate.matchRegExp(regExp, groupName)){
             errors.add(groupName,
-            new ActionError("errors.invalid", errorField));
+            new ActionError("errors.invalid", groupName));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
         
-        System.out.println("The selected group is: " + groupName);                        
+        //Write the new groupName to the database if there's no duplication
+        if(!write2Database(groupName, styleSheet)){
+            errors.add(groupName,
+            new ActionError("error.oscarEncounter.addNewMeasurementGroup.duplicateGroupName", groupName));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+                             
         HttpSession session = request.getSession();
         session.setAttribute( "groupName", groupName);
         
         return mapping.findForward("continue");
 
+    }
+    
+    /*****************************************************************************************
+     * Write the new groupName to the database if there's no duplication
+     *
+     * @return boolean
+     ******************************************************************************************/
+    private boolean write2Database(String inputGroupName, String styleSheet){
+        boolean isWrite2Database = true;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
+            System.out.println("Sql Statement: " + sql);
+            ResultSet rs;
+            for(rs = db.GetSQL(sql); rs.next(); )
+            {
+                String groupName = rs.getString("groupName");
+                if (inputGroupName.compareTo(groupName)==0){
+                    isWrite2Database = false;
+                    break;
+                }
+            }
+            rs.close();
+            
+            if (isWrite2Database){
+                sql = "INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('" + inputGroupName + "','" + styleSheet + "')";
+                db.RunSQL(sql);
+            }
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());            
+        }
+        return isWrite2Database;
     }
 }
     
