@@ -23,14 +23,15 @@ public class PathNetController {
    public PathNetController() {
    }
    
+   
    /**
     * @param args the command line arguments
     */
    public static void main(String[] args) {                  
       
-      System.out.println("Running oscarCommClient...");
+      System.out.println("Running PathNet Client...");
       if(args.length != 1) {
-         System.out.println("Usage: oscarCommClient pathOfPropertiesFile");	 
+         System.out.println("Usage: PathNet Client pathOfPropertiesFile");	 
          System.exit(1);
       }
       
@@ -42,14 +43,26 @@ public class PathNetController {
          System.err.println("ERROR: Initializing DB : "+e.getMessage() );
          e.printStackTrace();
          System.exit(1);
-      }                           
+      }                 
+      OscarProperties.getInstance().loader(args[0]);
          
       //
       //String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
       ////
       Connection connection = new Connection();
-      String username = OscarProperties.getInstance().getProperty("PathNetUsername");
-      String password = OscarProperties.getInstance().getProperty("PathNetPassword");
+      String username = OscarProperties.getInstance().getProperty("pathnet_username");
+      String password = OscarProperties.getInstance().getProperty("pathnet_password");
+      
+      if (username == null) {
+         System.err.println("ERROR: property pathnet_username was not found");         
+      }
+      if (password == null) {
+         System.err.println("ERROR: property pathnet_password was not found");
+      }
+      if (username == null || password == null){
+         System.exit(1);         
+      }
+      
       if (connection.Open(username, password)) {
          ArrayList messages = connection.Retrieve();
             if (messages != null) {
