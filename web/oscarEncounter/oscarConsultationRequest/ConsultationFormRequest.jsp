@@ -805,11 +805,11 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             <td colspan=2>
 	        <input type="hidden" name="submission" value="">
                 <%if (request.getAttribute("id") != null){ %>
-      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
                 <%}else{%>
-      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
 
                 <%}%>
             </td>
