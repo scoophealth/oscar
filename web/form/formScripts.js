@@ -197,7 +197,7 @@
                 }
             }
             if (isValid==false){
-                alert("Invalid entry!");
+                alert("The highlighted field(s) is(are) out of Range!");
                 return false;
             } 
         }
