@@ -63,8 +63,14 @@ public class BillingDocumentErrorReportUploadAction extends Action {
             return (new ActionForward(mapping.getInput()));
         }
         else{
-            getData(file1.getFileName(), request);
-            return mapping.findForward("success");
+            if(getData(file1.getFileName(), request))
+                return mapping.findForward("success");
+            else{
+                errors.add(errors.GLOBAL_ERROR,
+                new ActionError("errors.incorrectFileFormat"));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
         }
     }
      
@@ -148,7 +154,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
      * @return
      */
     private boolean getData(String fileName, HttpServletRequest request){
-        boolean isGot = true;
+        boolean isGot = false;
         
         try{
             OscarProperties props = OscarProperties.getInstance();        
@@ -167,21 +173,25 @@ public class BillingDocumentErrorReportUploadAction extends Action {
                 ReportName="Claims Error Report"; 
                 BillingClaimsErrorReportBeanHandler hd = generateReportE(file);
                 request.setAttribute("claimsErrors", hd);
+                isGot = hd.verdict;
             }
             if (fileName.substring(0,1).compareTo("B")==0){ 
                 ReportName="Claim Batch Acknowledgement Report"; 
                 BillingClaimBatchAcknowledgementReportBeanHandler hd = generateReportB(file);
                 request.setAttribute("batchAcks", hd);
+                isGot = hd.verdict;
             }
             if (fileName.substring(0,1).compareTo("X")==0){ 
                 ReportName="Claim File Rejection Report"; 
                 messages=generateReportX(file);
                 request.setAttribute("messages", messages);
+                isGot = reportXIsGenerated;
             }
             if (fileName.substring(0,1).compareTo("R")==0){ 
                 ReportName="EDT OBEC Output Specification"; 
                 BillingEDTOBECOutputSpecificationBeanHandler hd = generateReportR(file);
                 request.setAttribute("outputSpecs", hd);
+                isGot = hd.verdict;
             }
             request.setAttribute("ReportName", ReportName);
         }
@@ -232,6 +242,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
      * @param file
      * @return
      */
+     private boolean reportXIsGenerated = true;
      private ArrayList generateReportX(FileInputStream file){
         ArrayList messages = new ArrayList();
         messages.add("M01 | Message Reason         Length     Msg Type   Filler  Record Image");
@@ -266,6 +277,9 @@ public class BillingDocumentErrorReportUploadAction extends Action {
         }
         catch (IOException ioe) {
             ioe.printStackTrace();            
+        }
+        catch (StringIndexOutOfBoundsException ioe) {
+            reportXIsGenerated =  false;   
         }
         return messages;
      }
