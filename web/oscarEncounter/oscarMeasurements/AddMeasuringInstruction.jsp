@@ -124,14 +124,15 @@
                                          <html:select property="validation">
                                             <html:options collection="validations" property="id" labelProperty="name"/>
                                         </html:select>
-                                        </td>
+                                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.AddMeasurementType.successful"/>"/>
+                                        </td>                                        
                                     </tr>                            
                                     <tr>                            
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                                                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>" onclick="submit();"/></td>
+                                                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"/></td>
+                                                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>" onclick="submit();"/></td>                                                    
                                                 <tr>
                                             </table>
                                         </td>
@@ -153,8 +154,7 @@
 
             </td>
         </tr>
-    </table>
-    <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.AddMeasurementType.successful"/>
+    </table>    
 </html:form>
 </body>
 </html:html>
