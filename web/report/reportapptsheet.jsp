@@ -99,7 +99,7 @@ function refresh() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica">BAD APPT SHEET</font></th>
+  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportapptsheet.title"/></font></th>
     <th width="10%" nowrap><%=createtime%> 
       <input type="button" name="Button" value="<bean:message key="global.btnPrint" />" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit" />" onClick="window.close()"></th></tr>
 </table>
