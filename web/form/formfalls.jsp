@@ -151,7 +151,7 @@
 
 <table width="100%" border="0"  cellspacing="0" cellpadding="0" >
     <tr>
-        <td colspan="2">1. Have you fallen in the last 12 months?</td>
+        <td colspan="2">1. Have you fallen in the last 9 months?</td>
     </tr>
     <tr bgcolor="white">
         <td width="5%" align="right">
