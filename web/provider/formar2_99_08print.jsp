@@ -580,7 +580,7 @@ if (fedb != null && fedb.length() == 10 ) {
 	}
 %>
 <div ID="graphic" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=3+oox%>px; top:<%=653+ooy%>px; width:501px; height:280px;">
-<embed type="image/svg+xml" src="../oscarEncounter/formAR2svg.jsp?bgimage=<%=URLEncoder.encode("../images/formar2_99_08gra.gif")%>&bgimagewidth=222&bgimageheight=276<%=urlparam%>" width="221" height="276"  wmode="transparent" />
+<embed type="image/svg+xml" src="../form/formar2svg.jsp?bgimage=<%=URLEncoder.encode("../images/formar2_99_08gra.gif")%>&bgimagewidth=222&bgimageheight=276<%=urlparam%>" width="221" height="276"  wmode="transparent" />
 </div>
 <%
 }
