@@ -25,8 +25,7 @@
             var ret = is1CheckboxChecked(0, choiceFormat);
         else if(allNumericField!=null)
             var ret = allAreNumeric(0, allNumericField);             
-        if(ret==true) {            
-            reset();
+        if(ret==true) {                        
             ret = confirm("Are you sure you want to save this form?");
         }
         return ret;
@@ -46,8 +45,7 @@
         else if(allNumericField!=null)
             var ret = allAreNumeric(0, allNumericField);
 
-        if(ret == true) {
-            reset();
+        if(ret == true) {            
             ret = confirm("Are you sure you wish to save and close this window?");
         }
         return ret;
