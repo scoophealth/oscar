@@ -125,7 +125,7 @@ function CheckType(){
 
 function gotoPrivate(){
    if (document.BillingCreateBillingForm.xml_billtype.value == "PRIV"){
-      document.location = "../../../billing.do?billRegion=BC&billForm=PRI&hotclick=&appointment_no=6440&demographic_name=Regan,Timothy&demographic_no=9731&user_no=999998&apptProvider_no=103&providerview=103&appointment_date=2004-8-6&status=t&start_time=11:0&bNewForm=1&billType=PRIV";
+      document.location = "../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRIV&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1"       
    }
 }
 
