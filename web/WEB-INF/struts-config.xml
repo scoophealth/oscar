@@ -1768,7 +1768,8 @@
        <forward name="success" path="/oscarWaitingList/WLDisplayPatientWaitingList.jsp"/>
     </action>       
     <!-- oscarWaitingList end -->
-        
+    <!--PDF Label Printing -->
+     <action path="/demographic/printDemoLabelAction" type="oscar.oscarDemographic.PrintDemoLabelAction" />    
 
   </action-mappings>
 
