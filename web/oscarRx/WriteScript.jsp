@@ -79,7 +79,15 @@ int specialStringLen = 0;
         }else{
             frm.takeOther.style.display = '';
         }
-
+        
+        
+        if (frm.take.value == '1/2'){
+           frm.takeOther.value = 0.5;
+        }
+        
+        if (frm.take.value == '1/4'){
+           frm.takeOther.value = 0.25;
+        }
         var sTake = frm.takeOther.value;
         var s = sTake.split('-');
         var sMin;
@@ -92,7 +100,7 @@ int specialStringLen = 0;
             sMin = s[0];
             sMax = s[1];
         }
-
+        
         if(isNaN(parseFloat(sMin))){
             sMin = '';
         }
@@ -585,6 +593,8 @@ int i;
                                 <td colspan=2>Take:</td>
                                 <td colspan=2>
                                     <select name="take" style="width:72px" onChange="javascript:takeChg();">
+                                        <option value="1/4">1/4</option>
+                                        <option value="1/2">1/2</option>
                                         <option value="1">1</option>
                                         <option value="1-2">1-2</option>
                                         <option value="1-3">1-3</option>
@@ -615,13 +625,21 @@ int i;
                                     <script language=javascript>
                                         var frm = document.forms.RxWriteScriptForm;
 
+                                        
                                         if(frm.takeMin.value == frm.takeMax.value){
                                             frm.takeOther.value = frm.takeMin.value;
                                         }else{
                                             frm.takeOther.value = (frm.takeMin.value + '-' + frm.takeMax.value);
                                         }
-
-                                        frm.take.value = frm.takeOther.value;
+                                        
+                                        if(frm.takeOther.value == '0.5'){
+                                           frm.takeOther.value = '1/2';
+                                        }
+                                        
+                                        if(frm.takeOther.value == '0.25'){
+                                           frm.takeOther.value == '1/4';                                        
+                                        }                                        
+                                        frm.take.value = frm.takeOther.value;                                        
                                         if(frm.take.value != frm.takeOther.value){
                                             frm.take.value = 'Other'; 
                                             frm.takeOther.style.display = '';
@@ -776,7 +794,14 @@ int i;
 
                         
                         <br>
-                        <!-- peice Went Here -->
+                        <!-- peice Went Here 
+                        <div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+                        ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
+                        </div>
+                        <div style="background-color:red;margin-right:100px;margin-left:20px;margin-top:1px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+                        ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
+                        </div>
+                        -->
                         <script language=javascript>
                             function submitPending(stashId, action){
                                 
