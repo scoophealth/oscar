@@ -155,6 +155,9 @@
                     type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmDeleteImmunizationSetForm"/>
     <form-bean      name="EctImmImmunizationSetDisplayForm"
                     type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmImmunizationSetDisplayForm"/>
+    <form-bean      name="DeleteImmuSetForm"
+                    type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmInitConfigDeleteImmuSetForm"/>
+
 
                     
     <!-- Measurements form-beans -->
@@ -914,6 +917,19 @@
                 scope="request">
         <forward name="success" path="/oscarEncounter/immunization/config/AdministrateImmunizationSets.jsp"/>
     </action>
+    
+    
+    
+    <action 	path="/oscarEncounter/immunization/config/deleteImmunizationSet"
+            	type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmInitConfigDeleteImmuSetAction"
+            	name="DeleteImmuSetForm"
+            	scope="request"
+            	input="/immunization/config/AdministrateImmunizationSets.jsp">
+		<forward name="success" path="/oscarEncounter/immunization/config/AdministrateImmunizationSets.jsp"/>
+    </action>
+    
+    
+    
     <action     path="/oscarEncounter/immunization/config/CreateInitImmunization"
                 type="oscar.oscarEncounter.immunization.config.pageUtil.EctImmCreateImmunizationSetInitAction"
                 name="EctImmCreateImmunizationSetInitForm"
