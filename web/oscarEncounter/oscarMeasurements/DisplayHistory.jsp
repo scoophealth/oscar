@@ -94,7 +94,7 @@
                          </tr>
                         <logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId = "ctr" >
                         <tr>
-                            <td width="5"><bean:write name="data" property="type" /></td>
+                            <td width="5"><a href="../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>"><bean:write name="data" property="type" /></a></td>
                             <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                            
                             <td width="10"><bean:write name="data" property="dataField" /></td>
                             <td width="300"><bean:write name="data" property="measuringInstrc" /></td>
@@ -105,7 +105,7 @@
                         </tr>                        
                         </logic:iterate>
                         <tr>
-                            <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
+                            <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
                             <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>" onclick="submit();"/></td>
                         </tr>
                         

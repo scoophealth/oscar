@@ -25,83 +25,124 @@
 -->
 
 <%@ page language="java" %>
+<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="oscar.oscarEncounter.pageUtil.*"%>
-<%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
-<%@ page import="java.util.Vector;"%>
-<%
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
-%>
-
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <html:html locale="true">
-
 <head>
 <title>
 <bean:message key="oscarEncounter.Measurements.msgAddMeasurementGroup"/>
 </title>
-<html:base/>
+<style type="text/css">
+   td.nameBox {
+      border-bottom: 1pt solid #888888;
+      font-family: tahoma, helvetica; ;
+      font-size: 12pt;
+   }
+   td.sideLine {
+      border-right: 1pt solid #888888;
+   }
+   td.fieldBox {
+      font-family: tahoma, helvetica;
+   }
+   th.subTitles{
+      font-family: tahoma, helvetica ;
+      font-size:10pt;
+   }
+</style>
 
-<script language="javascript">
-function set(target) {
+<script type="text/javascript">
+    function set(target) {
      document.forms[0].forward.value=target;
 };
 </script>
 
 </head>
 
-<link rel="stylesheet" type="text/css" href="../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
-<html:errors/>
-<html:form action="/oscarEncounter/oscarMeasurements/AddMeasurementGroup.do">
-<table>
-    <tr>
-        <td>
-            <table>
+<body class="BodyStyle" vlink="#0000FF" onload="window.resizeTo(1000,350)";>
+<!--  -->
+    <html:errors/>
+    <html:form action="/oscarEncounter/oscarMeasurements/AddMeasurementGroup.do">
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                <bean:message key="oscarEncounter.Measurements.msgMeasurements"/>
+            </td>
+            <td class="MainTableTopRowRightColumn" width="400">
+                <table class="TopStatusBar" >                 
+                    <tr>
+                        <td ><bean:message key="oscarEncounter.Measurements.msgAddMeasurementGroup"/></td>                        
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>                  
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn">             
+            </td>
+            <td class="MainTableRightColumn">
+               <table border=0 cellspacing=4 width=400>
                 <tr>
-                    <th align="left" class="td.tite">
-                        <bean:message key="oscarEncounter.oscarMeasurements.MeasurementGroup.allTypes"/>
-                    </th>
+                    <td>
+                        <table>
+                            <tr>
+                                <th align="left" class="td.tite">
+                                    <bean:message key="oscarEncounter.oscarMeasurements.MeasurementGroup.allTypes"/>
+                                </th>
 
-                    <th align="left" class="td.tite">
-                        <bean:write name="groupName"/>    
-                    </th>
-                </tr>
-                <tr>
-                    <td><bean:message key="oscarEncounter.oscarMeasurements.MeasurementGroup.add2Group"/><bean:write name="groupName"/></td>
-                    <td><bean:message key="oscarEncounter.oscarMeasurements.MeasurementGroup.deleteTypes"/><bean:write name="groupName"/></td>
-                <tr>
-                    <td>
-                        <html:select multiple="true" property="selectedAddTypes" size="10">
-                            <html:options collection="allTypeDisplayNames" property="typeDisplayName" labelProperty="typeDisplayName"/>
-                        </html:select>
+                                <th align="left" class="td.tite">
+                                    <bean:write name="groupName"/>    
+                                </th>
+                            </tr>
+                            <tr>
+                                <td><bean:message key="oscarEncounter.oscarMeasurements.MeasurementGroup.add2Group"/><bean:write name="groupName"/></td>
+                                <td><bean:message key="oscarEncounter.oscarMeasurements.MeasurementGroup.deleteTypes"/><bean:write name="groupName"/></td>
+                            <tr>
+                                <td>
+                                    <html:select multiple="true" property="selectedAddTypes" size="10">
+                                        <html:options collection="allTypeDisplayNames" property="typeDisplayName" labelProperty="typeDisplayName"/>
+                                    </html:select>
+                                </td>
+                                <td>
+                                    <html:select multiple="true" property="selectedDeleteTypes" size="10">
+                                        <html:options collection="existingTypeDisplayNames" property="typeDisplayName" labelProperty="typeDisplayName"/>
+                                    </html:select>
+                                </td>
+                            </tr>
+                            <tr>     
+                                    <input type="hidden" name="forward" value="error"/>
+                                <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>" onclick="set('add');submit();"/></td>
+                                <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementAction.deleteBtn"/>" onclick="set('delete');submit();"/></td>
+                            </tr>                        
+                            <tr>
+                                <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
+                                <td></td>
+                            </tr>
+                            <input type="hidden" name="groupName" value="<bean:write name="groupName"/>"/>    
+                        </table>
                     </td>
-                    <td>
-                        <html:select multiple="true" property="selectedDeleteTypes" size="10">
-                            <html:options collection="existingTypeDisplayNames" property="typeDisplayName" labelProperty="typeDisplayName"/>
-                        </html:select>
-                    </td>
                 </tr>
-                <tr>     
-                        <input type="hidden" name="forward" value="error"/>
-                    <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>" onclick="set('add');submit();"/></td>
-                    <td><input type="button" name="button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementAction.deleteBtn"/>" onclick="set('delete');submit();"/></td>
-                </tr>                        
-                <tr>
-                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                    <td></td>
-                </tr>
-                <input type="hidden" name="groupName" value="<bean:write name="groupName"/>"/>    
             </table>
-        </td>   
-    </tr>
-</table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
 </html:form>
 </body>
 </html:html>
-                             
+
+
+              
                                    
                                 

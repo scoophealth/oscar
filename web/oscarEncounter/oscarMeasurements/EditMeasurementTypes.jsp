@@ -36,23 +36,17 @@
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
 %>
-
 <html:html locale="true">
-
-<%
-    java.util.Calendar calender = java.util.Calendar.getInstance();
-    String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
-    String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
-    String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
-    String formattedDate = year+"/"+month+"/"+day;
-    String input = null;
-
-%>
-
 <head>
 <title>
 <bean:message key="oscarEncounter.Measurements.msgEditMeasurementTypes"/>
 </title>
+<style type="text/css">
+body{
+    FONT-SIZE: 12px;
+    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+}
+</style>
 <html:base/>
 <script type="text/javascript">
 function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
@@ -74,12 +68,12 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
         <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(200,350,'DefineNewMeasurementGroup.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
+            <a href=# onClick="popupOscarConS(200,1000,'DefineNewMeasurementGroup.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
             </td></tr></table>
         </td>
         <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(200,300,'ProcessGroupListAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.editMeasurementGroup"/></a>
+            <a href=# onClick="popupOscarConS(200,1000,'ProcessGroupListAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.editMeasurementGroup"/></a>
             </td></tr></table>
         </td>
     </tr>
@@ -89,12 +83,12 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
          <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(800,800,'ProcessDisplayMeasurementTypesAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementType"/></a>
+            <a href=# onClick="popupOscarConS(600,1000,'ProcessDisplayMeasurementTypesAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementType"/></a>
             </td></tr></table>
         </td>
          <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(250,350,'ProcessAddMeasurementTypeAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementType"/></a>
+            <a href=# onClick="popupOscarConS(200,1000,'ProcessAddMeasurementTypeAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementType"/></a>
             </td></tr></table>
         </td>
     </tr>
@@ -104,7 +98,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
     <tr>
         <td>
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="150">
-            <a href=# onClick="popupOscarConS(300,400,'ProcessAddMeasuringInstructionAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasuringInstruction"/></a>
+            <a href=# onClick="popupOscarConS(200,1000,'ProcessAddMeasuringInstructionAction.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasuringInstruction"/></a>
             </td></tr></table>
         </td>
     </tr>

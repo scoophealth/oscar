@@ -1,4 +1,3 @@
-
 <!--  
 /*
  * 
@@ -26,69 +25,109 @@
 -->
 
 <%@ page language="java" %>
+<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="oscar.oscarEncounter.pageUtil.*"%>
-<%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
-<%@ page import="java.util.Vector;"%>
-<%
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
-%>
-
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <html:html locale="true">
-
-
 <head>
 <title>
 <bean:message key="oscarEncounter.Measurements.msgSelectMeasurementGroup"/>
 </title>
-<html:base/>
+<style type="text/css">
+   td.nameBox {
+      border-bottom: 1pt solid #888888;
+      font-family: tahoma, helvetica; ;
+      font-size: 12pt;
+   }
+   td.sideLine {
+      border-right: 1pt solid #888888;
+   }
+   td.fieldBox {
+      font-family: tahoma, helvetica;
+   }
+   th.subTitles{
+      font-family: tahoma, helvetica ;
+      font-size:10pt;
+   }
+</style>
+
+<script type="text/javascript">
+    function set(target) {
+     document.forms[0].forward.value=target;
+};
+</script>
+
 </head>
 
-<link rel="stylesheet" type="text/css" href="../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
-<html:errors/>
-<html:form action="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup.do">
-<table>
-    <tr>
-        <td>
-            <table>
+<body class="BodyStyle" vlink="#0000FF" >
+<!--  -->
+    <html:errors/>
+    <html:form action="/oscarEncounter/oscarMeasurements/SelectMeasurementGroup.do">
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                <bean:message key="oscarEncounter.Measurements.msgMeasurements"/>
+            </td>
+            <td class="MainTableTopRowRightColumn" width="400">
+                <table class="TopStatusBar" >                 
+                    <tr>
+                        <td ><bean:message key="oscarEncounter.Measurements.msgSelectMeasurementGroup"/></td>                        
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>                  
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn">             
+            </td>
+            <td class="MainTableRightColumn">
+               <table border=0 cellspacing=4 width=400>
                 <tr>
-                    <td> 
-                        <tr>
-                            <th align="left" class="td.tite">
-                                <bean:message key="oscarEncounter.oscarMeasurements.SelectMeasurementGroup.selectGroup"/>
-                            </th>
-                            <td>
-                             <html:select property="value(groupName)">
-                                <html:options collection="groups" property="groupName" labelProperty="groupName"/>
-                            </html:select>
-                            </td>
-                        </tr>                                                                    
-                        <tr>
-                            <td>
-                                <table>
+                    <td>
+                        <table>
+                            <tr>
+                                <td> 
                                     <tr>
-                                        <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                                        <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.continueBtn"/>" onclick="submit();"/></td>
+                                        <th align="left" class="td.tite">
+                                            <bean:message key="oscarEncounter.oscarMeasurements.SelectMeasurementGroup.selectGroup"/>
+                                        </th>
+                                        <td>
+                                         <html:select property="value(groupName)">
+                                            <html:options collection="groups" property="groupName" labelProperty="groupName"/>
+                                        </html:select>
+                                        </td>
+                                    </tr>                                                                    
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
+                                                    <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.continueBtn"/>" onclick="submit();"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
                                     </tr>
-                                </table>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
-        </td>   
-    </tr>
-</table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
 
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
 </html:form>
-
 </body>
 </html:html>
-                             
-                                   
-                                
