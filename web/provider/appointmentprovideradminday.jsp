@@ -418,7 +418,7 @@ function goZoomView(s, n) {
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
           <% if (!userAvail) {%>
-          [<bean:message key="provider.appointmentProviderAdminDay.msgNotOnSched"/>]"%>
+          [<bean:message key="provider.appointmentProviderAdminDay.msgNotOnSched"/>]
           <% } %>
 </td></tr>
           <tr><td valign="top">
@@ -587,7 +587,11 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.flipView"/>"  >
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="zoom view"-->
-          <%=curProviderName[nProvider]%></a></b> <%=userAvail?"":"[not on Schedule]"%></td></tr>
+          <%=curProviderName[nProvider]%></a></b>
+          <% if(!userAvail) { %>
+          [<bean:message key="provider.appointmentProviderAdminDay.msgNotOnSched"/>]
+          <% } %>
+          </td></tr>
          
        </table><!-- end table for each provider name -->
 

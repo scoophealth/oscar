@@ -473,7 +473,7 @@ notes: <%=Misc.htmlEscape(notes)%>" >
         		<%=view==0?(name.length()>len?name.substring(0,len):name):name%></a>
         		<% if(len==lenLimitedL || view!=0) {%>
             <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;" title='<bean:message key="receptionist.appointmentreceptionistadminday.masterFile"/>'>
-            | M </a>
+            | <bean:message key="provider.appointmentProviderAdminDay.btnM"/> </a>
 <% } %>
         		</font></td>
 <% 
