@@ -178,7 +178,7 @@ function unCheck(s) {
 	}
 }
 function onExit() {
-    if (confirm(<bean:message key="appointment.appointmentgrouprecords.msgExitConfirmation"/>)) {
+    if (confirm("<bean:message key="appointment.appointmentgrouprecords.msgExitConfirmation"/>")) {
         window.close()
 	}
 }
@@ -189,7 +189,7 @@ function onButDelete() {
 }
 function onSub() {
   if( saveTemp==1 ) {
-    return (confirm(<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>)) ; 
+    return (confirm("<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>")) ; 
   } 
 }
 //-->

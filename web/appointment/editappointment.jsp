@@ -26,6 +26,10 @@ function demographicdetail(vheight,vwidth) {
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
   var popup=window.open(page, "demographic", windowprops);
 }
+function onButRepeat() {
+	document.forms[0].action = "appointmentrepeatbooking.jsp" ;
+	document.forms[0].submit();
+}
 // stop javascript -->
 </script>
 
@@ -320,20 +324,21 @@ function checkTimeTypeIn(obj) {
 </table>
 
 <table width="100%" BGCOLOR="<%=deepcolor%>">
-  <tr>
-      <TD align="left">
+<tr>
+	<td align="left">
+	<input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt'; onButUpdate();" value="<bean:message key="appointment.editappointment.btnUpdateAppointment"/>">
 	<input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Group Action'; onButUpdate();" value="<bean:message key="appointment.editappointment.btnGroupAction"/>">
-        <input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt'; onButUpdate();" value="<bean:message key="appointment.editappointment.btnUpdateAppointment"/>">
-        <input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();" value = "<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">
-        <input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnCancelAppointment"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
-        <input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnNoShow"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
-      </TD>
-      <TD align="right"> 
-        <input type = "button" name="labelprint" value = "<bean:message key="appointment.editappointment.btnLabelPrint"/>" onClick="window.open('../demographic/demographiclabelprintsetting.jsp?demographic_no='+document.EDITAPPT.demographic_no.value, 'labelprint','height=550,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no' )">
-        <input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="self.close()">
-    </TD>
-  </tr>
-</TABLE>
+	<input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();" value = "<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">
+	<input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnCancelAppointment"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
+	<input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnNoShow"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
+	</td>
+	<td align="right" nowrap> 
+	<input type = "button" name="labelprint" value = "<bean:message key="appointment.editappointment.btnLabelPrint"/>" onClick="window.open('../demographic/demographiclabelprintsetting.jsp?demographic_no='+document.EDITAPPT.demographic_no.value, 'labelprint','height=550,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no' )">
+	<!--input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="self.close()"-->
+	<a href=# onclick="onButRepeat()">.</a>
+	</td>
+</tr>
+</table>
 </FORM>
 
 <table width="95%" align="center">
