@@ -29,17 +29,34 @@
 // form/createpdf?__title=British+Columbia+Antenatal+Record+Part+1&__cfgfile=bcar1PrintCfgPg1&__cfgfile=bcar1PrintCfgPg2&__template=bcar1
 package oscar.form.pdfservlet;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
 import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Vector;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import oscar.form.graphic.FrmPdfGraphicAR;
 
-// import the iText packages
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.ColumnText;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * 
@@ -61,11 +78,8 @@ public class FrmPDFServlet extends HttpServlet {
     }
 
     /**
-     * @param req
-     *            HTTP request object
-     * @param resp
-     *            HTTP response object
-     *  
+     * @param req HTTP request object
+     * @param resp HTTP response object
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws javax.servlet.ServletException, java.io.IOException {
@@ -130,9 +144,8 @@ public class FrmPDFServlet extends HttpServlet {
     /**
      *  
      */
-    protected ByteArrayOutputStream generatePDFDocumentBytes(
-            final HttpServletRequest req, final ServletContext ctx)
-            throws DocumentException, java.io.IOException {
+    protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req,
+            final ServletContext ctx) throws DocumentException, java.io.IOException {
         Document document = new Document();
         //document = new Document(psize, 50, 50, 50, 50);
 
@@ -143,8 +156,8 @@ public class FrmPDFServlet extends HttpServlet {
         try {
             writer = PdfWriter.getInstance(document, baosPDF);
 
-            String title = req.getParameter("__title") != null ? req
-                    .getParameter("__title") : "Unknown";
+            String title = req.getParameter("__title") != null ? req.getParameter("__title")
+                    : "Unknown";
             String[] cfgFile = req.getParameterValues("__cfgfile");
             String template = req.getParameter("__template") != null ? req
                     .getParameter("__template")
@@ -152,8 +165,7 @@ public class FrmPDFServlet extends HttpServlet {
             //for page 1 picture only
             String cfgGraphicFile = req.getParameter("__cfgGraphicFile") != null ? req
                     .getParameter("__cfgGraphicFile")
-                    + ".txt"
-                    : "";
+                    + ".txt" : "";
 
             int cfgFileNo = 0;
             Properties[] printCfg = null;
@@ -162,13 +174,13 @@ public class FrmPDFServlet extends HttpServlet {
                 printCfg = new Properties[cfgFileNo];
                 for (int i = 0; i < cfgFileNo; i++) {
                     cfgFile[i] += ".txt";
-                    if (cfgFile[i].indexOf("/") > 0) cfgFile[i] = "";
+                    if (cfgFile[i].indexOf("/") > 0)
+                        cfgFile[i] = "";
                     printCfg[i] = getCfgProp(cfgFile[i]);
                 }
             }
 
-            Properties graphicCfg = cfgGraphicFile.equals("") ? null
-                    : getCfgProp(cfgGraphicFile);
+            Properties graphicCfg = cfgGraphicFile.equals("") ? null : getCfgProp(cfgGraphicFile);
 
             String[] cfgVal = null;
             StringBuffer tempName = null;
@@ -179,8 +191,7 @@ public class FrmPDFServlet extends HttpServlet {
             StringBuffer temp = new StringBuffer("");
             for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
                 temp = new StringBuffer(e.nextElement().toString());
-                props.setProperty(temp.toString(), req.getParameter(temp
-                        .toString()));
+                props.setProperty(temp.toString(), req.getParameter(temp.toString()));
             }
 
             document.addTitle(title);
@@ -215,61 +226,72 @@ public class FrmPDFServlet extends HttpServlet {
                 cb.addTemplate(page1, 1, 0, 0, 1, 0, 0);
                 //System.err.println(cfgFileNo + "processed page " + i);
 
-                BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA,
-                        BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252,
+                        BaseFont.NOT_EMBEDDED);
                 cb.setRGBColorStroke(0, 0, 255);
                 //cb.setFontAndSize(bf, 8);
                 // LEFT/CENTER/RIGHT, X, Y,
                 //cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "Cathy
                 // Pacific", 126, height-50, 0);
 
-                if (i > (cfgFileNo)) continue;
+                if (i > (cfgFileNo))
+                    continue;
 
-                for (Enumeration e = printCfg[i - 1].propertyNames(); e
-                        .hasMoreElements();) {
+                for (Enumeration e = printCfg[i - 1].propertyNames(); e.hasMoreElements();) {
                     tempName = new StringBuffer(e.nextElement().toString());
-                    cfgVal = printCfg[i - 1].getProperty(tempName.toString())
-                            .split(" *, *");
+                    cfgVal = printCfg[i - 1].getProperty(tempName.toString()).split(" *, *");
 
                     // write in a rectangle area
                     if (cfgVal.length >= 9) {
-                        Font font = new Font(bf, Integer.parseInt(cfgVal[5]
-                                .trim()), Font.NORMAL);
+                        Font font = new Font(bf, Integer.parseInt(cfgVal[5].trim()), Font.NORMAL);
                         //ct.setSimpleColumn(60, 300, 200, 500, 10,
                         // Element.ALIGN_LEFT);
                         //ct.addText(new Phrase(15, "xxxx xxxxx xxxxx xxxxx xxx
                         // xxxxx xxxxx xxxx xxxxx xxxxxx xxxx xxxxxxx xxxxx
                         // xxxx", font));
-                        ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()),
-                                (height - Integer.parseInt(cfgVal[2].trim())),
-                                Integer.parseInt(cfgVal[7].trim()),
-                                (height - Integer.parseInt(cfgVal[8].trim())),
-                                Integer.parseInt(cfgVal[9].trim()),
-                                Element.ALIGN_LEFT);
-                        ct.addText(new Phrase(12, props.getProperty(tempName
-                                .toString(), ""), font)); // page size leading
+                        ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()), (height - Integer
+                                .parseInt(cfgVal[2].trim())), Integer.parseInt(cfgVal[7].trim()),
+                                (height - Integer.parseInt(cfgVal[8].trim())), Integer
+                                        .parseInt(cfgVal[9].trim()), Element.ALIGN_LEFT);
+                        ct
+                                .addText(new Phrase(12, props.getProperty(tempName.toString(), ""),
+                                        font)); // page size leading
                         // space between two
                         // lines
                         ct.go();
                         continue;
                     }
 
-                    cb.beginText();
-                    cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
-                    cb
-                            .showTextAligned(
-                                    (cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
-                                            : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
-                                                    : PdfContentByte.ALIGN_CENTER)),
-                                    (cfgVal.length >= 7 ? ((props.getProperty(
-                                            tempName.toString(), "").equals("") ? ""
-                                            : cfgVal[6].trim()))
-                                            : props.getProperty(tempName
-                                                    .toString(), "")), Integer
-                                            .parseInt(cfgVal[1].trim()),
-                                    (height - Integer
-                                            .parseInt(cfgVal[2].trim())), 0);
-                    cb.endText();
+                    // write text directly
+                    if (tempName.toString().startsWith("__")) {
+                        cb.beginText();
+                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+                        cb
+                                .showTextAligned(
+                                        (cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+                                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
+                                                        : PdfContentByte.ALIGN_CENTER)),
+                                        (cfgVal.length >= 7 ? (cfgVal[6].trim()) : props.getProperty(tempName
+                                                .toString(), "")), Integer.parseInt(cfgVal[1]
+                                                .trim()), (height - Integer.parseInt(cfgVal[2]
+                                                .trim())), 0);
+                        cb.endText();
+                    } else { // write prop text 
+                        cb.beginText();
+                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+                        cb
+                                .showTextAligned(
+                                        (cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+                                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
+                                                        : PdfContentByte.ALIGN_CENTER)),
+                                        (cfgVal.length >= 7 ? ((props.getProperty(
+                                                tempName.toString(), "").equals("") ? ""
+                                                : cfgVal[6].trim())) : props.getProperty(tempName
+                                                .toString(), "")), Integer.parseInt(cfgVal[1]
+                                                .trim()), (height - Integer.parseInt(cfgVal[2]
+                                                .trim())), 0);
+                        cb.endText();
+                    }
                 }
 
                 //graphic
@@ -291,11 +313,9 @@ public class FrmPDFServlet extends HttpServlet {
                     Vector xDate = new Vector();
                     Vector yHeight = new Vector();
 
-                    for (Enumeration e = graphicCfg.propertyNames(); e
-                            .hasMoreElements();) {
+                    for (Enumeration e = graphicCfg.propertyNames(); e.hasMoreElements();) {
                         tempName = new StringBuffer(e.nextElement().toString());
-                        tempValue = graphicCfg.getProperty(tempName.toString())
-                                .trim();
+                        tempValue = graphicCfg.getProperty(tempName.toString()).trim();
 
                         if (tempName.toString().equals("__finalEDB"))
                             fEDB = props.getProperty(tempValue);
@@ -328,27 +348,23 @@ public class FrmPDFServlet extends HttpServlet {
                     if (fEDB != null && fEDB.length() >= 8) {
                         //make the graphic class
                         FrmPdfGraphicAR myClass = new FrmPdfGraphicAR();
-                        myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX,
-                                fStartY, fEndY, dateFormat, fEDB);
-                        Properties gProp = myClass.getGraphicXYProp(xDate,
-                                yHeight);
+                        myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY,
+                                dateFormat, fEDB);
+                        Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
 
                         //draw the pic
                         cb.setLineWidth(1.5f);
                         //cb.setRGBColorStrokeF(0f, 255f, 0f); //cb.circle(52f,
                         // height - 751f, 1f);//cb.circle(52f, height - 609f,
                         // 1f);
-                        for (Enumeration e = gProp.propertyNames(); e
-                                .hasMoreElements();) {
-                            tempName = new StringBuffer(e.nextElement()
-                                    .toString());
-                            tempValue = gProp.getProperty(tempName.toString(),
-                                    "");
-                            if (tempValue.equals("")) continue;
+                        for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
+                            tempName = new StringBuffer(e.nextElement().toString());
+                            tempValue = gProp.getProperty(tempName.toString(), "");
+                            if (tempValue.equals(""))
+                                continue;
 
-                            cb.circle((origX + Float.parseFloat(tempName
-                                    .toString())), (height - origY + Float
-                                    .parseFloat(tempValue)), 1.5f);
+                            cb.circle((origX + Float.parseFloat(tempName.toString())), (height
+                                    - origY + Float.parseFloat(tempValue)), 1.5f);
                             cb.stroke();
                         }
                     }
@@ -360,8 +376,10 @@ public class FrmPDFServlet extends HttpServlet {
             baosPDF.reset();
             throw dex;
         } finally {
-            if (document != null) document.close();
-            if (writer != null) writer.close();
+            if (document != null)
+                document.close();
+            if (writer != null)
+                writer.close();
         }
 
         return baosPDF;
@@ -376,8 +394,7 @@ public class FrmPDFServlet extends HttpServlet {
 
         try {
             //InputStream is = cLoader.getResourceAsStream(cfgFilename);
-            InputStream is = getServletContext().getResourceAsStream(
-                    propPath + cfgFilename);
+            InputStream is = getServletContext().getResourceAsStream(propPath + cfgFilename);
 
             if (is != null) {
                 ret.load(is);
