@@ -21,7 +21,8 @@ c_hospital	: left, 50, 50, 0, BaseFont.HELVETICA, 8
   ar2_labHem1st	: left, 50, 135, 0, BaseFont.HELVETICA, 8
   ar2_labHem3rd	: left, 98, 135, 0, BaseFont.HELVETICA, 8
   ar2_labRhIgG	: left, 150, 124, 0, BaseFont.HELVETICA, 8
-  ar2_labOtherTest	: left, 221, 124, 0, BaseFont.HELVETICA, 7
+  ar2_labRhIgG2	: left, 150, 136, 0, BaseFont.HELVETICA, 8
+  ar2_labOtherTest	: left, 220, 117, 0, BaseFont.TIMES_ROMAN, 6, _, 325, 180, 8 
 
   ar2_labGWeek	: left, 50, 160, 0, BaseFont.HELVETICA, 8 
   ar2_labDiabDate	: left, 78, 160, 0, BaseFont.HELVETICA, 8 
@@ -49,14 +50,16 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
 
   ar2_age	: left, 60, 179, 0, BaseFont.HELVETICA, 8 
   c_ppWt	: left, 110, 179, 0, BaseFont.HELVETICA, 8 
-  c_ppHt	: left, 170, 179, 0, BaseFont.HELVETICA, 8 
+  c_ppHt	: left, 159, 179, 0, BaseFont.HELVETICA, 7 
+  c_ppBMI	: left, 179, 179, 0, BaseFont.HELVETICA, 7 
   ar2_lmpDate	: left, 210, 179, 0, BaseFont.HELVETICA, 8 
   c_EDD	: left, 270, 178, 0, BaseFont.HELVETICA, 8 
 
   pg2_date1	: left, 50, 219, 0, BaseFont.HELVETICA, 7 
   pg2_wt1	: left, 98, 219, 0, BaseFont.HELVETICA, 7 
   pg2_bp1	: left, 128, 219, 0, BaseFont.HELVETICA, 7 
-  pg2_urine1	: left, 166, 219, 0, BaseFont.HELVETICA, 7 
+  pg2_urine1	: left, 160, 219, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG1	: left, 178, 219, 0, BaseFont.HELVETICA, 7 
   pg2_gest1	: left, 198, 219, 0, BaseFont.HELVETICA, 7 
   pg2_ht1	: left, 230, 219, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct1	: left, 257, 219, 0, BaseFont.HELVETICA, 7 
@@ -67,7 +70,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date2	: left, 50, 239, 0, BaseFont.HELVETICA, 7 
   pg2_wt2	: left, 98, 239, 0, BaseFont.HELVETICA, 7 
   pg2_bp2	: left, 128, 239, 0, BaseFont.HELVETICA, 7 
-  pg2_urine2	: left, 166, 239, 0, BaseFont.HELVETICA, 7 
+  pg2_urine2	: left, 160, 239, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG2	: left, 178, 239, 0, BaseFont.HELVETICA, 7 
   pg2_gest2	: left, 198, 239, 0, BaseFont.HELVETICA, 7 
   pg2_ht2	: left, 230, 239, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct2	: left, 257, 239, 0, BaseFont.HELVETICA, 7 
@@ -78,7 +82,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date3	: left, 50, 259, 0, BaseFont.HELVETICA, 7 
   pg2_wt3	: left, 98, 259, 0, BaseFont.HELVETICA, 7 
   pg2_bp3	: left, 128, 259, 0, BaseFont.HELVETICA, 7 
-  pg2_urine3	: left, 166, 259, 0, BaseFont.HELVETICA, 7 
+  pg2_urine3	: left, 160, 259, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG3	: left, 178, 259, 0, BaseFont.HELVETICA, 7 
   pg2_gest3	: left, 198, 259, 0, BaseFont.HELVETICA, 7 
   pg2_ht3	: left, 230, 259, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct3	: left, 257, 259, 0, BaseFont.HELVETICA, 7 
@@ -89,7 +94,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date4	: left, 50, 289, 0, BaseFont.HELVETICA, 7 
   pg2_wt4	: left, 98, 289, 0, BaseFont.HELVETICA, 7 
   pg2_bp4	: left, 128, 289, 0, BaseFont.HELVETICA, 7 
-  pg2_urine4	: left, 166, 289, 0, BaseFont.HELVETICA, 7 
+  pg2_urine4	: left, 160, 289, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG4	: left, 178, 289, 0, BaseFont.HELVETICA, 7 
   pg2_gest4	: left, 198, 289, 0, BaseFont.HELVETICA, 7 
   pg2_ht4	: left, 230, 289, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct4	: left, 257, 289, 0, BaseFont.HELVETICA, 7 
@@ -100,7 +106,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date5	: left, 50, 326, 0, BaseFont.HELVETICA, 7 
   pg2_wt5	: left, 98, 326, 0, BaseFont.HELVETICA, 7 
   pg2_bp5	: left, 128, 326, 0, BaseFont.HELVETICA, 7 
-  pg2_urine5	: left, 166, 326, 0, BaseFont.HELVETICA, 7 
+  pg2_urine5	: left, 160, 326, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG5	: left, 178, 326, 0, BaseFont.HELVETICA, 7 
   pg2_gest5	: left, 198, 326, 0, BaseFont.HELVETICA, 7 
   pg2_ht5	: left, 230, 326, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct5	: left, 257, 326, 0, BaseFont.HELVETICA, 7 
@@ -111,7 +118,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date6	: left, 50, 346, 0, BaseFont.HELVETICA, 7 
   pg2_wt6	: left, 98, 346, 0, BaseFont.HELVETICA, 7 
   pg2_bp6	: left, 128, 346, 0, BaseFont.HELVETICA, 7 
-  pg2_urine6	: left, 166, 346, 0, BaseFont.HELVETICA, 7 
+  pg2_urine6	: left, 160, 346, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG6	: left, 178, 346, 0, BaseFont.HELVETICA, 7 
   pg2_gest6	: left, 198, 346, 0, BaseFont.HELVETICA, 7 
   pg2_ht6	: left, 230, 346, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct6	: left, 257, 346, 0, BaseFont.HELVETICA, 7 
@@ -122,7 +130,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date7	: left, 50, 366, 0, BaseFont.HELVETICA, 7 
   pg2_wt7	: left, 98, 366, 0, BaseFont.HELVETICA, 7 
   pg2_bp7	: left, 128, 366, 0, BaseFont.HELVETICA, 7 
-  pg2_urine7	: left, 166, 366, 0, BaseFont.HELVETICA, 7 
+  pg2_urine7	: left, 160, 366, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG7	: left, 178, 366, 0, BaseFont.HELVETICA, 7 
   pg2_gest7	: left, 198, 366, 0, BaseFont.HELVETICA, 7 
   pg2_ht7	: left, 230, 366, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct7	: left, 257, 366, 0, BaseFont.HELVETICA, 7 
@@ -133,7 +142,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date8	: left, 50, 386, 0, BaseFont.HELVETICA, 7 
   pg2_wt8	: left, 98, 386, 0, BaseFont.HELVETICA, 7 
   pg2_bp8	: left, 128, 386, 0, BaseFont.HELVETICA, 7 
-  pg2_urine8	: left, 166, 386, 0, BaseFont.HELVETICA, 7 
+  pg2_urine8	: left, 160, 386, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG8	: left, 178, 386, 0, BaseFont.HELVETICA, 7 
   pg2_gest8	: left, 198, 386, 0, BaseFont.HELVETICA, 7 
   pg2_ht8	: left, 230, 386, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct8	: left, 257, 386, 0, BaseFont.HELVETICA, 7 
@@ -144,7 +154,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date9	: left, 50, 408, 0, BaseFont.HELVETICA, 7 
   pg2_wt9	: left, 98, 408, 0, BaseFont.HELVETICA, 7 
   pg2_bp9	: left, 128, 408, 0, BaseFont.HELVETICA, 7 
-  pg2_urine9	: left, 166, 408, 0, BaseFont.HELVETICA, 7 
+  pg2_urine9	: left, 160, 408, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG9	: left, 178, 408, 0, BaseFont.HELVETICA, 7 
   pg2_gest9	: left, 198, 408, 0, BaseFont.HELVETICA, 7 
   pg2_ht9	: left, 230, 408, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct9	: left, 257, 408, 0, BaseFont.HELVETICA, 7 
@@ -155,7 +166,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date10	: left, 50, 429, 0, BaseFont.HELVETICA, 7 
   pg2_wt10	: left, 98, 429, 0, BaseFont.HELVETICA, 7 
   pg2_bp10	: left, 128, 429, 0, BaseFont.HELVETICA, 7 
-  pg2_urine10	: left, 166, 429, 0, BaseFont.HELVETICA, 7 
+  pg2_urine10	: left, 160, 429, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG10	: left, 178, 429, 0, BaseFont.HELVETICA, 7 
   pg2_gest10	: left, 198, 429, 0, BaseFont.HELVETICA, 7 
   pg2_ht10	: left, 230, 429, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct10	: left, 257, 429, 0, BaseFont.HELVETICA, 7 
@@ -166,7 +178,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date11	: left, 50, 450, 0, BaseFont.HELVETICA, 7 
   pg2_wt11	: left, 98, 450, 0, BaseFont.HELVETICA, 7 
   pg2_bp11	: left, 128, 450, 0, BaseFont.HELVETICA, 7 
-  pg2_urine11	: left, 166, 450, 0, BaseFont.HELVETICA, 7 
+  pg2_urine11	: left, 160, 450, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG11	: left, 178, 450, 0, BaseFont.HELVETICA, 7 
   pg2_gest11	: left, 198, 450, 0, BaseFont.HELVETICA, 7 
   pg2_ht11	: left, 230, 450, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct11	: left, 257, 450, 0, BaseFont.HELVETICA, 7 
@@ -177,7 +190,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date12	: left, 50, 471, 0, BaseFont.HELVETICA, 7 
   pg2_wt12	: left, 98, 471, 0, BaseFont.HELVETICA, 7 
   pg2_bp12	: left, 128, 471, 0, BaseFont.HELVETICA, 7 
-  pg2_urine12	: left, 166, 471, 0, BaseFont.HELVETICA, 7 
+  pg2_urine12	: left, 160, 471, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG12	: left, 178, 471, 0, BaseFont.HELVETICA, 7 
   pg2_gest12	: left, 198, 471, 0, BaseFont.HELVETICA, 7 
   pg2_ht12	: left, 230, 471, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct12	: left, 257, 471, 0, BaseFont.HELVETICA, 7 
@@ -188,7 +202,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date13	: left, 50, 492, 0, BaseFont.HELVETICA, 7 
   pg2_wt13	: left, 98, 492, 0, BaseFont.HELVETICA, 7 
   pg2_bp13	: left, 128, 492, 0, BaseFont.HELVETICA, 7 
-  pg2_urine13	: left, 166, 492, 0, BaseFont.HELVETICA, 7 
+  pg2_urine13	: left, 160, 492, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG13	: left, 178, 492, 0, BaseFont.HELVETICA, 7 
   pg2_gest13	: left, 198, 492, 0, BaseFont.HELVETICA, 7 
   pg2_ht13	: left, 230, 492, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct13	: left, 257, 492, 0, BaseFont.HELVETICA, 7 
@@ -199,7 +214,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date14	: left, 50, 513, 0, BaseFont.HELVETICA, 7 
   pg2_wt14	: left, 98, 513, 0, BaseFont.HELVETICA, 7 
   pg2_bp14	: left, 128, 513, 0, BaseFont.HELVETICA, 7 
-  pg2_urine14	: left, 166, 513, 0, BaseFont.HELVETICA, 7 
+  pg2_urine14	: left, 160, 513, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG14	: left, 178, 513, 0, BaseFont.HELVETICA, 7 
   pg2_gest14	: left, 198, 513, 0, BaseFont.HELVETICA, 7 
   pg2_ht14	: left, 230, 513, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct14	: left, 257, 513, 0, BaseFont.HELVETICA, 7 
@@ -210,7 +226,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date15	: left, 50, 534, 0, BaseFont.HELVETICA, 7 
   pg2_wt15	: left, 98, 534, 0, BaseFont.HELVETICA, 7 
   pg2_bp15	: left, 128, 534, 0, BaseFont.HELVETICA, 7 
-  pg2_urine15	: left, 166, 534, 0, BaseFont.HELVETICA, 7 
+  pg2_urine15	: left, 160, 534, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG15	: left, 178, 534, 0, BaseFont.HELVETICA, 7 
   pg2_gest15	: left, 198, 534, 0, BaseFont.HELVETICA, 7 
   pg2_ht15	: left, 230, 534, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct15	: left, 257, 534, 0, BaseFont.HELVETICA, 7 
@@ -221,7 +238,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date16	: left, 50, 555, 0, BaseFont.HELVETICA, 7 
   pg2_wt16	: left, 98, 555, 0, BaseFont.HELVETICA, 7 
   pg2_bp16	: left, 128, 555, 0, BaseFont.HELVETICA, 7 
-  pg2_urine16	: left, 166, 555, 0, BaseFont.HELVETICA, 7 
+  pg2_urine16	: left, 160, 555, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG16	: left, 178, 555, 0, BaseFont.HELVETICA, 7 
   pg2_gest16	: left, 198, 555, 0, BaseFont.HELVETICA, 7 
   pg2_ht16	: left, 230, 555, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct16	: left, 257, 555, 0, BaseFont.HELVETICA, 7 
@@ -232,7 +250,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_date17	: left, 50, 576, 0, BaseFont.HELVETICA, 7 
   pg2_wt17	: left, 98, 576, 0, BaseFont.HELVETICA, 7 
   pg2_bp17	: left, 128, 576, 0, BaseFont.HELVETICA, 7 
-  pg2_urine17	: left, 166, 576, 0, BaseFont.HELVETICA, 7 
+  pg2_urine17	: left, 160, 576, 0, BaseFont.HELVETICA, 7 
+  pg2_urineG17	: left, 178, 576, 0, BaseFont.HELVETICA, 7 
   pg2_gest17	: left, 198, 576, 0, BaseFont.HELVETICA, 7 
   pg2_ht17	: left, 230, 576, 0, BaseFont.HELVETICA, 7 
   pg2_fhrAct17	: left, 257, 576, 0, BaseFont.HELVETICA, 7 
@@ -245,5 +264,8 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   ar2_probComment	: left, 345, 620, 0, BaseFont.HELVETICA, 8
 
   ar2_investigation 	: left, 210, 623, 0, BaseFont.HELVETICA, 8, _, 582, 740, 18
+  ar2_doula 	: left, 230, 738, 0, BaseFont.HELVETICA, 8
+  ar2_doulaNo 	: left, 460, 738, 0, BaseFont.HELVETICA, 8
+  
   pg2_consultName 	: left, 220, 758, 0, BaseFont.HELVETICA, 8
   pg2_signature	: left, 450, 758, 0, BaseFont.HELVETICA, 8

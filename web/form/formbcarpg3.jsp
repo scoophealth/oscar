@@ -106,10 +106,39 @@ function insertBox(str, layerName) { // 1 visible, 0 hidden
     }
     showHideBox(layerName, 0, null);
 }
+function wtEnglish2Metric() {
+	if(isNumber(document.forms[0].c_ppWt) ) {
+		weight = document.forms[0].c_ppWt.value;
+		weightM = Math.round(weight * 10 * 0.4536) / 10 ;
+		if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
+			document.forms[0].c_ppWt.value = weightM;
+		}
+	}
+}
+function htEnglish2Metric() {
+	height = document.forms[0].c_ppHt.value;
+	if(height.length > 1 && height.indexOf("'") > 0 ) {
+		feet = height.substring(0, height.indexOf("'"));
+		inch = height.substring(height.indexOf("'"));
+		if(inch.length == 1) {
+			inch = 0;
+		} else {
+			inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
+			inch = inch.substring(1);
+		}
+		
+		//if(isNumber(feet) && isNumber(inch) )
+			height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10 ;
+			if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
+				document.forms[0].c_ppHt.value = height;
+			}
+		//}
+	}
+}
 function calcBMIMetric() {
 	if(isNumber(document.forms[0].c_ppWt) && isNumber(document.forms[0].c_ppHt)) {
 		weight = document.forms[0].c_ppWt.value;
-		height = document.forms[0].c_ppHt.value;
+		height = document.forms[0].c_ppHt.value / 100;
 		if(weight!="" && weight!="0" && height!="" && height!="0") {
 			document.forms[0].c_ppBMI.value = Math.round(weight * 10 / height / height) / 10;
 		}
@@ -835,7 +864,7 @@ function calToday(field) {
           </select>
 		  </td>
 		</tr><tr>
-          <td><span class="small9">S.T.S.</span><br>
+          <td><span class="small9">S.T.S.</span>
 		  <select name="ar2_labSTS">
 		    <option value="" <%= props.getProperty("ar2_labSTS", "").equals("")?"selected":""%> ></option>
 		    <option value="NR" <%= props.getProperty("ar2_labSTS", "").equals("NR")?"selected":""%> >NR</option>
@@ -856,7 +885,7 @@ function calToday(field) {
 		  </td>
 		</tr><tr>
           <td><span class="small9">OTHER TESTS<br>
-          <textarea name="ar2_labOtherTest" style="width:100%" cols="50" rows="2"  ><%= props.getProperty("ar2_labOtherTest", "") %></textarea> </td>
+          <textarea name="ar2_labOtherTest" style="width:100%" cols="50" rows="3"  ><%= props.getProperty("ar2_labOtherTest", "") %></textarea> </td>
 		  </td>
 		</tr>
       </table>
@@ -986,10 +1015,10 @@ function calToday(field) {
           <input type="text" name="ar2_age" style="width:100%" size="3" maxlength="5" value="<%= props.getProperty("ar2_age", "") %>"  />
 		  </td>
 		  <td width="12%" nowrap><span class="small8">PREPREGNANT WEIGHT</span><br>
-          <input type="text" name="c_ppWt" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("c_ppWt", "") %>"  />
+          <input type="text" name="c_ppWt" onDblClick="wtEnglish2Metric();" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("c_ppWt", "") %>"  />
 		  </td>
 		  <td width="10%">HEIGHT<br>
-          <input type="text" name="c_ppHt" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>"  />
+          <input type="text" name="c_ppHt" onDblClick="htEnglish2Metric();" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>"  />
 		  </td>
 		  <td width="12%">BMI<br>
           <input type="text" name="c_ppBMI" onDblClick="calcBMIMetric();" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("c_ppBMI", "") %>" />
