@@ -100,7 +100,7 @@
     {"search_wlstatus", "select * from waitingList where demographic_no=? order by onListSince DESC"},
     {"search_waiting_list", "select * from waitingListName order by name"},
     {"search_demo_waiting_list", "select * from waitingList where demographic_no=? AND listID=?"},
-    {"search_future_appt", "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no=?",}
+    {"search_future_appt", "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no=?"},
    };
    
    //associate each operation with an output JSP file -- displaymode
