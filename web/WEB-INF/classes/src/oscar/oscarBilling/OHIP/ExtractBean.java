@@ -200,7 +200,6 @@ public class ExtractBean extends Object implements Serializable {
 		return ("\n" + patientHeader + "\r" + patientHeader2);
 	}
 	private String buildHeader2() {
-		String ret = null;
 		spec = "RMB";
 		hcFlag = "H";
 		healthcardCount++;
@@ -217,9 +216,8 @@ public class ExtractBean extends Object implements Serializable {
 		hcLast.replaceAll("\\W", "");
 		hcFirst.replaceAll("\\W", "");
 		checkHeader2();
-		patientHeader2 = "\n" + HE + "R" + hcHin + hcLast + hcFirst + demoSex
-				+ hcType + space(47) + "\r";
-		return ret;
+		//patientHeader2 = "\n" + HE + "R" + hcHin + hcLast + hcFirst + demoSex	+ hcType + space(47) + "\r";
+		return ("\n" + HE + "R" + hcHin + hcLast + hcFirst + demoSex + hcType + space(47) + "\r");
 	}
 	private String buildHTMLContentHeader() {
 		String ret = null;
