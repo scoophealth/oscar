@@ -37,7 +37,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <%
   String [][] dbQueries=new String[][] {
-    {"searchmygroupno", "select * from mygroup group by mygroup_no order by mygroup_no"}, 
+    {"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"}, 
     {"searchmygroupall", "select * from mygroup order by mygroup_no"}, 
   };
   String[][] responseTargets=new String[][] {  };

@@ -28,7 +28,7 @@
 <%
   String [][] dbQueries=new String[][] {
     {"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by ?"}, 
-    {"search_group", "select * from mygroup group by mygroup_no order by mygroup_no"}, 
+    {"search_group", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"}, 
     {"drop_reporttemp", "DROP TABLE ?" }, 
     {"create_reporttemp", "create table reporttemp ( edb date not null,last_name varchar(30) not null,first_name varchar(30) not null,family_doctor varchar(20) not null,address varchar(60),phone varchar(20))" }, 
     {"delete_reporttemp", "delete from reporttemp where demographic_no like ? " }, 

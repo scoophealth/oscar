@@ -41,7 +41,7 @@
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "}, 
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? order by first_name"}, 
     {"searchmygroupall", "select * from mygroup order by mygroup_no"}, 
-    {"searchmygroupno", "select * from mygroup group by mygroup_no order by mygroup_no"}, 
+    {"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"}, 
     {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"}, 
     {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by last_name"}, 
