@@ -36,7 +36,7 @@ import org.apache.struts.action.*;
 import oscar.oscarEncounter.data.EctType2DiabetesRecord;
 
 public final class EctType2DiabetesAction extends Action {
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException   {
         int newID = 0;
         try {

@@ -46,7 +46,7 @@ import org.apache.struts.util.MessageResources;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctIncomingEncounterAction extends Action {
-  public ActionForward perform(ActionMapping mapping,
+  public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
 				 HttpServletRequest request,
 				 HttpServletResponse response) throws IOException, ServletException {

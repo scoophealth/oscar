@@ -36,7 +36,7 @@ import oscar.oscarEncounter.data.EctARRecord;
 
 public final class EctARAction extends Action {
 
-    public ActionForward perform(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse httpservletresponse)
+    public ActionForward execute(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse httpservletresponse)
         throws IOException, ServletException    {
         int newID = 0;
         try   {
