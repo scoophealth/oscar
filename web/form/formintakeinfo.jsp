@@ -131,8 +131,8 @@
 
 <script type="text/javascript" language="Javascript">
     
-    var choiceFormat  = new Array(11,15,16,22,24,26,27,31,32,36,37,45,46,53,54,56,62,63,66,67,70,71,72,73,74,77,78,81,82,85,86,89,90,93,94,97,98,101,102,105,106,109,110,113,114,117,118,121,122,125,126,129,130,133,134,137,138,141,142,145,146,149);
-    var allNumericField = new Array(23,57,58,59,60,64,68);
+    var choiceFormat  = new Array(11,15,16,22,24,26,27,31,32,36,37,45,46,53,54,56,62,63,66,67,70,71,72,73,74,77,78,81,82,85,86,89,90,93,94,97,98,101,102,105,106,109,110,113,114,117,118,121,122,125,126,129,130,133,134,137,138,141,142,145,146,149,150,153);
+    var allNumericField = new Array(23,57,58,59,60,64,68,154,155);
     var allMatch = null;
     var msg2 = "Are you sure that there are more than 5 people living in your household?"
     var a2 = new Array(0,5, 23);
@@ -1444,6 +1444,52 @@
                     </td>
                     <td>
                         Don't Know
+                    </td>
+                </tr>
+                <tr>                    
+                    <th valign="top">20. </th>
+                    <th colspan="7" class="question">
+                        (Has a doctor ever told you that you had...) problems with your weight?
+                    </th>
+                </tr>
+                <tr bgcolor="white">
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="weightY" <%= props.getProperty("weightY", "") %>/>
+                    </td>
+                    <td>
+                        Yes
+                    </td>                    
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="weightRefused" <%= props.getProperty("weightRefused", "") %>/>
+                    </td>
+                    <td>
+                        Refused
+                    </td>
+                </tr>
+                <tr bgcolor="white"> 
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="weightN" <%= props.getProperty("weightN", "") %>/>
+                    </td>
+                    <td>
+                        No
+                    </td>
+                    <td width="5%" align="right">
+                        <input type="checkbox" class="checkbox"  name="weightDoNotKnow" <%= props.getProperty("weightDoNotKnow", "") %>/>
+                    </td>
+                    <td>
+                        Don't Know
+                    </td>
+                </tr>
+                <tr bgcolor="white"> 
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td>
+                        Weight: <input type="text" size="10" name="weight" value="<%= props.getProperty("weight", "") %>"/> Kg
+                    </td>
+                    <td width="5%" align="right">                        
+                    </td>
+                    <td>
+                        Height: <input type="text" size="10" name="height" value="<%= props.getProperty("height", "") %>"/> meter
                     </td>
                 </tr>
             </table>              
