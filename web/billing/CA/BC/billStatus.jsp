@@ -372,7 +372,7 @@ if (billTypes == null){
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <td align="center" class="bCellData" ><%=b.apptDate%></td>    
     <td align="center" class="bCellData" ><a href="javascript: setDemographic('<%=b.demoNo%>');"><%=b.demoName%></a></td>
-    <td align="center" class="bCellData" ><%=b.reason%></td>
+    <td align="center" class="bCellData" title="<%=msp.getStatusDesc(b.reason)%>" ><%=b.reason%></td>
     <td align="center" class="bCellData" ><%=b.code%></td>
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> >        
             <%=b.amount%>        
