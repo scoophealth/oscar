@@ -63,9 +63,11 @@ GregorianCalendar now=new GregorianCalendar();
    
    
 %> 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>Billing Report</title>
+<title><bean:message key="oscarReport.oscarReportAgeSex.title"/></title>
 <link rel="stylesheet" href="oscarReport.css" >
 <style type="text/css">
 <!--
@@ -129,10 +131,10 @@ function refresh() {
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
     <td height="40" width="10%">
-      <input type='button' name='print' value='Print' onClick='window.print()'>
+      <input type='button' name='print' value=<bean:message key="global.btnPrint"/>' onClick='window.print()'>
     </td>
     <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Report</font></font></b></font></p>
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="oscarReport.oscarReportAgeSex.msgOscarReport"/></font></b></font></p>
     </td>
   </tr>
 </table>
@@ -141,27 +143,25 @@ function refresh() {
   <form name="serviceform" method="get" action="oscarReportAgeSex.jsp">
     <tr> 
       <td colspan="3"> 
-        <div align="center"> <font face="Arial, Helvetica, sans-serif" size="2"><b>Age 
-          Sex Report<font color="#333333"></font></b></font></div>
+        <div align="center"> <font face="Arial, Helvetica, sans-serif" size="2"><b><bean:message key="oscarReport.oscarReportAgeSex.msgAgeSexRep"/><font color="#333333"></font></b></font></div>
       </td>
     </tr>
     <tr> 
       <td width="40%"> 
         <div align="right"><font color="#003366"><font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
           <input type="radio" name="reportAction" value="RO" <%=reportAction.equals("RO")?"checked":""%>>
-          Rostered 
+          <bean:message key="oscarReport.oscarReportAgeSex.formRostered"/> 
           <input type="radio" name="reportAction" value="NR"  <%=reportAction.equals("NR")?"checked":""%>>
-          Not Rostered 
+          <bean:message key="oscarReport.oscarReportAgeSex.formNotRostered"/> 
           <input type="radio" name="reportAction" value="TO" <%=reportAction.equals("TO")?"checked":""%>>
-          Total</font> <font face="Arial, Helvetica, sans-serif" size="1"><b> 
+          <bean:message key="oscarReport.oscarReportAgeSex.formTotal"/></font> <font face="Arial, Helvetica, sans-serif" size="1"><b> 
           </b></font></font> </div>
       </td>
       <td width="40%"> 
         <div align="right"></div>
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b>Select 
-          provider </b></font> 
+        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b><bean:message key="oscarReport.oscarReportAgeSex.formSelectProvider"/> </b></font> 
           <select name="providerview">
-          <option value="" <%=providerview.equals("all")?"selected":""%>>-------Select Provider ----------</option>
+          <option value="" <%=providerview.equals("all")?"selected":""%>>-------<bean:message key="oscarReport.oscarReportAgeSex.formSelectProvider"/> ----------</option>
             <% String proFirst="";
            String proLast="";
            String proOHIP="";
@@ -189,19 +189,19 @@ String billinggroup_no;
         </div>
       </td>
       <td width="20%"><font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
-        <input type="submit" name="Submit" value="Create Report">
+        <input type="submit" name="Submit" value="<bean:message key="oscarReport.oscarReportAgeSex.btnCreate"/>">
         </font></td>
     </tr>
     <tr> 
           <td width="50%"> 
             <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><b> 
               
-              <font color="#333333">Service Date-Range</font></b></font></font> &nbsp; &nbsp;  <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin Date:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
+              <font color="#333333"><bean:message key="oscarReport.oscarReportAgeSex.msgServiceDate"/></font></b></font></font> &nbsp; &nbsp;  <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="oscarReport.oscarReportAgeSex.btnBegin"/>:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
               
        </div>
           </td>
           <td colspan='2' > 
-            <div align="left">    <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End Date:</a></font> <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
+            <div align="left">    <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="oscarReport.oscarReportAgeSex.btnEnd"/>:</a></font> <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
              
     
                   </div>
@@ -237,7 +237,7 @@ if (reportAction.compareTo("TO") == 0) {
 
 <%@ include file="../demographic/zfooterbackclose.jsp" %>
 </body>
-</html>
+</html:html>
 
 <%! public String WriteMaleBar(int x){
    String content="";

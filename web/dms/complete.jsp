@@ -32,9 +32,13 @@ String filepath="", filename = "", header="", headerCount="", total="", paymentd
 
 filename = documentBean.getFilename();
 %>
-<html>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
-<title>DOCUMENT MANAGEMENT SYSTEM</title>
+<title><bean:message key="dms.complete.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script LANGUAGE="JavaScript">
@@ -50,17 +54,17 @@ function CodeAttach(File2) {
 </head>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onLoad="CodeAttach('<%=filename%>')" >
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">UPLOAD DOCUMENT</font></th></tr>
+  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="dms.complete.msgTitle"/></font></th></tr>
 </table>
-completed
+<bean:message key="dms.complete.msgCompleted"/>
 <br>
 <br>
 <form>
-  <input type="button" name="Button" value="Done" onclick= "CodeAttach('<%=filename%>')"> 
+  <input type="button" name="Button" value="<bean:message key="dms.complete.btnDone"/>" onclick= "CodeAttach('<%=filename%>')"> 
 </form>
 <script LANGUAGE="JavaScript">
       self.close();
          self.opener.document.aDoc.docfilename.value = <%=filename%>;
 </script>
 </body>
-</html> 
+</html:html> 

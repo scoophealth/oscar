@@ -68,7 +68,7 @@ function checkTypeInAll() {
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
-  var popup=window.open(page, <bean:message key="provider.providerpreference.titlePopup"/>, windowprops);
+  var popup=window.open(page, "<bean:message key="provider.providerpreference.titlePopup"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self; 

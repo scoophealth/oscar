@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
 String Total="0", mNum="", fNum="";
  String dateBegin = request.getParameter("xml_vdate");
@@ -69,25 +72,25 @@ Total = rs.getString("n");
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
    <tr  bgcolor="#CCCCFF"> 
      <td> 
-       <div align="center">Age</div>
+       <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgAge"/></div>
      </td>
    <td colspan='12'> 
-       <div align="center">---------------------------Female ---------------------------------</div>
+       <div align="center">---------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgFemale"/> ---------------------------------</div>
      </td>
      <td> 
        <div align="center"> </div>
      </td>
      <td colspan='12'> 
-       <div align="center">----------------------------Male ----------------------------------</div>
+       <div align="center">----------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgMale"/> ----------------------------------</div>
      </td>
      <td colspan='2'> 
-       <div align="center">---Total ---</div>
+       <div align="center">---<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgTotal"/> ---</div>
     
      </td>
   </tr>
  <tr  bgcolor="#CCCCFF"> 
     <td width="10%"> 
-      <div align="center">Group</div>
+      <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgGroup"/></div>
     </td>
     <td  width="8%"> 
       <div align="right">####</div>
@@ -299,7 +302,7 @@ param2[6] = dateEnd ;
   } %>
     <tr  bgcolor="#CCCCFF"> 
        <td   width="10%"> 
-         <div align="center">Total</div>
+         <div align="center"></div>
        </td>
        <td   width="8%"> 
          <div align="right"><%=fTotal.toString().substring(0, fTotal.toString().indexOf("."))%></div>

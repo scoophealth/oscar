@@ -36,9 +36,11 @@ GregorianCalendar now=new GregorianCalendar();
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>oscarReport -  Visit Report</title>
+<title><bean:message key="oscarReport.oscarReportCatchment.title"/></title>
 <link rel="stylesheet" href="oscarReport.css" >
 <style type="text/css">
 <!--
@@ -100,7 +102,7 @@ function refresh() {
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
     <td height="40" width="10%">
-      <input type='button' name='print' value='Print' onClick='window.print()'>
+      <input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'>
     </td>
     <td width="90%" align="left"> 
       <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Report 
@@ -111,13 +113,13 @@ function refresh() {
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#666699"> 
-    <td width="23%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Demographic</font></strong></div></td>
-    <td width="4%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Sex</font></strong></div></td>
-    <td width="11%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">DoB</font></strong></div></td>
-    <td width="15%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">City</font></strong></div></td>
-    <td width="17%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Province</font></strong></div></td>
-    <td width="19%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Postal</font></strong></div></td>
-    <td width="11%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif">Status</font></strong></div></td>
+    <td width="23%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarReport.oscarReportCatchment.msgDemographic"/></font></strong></div></td>
+    <td width="4%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarReport.oscarReportCatchment.msgSex"/></font></strong></div></td>
+    <td width="11%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarReport.oscarReportCatchment.msgDOB"/></font></strong></div></td>
+    <td width="15%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarReport.oscarReportCatchment.msgCity"/></font></strong></div></td>
+    <td width="17%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarReport.oscarReportCatchment.msgProvince"/></font></strong></div></td>
+    <td width="19%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarReport.oscarReportCatchment.msgPostal"/></font></strong></div></td>
+    <td width="11%"><div align="center"><strong><font color="#CCCCFF" size="2" face="Tahoma, Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarReport.oscarReportCatchment.msgStatus"/></font></strong></div></td>
   </tr>
   <%
   String[] param = new String[1];
@@ -145,15 +147,15 @@ function refresh() {
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="oscarReportCatchment.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a href="oscarReportCatchment.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="oscarReport.oscarReportCatchment.msgLastPage"/></a> |
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="oscarReportCatchment.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<a href="oscarReportCatchment.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="oscarReport.oscarReportCatchment.msgNextPage"/></a>
 <%
 }
 %>
 </table>
 </body>
-</html>
+</html:html>

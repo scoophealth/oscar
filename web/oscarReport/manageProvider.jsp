@@ -44,9 +44,11 @@ String demographic_dob="1800";
 String action = request.getParameter("action");
 String last_name="", first_name="", mygroup="";
 %> 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>Manage Provider </title>
+<title><bean:message key="oscarReport.manageProvider.title"/> </title>
 <link rel="stylesheet" href="oscarReport.css" >
 <style type="text/css">
 <!--
@@ -107,7 +109,7 @@ function refresh() {
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
     <td height="40" width="10%">
-      <input type='button' name='print' value='Print' onClick='window.print()'>
+      <input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'>
     </td>
     <td width="90%" align="left"> 
       <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Report</font></font></b></font></p>
@@ -118,18 +120,18 @@ function refresh() {
 <table width="50%" border="0" cellspacing="0" cellpadding="2">
   <tr bgcolor="#CCCCFF"> 
     <td  width="100%" colspan="3" align="center">
-<b>Manage Provider List for <%=action.toUpperCase()%></b>
+<b><bean:message key="oscarReport.manageProvider.msgManageProvider"/> <%=action.toUpperCase()%></b>
     </td>
   </tr>
   <tr bgcolor="#CCCCFF"> 
     <td  width="40%">
-    Team
+    <bean:message key="oscarReport.manageProvider.msgTeam"/>
     </td>
     <td width="50%" align="left"> 
-    Provider Name
+    <bean:message key="oscarReport.manageProvider.msgProviderName"/>
     </td>
     <td width="10%" align="left"> 
-        Check
+        <bean:message key="oscarReport.manageProvider.msgCheck"/>
     </td>
   </tr>
 
@@ -186,8 +188,9 @@ count1 = count1 + 1;
 %>
 <tr>
 <td colspan=3>
-<input type=submit name=submit value=Submit>
+<input type="hidden" name="submit" value="Submit">
+<input type=submit value=<bean:message key="oscarReport.manageProvider.btnSubmit"/>>
 <input type=hidden name=action value=<%=action%>>
 <input type=hidden name=count value=<%=count1%>>
 </td></tr></table>
-</form></body></html> 
+</form></body></html:html> 

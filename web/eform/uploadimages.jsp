@@ -6,7 +6,10 @@
 <%@ page import = "java.io.*, oscar.eform.*"  errorPage="../errorpage.jsp"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
 <link rel="stylesheet" href="../web.css">
 
@@ -15,7 +18,7 @@
 <!--
   function checkHtml(){
     if (document.myForm.FileName.value==""){ 
-      alert("Please choose a file first, then click Upload");
+      alert("<bean:message key="eform.uploadimages.msgChooseFile"/>");
     } else {
       document.myForm.submit();
     } 
@@ -33,28 +36,28 @@
 <body topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica">UPLOAD IMAGE</font></th></tr>
+  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica"><bean:message key="eform.uploadimages.msgTitle"/></font></th></tr>
 </table>
 <table border="0" cellspacing="2" cellpadding="2" width="100%" >
-  <tr><td align='right'><a href=# onclick="javascript:BackHtml()">Back to Admin Page</a></td></tr>
+  <tr><td align='right'><a href=# onclick="javascript:BackHtml()"><bean:message key="eform.uploadimages.btnBack"/></a></td></tr>
 </table>
 
 <table cellspacing="2" cellpadding="2" width="80%" border="0" BGCOLOR="<%=weakColor%>">
 <FORM NAME="myForm" ENCTYPE="multipart/form-data" ACTION="uploadimagesproc.jsp" METHOD="post" onSubmit="return checkHtml()">
-  <tr><td align='right'><b>File name </b></td><td><input type="file" name="FileName" size="80"></td></tr>
-  <tr><td></td><td><input type="button" value="Upload" onclick="javascript:checkHtml()"></td></tr>
+  <tr><td align='right'><b><bean:message key="eform.uploadimages.msgFileName"/> </b></td><td><input type="file" name="FileName" size="80"></td></tr>
+  <tr><td></td><td><input type="button" value="<bean:message key="eform.uploadimages.btnUplaod"/>" onclick="javascript:checkHtml()"></td></tr>
 </form>
 </table>
 
 <table border="0" cellspacing="0" cellpadding="0" width="80%">
-  <tr><td>Image Library </td>
+  <tr><td><bean:message key="eform.uploadimages.msgImageLibrary"/> </td>
   <td align='right'></td></tr>
 </table>
 
 <table border="0" cellspacing="2" cellpadding="2" width="80%">
   <tr bgcolor=<%=deepColor%> >
-    <th>Image Name</th>
-    <th>Action</th> 
+    <th><bean:message key="eform.uploadimages.msgimgName"/></th>
+    <th><bean:message key="eform.uploadimages.msgImgAction"/></th> 
   </tr> 
 <%
   boolean bOdd = false;
@@ -74,7 +77,7 @@
 %>    
   <tr bgcolor="<%=bOdd?weakColor:"white"%>">
     <td><a href="JavaScript:newWindow('<%=imgDir1%>','_blank')"><%=temp[i]%></a></td>
-    <td width=100 align='center'><input type="button" value="Delete" onclick="DoEmpty('<%=temp[i]%>')"></td>
+    <td width=100 align='center'><input type="button" value="<bean:message key="eform.uploadimages.btnDelete"/>" onclick="DoEmpty('<%=temp[i]%>')"></td>
   </tr>
 <%
     } 
@@ -89,10 +92,10 @@
 <script language="javascript">
 <!--
   function DoEmpty(str){
-    if (confirm("Are you sure you want to permanently delete all messages in this folder?"))
+    if (confirm("<bean:message key="eform.uploadimages.msgDelAll"/>"))
     window.location = "deleteimage.jsp?filename="+str;
   } 
 //-->
 </script> 
 
-</html>
+</html:html>

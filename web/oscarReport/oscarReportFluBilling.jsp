@@ -64,10 +64,10 @@ ArrayList proList = fluData.providerList();
 
 
 
-<html>
+<html:html locale="true">
 <head>
 <title>
-Flu Report <%= years %>
+<bean:message key="oscarReport.oscarReportFluBilling.title"/> <%= years %>
 </title>
 <style type="text/css">
    td.nameBox {
@@ -119,13 +119,13 @@ Flu Report <%= years %>
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Report
+                <bean:message key="oscarReport.oscarReportFluBilling.msgReport"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar" >
                  <form action="oscarReportFluBilling.jsp">
                     <tr>
-                        <td >Flu Report</td>
+                        <td ><bean:message key="oscarReport.oscarReportFluBilling.msgFluReport"/></td>
                         <td>
                            <select name="numMonth">
                               <option value="2001" <%=selled("2001",years)%> >2001</option>
@@ -136,7 +136,7 @@ Flu Report <%= years %>
 
                            </select>
                            <select name="proNo">
-                                 <option value="-1" <%=selled("-1",pros)%> >ALL Providers</option>
+                                 <option value="-1" <%=selled("-1",pros)%> ><bean:message key="oscarReport.oscarReportFluBilling.msgAllProviders"/></option>
                               <%
                                   for( int i = 0; i < proList.size(); i++){
                                      ArrayList w = (ArrayList) proList.get(i);
@@ -148,10 +148,10 @@ Flu Report <%= years %>
                                   }
                               %>
                            </select>
-                           <input type=submit value="update report"/>
+                           <input type=submit value="<bean:message key="oscarReport.oscarReportFluBilling.btnUpdate"/>"/>
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.btnHelp"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.btnAbout"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.btnLicense"/></a>
                         </td>
                     </tr>
                   </form>
@@ -162,17 +162,17 @@ Flu Report <%= years %>
         
                  <table border=0 cellspacing=3 >
                  <tr>
-	                  <td colspan=7 class=nameBox>Flu Report</td>
+	                  <td colspan=7 class=nameBox><bean:message key="oscarReport.oscarReportFluBilling.msgTitle"/></td>
 	         </tr>
 	         <tr>
-	                     <th width=100 class="subTitles" align=left>Name</th>
-	                     <th width=120 class="subTitles" align=left>DOB</th>
-	                     <th width=80 class="subTitles" align=left>Age</th>
-	                      <th width=100 class="subTitles" align=left>Roster Status</th>
-	                           <th width=100 class="subTitles" align=left>Patient Status</th>
-	                  <th width=100 class="subTitles" align=left>Phone</th>
+	                     <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgName"/></th>
+	                     <th width=120 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgDOB"/></th>
+	                     <th width=80 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgAge"/></th>
+	                      <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgRoster"/></th>
+	                           <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgPatientStatus"/></th>
+	                  <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgPhone"/></th>
 	                     
-	                     <th width=100 class="subTitles" align=left>Billing Date</th>
+	                     <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgBillingDate"/></th>
 	                  </tr>
 	                  <%
 	                  RptFluReportData.DemoFluDataStruct demoData;
@@ -201,8 +201,8 @@ bgcolor = "#ddddff";
 
      %>
          <tr>
-     	                  <td colspan=7 class=nameBox>No Match Found</td>
+     	                  <td colspan=7 class=nameBox><bean:message key="oscarReport.oscarReportFluBilling.msgNoMatch"/></td>
 	         </tr>
 	         <% } %>
-        </body>
-        </html>
+</body>
+</html:html>

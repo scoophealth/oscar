@@ -77,7 +77,7 @@ date_joined = rsdemo2.getString("date_joined");
 	  param[3]=demo_sex;
 	  param[4]=provider_no;
 	  param[5]=nowDate;
-	  param[6]=patient_status.toUpperCase();
+	  param[6]=patient_status;
 	  param[7]=date_joined;
 	  
 	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_reportagesex");

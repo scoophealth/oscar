@@ -49,8 +49,10 @@
   String[][] responseTargets=new String[][] {  };
   updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<html>
-<head><title> UPDATE PATIENT PROVIDERS </title></head>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
+<head><title> <bean:message key="admin.updatedemographicprovider.title"/> </title></head>
 <meta http-equiv="Cache-Control" content="no-cache" >
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
@@ -80,7 +82,7 @@ function setregexp1() {
 %>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0"  leftmargin="0" rightmargin="0">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica">UPDATE PATIENT PROVIDER</font></th></tr>
+  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="admin.updatedemographicprovider.msgTitle"/></font></th></tr>
 </table>
 <%
   if(request.getParameter("update")!=null && request.getParameter("update").equals(" Go ") ) {
@@ -146,8 +148,9 @@ function setregexp1() {
 //    System.out.println( dbQueries[1][1] );    
       updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
   	  rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_nursemultiple");
-  	}
-    out.print( (rowsAffected==1?(rowsAffected+" record has "):(rowsAffected+" record(s) have ")) + "been updated. <br> "); 
+  	} %>
+    <%=rowsAffected %> <bean:message key="admin.updatedemographicprovider.msgRecords"/> <br>
+<%
   }
 
 %>
@@ -155,9 +158,9 @@ function setregexp1() {
 <center>
 <table border="0" cellpadding="0" cellspacing="2" width="90%" bgcolor="<%=weakcolor%>" >
 <FORM NAME = "ADDAPPT" METHOD="post" ACTION="updatedemographicprovider.jsp" onsubmit="return(setregexp())">
-  <tr><td><b>Resident</b></td></tr>
+  <tr><td><b><bean:message key="admin.updatedemographicprovider.msgResident"/></b></td></tr>
   <tr><td>
-  Use 
+  <bean:message key="admin.updatedemographicprovider.formUse"/>
   <select name="newcust2" >
 <%
  	 for(int i=0; i<namevector.size(); i=i+2) {
@@ -168,7 +171,7 @@ function setregexp1() {
 %>
 </select>
 
-  replace
+  <bean:message key="admin.updatedemographicprovider.formReplace"/>
   <select name="oldcust2" >
 <%
  	 for(int i=0; i<namevector.size(); i=i+2) {
@@ -178,8 +181,7 @@ function setregexp1() {
  	 }
 %>
 </select><br>
-  ON CONDITION <br>
-  patient's last name from
+  <bean:message key="admin.updatedemographicprovider.formCondition"/>
   <select name="last_name_from" >
 <%
    char cletter = 'A';
@@ -190,7 +192,7 @@ function setregexp1() {
  	 }
 %>
 </select>
-  to
+  <bean:message key="admin.updatedemographicprovider.formTo"/>
   <select name="last_name_to" >
 <%
    cletter = 'A';
@@ -203,7 +205,8 @@ function setregexp1() {
 </select>
 <br>
   <INPUT TYPE="hidden" NAME="regexp" VALUE="">
-  <INPUT TYPE="submit" NAME="update" VALUE=" Go " >
+  <input type="hidden" name="update" value=" Go ">
+  <INPUT TYPE="submit" VALUE="<bean:message key="admin.updatedemographicprovider.btnGo"/>" >
 
 
   </td></tr>
@@ -214,9 +217,9 @@ function setregexp1() {
 <!-- for nurse -->
 <table border="0" cellpadding="0" cellspacing="2" width="90%" bgcolor="<%=weakcolor%>" >
 <FORM NAME = "ADDAPPT1" METHOD="post" ACTION="updatedemographicprovider.jsp" onsubmit="return(setregexp1())">
-  <tr><td><b>Nurse</b></td></tr>
+  <tr><td><b><bean:message key="admin.updatedemographicprovider.msgNurse"/></b></td></tr>
   <tr><td>
-  Use 
+  <bean:message key="admin.updatedemographicprovider.formUse"/>
   <select name="newcust2" >
 <%
  	 for(int i=0; i<namevector.size(); i=i+2) {
@@ -227,7 +230,7 @@ function setregexp1() {
 %>
 </select>
 
-  replace
+  <bean:message key="admin.updatedemographicprovider.formReplace"/>
   <select name="oldcust2" >
 <%
  	 for(int i=0; i<namevector.size(); i=i+2) {
@@ -237,8 +240,7 @@ function setregexp1() {
  	 }
 %>
 </select><br>
-  ON CONDITION <br>
-  patient's last name from
+  <bean:message key="admin.updatedemographicprovider.formCondition"/>
   <select name="last_name_from" >
 <%
    cletter = 'A';
@@ -249,7 +251,7 @@ function setregexp1() {
  	 }
 %>
 </select>
-  to
+  <bean:message key="admin.updatedemographicprovider.formTo"/>
   <select name="last_name_to" >
 <%
    cletter = 'A';
@@ -262,7 +264,8 @@ function setregexp1() {
 </select>
 <br>
   <INPUT TYPE="hidden" NAME="regexp" VALUE="">
-  <INPUT TYPE="submit" NAME="update" VALUE=" Submit " >
+  <input type="hidden" name="update" value=" Submit ">
+  <INPUT TYPE="submit" VALUE="<bean:message key="admin.updatedemographicprovider.btnGo"/>" >
 
 
   </td></tr>
@@ -274,4 +277,4 @@ function setregexp1() {
 
 </center>
 </body>
-</html>
+</html:html>

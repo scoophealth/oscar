@@ -119,7 +119,7 @@ function closeit() {
         rsdemo = apptMainBean.queryResults(request.getParameter("appointment_no"), "searchapptstatus");
         String apptCurStatus = rsdemo.next()?rsdemo.getString("status"):"T";
 
-        oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+        oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData(request.getLocale());
         String billStatus = as.billStatus(apptCurStatus);
         String[] param1 =new String[2];
 	    param1[0]=billStatus;
