@@ -82,7 +82,7 @@ System.out.println("select state "+sel);
         }else{
             rs.close();
             String sql = "insert into remoteAttachments (demographic_no,messageid, savedBy,date,time) values "
-            +"('"+demoId+"','"+id+"','"+bean.getUserName()+"',curdate(),curtime())";
+            +"('"+demoId+"','"+id+"','"+bean.getUserName()+"','today', 'now')";
             db.RunSQL(sql);
             request.setAttribute("confMessage","2");
 

@@ -189,7 +189,7 @@ public class MsgMessageData {
           java.sql.ResultSet rs;
 
           db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo)"
-                        +" values (curdate(),curtime(),'"
+                        +" values ('today','now','"
                         +str.q(message)+"','"
                         +str.q(subject)+"','"
                         +userName+"','"
@@ -231,7 +231,7 @@ public class MsgMessageData {
             }
 
          String sql = new String("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo,sentByLocation,attachment)"
-                       +" values (curdate(),curtime(),'"
+                       +" values ('today', 'now','"
                        +str.q(message)+"','"
                        +str.q(subject)+"','"
                        +userName+"','"

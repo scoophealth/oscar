@@ -156,8 +156,8 @@ public class MsgSendMessageAction extends Action {
             {
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
-              //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values (curdate(),curtime(),\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\" ";
-              db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values (curdate(),curtime(),\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\") ");
+              //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values ('today','now',\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\" ";
+              db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now',\""+message+"\",\""+subject+"\",\"jay\",\""+sentToWho+"\") ");
 
 
 

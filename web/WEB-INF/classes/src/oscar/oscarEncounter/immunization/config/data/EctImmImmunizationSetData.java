@@ -94,7 +94,7 @@ public class EctImmImmunizationSetData
         try
         {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "insert into config_Immunization (setName,setXmlDoc,createDate,ProviderNo) values ('" +UtilMisc.charEscape(setName, '\\') +"','"+ UtilMisc.charEscape(UtilXML.toXML(setXmlDoc), '\\') +"',"+ " curdate() ,'"+ UtilMisc.charEscape(providerNo, '\\') +"')";
+            String sql = "insert into config_Immunization (setName,setXmlDoc,createDate,ProviderNo) values ('" +UtilMisc.charEscape(setName, '\\') +"','"+ UtilMisc.charEscape(UtilXML.toXML(setXmlDoc), '\\') +"',"+ " 'today' ,'"+ UtilMisc.charEscape(providerNo, '\\') +"')";
             db.RunSQL(sql);
             db.CloseConn();
         }

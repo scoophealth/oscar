@@ -73,7 +73,7 @@ public  class MsgHandleMessagesAction extends Action {
           try{    //sents this message status to del
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              java.sql.ResultSet rs;
-             String sql = new String("update messagelisttbl set status = \"del\" where provider_no = \""+providerNo+"\" and message = \""+messageNo+"\"");
+             String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \""+providerNo+"\" and message = \""+messageNo+"\"");
              db.RunSQL(sql);
             
             db.CloseConn();

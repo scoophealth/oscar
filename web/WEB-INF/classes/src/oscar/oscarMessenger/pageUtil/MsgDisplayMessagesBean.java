@@ -219,7 +219,7 @@ public class MsgDisplayMessagesBean {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select message, status from messagelisttbl where provider_no = '"+ providerNo+"' and status not like \"del\" and remoteLocation = '"+getCurrentLocationId()+"' order by message");
+        String sql = new String("select message, status from messagelisttbl where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' order by message");
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
@@ -247,7 +247,7 @@ public class MsgDisplayMessagesBean {
         java.sql.ResultSet rs;
 
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
-        +" where provider_no = '"+ providerNo+"' and status not like \"del\" and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and ml.message = m.messageid order by message");
         rs = db.GetSQL(sql);
 
@@ -294,7 +294,7 @@ public java.util.Vector estDeletedInbox(){
         java.sql.ResultSet rs;
 
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
-        +" where provider_no = '"+ providerNo+"' and status like \"del\" and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" where provider_no = '"+ providerNo+"' and status like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and ml.message = m.messageid order by message");
         rs = db.GetSQL(sql);
 
@@ -344,7 +344,7 @@ public java.util.Vector estDeletedInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select message from messagelisttbl where provider_no = '"+ providerNo+"' and status like \"del\" and remoteLocation = '"+getCurrentLocationId()+"'");
+        String sql = new String("select message from messagelisttbl where provider_no = '"+ providerNo+"' and status like \'del\' and remoteLocation = '"+getCurrentLocationId()+"'");
         rs = db.GetSQL(sql);
         int cou = 0;
         while (rs.next()) {
