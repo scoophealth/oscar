@@ -112,6 +112,7 @@ public class FrmFormAction extends Action {
             //if(!valid)
             //    System.out.println("validate each input: " + valid + " " + mt.getType() + " value:" + inputValue);
         } 
+        
         long endTime = System.currentTimeMillis();
         long delTime = endTime - startTime;
         System.out.println("Time spent on validation: " + Long.toString(delTime));
@@ -139,7 +140,7 @@ public class FrmFormAction extends Action {
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
-                if(inputValue.equalsIgnoreCase(""))
+                if(!inputValue.equalsIgnoreCase(""))
                     write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
                 
                 //Store all input value as properties for saving to form table
@@ -189,6 +190,10 @@ public class FrmFormAction extends Action {
         return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId="+formPath[1]));
     }
         
+    
+    
+    
+    
     private boolean validate(String inputValue, String observationDate, EctMeasurementTypesBean mt, EctValidationsBean validation, HttpServletRequest request ){
         EctValidation ectValidation = new EctValidation();                            
         
@@ -250,11 +255,14 @@ public class FrmFormAction extends Action {
         return valid;
     }
     
+    
+    
+    
     private boolean write2MeasurementTable(String demographicNo, String providerNo, 
                                         EctMeasurementTypesBean mt, String inputValue, 
                                         String dateObserved, String comments){
         boolean newDataAdded = false;
-        System.out.println("writing to Measurement: " + mt.getType() + " value: " + inputValue + " dateObserved: " + dateObserved);
+        //System.out.println("writing to Measurement: " + mt.getType() + " value: " + inputValue + " dateObserved: " + dateObserved);
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);    
             org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
