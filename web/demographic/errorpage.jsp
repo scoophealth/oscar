@@ -36,6 +36,7 @@ Received the exception:<br>
 <font color=red>
 <%= exception.toString() %><br>
 <%= exception.getMessage() %>
+<% exception.printStackTrace(); %>
 </font>
 </h2>
 </body>
