@@ -90,7 +90,7 @@ try {
 		}
 	}
 	
-	String pValue="", pCode="", pDesc="", pPerc="", pUnit = "";
+	String pValue="0", pCode="", pDesc="", pPerc="", pUnit = "";
 	String eValue="", eCode="", eDesc="", ePerc="", eUnit = "";
 	String xValue="", xCode="", xDesc="", xPerc="", xUnit = "";
 	String eFlag = "", xFlag="";
@@ -133,8 +133,25 @@ try {
 			billingunit = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 			billingunit = new BigDecimal(Double.parseDouble(billunit)).setScale(2, BigDecimal.ROUND_HALF_UP);
 			otherunit2 = billingunit.multiply(otherunit2).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        
+                        
 			
-			if (scode.compareTo("P009A")==0 || scode.compareTo("P006A") == 0 || scode.compareTo("P011A") == 0 || scode.compareTo("P018A") == 0 || scode.compareTo("P038A") == 0 || scode.compareTo("P020A") == 0 || scode.compareTo("P041A") == 0 ){
+			//if (scode.compareTo("P009A")==0 || scode.compareTo("P006A") == 0 || scode.compareTo("P011A") == 0 || scode.compareTo("P018A") == 0 || scode.compareTo("P038A") == 0 || scode.compareTo("P020A") == 0 || scode.compareTo("P041A") == 0 ){
+                        if (scode.compareTo("A001A")==0 || scode.compareTo("A003A")==0 || 
+                            scode.compareTo("A004A")==0 || scode.compareTo("A007A")==0 || 
+                            scode.compareTo("A008A")==0 || scode.compareTo("A888A")==0 || 
+                            scode.compareTo("Z777A")==0 || scode.compareTo("P029A")==0 || 
+                            scode.compareTo("P028A")==0 || scode.compareTo("Z776A")==0 || 
+                            scode.compareTo("P042A")==0 || scode.compareTo("S768A")==0 || 
+                            scode.compareTo("S756A")==0 || scode.compareTo("S757A")==0 || 
+                            scode.compareTo("S784A")==0 || scode.compareTo("S745A")==0 || 
+                            scode.compareTo("P010A")==0 || scode.compareTo("P009A")==0 || 
+                            scode.compareTo("P006A")==0 || scode.compareTo("P011A")==0 || 
+                            scode.compareTo("P041A")==0 || scode.compareTo("P018A")==0 || 
+                            scode.compareTo("P038A")==0 || scode.compareTo("P020A")==0 || 
+                            scode.compareTo("P031A")==0 || scode.compareTo("Z552A")==0 || 
+                            scode.compareTo("Z716A")==0 || scode.startsWith("S") || 
+                            (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherunit2);
 				pCode = scode;
 				pValue = pValue1.toString();
@@ -148,6 +165,7 @@ try {
 			}
 			
 			if (value.compareTo(".00") ==0 ){
+                            System.out.println("scode: " + scode + " value" + value + " percentage " + percentage);
 				if (scode.compareTo("E411A") == 0 ){
 					eCode = scode;
 					eDesc = desc;
@@ -192,7 +210,7 @@ try {
 				billingItem.setPercentage(percentage);
 				billingItem.setDiag_code(diagcode);
 				billingItem.setQuantity(billunit);
-				billing.addBillingItem(billingItem);
+				billing.addBillingItem(billingItem);                                
 			}
 		}
 		
