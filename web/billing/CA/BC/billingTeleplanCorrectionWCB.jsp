@@ -318,7 +318,7 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 					<td><html:text property="w_extrafeeitem" value="<%=form.getW_extrafeeitem()%>" />
 					<a onClick="popup('400', '600', 'support/billingfeeitem.jsp?info=all&form=TeleplanCorrectionFormWCB&field=w_extrafeeitem', 'eFeeItem');">Codes</a></td>
 				</tr>-->
-			<!--	<tr>
+			  <tr>
 				<td class="FormLabel">Service Location:</td>
 				<td><html:select name="serviceLocation" value="<%=form.getServiceLocation()%>" property="serviceLocation">
 					<html:option value="C">Continuing Care facility</html:option>
@@ -332,7 +332,7 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
                     <html:option value="S">Future Use</html:option>
                     <html:option value="Z">None of the above</html:option>
 					</html:select></td>
-				</tr>-->
+				</tr>
 				<tr>
 					<td class="FormLabel">Report Type:</td>
 					<td><html:text property="w_reporttype" value="<%=form.getW_reporttype()%>" /></td>
