@@ -66,6 +66,7 @@
     {"delete_ctldiagcode","delete from ctl_diagcode where servicetype=?"},
     {"delete_bill", "update billing set status='D' where billing_no=?" },    
     {"delete_bill_detail", "update billingdetail set status='D' where billing_no=?" },  
+    {"delete_bill_master", "update billingmaster set billingstatus='D' where billing_no=?" },  
     {"search_bill_mismatch", "select distinct a.appointment_no, a.appointment_date, a.start_time, d.first_name, d.last_name, p.first_name, p.last_name, b.provider_no, b.billing_no from billing b, appointment a, demographic d, provider p where a.provider_no=? and a.appointment_no=b.appointment_no and a.demographic_no=d.demographic_no and p.provider_no=b.provider_no and b.status<>'B' and b.status<>'D' order by a.appointment_date desc, a.start_time desc;"},  
     {"search_servicecode", "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype = ? and c.service_group =? order by c.service_order"},    
     {"search_servicecode_detail", "select b.service_code, b.description, b.value, b.percentage from billingservice b where b.service_code=?"},
