@@ -5,13 +5,14 @@
 package oscar.billing.model;
 
 import oscar.billing.cad.model.CadProcedimentos;
+import oscar.billing.cad.model.CadTiposAtendimento;
 
 import java.util.Date;
 
 
 /**
  * <p>
- *
+ * Bean for a done procedure.
  * </p>
  */
 public class ProcedimentoRealizado {
@@ -19,30 +20,10 @@ public class ProcedimentoRealizado {
     // attributes
     
     private boolean isSave = false;
-
-    /**
-     * <p>
-     * Represents ...
-     * </p>
-     */
     private Date dtRealizacao;
-
-    ///////////////////////////////////////
-    // associations
-
-    /**
-     * <p>
-     *
-     * </p>
-     */
     public CadProcedimentos cadProcedimentos;
-
-    /**
-     * <p>
-     *
-     * </p>
-     */
     public Appointment appointment;
+    private CadTiposAtendimento tpAtendimento = new CadTiposAtendimento();
 
 	/**
 	 * 
@@ -131,6 +112,22 @@ public class ProcedimentoRealizado {
 	 */
 	public void setSave(boolean b) {
 		isSave = b;
+	}
+
+	/**
+	 * Returns the tpAtendimento.
+	 * @return int
+	 */
+	public CadTiposAtendimento getTpAtendimento() {
+		return tpAtendimento;
+	}
+
+	/**
+	 * Sets the tpAtendimento.
+	 * @param tpAtendimento The tpAtendimento to set
+	 */
+	public void setTpAtendimento(CadTiposAtendimento tpAtendimento) {
+		this.tpAtendimento = tpAtendimento;
 	}
 
 }
