@@ -40,7 +40,7 @@ public class EctFormData {
         ResultSet rs = db.GetSQL(sql);
 
         while(rs.next()) {
-            Form frm = new Form(rs.getString("form_name"), rs.getString("form_value"), rs.getString("form_table"), (rs.getString("hidden").equals("1")?false:true));
+            Form frm = new Form(rs.getString("form_name"), rs.getString("form_value"), rs.getString("form_table"), (!rs.getString("hidden").equals("0")?false:true));
             forms.add(frm);
         }
 
