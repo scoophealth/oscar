@@ -1,3 +1,8 @@
+<% 
+  if(session.getValue("user") == null)
+    response.sendRedirect("../../../logout.jsp");
+  String user_no = (String) session.getAttribute("user");
+%>
 <!--  
 /*
  * 
@@ -24,72 +29,64 @@
  */
 -->
 
- <% 
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
-%>
+ 
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"  %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %>
 <% String search = "",search2 = "";
- search = request.getParameter("search"); 
- if (search.compareTo("") == 0){
- search = "search_service_code";
- }
+   search = request.getParameter("search"); 
+   if (search.compareTo("") == 0){
+      search = "search_service_code";
+   }
  
-    String codeName= "",codeName1 = "", codeName2 = "";
-       String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
+   String codeName= "",codeName1 = "", codeName2 = "";
+   String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
    codeName = request.getParameter("name");
    codeName1= request.getParameter("name1");
    codeName2 = request.getParameter("name2");
-  xcodeName = request.getParameter("name");
-     xcodeName1= request.getParameter("name1");
-      xcodeName2 = request.getParameter("name2");
+   xcodeName = request.getParameter("name");
+   xcodeName1= request.getParameter("name1");
+   xcodeName2 = request.getParameter("name2");
 
-      String formName = request.getParameter("formName");
-      String formElement = request.getParameter("formElement");
-      if ( formName == null || formElement == null){
-         formName = "";
-         formElement = "";
-      }
+   String formName = request.getParameter("formName");
+   String formElement = request.getParameter("formElement");
+   if ( formName == null || formElement == null){
+      formName = "";
+      formElement = "";
+   }
    
    String desc = "", desc1 = "", desc2 = "";
    
- if (codeName.compareTo("") == 0 || codeName == null){
- codeName = " ";
- desc = " ";
- }
- else{
-codeName = codeName + "%";
-desc = "%" + codeName + "%";
-}
-  if (codeName1.compareTo("") == 0 || codeName1 == null){
-  codeName1 = " ";
-  desc1 = " ";
-  }
-  else{
- codeName1 = codeName1 + "%";
- desc1 ="%" + codeName1 + "%";
-}
- if (codeName2.compareTo("") == 0 || codeName2 == null){
- codeName2 = " ";
- desc2 = " ";
- }
- else{
-codeName2 = codeName2 + "%";
-desc2 = "%" + codeName2 + "%";
-}
+   if (codeName.compareTo("") == 0 || codeName == null){
+      codeName = " ";
+      desc = " ";
+   }else{
+      codeName = codeName + "%";
+      desc = "%" + codeName + "%";
+   }
+   if (codeName1.compareTo("") == 0 || codeName1 == null){
+      codeName1 = " ";
+      desc1 = " ";
+   }else{
+      codeName1 = codeName1 + "%";
+      desc1 ="%" + codeName1 + "%";
+   }
+   if (codeName2.compareTo("") == 0 || codeName2 == null){
+      codeName2 = " ";
+      desc2 = " ";
+   }else{
+      codeName2 = codeName2 + "%";
+      desc2 = "%" + codeName2 + "%";
+   }
 
- String[] param =new String[6];
- param[0] = codeName;
- param[1] = codeName1;
- param[2] = codeName2;
- param[3] = desc;
- param[4] = desc1;
- param[5] = desc2;
+   String[] param =new String[6];
+   param[0] = codeName;
+   param[1] = codeName1;
+   param[2] = codeName2;
+   param[3] = desc;
+   param[4] = desc1;
+   param[5] = desc2;
 
 %>
 <html>
@@ -119,42 +116,44 @@ function CodeAttach(File0) {
  <form name="servicecode" id="servicecode" method="post" action="billingCodeNewUpdate.jsp">
  <input type="hidden" name="formName" value="<%=formName%>" />
  <input type="hidden" name="formElement" value="<%=formElement%>" />
-<table width="600" border="1">
+ 
+<div style="height:600; overflow: auto"> 
+<table width="800" border="1">
   <tr bgcolor="#CCCCFF"> 
-    <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>
-    <td width="88%"><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
+    <td ><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>
+    <td ><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
   </tr>
    
-  <%  ResultSet rslocal = null;  
-      ResultSet rslocal2 = null;
+  <%
+   ResultSet rslocal = null;  
+   ResultSet rslocal2 = null;
      
      
-    String color="";
- int Count = 0;
- int intCount = 0;
- String numCode="";
+   String color="";
+   int Count = 0;
+   int intCount = 0;
+   String numCode="";
    String textCode="";
    String searchType="";
 // Retrieving Provider
  
-String Dcode="", DcodeDesc="";
- rslocal = null;
-  rslocal = apptMainBean.queryResults(param, search);
- while(rslocal.next()){
-    intCount = intCount + 1;
-    Dcode = rslocal.getString("service_code");
-    DcodeDesc = rslocal.getString("description");
-    if (Count == 0){
-       Count = 1;
-       color = "#FFFFFF";
-    } else {
-       Count = 0;
-       color="#EEEEFF";
-    }
+   String Dcode="", DcodeDesc="";   
+   rslocal = apptMainBean.queryResults(param, search);
+   while(rslocal.next()){
+      intCount = intCount + 1;
+      Dcode = rslocal.getString("service_code");
+      DcodeDesc = rslocal.getString("description");
+      if (Count == 0){
+         Count = 1;
+         color = "#FFFFFF";
+      } else {
+         Count = 0;
+         color="#EEEEFF";
+      }
  %>
   
   <tr bgcolor="<%=color%>"> 
-    <td width="12%">
+    <td>
         <font face="Arial, Helvetica, sans-serif" size="2">
         <% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %>
             <input type="checkbox" name="code_<%=Dcode%>" checked>
@@ -164,7 +163,12 @@ String Dcode="", DcodeDesc="";
         <%=Dcode%>
         </font>
     </td>
-    <td width="88%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>"><input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="50"><input type="submit" name="update" value="update <%=Dcode%>"></font></td>
+    <td >
+       <font face="Arial, Helvetica, sans-serif" size="2"> 
+          <input type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>">
+          <input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="80">
+          <input type="submit" name="update" value="update <%=Dcode%>"></font>
+    </td>
   </tr>
 <%}%>
   
@@ -183,7 +187,11 @@ String Dcode="", DcodeDesc="";
 
 </script>
 <% } %>
-</table><input type="submit" name="update" value="Confirm"><input type="button" name="cancel" value="Cancel" onclick="javascript:window.close()">
+</table>
+</div>
+<input type="submit" name="update" value="Confirm">
+<input type="button" name="cancel" value="Cancel" onclick="javascript:window.close()">
+<input type="button" name="cancel" value="Cancel" onclick="javascript: alert(window.innerHeight);">
 </form>
 </body>
 </html>
