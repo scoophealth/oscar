@@ -2,6 +2,7 @@
 doctor : doctor
 resident : doctor
 nurse : doctor
+midwife : doctor
 
 receptionist : receptionist
 
