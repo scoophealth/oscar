@@ -81,6 +81,7 @@
     var X       = 10;
     var small   = 60;
     var normal  = 166;
+    var medium  = 272;
     var large   = 378;
     var full    = 649;
 //tilde operator function variables
@@ -319,6 +320,11 @@ function rowThreeSmall(){
 function rowThreeNormal(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=normal;
+    setBoxesFullWidth();
+}
+function rowThreeMedium(){
+    document.encForm.enTextarea.style.overflow="auto";
+    document.encForm.enTextarea.style.height=medium;
     setBoxesFullWidth();
 }
 function rowThreeLarge(){
@@ -969,8 +975,10 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                         <bean:message key="oscarEncounter.Index.x"/></a> |
                                     <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowThreeSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
                                         <bean:message key="oscarEncounter.Index.s"/></a> |
-                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowThreeNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
+                                    <a onMouseOver="javascript:window.status='Normal Size'; return true;" href="javascript:rowThreeNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
                                         <bean:message key="oscarEncounter.Index.n"/></a> |
+                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowThreeMedium();" title="<bean:message key="oscarEncounter.Index.tooltipMedium"/>">
+                                        <bean:message key="oscarEncounter.Index.m"/></a> |
                                     <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowThreeLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
                                         <bean:message key="oscarEncounter.Index.l"/></a> |
                                     <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowThreeFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
