@@ -380,7 +380,8 @@ TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.quer
                 <option value="S" <%=status.equals("S")?"selected":""%>>S | Settled/Paid by MSP</option>
                 <option value="X" <%=status.equals("X")?"selected":""%>>X | Bad Debt</option>
                 <option value="D" <%=status.equals("D")?"selected":""%>>D | Deleted Bill</option>          
-
+                <option value="T" <%=status.equals("T")?"selected":""%>>T | Transfer to Collection</option>          
+                
                 <option value="R" <%=status.equals("R")?"selected":""%>>R | Rejected Bill</option>          
                 <option value="Z" <%=status.equals("Z")?"selected":""%>>Z | Held Bill</option>          
                 <option value="C" <%=status.equals("C")?"selected":""%>>C | Data Center Changed</option>                            

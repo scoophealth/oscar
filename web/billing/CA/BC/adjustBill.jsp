@@ -421,7 +421,8 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
                 <option value="B" <%=BillType.equals("B")?"selected":""%>>B | Summitted MSP</option>
                 <option value="S" <%=BillType.equals("S")?"selected":""%>>S | Settled/Paid by MSP</option>
                 <option value="X" <%=BillType.equals("X")?"selected":""%>>X | Bad Debt</option>
-                <option value="D" <%=BillType.equals("D")?"selected":""%>>D | Deleted Bill</option>          
+                <option value="D" <%=BillType.equals("D")?"selected":""%>>D | Deleted Bill</option>   
+                <option value="T" <%=BillType.equals("T")?"selected":""%>>T | Transfer to Collection</option>          
 
                 <option value="R" <%=BillType.equals("R")?"selected":""%>>R | Rejected Bill</option>          
                 <option value="Z" <%=BillType.equals("Z")?"selected":""%>>Z | Held Bill</option>          

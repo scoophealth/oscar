@@ -292,6 +292,7 @@ if (billTypes == null){
         <input type="radio" name="billTypes" value="<%=MSPReconcile.CAPITATED%>"    <%=billTypes.equals(MSPReconcile.CAPITATED)?"checked":""%>/> Capitated
         <input type="radio" name="billTypes" value="<%=MSPReconcile.DONOTBILL%>"    <%=billTypes.equals(MSPReconcile.DONOTBILL)?"checked":""%>/> Do Not Bill
         <input type="radio" name="billTypes" value="<%=MSPReconcile.BILLPATIENT%>"  <%=billTypes.equals(MSPReconcile.BILLPATIENT)?"checked":""%>/> Bill Patient
+        <input type="radio" name="billTypes" value="<%=MSPReconcile.COLLECTION%>"   title="Transfered to Collection"<%=billTypes.equals(MSPReconcile.COLLECTION)?"checked":""%>/> Collection
         <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/> All
         <input type="hidden" name="submitted" value="yes"/>
       </td>
