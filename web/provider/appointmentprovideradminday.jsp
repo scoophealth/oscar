@@ -69,7 +69,7 @@
     String formatDate;
     try {
      java.util.ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
-     formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), prop.getString("dateEEEyyyyMMdd"));
+     formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), prop.getString("date.EEEyyyyMMdd"),request.getLocale());
     } catch (Exception e) {
      e.printStackTrace();
      formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");

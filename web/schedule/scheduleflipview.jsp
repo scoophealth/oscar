@@ -48,9 +48,11 @@
   String[][] responseTargets=new String[][] {  };
   flipviewMainBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
-<title>Flip View</title>
+<title><bean:message key="schedule.scheduleflipview.title"/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" type="text/css">
@@ -113,7 +115,7 @@ function t(s1,s2,s3,s4,s5) {
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
   <tr align="center" bgcolor="#CCCCFF"> 
     <td width="15%" nowrap>
-	<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH))+"-"+now.get(Calendar.DATE)%>" title="Last Month" border='0'><img src="../images/previous.gif"></a>
+	<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH))+"-"+now.get(Calendar.DATE)%>" title="<bean:message key="schedule.scheduleflipview.msgLastMonth"/>" border='0'><img src="../images/previous.gif"></a>
     <select name="provider_no" onChange="selectprovider(this)">
 <%
   ResultSet rsdemo = flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
@@ -124,7 +126,7 @@ function t(s1,s2,s3,s4,s5) {
 <%
   }
 %>
-    </select><a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+2)+"-"+now.get(Calendar.DATE)%>" title="Next Month" border='0'><img src="../images/next.gif"></a></td>
+    </select><a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+2)+"-"+now.get(Calendar.DATE)%>" title="<bean:message key="schedule.scheduleflipview.msgNextmonth"/>" border='0'><img src="../images/next.gif"></a></td>
 <% for(int j=0; j<colscode; j++) { %>
 <td>
 <%  if(nStep<60) { %>	
@@ -240,7 +242,7 @@ function t(s1,s2,s3,s4,s5) {
 %>  
   
 </table>
-<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH))+"-"+now.get(Calendar.DATE)%>">last month </a> |
-<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+2)+"-"+now.get(Calendar.DATE)%>">next month </a>
+<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH))+"-"+now.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnLastMonth"/> </a> |
+<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+2)+"-"+now.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnNextMonth"/></a>
 </body>
-</html>
+</html:html>
