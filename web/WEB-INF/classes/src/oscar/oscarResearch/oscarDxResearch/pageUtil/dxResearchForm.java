@@ -45,17 +45,28 @@ public final class dxResearchForm extends ActionForm {
     }
 */
     private String demographicNo;
+    private String providerNo;
     private String xml_research1;
     private String xml_research2;
     private String xml_research3;
     private String xml_research4;
     private String xml_research5;
+    private String quickList;
+    private String[] quickListItems;
+    private String forward;
     
     public String getDemographicNo() {
         return demographicNo;
     }    
     public void setDemographicNo(String demographicNo) {
         this.demographicNo = demographicNo;
+    }
+    
+    public String getProviderNo() {
+        return providerNo;
+    }    
+    public void setProviderNo(String providerNo) {
+        this.providerNo = providerNo;
     }
     
     public String getXml_research1() {
@@ -92,5 +103,25 @@ public final class dxResearchForm extends ActionForm {
     public void setXml_research5(String xml_research5) {
         this.xml_research5 = xml_research5;
     }
-        
+     
+    public String getQuickList() {
+        return quickList;
+    }    
+    public void setQuickList(String quickList) {
+        this.quickList = quickList;
+    }
+    
+    public String[] getQuickListItems() {
+        return quickListItems;
+    }    
+    public void setQuickListItems(String[] quickListItems) {
+        this.quickListItems = quickListItems;
+    }
+    
+    public String getForward() {
+        return forward;
+    }    
+    public void setForward(String forward) {
+        this.forward = forward;
+    }
 }
