@@ -269,10 +269,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
            <% if (!country.equals("BR")) { %>
               <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportCatchment.jsp');return false;"><bean:message key="admin.admin.btnPCNCatchmentReport"/></a><br>
               <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/FluBilling.do?orderby=');return false;"><bean:message key="admin.admin.btnFluBillingReport"/></a><br>
-              <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.jsp');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a><br>              
+              <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.jsp');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a><br/>              
            <% } else {%>
-              <a HREF="#" ONCLICK ="popupPage(600,750,'../report/reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a>
+              <a HREF="#" ONCLICK ="popupPage(600,750,'../report/reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a><br/>
            <% } %>
+              <a href="#" onclick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a>
           </td>
       </tr>
 
