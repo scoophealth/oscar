@@ -191,18 +191,19 @@ Vascular Tracker
 
 function popupDecisionSupport(){
     var varpage = "<%=request.getAttribute("decisionSupportURL")%>";
-    var vheight = 500;
+    var vheight = 760;
     var vwidth = 400;
     var posX = 400;
     var posY = 0;
     if(varpage!="null"){
-        windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=600";
+        windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=680";
         var popup=window.open(varpage, "Decision Support", windowprops);  
         popup.focus();
     }
     
  }
   
+ 
 function showHideItem(id){ 
     if(document.getElementById(id).style.display == 'none')
         document.getElementById(id).style.display = 'block'; 
@@ -414,7 +415,7 @@ function controlEyeExam(){
     }
 }
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(670,710); popupDecisionSupport();">
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport();">
 <!--  -->
     
     <html:form action="/form/SubmitForm" enctype="multipart/form-data">    
