@@ -41,14 +41,24 @@
       <meta http-equiv="Pragma" content="no-cache">
 
 <script language="javascript">
-<!-- start javascript ---- check to see if it is really empty in database
+<%-- start javascript ---- check to see if it is really empty in database --%>
 function setfocus() {
   this.focus();
   document.UPDATEPRE.mygroup_no.focus();
   document.UPDATEPRE.mygroup_no.select();
 }
 
-// stop javascript -->
+function validate() {
+  group = document.UPDATEPRE.mygroup_no.value;
+  
+  if (group.length <=0 || group <= " ") {
+     alert("<bean:message key="admin.adminNewGroup.msgGroupIsRequired"/>");
+     
+     return false;
+  }else{
+  	return true;
+  }
+}
 </script>
 
 <body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -72,7 +82,7 @@ function setfocus() {
   }
 %>
 
-<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp">
+<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp" onsubmit="return validate();">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#486ebd"> 
       <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.adminnewgroup.description"/></font></th>
