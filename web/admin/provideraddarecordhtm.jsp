@@ -32,12 +32,8 @@ function onsub() {
      document.searchprovider.provider_type.value==""  ) {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
-  } else {
-    document.forms['searchprovider'].displaymode.value='Provider_Add_Record';
-    document.forms['searchprovider'].submit();
-    return true;
-      // do nothing at the moment
-      // check input data in the future 
+  } else {    
+    return true;      
   }
 }
 function upCaseCtrl(ctrl) {
@@ -237,8 +233,11 @@ function upCaseCtrl(ctrl) {
       <tr> 
         <td colspan="2">
           <div align="center"> 
+            <%-- not quite sure why we need both dboperation and displaymode set to the same thing, but
+                 that's the way I found it so that's the way I'll leave it... --%>
             <input type="hidden" name="dboperation" value="provider_add_record">
-            <input type="submit" name="displaymode" value="<bean:message key="admin.provideraddrecordhtm.btnProviderAddRecord"/>">
+            <input type="hidden" name="displaymode" value="Provider_Add_Record">
+            <input type="submit" name="submitbtn" value="<bean:message key="admin.provideraddrecordhtm.btnProviderAddRecord"/>">
           </div>
         </td>
       </tr>
