@@ -64,7 +64,8 @@ public final class FrmSetupFormAction extends Action {
          * Create a new table named form<formName> which include the name of all the input elements in the <formName>.jsp
          * Add the form description to encounterForm table of the database
          **/
-        
+        //System.gc();
+        System.out.println("SetupFormAction is called");
         HttpSession session = request.getSession(true);
                 
         FrmFormForm frm = (FrmFormForm) form;        
@@ -82,67 +83,95 @@ public final class FrmSetupFormAction extends Action {
         List drugLists = getDrugList(demo);
         request.setAttribute("today", today);
         request.setAttribute("drugs", drugLists);
-        InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");        
-        Properties currentRec = getFormRecord(formName, formId, demo);
         
-        try {
-            Vector measurementTypes = EctFindMeasurementTypeUtil.checkMeasurmentTypes(is);
-            
+        if(!formId.equals("0")){
+            System.out.println("formID: " + formId);
+            Properties currentRec = getFormRecord(formName, formId, demo);
+            Vector measurementTypes = EctFindMeasurementTypeUtil.getMeasurementsType(formName, demo);
+            EctMeasurementTypesBean mt;
             for(int i=0; i<measurementTypes.size(); i++){
-                EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
-                
-                if(currentRec!=null){
-                    frm.setValue(mt.getType()+"Value", currentRec.getProperty(mt.getType()+"Value", ""));
-                    frm.setValue(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
-                    frm.setValue(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));                    
-                    //frm.setValue(mt.getType()+"LastData", currentRec.getProperty(mt.getType()+"LastData"));
-                    //frm.setValue(mt.getType()+"LastDataEnteredDate", currentRec.getProperty(mt.getType()+"LastDataEnteredDate"));
-                    //request.setAttribute(mt.getType()+"LastData", currentRec.getProperty(mt.getType()+"LastData"));
-                    //request.setAttribute(mt.getType()+"LastDataEnteredDate", currentRec.getProperty(mt.getType()+"LastDataEnteredDate"));
-                }
-                else{                                        
-                    frm.setValue(mt.getType() + "Date", today);                
-                }                
-                //get last value and its observation date
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
-                                 + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC LIMIT 1";
-                ResultSet rs = db.GetSQL(sqlData);
-                if(rs.next()){                    
-                    mt.setLastData(rs.getString("dataField"));
-                    mt.setLastDateEntered(rs.getString("dateEntered"));
-                    request.setAttribute(mt.getType()+"LastData", mt.getLastData());
-                    request.setAttribute(mt.getType()+"LastDataEnteredDate", mt.getLastDateEntered());
-                    frm.setValue(mt.getType()+"LastData", mt.getLastData());
-                    frm.setValue(mt.getType()+"LastDataEnteredDate", mt.getLastDateEntered());
-                }
-                rs.close();
-                db.CloseConn();
-
+                mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);                                        
+                frm.setValue(mt.getType()+"Value", currentRec.getProperty(mt.getType()+"Value", ""));
+                frm.setValue(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
+                frm.setValue(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));  
                 request.setAttribute(mt.getType(), mt.getType());
                 request.setAttribute(mt.getType() + "Display", mt.getTypeDisplayName());
                 request.setAttribute(mt.getType() + "Desc", mt.getTypeDesc());
-                request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());
-                //request.setAttribute("value("+mt.getType() + "Date)", today);
-                                
-            }                      
+                request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());                
+                
+                /*try{
+                    //get last value and its observation date
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
+                                     + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC LIMIT 1";
+                    ResultSet rs = db.GetSQL(sqlData);
+                    if(rs.next()){                                            
+                        request.setAttribute(mt.getType()+"LastData", rs.getString("dataField"));
+                        request.setAttribute(mt.getType()+"LastDataEnteredDate", rs.getString("dateEntered"));
+                        frm.setValue(mt.getType()+"LastData",rs.getString("dateEntered"));
+                        frm.setValue(mt.getType()+"LastDataEnteredDate",rs.getString("dateEntered"));
+                    }
+                    rs.close();
+                    db.CloseConn();
+                    System.out.println("Set attribute for Type: " + mt.getType() + " value: " + currentRec.getProperty(mt.getType()+"Value", ""));
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }*/
+            }
+                    
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error, file " + formName + ".xml not found.");
-            System.out.println("This file must be placed at web/form");
-        }
+        else{
+            try {
+                System.out.println("formId=" + formId + "opening " + formName + ".xml");
+                InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");
+                Vector measurementTypes = EctFindMeasurementTypeUtil.checkMeasurmentTypes(is, formName);
+                EctMeasurementTypesBean mt;
+                
+                for(int i=0; i<measurementTypes.size(); i++){
+                    mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);                                                            
+                    frm.setValue(mt.getType() + "Date", today);                
+                    
+                    /*
+                    //get last value and its observation date
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
+                                     + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC LIMIT 1";
+                    ResultSet rs = db.GetSQL(sqlData);
+                    if(rs.next()){                    
+                        //mt.setLastData(rs.getString("dataField"));
+                        //mt.setLastDateEntered(rs.getString("dateEntered"));
+                        request.setAttribute(mt.getType()+"LastData", rs.getString("dataField"));
+                        request.setAttribute(mt.getType()+"LastDataEnteredDate", rs.getString("dateEntered"));
+                        frm.setValue(mt.getType()+"LastData",rs.getString("dateEntered"));
+                        frm.setValue(mt.getType()+"LastDataEnteredDate",rs.getString("dateEntered"));
+                    }
+                    rs.close();
+                    db.CloseConn();
+                    */
+                    request.setAttribute(mt.getType(), mt.getType());
+                    request.setAttribute(mt.getType() + "Display", mt.getTypeDisplayName());
+                    request.setAttribute(mt.getType() + "Desc", mt.getTypeDesc());
+                    request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());
+                    //request.setAttribute("value("+mt.getType() + "Date)", today);
 
-        try{
-            is.close();
-        }
-        catch (IOException e) {
-                System.out.println("IO error.");
+                }    
+                is.close();
+            }
+            /*
+            catch (SQLException e) {
                 e.printStackTrace();
-        }                        
+            }
+            /*catch (Exception e) {
+                e.printStackTrace();            
+            } */       
+            catch (IOException e) {
+                    System.out.println("IO error.");
+                    System.out.println("Error, file " + formName + ".xml not found.");
+                    System.out.println("This file must be placed at web/form");
+                    e.printStackTrace();
+            }
+        }
                 
         return (new ActionForward("/form/form"+formName+".jsp"));        
     }
