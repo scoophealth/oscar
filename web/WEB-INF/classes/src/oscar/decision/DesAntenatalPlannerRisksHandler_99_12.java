@@ -69,71 +69,71 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 		 //System.out.println("Mapping ends for prefix " + prefix);
 	}
 
-	public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
-		// System.out.print("\n startElement: localName " + localName+" rawName "+rawName);
-		if (rawName.equals("section_title")) { 
-			if (interiortable == 1) { //close content table
-				results += "</center></td></tr></table>";
-				interiortable = 0;
-				colcount = 0;
-			}
-			results += "<table border=0 cellspacing=0 cellpadding=0 width=\"100%\">\n";
-			results += "<tr><td BGCOLOR='#009966' align='center'>\n";
-			results += "<font size=-1 color='#FFFFFF'>";
-	  } else if (rawName.equals("subsection_title")) {
-			if (interiortable == 1) { //close table
-				results += "</center></td></tr></table>";
-				interiortable = 0;
-				colcount = 0;
-			}
-				results += "<center><table border=0 cellpadding=0 cellspacing=0 width=\"98%\">";
-			  results += "<tr><td BGCOLOR='#CCFFCC' align='center'>\n";
-			  results += "<font size=-1>";
-		}	else if (rawName.equals("risk") || rawName.equals("entry")) {
-			if (interiortable == 0) { //table beginning
-				results += "<center><table border=0 cellpadding=2 cellspacing=2 width=\"98%\" datasrc='#xml_list' BGCOLOR='silver'>";
-				interiortable = 1;
-				colcount = 0;
-			}
-			if (colcount == 0) results += "<tr BGCOLOR='ivory'><td width="+10/numcols+"% >"; //the first td
-      else {
-			  if (colcount % numcols == 0) { //tr td  new line beginning?
-				  results += "</td></tr>\n<tr BGCOLOR='ivory'><td width="+10/numcols+"% >";
-			  } else {
-				  results += "</td><td width="+10/numcols+"% >";
-				  //results += "</td><td width="+10/numcols+"% >";
-			  }
-      }
-			results += "<font size=-2>";
-			colcount += 1;
-		} else if (rawName.equals("heading")) {
-			if (interiortable == 1) { //close table
-				results += "</center></td></tr></table>";
-				interiortable = 0;
-				colcount = 0;
-			}
-			results += "<table border=0 cellpadding=0 cellspacing=0 width=\"98%\">";
-			results += "<tr><td align='center'><font size=-2><b>\n";
-		}
-		for (int i=0; i < atts.getLength(); i++) {
-			if (atts.getQName(i) == "name") {
-				riskName = atts.getValue(i);
-        results += "<input type=checkbox name=\"risk_" + riskName + "\" value='checked' datafld='risk_" +riskName+ "'></font></td><td width="+100/numcols+"% >"; 
-        riskNameObj.setProperty(riskName, "checked");
-			}
-			if (atts.getQName(i) == "href") {
-				results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
-				href = 1; //there is a href there
-			}
-			// System.out.println(" Attribute: " + atts.getQName(i) + "=" + atts.getValue(i));
-		}
-		//for (int i=0; i < atts.getLength(); i++) {
-		//  if (atts.getQName(i) == "riskno") {
-		//  	riskNameObj.setProperty(atts.getValue(i), "risk_"+riskName);
-    //    break;
-		//  }
-		//}
-	}
+        public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
+            // System.out.print("\n startElement: localName " + localName+" rawName "+rawName);
+            if (rawName.equals("section_title")) {
+                if (interiortable == 1) { //close content table
+                    results += "</center></td></tr></table>";
+                    interiortable = 0;
+                    colcount = 0;
+                }
+                results += "<table border=0 cellspacing=0 cellpadding=0 width=\"100%\">\n";
+                results += "<tr><td BGCOLOR='#009966' align='center'>\n";
+                results += "<font size=-1 color='#FFFFFF'>";
+            } else if (rawName.equals("subsection_title")) {
+                if (interiortable == 1) { //close table
+                    results += "</center></td></tr></table>";
+                    interiortable = 0;
+                    colcount = 0;
+                }
+                results += "<center><table border=0 cellpadding=0 cellspacing=0 width=\"98%\">";
+                results += "<tr><td BGCOLOR='#CCFFCC' align='center'>\n";
+                results += "<font size=-1>";
+            }	else if (rawName.equals("risk") || rawName.equals("entry")) {
+                if (interiortable == 0) { //table beginning
+                    results += "<center><table border=0 cellpadding=2 cellspacing=2 width=\"98%\" datasrc='#xml_list' BGCOLOR='silver'>";
+                    interiortable = 1;
+                    colcount = 0;
+                }
+                if (colcount == 0) results += "<tr BGCOLOR='ivory'><td width="+10/numcols+"% >"; //the first td
+                else {
+                    if (colcount % numcols == 0) { //tr td  new line beginning?
+                        results += "</td></tr>\n<tr BGCOLOR='ivory'><td width="+10/numcols+"% >";
+                    } else {
+                        results += "</td><td width="+10/numcols+"% >";
+                        //results += "</td><td width="+10/numcols+"% >";
+                    }
+                }
+                results += "<font size=-2>";
+                colcount += 1;
+            } else if (rawName.equals("heading")) {
+                if (interiortable == 1) { //close table
+                    results += "</center></td></tr></table>";
+                    interiortable = 0;
+                    colcount = 0;
+                }
+                results += "<table border=0 cellpadding=0 cellspacing=0 width=\"98%\">";
+                results += "<tr><td align='center'><font size=-2><b>\n";
+            }
+            for (int i=0; i < atts.getLength(); i++) {
+                if (atts.getQName(i) == "name") {
+                    riskName = atts.getValue(i);
+                    results += "<input type=checkbox name=\"risk_" + riskName + "\" value='checked' datafld='risk_" +riskName+ "'></font></td><td width="+100/numcols+"% >";
+                    riskNameObj.setProperty(riskName, "checked");
+                }
+                if (atts.getQName(i) == "href") {
+                    results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
+                    href = 1; //there is a href there
+                }
+                // System.out.println(" Attribute: " + atts.getQName(i) + "=" + atts.getValue(i));
+            }
+            //for (int i=0; i < atts.getLength(); i++) {
+            //  if (atts.getQName(i) == "riskno") {
+            //  	riskNameObj.setProperty(atts.getValue(i), "risk_"+riskName);
+            //    break;
+            //  }
+            //}
+        }
 
 	public void endElement(String namespaceURI, String localName, String rawName) throws SAXException {
 		if (href == 1) {
