@@ -114,6 +114,10 @@
     <!-- new form bean -->
     <form-bean      name="FrmForm"
                     type="oscar.form.FrmForm"/>
+                    
+    <!-- form/pageUtil start -->                                    
+    <form-bean      name="FrmFormForm"
+                    type="oscar.form.pageUtil.FrmFormForm"/>                        
 
     <!-- oscarEncounter form bean -->
     <!--form-bean      name="EctSaveEncounterForm"
@@ -251,10 +255,7 @@
     <form-bean      name="EctDeleteMeasurementStyleSheetForm"
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementStyleSheetForm"/>      
     <form-bean      name="EctAddMeasurementStyleSheetForm"
-                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementStyleSheetForm"/>                          
-<!-- oscarmeasurements/oscarForm start -->                                    
-    <form-bean      name="EctVTFormForm"
-                    type="oscar.oscarEncounter.oscarMeasurements.oscarForm.pageUtil.EctVTFormForm"/>                          
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddMeasurementStyleSheetForm"/>                                                
 
 
 <!-- OscarComm start -->
@@ -745,6 +746,20 @@
         <forward name="save" path="/form/forwardname.jsp" />
         <forward name="failure" path="/oscarEncounter/error.jsp" />
     </action>
+        
+        <action path="/form/SetupForm"
+                type="oscar.form.pageUtil.FrmSetupFormAction"
+                name="FrmFormForm"
+                scope="request">                
+                <forward name="continue" path="/form/formVT.jsp"/>
+        </action> 
+        <action path="/form/SubmitForm"
+                type="oscar.form.pageUtil.FrmFormAction"
+                name="FrmFormForm"                
+                scope="request">                
+                <forward name="success" path="/form/formVT2OSDSF.jsp"/>
+                <forward name="failure" path="/form/formVT.jsp" />
+        </action>     
 
 	<!-- Edit oscarEncounter -->
     <action   path="/oscarEncounter/IncomingEncounter"
@@ -1256,21 +1271,7 @@
        <forward name="success" path="/oscarEncounter/oscarMeasurements/AddMeasurementStyleSheet.jsp"/>
     </action>
     
-    <!--start oscarmeasurements/oscarForm actions -->
-        <action path="/oscarEncounter/oscarMeasurements/oscarForm/SetupVTForm"
-                type="oscar.oscarEncounter.oscarMeasurements.oscarForm.pageUtil.EctSetupVTFormAction"
-                name="EctVTFormForm"
-                scope="request">                
-                <forward name="continue" path="/form/formVT.jsp"/>
-        </action> 
-        <action path="/oscarEncounter/oscarMeasurements/oscarForm/VTForm"
-                type="oscar.oscarEncounter.oscarMeasurements.oscarForm.pageUtil.EctVTFormAction"
-                name="EctVTFormForm"
-                input="/form/formVT.jsp"
-                scope="request">                
-                <forward name="success" path="/form/formVT2OSDSF.jsp"/>
-        </action> 
-    <!-- end oscarmeasurements/oscarForm actions -->
+    
 <!-- end measurements actions-->    
 
 
