@@ -1,4 +1,4 @@
-
+  
     function reset() {
         document.forms[0].target = "apptProviderSearch";
         document.forms[0].action = action ;
@@ -18,13 +18,10 @@
         return ret;
     }
     function onSave() {
-        document.forms[0].submit.value="save";
-        if(choiceFormat!=null && allNumericField!=null)
-            var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);
-        else if(choiceFormat!=null)
-            var ret = is1CheckboxChecked(0, choiceFormat);
-        else if(allNumericField!=null)
-            var ret = allAreNumeric(0, allNumericField);             
+        document.forms[0].submit.value="save";                
+        
+        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField) && areInRange(0, allMatch);                       
+
         if(ret==true) {                        
             ret = confirm("Are you sure you want to save this form?");
         }
@@ -36,15 +33,10 @@
         }
         return(false);
     }
-    function onSaveExit() {
-        document.forms[0].submit.value="exit";
-        if(choiceFormat!=null && allNumericField!=null)
-            var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField);
-        else if(choiceFormat!=null)
-            var ret = is1CheckboxChecked(0, choiceFormat);
-        else if(allNumericField!=null)
-            var ret = allAreNumeric(0, allNumericField);
 
+    function onSaveExit() {
+        document.forms[0].submit.value="exit";        
+        var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField) && areInRange(0, allMatch);                       
         if(ret == true) {            
             ret = confirm("Are you sure you wish to save and close this window?");
         }
@@ -80,20 +72,20 @@
     */
     function is1CheckboxChecked(formNb, nbcheckboxes){        
         var isValid=true;
-        
-        for(var i=0; i < nbcheckboxes.length; i=i+2)
-        {                        
-            if (numCheckboxChecked(formNb,nbcheckboxes[i],nbcheckboxes[i+1])>1){                
-                isValid=false;              
-                for(var j=nbcheckboxes[i]; j<=nbcheckboxes[i+1]; j++){
-                    if (document.forms[formNb].elements[j].checked==true)
-                        document.forms[formNb].elements[j].className = 'checkboxError';                        
+        if(nbcheckboxes!=null){
+            for(var i=0; i < nbcheckboxes.length; i=i+2)
+            {                        
+                if (numCheckboxChecked(formNb,nbcheckboxes[i],nbcheckboxes[i+1])>1){                
+                    isValid=false;              
+                    for(var j=nbcheckboxes[i]; j<=nbcheckboxes[i+1]; j++){
+                        if (document.forms[formNb].elements[j].checked==true)
+                            document.forms[formNb].elements[j].className = 'checkboxError';                        
+                    }
                 }
             }
+            if(isValid==false)
+                alert("Please select one item only for each question");        
         }
-        if(isValid==false)
-            alert("Please select one item only for each question");        
-        
         return isValid;
     }
                
@@ -150,6 +142,60 @@
             document.forms[formNb].elements[id].style.backgroundColor = 'red'; 
             alert("Only numeric value is valid in the highlighted field(s)");  
             return false;
+        }
+        return true;
+    }
+
+    function maxLength(formNb, id){
+        var input = document.forms[formNb].elements[id].value;
+        if((input.length)<=document.forms[formNb].elements[id].maxLength)
+            return true;
+        return false;
+    }
+
+    function allMaxLength(formNb, allId){
+        var isValid = true;
+        for(var i=0; i<allId.length; i++){
+            document.forms[formNb].elements[allId[i]].style.backgroundColor='white';
+            if (!maxLength(formNb, allId[i])){
+                isValid = false;
+                document.forms[formNb].elements[allId[i]].style.backgroundColor='red';
+                alert("The maximum length of the highlighted field is " + document.forms[formNb].elements[id].maxLength);
+            }
+        }
+        
+        return isValid;                   
+    }
+
+    //the string s can only include character shown in match
+    function isMatched(s, match){
+        if(s!=null){
+            for(var i=0; i<s.length; ++i){
+                if(match.indexOf(s.charAt(i))<0)
+                    return false;                
+            }
+        }
+        return true;
+    }
+
+    function areInRange(formNb, allId){
+        var isValid = true;
+        if (allId !=null){
+            for(var i = 0; i<allId.length; i++){
+                var match = allId[i][0];            
+                for(var j = 1; j<allId[i].length; j++){
+                    document.forms[formNb].elements[allId[i][j]].style.backgroundColor='white';
+                    var s = document.forms[formNb].elements[allId[i][j]].value;
+                    if(isMatched(s,match)==false || maxLength(formNb, allId[i][j])==false){
+                        isValid = false;
+                        document.forms[formNb].elements[allId[i][j]].style.backgroundColor='red';
+                    }
+                }
+            }
+            if (isValid==false){
+                alert("Invalid entry!");
+                return false;
+            } 
         }
         return true;
     }
