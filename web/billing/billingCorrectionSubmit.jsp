@@ -24,10 +24,14 @@
  */
 -->
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title></title>
+<title><bean:message key="billing.billingCorrectionSubmit.title"/></title>
 </head>
 <body>
 <%@ page import="oscar.*,java.text.*, java.util.*" %>
@@ -40,7 +44,7 @@
 <%@ include file="dbBilling.jsp" %>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Billing Correction Successfully Done</font></th>
+    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="billing.billingCorrectionSubmit.msgSuccessfull"/></font></th>
   </tr>
 </table>
 <%
@@ -130,8 +134,8 @@
 
 <form action="billingCorrection.jsp">
 <input type="hidden" name="billing_no" value="">
-<input type="submit" value="Correct Another One" name="submit">
-<input type="button" value="Successful - Close this window" onClick="window.close()">
+<input type="submit" value="<bean:message key="billing.billingCorrectionSubmit.btnCorrectAnother"/>" name="submit">
+<input type="button" value="<bean:message key="billing.billingCorrectionSubmit.btnClose"/>" onClick="window.close()">
 </form>
 </body>
-</html>
+</html:html>

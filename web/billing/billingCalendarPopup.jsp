@@ -42,9 +42,12 @@
   month = now.get(Calendar.MONTH)+1;
 %>
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
-<title>CALENDAR</title>
+<title><bean:message key="billing.billingCalendarPopup.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -72,21 +75,21 @@ function typeSrvDate(year1,month1,day1) {
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   			<tr>
         	  <td BGCOLOR="#FFD7C4" width="50%" align="center" >
-			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
+			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> <bean:message key="billing.billingCalendarPopup.btnLast"/>&nbsp;&nbsp; 
               </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>"> &nbsp;&nbsp;<bean:message key="billing.billingCalendarPopup.btnNext"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
   			</TR>
 		</table>
 <p>
           <table width="100%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
             <tr bgcolor="#FOFOFO" align="center"> 
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Sun</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Mon</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Tue</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Wed</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Thu</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Fri</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green">Sat</font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="billing.billingCalendarPopup.msgSun"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgMon"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgTue"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgWed"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgThu"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgFri"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="billing.billingCalendarPopup.msgSat"/></font></td>
             </tr>
             
             <%
@@ -126,11 +129,11 @@ function typeSrvDate(year1,month1,day1) {
             <tr> 
               <td bgcolor="#FFD7C4"> 
                 <div align="center"> 
-                  <input type="button" name="Cancel" value=" Exit " onClick="window.close()">
+                  <input type="button" name="Cancel" value=" <bean:message key="billing.billingCalendarPopup.btnExit"/> " onClick="window.close()">
                 </div>
               </td>
             </tr>
           </table>
 
 </body>
-</html>
+</html:html>
