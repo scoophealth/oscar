@@ -65,6 +65,17 @@
   <p>&nbsp;</p>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
     <tr class="body">
+      <td width="10%"><span class="formLabel">Tipo de Atendimento</span></td>
+      <td width="20%"><span class="formLabel">
+		<html:select property="tpAtendimento">
+			<html:options collection="TPATENDIMENTO" property="coTipoatendimento" labelProperty="dsTipoatendimento"/>
+		</html:select>
+      </td></span>
+    </tr>
+  </table>
+  <p>&nbsp;</p>
+  <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
+    <tr class="body">
       <td width="10%"><span class="formLabel">Formul&aacute;rio de Faturamento</span></td>
       <td width="90%"> 
        <html:select property="formulario.coFormulario">
