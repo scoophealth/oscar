@@ -88,7 +88,7 @@
             font-weight: normal;            
         }
 
-        .checkbox{
+        .bigCheckbox{
             height: 25px;
             width: 25px;     
             background-color: #FFFFFF;
@@ -122,7 +122,9 @@
         .question{
             text-align: left;
         }
-        
+        .textbox{
+            border: 1px solid #A9A9A9;
+        }
         
 
     </style>
@@ -131,7 +133,7 @@
 
 <script type="text/javascript" language="Javascript">
     
-    var choiceFormat  = new Array(6,10,12,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,59,61,62,64,65,67,68,70,71,73,74,76,77,79,83,85,90,92,96,98,103,105,110,112,117,119,124,126,131,133,138,140,145,147,152,154,158,161,166,168,172,174,178,180,184,186,190);        
+    var choiceFormat  = new Array(6,10,12,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,62,64,68,70,74,76,81,82,86,88,92,94,98,100,104,106,111,113,117,119,123,125,129,131,135,137,141,143,147,149,153,155,159,161,165,167,171,173,177,179,183,185,189,191,195,197,201,204,208);
     var allNumericField = null;
     var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";
@@ -170,7 +172,7 @@
     }
 
     function goToPage4(){    
-        var checkboxes = new Array(58,59,61,62,64,65,67,68,70,71,73,74,76,77);
+        var checkboxes = new Array(58,62,64,68,70,74,76,81,82,86,88,92,94,98);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
@@ -182,7 +184,7 @@
     }
 
     function goToPage5(){      
-        var checkboxes = new Array(79,83,85,90,92,96);
+        var checkboxes = new Array(100,104,106,111,113,117);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
@@ -194,7 +196,7 @@
     }
 
     function goToPage6(){      
-        var checkboxes = new Array(98,103,105,110,112,117,119,124,126,131,133,138,140,145,147,152,154,158,161,166);
+        var checkboxes = new Array(119,123,125,129,131,135,137,141,143,147,149,153,155,159,161,165,167,171);
         if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'none'; 
@@ -259,27 +261,27 @@
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1Ex" <%= props.getProperty("Q1Ex", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q1Ex" <%= props.getProperty("Q1Ex", "") %>/>
                     </td>
                     <td width="45%">Excellent</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1F" <%= props.getProperty("Q1F", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q1F" <%= props.getProperty("Q1F", "") %>/>
                     </td>
                     <td width="45%">Fair</td>                
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1VG" <%= props.getProperty("Q1VG", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q1VG" <%= props.getProperty("Q1VG", "") %>/>
                     </td>
                     <td width="45%">Very Good</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1P" <%= props.getProperty("Q1P", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q1P" <%= props.getProperty("Q1P", "") %>/>
                     </td>
                     <td width="45%">Poor</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1G" <%= props.getProperty("Q1G", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q1G" <%= props.getProperty("Q1G", "") %>/>
                     </td>
                     <td width="45%">Good</td>
                     <td width="5%"></td>
@@ -288,7 +290,7 @@
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="3">
-                        Comments: <input type="text" size="80" name="Q1Cmt" value="<%= props.getProperty("Q1Cmt", "") %>"/>
+                        Comments: <input type="text" class="textbox" size="80" name="Q1Cmt" value="<%= props.getProperty("Q1Cmt", "") %>"/>
                     </td>
                 </tr>
                 <tr>                    
@@ -297,27 +299,27 @@
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q2MuchBetter" <%= props.getProperty("Q2MuchBetter", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q2MuchBetter" <%= props.getProperty("Q2MuchBetter", "") %>/>
                     </td>
                     <td width="45%">Much better now than one year ago</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q2Worse" <%= props.getProperty("Q2Worse", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q2Worse" <%= props.getProperty("Q2Worse", "") %>/>
                     </td>
                     <td width="45%">Somewhat worse now than one year ago</td>                
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q2Better" <%= props.getProperty("Q2Better", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q2Better" <%= props.getProperty("Q2Better", "") %>/>
                     </td>
                     <td width="45%">Somewhat better now than one year ago</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q2MuchWorse" <%= props.getProperty("Q2MuchWorse", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q2MuchWorse" <%= props.getProperty("Q2MuchWorse", "") %>/>
                     </td>
                     <td width="45%">Much worse now than one year ago</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q2Same" <%= props.getProperty("Q2Same", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q2Same" <%= props.getProperty("Q2Same", "") %>/>
                     </td>
                     <td width="45%">About the same</td>
                     <td width="5%"></td>
@@ -326,7 +328,7 @@
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="3">
-                        Comments: <input type="text" size="80" name="Q2Cmt" value="<%= props.getProperty("Q2Cmt", "") %>"/>
+                        Comments: <input type="text" class="textbox" size="80" name="Q2Cmt" value="<%= props.getProperty("Q2Cmt", "") %>"/>
                     </td>
                 </tr>                
             </table>            
@@ -371,16 +373,16 @@
                                     <font style='text-decoration:underline'>Vigorous activities</font>, such as running, lifting heavy objects, participating in strenuous sports
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3aYesLot" <%= props.getProperty("Q3aYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3aYesLot" <%= props.getProperty("Q3aYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3aYesLittle" <%= props.getProperty("Q3aYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3aYesLittle" <%= props.getProperty("Q3aYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3aNo" <%= props.getProperty("Q3aNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3aNo" <%= props.getProperty("Q3aNo", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3aCmt"><%= props.getProperty("Q3aCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3aCmt"><%= props.getProperty("Q3aCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -389,16 +391,16 @@
                                     <font style='text-decoration:underline'>Moderate activities</font>, such as moving a table, pushing a vacuum cleaner, bowling, or playing golf
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3bYesLot" <%= props.getProperty("Q3bYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3bYesLot" <%= props.getProperty("Q3bYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3bYesLittle" <%= props.getProperty("Q3bYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3bYesLittle" <%= props.getProperty("Q3bYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3bNo" <%= props.getProperty("Q3bNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3bNo" <%= props.getProperty("Q3bNo", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3bCmt"><%= props.getProperty("Q3bCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3bCmt"><%= props.getProperty("Q3bCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -407,16 +409,16 @@
                                     Lifting or carrying groceries
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3cYesLot" <%= props.getProperty("Q3cYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3cYesLot" <%= props.getProperty("Q3cYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3cYesLittle" <%= props.getProperty("Q3cYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3cYesLittle" <%= props.getProperty("Q3cYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3cNo" <%= props.getProperty("Q3cNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3cNo" <%= props.getProperty("Q3cNo", "") %>/>
                                 </td>   
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3cCmt"><%= props.getProperty("Q3cCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3cCmt"><%= props.getProperty("Q3cCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -425,16 +427,16 @@
                                     Climbing <font style="text-decoration:underline">several</font> flights of stairs
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3dYesLot" <%= props.getProperty("Q3dYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3dYesLot" <%= props.getProperty("Q3dYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3dYesLittle" <%= props.getProperty("Q3dYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3dYesLittle" <%= props.getProperty("Q3dYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3dNo" <%= props.getProperty("Q3dNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3dNo" <%= props.getProperty("Q3dNo", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3dCmt"><%= props.getProperty("Q3dCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3dCmt"><%= props.getProperty("Q3dCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -443,16 +445,16 @@
                                     Climbing <font style="text-decoration:underline">one</font> flight of stairs
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3eYesLot" <%= props.getProperty("Q3eYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3eYesLot" <%= props.getProperty("Q3eYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3eYesLittle" <%= props.getProperty("Q3eYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3eYesLittle" <%= props.getProperty("Q3eYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3eNo" <%= props.getProperty("Q3eNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3eNo" <%= props.getProperty("Q3eNo", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3eCmt"><%= props.getProperty("Q3eCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3eCmt"><%= props.getProperty("Q3eCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -461,16 +463,16 @@
                                     Bending, kneeling, or stooping
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3fYesLot" <%= props.getProperty("Q3fYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3fYesLot" <%= props.getProperty("Q3fYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3fYesLittle" <%= props.getProperty("Q3fYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3fYesLittle" <%= props.getProperty("Q3fYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3fNo" <%= props.getProperty("Q3fNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3fNo" <%= props.getProperty("Q3fNo", "") %>/>
                                 </td>   
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3fCmt"><%= props.getProperty("Q3fCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3fCmt"><%= props.getProperty("Q3fCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -479,16 +481,16 @@
                                     Walking <font style="text-decoration:underline">more than a mile</font>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3gYesLot" <%= props.getProperty("Q3gYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3gYesLot" <%= props.getProperty("Q3gYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3gYesLittle" <%= props.getProperty("Q3gYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3gYesLittle" <%= props.getProperty("Q3gYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3gNo" <%= props.getProperty("Q3gNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3gNo" <%= props.getProperty("Q3gNo", "") %>/>
                                 </td>   
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3gCmt"><%= props.getProperty("Q3gCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3gCmt"><%= props.getProperty("Q3gCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -497,16 +499,16 @@
                                     Walking <font style="text-decoration:underline">several blocks</font>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3hYesLot" <%= props.getProperty("Q3hYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3hYesLot" <%= props.getProperty("Q3hYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3hYesLittle" <%= props.getProperty("Q3hYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3hYesLittle" <%= props.getProperty("Q3hYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3hNo" <%= props.getProperty("Q3hNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3hNo" <%= props.getProperty("Q3hNo", "") %>/>
                                 </td>     
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3hCmt"><%= props.getProperty("Q3hCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3hCmt"><%= props.getProperty("Q3hCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -515,16 +517,16 @@
                                     Walking <font style="text-decoration:underline">one blocks</font>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3iYesLot" <%= props.getProperty("Q3iYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3iYesLot" <%= props.getProperty("Q3iYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3iYesLittle" <%= props.getProperty("Q3iYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3iYesLittle" <%= props.getProperty("Q3iYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3iNo" <%= props.getProperty("Q3iNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3iNo" <%= props.getProperty("Q3iNo", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3iCmt"><%= props.getProperty("Q3iCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3iCmt"><%= props.getProperty("Q3iCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -533,16 +535,16 @@
                                     Bathing and dressing yourself
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3jesLot" <%= props.getProperty("Q3jYesLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3jesLot" <%= props.getProperty("Q3jYesLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3jYesLittle" <%= props.getProperty("Q3jYesLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3jYesLittle" <%= props.getProperty("Q3jYesLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q3jNo" <%= props.getProperty("Q3jNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q3jNo" <%= props.getProperty("Q3jNo", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q3jCmt"><%= props.getProperty("Q3jCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q3jCmt"><%= props.getProperty("Q3jCmt", "") %></textarea>
                                 </td>
                             </tr>                            
                         </table>
@@ -568,9 +570,9 @@
                 <tr>                    
                     <th width="3%" valign="top" >4. </th>
                     <th valign="top" class="question">
-                        During the <font style="text-decoration:underline">past 4 weeks</font>, have you had any of the following problems with your work or other regular daily activities 
-                        <font style="text-decoration:underline">as a result of your physical health</font>? (Please answer <font style="text-decoration:underline">YES</font> or <font style="text-decoration:underline">NO</font>
-                        for each question by selecting the corresponding checkbox on each line.)
+                        During the <font style="text-decoration:underline">past 4 weeks</font>, 
+                        how much of the time have you had any of the following problems with your work or other regular daily activities
+                        <font style="text-decoration:underline">as a result of your physical health</font>?
                     </th>
                 </tr>                
                 
@@ -579,10 +581,13 @@
                         <table>
                             <tr class="question">
                                 <th width="3%"></th>
-                                <th width="42%"></th>
-                                <th width="12%" align="center">Yes</th>                                
-                                <th width="12%" align="center">No</th>
-                                <th width="31%" align="center">Comments</th>
+                                <th width="35%"></th>
+                                <th width="8%" align="center">All of the time</th>                                
+                                <th width="8%" align="center">Most of the time</th>
+                                <th width="8%" align="center">Some of the time</th>
+                                <th width="8%" align="center">A litte of the time</th>
+                                <th width="8%" align="center">None of the time</th>
+                                <th width="22%" align="center">Comments</th>
                             </tr>
                             <tr>
                                 <td valign="top">a. </td>
@@ -590,28 +595,46 @@
                                     Cut down on the <font style='text-decoration:underline'>amount of time</font> you spent on work or other activities
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4aYes" <%= props.getProperty("Q4aYes", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4aAll" <%= props.getProperty("Q4aAll", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4aNo" <%= props.getProperty("Q4aNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4aMost" <%= props.getProperty("Q4aMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="25" rows="2" name="Q4aCmt"><%= props.getProperty("Q4aCmt", "") %></textarea>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4aSome" <%= props.getProperty("Q4aSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4aLittle" <%= props.getProperty("Q4aLittle", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4aNone" <%= props.getProperty("Q4aNone", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="15" rows="2" name="Q4aCmt"><%= props.getProperty("Q4aCmt", "") %></textarea>
                                 </td>
                             </tr> 
                             <tr>
-                                <td valign="center">b. </td>
+                                <td valign="top">b. </td>
                                 <td>
                                     <font style='text-decoration:underline'>Accomplished less</font> than you would like
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4bYes" <%= props.getProperty("Q4bYes", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4bAll" <%= props.getProperty("Q4bAll", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4bNo" <%= props.getProperty("Q4bNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4bMost" <%= props.getProperty("Q4bMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="25" rows="2" name="Q4bCmt"><%= props.getProperty("Q4bCmt", "") %></textarea>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4bSome" <%= props.getProperty("Q4bSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4bLittle" <%= props.getProperty("Q4bLittle", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4bNone" <%= props.getProperty("Q4bNone", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="15" rows="2" name="Q4bCmt"><%= props.getProperty("Q4bCmt", "") %></textarea>
                                 </td>
                             </tr> 
                             <tr>
@@ -619,14 +642,24 @@
                                 <td>
                                     Were limited in the <font style='text-decoration:underline'>kind</font> of work or other activities
                                 </td>
+                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4cYes" <%= props.getProperty("Q4cYes", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4cAll" <%= props.getProperty("Q4cAll", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4cNo" <%= props.getProperty("Q4cNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4cMost" <%= props.getProperty("Q4cMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="25" rows="2" name="Q4cCmt"><%= props.getProperty("Q4cCmt", "") %></textarea>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4cSome" <%= props.getProperty("Q4cSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4cLittle" <%= props.getProperty("Q4cLittle", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4cNone" <%= props.getProperty("Q4cNone", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="15" rows="2" name="Q4cCmt"><%= props.getProperty("Q4cCmt", "") %></textarea>
                                 </td>
                             </tr> 
                             <tr>
@@ -635,13 +668,22 @@
                                     Had <font style='text-decoration:underline'>difficulty</font> performing the work or other activities (for example, it took extra effort)
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4dYes" <%= props.getProperty("Q4dYes", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4dAll" <%= props.getProperty("Q4dAll", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q4dNo" <%= props.getProperty("Q4dNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4dMost" <%= props.getProperty("Q4dMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="25" rows="2" name="Q4dCmt"><%= props.getProperty("Q4dCmt", "") %></textarea>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4dSome" <%= props.getProperty("Q4dSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4dLittle" <%= props.getProperty("Q4dLittle", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q4dNone" <%= props.getProperty("Q4dNone", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="15" rows="2" name="Q4dCmt"><%= props.getProperty("Q4dCmt", "") %></textarea>
                                 </td>
                             </tr> 
                         </table>
@@ -650,9 +692,9 @@
                 <tr>                    
                     <th width="3%" valign="top" >5. </th>
                     <th valign="top" class="question">
-                        During the <font style="text-decoration:underline">past 4 weeks</font>, have you had any of the following problems with your work or other regular daily activities 
-                        <font style="text-decoration:underline">as a result of any emotional problems</font> (such as feeling depressed or anxious)? (Please answer <font style="text-decoration:underline">YES</font> or <font style="text-decoration:underline">NO</font>
-                        for each question by selecting the corresponding checkbox on each line.)
+                        During the <font style="text-decoration:underline">past 4 weeks</font>, 
+                        how much of the time have you had any of the following problmes with your work or other regular daily activities
+                        <font style="text-decoration:underline">as a result of any emotional problems</font> (such as feeling depressed or anxious)?
                     </th>
                 </tr>                
                 
@@ -661,10 +703,13 @@
                         <table>
                             <tr class="question">
                                 <th width="3%"></th>
-                                <th width="42%"></th>
-                                <th width="12%" align="center">Yes</th>                                
-                                <th width="12%" align="center">No</th>
-                                <th width="31%" align="center">Comments</th>
+                                <th width="35%"></th>
+                                <th width="8%" align="center">All of the time</th>                                
+                                <th width="8%" align="center">Most of the time</th>
+                                <th width="8%" align="center">Some of the time</th>
+                                <th width="8%" align="center">A litte of the time</th>
+                                <th width="8%" align="center">None of the time</th>
+                                <th width="22%" align="center">Comments</th>
                             </tr>
                             <tr>
                                 <td valign="top">a. </td>
@@ -672,28 +717,46 @@
                                     Cut down on the <font style='text-decoration:underline'>amount of time</font> you spent on work or other activities
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q5aYes" <%= props.getProperty("Q5aYes", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5aAll" <%= props.getProperty("Q5aAll", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q5aNo" <%= props.getProperty("Q5aNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5aMost" <%= props.getProperty("Q5aMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="25" rows="2" name="Q5aCmt"><%= props.getProperty("Q5aCmt", "") %></textarea>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5aSome" <%= props.getProperty("Q5aSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5aLittle" <%= props.getProperty("Q5aLittle", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5aNone" <%= props.getProperty("Q5aNone", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="15" rows="2" name="Q5aCmt"><%= props.getProperty("Q5aCmt", "") %></textarea>
                                 </td>
                             </tr> 
                             <tr>
-                                <td valign="center">b. </td>
+                                <td valign="top">b. </td>
                                 <td>
                                     <font style='text-decoration:underline'>Accomplished less</font> than you would like
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q5bYes" <%= props.getProperty("Q5bYes", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5bAll" <%= props.getProperty("Q5bAll", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q5bNo" <%= props.getProperty("Q5bNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5bMost" <%= props.getProperty("Q5bMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="25" rows="2" name="Q5bCmt"><%= props.getProperty("Q5bCmt", "") %></textarea>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5bSome" <%= props.getProperty("Q5bSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5bLittle" <%= props.getProperty("Q5bLittle", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5bNone" <%= props.getProperty("Q5bNone", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="15" rows="2" name="Q5bCmt"><%= props.getProperty("Q5bCmt", "") %></textarea>
                                 </td>
                             </tr> 
                             <tr>
@@ -702,13 +765,22 @@
                                     Didn't do work or other activities as <font style='text-decoration:underline'>carefully</font> as usual
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q5cYes" <%= props.getProperty("Q5cYes", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5cAll" <%= props.getProperty("Q5cAll", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q5cNo" <%= props.getProperty("Q5cNo", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5cMost" <%= props.getProperty("Q5cMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="25" rows="2" name="Q5cCmt"><%= props.getProperty("Q5cCmt", "") %></textarea>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5cSome" <%= props.getProperty("Q5cSome", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5cLittle" <%= props.getProperty("Q5cLittle", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q5cNone" <%= props.getProperty("Q5cNone", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="15" rows="2" name="Q5cCmt"><%= props.getProperty("Q5cCmt", "") %></textarea>
                                 </td>
                             </tr>                             
                         </table>
@@ -740,27 +812,27 @@
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q6NotAtAll" <%= props.getProperty("Q6NotAtAll", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q6NotAtAll" <%= props.getProperty("Q6NotAtAll", "") %>/>
                     </td>
                     <td width="45%">Not at all</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q6QuiteABit" <%= props.getProperty("Q6QuiteABit", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q6QuiteABit" <%= props.getProperty("Q6QuiteABit", "") %>/>
                     </td>
                     <td width="45%">Quite a bit</td>                
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q6Slightly" <%= props.getProperty("Q6Slightly", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q6Slightly" <%= props.getProperty("Q6Slightly", "") %>/>
                     </td>
                     <td width="45%">Slightly</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q6Extremely" <%= props.getProperty("Q6Extremely", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q6Extremely" <%= props.getProperty("Q6Extremely", "") %>/>
                     </td>
                     <td width="45%">Extremely</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q6Moderately" <%= props.getProperty("Q6Moderately", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q6Moderately" <%= props.getProperty("Q6Moderately", "") %>/>
                     </td>
                     <td width="45%">Moderately</td>
                     <td width="5%"></td>
@@ -769,7 +841,7 @@
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="3">
-                        Comments: <input type="text" size="80" name="Q6Cmt" value="<%= props.getProperty("Q6Cmt", "") %>"/>
+                        Comments: <input type="text" class="textbox" class="textbox" size="80" name="Q6Cmt" value="<%= props.getProperty("Q6Cmt", "") %>"/>
                     </td>
                 </tr>
                 <tr>                    
@@ -779,38 +851,38 @@
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q7None" <%= props.getProperty("Q7None", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q7None" <%= props.getProperty("Q7None", "") %>/>
                     </td>
                     <td width="45%">None</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q7Moderate" <%= props.getProperty("Q7Moderate", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q7Moderate" <%= props.getProperty("Q7Moderate", "") %>/>
                     </td>
                     <td width="45%">Moderate</td>                
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q7VeryMild" <%= props.getProperty("Q7VeryMild", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q7VeryMild" <%= props.getProperty("Q7VeryMild", "") %>/>
                     </td>
                     <td width="45%">Very Mild</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q7Severe" <%= props.getProperty("Q7Severe", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q7Severe" <%= props.getProperty("Q7Severe", "") %>/>
                     </td>
                     <td width="45%">Severe</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q7Mild" <%= props.getProperty("Q7Mild", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q7Mild" <%= props.getProperty("Q7Mild", "") %>/>
                     </td>
                     <td width="45%">Mild</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q7VerySevere" <%= props.getProperty("Q7VerySevere", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q7VerySevere" <%= props.getProperty("Q7VerySevere", "") %>/>
                     </td>
                     <td width="45%">Very Severe</td>
                 </tr>
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="3">
-                        Comments: <input type="text" size="80" name="Q7Cmt" value="<%= props.getProperty("Q7Cmt", "") %>"/>
+                        Comments: <input type="text" class="textbox" size="80" name="Q7Cmt" value="<%= props.getProperty("Q7Cmt", "") %>"/>
                     </td>
                 </tr> 
                 <tr>                    
@@ -822,27 +894,27 @@
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q8NotAtAll" <%= props.getProperty("Q8NotAtAll", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q8NotAtAll" <%= props.getProperty("Q8NotAtAll", "") %>/>
                     </td>
                     <td width="45%">Not at all</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q8QuiteABit" <%= props.getProperty("Q8QuiteABit", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q8QuiteABit" <%= props.getProperty("Q8QuiteABit", "") %>/>
                     </td>
                     <td width="45%">Quite a bit</td>                
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q8Slightly" <%= props.getProperty("Q8Slightly", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q8Slightly" <%= props.getProperty("Q8Slightly", "") %>/>
                     </td>
                     <td width="45%">A little bit</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q8Extremely" <%= props.getProperty("Q8Extremely", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q8Extremely" <%= props.getProperty("Q8Extremely", "") %>/>
                     </td>
                     <td width="45%">Extremely</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q8Moderately" <%= props.getProperty("Q8Moderately", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q8Moderately" <%= props.getProperty("Q8Moderately", "") %>/>
                     </td>
                     <td width="45%">Moderately</td>
                     <td width="5%"></td>
@@ -851,7 +923,7 @@
                 <tr bgcolor="white">
                     <td></td>
                     <td colspan="3">
-                        Comments: <input type="text" size="80" name="Q8Cmt" value="<%= props.getProperty("Q8Cmt", "") %>"/>
+                        Comments: <input type="text" class="textbox" class="textbox" size="80" name="Q8Cmt" value="<%= props.getProperty("Q8Cmt", "") %>"/>
                     </td>
                 </tr>
                 <tr><td><table border="0"  cellspacing="0" cellpadding="0" height="100px"><tr><td>&nbsp;</td></tr></table></td></tr>
@@ -877,7 +949,9 @@
                     <th valign="top" class="question">
                         These questions are about how you feel and how things have been with you
                         <font style="text-decoration:underline">during the past month</font>.
-                        For each question, please indicate the one answer that comes closest to the way you have been feeling.
+                        For each question, please give the one answer that comes closest to the way 
+                        you have been feeling. How much of the time during the 
+                        <font style="text-decoration:underline">past 4 weeks</font>...
                     </th>
                 </tr>                                
                 <tr>
@@ -885,40 +959,36 @@
                         <table>
                             <tr class="question">
                                 <th width="2%"></th>
-                                <th width="26%"></th>
-                                <th width="7%"  valign="top" align="center">All of the Time</th>
+                                <th width="35%"></th>
+                                <th width="8%"  valign="top" align="center">All of the Time</th>
                                 <th width="8%"  valign="top" align="center">Most of the Time</th>
-                                <th width="12%"  valign="top" align="center">A Good bit of the Time</th>
-                                <th width="8%"  valign="top" align="center">Some of the Time</th>
-                                <th width="10%"  valign="top" align="center">A Little of the Time</th>
+                                <th width="8%" valign="top" align="center">Some the Time</th>                                
+                                <th width="8%" valign="top" align="center">A Little of the Time</th>
                                 <th width="8%"  valign="top" align="center">None of the Time</th>
-                                <th width="19%" valign="top" align="center">Comments</th>
+                                <th width="22%" valign="top" align="center">Comments</th>
                             </tr>
                             <tr>
                                 <td>a. </td>
                                 <td>
-                                    Did you feel full of pep?
+                                    Did you feel full of life?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9aAll" <%= props.getProperty("Q9aAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9aAll" <%= props.getProperty("Q9aAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9aMost" <%= props.getProperty("Q9aMost", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9aMost" <%= props.getProperty("Q9aMost", "") %>/>
+                                </td>                                
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9aSome" <%= props.getProperty("Q9aSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9aGood" <%= props.getProperty("Q9aGood", "") %>/>
-                                </td> 
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9aSome" <%= props.getProperty("Q9aSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9aLittle" <%= props.getProperty("Q9aLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9aLittle" <%= props.getProperty("Q9aLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9aNone" <%= props.getProperty("Q9aNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9aNone" <%= props.getProperty("Q9aNone", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9aCmt"><%= props.getProperty("Q9aCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9aCmt"><%= props.getProperty("Q9aCmt", "") %></textarea>
                                 </td>
                             </tr>  
                             <tr>
@@ -927,25 +997,22 @@
                                     Have you been a very nervous person?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9bAll" <%= props.getProperty("Q9bAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9bAll" <%= props.getProperty("Q9bAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9bMost" <%= props.getProperty("Q9bMost", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9bMost" <%= props.getProperty("Q9bMost", "") %>/>
+                                </td>                                
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9bSome" <%= props.getProperty("Q9bSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9bGood" <%= props.getProperty("Q9bGood", "") %>/>
-                                </td> 
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9bSome" <%= props.getProperty("Q9bSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9bLittle" <%= props.getProperty("Q9bLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9bLittle" <%= props.getProperty("Q9bLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9bNone" <%= props.getProperty("Q9bNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9bNone" <%= props.getProperty("Q9bNone", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9bCmt"><%= props.getProperty("Q9bCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9bCmt"><%= props.getProperty("Q9bCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -954,25 +1021,22 @@
                                     Have you felt so down in the dumps nothing could cheer you up?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9cAll" <%= props.getProperty("Q9cAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9cAll" <%= props.getProperty("Q9cAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9cMost" <%= props.getProperty("Q9cMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9cGood" <%= props.getProperty("Q9cGood", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9cMost" <%= props.getProperty("Q9cMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9cSome" <%= props.getProperty("Q9cSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9cSome" <%= props.getProperty("Q9cSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9cLittle" <%= props.getProperty("Q9cLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9cLittle" <%= props.getProperty("Q9cLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9cNone" <%= props.getProperty("Q9cNone", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9cNone" <%= props.getProperty("Q9cNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9cCmt"><%= props.getProperty("Q9cCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9cCmt"><%= props.getProperty("Q9cCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -981,52 +1045,46 @@
                                     Have you felt calm and peaceful?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9dAll" <%= props.getProperty("Q9dAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9dAll" <%= props.getProperty("Q9dAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9dMost" <%= props.getProperty("Q9dMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9dGood" <%= props.getProperty("Q9dGood", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9dMost" <%= props.getProperty("Q9dMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9dSome" <%= props.getProperty("Q9dSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9dSome" <%= props.getProperty("Q9dSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9dLittle" <%= props.getProperty("Q9dLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9dLittle" <%= props.getProperty("Q9dLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9dNone" <%= props.getProperty("Q9dNone", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9dNone" <%= props.getProperty("Q9dNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9dCmt"><%= props.getProperty("Q9dCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9dCmt"><%= props.getProperty("Q9dCmt", "") %></textarea>
                                 </td>
                             </tr>
                              <tr>
-                                <td  valign="top">e. </td>
+                                <td>e. </td>
                                 <td>
                                     Did you have a lot of energy?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9eAll" <%= props.getProperty("Q9eAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9eAll" <%= props.getProperty("Q9eAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9eMost" <%= props.getProperty("Q9eMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9eGood" <%= props.getProperty("Q9eGood", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9eMost" <%= props.getProperty("Q9eMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9eSome" <%= props.getProperty("Q9eSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9eSome" <%= props.getProperty("Q9eSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9eLittle" <%= props.getProperty("Q9eLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9eLittle" <%= props.getProperty("Q9eLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9eNone" <%= props.getProperty("Q9eNone", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9eNone" <%= props.getProperty("Q9eNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9eCmt"><%= props.getProperty("Q9eCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9eCmt"><%= props.getProperty("Q9eCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -1035,25 +1093,22 @@
                                     Have you felt downhearted and blue?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9fAll" <%= props.getProperty("Q9fAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9fAll" <%= props.getProperty("Q9fAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9fMost" <%= props.getProperty("Q9fMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9fGood" <%= props.getProperty("Q9fGood", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9fMost" <%= props.getProperty("Q9fMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9fSome" <%= props.getProperty("Q9fSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9fSome" <%= props.getProperty("Q9fSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9fLittle" <%= props.getProperty("Q9fLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9fLittle" <%= props.getProperty("Q9fLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9fNone" <%= props.getProperty("Q9fNone", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9fNone" <%= props.getProperty("Q9fNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9fCmt"><%= props.getProperty("Q9fCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9fCmt"><%= props.getProperty("Q9fCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -1062,52 +1117,46 @@
                                     Did you feel worn out?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9gAll" <%= props.getProperty("Q9gAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9gAll" <%= props.getProperty("Q9gAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9gMost" <%= props.getProperty("Q9gMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9gGood" <%= props.getProperty("Q9gGood", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9gMost" <%= props.getProperty("Q9gMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9gSome" <%= props.getProperty("Q9gSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9gSome" <%= props.getProperty("Q9gSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9gLittle" <%= props.getProperty("Q9gLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9gLittle" <%= props.getProperty("Q9gLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9gNone" <%= props.getProperty("Q9gNone", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9gNone" <%= props.getProperty("Q9gNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9gCmt"><%= props.getProperty("Q9gCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9gCmt"><%= props.getProperty("Q9gCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
-                                <td valign="top">h. </td>
+                                <td>h. </td>
                                 <td>
                                     Have you been a happy person?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9hAll" <%= props.getProperty("Q9hAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9hAll" <%= props.getProperty("Q9hAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9hMost" <%= props.getProperty("Q9hMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9hGood" <%= props.getProperty("Q9hGood", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9hMost" <%= props.getProperty("Q9hMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9hSome" <%= props.getProperty("Q9hSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9hSome" <%= props.getProperty("Q9hSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9hLittle" <%= props.getProperty("Q9hLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9hLittle" <%= props.getProperty("Q9hLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9hNone" <%= props.getProperty("Q9hNone", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9hNone" <%= props.getProperty("Q9hNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9hCmt"><%= props.getProperty("Q9hCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9hCmt"><%= props.getProperty("Q9hCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -1116,58 +1165,27 @@
                                     Did you feel tired?
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9iAll" <%= props.getProperty("Q9iAll", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9iAll" <%= props.getProperty("Q9iAll", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9iMost" <%= props.getProperty("Q9iMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9iGood" <%= props.getProperty("Q9iGood", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9iMost" <%= props.getProperty("Q9iMost", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9iSome" <%= props.getProperty("Q9iSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9iSome" <%= props.getProperty("Q9iSome", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9iLittle" <%= props.getProperty("Q9iLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9iLittle" <%= props.getProperty("Q9iLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9iNone" <%= props.getProperty("Q9iNone", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q9iNone" <%= props.getProperty("Q9iNone", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9iCmt"><%= props.getProperty("Q9iCmt", "") %></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td valign="top">j. </td>
-                                <td>
-                                    Has your <font style='text-decoration:underline'>health limited your social activities </font>
-                                    (like visiting with friends or close relatives)?
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9jAll" <%= props.getProperty("Q9jAll", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9jMost" <%= props.getProperty("Q9jMost", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9jGood" <%= props.getProperty("Q9jGood", "") %>/>
-                                </td> 
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9jSome" <%= props.getProperty("Q9jSome", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9jLittle" <%= props.getProperty("Q9jLittle", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q9jNone" <%= props.getProperty("Q9jNone", "") %>/>
-                                </td>
-                                <td align="center" bgcolor="white">
-                                    <textarea cols="15" rows="2" name="Q9jCmt"><%= props.getProperty("Q9jCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="15" rows="2" name="Q9iCmt"><%= props.getProperty("Q9iCmt", "") %></textarea>
                                 </td>
                             </tr>
                         </table>
                     </td>                    
-                </tr>          
+                </tr>                              
             </table>              
         </td>
     </tr>    
@@ -1187,6 +1205,52 @@
         <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >
                <tr>                    
                     <th width="3%" valign="top" >10. </th>
+                    <th valign="top" class="question">                        
+                        <font style="text-decoration:underline">During the past month</font>,
+                        How much of the time has your                         
+                        <font style="text-decoration:underline">physical health or emotional problems</font> interfered
+                         with your social activities (like visiting friends, relatives, etc.)?
+                      
+                    </th>
+                </tr>                                
+                <tr>
+                    <td valign="top" colspan="2">
+                        <table>
+                            <tr class="question">
+                                <th width="3%"></th>                                
+                                <th width="14%"  valign="top" align="center">All of the Time</th>
+                                <th width="14%"  valign="top" align="center">Most of the Time</th>
+                                <th width="14%" valign="top" align="center">Some the Time</th>                                
+                                <th width="14%" valign="top" align="center">A Little of the Time</th>
+                                <th width="14%"  valign="top" align="center">None of the Time</th>
+                                <th width="27%" valign="top" align="center">Comments</th>
+                            </tr>
+                            <tr>
+                                <td></td>                                
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q10All" <%= props.getProperty("Q10All", "") %>/>
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q10Most" <%= props.getProperty("Q10Most", "") %>/>
+                                </td> 
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q10Some" <%= props.getProperty("Q10Some", "") %>/>
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q10Little" <%= props.getProperty("Q10Little", "") %>/>
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <input type="checkbox"  class="bigCheckbox" name="Q10None" <%= props.getProperty("Q10None", "") %>/>
+                                </td>
+                                <td align="center" bgcolor="white">
+                                    <textarea class="textbox" cols="20" rows="2" name="Q10Cmt"><%= props.getProperty("Q10Cmt", "") %></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>                    
+                </tr>      
+               <tr>                    
+                    <th width="3%" valign="top" >11. </th>
                     <th valign="top" class="question">
                         Please choose the answer that best describes how <font style="text-decoration:underline">true</font> or
                         <font style="text-decoration:underline">false</font> each of the following statements is for you.
@@ -1200,7 +1264,7 @@
                                 <th width="30%"></th>
                                 <th width="8%"  valign="top" align="center">Definitely True</th>
                                 <th width="8%"  valign="top" align="center">Mostly True</th>
-                                <th width="8%"  valign="top" align="center">Not sure</th>
+                                <th width="8%"  valign="top" align="center">Don't Know</th>
                                 <th width="8%"  valign="top" align="center">Mostly False</th>
                                 <th width="8%"  valign="top" align="center">Definitely False</th>                                
                                 <th width="27%" valign="top" align="center">Comments</th>
@@ -1211,22 +1275,22 @@
                                     I seem to get sick a little easier than other people.
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10aDefTrue" <%= props.getProperty("Q10aDefTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11aDefTrue" <%= props.getProperty("Q11aDefTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10aMostTrue" <%= props.getProperty("Q10aMostTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11aMostTrue" <%= props.getProperty("Q11aMostTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10aNotSure" <%= props.getProperty("Q10aNotSure", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11aNotSure" <%= props.getProperty("Q11aNotSure", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10aMostFalse" <%= props.getProperty("Q10aMostFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11aMostFalse" <%= props.getProperty("Q11aMostFalse", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10aDefFalse" <%= props.getProperty("Q10aDefFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11aDefFalse" <%= props.getProperty("Q11aDefFalse", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q10aCmt"><%= props.getProperty("Q10aCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q11aCmt"><%= props.getProperty("Q11aCmt", "") %></textarea>
                                 </td>
                             </tr> 
                             <tr>
@@ -1235,22 +1299,22 @@
                                     I am as healthy as anybody I know.
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10bDefTrue" <%= props.getProperty("Q10bDefTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11bDefTrue" <%= props.getProperty("Q11bDefTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10bMostTrue" <%= props.getProperty("Q10bMostTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11bMostTrue" <%= props.getProperty("Q11bMostTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10bNotSure" <%= props.getProperty("Q10bNotSure", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11bNotSure" <%= props.getProperty("Q11bNotSure", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10bMostFalse" <%= props.getProperty("Q10bMostFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11bMostFalse" <%= props.getProperty("Q11bMostFalse", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10bDefFalse" <%= props.getProperty("Q10bDefFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11bDefFalse" <%= props.getProperty("Q11bDefFalse", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q10bCmt"><%= props.getProperty("Q10bCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q11bCmt"><%= props.getProperty("Q11bCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -1259,22 +1323,22 @@
                                     I expect my health to get worse.
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10cDefTrue" <%= props.getProperty("Q10cDefTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11cDefTrue" <%= props.getProperty("Q11cDefTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10cMostTrue" <%= props.getProperty("Q10cMostTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11cMostTrue" <%= props.getProperty("Q11cMostTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="10cNotSure" <%= props.getProperty("Q10cNotSure", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11cNotSure" <%= props.getProperty("Q11cNotSure", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10cMostFalse" <%= props.getProperty("Q10cMostFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11cMostFalse" <%= props.getProperty("Q11cMostFalse", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10cDefFalse" <%= props.getProperty("Q10cDefFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11cDefFalse" <%= props.getProperty("Q11cDefFalse", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q10cCmt"><%= props.getProperty("Q10cCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q11cCmt"><%= props.getProperty("Q11cCmt", "") %></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -1283,33 +1347,33 @@
                                     My health is excellent.
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10dDefTrue" <%= props.getProperty("Q10dDefTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11dDefTrue" <%= props.getProperty("Q11dDefTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10dMostTrue" <%= props.getProperty("Q10dMostTrue", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11dMostTrue" <%= props.getProperty("Q11dMostTrue", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10dNotSure" <%= props.getProperty("Q10dNotSure", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11dNotSure" <%= props.getProperty("Q11dNotSure", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10dMostFalse" <%= props.getProperty("Q10dMostFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11dMostFalse" <%= props.getProperty("Q11dMostFalse", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q10dDefFalse" <%= props.getProperty("Q10dDefFalse", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q11dDefFalse" <%= props.getProperty("Q11dDefFalse", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q10dCmt"><%= props.getProperty("Q10dCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q11dCmt"><%= props.getProperty("Q11dCmt", "") %></textarea>
                                 </td>
                             </tr>                            
                         </table>
                     </td>                    
                 </tr>
                 <tr>                    
-                    <th width="3%" valign="top" >11. </th>
+                    <th width="3%" valign="top" >12. </th>
                     <th valign="top" class="question">
                         Regardless of your current level of sexual activity, please answer the following question.
                         If you prefer not to answer it, please check this box: 
-                        <input type="checkbox"  class="checkbox" name="Q11aNotAns" <%= props.getProperty("Q11aNotAns", "") %>/>
+                        <input type="checkbox"  class="bigCheckbox" name="Q12aNotAns" <%= props.getProperty("Q12aNotAns", "") %>/>
                     </th>
                 </tr>                                
                 <tr>
@@ -1326,27 +1390,27 @@
                                 <th width="27%" valign="top" align="center">Comments</th>
                             </tr>
                             <tr>
-                                <td valign="top">a. </td>
+                                <td valign="center">a. </td>
                                 <td>
                                     I am satisfied with my sex life
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q11aNot" <%= props.getProperty("Q11aNot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q12aNot" <%= props.getProperty("Q12aNot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q11aLittle" <%= props.getProperty("Q11aLittle", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q12aLittle" <%= props.getProperty("Q12aLittle", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q11aSome" <%= props.getProperty("Q11aSome", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q12aSome" <%= props.getProperty("Q12aSome", "") %>/>
                                 </td> 
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q11aLot" <%= props.getProperty("Q11aLot", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q12aLot" <%= props.getProperty("Q12aLot", "") %>/>
                                 </td>
                                 <td align="center" bgcolor="white">
-                                    <input type="checkbox"  class="checkbox" name="Q11aMuch" <%= props.getProperty("Q11aMuch", "") %>/>
+                                    <input type="checkbox"  class="bigCheckbox" name="Q12aMuch" <%= props.getProperty("Q12aMuch", "") %>/>
                                 </td>                                
                                 <td align="center" bgcolor="white">
-                                    <textarea cols="20" rows="2" name="Q11aCmt"><%= props.getProperty("Q11aCmt", "") %></textarea>
+                                    <textarea class="textbox" cols="20" rows="2" name="Q12aCmt"><%= props.getProperty("Q12aCmt", "") %></textarea>
                                 </td>
                             </tr> 
                         </table>
