@@ -332,7 +332,7 @@ public class FrmFormAction extends Action {
         //send to osdsf thru XMLRPC
         try{
             XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
-            String result = (String) xmlrpc.execute("vt.vtXMLRtn", data2OSDSF);
+            String result = (String) xmlrpc.execute("vt.saveAndGetRlt", data2OSDSF);
             System.out.println("Reverse result: " + result);
             return result;
         }
