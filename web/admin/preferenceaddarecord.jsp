@@ -129,7 +129,7 @@
   <table border="0" cellspacing="0" cellpadding="0" width="100%">
     <tr>
       <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"><bean:message key="global.btnBack"/></a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout" /><img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
     </tr>
   </table>
 
