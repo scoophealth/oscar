@@ -30,6 +30,8 @@ package oscar.oscarSurveillance;
 
 import java.io.*;
 import java.sql.*;
+import java.util.*;
+import net.sf.jasperreports.engine.*;
 import oscar.*;
 import oscar.oscarDB.*;
 
@@ -37,7 +39,7 @@ import oscar.oscarDB.*;
  *
  * @author  Jay Gallagher
  */
-public class ProcessSurveyFile {
+public class ProcessSurveyFile{
    
    
    
@@ -45,16 +47,14 @@ public class ProcessSurveyFile {
       int maxprocessed = 0 ;
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         String sql = "select max(processed) as maxprocessed from surveyData  where surveyId = '"+surveyId+"'  ";
-         
+         String sql = "select max(processed) as maxprocessed from surveyData  where surveyId = '"+surveyId+"'  ";         
          ResultSet rs = db.GetSQL(sql);
          
          if(rs.next()){
             maxprocessed = rs.getInt("maxprocessed");            
          }            
          rs.close();
-         db.CloseConn();
-         
+         db.CloseConn();         
       }catch(Exception e){
          e.printStackTrace();
       }
@@ -71,40 +71,27 @@ public class ProcessSurveyFile {
          e.printStackTrace();
       }
    }
-   
-   private void writeSurveyFile(ResultSet rs,String surveyId) throws SQLException{
-      int processedId = maxProcessed(surveyId);
-      processedId++;
-      String fileDir = OscarProperties.getInstance().getProperty("surveillance_directory");
-      String filename = surveyId+Integer.toString(processedId)+".txt";
-      
-      String qChar = "\"";
-      //open file
-      try {
-        BufferedWriter out = new BufferedWriter(new FileWriter(fileDir+filename));
-        
-        while(rs.next()){
-           String surveyDataId = rs.getString("surveyDataId");
-           String dateSeen = rs.getString("survey_date");
-           String patientAnswer = rs.getString("answer");
-           String yearOfBirth = rs.getString("year_of_birth");
-           String fsa = rs.getString("postal");
-           if (fsa.length() > 3){
-              fsa = fsa.substring(0,3);
-           }
-           
-           out.write(qChar+surveyDataId+qChar+"\t"+qChar+dateSeen+qChar+"\t"+qChar+patientAnswer+qChar+"\t"+qChar+yearOfBirth+qChar+"\t"+qChar+fsa+qChar+"\n");
-           setProcessed(surveyDataId,processedId);
-        }
-        
-        out.close();
-      } catch (IOException e) {
-         e.printStackTrace();
+               
+   String replaceAllValues(String guideString,ResultSet rs) throws SQLException{      
+      String processString = getFirstVal(guideString);
+      while (processString != null){         
+         String replaceVal = rs.getString(processString);   
+         if(replaceVal == null) replaceVal ="";
+         guideString = guideString.replaceAll("\\$\\{"+processString+"\\}", replaceVal);         
+         processString = getFirstVal(guideString);
       }
-      //close file
-      
+      return guideString;
    }
    
+   public String getFirstVal(String s){
+      String firstString = null;
+      int start = s.indexOf("${");
+      int end = s.indexOf("}");      
+      if (start > 0 ){
+         firstString = s.substring(start+2,end);
+      }
+      return firstString;
+   }
    
    public synchronized String processSurveyFile(String surveyId){
       String sStatus = null;
@@ -116,13 +103,34 @@ public class ProcessSurveyFile {
          ResultSet rs = db.GetSQL(processCount);
          
          if (rs.next()){
-            numRecordsToProcess = rs.getInt("recordsForProcessing");
-            
-            if (numRecordsToProcess > 0){                  
-               String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
-               "select s.surveyDataId, s.survey_date, s.answer, d.year_of_birth,d.postal from surveyData s, demographic d where s.surveyId = '"+surveyId+"' and s.demographic_no = d.demographic_no  and processed is null and status = 'A'";         
-               rs = db.GetSQL(sql);         
-               writeSurveyFile(rs,surveyId);
+            numRecordsToProcess = rs.getInt("recordsForProcessing");            
+            if (numRecordsToProcess > 0){                 
+               int processedId = maxProcessed(surveyId);
+               processedId++;
+               String fileDir = OscarProperties.getInstance().getProperty("surveillance_directory");
+               String filename = surveyId+Integer.toString(processedId)+".txt";
+               
+               SurveillanceMaster sm = SurveillanceMaster.getInstance();
+               Survey survey = sm.getSurveyById(surveyId);
+               String sql = survey.getExportQuery() + " '"+surveyId+"' ";
+                 System.out.println("sql "+sql);
+               String exp = survey.getExportString();
+                 System.out.println("xp "+exp);
+               
+               rs = db.GetSQL(sql);  
+               
+               try{
+                  BufferedWriter out = new BufferedWriter(new FileWriter(fileDir+filename));                
+                  while(rs.next()){ 
+                     String surveyDataId = rs.getString("surveyDataId");
+                     String writeString = replaceAllValues(exp, rs);                     
+                     out.write(writeString+'\n');                                    
+                     setProcessed(surveyDataId,processedId);
+                  }        
+                  out.close();
+               } catch (IOException e) {
+                  e.printStackTrace();
+               }             
             }
          }
          rs.close();
