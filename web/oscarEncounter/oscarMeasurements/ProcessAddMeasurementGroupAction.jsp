@@ -61,7 +61,7 @@ function submitForm(){
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 <html:errors/>
 <table>
-    <form action="SetupEditMeasurementGroup.do">
+    <form action="SetupAddMeasurementGroup.do">
         <tr>
             <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
             <td> Processing... </td>
