@@ -49,6 +49,7 @@ public class dxResearchAction extends Action {
         request.getSession().setAttribute("dxResearchForm", frm);
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
         String demographicNo = frm.getDemographicNo();
+        String providerNo = frm.getProviderNo();
         String forward = frm.getForward();
         String [] xml_research = null;
         
@@ -121,7 +122,13 @@ public class dxResearchAction extends Action {
         if(!valid)
             return (new ActionForward(mapping.getInput()));
         
-        return mapping.findForward("success");
+        ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
+        actionforward.addParameter("demographicNo", demographicNo);
+        actionforward.addParameter("providerNo", providerNo);
+        actionforward.addParameter("quickList", "");
+        
+        
+        return actionforward;
     }
      
 }
