@@ -42,588 +42,578 @@ import oscar.*;
 
 
 public class ExtractBean extends Object implements Serializable {
-private String ohipRecord;
-private String ohipClaim;
-private String ohipReciprocal;
-private String ohipFilename;
-private String htmlFilename;
-private String value;
-private String query;
-private String query2;
-private String query3;
-private String HE = "HE";
-private String providerNo;
-private String ohipVer;
-private String ohipCenter;
-private String reportGenDate;
-private String reportCount;
-private String demoName;
-private String hin;
-private String ver;
-private String dob;
-private String invNo;
-private String spec;
-private String specCode;
-private String inPatient;
-private String outPatient;
-private String outPatientDate;
-private String outPatientDateValue;
-private String diagcode;
-private String fee;
-private String apptDate;
-private String appt;
-private String serviceCode;
-private String batchHeader;
-private String patientHeader;
-private String patientHeader2;
-private String visitType;
-private String specialty;
-private String groupNo;
-private String billingUnit;
-private String totalAmount;
-private java.sql.Date visitDate;
-private int count = 0;
-private int invCount = 0;
-private int htmlCount = 0;
-private int flag =0;
-private int flagOrder =0;
-private int secondFlag = 0;
-private int thirdFlag = 0;
-private int it;
-private ArrayList iterator ;
-private java.util.Date today;
-private String output;
-private SimpleDateFormat formatter;
-private int recordCount=0;
-private int patientCount=0;
-private int healthcardCount = 0;
-private String rCount="";
-private String pCount="";
-private String hcCount = "";
-private String htmlHeader="";
-private String htmlCode="";
-private String htmlContent="";
-private String htmlContentHeader="";
-private String htmlFooter="";
-private String htmlValue="";
-private String htmlClass="";
-private String batchCount ="";
-private int batchOrder =0;
-private double dFee;
-private BigDecimal BigTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-private BigDecimal bdFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-private BigDecimal percent = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-private String dateRange="";
-private String eFlag="";
-private String hcFlag="";
-private String hcType = "";
-private String hcHin="";
-private String hcFirst="";
-private String hcLast="";
-private String demoSex = "";
-private String referral;
-private String referralDoc;
-private String oscar_home;
-private String m_review ="";
-private String m_Flag = "";
-private int vsFlag=0;
-private String logNo = "";
-private String logValue="";
-  public String[] dbParam;
-  public String surl;
-  public String user;
-  public String password;
-  public String sdriver;
-
-
-
-public ExtractBean() {
-
-
-formatter = new SimpleDateFormat("yyyyMMddHmm");
-today = new java.util.Date();
-output = formatter.format(today);
-
-
-}
-
-public void dbQuery(String[] dbP){
-   dbParam = dbP;
- sdriver = dbParam[0];
- surl = dbParam[1];
- user = dbParam[2];
- password = dbParam[3];
-   try{
-
-	    //htmlClass="class='bodytext'";
-	     batchOrder = 4 - batchCount.length();
-
-	     if (vsFlag == 0) {
-            logNo = getSequence(sdriver, surl, user, password);
-		 	batchHeader = "VS1" + "V6242" + forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + space(25) + space(57) + "\r";
-            System.out.println("BH:" + batchHeader);
-            logValue = batchHeader;
-            setLog(logNo, logValue);
-            vsFlag = 1;
-}
-else{
-	batchHeader = "";
-}
-
-
-
-
-
-htmlContentHeader = "<html><body><style type='text/css'><!-- .bodytext{  font-family: Tahoma, Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
-htmlContentHeader = htmlContentHeader + "<table width='100%' border='0' cellspacing='0' cellpadding='0'>";
-htmlContentHeader = htmlContentHeader + "<tr>";
-htmlContentHeader = htmlContentHeader + "<td colspan='4' class='bodytext'>OHIP Invoice for OHIP No."+ providerNo +"</td>";
-htmlContentHeader = htmlContentHeader + "<td colspan='6' class='bodytext'>Payment date of " + output.substring(0,8) + "</td>";
-htmlContentHeader = htmlContentHeader + "</tr>";
-htmlContentHeader = htmlContentHeader + "<tr>";
-htmlContentHeader = htmlContentHeader + "<td width='9%' class='bodytext'>INVOICE</td>";
-htmlContentHeader = htmlContentHeader + "<td width='19%' class='bodytext'>NAME</td>";
-htmlContentHeader = htmlContentHeader + "<td width='12%' class='bodytext'>HEALTH #</td>";
-htmlContentHeader = htmlContentHeader + "<td width='10%' class='bodytext'>BILLDATE</td>";
-htmlContentHeader = htmlContentHeader + "<td width='8%' class='bodytext'>CODE</td>";
-htmlContentHeader = htmlContentHeader + "<td width='14%' align='right' class='bodytext'>BILLED</td>";
-htmlContentHeader = htmlContentHeader + "<td width='4%' align='right' class='bodytext'>DX</td>";
-htmlContentHeader = htmlContentHeader + "<td width='5%' align='right' class='bodytext'>DX2</td>";
-htmlContentHeader = htmlContentHeader + "<td width='6%' align='right' class='bodytext'>DX3</td>";
-htmlContentHeader = htmlContentHeader + "<td width='8%' align='right' class='bodytext'>SEQUENCE</td>";
-htmlContentHeader = htmlContentHeader + "<td width='5%' align='right' class='bodytext'>COMMENT</td>";
-htmlContentHeader = htmlContentHeader + "</tr>";
-
-htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>OHIP No: 016096: 173 RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: 11277.32</td>  </tr></table></body></html>";
-     // htmlContentHeader = "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4' class='bodytext'>OHIP Invoice for OHIP No." + providerNo +"</td><td colspan='4' class='bodytext'>Payment date of " + output.substring(0,8) + "</td></tr>";
-     // htmlContentHeader = htmlContentHeader + "<tr><td class='bodytext'>ACCT NO</td><td class='bodytext'>NAME</td><td class='bodytext'>HEALTH #</td><td class='bodytext'>BILLDATE</td><td class='bodytext'>CODE</td><td align='right' class='bodytext'>BILLED</td><td align='right' class='bodytext'>DX</td><td align='right' class='bodytext'>Comment</td></tr>";
-      // htmlValue = htmlContentHeader;
-      value = batchHeader;
-      dbExtract dbExt = new dbExtract();
-
-      dbExt.openConnection(sdriver, surl, user, password);
-      query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
-      ResultSet rs = dbExt.executeQuery(query);
-      if (rs != null){
-      while(rs.next())
-      {
-        patientCount = patientCount + 1;
-        invNo = rs.getString("billing_no");
-      //  ohipVer = rs.getString("organization_spec_code");
-      //  inPatient = rs.getString("clinic_no");
-      //  hin = rs.getString("hin");
-      //  dob = rs.getString("dob");
-        	      demoName = rs.getString("demographic_name");
-      //  	      visitType = rs.getString("visittype");
-      // outPatient = rs.getString("clinic_ref_code");
-      // outPatientDate = rs.getDate("visitdate").toString();
-      //    visitDate = rs.getDate("visitdate");
-      //    referral = "";
-      //    referralDoc = "000000";
-      //    hcFlag = "";
-      //    referral = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<xml_referral>","</xml_referral>");
-      //    hcType = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<hctype>","</hctype>");
-      //    m_review = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<mreview>","</mreview>");
-      //      if (m_review == null){  m_review = space(1);
-	//		  m_Flag = "";}
-      //    if (m_review.compareTo("checked") == 0){
-	//		  m_review = "Y";
-	//		  m_Flag = "M";
-	//	  } else {
-	//		  m_review = space(1);
-	//		  m_Flag = "";
-	//	  }
-      //    if (hcType == null || hcType.compareTo("ON")==0 || hcType.compareTo("") == 0 ){hcFlag = "";}
-      //   else{
-	//		 demoSex = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<demosex>","</demosex>");
-	//		 hcFlag = "H";
-      //       hcLast = demoName.substring(0, demoName.indexOf(",")).toUpperCase();
-      //       hcFirst = demoName.substring(demoName.indexOf(",")+1).toUpperCase();
-      //       if (hcLast.length() <9) {hcLast = hcLast + space(9-hcLast.length()); } else{ hcLast = hcLast.substring(0,9);}
-      //       if (hcFirst.length() <5) {hcFirst = hcFirst + space(5-hcFirst.length()); } else{ hcFirst = hcFirst.substring(0,5);}
-//
-	//	 }
-      //    if (referral == null){referral = "";}
-      //    referralDoc = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<rdohip>","</rdohip>");
-      //    if (referral.compareTo("checked")==0 ){
-      //    if (referralDoc == null || referralDoc.compareTo("000000")==0){
-	//		 referral = "";
-	//		 referralDoc = space(6);
-	//	  }else{
-	//		referral = "R";
-	//		referralDoc = referralDoc + space(6-referralDoc.length());
-	//	  }
-	//  }
-	//	  else{
-	//		  referral = "";
-	//		  	 referralDoc = space(6);
-	//	  }
-    //      if (visitDate == null) {
-    //      	outPatientDateValue = space(8);
-    //    } else {
-    //    	outPatientDate = visitDate.toString();
-    //     outPatientDateValue = outPatientDate.substring(0,4) + outPatientDate.substring(5,7) + outPatientDate.substring(outPatientDate.length()-2);
-//
-    //    	}
-    //    specCode = rs.getString("status");
-
-    //    if (specCode.compareTo("O") == 0){
-    //    	spec = "HCP";
-    //    }
-    //    else
-    //    {
-    //          spec = "WCB";
-    //    }
-    //    if (hin.length() < 12) {
-    //    	hin = hin + space(12-hin.length());
-    //    }
-    //    else
-    //    {
-    //    	hin = hin.substring(0,12);
-    //    }
-    //    hin = hin.toUpperCase();
-    //    count = invNo.length();
-    //    count = 8 - count;
-    //    hcHin =hin;
-    //    if (hcFlag.compareTo("H")==0){ spec="RMB"; healthcardCount = healthcardCount + 1;hcHin =hin; hin = space(12); patientHeader2 = "\n" + HE + "R" + hcHin + hcLast + hcFirst + demoSex + hcType + space(47) + "\r"; }else{patientHeader2 = ""; }
-    //    if (visitType == null){
-    //    	 patientHeader = HE + "H" + hin + dob + zero(count) + invNo + spec + "P" + referralDoc + space(4) + space(8) + space(4) + m_review + inPatient + space(11) + space(6);
-	//} else{
-    //    if (visitType.compareTo("00") == 0){
-    //    patientHeader = HE + "H" + hin + dob + zero(count) + invNo + spec + "P" + referralDoc + space(4) + space(8) + space(4) + m_review + inPatient + space(11) + space(6);
-	//}
-	//else{
-	//	  patientHeader = HE + "H" + hin + dob + zero(count) + invNo + spec + "P" +referralDoc + outPatient + outPatientDateValue + space(4) + m_review + inPatient + space(11) + space(6);
-	//}
-	//}
-
-
-    //    value = value + "\n" + patientHeader + "\r" + patientHeader2;
-
-
-
-        invCount = 0;
-        query2 = "select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'";
-       ResultSet rs2 = dbExt.executeQuery2(query2);
- 	 while (rs2.next())
-      	{
-      		recordCount = recordCount + 1;
-
-      		count = 0;
-
-logNo = getSequence(sdriver, surl, user, password);
-      	        value = value + "\n" +rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") + rs2.getString("phn")+ rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6)+"\r";
-                logValue = rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") + rs2.getString("phn")+ rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6);
- 	setLog(logNo,logValue);
- dFee = Double.parseDouble(rs2.getString("bill_amount"));
-                bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-                BigTotal = BigTotal.add(bdFee);
-
- 	   if (invCount == 0) {
-
-	      	      	htmlContent = htmlContent + "<tr><td class='bodytext'>" + invNo+ "</td><td class='bodytext'>" + demoName + "</td><td class='bodytext'>" +rs2.getString("phn")+ "</td><td class='bodytext'>" +rs2.getString("service_date")+ "</td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
-			       		}
-			  		else {
-			  			htmlContent = htmlContent + "<tr><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
-		    		}
-
- 	invCount = invCount + 1;
-
-      	}
-
-
-if (eFlag.compareTo("1") == 0) {
-	//setAsBilled(invNo, sdriver, surl, user, password);
-}
-
-
-
-
-  }
-//      hcCount = hcCount + healthcardCount;
-      pCount = pCount + patientCount;
-      rCount = rCount + recordCount;
-//      flagOrder = 4 - pCount.length();
-//      secondFlag = 5 - rCount.length();
-//      thirdFlag= 4 - hcCount.length();
-//      percent = new BigDecimal(0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
-//      BigTotal = BigTotal.multiply(percent);
-//      value = value + "\n" + HE + "E" + zero(flagOrder) + pCount + zero(thirdFlag) +hcCount + zero(secondFlag) + rCount + space(63) + "\r";
-// htmlContent = htmlContent + "<tr><td colspan='8' class='bodytext'>&nbsp;</td></tr><tr><td colspan='4' class='bodytext'>OHIP No: "+ providerNo+": "+ pCount+" RECORDS PROCESSED</td><td colspan='4' class='bodytext'>TOTAL: " + BigTotal.toString().substring(0,BigTotal.toString().length() -2)  +"</td></tr>";
-   // totalAmount = BigTotal.toString();
-    //  writeFile(value);
-//      htmlValue = htmlValue + htmlContent + "</table>";
-//      htmlHeader = "<html><body><style type='text/css'><!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
-
-htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>OHIP No: "+ providerNo + ": "+ pCount +" RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: " +BigTotal +"</td>  </tr></table></body></html>";
-      htmlCode = htmlContentHeader + htmlContent + htmlFooter;
-
-     writeHtml(htmlCode);
-
-     ohipReciprocal = String.valueOf(hcCount);
-     ohipRecord = String.valueOf(rCount);
-     ohipClaim = String.valueOf(pCount);
-       }
-
-System.out.println(value);
-
-}
-catch (SQLException e) {
+    private String ohipRecord;
+    private String ohipClaim;
+    private String ohipReciprocal;
+    private String ohipFilename;
+    private String htmlFilename;
+    private String value;
+    private String query;
+    private String query2;
+    private String query3;
+    private String HE = "HE";
+    private String providerNo;
+    private String ohipVer;
+    private String ohipCenter;
+    private String reportGenDate;
+    private String reportCount;
+    private String demoName;
+    private String hin;
+    private String ver;
+    private String dob;
+    private String invNo;
+    private String spec;
+    private String specCode;
+    private String inPatient;
+    private String outPatient;
+    private String outPatientDate;
+    private String outPatientDateValue;
+    private String diagcode;
+    private String fee;
+    private String apptDate;
+    private String appt;
+    private String serviceCode;
+    private String batchHeader;
+    private String patientHeader;
+    private String patientHeader2;
+    private String visitType;
+    private String specialty;
+    private String groupNo;
+    private String billingUnit;
+    private String totalAmount;
+    private java.sql.Date visitDate;
+    private int count = 0;
+    private int invCount = 0;
+    private int htmlCount = 0;
+    private int flag =0;
+    private int flagOrder =0;
+    private int secondFlag = 0;
+    private int thirdFlag = 0;
+    private int it;
+    private ArrayList iterator ;
+    private java.util.Date today;
+    private String output;
+    private SimpleDateFormat formatter;
+    private int recordCount=0;
+    private int patientCount=0;
+    private int healthcardCount = 0;
+    private String rCount="";
+    private String pCount="";
+    private String hcCount = "";
+    private String htmlHeader="";
+    private String htmlCode="";
+    private String htmlContent="";
+    private String htmlContentHeader="";
+    private String htmlFooter="";
+    private String htmlValue="";
+    private String htmlClass="";
+    private String batchCount ="";
+    private int batchOrder =0;
+    private double dFee;
+    private BigDecimal BigTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private BigDecimal bdFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private BigDecimal percent = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private String dateRange="";
+    private String eFlag="";
+    private String hcFlag="";
+    private String hcType = "";
+    private String hcHin="";
+    private String hcFirst="";
+    private String hcLast="";
+    private String demoSex = "";
+    private String referral;
+    private String referralDoc;
+    private String oscar_home;
+    private String m_review ="";
+    private String m_Flag = "";
+    private int vsFlag=0;
+    private String logNo = "";
+    private String logValue="";
+    public String[] dbParam;
+    public String surl;
+    public String user;
+    public String password;
+    public String sdriver;
+    
+    
+    
+    public ExtractBean() {
+        
+        
+        formatter = new SimpleDateFormat("yyyyMMddHmm");
+        today = new java.util.Date();
+        output = formatter.format(today);
+        
+        
+    }
+    
+    public void dbQuery(String[] dbP){
+        dbParam = dbP;
+        sdriver = dbParam[0];
+        surl = dbParam[1];
+        user = dbParam[2];
+        password = dbParam[3];
+        try{
+            
+            //htmlClass="class='bodytext'";
+            batchOrder = 4 - batchCount.length();
+            
+            if (vsFlag == 0) {
+                logNo = getSequence(sdriver, surl, user, password);
+                batchHeader = "VS1" + "V6242" + forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + space(25) + space(57) + "\r";
+                System.out.println("BH:" + batchHeader);
+                logValue = batchHeader;
+                setLog(logNo, logValue);
+                vsFlag = 1;
+            }
+            else{
+                batchHeader = "";
+            }
+            
+            htmlContentHeader = "<html><body><style type='text/css'><!-- .bodytext{  font-family: Tahoma, Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
+            htmlContentHeader = htmlContentHeader + "<table width='100%' border='0' cellspacing='0' cellpadding='0'>";
+            htmlContentHeader = htmlContentHeader + "<tr>";
+            htmlContentHeader = htmlContentHeader + "<td colspan='4' class='bodytext'>OHIP Invoice for OHIP No."+ providerNo +"</td>";
+            htmlContentHeader = htmlContentHeader + "<td colspan='6' class='bodytext'>Payment date of " + output.substring(0,8) + "</td>";
+            htmlContentHeader = htmlContentHeader + "</tr>";
+            htmlContentHeader = htmlContentHeader + "<tr>";
+            htmlContentHeader = htmlContentHeader + "<td width='9%' class='bodytext'>INVOICE</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='19%' class='bodytext'>NAME</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='12%' class='bodytext'>HEALTH #</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='10%' class='bodytext'>BILLDATE</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='8%' class='bodytext'>CODE</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='14%' align='right' class='bodytext'>BILLED</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='4%' align='right' class='bodytext'>DX</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='5%' align='right' class='bodytext'>DX2</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='6%' align='right' class='bodytext'>DX3</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='8%' align='right' class='bodytext'>SEQUENCE</td>";
+            htmlContentHeader = htmlContentHeader + "<td width='5%' align='right' class='bodytext'>COMMENT</td>";
+            htmlContentHeader = htmlContentHeader + "</tr>";
+            
+            htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>OHIP No: 016096: 173 RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: 11277.32</td>  </tr></table></body></html>";
+            // htmlContentHeader = "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4' class='bodytext'>OHIP Invoice for OHIP No." + providerNo +"</td><td colspan='4' class='bodytext'>Payment date of " + output.substring(0,8) + "</td></tr>";
+            // htmlContentHeader = htmlContentHeader + "<tr><td class='bodytext'>ACCT NO</td><td class='bodytext'>NAME</td><td class='bodytext'>HEALTH #</td><td class='bodytext'>BILLDATE</td><td class='bodytext'>CODE</td><td align='right' class='bodytext'>BILLED</td><td align='right' class='bodytext'>DX</td><td align='right' class='bodytext'>Comment</td></tr>";
+            // htmlValue = htmlContentHeader;
+            value = batchHeader;
+            dbExtract dbExt = new dbExtract();
+            
+            dbExt.openConnection(sdriver, surl, user, password);
+            query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
+            ResultSet rs = dbExt.executeQuery(query);
+            if (rs != null){
+                while(rs.next()) {
+                    patientCount = patientCount + 1;
+                    invNo = rs.getString("billing_no");
+                    //  ohipVer = rs.getString("organization_spec_code");
+                    //  inPatient = rs.getString("clinic_no");
+                    //  hin = rs.getString("hin");
+                    //  dob = rs.getString("dob");
+                    demoName = rs.getString("demographic_name");
+                    //  	      visitType = rs.getString("visittype");
+                    // outPatient = rs.getString("clinic_ref_code");
+                    // outPatientDate = rs.getDate("visitdate").toString();
+                    //    visitDate = rs.getDate("visitdate");
+                    //    referral = "";
+                    //    referralDoc = "000000";
+                    //    hcFlag = "";
+                    //    referral = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<xml_referral>","</xml_referral>");
+                    //    hcType = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<hctype>","</hctype>");
+                    //    m_review = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<mreview>","</mreview>");
+                    //      if (m_review == null){  m_review = space(1);
+                    //		  m_Flag = "";}
+                    //    if (m_review.compareTo("checked") == 0){
+                    //		  m_review = "Y";
+                    //		  m_Flag = "M";
+                    //	  } else {
+                    //		  m_review = space(1);
+                    //		  m_Flag = "";
+                    //	  }
+                    //    if (hcType == null || hcType.compareTo("ON")==0 || hcType.compareTo("") == 0 ){hcFlag = "";}
+                    //   else{
+                    //		 demoSex = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<demosex>","</demosex>");
+                    //		 hcFlag = "H";
+                    //       hcLast = demoName.substring(0, demoName.indexOf(",")).toUpperCase();
+                    //       hcFirst = demoName.substring(demoName.indexOf(",")+1).toUpperCase();
+                    //       if (hcLast.length() <9) {hcLast = hcLast + space(9-hcLast.length()); } else{ hcLast = hcLast.substring(0,9);}
+                    //       if (hcFirst.length() <5) {hcFirst = hcFirst + space(5-hcFirst.length()); } else{ hcFirst = hcFirst.substring(0,5);}
+                    //
+                    //	 }
+                    //    if (referral == null){referral = "";}
+                    //    referralDoc = oscar.SxmlMisc.getXmlContent(rs.getString("content"),"<rdohip>","</rdohip>");
+                    //    if (referral.compareTo("checked")==0 ){
+                    //    if (referralDoc == null || referralDoc.compareTo("000000")==0){
+                    //		 referral = "";
+                    //		 referralDoc = space(6);
+                    //	  }else{
+                    //		referral = "R";
+                    //		referralDoc = referralDoc + space(6-referralDoc.length());
+                    //	  }
+                    //  }
+                    //	  else{
+                    //		  referral = "";
+                    //		  	 referralDoc = space(6);
+                    //	  }
+                    //      if (visitDate == null) {
+                    //      	outPatientDateValue = space(8);
+                    //    } else {
+                    //    	outPatientDate = visitDate.toString();
+                    //     outPatientDateValue = outPatientDate.substring(0,4) + outPatientDate.substring(5,7) + outPatientDate.substring(outPatientDate.length()-2);
+                    //
+                    //    	}
+                    //    specCode = rs.getString("status");
+                    
+                    //    if (specCode.compareTo("O") == 0){
+                    //    	spec = "HCP";
+                    //    }
+                    //    else
+                    //    {
+                    //          spec = "WCB";
+                    //    }
+                    //    if (hin.length() < 12) {
+                    //    	hin = hin + space(12-hin.length());
+                    //    }
+                    //    else
+                    //    {
+                    //    	hin = hin.substring(0,12);
+                    //    }
+                    //    hin = hin.toUpperCase();
+                    //    count = invNo.length();
+                    //    count = 8 - count;
+                    //    hcHin =hin;
+                    //    if (hcFlag.compareTo("H")==0){ spec="RMB"; healthcardCount = healthcardCount + 1;hcHin =hin; hin = space(12); patientHeader2 = "\n" + HE + "R" + hcHin + hcLast + hcFirst + demoSex + hcType + space(47) + "\r"; }else{patientHeader2 = ""; }
+                    //    if (visitType == null){
+                    //    	 patientHeader = HE + "H" + hin + dob + zero(count) + invNo + spec + "P" + referralDoc + space(4) + space(8) + space(4) + m_review + inPatient + space(11) + space(6);
+                    //} else{
+                    //    if (visitType.compareTo("00") == 0){
+                    //    patientHeader = HE + "H" + hin + dob + zero(count) + invNo + spec + "P" + referralDoc + space(4) + space(8) + space(4) + m_review + inPatient + space(11) + space(6);
+                    //}
+                    //else{
+                    //	  patientHeader = HE + "H" + hin + dob + zero(count) + invNo + spec + "P" +referralDoc + outPatient + outPatientDateValue + space(4) + m_review + inPatient + space(11) + space(6);
+                    //}
+                    //}
+                    
+                    
+                    //    value = value + "\n" + patientHeader + "\r" + patientHeader2;
+                    
+                    
+                    
+                    invCount = 0;
+                    query2 = "select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'";
+                    ResultSet rs2 = dbExt.executeQuery2(query2);
+                    while (rs2.next()) {
+                        recordCount = recordCount + 1;
+                        
+                        count = 0;
+                        
+                        logNo = getSequence(sdriver, surl, user, password);
+                        value = value + "\n" +rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") + rs2.getString("phn")+ rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6)+"\r";
+                        logValue = rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") + rs2.getString("phn")+ rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6);
+                        setLog(logNo,logValue);
+                        dFee = Double.parseDouble(rs2.getString("bill_amount"));
+                        bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        BigTotal = BigTotal.add(bdFee);
+                        
+                        if (invCount == 0) {
+                            
+                            htmlContent = htmlContent + "<tr><td class='bodytext'>" + invNo+ "</td><td class='bodytext'>" + demoName + "</td><td class='bodytext'>" +rs2.getString("phn")+ "</td><td class='bodytext'>" +rs2.getString("service_date")+ "</td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
+                        }
+                        else {
+                            htmlContent = htmlContent + "<tr><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
+                        }
+                        
+                        invCount = invCount + 1;
+                        
+                    }
+                    
+                    
+                    if (eFlag.compareTo("1") == 0) {
+                        //setAsBilled(invNo, sdriver, surl, user, password);
+                    }
+                    
+                    
+                    
+                    
+                }
+                //      hcCount = hcCount + healthcardCount;
+                pCount = pCount + patientCount;
+                rCount = rCount + recordCount;
+                //      flagOrder = 4 - pCount.length();
+                //      secondFlag = 5 - rCount.length();
+                //      thirdFlag= 4 - hcCount.length();
+                //      percent = new BigDecimal(0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
+                //      BigTotal = BigTotal.multiply(percent);
+                //      value = value + "\n" + HE + "E" + zero(flagOrder) + pCount + zero(thirdFlag) +hcCount + zero(secondFlag) + rCount + space(63) + "\r";
+                // htmlContent = htmlContent + "<tr><td colspan='8' class='bodytext'>&nbsp;</td></tr><tr><td colspan='4' class='bodytext'>OHIP No: "+ providerNo+": "+ pCount+" RECORDS PROCESSED</td><td colspan='4' class='bodytext'>TOTAL: " + BigTotal.toString().substring(0,BigTotal.toString().length() -2)  +"</td></tr>";
+                // totalAmount = BigTotal.toString();
+                //  writeFile(value);
+                //      htmlValue = htmlValue + htmlContent + "</table>";
+                //      htmlHeader = "<html><body><style type='text/css'><!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
+                
+                htmlFooter =  "<tr>    <td colspan='11' class='bodytext'>&nbsp;</td>  </tr>  <tr>    <td colspan='5' class='bodytext'>OHIP No: "+ providerNo + ": "+ pCount +" RECORDS PROCESSED</td>    <td colspan='6' class='bodytext'>TOTAL: " +BigTotal +"</td>  </tr></table></body></html>";
+                htmlCode = htmlContentHeader + htmlContent + htmlFooter;
+                
+                writeHtml(htmlCode);
+                
+                ohipReciprocal = String.valueOf(hcCount);
+                ohipRecord = String.valueOf(rCount);
+                ohipClaim = String.valueOf(pCount);
+            }
+            
+            System.out.println(value);
+            
         }
-
+        catch (SQLException e) {
+        }
+        
     }
-
-
+    
+    
     public void setAsBilled(String newInvNo, String newsdriver, String newsurl, String newuser, String newpassword){
-
-		try{
-		  dbExtract dbExt1 = new dbExtract();
-		  dbExt1.openConnection(newsdriver, newsurl, newuser, newpassword);
-		  String query30 = "update billing set status='B' where billing_no='" + newInvNo + "'";
-		  dbExt1.setUpdateString(query30);
-	      dbExt1.executeUpdate();
-
-			}
-			catch (SQLException e) {
-			        }
-
+        
+        try{
+            dbExtract dbExt1 = new dbExtract();
+            dbExt1.openConnection(newsdriver, newsurl, newuser, newpassword);
+            String query30 = "update billing set status='B' where billing_no='" + newInvNo + "'";
+            dbExt1.setUpdateString(query30);
+            dbExt1.executeUpdate();
+            
+        }
+        catch (SQLException e) {
+        }
+        
     }
-
+    
     public void setLog(String x, String logValue){
-	String n="0";
-   String nsql ="";
-
-	   nsql = "update log_teleplantx ";
-		   nsql = nsql + " set claim='" +logValue + "' where log_no='" + x +"'";
-		  						 try
-		  						           {
-
-	                		               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-		  						                db.RunSQL(nsql);
-		  						           db.CloseConn();
-			}
-			catch (SQLException e) {
-			        }
+        String n="0";
+        String nsql ="";
+        
+        nsql = "update log_teleplantx ";
+        nsql = nsql + " set claim='" +logValue + "' where log_no='" + x +"'";
+        try {
+            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db.RunSQL(nsql);
+            db.CloseConn();
+        }
+        catch (SQLException e) {
+        }
     }
-
-
+    
+    
     public String getSequence(String newsdriver, String newsurl, String newuser, String newpassword){
-	String n="0";
-   String nsql ="";
-
-	   nsql = "insert into log_teleplantx (log_no, claim)";
-		   nsql = nsql + " values('\\N','" + "New Log" + "')";
-		  						 try
-		  						           {
-
-	                		               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-		  						                db.RunSQL(nsql);
-		  						              ResultSet  rs = db.GetSQL("SELECT LAST_INSERT_ID()");
-		  						          //      System.out.println(rs.getString(1));
-		  						              if (rs.next()){
-		  									    n = rs.getString(1);
-		  										}
-		  				                        rs.close();
-						               db.CloseConn();
-			}
-			catch (SQLException e) {
-			        }
-return n;
+        String n="0";
+        String nsql ="";
+        
+        nsql = "insert into log_teleplantx (log_no, claim)";
+        nsql = nsql + " values('\\N','" + "New Log" + "')";
+        try {
+            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db.RunSQL(nsql);
+            ResultSet  rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+            //      System.out.println(rs.getString(1));
+            if (rs.next()){
+                n = rs.getString(1);
+            }
+            rs.close();
+            db.CloseConn();
+        }
+        catch (SQLException e) {
+        }
+        return n;
     }
-public void writeFile(String value1){
-
-
-
-   try{
-   int fileCount = 0;
-    String home_dir;
- String userHomePath = System.getProperty("user.home", "user.dir");
-      System.out.println(userHomePath);
-      File pFile = new File(userHomePath, oscar_home);
-      FileInputStream pStream = new FileInputStream(pFile.getPath());
-
-      Properties ap = new Properties();
-      ap.load(pStream);
-
-
-      home_dir = ap.getProperty("HOME_DIR");
-      pStream.close();
-
-
-	   FileOutputStream out;
-   out = new FileOutputStream(home_dir+ ohipFilename);
-   PrintStream p;
-   p = new PrintStream(out);
-
-
-   p.println(value1);
-
-//System.out.println(sqlE.record);
-   p.close();
-   }
-   catch(Exception e)
-   {
-   System.err.println("Error");
-}
-
-}
-public void writeHtml(String htmlvalue1){
-
-
-
-   try{
-   int fileCount = 0;
-    String home_dir1;
- String userHomePath1 = System.getProperty("user.home", "user.dir");
-     // System.out.println(userHomePath);
-      File pFile1 = new File(userHomePath1, oscar_home);
-      FileInputStream pStream1 = new FileInputStream(pFile1.getPath());
-
-      Properties ap1 = new Properties();
-      ap1.load(pStream1);
-
-
-      home_dir1 = ap1.getProperty("HOME_DIR");
-      pStream1.close();
-
-
-	   FileOutputStream out1;
-   out1 = new FileOutputStream(home_dir1+htmlFilename);
-   PrintStream p1;
-   p1 = new PrintStream(out1);
-
-
-   p1.println(htmlvalue1);
-
-//System.out.println(sqlE.record);
-   p1.close();
-   }
-   catch(Exception e)
-   {
-   System.err.println("Error");
-}
-
-}
-
- public String space(int i) {
-  String returnValue = new String();
-	for(int j=0; j < i; j++) {
-	returnValue += " ";
-	}
-  return returnValue;
-}
-
- public String backwardSpace(String y,int i) {
-  String returnValue = new String();
-	for(int j=y.length(); j < i; j++) {
-	returnValue += " ";
-	}
-  return y+returnValue;
-}
-
-
- public String zero(int x) {
-  String returnZeroValue = new String();
-	for(int y=0; y < x; y++) {
-	returnZeroValue += "0";
-	}
-  return returnZeroValue;
-}
-public String forwardZero(String y, int x) {
-  String returnZeroValue = new String();
-	for(int i=y.length(); i < x; i++) {
-	returnZeroValue += "0";
-	}
-  return returnZeroValue+y;
-}
-
-public String moneyFormat(String y, int x) {
-  String returnZeroValue = new String();
-	for(int i=y.substring(0, y.indexOf(".")).length(); i < x-2; i++) {
-	returnZeroValue += "0";
-	}
-	returnZeroValue = returnZeroValue + y.substring(0, y.indexOf(".")) + y.substring(y.indexOf(".")+1);
-
-  return returnZeroValue;
-}
-
-   public String getOhipReciprocal() {
-    return ohipReciprocal;
-  }
-
-
-   public String getOhipRecord() {
-    return ohipRecord;
-  }
-     public String getOhipClaim() {
-      return ohipClaim;
-  }
-
-public String getTotalAmount() {
-	return totalAmount;
-}
-   public String getHtmlValue() {
-    return htmlValue;
-  }
-     public String getHtmlCode() {
-      return htmlCode;
-  }
+    public void writeFile(String value1){
+        
+        
+        
+        try{
+            int fileCount = 0;
+            String home_dir;
+            String userHomePath = System.getProperty("user.home", "user.dir");
+            System.out.println(userHomePath);
+            File pFile = new File(userHomePath, oscar_home);
+            FileInputStream pStream = new FileInputStream(pFile.getPath());
+            
+            Properties ap = new Properties();
+            ap.load(pStream);
+            
+            
+            home_dir = ap.getProperty("HOME_DIR");
+            pStream.close();
+            
+            
+            FileOutputStream out;
+            out = new FileOutputStream(home_dir+ ohipFilename);
+            PrintStream p;
+            p = new PrintStream(out);
+            
+            
+            p.println(value1);
+            
+            //System.out.println(sqlE.record);
+            p.close();
+        }
+        catch(Exception e) {
+            System.err.println("Error");
+        }
+        
+    }
+    public void writeHtml(String htmlvalue1){
+        
+        
+        
+        try{
+            int fileCount = 0;
+            String home_dir1;
+            String userHomePath1 = System.getProperty("user.home", "user.dir");
+            // System.out.println(userHomePath);
+            File pFile1 = new File(userHomePath1, oscar_home);
+            FileInputStream pStream1 = new FileInputStream(pFile1.getPath());
+            
+            Properties ap1 = new Properties();
+            ap1.load(pStream1);
+            
+            
+            home_dir1 = ap1.getProperty("HOME_DIR");
+            pStream1.close();
+            
+            
+            FileOutputStream out1;
+            out1 = new FileOutputStream(home_dir1+htmlFilename);
+            PrintStream p1;
+            p1 = new PrintStream(out1);
+            
+            
+            p1.println(htmlvalue1);
+            
+            //System.out.println(sqlE.record);
+            p1.close();
+        }
+        catch(Exception e) {
+            System.err.println("Error");
+        }
+        
+    }
+    
+    public String space(int i) {
+        String returnValue = new String();
+        for(int j=0; j < i; j++) {
+            returnValue += " ";
+        }
+        return returnValue;
+    }
+    
+    public String backwardSpace(String y,int i) {
+        String returnValue = new String();
+        for(int j=y.length(); j < i; j++) {
+            returnValue += " ";
+        }
+        return y+returnValue;
+    }
+    
+    
+    public String zero(int x) {
+        String returnZeroValue = new String();
+        for(int y=0; y < x; y++) {
+            returnZeroValue += "0";
+        }
+        return returnZeroValue;
+    }
+    public String forwardZero(String y, int x) {
+        String returnZeroValue = new String();
+        for(int i=y.length(); i < x; i++) {
+            returnZeroValue += "0";
+        }
+        return returnZeroValue+y;
+    }
+    
+    public String moneyFormat(String y, int x) {
+        String returnZeroValue = new String();
+        for(int i=y.substring(0, y.indexOf(".")).length(); i < x-2; i++) {
+            returnZeroValue += "0";
+        }
+        returnZeroValue = returnZeroValue + y.substring(0, y.indexOf(".")) + y.substring(y.indexOf(".")+1);
+        
+        return returnZeroValue;
+    }
+    
+    public String getOhipReciprocal() {
+        return ohipReciprocal;
+    }
+    
+    
+    public String getOhipRecord() {
+        return ohipRecord;
+    }
+    public String getOhipClaim() {
+        return ohipClaim;
+    }
+    
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+    public String getHtmlValue() {
+        return htmlValue;
+    }
+    public String getHtmlCode() {
+        return htmlCode;
+    }
     public String getValue() {
-    return value;
-  }
-
-  public String getOhipVer() {
-    return ohipVer;
-  }
-
-  public synchronized void setOhipVer(String newOhipVer) {
-    ohipVer = newOhipVer;
-  }
-
-   public synchronized void setGroupNo(String newGroupNo) {
-    groupNo = newGroupNo;
-  }
-   public synchronized void setSpecialty(String newSpecialty) {
-    specialty = newSpecialty;
-  }
-  public String getOhipCenter() {
-    return ohipCenter;
-  }
-  public synchronized void setBatchCount(String newBatchCount) {
-    batchCount = newBatchCount;
-  }
-  public synchronized void setOhipCenter(String newOhipCenter) {
-    ohipCenter = newOhipCenter;
-  }
-
-  public synchronized void setProviderNo(String newProviderNo) {
-    providerNo = newProviderNo;
-  }
-
-  public synchronized void setOhipFilename(String newOhipFilename) {
-    ohipFilename = newOhipFilename;
-  }
-
-  public synchronized void setHtmlFilename(String newHtmlFilename) {
-    htmlFilename = newHtmlFilename;
-  }
-  public String getInvNo(){
-  	return invNo;
-  	}
-
-
-  	public synchronized void setOscarHome(String oscarHOME){
-		oscar_home = oscarHOME;
-	}
-
-  	public synchronized void seteFlag(String neweFlag){
-		eFlag = neweFlag;
-	}
-
-	  	public synchronized void setVSFlag(int newVSFlag){
-			vsFlag = newVSFlag;
-	}
-	public synchronized void setDateRange(String newDateRange){
-		dateRange = newDateRange;
+        return value;
+    }
+    
+    public String getOhipVer() {
+        return ohipVer;
+    }
+    
+    public synchronized void setOhipVer(String newOhipVer) {
+        ohipVer = newOhipVer;
+    }
+    
+    public synchronized void setGroupNo(String newGroupNo) {
+        groupNo = newGroupNo;
+    }
+    public synchronized void setSpecialty(String newSpecialty) {
+        specialty = newSpecialty;
+    }
+    public String getOhipCenter() {
+        return ohipCenter;
+    }
+    public synchronized void setBatchCount(String newBatchCount) {
+        batchCount = newBatchCount;
+    }
+    public synchronized void setOhipCenter(String newOhipCenter) {
+        ohipCenter = newOhipCenter;
+    }
+    
+    public synchronized void setProviderNo(String newProviderNo) {
+        providerNo = newProviderNo;
+    }
+    
+    public synchronized void setOhipFilename(String newOhipFilename) {
+        ohipFilename = newOhipFilename;
+    }
+    
+    public synchronized void setHtmlFilename(String newHtmlFilename) {
+        htmlFilename = newHtmlFilename;
+    }
+    public String getInvNo(){
+        return invNo;
+    }
+    
+    
+    public synchronized void setOscarHome(String oscarHOME){
+        oscar_home = oscarHOME;
+    }
+    
+    public synchronized void seteFlag(String neweFlag){
+        eFlag = neweFlag;
+    }
+    
+    public synchronized void setVSFlag(int newVSFlag){
+        vsFlag = newVSFlag;
+    }
+    public synchronized void setDateRange(String newDateRange){
+        dateRange = newDateRange;
+    }
 }
- }
