@@ -604,7 +604,11 @@ border-right: 2px solid #cfcfcf;
                             <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
                         <% } %>
                         <a href=# onClick="popupOscarCon(100,355,'oscarConsultationRequest/ConsultChoice.jsp');return false;"><bean:message key="global.consultations"/></a><br>
-                        <a href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
+                        <% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(demoNo)) { %>
+                            <a style="color:red" href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
+                        <% } else {%>
+                            <a href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
+                        <% } %>
                         <!--<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')">oscarComm</a><br> -->
                         <a href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')"><bean:message key="global.oscarComm"/></a><br>
                         <a href=# onClick="popupOscarCon(580,900,'../oscarResearch/oscarDxResearch/dxResearch.jsp?demographicNo=<%=bean.demographicNo%>');return false;">Disease Registry</a><br>
