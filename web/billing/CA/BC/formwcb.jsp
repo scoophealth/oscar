@@ -26,18 +26,28 @@
  * EMR System
  */
 -->
-<%@ page import="oscar.form.*, java.util.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.oscarDB.*" %>
+<%@ page import="oscar.form.*, java.util.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.oscarDB.*,oscar.oscarBilling.ca.bc.MSP.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <% 
-    boolean readonly = false;
-    String readOnlyParam = request.getParameter("readonly");
-    if(readOnlyParam != null && readOnlyParam.equals("true")){
-       readonly = true;   
-    }
+   boolean readonly = false;
+   String readOnlyParam = request.getParameter("readonly");
+   if(readOnlyParam != null && readOnlyParam.equals("true")){
+      readonly = true;   
+   }
+
+   oscar.oscarBilling.ca.bc.pageUtil.WCBForm form = (oscar.oscarBilling.ca.bc.pageUtil.WCBForm) request.getSession().getAttribute("WCBForm"); 
+   WcbHelper wcbHelper = new WcbHelper(form.getDemographic());
+   ArrayList claims = (ArrayList) wcbHelper.getClaimInfo(form.getDemographic());
+   ArrayList emps = (ArrayList) wcbHelper.getEmployers(form.getDemographic());
+   
+   boolean haveClaims = isEmpty(claims);
+   boolean haveEmps   = isEmpty(emps);
+      
 %>
+
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
@@ -50,7 +60,7 @@
 <script src="../../../share/calendar/calendar.js"></script>
 <script src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" type="text/javascript"></script>
 <script src="../../../share/calendar/calendar-setup.js" type="text/javascript"></script>
-<% oscar.oscarBilling.ca.bc.pageUtil.WCBForm form = (oscar.oscarBilling.ca.bc.pageUtil.WCBForm) request.getSession().getAttribute("WCBForm"); %>
+
 <script language="JavaScript">
 function popup( height, width, url, windowName){   
   var page = url;  
@@ -132,12 +142,12 @@ function isformNeeded(){
      document.getElementById(ele).style.display='';
   }
 
-  function showpic(picture){
+  function showpic(picture,id){
      if (document.getElementById){ // Netscape 6 and IE 5+      
         var targetElement = document.getElementById(picture);                
-        var bal = document.getElementById("Calcs");
+        var bal = document.getElementById(id);
 
-        var offsetTrail = document.getElementById("Calcs");
+        var offsetTrail = document.getElementById(id);
         var offsetLeft = 0;
         var offsetTop = 0;
         while (offsetTrail) {
@@ -212,6 +222,19 @@ function isformNeeded(){
         textField.value = textField.value.substring(0, maximumlength);
      }
   }
+  
+  function setClaim(w_wcbno,w_empname,w_opaddress,w_opcity,w_emparea,w_empphone){    
+     document.WCBForm.w_wcbno.value = w_wcbno;
+     setEmployer(w_empname,w_opaddress,w_opcity,w_emparea,w_empphone);
+  }
+  
+  function setEmployer(w_empname,w_opaddress,w_opcity,w_emparea,w_empphone){    
+    document.WCBForm.w_empname.value = w_empname;
+    document.WCBForm.w_opaddress.value = w_opaddress;
+    document.WCBForm.w_opcity.value = w_opcity;
+    document.WCBForm.w_emparea.value = w_emparea;
+    document.WCBForm.w_empphone.value = w_empphone;
+  }
 </script>
 </head>
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
@@ -242,7 +265,13 @@ function isformNeeded(){
 	
 	<tr class="LightBG">
 		<td colspan="2">
-			<b>WCB Claim Number:</B> <input name="w_wcbno" type="text" maxlength="25" id="w_wcbno" value="<%=form.getW_wcbno()%>" />
+		   <%if(!haveClaims){%>
+			<a href="javascript: function myFunction() {return false; }"  onClick="showpic('claimLayer','claimId');"  id="claimId" >
+			<%}%>
+         <b>WCB Claim Number:</B> <input name="w_wcbno" type="text" maxlength="25" id="w_wcbno" value="<%=form.getW_wcbno()%>" />
+         <%if(!haveClaims){%>
+         </a>
+         <%}%>
 		</td>
 	</tr>
 	
@@ -256,7 +285,15 @@ function isformNeeded(){
 		   
 			<table border="0" cellspacing="0" cellpading="0" width="100%">
 				<tr id="firstSection1">
-					<td class="SmallerText">Employer's Name:</td>
+					<td class="SmallerText">
+					   <%if(!haveClaims){%>
+					   <a href="javascript: function myFunction() {return false; }"  onClick="showpic('employerLayer','employerId');"  id="employerId" >
+					   <%}%>
+                     Employer's Name:
+                  <%if(!haveClaims){%>
+					   </a>
+					   <%}%>
+					</td>
                <td><input name="w_empname" type="text" maxlength="25" id="w_empname" value="<%=form.getW_empname()%>"/></td>
 				<!--</tr>
 				<tr id="firstSection2">-->
@@ -388,9 +425,9 @@ function isformNeeded(){
           <td><input name="w_diagnosis" type="text" maxlength="120" size="120" id="w_diagnosis" value="<%=form.getW_diagnosis()%>">
 		</td>
 	</tr>
-	<tr>
+	<tr>     
 		<td>
-		   <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');"  id="Calcs" >WCB Fee Item: </a>
+		   <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1','Calcs');"  id="Calcs" >WCB Fee Item: </a>
                                                          
 		</td>
 		<td>
@@ -671,6 +708,76 @@ td.wcblayerItem{
                                 
 </div>
 
+
+
+<div id="claimLayer" style="position:absolute; left:1px; top:1px; width:350px; height:311px; visibility: hidden; z-index:1"   >
+<!--  This should be changed to automagically fill if this changes often -->                             
+<table width="98%" border="0" cellspacing="1" cellpadding="1" align=center>
+    <tr class="LightBG"> 
+      <td class="wcblayerTitle">Claim #</td>      
+      <td class="wcblayerTitle" align="right">
+             <a href="javascript: function myFunction() {return false; }" onclick="hidepic('claimLayer');" style="text-decoration: none;">X</a>           
+      </td>
+    </tr>
+   
+    <% for (int i = 0 ; i < claims.size(); i++){ 
+      WcbHelper.WCBClaim claim = (WcbHelper.WCBClaim) claims.get(i);  
+      WcbHelper.WCBEmployer emp = claim.wcbEmp;
+    %>
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+               <a href="#" onClick="setClaim('<%=claim.getClaimNumber()%>','<%=emp.w_empname%>','<%=emp.w_opaddress%>','<%=emp.w_opcity%>','<%=emp.w_emparea%>','<%=emp.w_empphone%>');hidepic('claimLayer');return false;">
+                   <%=claim.getClaimNumber()%>
+               </a>
+          </td>
+          <td class="wcblayerItem">&nbsp;</td>
+	       
+    </tr>                                        	
+    <%} %>                                                                                        
+  </table>
+                                
+</div>
+
+
+<div id="employerLayer" style="position:absolute; left:1px; top:1px; width:350px; height:311px; visibility: hidden; z-index:1"   >
+<!--  This should be changed to automagically fill if this changes often -->                             
+<table width="98%" border="0" cellspacing="1" cellpadding="1" align=center>
+    <tr class="LightBG"> 
+    
+    
+
+      <td class="wcblayerTitle">Employer's Name</td>      
+      <td class="wcblayerTitle">Operating Address</td>      
+      <td class="wcblayerTitle">Operating City</td>      
+      <td class="wcblayerTitle">Employers Telephone No</td>      
+      <td class="wcblayerTitle" align="right">
+             <a href="javascript: function myFunction() {return false; }" onclick="hidepic('employerLayer');" style="text-decoration: none;">X</a>           
+      </td>
+    </tr>
+   
+    <% for (int i = 0 ; i < emps.size(); i++){ 
+      WcbHelper.WCBEmployer emp = (WcbHelper.WCBEmployer) emps.get(i);  
+    %>
+    <tr class="LightBG"> 
+          <td class="wcblayerTitle">
+               <a href="#" onClick="setEmployer('<%=emp.w_empname%>','<%=emp.w_opaddress%>','<%=emp.w_opcity%>','<%=emp.w_emparea%>','<%=emp.w_empphone%>');hidepic('employerLayer');return false;">
+                   <%=emp.w_empname%>
+               </a>
+          </td>          
+          <td class="wcblayerTitle"><%=emp.w_opaddress%></td>      
+          <td class="wcblayerTitle"><%=emp.w_opcity%></td>      
+          <td class="wcblayerTitle"><%=emp.w_emparea%>-<%=emp.w_empphone%></td>      
+	       <td colspan="2" class="wcblayerItem" >
+                   &nbsp;
+	       </td>
+    </tr>                                        	
+    <%}%>                                                                                        
+  </table>
+                                
+</div>
+
+
+
 </body>
 </html:html>
 
@@ -688,5 +795,11 @@ String checked(String val,String str,boolean dfault){
         retval = "CHECKED";
     }
     return retval;
+}
+
+boolean isEmpty(ArrayList a){
+   boolean isEmpty = false;
+   if ( a.size() == 0 ) isEmpty = true;
+   return isEmpty;
 }
 %>
