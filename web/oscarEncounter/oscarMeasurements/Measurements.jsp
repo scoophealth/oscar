@@ -41,16 +41,6 @@
 
 <html:html locale="true">
 
-<%
-    java.util.Calendar calender = java.util.Calendar.getInstance();
-    String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
-    String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
-    String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
-    String formattedDate = year+"-"+month+"-"+day;
-    String input = null;
-
-%>
-
 <head>
 <title>
 <bean:message key="global.measurements.general"/>
@@ -107,7 +97,7 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
             <td class="MainTableLeftColumn">             
             </td>            
             <td class="MainTableRightColumn">
-               <table border=0 cellspacing=1 >
+               <table border=0 cellspacing=0 >
                 <tr>
                     <td>
                         <table>
@@ -157,14 +147,15 @@ function popupPage(vheight,vwidth,type,selection) { //open a new popup window
                                                 </tr>
                                                 <logic:present name='measurementType' property='lastMInstrc'>
                                                 <tr class="note">
-                                                    <td  align="left"colspan="6">    
-                                                        <bean:message key="oscarEncoutner.oscarMeasurements.msgTheLast"/> <bean:write name="measurementType" property="type"/> <bean:write name='measurementType' property='lastMInstrc'/> <bean:message key="oscarEncoutner.oscarMeasurements.msgValueWasEnteredBy"/> <bean:write name='measurementType' property='lastProviderFirstName'/> <bean:write name='measurementType' property='lastProviderLastName'/> <bean:message key="oscarEncoutner.oscarMeasurements.msgOn"/> <bean:write name='measurementType' property='lastDateEntered'/>: <bean:write name='measurementType' property='lastData'/>                                                       
-                                                    </td>                            
+                                                    <td colspan="2"><bean:message key="oscarEncoutner.oscarMeasurements.msgTheLast"/> <bean:message key="oscarEncoutner.oscarMeasurements.msgValueWasEnteredBy"/> <bean:write name='measurementType' property='lastProviderFirstName'/> <bean:write name='measurementType' property='lastProviderLastName'/></td>                                                    
+                                                    <td><bean:write name='measurementType' property='lastMInstrc'/></td>
+                                                    <td><bean:write name='measurementType' property='lastData'/></td>
+                                                    <td><bean:write name='measurementType' property='lastComments'/></td>
+                                                    <td><bean:write name='measurementType' property='lastDateEntered'/></td>                                                    
                                                 </tr>
                                                 </logic:present>
                                                 </logic:iterate>                        
-                                                <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>
-                                                <html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>
+                                                <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>                                                
                                                 <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
                                                 <input type="hidden" name="value(css)" value="<bean:write name="css"/>"/>
                                             </td>
