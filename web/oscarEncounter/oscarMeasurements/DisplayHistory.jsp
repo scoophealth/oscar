@@ -34,7 +34,7 @@
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
-<%@ page import="java.util.Vector;"%>
+<%@ page import="java.util.Vector"%>
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
