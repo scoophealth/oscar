@@ -217,7 +217,9 @@ table.hiddenLayer {
 
             <tr>
                 <td>
-                    <div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title"/></div>
+                    <div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title"/> 
+                                                   
+                   (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>)</div>
                 </td>
             </tr>
             <tr>
