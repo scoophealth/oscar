@@ -190,6 +190,8 @@ public   class SurveillanceMaster {
       digester.addSetProperties("surveillance-config/survey");
       digester.addBeanPropertySetter("surveillance-config/survey/surveyQuestion","surveyQuestion");
       digester.addBeanPropertySetter("surveillance-config/survey/patientCriteria","patientCriteria");
+      digester.addBeanPropertySetter("surveillance-config/survey/exportQuery","exportQuery");
+      digester.addBeanPropertySetter("surveillance-config/survey/exportString","exportString");        
       digester.addCallMethod("surveillance-config/survey/provider","addProvider",0);
       digester.addCallMethod("surveillance-config/survey/answer","addAnswer",3);
       digester.addCallParam("surveillance-config/survey/answer",0);
