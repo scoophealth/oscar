@@ -26,7 +26,7 @@
  * EMR System
  */
 -->
-<%@page import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*"%>
+<%@page import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*,java.sql.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
@@ -218,9 +218,30 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 					<td><html:text property="w_wcbno" value="<%=form.getW_wcbno()%>" /></td>
 				</tr>
 				<tr>
-					<td width="200" class="FormLabel">Practitioner:</td>
-					<td width="300"><html:text property="practitioner" value="<%=form.getPractitioner()%>" />
-						<a onClick="popup('400', '600', 'support/providers.jsp?form=TeleplanCorrectionFormWCB&field=practitioner', 'Code');">Practitioners</a></td>
+                <td class="FormLabel">Billing Physician</td> 
+                <td >                                    
+                    <html:select style="font-size:80%;" property="providerNo" value="<%=form.getProviderNo()%>">            
+                        <%                
+                           String proFirst="", proLast="", proOHIP="", proNo="";                              
+                           ResultSet rspro  = apptMainBean.queryResults("%", "search_provider_dt");
+                           while(rspro.next()){
+                                proFirst = rspro.getString("first_name");
+                                proLast = rspro.getString("last_name");
+                                proOHIP = rspro.getString("provider_no");
+
+                        %>
+                        <html:option value="<%=proOHIP%>" > <%=proOHIP%> | <%=proLast%>, <%=proFirst%></html:option>
+                        <% }%>
+                    </html:select>                
+                </td>                                                                
+				</tr>
+				<tr>
+					<td class="FormLabel">Practioner Num: </td>
+					<td><%=form.getW_pracno()%></td>
+				</tr>
+            <tr>               
+					<td class="FormLabel">Payee Num:</td>
+               <td><%=form.getW_payeeno()%></td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Regular Physician:</td>
@@ -253,7 +274,7 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 				</tr>-->
 				<tr>
 					<td class="FormLabel">Bill Amount:</td>
-					<td><html:text property="billingAmount" readonly="true" value="<%=form.getBillingAmount()%>" /></td>					
+					<td><html:text property="billingAmount" value="<%=form.getBillingAmount()%>" /></td>					
 				</tr>
 				
   
@@ -322,7 +343,7 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 		<table width="100%">
 				<tr>
 					<td class="FormLabel">Disabled from Work:</td>
-					<td><html:text readonly="true" property="w_work" value="<%=form.getW_work()%>" /></td>
+					<td><html:text  property="w_work" value="<%=form.getW_work()%>" />drop box</td>
 				</tr>
 				<tr>
 					<td class="FormLabel">Date Of Injury:</td>
