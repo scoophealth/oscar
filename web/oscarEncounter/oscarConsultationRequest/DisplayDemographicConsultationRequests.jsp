@@ -37,6 +37,9 @@ String proNo = (String) session.getAttribute("user");
 oscar.oscarDemographic.data.DemographicData demoData=null;
 oscar.oscarDemographic.data.DemographicData.Demographic demographic=null;
 
+oscar.oscarProvider.data.ProviderData pdata = new oscar.oscarProvider.data.ProviderData(proNo);
+String team = pdata.getTeam();
+
 if (demo != null ){ 
     demoData = new oscar.oscarDemographic.data.DemographicData();
     demographic = demoData.getDemographic(demo);    
@@ -154,7 +157,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                 <table>
                     <tr>
                         <td NOWRAP>
-                        <a href="javascript:popupOscarRx(700,960,'ConsultationFormRequest.jsp?de=<%=demo%>')">
+                        <a href="javascript:popupOscarRx(700,960,'ConsultationFormRequest.jsp?de=<%=demo%>&teamVar=<%=team%>')">
                         <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.btnNewCon"/></a>
                         </td>
                     </tr>
