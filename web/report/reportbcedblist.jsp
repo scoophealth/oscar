@@ -95,7 +95,7 @@ function setfocus() {
     providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
   }
   
-  String temp = "";
+  Properties demoProp = new Properties();
     
   String[] param =new String[2];
   param[0]=startDate; //"0001-01-01"; 
@@ -112,8 +112,8 @@ function setfocus() {
   int nItems=0;
   rs = reportMainBean.queryResults(param,itemp1, "select_bcformar");
   while (rs.next()) {
-    if (temp.equals(rs.getString("demographic_no")) ) continue;
-    else temp = rs.getString("demographic_no");
+    if (demoProp.containsKey(rs.getString("demographic_no")) ) continue;
+    else demoProp.setProperty(rs.getString("demographic_no"), "1");
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
 %>
