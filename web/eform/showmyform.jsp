@@ -141,6 +141,7 @@ function newWindow(file,window) {
 <table border="0" cellspacing="2" cellpadding="2" width="95%">
   <tr bgcolor=<%=deepColor%> >
     <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
     <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
     <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
     <th></th> 
@@ -154,6 +155,7 @@ function newWindow(file,window) {
 %>
     <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
         <td><a href="JavaScript:newWindow('showmyformdata.jsp?fdid=<%=rs.getInt("fdid")%>','_blank')"><%=rs.getString("form_name")%></a></td>
+        <td><%=rs.getString("subject")%></td>
         <td align='center'><%=rs.getString("form_date")%></td>
         <td align='center'><%=rs.getString("form_time")%></td>
         <td align='center'><a href="deleteformdata.jsp?fdid=<%=rs.getInt("fdid")%>&demographic_no=<%=demographic_no%>"><bean:message key="eform.uploadimages.btnDelete"/></a></td>

@@ -133,6 +133,7 @@ String [][] dbQueries=new String[][] {
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
       <tr bgcolor=<%=deepColor%> >
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+      <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
       <th><a href="myform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
@@ -148,6 +149,7 @@ String [][] dbQueries=new String[][] {
         <a href="makemyform.jsp?fid=<%=rs.getInt("fid")%>&form_name=<%=rs.getString("form_name")%>&demographic_no=<%=demographic_no%>&subject=<%=rs.getString("subject")%>">
 	    <%=rs.getString("form_name")%>
         </a></td>
+                <td width=30% ><%=rs.getString("subject")%></td>
 		<td width=25% ><%=rs.getString("file_name")%></td>
 		<td nowrap align='center'><%=rs.getString("form_date")%></td>
 		<td nowrap align='center'><%=rs.getString("form_time")%></td>

@@ -136,6 +136,7 @@ function newWindow(file,window) {
 <table border="0" cellspacing="2" cellpadding="2" width="98%">
   <tr bgcolor="<%=deepColor%>" >
   <th width=20%><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+  <th width=40%><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
   <th><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>
   <th><a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formTime"/></a></th> 
   <th><bean:message key="eform.showmyform.msgAction"/></th>
@@ -149,6 +150,7 @@ function newWindow(file,window) {
 %>
   <tr bgcolor="<%=bgcolor%>">
   <td><a href="JavaScript:newWindow('showmyformdata.jsp?fdid=<%=rs.getInt("fdid")%>','window2')"><%=rs.getString("form_name")%></a></td>
+  <td><%=rs.getString("subject")%></td>
   <td nowrap align='center'><%=rs.getString("form_date")%></td>
   <td nowrap align='center'><%=rs.getString("form_time")%></td>
   <td nowrap align='center'><a href="undeleteformdata.jsp?fdid=<%=rs.getInt("fdid")%>&demographic_no=<%=demographic_no%>"><bean:message key="eform.calldeletedformdata.btnUndelete"/></a></td>
