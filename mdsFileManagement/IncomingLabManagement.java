@@ -9,6 +9,7 @@ import java.util.logging.*;
 import java.lang.*;
 import java.util.*;
 import oscar.oscarMDSLab.*;
+import oscar.oscarMDSLab.dbUtil.*;
 
 /**
  *
@@ -21,7 +22,7 @@ public class IncomingLabManagement {
     static String busyFile        = "BUSY.TXT";
     static String workingFile     = "UPLD.TXT";
     //static String incomingHL7dir  = "./mds";
-    static String incomingHL7dir  = "./mds";
+    static String incomingHL7dir  = "c:/Data/mds";
     static String moddedTime      = "MODTIME.TXT";    
     //static String errorHL7dir     = "./mdsError";
     //static String dupsHL7dir      = "./mdsDups";
@@ -41,6 +42,7 @@ public class IncomingLabManagement {
         try {
             // Create an appending file handler
             boolean append = true;
+            //FileHandler handler = new FileHandler("c:/Data/LabManagement.log", append);
             FileHandler handler = new FileHandler("LabManagement.log", append);
             handler.setFormatter(new SimpleFormatter());
             logger.setLevel(Level.ALL);             
@@ -67,12 +69,23 @@ public class IncomingLabManagement {
        dupsHL7dir      = labProperties.getProperty("dupsHL7dir");
        completedHL7dir = labProperties.getProperty("completedHL7dir");
        auditLogFile    = labProperties.getProperty("auditLogFile");
+       
+       logger.info("busyFile "+busyFile+"\n"+
+                   "workingFile "+workingFile+"\n"+
+                   "incomingHL7dir "+incomingHL7dir+" prop "+labProperties.getProperty("incomingHL7dir") +"\n"+
+                   "moddedTime "+moddedTime+"\n"+
+                   "errorHL7dir "+errorHL7dir+"\n"+
+                   "dupsHL7dir "+dupsHL7dir+"\n"+
+                   "completedHL7dir "+completedHL7dir+"\n"+
+                   "auditLogFile "+auditLogFile);              
+       
     }
     public static void main(String[] args) {
         initLogger();
         logger.info("Start ");
         try{
            if ( args[0] == null ){ throw new Exception("Usage Exception"); }
+           logger.info("Loading Properties file "+args[0]);
            loadProperties(args[0]);
            
         }catch(Exception loadingEx){
@@ -80,6 +93,7 @@ public class IncomingLabManagement {
            System.out.println("Usage: IncomingLabManagement <properties file>");
            System.exit(2);
         }
+        DBHandler db = new DBHandler();
             
         
         IncomingMDSFiles inMDS = new IncomingMDSFiles();
@@ -92,7 +106,7 @@ public class IncomingLabManagement {
             try{
                 if (inMDS.filesToParse(incomingHL7dir,moddedTime)){
             
-                    ArrayList fileNamesList = inMDS.getFileNamesToParse(incomingHL7dir);
+                    ArrayList fileNamesList = inMDS.getFileNamesToParse(incomingHL7dir,auditLogFile);
                     
                     for (int i = 0 ; i < fileNamesList.size();i++){
                         String filename = (String) fileNamesList.get(i);
@@ -101,7 +115,7 @@ public class IncomingLabManagement {
                         
                                                                                     
                         if(bfp.parseFile(incomingHL7dir+"/"+filename)){
-                             bfp.processResult(auditLogFile,dupsHL7dir);                              
+                             bfp.processResult(incomingHL7dir+"/"+auditLogFile,dupsHL7dir);                              
                              inMDS.moveCompletedFile(incomingHL7dir+"/"+filename,completedHL7dir);                                                          
                         }else{                        
                             logger.severe("file :"+incomingHL7dir+"/"+filename+" corrupted being moved to the corrupted file directory");
