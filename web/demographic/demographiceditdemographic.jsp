@@ -46,7 +46,8 @@
         
         OscarProperties oscarProps = OscarProperties.getInstance();
         
-        ProvinceNames pNames = ProvinceNames.getInstance();
+        ProvinceNames pNames = ProvinceNames.getInstance();                       
+
 %>
 
 
@@ -318,7 +319,7 @@ function newStatus() {
                     </td>
                 </tr>
                 <tr><td>
-                    <a href="javascript: function myFunction() {return false; }" onclick="popupPage(100,355,'../oscarEncounter/oscarConsultationRequest/ConsultChoice.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')"><bean:message key="demographic.demographiceditdemographic.btnConsultation"/></a>
+                    <a href="javascript: function myFunction() {return false; }" onclick="popupPage(700,960,'../oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')"><bean:message key="demographic.demographiceditdemographic.btnConsultation"/></a>
                 </td></tr>
                 <% if (!vLocale.getCountry().equals("BR")) { %>    
                 <tr><td>
