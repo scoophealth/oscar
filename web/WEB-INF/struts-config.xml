@@ -369,7 +369,7 @@
                     
 <!-- OscarWaitingList start-->
     <form-bean      name="WLWaitingListForm"
-                    type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm"/>       
+                    type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm"/>                        
 <!-- OscarWaitingList stop-->
     </form-beans>   
     
@@ -750,15 +750,12 @@
         <action path="/form/SetupForm"
                 type="oscar.form.pageUtil.FrmSetupFormAction"
                 name="FrmFormForm"
-                scope="request">                
-                <forward name="continue" path="/form/formVT.jsp"/>
+                scope="request">                                
         </action> 
         <action path="/form/SubmitForm"
                 type="oscar.form.pageUtil.FrmFormAction"
                 name="FrmFormForm"                
-                scope="request">                
-                <forward name="success" path="/form/formVT2OSDSF.jsp"/>
-                <forward name="failure" path="/form/formVT.jsp" />
+                scope="request">                                
         </action>     
 
 	<!-- Edit oscarEncounter -->
@@ -1174,6 +1171,11 @@
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupDisplayHistoryAction"                
                 scope="request">                
        <forward name="continue" path="/oscarEncounter/oscarMeasurements/DisplayHistory.jsp"/>
+    </action>
+    <action     path="/oscarEncounter/oscarMeasurements/SetupHistoryIndex"
+                type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupHistoryIndexAction"                
+                scope="request">                
+       <forward name="continue" path="/oscarEncounter/oscarMeasurements/HistoryIndex.jsp"/>
     </action>          
     <action     path="/oscarEncounter/oscarMeasurements/DeleteData"
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataAction" 
@@ -1773,7 +1775,7 @@
                 scope="request"
                 input="/oscarWaitingList/WLDisplayPatientWaitingList.jsp">                
        <forward name="success" path="/oscarWaitingList/WLDisplayPatientWaitingList.jsp"/>
-    </action>       
+    </action>          
     <!-- oscarWaitingList end -->
     <!--PDF Label Printing -->
      <action path="/demographic/printDemoLabelAction" type="oscar.oscarDemographic.PrintDemoLabelAction" />    
