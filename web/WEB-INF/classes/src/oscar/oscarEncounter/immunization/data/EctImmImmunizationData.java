@@ -31,6 +31,7 @@ import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import oscar.oscarDB.DBHandler;
+import oscar.OscarProperties;
 
 public class EctImmImmunizationData
 {
@@ -69,9 +70,18 @@ public class EctImmImmunizationData
     {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         System.out.println(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
-        String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURDATE(), 0)")));
+        String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURRENT_DATE, 0)")));
         db.RunSQL(sql);
-        sql = String.valueOf(String.valueOf((new StringBuffer("UPDATE immunizations SET archived = 1 WHERE demographic_no = ")).append(demographicNo).append(" AND ID <> LAST_INSERT_ID()")));
+	//select the specific database function:
+	String db_type = OscarProperties.getInstance().getProperty("db_type", "mysql");
+	db_type.trim();
+	String proper_func = "";
+	if (db_type.equalsIgnoreCase("mysql")) proper_func = "LAST_INSERT_ID()";
+        else if (db_type.equalsIgnoreCase("postgresql")) proper_func = "SELECT CURRVAL('immunizations_numeric_seq')";
+	else throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
+	
+        sql = "UPDATE immunizations SET archived = 1 WHERE demographic_no = " + demographicNo + 
+              " AND ID <>" + proper_func;
         db.RunSQL(sql);
         db.CloseConn();
     }
