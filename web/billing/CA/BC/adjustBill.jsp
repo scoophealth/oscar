@@ -376,8 +376,8 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
         <table>
             <tr>
                 <td>
-              <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=serviceform&returnItem=xml_appointment_date","380","300","0")'>
-              Billing Date: 
+              <a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=ReProcessBilling&returnItem=serviceDate","380","300","0")'>
+              Billing Date:  
               </a>
                 </td>
                 <td>
@@ -386,7 +386,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             </tr>
             <tr>
                 <td>
-                <input type="text" style="font-size:80%;"  name="serviceDate" value="<%=BillDate%>"><!--<%=allFields.getProperty("service_date")%>"/>-->
+                <input type="text" style="font-size:80%;"  name="serviceDate" value="<%=allFields.getProperty("service_date")%>"><!--<%=allFields.getProperty("service_date")%>"/><%=BillDate%>-->
                 </td>
                 <td>
                 <input type="text" name="serviceToDay" value="<%=allFields.getProperty("service_to_day")%>" size="2" maxlength="2"/>
@@ -524,12 +524,12 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
       </td>
       <td width="12%" class="bCellData">
         <input type="hidden" name="billing_unit" value="<%=allFields.getProperty("billing_unit")%>">
-        <input type="text" style="font-size:80%;" name="billingunit" value="<%=allFields.getProperty("billing_unit")%>" size="3" maxlength="3">
+        <input type="text" style="font-size:80%;" name="billingUnit" value="<%=allFields.getProperty("billing_unit")%>" size="3" maxlength="3">
       </td>
       <td width="13%"  class="bCellData"> 
         <div align="right">
            <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bill_amount")%>">
-           <input type="text" style="font-size:80%;" size="5" maxlength="5" name="billingamount" value="<%=allFields.getProperty("bill_amount")%>">
+           <input type="text" style="font-size:80%;" size="5" maxlength="5" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>">
         </div>
       </td>
     </tr>
