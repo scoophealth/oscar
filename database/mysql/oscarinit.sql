@@ -762,6 +762,34 @@ CREATE TABLE form (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table form2MinWalk
+--
+CREATE TABLE form2MinWalk(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,    
+  distance varchar(255),
+  1tried tinyint(1),
+  1FullTandem3To9 tinyint(1),
+  1SideBySide10 tinyint(1),
+  1FullTandem10 tinyint(1),
+  1SemiTandem10 tinyint(1),
+  1Cmt varchar(255),
+  2time1 varchar(255),
+  2time2 varchar(255),
+  2Cmt varchar(255),
+  3Unable tinyint(1),
+  3From11To13s varchar(255),
+  3LessThan16s tinyint(1),
+  3LessThan11s tinyint(1),
+  3From13To16s tinyint(1),
+  3Cmt varchar(255),    
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table `formAR`
 --
 
@@ -3319,7 +3347,6 @@ CREATE TABLE formSF36(
 --
 -- Table structure for table formSelfAdministered
 --
-DROP TABLE IF EXISTS formSelfAdministered;
 CREATE TABLE formSelfAdministered(
   ID int(10) NOT NULL  auto_increment ,
   demographic_no int(10) NOT NULL,
@@ -3353,6 +3380,60 @@ CREATE TABLE formSelfAdministered(
   anyHeartAttackN tinyint(1),
   relativeTakeCareY tinyint(1),
   relativeTakeCareN tinyint(1),
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table formSelfManagement
+--
+CREATE TABLE formSelfManagement(
+  ID int(10) NOT NULL  auto_increment ,
+  demographic_no int(10) NOT NULL,
+  provider_no int(10),
+  formCreated date,
+  formEdited timestamp NOT NULL,    
+  ex1 int(1),
+  ex2 int(1),
+  ex3 int(1),
+  ex4 int(1),
+  ex5 int(1),
+  ex6Spec varchar(255),
+  ex6 int(1),
+  exTime1 int(3),
+  exTime2To6 int(3),
+  cog1 int(1),
+  cog2 int(1),
+  cog3 int(1),
+  cog4 int(1),
+  cog5 int(1),
+  cog6 int(1),
+  mentalStressTimes  int(3),
+  mentalStressToRelax int(3),
+  tangibleHelpHouseN tinyint(1),
+  tangibleHelpHouseY tinyint(1),
+  tangibleHelpYardN tinyint(1),
+  tangibleHelpYardY tinyint(1),
+  tangibleHelpHomeN tinyint(1),
+  tangibleHelpHomeY tinyint(1),
+  tangibleHelpMealN tinyint(1),
+  tangibleHelpMealY tinyint(1),
+  tangibleHelpHygieneN tinyint(1),
+  tangibleHelpHygieneY tinyint(1),
+  tangibleHelpErrandsN tinyint(1),
+  tangibleHelpErrandsY tinyint(1),
+  tangibleHelpTransportN tinyint(1),
+  tangibleHelpTransportY tinyint(1),
+  emotionalSupportN tinyint(1),
+  emotionalSupportY tinyint(1),
+  healthEducationN tinyint(1),
+  healthEducationY tinyint(1),
+  healthEducationHours int(4),
+  exercisePrgmN tinyint(1),
+  exercisePrgmY tinyint(1),
+  exercisePrgmHours int(4),
+  communicate1 int(1),
+  communicate2  int(1),
+  communicate3  int(1),
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
