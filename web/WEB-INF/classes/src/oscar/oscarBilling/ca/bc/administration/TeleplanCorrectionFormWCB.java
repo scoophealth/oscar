@@ -106,7 +106,7 @@ extends org.apache.struts.action.ActionForm {
             this.yearOfBirth = result.getString("year_of_birth");
             this.practitioner = result.getString("practitioner_no");
             this.billingCode = result.getString("billing_code");
-            this.billingAmount = result.getString("bill_amount");
+            this.billingAmount = result.getString("wcb.bill_amount");
             this.billingUnit = result.getString("billing_unit");
             this.date = result.getString("service_date");
             this.billingNo = result.getString("billing_no");
