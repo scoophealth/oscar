@@ -397,11 +397,11 @@
         
         if (document.forms[0].elements[48].checked==true){
             var hours = document.forms[0].elements[49].value;
-            if(hours>=1 && hours<=5)
+            if(hours>=1 && hours<=18)
                 document.forms[0].elements[50].value = 2;
-            else if (hours>=6 && hours<=10)
+            else if (hours>=19 && hours<=47)
                 document.forms[0].elements[50].value = 3;
-            else if (hours>=11)
+            else if (hours>=48)
                 document.forms[0].elements[50].value = 4;            
         }
     }
@@ -988,7 +988,7 @@
                 <tr>
                     <td colspan="4">
                         <font style="font-weight:bold">Outside of this study</font>, have you attended any classes, lectures, or
-                        support groups about your health problem in the <font style="font-weight:bold">past 6 month</font>?
+                        support groups about your health problem in the <font style="font-weight:bold">past 9 month</font>?
                     </td>
                 </tr>    
                 <tr>                    
