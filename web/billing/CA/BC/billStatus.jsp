@@ -61,6 +61,8 @@
      //String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
      String xml_vdate            = request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
      String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
+     String xml_demoNo           = request.getParameter("demographicNo")==null?"":request.getParameter("demographicNo"); 
+     
 %>
 
 <html>
@@ -137,6 +139,10 @@ function refresh() {
       history.go(0);
   
 }
+function setDemographic(demoNo){
+//alert(demoNo);
+    document.serviceform.demographicNo.value = demoNo;
+}
 //-->
 </script>
 
@@ -185,7 +191,8 @@ function refresh() {
                     <%  } %>
                 </select>                 
             <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
-                <input type="hidden" name="verCode" value="V03">
+                <input type="hidden" name="verCode" value="V03"/>
+                
                 <input type="submit" name="Submit" value="Create Report">
             </font>
         </div>
@@ -206,7 +213,8 @@ function refresh() {
           <a href="javascript: function myFunction() {return false; }" id="hlADate" >End:</a>
           </font> 
           <input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=xml_appointment_date%>">        
-        </div>                        
+          Demographic:<input type="text" name="demographicNo" size="5"value="<%=xml_demoNo%>"/>
+        </div>                                
       </td>
       <td class="bCellData"> 
         <div align="right"><input type='button' name='print' value='Print' onClick='window.print()'>                      
@@ -240,6 +248,7 @@ if (billTypes == null){
         <input type="radio" name="billTypes" value="<%=MSPReconcile.CAPITATED%>"    <%=billTypes.equals(MSPReconcile.CAPITATED)?"checked":""%>/> Capitated
         <input type="radio" name="billTypes" value="<%=MSPReconcile.DONOTBILL%>"    <%=billTypes.equals(MSPReconcile.DONOTBILL)?"checked":""%>/> Do Not Bill
         <input type="radio" name="billTypes" value="<%=MSPReconcile.BILLPATIENT%>"  <%=billTypes.equals(MSPReconcile.BILLPATIENT)?"checked":""%>/> Bill Patient
+        <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/> ALL
 
       </td>
     </tr>
@@ -267,9 +276,10 @@ if (billTypes == null){
 
     String dateBegin = request.getParameter("xml_vdate");
     String dateEnd = request.getParameter("xml_appointment_date");
+    String demoNo = request.getParameter("demographicNo");
     
     ArrayList list;
-    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd);
+    MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd,demoNo);
     list = bSearch.list;
     Properties p2 = bSearch.getCurrentErrorMessages();
     Properties p = msp.currentC12Records();    
@@ -294,7 +304,7 @@ if (billTypes == null){
    %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
     <td align="center" class="bCellData" ><%=b.apptDate%></td>    
-    <td align="center" class="bCellData" ><%=b.demoName%></td>
+    <td align="center" class="bCellData" ><a href="javascript: setDemographic('<%=b.demoNo%>');"><%=b.demoName%></a></td>
     <td align="center" class="bCellData" ><%=b.reason%></td>
     <td align="center" class="bCellData" ><%=b.code%></td>
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.amount%></td>
