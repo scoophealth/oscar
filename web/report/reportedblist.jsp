@@ -25,11 +25,11 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
   
   String strLimit1="0";
-  String strLimit2="50";  
+  String strLimit2="1500";  
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 

@@ -26,12 +26,12 @@
 
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
   
   String strLimit1="0";
-  String strLimit2="50";  
+  String strLimit2="1500";  
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 
@@ -39,7 +39,7 @@
   if(request.getParameter("startDate")!=null) startDate = request.getParameter("startDate");  
   if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDate");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*" errorPage="../errorpage.jsp" %>
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="providerNameBean" class="java.util.Properties" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
