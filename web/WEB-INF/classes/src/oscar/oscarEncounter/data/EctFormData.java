@@ -35,7 +35,8 @@ public class EctFormData {
         ArrayList forms = new ArrayList();
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        String sql = "SELECT * from encounterForm";
+        // Quick hack to display BC forms before other forms... probably should make this a little less BC-specific at some time in the future...
+        String sql = "(select * from encounterForm where form_name like 'BC%' order by form_name) union (select * from encounterForm where form_name not like 'BC%' order by form_name)";
         ResultSet rs = db.GetSQL(sql);
 
         while(rs.next()) {
