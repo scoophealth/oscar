@@ -77,6 +77,7 @@ String strPhones = clinic.getClinicDelimPhone();
 
 <html>
 <head>
+<html:base/>
 <title><bean:message key="billing.bc.title"/></title>
 
 <style type="text/css" media="print">
