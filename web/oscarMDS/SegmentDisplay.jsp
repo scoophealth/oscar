@@ -1,4 +1,4 @@
-<%@ page language="java" %>
+<%@ page language="java" errorPage="../provider/errorpage.jsp" %>
 <%@ page import="java.util.*, oscar.oscarMDS.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -62,7 +62,7 @@ String AbnFlag = "";
 .HiLoRes a:hover { color: blue }
 .HiLoRes a:visited { color: blue }
 .HiLoRes a:active { color: blue }
-.CorrectedRes { font-weight: bold; font-size: 8pt; color: #4d8977; font-family: 
+.CorrectedRes { font-weight: bold; font-size: 8pt; color: #E000D0; font-family: 
                Verdana, Arial, Helvetica }
 .CorrectedRes a:link { color: #6da997 }
 .CorrectedRes a:hover { color: #6da997 }
@@ -500,7 +500,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                        
                                     <% for (m=firstorgindex;m<=lastorgindex;m++) {  // print headers %>
                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-                                               <td align="right"><bean:message key="oscarMDS.segmentDisplay.formORG"/> <%=m-firstorgindex+1%></td>
+                                               <td align="right"><bean:message key="oscarMDS.segmentDisplay.msgORG"/> <%=m-firstorgindex+1%></td>
                                                <td align="left" colspan="7"><%=((oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(m)).resultsArray.get(0)).notes.get(0)%></td>
                                            </tr>
                                     <%     linenum++;
@@ -550,10 +550,11 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                    } else {  // not an organism sensitivity section
                                        for(k=0;k< ((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.size() ;k++){
                                        oscar.oscarMDS.data.Results thisResult = (oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.get(k);
+                                       if (thisResult.resultStatus.startsWith("DNR")) continue;
                                        AbnFlag = thisResult.abnormalFlags; 
                                        boolean lineContinued = false; %>
 
-                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=AbnFlag.compareTo("HI")==0?"AbnormalRes":AbnFlag.compareTo("LO")==0?"HiLoRes":"NormalRes"%>">
+                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Edited")?"CorrectedRes":AbnFlag.compareTo("HI")==0?"AbnormalRes":AbnFlag.compareTo("LO")==0?"HiLoRes":"NormalRes"%>">
                                             <td valign="top" align="right"><%=thisResult.name %></td>
                                          <% if ( thisResult.observationValue.equals("") && thisResult.notes != null ) {
                                                 lineContinued = true;
@@ -564,7 +565,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <td align="left"><%=thisResult.units %></td>
                                                     <td align="center"></td>
                                                     <td align="center"><%=thisResult.labID %></td>
-                                                    <td align="center">New</td>
+                                                    <td align="center"><%=thisResult.resultStatus %></td>
                                                 </tr>
                                           <% } 
 
@@ -577,7 +578,13 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                                 <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                                     <td>&nbsp;</td>
                                                         <% } // end if !lineContinued %>
-                                                                <td align="left" colspan="7"><%= notetext %></td>
+                                                                <td align="left" colspan="5"><%= notetext %></td>
+                                                                <% if (lineContinued) { %>
+                                                                    <td align="center"><%=thisResult.labID %></td>
+                                                                    <td align="center"><%=thisResult.resultStatus %></td>
+                                                                <% } else { %>
+                                                                    <td></td><td></td>
+                                                                <% } %>
                                                             </tr>
                                             <%         lineContinued = false;
                                                    }  // end while iter.hasNext()
@@ -626,10 +633,11 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
                                     <% for(k=0;k< ((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.size() ;k++){
                                        oscar.oscarMDS.data.Results thisResult = (oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.get(k);
+                                       if (thisResult.resultStatus.startsWith("DNR")) continue;
                                        AbnFlag = thisResult.abnormalFlags; 
                                        boolean lineContinued = false; %>
 
-                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=AbnFlag.startsWith("HI", AbnFlag.indexOf("~") + 1)?"AbnormalRes":AbnFlag.startsWith("LO", AbnFlag.indexOf("~") + 1)?"HiLoRes":"NormalRes"%>">
+                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Edited")?"CorrectedRes":AbnFlag.startsWith("HI", AbnFlag.indexOf("~") + 1)?"AbnormalRes":AbnFlag.startsWith("LO", AbnFlag.indexOf("~") + 1)?"HiLoRes":"NormalRes"%>">
                                             <td valign="top" align="left"><%=thisResult.name %></td>
                                          <% if ( thisResult.observationValue.equals("") && thisResult.notes != null ) {
                                                 lineContinued = true;
@@ -640,7 +648,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <td align="left"><%=thisResult.units %></td>
                                                     <td align="center"><%=thisGroup.timeStamp %></td>
                                                     <td align="center"><%=thisResult.labID %></td>
-                                                    <td align="center">New</td>
+                                                    <td align="center"><%=thisResult.resultStatus %></td>
                                                 </tr>
                                          <% }
 
@@ -653,7 +661,13 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                                 <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                                     <td>&nbsp;</td>
                                                         <% } // end if !lineContinued %> 
-                                                                <td align="left" colspan="7"><%= notetext %></td>
+                                                                <td align="left" colspan="5"><%= notetext %></td>
+                                                                <% if (lineContinued) { %>
+                                                                    <td align="center"><%=thisResult.labID %></td>
+                                                                    <td align="center"><%=thisResult.resultStatus %></td>
+                                                                <% } else { %>
+                                                                    <td></td><td></td>
+                                                                <% } %>
                                                             </tr>
 
                                             <%         lineContinued = false;
