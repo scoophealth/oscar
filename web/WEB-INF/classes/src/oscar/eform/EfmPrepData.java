@@ -36,6 +36,10 @@ public class EfmPrepData {
   private String address;
   private String addressLine;
   private String doctor;
+  private String DOB;
+  private String Email;
+  private String HIN;
+  private String NameAddress;
   private String Problem_List ;
   private String Medication ;
   private String Family_Social_History ;
@@ -64,12 +68,16 @@ public class EfmPrepData {
     setAddress();
     setAddressLine();
     setDoctor();
+    setDOB();
+    setNameAddress();
+    setEmail();
+    setHIN();
     setEChartAcc();
     createDemoAcc();
     
-    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders" };
+    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders" };    
     try {
-      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders };
+      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders };        
     } catch(Exception ex) {
       System.err.println(" : " + ex.getMessage());
     }
@@ -155,6 +163,18 @@ public class EfmPrepData {
   }
   public void setDoctor() {  
     doctor = " value=\"" + (new EfmDataOpt()).getDoctor(demographic_no) + "\"";
+  }
+  public void setDOB() {  
+    DOB = " value=\"" + (new EfmDataOpt()).getDOB(demographic_no) + " (d/m/y)\"";
+  }
+  public void setNameAddress() {  
+    NameAddress = (new EfmDataOpt()).getNameAddress(demographic_no);
+  }
+  public void setEmail() {
+    Email = " value=\"" + (new EfmDataOpt()).getEmail(demographic_no) + "\"";
+   }
+  public void setHIN() {
+    HIN = " value=\"" + (new EfmDataOpt()).getHIN(demographic_no) + "\"";
   }
   public void setPatientName() {  
     patient_name = " value=\"" + (new EfmDataOpt()).getPatientName(demographic_no) + "\"";
