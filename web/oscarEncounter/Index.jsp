@@ -557,22 +557,7 @@ border-right: 2px solid #cfcfcf;
                     <tr>
                         <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
                             <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
-                        </td>
-                        <td class="Header" style="text-align:right;font-size:80%;font-weight:bold" NOWRAP >
-                            <bean:message key="oscarEncounter.Index.msgAppoint"/>:
-                        </td>
-                        <td class="Header" style="border-right:2px solid #003399">
-                                           <select   style="font-size:80%;" name="selectList" onchange="javascript:getAnotherEncounter(document.appointmentListForm.selectList.options[document.appointmentListForm.selectList.selectedIndex].value)">
-                                           <%for(int i=0; i<bean.appointmentsIdArray.size();i++){ %>
-                                           <%if(bean.appointmentsIdArray.get(i).equals(bean.appointmentNo)){%>
-                                           <option selected value="<%=bean.appointmentsIdArray.get(i) %>"><%=bean.appointmentsNamesArray.get(i)%></option>
-                                           <%}else{%>
-                                           <option value="<%=bean.appointmentsIdArray.get(i) %>"><%=bean.appointmentsNamesArray.get(i)%></option>
-                                           <%}%>
-                                           <%}
-                                           %>
-                                           </select>
-                        </td>
+                        </td>                        
                         <td class="Header" style="text-align:center;border-right: 3px solid #003399" NOWRAP>
                         <!--div class="FakeLink">
                         </div-->
@@ -617,7 +602,7 @@ border-right: 2px solid #cfcfcf;
                         <%  if (!vLocale.getCountry().equals("BR")) { %>
                             <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
                         <% } %>
-                        <a href=# onClick="popupOscarCon(100,355,'oscarConsultationRequest/ConsultChoice.jsp');return false;"><bean:message key="global.consultations"/></a><br>
+                        <a href=# onClick="popupOscarCon(700,960,'oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp');return false;"><bean:message key="global.consultations"/></a><br>
                         <% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(demoNo)) { %>
                             <a style="color:red" href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
                         <% } else {%>
