@@ -159,13 +159,11 @@ Vascular Tracker
         window.print();
     }
     function onSave() {
-        document.forms[0].submit.value="save";
-        //var ret = checkAllDates();
+        document.forms[0].submit.value="save";        
         storeFTExamSupportData();
-        //if(ret==true)
-        //{
+        storeEyeExamSupportData();
             var ret = confirm("Are you sure you want to save this form?");
-        //}
+        
         return ret;
     }
     function onExit() {
@@ -178,11 +176,9 @@ Vascular Tracker
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         storeFTExamSupportData();
-        //var ret = checkAllDates();
-        //if(ret == true)
-        //{
+        storeEyeExamSupportData();
             var ret = confirm("Are you sure you wish to save and close this window?");
-        //}
+        
         return ret;
     }
 
@@ -199,22 +195,48 @@ function showHideItem(id){
         document.getElementById(id).style.display = 'none'; 
 }
 
+
 function storeFTExamSupportData(){
-    document.getElementById('value(FTNoDate)').value = document.getElementById('FTDate').value;
-    document.getElementById('value(FTNeDate)').value = document.getElementById('FTDate').value;
-    document.getElementById('value(FTIsDate)').value = document.getElementById('FTDate').value;
-    document.getElementById('value(FTUlDate)').value = document.getElementById('FTDate').value;
-    document.getElementById('value(FTInDate)').value = document.getElementById('FTDate').value;
-    document.getElementById('value(FTOtDate)').value = document.getElementById('FTDate').value;
-    document.getElementById('value(FTReDate)').value = document.getElementById('FTDate').value;
+    //getElementbyId function doesn't work on these elements
+    //here is the work around
+    var e = document.forms[0].elements;
+    var ftNoId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
+    var ftNoCmt, ftNeCmt, ftIsCmt, ftInCmt, ftUlCmt, ftOtCmt, ftReCmt;
+    for(i=50; i< e.length; i++){
+        switch(e[i].name){
+            case 'value(FTNoDate)': ftNoId = i;  break;
+            case 'value(FTNeDate)': ftNeId = i;  break;
+            case 'value(FTIsDate)': ftIsId = i;  break;
+            case 'value(FTUlDate)': ftUlId = i;  break;
+            case 'value(FTInDate)': ftInId = i;  break;
+            case 'value(FTOtDate)': ftOtId = i;  break;
+            case 'value(FTReDate)': ftReId = i;  break;
+            
+            case 'value(FTNoComments)': ftNoCmt = i;  break;
+            case 'value(FTNeComments)': ftNeCmt = i;  break;
+            case 'value(FTIsComments)': ftIsCmt = i;  break;
+            case 'value(FTUlComments)': ftUlCmt = i;  break;
+            case 'value(FTInComments)': ftInCmt = i;  break;
+            case 'value(FTOtComments)': ftOtCmt = i;  break;
+            case 'value(FTReComments)': ftReCmt = i;  break;
+        }
+    }
+
+    document.forms[0].elements[ftNoId].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftNeId].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftIsId].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftUlId].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftInId].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftOtId].value = document.getElementById('FTDate').value;
+    document.forms[0].elements[ftReId].value = document.getElementById('FTDate').value;
     
-    document.getElementById('value(FTNoComments)').value = document.getElementById('FTComments').value;
-    document.getElementById('value(FTNeComments)').value = document.getElementById('FTComments').value;
-    document.getElementById('value(FTIsComments)').value = document.getElementById('FTComments').value;
-    document.getElementById('value(FTUlComments)').value = document.getElementById('FTComments').value;
-    document.getElementById('value(FTInComments)').value = document.getElementById('FTComments').value;
-    document.getElementById('value(FTOtComments)').value = document.getElementById('FTComments').value;
-    document.getElementById('value(FTReComments)').value = document.getElementById('FTComments').value;
+    document.forms[0].elements[ftNoCmt].value = document.forms[0].FTComments.value;
+    document.forms[0].elements[ftNeCmt].value = document.forms[0].FTComments.value;
+    document.forms[0].elements[ftIsCmt].value = document.forms[0].FTComments.value;
+    document.forms[0].elements[ftUlCmt].value = document.forms[0].FTComments.value;
+    document.forms[0].elements[ftInCmt].value = document.forms[0].FTComments.value;
+    document.forms[0].elements[ftOtCmt].value = document.forms[0].FTComments.value;
+    document.forms[0].elements[ftReCmt].value = document.forms[0].FTComments.value;
 }
 
 function controlFTExam(){
@@ -264,6 +286,42 @@ function controlFTExam(){
         document.forms[0].elements[ftReId].disabled= true;
     }
 }
+
+function storeEyeExamSupportData(){
+    //getElementbyId function doesn't work on these elements
+    //here is the work around
+    var e = document.forms[0].elements;
+    var eyeNoId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
+    var eyeNoCmt, eyeHypCmt, eyeDiaCmt, eyeOthCmt, eyeRefCmt;
+    for(i=50; i< e.length; i++){
+        switch(e[i].name){
+            case 'value(iNoDate)': eyeNoId = i;  break;
+            case 'value(iHypDate)': eyeHypId = i;  break;
+            case 'value(iDiaDate)': eyeDiaId = i;  break;
+            case 'value(iOthDate)': eyeOthId = i;  break;
+            case 'value(iRefDate)': eyeRefId = i;  break;
+            
+            case 'value(iNoComments)': eyeNoCmt = i;  break;
+            case 'value(iHypComments)': eyeHypCmt = i;  break;
+            case 'value(iDiaComments)': eyeDiaCmt = i;  break;
+            case 'value(iOthComments)': eyeOthCmt = i;  break;
+            case 'value(iRefComments)': eyeRefCmt = i;  break;
+        }
+    }
+
+    document.forms[0].elements[eyeNoId].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeHypId].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeDiaId].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeOthId].value = document.forms[0].iDate.value;
+    document.forms[0].elements[eyeRefId].value = document.forms[0].iDate.value;
+    
+    document.forms[0].elements[eyeNoCmt].value = document.forms[0].iComments.value;
+    document.forms[0].elements[eyeHypCmt].value = document.forms[0].iComments.value;
+    document.forms[0].elements[eyeDiaCmt].value = document.forms[0].iComments.value;
+    document.forms[0].elements[eyeOthCmt].value = document.forms[0].iComments.value;
+    document.forms[0].elements[eyeRefCmt].value = document.forms[0].iComments.value;    
+}
+
 
 function controlEyeExam(){
     
@@ -323,8 +381,7 @@ function controlEyeExam(){
     <html:hidden property="value(formId)"/>
     <table class="Head" class="hidePrint" width="640px" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="left">
-                <input type="hidden" name="submit" value="exit"/>
+            <td align="left">                
                 <input type="submit" value="Save" onclick="javascript:return onSave();" />
                 <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
                 <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
@@ -376,7 +433,7 @@ function controlEyeExam(){
                                                         <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                                                     </td>                                                    
                                                 </tr>
-                                                <tr class="dataEntryTable">
+                                                <tr class="dataEntryTable">                                                    
                                                     <td class="dataEntryTable"><bean:write name="HTDesc"/><br><font class="eightyPercent"><bean:write name="HTMeasuringInstrc"/></font></td>   
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="HTLastData">
@@ -708,8 +765,10 @@ function controlEyeExam(){
                                                 </tr>
                                                 <tr class="dataEntryTable">
                                                     <th class="dataEntryTable" colspan="3">Foot Exam</th>                                                    
-                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" name="FTDate" value="<bean:write name="today"/>" size="15%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" rowspan="8" valign="top" align="center"><textarea name="FTComments" wrap="hard" cols="20" style="height:180" tabindex="9999"></textarea></td>
+                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" id="FTDate" name="FTDate" value="<bean:write name="today"/>" size="15%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" rowspan="8" valign="top" align="center">
+                                                        <textarea name="FTComments" wrap="hard" cols="20" style="height:180" tabindex="9999"><logic:present name="FTNoComments"><bean:write name="FTNoComments"/></logic:present></textarea>
+                                                    </td>
                                                 </tr>
                                                 <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="FTNoDesc"/></td>   
@@ -876,7 +935,9 @@ function controlEyeExam(){
                                                  <tr class="dataEntryTable">
                                                     <th class="dataEntryTable" colspan="3">Eye Exam</th>                                                    
                                                     <td class="dataEntryTable" valign="top" align="center"><input type="text" name="iDate" value="<bean:write name="today"/>" size="15%"/></td>
-                                                    <td class="dataEntryTable" rowspan="8" valign="top" align="center"><textarea name="iComments" wrap="hard" cols="20" style="height:180"></textarea></td>
+                                                    <td class="dataEntryTable" rowspan="8" valign="top" align="center">
+                                                        <textarea name="iComments" wrap="hard" cols="20" style="height:180"><logic:present name="iNoComments"><bean:write name="iNoComments"/></logic:present></textarea>
+                                                    </td>
                                                 </tr>
                                                 <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="iNoDesc"/></td>   
@@ -1441,7 +1502,7 @@ function controlEyeExam(){
                                                 </td>
                                             </tr>
                                             </td>
-                                        </tr>
+                                        </tr>                                        
                                 </td>   
                             </tr>
                         </table>
@@ -1462,7 +1523,7 @@ function controlEyeExam(){
     <table class="Head" class="hidePrint" width="100%">
         <tr>
             <td align="left">
-                <input type="hidden" name="submit" value="exit"/>
+                <input type="hidden" name="submit" value=""/>
                 <input type="submit" value="Save" onclick="javascript:return onSave();" />
                 <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
                 <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
