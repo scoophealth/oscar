@@ -329,11 +329,10 @@ function showHideLayers() { //v3.0
 
 
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide');CheckType();correspondenceNote();">
-<div id="Layer2" style="position:absolute; left:362px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden"> 
+<div id="Layer2" style="position:absolute; left:298px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden"> 
   <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
     <tr> 
-      <td width="18%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Dx 
-        Code</font></b></td>
+      <td width="18%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Dx Code</font></b></td>
       <td width="76%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Description</font></b></td>
       <td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide'); return false;">X</a></td>
     </tr>
