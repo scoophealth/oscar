@@ -17,6 +17,14 @@ String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/M
 String function = request.getParameter("function");
 String functionid = request.getParameter("functionid");
 String doctype = request.getParameter("doctype");
+
+
+String creator="%", docfilename="", docdesc="", dispDesc="", dispType="", dispDocNo="", dispFunction="", dispCreator="", dispUpdatedate="", dispFilename="", dispStatus="";
+String proFirst="", proLast="", proOHIP="", proNo="";
+
+String functionString = getFullName(apptMainBean, function, functionid);
+       
+//String functionString = function.substring(0,1).toUpperCase()+function.substring(1);   
 %>
 
 <html:html locale="true"> 
@@ -65,169 +73,146 @@ function setfocus() {
 <link rel="stylesheet" href="dms.css" />
 </head>
 <body  onLoad="setfocus()" background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'> </th> 
-    <th align='RIGHT'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"><bean:message key="dms.documentReport.msgDocReport"/> &nbsp;&nbsp;&nbsp;&nbsp;</font></th>
-      <th align='RIGHT'><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddHTML"/>" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddDoc"/>" onclick="window.open('../dms/adddocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";><input type='button' name='close' value='<bean:message key="global.btnClose"/>' onClick='window.close()'></th>
-  </tr>
-</table>
+   <table border="0" cellspacing="0" cellpadding="0" width="100%" >
+      <tr bgcolor="#486ebd">
+         <th align='LEFT'><input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'></th> 
+         <th align='RIGHT'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"><bean:message key="dms.documentReport.msgDocReport"/> &nbsp;&nbsp;&nbsp;&nbsp;</font></th>
+         <th align='RIGHT'><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddHTML"/>" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddDoc"/>" onclick="window.open('../dms/adddocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";><input type='button' name='close' value='<bean:message key="global.btnClose"/>' onClick='window.close()'></th>
+      </tr>
+   </table>
+   
+   
 
 
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
-<tr valign="top"> 
-      
-    <td rowspan="2" ALIGN="center" valign="middle"> 
+   <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
+      <tr valign="top">       
+         <td rowspan="2" ALIGN="center" valign="middle"> 
  
-          <table width="100%" border="1" cellspacing="0" cellpadding="0">
-          <tr><td colspan='5'><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%>'s folder</b></td></td>
-<tr>
-          <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
-          <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
-          <td width="17%"><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%></b></td>
-          <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate"/></b></td> 
-          <td width="13%"><b><bean:message key="dms.documentReport.msgAction"/></b></td>
-  </tr>
+            <table width="100%" border="1" cellspacing="0" cellpadding="0">
+               <tr><td colspan='5'><b><%=functionString%>'s folder</b></td></td>
+               <tr>
+                   <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
+                   <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
+                   <td width="17%"><b><bean:message key="dms.documentReport.msgCreator"/></b></td>                   
+                   <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate" /></b></td> 
+                   <td width="13%"><b><bean:message key="dms.documentReport.msgAction" /></b></td>
+               </tr>
   
-  <%String creator="%", docfilename="", docdesc="", dispDesc="", dispType="", dispDocNo="", dispFunction="", dispCreator="", dispUpdatedate="", dispFilename="", dispStatus="";
-  int count0 = 0;
- if(request.getParameter("creator") != null) creator= request.getParameter("creator") ;
-  if(request.getParameter("docfilename") != null) docfilename= request.getParameter("docfilename") ;
-   if(request.getParameter("doctype") != null) doctype= request.getParameter("doctype") ;
-   if(request.getParameter("docdesc") != null) docdesc= request.getParameter("docdesc") ;
-    String proFirst="", proLast="", proOHIP="", proNo="";
+  <%
+    
+    int count0 = 0;
+    if(request.getParameter("creator") != null) creator= request.getParameter("creator") ;
+    if(request.getParameter("docfilename") != null) docfilename= request.getParameter("docfilename") ;
+    if(request.getParameter("doctype") != null) doctype= request.getParameter("doctype") ;
+    if(request.getParameter("docdesc") != null) docdesc= request.getParameter("docdesc") ;
+    
 
-           String[] param0 = new String[3];
-                 param0[0] = function;
-                 param0[1] = functionid;
-            param0[2] = "%"; // doctype;
+    String[] param0 = new String[3];
+             param0[0] = function;
+             param0[1] = functionid;
+             param0[2] = "%"; // doctype;
     
           
-        ResultSet rslocal2 = null;
- 	rslocal2 = apptMainBean.queryResults(param0, "match_document");
+     ResultSet rslocal2 = null;
+ 	  rslocal2 = apptMainBean.queryResults(param0, "match_document");
  	  while(rslocal2.next()){
- 	  dispDesc = rslocal2.getString("docdesc");
- 	   dispFilename = rslocal2.getString("docfilename");
- 	    dispType = rslocal2.getString("doctype");
- 	    dispCreator = rslocal2.getString("doccreator");
- 	dispDocNo = rslocal2.getString("document_no");
-       dispUpdatedate = rslocal2.getString("updatedatetime");
-       dispStatus = rslocal2.getString("status");
-  count0 = count0 + 1;
+ 	     dispDesc = rslocal2.getString("docdesc");
+ 	     dispFilename = rslocal2.getString("docfilename");
+ 	     dispType = rslocal2.getString("doctype");
+ 	     dispCreator = rslocal2.getString("doccreator");
+ 	     dispDocNo = rslocal2.getString("document_no");
+        dispUpdatedate = rslocal2.getString("updatedatetime");
+        dispStatus = rslocal2.getString("status");
+        count0 = count0 + 1;
   
-  if (dispStatus.compareTo("A") == 0) dispStatus="active";
-     if (dispStatus.compareTo("H") == 0) dispStatus="html";    
+        if (dispStatus.compareTo("A") == 0) dispStatus="active";
+        if (dispStatus.compareTo("H") == 0) dispStatus="html";    
    //   if (function.compareTo("demographic") == 0){
-       
-             ResultSet rslocal=null;
-             rslocal = null;
-             rslocal = apptMainBean.queryResults(functionid, "search_"+function+"_details");  
-   	    while(rslocal.next()){
-       
-       proFirst = rslocal.getString("first_name");
-            proLast = rslocal.getString("last_name");
-  //   proOHIP = rslocal.getString("provider_no");
-  }
+     
+        
+        String creatorName = getFullName(apptMainBean,"provider",dispCreator);
 //  }
 %>
-  <tr>
-          <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=dispFilename%>&type=<%=dispStatus%>&doc_no=<%=dispDocNo%>', 480,480,1)"><%=dispDesc%></td>
-          <td width="15%"><%=dispType%></td>
-          <td width="17%"><%=proLast%>, <%=proFirst%></td>
-          <td width="21%"><%=dispUpdatedate%></td>
-          <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>','<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; <a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a></td>
-  </tr> 
+               <tr>
+                  <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=dispFilename%>&type=<%=dispStatus%>&doc_no=<%=dispDocNo%>', 480,480,1)"><%=dispDesc%></td>
+                  <td width="15%"><%=dispType%></td>
+                  <td width="17%"><%=creatorName%></td>
+                  <td width="21%"><%=dispUpdatedate%></td>
+                  <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>','<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; <a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a></td>
+               </tr> 
 
-<%
+<%   }
+     if (count0 == 0) { %>
+               <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
+   <%}%>
+            </table>
+         </td>
+      </tr>
+   </table>
 
-}
-
-if (count0 == 0) {
-  %>
-    <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
-    <%
-    }
-  %>
-  </table>
-  </td>
-</tr>
-</table>
-
-  <%
-     if (function.compareTo("provider") == 0){
-     %>
-     <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4E9E7">
-     <tr valign="top"> 
-           
+<%if (function.compareTo("provider") == 0){ %>
+   <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4E9E7">
+      <tr valign="top">               
          <td rowspan="2" ALIGN="center" valign="middle"> 
-      
-          <table width="100%" border="1" cellspacing="0" cellpadding="0" >  
-<tr><td colspan='5'><b><bean:message key="dms.documentReport.msgShareFolder"/></b></td></td>
-<tr>
-          <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
-          <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
-          <td width="17%"><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%></b></td>
-          <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate"/></b></td> 
-          <td width="13%"><b><bean:message key="dms.documentReport.msgActive"/></b></td>
-  </tr>
+            <table width="100%" border="1" cellspacing="0" cellpadding="0" >  
+                <tr><td colspan='5'><b><bean:message key="dms.documentReport.msgShareFolder"/></b></td></tr>
+                <tr>
+                  <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
+                  <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
+                  <td width="17%"><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%></b></td>
+                  <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate"/></b></td> 
+                  <td width="13%"><b><bean:message key="dms.documentReport.msgActive"/></b></td>
+                </tr>
    <% creator="%"; docfilename="";docdesc="";dispDesc=""; dispType=""; dispFunction=""; dispCreator=""; dispUpdatedate=""; dispFilename=""; dispStatus="";
 
-
-
-       int count = 0;
-             String[] param1 = new String[1];
-                   param1[0] = function;
+      int count = 0;
+      String[] param1 = new String[1];
+               param1[0] = function;
                   
             
-         rslocal2 = null;
+      rslocal2 = null;
    	rslocal2 = apptMainBean.queryResults(param1, "share_document");
-   	  while(rslocal2.next()){
-   	  dispDesc = rslocal2.getString("docdesc");
+   	while(rslocal2.next()){
+   	   dispDesc = rslocal2.getString("docdesc");
    	   dispFilename = rslocal2.getString("docfilename");
-   	    dispType = rslocal2.getString("doctype");
-          dispCreator = rslocal2.getString("doccreator");
+   	   dispType = rslocal2.getString("doctype");
+         dispCreator = rslocal2.getString("doccreator");
          dispUpdatedate = rslocal2.getString("updatedatetime");
          dispDocNo = rslocal2.getString("document_no");
          dispStatus = rslocal2.getString("status");
-    count = count + 1;
+         count = count + 1;
     
-    if (dispStatus.compareTo("A") == 0) dispStatus="active";
+         if (dispStatus.compareTo("A") == 0) dispStatus="active";
          if (dispStatus.compareTo("H") == 0) dispStatus="html";    
      
-	           ResultSet    rslocal = null;
-	               rslocal = apptMainBean.queryResults(dispCreator, "search_"+function+"_details");  
-	     	    while(rslocal.next()){
-	         
+	      ResultSet    rslocal = null;
+	      rslocal = apptMainBean.queryResults(dispCreator, "search_"+function+"_details");  
+	     	while(rslocal.next()){	         
 	         proFirst = rslocal.getString("first_name");
-	              proLast = rslocal.getString("last_name");
+	         proLast = rslocal.getString("last_name");
 	    //   proOHIP = rslocal.getString("provider_no");
-  }
+         }
   
   %>
-    <tr>
-            <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=dispFilename%>&type=<%=dispStatus%>&doc_no=<%=dispDocNo%>', 480,480,1)"><%=dispDesc%></td>
-            <td width="15%"><%=dispType%></td>
-            <td width="17%"><%=proLast%>, <%=proFirst%></td>
-            <td width="21%"><%=dispUpdatedate%></td>
-            <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a>&nbsp; &nbsp;<a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a>&nbsp; &nbsp;</td>
-    </tr> 
+                <tr>
+                    <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=dispFilename%>&type=<%=dispStatus%>&doc_no=<%=dispDocNo%>', 480,480,1)"><%=dispDesc%></td>
+                    <td width="15%"><%=dispType%></td>
+                    <td width="17%"><%=proLast%>, <%=proFirst%></td>
+                    <td width="21%"><%=dispUpdatedate%></td>
+                    <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a>&nbsp; &nbsp;<a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a>&nbsp; &nbsp;</td>
+                </tr> 
   
-<%
-	}
-	if (count == 0) {
-%>
-    <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></td>
-<%
-	}
-%> 
+<%	   }
+	   if (count == 0) { %>
+	   
+                <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></td>
+<%	   }%> 
+            </table>
+        </td>
+    </tr>
 </table>
-</td>
-</tr></table>
-<%
-} 
-apptMainBean.closePstmtConn();
-%>
+<%} 
+apptMainBean.closePstmtConn(); %>
 
 <br>
 <form>
@@ -235,3 +220,16 @@ apptMainBean.closePstmtConn();
 </form>
 </body>
 </html:html>
+<%!
+
+public String getFullName(oscar.AppointmentMainBean apptMainBean, String function, String functionid) throws Exception{
+    ResultSet rslocal = apptMainBean.queryResults(functionid, "search_"+function+"_details");  
+    String proFirst = "";
+    String proLast = "";
+    if(rslocal.next()){       
+       proFirst = rslocal.getString("first_name");
+       proLast = rslocal.getString("last_name");      
+    }
+    return proLast+", "+proFirst ;
+}
+%>
