@@ -163,6 +163,7 @@
 	<!-- popups start-->
     <form-bean name="procedimentoForm" type="oscar.billing.popup.ProcedimentoForm"/>
     <form-bean name="atividadeSaudeForm" type="oscar.billing.popup.AtividadeSaudeForm"/>
+    <form-bean name="cidForm" type="oscar.billing.popup.CidForm"/>
     <!-- popups end-->
 
   </form-beans>
@@ -861,6 +862,24 @@
               name="atividadeSaudeForm"
               input="/popup/atividade.jsp">
               <forward name="success" path="/popup/atividade.jsp"/>
+    </action>
+
+    <!-- Popup Cid -->
+    <action   path="/popup/cid/init"
+              type="oscar.billing.popup.CidAction"
+              parameter="INIT"
+              scope="session"
+              name="cidForm"
+              input="/popup/cid.jsp">
+              <forward name="success" path="/popup/cid.jsp"/>
+    </action>
+    <action   path="/popup/cid/findCid"
+              type="oscar.billing.popup.CidAction"
+              parameter="FIND_CID"
+              scope="session"
+              name="cidForm"
+              input="/popup/cid.jsp">
+              <forward name="success" path="/popup/cid.jsp"/>
     </action>
     
   </action-mappings>

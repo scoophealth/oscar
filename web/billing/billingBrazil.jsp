@@ -17,6 +17,10 @@
       popup('/oscar/popup/procedimento/findProc.do?formCoProc=coProc&formDsProc=dsProc&coProc=' + document.forms[0].coProc.value + '&dsProc=' + document.forms[0].dsProc.value + '',xsize,ysize);
   }
 
+  function popupCid() {
+      popup('/oscar/popup/cid/findCid.do?formCoCid=coCid&formDsCid=dsCid&coCid=' + document.forms[0].coCid.value + '&dsCid=' + document.forms[0].dsCid.value + '',xsize,ysize);
+  }
+
 </script>
 
 
@@ -143,9 +147,10 @@
   <br>
   <table cellspacing="0" cellpadding="2" width="95%" border="1" align="center">
     <tr class="body">
-      <td width="20%"><span class="formLabel">C&oacute;digo CID-10*</span></td>
+      <td width="20%"><a href="#" class="formLink" onclick="popupCid()">Pesquisar</a> &nbsp; <span class="formLabel">C&oacute;digo CID-10*</span></td>
       <td width="80%"> 
-       <html:text property="coCid" size="10" maxlength="4"/> &nbsp; <html:submit onclick="set('diagnostico');"> Inserir diagn&oacute;stico </html:submit>
+       <html:text property="coCid" size="10" maxlength="4" styleId="coCid"/> &nbsp;
+       <html:text property="dsCid" size="50" maxlength="134" styleId="dsCid"/> <html:submit onclick="set('diagnostico');"> Inserir diagn&oacute;stico </html:submit>
 	  </td>
     </tr>
   </table>
