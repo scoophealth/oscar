@@ -271,7 +271,7 @@ function onSubmitForm() {
 		  <input type="hidden" name="ooy" value="0">
 		  <input type="hidden" name="cmd" value="">
 <%
-String newFormURL = "providercontrol.jsp?";
+String newFormURL = "../provider/providercontrol.jsp?";
 if (request.getParameter("demographic_no") != null) newFormURL += "demographic_no=" + request.getParameter("demographic_no");
 if (request.getParameter("appointment_no") != null) newFormURL += "&appointment_no=" + request.getParameter("appointment_no");
 if (request.getParameter("reason") != null) newFormURL += "&reason=" + URLEncoder.encode(request.getParameter("reason"));
