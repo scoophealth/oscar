@@ -34,6 +34,7 @@ public class EctMeasurementTypesBeanHandler {
     
     Vector measurementTypeVector = new Vector();
     Vector measuringInstrcVector = new Vector();
+    Vector measuringInstrcHdVector = new Vector();
     Vector measuringInstrcVectorVector = new Vector();
     Vector typeVector = new Vector();
     Vector measurementsDataVector = new Vector();
@@ -121,7 +122,9 @@ public class EctMeasurementTypesBeanHandler {
                                                                                         rsData.getString("dateObserved"), 
                                                                                         rsData.getString("dateEntered"));                        
                         
-                        measurementTypeVector.add(measurementTypes);                        
+                        measurementTypeVector.add(measurementTypes);
+                        EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
+                        measuringInstrcHdVector.add(hd);
                         measuringInstrcVectorVector.add(measuringInstrcVector);
                         measuringInstrcVector = new Vector();
                         hasPreviousData = true;
@@ -135,7 +138,9 @@ public class EctMeasurementTypesBeanHandler {
                                                                                         rsMT.getString("measuringInstruction"), 
                                                                                         rsMT.getString("validation")); 
                     
-                    measurementTypeVector.add(measurementTypes);                    
+                    measurementTypeVector.add(measurementTypes);   
+                    EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
+                    measuringInstrcHdVector.add(hd);
                     measuringInstrcVectorVector.add(measuringInstrcVector);
                     measuringInstrcVector = new Vector();
                 }
@@ -162,6 +167,10 @@ public class EctMeasurementTypesBeanHandler {
     
     public Vector getMeasuringInstrcVector(){
         return measuringInstrcVector;
+    }
+    
+    public Vector getMeasuringInstrcHdVector(){
+        return measuringInstrcHdVector;
     }
     
     public Vector getMeasuringInstrcVectorVector(){
