@@ -34,7 +34,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ page import="oscar.oscarDemographic.data.*" %>
 <%@ page import="java.text.*, java.util.*, oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*" %>
 <%
@@ -426,7 +426,8 @@ function showHideLayers() { //v3.0
               </font></td>
           </tr>
           <tr> 
-            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&type=service","380","300","0")'><bean:message key="billing.servicedate"/></a> </font></td>
+            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=service","380","300","0")'><bean:message key="billing.servicedate"/></a> </font>                
+            </td>
             <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">                                           
               <html:text property="xml_appointment_date" value="<%=bean.getApptDate()%>" size="12" />
               <strong><bean:message key="billing.servicedate.starttime"/></strong> 
