@@ -149,17 +149,29 @@ public class IncomingMDSFiles {
        Calendar cal =  Calendar.getInstance();
        Long lon = new Long(cal.getTimeInMillis());
        String str = new String ( file.getName()+"."+lon.toString() );
-       // Destination directory
-       File dir = new File(errorHL7dir);
-    
-       // Move file to new directory
-       boolean success = file.renameTo(new File(dir, str));
+       
+       File file2 = new File(str);        
+       boolean success = file.renameTo(file2);
+       file = null;
+       file2 = null;
+       file = new File(str);
        if (!success) {
-          // File was not successfully moved
-         logger.severe(" file: "+str+" was unable to be moved to the "+errorHL7dir+" directory");
-         retval = false;
-       }else{
-         logger.warning("file: "+str+" was corrupted, please examines its contents");
+        // File was not successfully renamed
+          logger.severe(" file: "+filename+" was unable to be renamed to "+str);
+          retval = false;
+       }else{                                   
+          // Destination directory
+          File dir = new File(errorHL7dir);
+
+          // Move file to new directory
+          boolean success2 = file.renameTo(new File(dir, str));
+          if (!success2) {
+             // File was not successfully moved
+            logger.severe(" file: "+str+" was unable to be moved to the "+errorHL7dir+" directory");
+            retval = false;
+          }else{
+            logger.warning("file: "+str+" was corrupted, please examines its contents");
+          }
        }
        return retval;
     }
@@ -171,17 +183,29 @@ public class IncomingMDSFiles {
        Calendar cal =  Calendar.getInstance();
        Long lon = new Long(cal.getTimeInMillis());
        String str = new String ( file.getName()+"."+lon.toString() );
-       // Destination directory
-       File dir = new File(completedHL7dir);
-    
-       // Move file to new directory
-       boolean success = file.renameTo(new File(dir, str));
+                       
+       File file2 = new File(str);        
+       boolean success = file.renameTo(file2);
+       file = null;
+       file2 = null;
+       file = new File(str);
        if (!success) {
-         // File was not successfully moved
-         logger.severe(" file: "+str+" was unable to be moved to the "+completedHL7dir+" directory");
-           retval = false;
-       }else{
-         logger.info("file: "+str+" has been processed, It has been moved to the completedHL7dir");
+        // File was not successfully renamed
+          logger.severe(" file: "+file.getName()+" was unable to be renamed to "+str);
+          retval = false;
+       }else{                     
+          // Destination directory
+          File dir = new File(completedHL7dir);
+    
+          // Move file to new directory       
+          boolean success2 = file.renameTo(new File(dir, str));
+          if (!success2) {
+             // File was not successfully moved
+             logger.severe(" file: "+str+" was unable to be moved to the "+completedHL7dir+" directory");
+             retval = false;
+          }else{
+             logger.info("file: "+str+" has been processed, It has been moved to the completedHL7dir");
+          }
        }
        return retval;
     }
