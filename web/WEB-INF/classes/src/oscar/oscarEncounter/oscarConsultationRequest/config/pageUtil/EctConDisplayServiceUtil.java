@@ -68,7 +68,7 @@ public class EctConDisplayServiceUtil
         try
         {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "select * from professionalSpecialists order by 'lName' ";
+            String sql = "select * from professionalSpecialists order by lName ";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); specIdVec.add(rs.getString("specId")))
             {
