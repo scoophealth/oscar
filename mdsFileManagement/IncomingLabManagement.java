@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.logging.*;
 import java.lang.*;
 import java.util.*;
+import oscar.oscarMDSLab.*;
+
 /**
  *
  * @author  root
@@ -50,8 +52,32 @@ public class IncomingLabManagement {
         
     }
   
-        
+    
+    static void loadProperties(String filename){
+       LabProperties labProperties = LabProperties.getInstance();
+       boolean loaded = labProperties.loader(filename);       
+       if(!loaded){          
+          System.exit(1);
+       }
+       busyFile        = labProperties.getProperty("busyFile");
+       workingFile     = labProperties.getProperty("workingFile");
+       incomingHL7dir  = labProperties.getProperty("incomingHL7dir");
+       moddedTime      = labProperties.getProperty("moddedTime");
+       errorHL7dir     = labProperties.getProperty("errorHL7dir");
+       dupsHL7dir      = labProperties.getProperty("dupsHL7dir");
+       completedHL7dir = labProperties.getProperty("completedHL7dir");
+       auditLogFile    = labProperties.getProperty("auditLogFile");
+    }
     public static void main(String[] args) {
+       
+        try{
+           if ( args[0] == null ){ throw new Exception("Usage Exception"); }
+           loadProperties(args[0]);
+           
+        }catch(Exception loadingEx){
+           System.out.println("Usage: IncomingLabManagement <properties file>");
+           System.exit(2);
+        }
             
         initLogger();
         IncomingMDSFiles inMDS = new IncomingMDSFiles();
