@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@page import="oscar.oscarEncounter.pageUtil.*"%>
+<%@page import="oscar.oscarEncounter.pageUtil.*, oscar.OscarProperties"%>
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -59,6 +59,8 @@ String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
 String mon =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
 String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
 String formattedDate = year+"/"+mon+"/"+day;
+
+OscarProperties props = OscarProperties.getInstance();
 %>
 
 <head>
@@ -388,7 +390,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                 thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
                 thisForm.setUrgency(consultUtil.urgency);
 
-                System.out.println("this is from in the form setter "+ consultUtil.patientName);
+                // System.out.println("this is from in the form setter "+ consultUtil.patientName);
 
 
         }else if(request.getAttribute("validateError") == null){
@@ -807,10 +809,15 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                 <%if (request.getAttribute("id") != null){ %>
       		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
                 <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                    <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update And Fax'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                    <%}%>
                 <%}else{%>
       		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
                 <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
-
+                    <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit And Fax'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                    <%}%>
                 <%}%>
             </td>
        </tr>
