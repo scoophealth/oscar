@@ -56,9 +56,9 @@
 <table>
     <tr>
         <td> Update waiting list </td> 
-        <script language="javascript">
+        <script language="javascript">            
+            window.opener.location.reload();
             self.close();
-            self.opener.refresh();
         </script>
     </tr>
 </table>
