@@ -71,7 +71,9 @@ public class FrmLabReqRecord  extends FrmRecord {
             sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_postal, clinic_phone, clinic_fax FROM clinic";
             rs = db.GetSQL(sql);
             if(rs.next()) {
-                 props.setProperty("aci", rs.getString("clinic_name") +"\n"+ rs.getString("clinic_address") +"\n"+ rs.getString("clinic_city") +"\n"+ rs.getString("clinic_postal") +"\ntel:"+ rs.getString("clinic_phone") +"\nfax:"+ rs.getString("clinic_fax")  );
+                 props.setProperty("clinicAddress", rs.getString("clinic_address"));
+                 props.setProperty("clinicCity", rs.getString("clinic_city"));
+                 props.setProperty("clinicPC", rs.getString("clinic_postal"));                 
             }
             rs.close();
 
@@ -79,19 +81,19 @@ public class FrmLabReqRecord  extends FrmRecord {
 
         } else {
             String sql = "SELECT * FROM formLabReq WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
-			props = (new FrmRecordHelp()).getFormRecord(sql);
+            props = (new FrmRecordHelp()).getFormRecord(sql);
         }
 
         return props;
     }
 
     public Properties getFormCustRecord(Properties props, int provNo) throws SQLException {
-		String demoProvider = props.getProperty("demoProvider", "");
-
-		if (!demoProvider.equals(""))	{
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-			ResultSet rs = null;
-			String sql = null;
+                String demoProvider = props.getProperty("demoProvider", "");                
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs = null;
+                String sql = null;
+                
+		if (!demoProvider.equals(""))	{			
 
 			if ( Integer.parseInt(demoProvider) == provNo) {
                             // from provider table
@@ -127,9 +129,19 @@ public class FrmLabReqRecord  extends FrmRecord {
                                 props.setProperty("practitionerNo", "0000-"+num+"-00");
                             }
                             rs.close();
-                        }
-			db.CloseConn();
+                        }                        
 		}
+                //get local clinic information
+                sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_postal, clinic_phone, clinic_fax FROM clinic";
+                rs = db.GetSQL(sql);
+                if(rs.next()) {
+                     props.setProperty("clinicAddress", rs.getString("clinic_address"));
+                     props.setProperty("clinicCity", rs.getString("clinic_city"));
+                     props.setProperty("clinicPC", rs.getString("clinic_postal"));                 
+                }
+                rs.close();
+
+                db.CloseConn();
 
         return props;
 	}
