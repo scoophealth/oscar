@@ -1,0 +1,22 @@
+# add form glucose for lab
+contact.contact_firstname			:demographic.first_name
+contact.contact_lastname			:demographic.last_name
+contact.contact_sex				:demographic.sex
+contact.contact_dob				:demographic.dob
+contact.conidentity.conidentity_type		:home
+contact.conidentity.conidentity_addrstreet	:demographic.address
+contact.conidentity.conidentity_addrcity	:demographic.city
+contact.conidentity.conidentity_addrprovince	:demographic.province
+contact.conidentity.conidentity_addrcountry	:Canada
+contact.conidentity.conidentity_addrpostal	:demographic.postal
+contact.conphone.conphone_phonetype		:Phone
+contact.conphone.conphone_phonenumber		:demographic.phone
+contact.conEHRpatient.conEHRpatient_EHR_id	:2
+contact.conEHRpatient.conEHRpatient_EHRpatient_id	:demographic.demographic_no
+
+#DMRecord.contact_healthnumber			:demographic.hin
+#DMRecord.entry_date					:formType2Diabetes.formEdited
+
+DMRecord.fpVisit^1						:formType2Diabetes.date
+DMRecord.bloodPressure^1				:formType2Diabetes.bp
+DMRecord.hbA1c^1						:formType2Diabetes.glucoseA1

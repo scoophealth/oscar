@@ -32,7 +32,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="oscar.form.study.*, java.util.*" %>
+<%@ page import="oscar.form.study.*" %>
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -52,7 +52,8 @@
     int formId = (pform == null) ? 0: Integer.parseInt(pform.getFormId());
 	String[] studyNameLink = (new oscar.form.data.FrmData()).getStudyNameLink(studyId);
     FrmStudyRecord rec = (new FrmStudyRecordFactory()).factory(studyNameLink[0]);
-    java.util.Properties props = (formId==0)? (new Properties()) : rec.getFormRecord(Integer.parseInt(demoNo), formId);
+	//System.out.println(" id: "+formId);
+    java.util.Properties props = rec.getFormRecord(Integer.parseInt(demoNo), formId);
 %>
 
 <script type="text/javascript" language="Javascript">
@@ -300,7 +301,7 @@ function checkAllDates()
         <td>
             <table width="100%">
                 <tr>
-                    <td>Date <small>(complete q3-6 months)</small></td>
+                    <td><div class="ping">Date <small>(complete q3-6 months)</small></div></td>
                     <td align="right"><small>(yyyy/mm/dd)</small></td>
                 </tr>
             </table>
@@ -312,7 +313,7 @@ function checkAllDates()
         <td><input type="text" class="Type2DiabetesTextarea" name="date5" value="<%= props.getProperty("date5", "") %>" /></td>
     </tr>
     <tr>
-        <td align="left">Weight (BMI ideally &lt;27)</td>
+        <td align="left"><div class="ping">Weight (BMI ideally &lt;27)</div></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="weight1" value="<%= props.getProperty("weight1", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="weight2" value="<%= props.getProperty("weight2", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="weight3" value="<%= props.getProperty("weight3", "") %>" /></td>
@@ -320,7 +321,7 @@ function checkAllDates()
         <td><input type="text" class="Type2DiabetesTextarea" name="weight5" value="<%= props.getProperty("weight5", "") %>" /></td>
     </tr>
     <tr>
-        <td align="left">*BP (ideally &lt;130/85)</td>
+        <td align="left"><div class="ping">*BP (ideally &lt;130/85)</div></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="bp1" value="<%= props.getProperty("bp1", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="bp2" value="<%= props.getProperty("bp2", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="bp3" value="<%= props.getProperty("bp3", "") %>" /></td>
@@ -332,7 +333,7 @@ function checkAllDates()
             <table border="0" nowrap="true">
                 <tr>
                     <td colspan="4" align="left" nowrap="true">GLUCOSE <small>(insulin q3mo, OHA q6mo)</small></td>
-                    <td align="right"><u>HbAic</u></td>
+                    <td align="right"><u><div class="ping">HbAic</div></u></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
@@ -391,7 +392,7 @@ function checkAllDates()
     </tr>
     <tr>
         <td align="left">
-            2. <b>*Urine alb:creat ratio yearly</b><br>
+            2. <b><div class="ping">*Urine alb:creat ratio yearly</div></b><br>
             <span style="padding-left:20px;"></span>
             <small>*if +ve (female &gt;=2.8 or male &gt;=2.0) see step 3</small>
         </td>
@@ -465,7 +466,7 @@ function checkAllDates()
     </tr>
     <tr>
         <td align="left">
-            <b>EYES (@dx then q2-4yrs)</b><br>
+            <b><div class="ping">EYES (@dx then q2-4yrs)</div></b><br>
             Ophthalmologist: <input type="text" class="Type2DiabetesInput" name="ophthalmologist" value="<%= props.getProperty("ophthalmologist", "") %>" />
         </td>
         <td><textarea style="height:42px;" class="Type2DiabetesTextarea" name="eyes1"><%= props.getProperty("eyes1", "") %></textarea></td>
@@ -476,7 +477,7 @@ function checkAllDates()
     </tr>
     <tr>
         <td align="left">
-            <b>FEET</b> check skin (q visit)<br>
+            <b><div class="ping">FEET</div></b> check skin (q visit)<br>
             <span style="padding-left:20px;"></span>
             annually (sensation, vibration, reflexes, pulses,<br> infection)
         </td>
@@ -495,13 +496,13 @@ function checkAllDates()
                 <tr>
                     <td>1. METFORMIN</td>
                     <td><input type="checkbox" name="metformin" <%= props.getProperty("metformin", "") %> /></td>
-                    <td>5. ACE INHIBITOR</td>
+                    <td>5. <div class="ping">ACE INHIBITOR</div></td>
                     <td nowrap="true"><input type="checkbox" name="aceInhibitor" <%= props.getProperty("aceInhibitor", "") %> />*</td>
                 </tr>
                 <tr>
                     <td>2. GLYBURIDE</td>
                     <td><input type="checkbox" name="glyburide" <%= props.getProperty("glyburide", "") %> /></td>
-                    <td>6. ASA &gt;30 YR</td>
+                    <td>6. <div class="ping">ASA</div> &gt;30 YR</td>
                     <td align="left"><input type="checkbox" name="asa" <%= props.getProperty("asa", "") %> /></td>
                 </tr>
                 <tr>
@@ -523,7 +524,7 @@ function checkAllDates()
         <td><textarea style="height:120px;" class="Type2DiabetesTextarea" name="meds5"><%= props.getProperty("meds5", "") %></textarea></td>
     </tr>
     <tr>
-        <td align="left">*LIFESTYLE <b>Smoking</b> (Y/N)</td>
+        <td align="left">*LIFESTYLE <b><div class="ping">Smoking</div></b> (Y/N)</td>
         <td><input type="text" class="Type2DiabetesTextarea" name="lifestyle1" value="<%= props.getProperty("lifestyle1", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="lifestyle2" value="<%= props.getProperty("lifestyle2", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="lifestyle3" value="<%= props.getProperty("lifestyle3", "") %>" /></td>
@@ -532,7 +533,7 @@ function checkAllDates()
     </tr>
     <tr>
         <td style="padding-left:60px;" align="left">
-            <i>Exercise</i> (min/wk)
+            <i><div class="ping">Exercise</div></i> (min/wk)
         </td>
         <td><input type="text" class="Type2DiabetesTextarea" name="exercise1" value="<%= props.getProperty("exercise1", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="exercise2" value="<%= props.getProperty("exercise2", "") %>" /></td>
