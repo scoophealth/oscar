@@ -867,7 +867,7 @@ function calToday(field) {
           String[] optAfp = {"", "Neg", "Pos","declined"}; 
           for (int i=0; i<optAfp.length; i++) {
           %>
-            <option value="<%=optAfp[i]%>" <%=props.getProperty("ar2_labBlood", "").equals(optAfp[i])?"selected":""%> ><%=optAfp[i]%></option>
+            <option value="<%=optAfp[i]%>" <%=props.getProperty("ar2_labAfpTS", "").equals(optAfp[i])?"selected":""%> ><%=optAfp[i]%></option>
           <%}%>
           </select>
 		  </td>
