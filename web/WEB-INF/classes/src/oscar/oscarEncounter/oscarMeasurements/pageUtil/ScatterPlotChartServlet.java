@@ -124,7 +124,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                         for( int x = 0; x < results.length; x++ )
                         {                                
                                 points[ x ] = ScatterPlotDataSet.createPoint2DDouble();
-                                points[ x ].setLocation( x, results[x] );
+                                points[ x ].setLocation( x+1, results[x] );
                         }                    
                        
                         scatterPlotDataSet.addDataPoints( points, Color.red, chartTitle );                    
