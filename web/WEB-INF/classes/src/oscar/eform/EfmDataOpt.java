@@ -176,6 +176,23 @@ public class EfmDataOpt {
     }                   
     return temp;
   }
+  public String getAddressLine(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("address")+", "+ rs.getString("city") +", "+rs.getString("province")+ ", "+ rs.getString("postal");
+                 
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
   
   public String getDoctor(int demographic_no){
     String temp = ""; 

@@ -34,6 +34,7 @@ public class EfmPrepData {
   private String today;
   private String label ;
   private String address;
+  private String addressLine;
   private String doctor;
   private String Problem_List ;
   private String Medication ;
@@ -61,13 +62,14 @@ public class EfmPrepData {
     setToday();
     setLabel();
     setAddress();
+    setAddressLine();
     setDoctor();
     setEChartAcc();
     createDemoAcc();
     
-    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=doctor","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders" };
+    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders" };
     try {
-      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, doctor, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders };
+      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders };
     } catch(Exception ex) {
       System.err.println(" : " + ex.getMessage());
     }
@@ -147,6 +149,9 @@ public class EfmPrepData {
 
   public void setAddress() {  
     address = (new EfmDataOpt()).getAddress(demographic_no);
+  }
+  public void setAddressLine() {  
+    addressLine = " value=\"" + (new EfmDataOpt()).getAddressLine(demographic_no) + "\"";
   }
   public void setDoctor() {  
     doctor = " value=\"" + (new EfmDataOpt()).getDoctor(demographic_no) + "\"";
