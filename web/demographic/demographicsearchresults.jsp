@@ -20,23 +20,30 @@
 <title> <bean:message key="demographic.demographicsearchresults.title"/> </title>
 <link rel="stylesheet" href="../web.css" >
 <script language="JavaScript">
-<!--
+
 function setfocus() {
   document.titlesearch.keyword.focus();
   document.titlesearch.keyword.select();
 }
+
 function checkTypeIn() {
-  var dob = document.titlesearch.keyword;
+  var dob = document.titlesearch.keyword; typeInOK = false;
+  
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
+      //alert(dob.value.length);
+      typeInOK = true;
     }
-    if(dob.value.length!=10) {
-      alert("<bean:message key="demographic.demographicsearchresults.msgWrongDOB"/>");
+    if(dob.value.length != 10) {
+      alert("<bean:message key="demographic.search.msgWrongDOB"/>");
+      typeInOK = false;
     }
+    
+    return typeInOK ;
   }
-} 
-//-->
+}
+
 </SCRIPT>
 </head>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
