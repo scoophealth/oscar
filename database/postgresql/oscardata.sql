@@ -10991,11 +10991,11 @@ INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue')
 -- Dumping data for table 'provider'
 --
 
-INSERT INTO provider VALUES ('999997','oscaradmin','admin','admin','','','','0001-01-01','','','','','','','','1','');
-INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','');
-INSERT INTO provider VALUES ('999999','oscarrep','receptionist','receptionist','','','','0001-01-01','','','','','','','','1','');
-INSERT INTO provider VALUES ('88888','Support','IT','receptionist','','Admin','','0001-01-01','','','','','','','','1','');
-INSERT INTO provider VALUES ('174','Chan','David','doctor','Family Medicine','TEAM A','M','0001-01-01','','H 905-','058081','','','BAAP','1','1','');
+INSERT INTO provider VALUES ('999997','oscaradmin','admin','admin','','','','0001-01-01','','','','','','','','1','','');
+INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','','');
+INSERT INTO provider VALUES ('999999','oscarrep','receptionist','receptionist','','','','0001-01-01','','','','','','','','1','','');
+INSERT INTO provider VALUES ('88888','Support','IT','receptionist','','Admin','','0001-01-01','','','','','','','','1','','');
+INSERT INTO provider VALUES ('174','Chan','David','doctor','Family Medicine','TEAM A','M','0001-01-01','','H 905-','058081','','','BAAP','1','1','','');
 
 --
 -- Dumping data for table 'providerExt'

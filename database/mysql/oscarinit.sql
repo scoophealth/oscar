@@ -2855,6 +2855,7 @@ CREATE TABLE provider (
   hso_no varchar(10) default NULL,
   status char(1) default NULL,
   comments text,
+  provider_activity char(3) default NULL,
   PRIMARY KEY  (provider_no)
 ) TYPE=MyISAM;
 

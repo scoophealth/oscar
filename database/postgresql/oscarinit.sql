@@ -3262,6 +3262,7 @@ CREATE TABLE provider (
   hso_no varchar(10) DEFAULT NULL,
   status char(1) DEFAULT NULL,
   comments text,
+  provider_activity CHAR(3) DEFAULT NULL,
   PRIMARY KEY (provider_no)
 
 );
