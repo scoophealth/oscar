@@ -44,7 +44,7 @@ function onBlockFieldFocus(obj) {
   obj.blur();
   document.EDITAPPT.keyword.focus();
   document.EDITAPPT.keyword.select();
-  window.alert('<bean:message key="Appointment.msgFillNameField"/>');
+  window.alert("<bean:message key="Appointment.msgFillNameField"/>");
 }
 function labelprint(vheight,vwidth,varpage) {
   var page = "" + varpage;
@@ -62,11 +62,12 @@ function upCaseCtrl(ctrl) {
 }
 function onSub() {
   if( saveTemp==1 ) {
-    return (confirm('<bean:message key="appointment.editappointment.msgDeleteConfirmation"/>')) ; 
+    return (confirm("<bean:message key="appointment.editappointment.msgDeleteConfirmation"/>")) ; 
   } 
   if( saveTemp==2 ) {
     return calculateEndTime() ;
-  } else return true;
+  } else 
+      return true;
 }
 function calculateEndTime() {
   var stime = document.EDITAPPT.start_time.value;
@@ -76,7 +77,7 @@ function calculateEndTime() {
     stime = document.EDITAPPT.start_time.value;
   }
   if(stime.length!=5) {
-    alert('<bean:message key="Appointment.msgInvalidDateFormat"/>');
+    alert("<bean:message key="Appointment.msgInvalidDateFormat"/>");
     return false;
   }
  
@@ -99,24 +100,24 @@ function calculateEndTime() {
   smin = smin<10?("0"+ smin):smin;
   document.EDITAPPT.end_time.value = shour +":"+ smin;
   if(shour > 23) {
-    alert('<bean:message key="Appointment.msgCheckDuration"/>');
+    alert("<bean:message key="Appointment.msgCheckDuration"/>");
     return false;
   }
 }
 
 function checkTimeTypeIn(obj) {
   if(!checkTypeNum(obj.value) ) {
-	  alert ('<bean:message key="Appointment.msgFillTimeField"/>');
+	  alert ("<bean:message key="Appointment.msgFillTimeField"/>");
 	} else {
 	  if(obj.value.indexOf(':')==-1) {
-	    if(obj.value.length < 3) alert('<bean:message key="Appointment.msgFillValidTimeField"/>');
+	    if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
 	    obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
 	  } 
 	}
 }
 </script>
 <body  onload="setfocus()" background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
-<FORM NAME = "EDITAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"  onSubmit="return ( onSub());">
+<FORM NAME = "EDITAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"  onSubmit="return(onSub())">
 <INPUT TYPE="hidden" NAME="displaymode" value="">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="appointment.editappointment.msgMainLabel"/></font></th></tr>
@@ -241,7 +242,7 @@ function checkTimeTypeIn(obj) {
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
               <!--input type="hidden" name="displaymode" value="Search " -->
-              <div align="right"><input type="button" onclick="document.forms['EDITAPPT'].displaymode.value='Search '; document.forms['ADDAPPT'].submit();" value="<bean:message key="appointment.editappointment.btnSearch"/>"></div>
+              <div align="right"><input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Search '" value="<bean:message key="appointment.editappointment.btnSearch"/>"></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
               <input type="TEXT" name="demographic_no" onFocus="onBlockFieldFocus(this)" readonly value="<%=bFirstDisp?( rs.getInt("demographic_no")==0?"":(""+rs.getInt("demographic_no")) ):request.getParameter("demographic_no")%>" width="25" height="20" border="0" hspace="2">
@@ -321,11 +322,15 @@ function checkTimeTypeIn(obj) {
 <table width="100%" BGCOLOR="<%=deepcolor%>">
   <tr>
       <TD align="left">
-	  <input type="button" onclick="document.forms['EDITAPPT'].displaymode.value='Group Action'; document.forms['EDITAPPT'].submit();" value="<bean:message key="appointment.editappointment.btnGroupAction"/>" onClick="onButUpdate()" >
-<input type="button" onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt'; document.forms['EDITAPPT'].submit();" value="<bean:message key="appointment.editappointment.btnUpdateAppointment"/>" onClick="onButUpdate()"><input type = "button" onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; document.forms['EDITAPPT'].submit();" value = "<bean:message key="appointment.editappointment.btnDeleteAppointment"/>" onClick="onButDelete()" >
-        <input type = "button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnCancelAppointment"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'"><input type = "button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnNoShow"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'" ></td>
+	<input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Group Action'; onButUpdate();" value="<bean:message key="appointment.editappointment.btnGroupAction"/>">
+        <input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt'; onButUpdate();" value="<bean:message key="appointment.editappointment.btnUpdateAppointment"/>">
+        <input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();" value = "<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">
+        <input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnCancelAppointment"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
+        <input type="button" name="buttoncancel" value = "<bean:message key="appointment.editappointment.btnNoShow"/>" onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
+      </TD>
       <TD align="right"> 
-<input type = "button" name="labelprint" value = "<bean:message key="appointment.editappointment.btnLabelPrint"/>" onClick="window.open('../demographic/demographiclabelprintsetting.jsp?demographic_no='+document.EDITAPPT.demographic_no.value, 'labelprint','height=550,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no' )"><input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="self.close()">
+        <input type = "button" name="labelprint" value = "<bean:message key="appointment.editappointment.btnLabelPrint"/>" onClick="window.open('../demographic/demographiclabelprintsetting.jsp?demographic_no='+document.EDITAPPT.demographic_no.value, 'labelprint','height=550,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no' )">
+        <input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="self.close()">
     </TD>
   </tr>
 </TABLE>

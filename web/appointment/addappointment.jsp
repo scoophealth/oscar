@@ -210,7 +210,7 @@ function calculateEndTime() {
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
               <!--input type="hidden" name="displaymode" value="Search " -->
-              <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Search '; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key="appointment.addappointment.btnSearch"/>"></font></div>
+              <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Search '" VALUE="<bean:message key="appointment.addappointment.btnSearch"/>"></font></div>
             </td>
             <td width="20%" > 
               <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>" width="25" height="20" border="0" hspace="2">
@@ -280,15 +280,15 @@ function calculateEndTime() {
 <table width="100%" BGCOLOR="<%=deepcolor%>">
   <tr>
     <TD nowrap>
-        <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/>" >
+        <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'" VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/>" >
 <%
   if(dateString2.equals( inform.format(inform.parse(now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH))) ) 
      || dateString2.equals( inform.format(inform.parse(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DAY_OF_MONTH))) ) ) {
     org.apache.struts.util.MessageResources resources = org.apache.struts.util.MessageResources.getMessageResources("oscarResources");
-    %><INPUT TYPE="button" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintPreview'; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key='appointment.addappointment.btnAddApptPrintPreview'/>"><%
+    %><INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintPreview'" VALUE="<bean:message key='appointment.addappointment.btnAddApptPrintPreview'/>"><%
   }
 %>        
-        <INPUT TYPE="button" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'; document.forms['ADDAPPT'].submit();" tabindex="6" VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>" SIZE="7">
+        <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'" tabindex="6" VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>">
       </TD>
     <TD></TD>
     <TD align="right"><INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();"></TD>
