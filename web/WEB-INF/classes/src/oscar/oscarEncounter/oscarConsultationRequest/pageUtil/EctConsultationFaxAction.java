@@ -28,6 +28,7 @@ import org.dom4j.*;
 import java.awt.*;
 import javax.xml.parsers.*;
 import oscar.oscarFax.client.*;
+import oscar.OscarProperties;
 
 public class EctConsultationFaxAction extends Action {
 
@@ -46,6 +47,8 @@ public class EctConsultationFaxAction extends Action {
         if(bean == null)
             return mapping.findForward("eject");
         
+        OscarProperties props = OscarProperties.getInstance();
+        
         String curUser_no = (String) request.getSession().getAttribute("user");
         
         FaxClientLog faxClientLog = new FaxClientLog(curUser_no);    
@@ -55,8 +58,8 @@ public class EctConsultationFaxAction extends Action {
         String requestId          = frm.getRequestId();
         //String sendingProvider    = bean.providerNo;
         String sendingProvider    = curUser_no;
-        String locationId         = getLocationId();
-        String identifier         = "zwf4t%8*9@s";
+        String locationId         = getLocationId();        
+        String identifier         = props.getProperty("faxIdentifier", "zwf4t%8*9@s");
         String recipentsFaxNumber = frm.getRecipientsFaxNumber();
         String comments           = frm.getComments(); 
         String sendersFax         = frm.getSendersFax();
@@ -76,9 +79,9 @@ public class EctConsultationFaxAction extends Action {
         String formattedDate = year+"/"+mon+"/"+day+"  "+hourOfDay+":"+minute;
 
         ClinicData clinic = new ClinicData();
-        String SIMPLE_SAMPLE_URI = "https://67.69.12.117:14043/OSCARFaxWebService" ;
+        String SIMPLE_SAMPLE_URI = props.getProperty("faxURI", "https://67.69.12.117:14043/OSCARFaxWebService");
     
-        System.setProperty("javax.net.ssl.trustStore", "/root/oscarFax/oscarFax.keystore");
+        System.setProperty("javax.net.ssl.trustStore", props.getProperty("faxKeystore", "/root/oscarFax/oscarFax.keystore"));
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
 			public boolean verify(String urlHostname, SSLSession a) {
 				return true;   
