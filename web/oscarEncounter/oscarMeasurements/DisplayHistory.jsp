@@ -134,6 +134,9 @@
                     <td><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"></td>
                     <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
                     <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>" onclick="submit();"/></td>
+                    <logic:present name="type">
+                        <input type="hidden" name="type" value="<bean:write name="type" />"/>
+                    </logic:present>
                 </tr>
             </table>
         </td>   
