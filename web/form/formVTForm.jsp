@@ -1324,6 +1324,29 @@ function controlEyeExam(){
                                         </tr>
                                         <tr>
                                             <th></th>
+                                            <th class="title" width="98%">
+                                            <a href="javascript: showHideItem('medicationAllergies');">Medication Allergies>> </a>
+                                            </th>
+                                        </tr>
+                                         <tr>
+                                            <td></td>
+                                            <td><table style="display:none" cellpadding='1' cellspacing='0' id="medicationAllergies">
+                                            <tr>
+                                                <td>
+                                                    <logic:present name="allergies">
+                                                        <logic:iterate id="alg" name="allergies">
+                                                            <bean:write name="alg"/><br>
+                                                        </logic:iterate>
+                                                    </logic:present>
+                                                    <logic:notPresent name="allergies">
+                                                        No Allergies in the current drug profile
+                                                    </logic:notPresent>
+                                                </td>
+                                            </tr></table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
                                             <th class="title">
                                             <a href="javascript: showHideItem('counselling');" >Counselling >></a>
                                             </th>
