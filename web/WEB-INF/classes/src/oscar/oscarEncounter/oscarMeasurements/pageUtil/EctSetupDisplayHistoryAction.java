@@ -63,8 +63,7 @@ public final class EctSetupDisplayHistoryAction extends Action {
                 request.setAttribute("type", type);
             }            
             HttpSession session = request.getSession();
-            session.setAttribute( "measurementsData", hd );            
-            session.setAttribute( "back", "back" );            
+            session.setAttribute( "measurementsData", hd );                        
         }
         else{
             System.out.println("cannot get the EctSessionBean");
