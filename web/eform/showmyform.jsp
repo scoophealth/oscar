@@ -58,6 +58,17 @@
 <bean:message key="eform.showmyform.title"/>
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+//if (document.all || document.layers)  window.resizeTo(790,580);
+function newWindow(file,window) {
+  msgWindow=open(file,window,'scrollbars=yes,width=760,height=520,screenX=0,screenY=0,top=0,left=10');
+  if (msgWindow.opener == null) msgWindow.opener = self;
+} 
+//-->
+</SCRIPT>
 <script type="text/javascript">
 
 
@@ -134,7 +145,7 @@ QueryString_Parse();
 </style>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">

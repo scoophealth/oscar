@@ -133,7 +133,14 @@ QueryString_Parse();
 	}	
 </style>
 </head>
-
+<script language="javascript">
+<!--
+function newWindow(file,window) {
+    msgWindow=open(file,window,'scrollbars=yes,width=760,height=520,screenX=0,screenY=0,top=0,left=10');
+    if (msgWindow.opener == null) msgWindow.opener = self;
+} 
+//-->
+</script>
 <body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
