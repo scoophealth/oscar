@@ -1,29 +1,3 @@
-<%--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
---%>
-
 <table width="100%" border="2"  valign="top">
 <% 
 String dateBegin = request.getParameter("xml_vdate");
@@ -45,11 +19,11 @@ if(rs==null) {
 } else {
 %>
 <tr bgcolor="#CCCCFF"> 
-<TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">SERVICE DATE</font></b></TH>
-<TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">TIME</font></b></TH>
-<TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
-<TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">DESCRIPTION</font></b></TH>
-<TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">COMMENTS</font></b></TH>
+<TH width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">SERVICE DATE</font></b></TH>
+<TH width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">TIME</font></b></TH>
+<TH width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
+<TH width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">DESCRIPTION</font></b></TH>
+<TH width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">COMMENTS</font></b></TH>
 </tr>
 <%
 	while (rs.next()) {
@@ -63,13 +37,12 @@ if(rs==null) {
 		apptTime = rs.getString("start_time");
 		reason = rs.getString("reason");
 %>
-<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
-	<TD align="center" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
-	<TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime%></font></b></TD>
-	<TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
-	<TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason%>
-	</font></b></TD>
-	<TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "billingOB.jsp?billForm=MFP&hotclick=&appointment_no=<%=apptNo%>&demographic_name=<%=URLEncoder.encode(demoName)%>&demographic_no=<%=demoNo%>&user_no=<%=userno%>&apptProvider_no=<%=providerview%>&appointment_date=<%=apptDate%>&start_time=<%=apptTime%>&bNewForm=1")' title="<%=reason%>">Bill 
+<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"  align="center"> 
+	<TD width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
+	<TD width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime%></font></b></TD>
+	<TD width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
+	<TD width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason%></font></b></TD>
+	<TD width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=<%=apptNo%>&demographic_name=<%=URLEncoder.encode(demoName)%>&demographic_no=<%=demoNo%>&user_no=<%=userno%>&apptProvider_no=<%=providerview%>&appointment_date=<%=apptDate%>&start_time=<%=apptTime%>&bNewForm=1")' title="<%=reason%>">Bill 
 	|$|</a></font></b></TD>
 </tr>
 <%
@@ -79,8 +52,7 @@ if(rs==null) {
 	if (rowCount == 0) {
 %>
 <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-	<TD colspan="5" align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">No 
-	unbill items</font></b></TD>
+	<TD colspan="5"><b><font size="2" face="Arial, Helvetica, sans-serif">No unbill items</font></b></TD>
 </tr>
 <% 
 	}
