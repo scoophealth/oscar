@@ -135,8 +135,13 @@ oscar.oscarRx.data.RxPrescriptionData.Prescription[] drugs =
                     for(int i=0; i<drugs.length; i++){
                         oscar.oscarRx.data.RxProviderData.Provider prov =
                             new oscar.oscarRx.data.RxProviderData().getProvider(drugs[i].getProviderNo());
+                        String arch = "";
+                        System.out.println(drugs[i].isArchived());
+                        if (drugs[i].isArchived()){
+                           arch = "text-decoration: line-through;";
+                        } 
                         %>
-                        <tr style="height:20px">
+                        <tr style="height:20px;<%=arch%>">
                             <td><%= prov.getFirstName() %> <%= prov.getSurname() %></td>
                             <td><%= oscar.oscarRx.util.RxUtil.DateToString(drugs[i].getRxDate()) %></td>
                             <td><%= oscar.oscarRx.util.RxUtil.DateToString(drugs[i].getEndDate()) %></td>
