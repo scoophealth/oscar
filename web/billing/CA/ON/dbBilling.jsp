@@ -128,6 +128,7 @@
     {"search_billingform","select distinct  servicetype_name, servicetype from ctl_billingservice where servicetype like ?"},
     {"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
       
+    {"search_demo_fd", "select provider_no from demographic where hin=?"},
  
  };
   

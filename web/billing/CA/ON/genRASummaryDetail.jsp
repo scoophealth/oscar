@@ -174,7 +174,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
 <tr bgcolor="#333333">
-	<th align='CENTRE' nowrap><form action="genRASummary.jsp"><input type="hidden" name="rano" value="<%=raNo%>">
+	<th align='CENTRE'><form action="genRASummary.jsp"><input type="hidden" name="rano" value="<%=raNo%>">
 	<select name="proNo">
 	<!--option value="all"  <%--=proNo.equals("all")?"selected":""--%>>All Providers</option-->
 	
@@ -191,9 +191,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 	<option value="<%=pohipno%>" "selected"><%=plast%>,<%=pfirst%></option>
 <%	} %>
 	</select>
-	<input type="submit" name="submit" value="Generate">
-	<a href="genRASummaryDetail.jsp?rano=<%=raNo%>&proNo=">Detail</a></form>
-	</th>
+	<input type="submit" name="submit" value="Generate"></form></th>
 </tr>
 </table>
       
@@ -203,7 +201,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
 <tr> 
 	<td width="7%" height="16">Billing No</td>
-	<td width="14%" height="16">Provider </td>
+	<td width="14%" height="16">Family Doc </td>
 	<td width="15%" height="16">Patient </td>
 	<td width="7%" height="16">HIN</td>
 	<td width="10%" height="16">Service Date </td>
@@ -243,7 +241,16 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			location = rsdemo3.getString("visittype");
 			localServiceDate = rsdemo3.getString("billing_date");
 			localServiceDate = localServiceDate.replaceAll("-*", "");
-			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
+			
+			//find the patient's family doctor in oscar
+			if (!demo_hin.equals("")) {
+				rsdemo1 = apptMainBean.queryResults(demo_hin, "search_demo_fd");
+				while (rsdemo1.next()){
+					demo_docname = propProvierName.getProperty(("no_" + rsdemo1.getString("provider_no")), ""); 
+				}
+			} else if (!demo_name.equals("")) {
+				demo_docname = "######";
+			}
 		}
 
 		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
