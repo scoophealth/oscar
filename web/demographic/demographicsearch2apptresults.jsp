@@ -89,7 +89,7 @@ function searchAll() {
 </table>
 
   <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
-	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="checkTypeIn()">
+	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
 	<%--@ include file="zdemographictitlesearch.htm"--%>
 		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.demographicsearch2apptresults.btnSearch"/> 
         </i></b></font></td>
