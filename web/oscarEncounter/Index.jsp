@@ -632,12 +632,13 @@ border-right: 2px solid #cfcfcf;
                         //EctFormData.Form[] forms = new EctFormData().getForms();
                         for(int j=0; j<forms.length; j++) {
                             EctFormData.Form frm = forms[j];
+                            if (!frm.isHidden()) {
                         %>
                         <option value="<%=frm.getFormPage()+demoNo+"&formId=0&provNo="+provNo%>"><%=frm.getFormName()%>
                         <%
 
+                            }
                         }
-
                         %>
                         </select>
 
