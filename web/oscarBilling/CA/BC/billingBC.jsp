@@ -36,7 +36,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@ page import="oscar.oscarDemographic.data.*" %>
-<%@ page import="java.text.*, java.util.*, oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*" %>
+<%@ page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*" %>
 <%
 
  int year = 0;//Integer.parseInt(request.getParameter("year"));
