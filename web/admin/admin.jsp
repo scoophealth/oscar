@@ -12,6 +12,7 @@
   //includeing the provider name and a month calendar
 %>
 <%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <% String country = request.getLocale().getCountry(); %>
 <html:html locale="true">
 <head>
@@ -130,6 +131,12 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <tr bgcolor="#EEEEFF"> 
       <td> 
         <p>
+        <% if (oscarVariables.getProperty("billregion").equals("BC")){ %>
+          <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a><br>
+          <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan Diskette</a><br>
+          <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanCorrection.jsp?billing_no=');return false;">Billing Correction</a><br>
+          <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Billing Reconcilliation</a><br>          
+       <% }else{ %>
           <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
           <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
           <a href=# onClick ="popupPage(800,700,'../billing/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a><br>
@@ -139,6 +146,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           <a href=# onClick ="popupPage(800,640,'../billing/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
           <a href=# onClick ="popupPage(600,800,'../billing/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
           <a href=# onClick ="popupPage(600,1000,'../billing/billingEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>         	         
+       <%}%>
+                   	         
         </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
