@@ -186,7 +186,7 @@ function checkTotal() {
       </td>
       <td align="center" bgcolor="#CCCCCC"> 
         <input type="checkbox" name="label2checkbox" value="checked" checked>
-        <input type="text" name="label2no" size="2" maxlength="2" value="1">
+        <input type="text" name="label2no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.2no","1") %>">
       </td>
     </tr>
     <tr> 
@@ -204,7 +204,7 @@ function checkTotal() {
       </td>
       <td align="center" bgcolor="#CCCCCC"> 
         <input type="checkbox" name="label3checkbox" value="checked" >
-        <input type="text" name="label3no" size="2" maxlength="2" value="1">
+        <input type="text" name="label3no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.3no","1") %>">
       </td>
     </tr>
     <tr bgcolor="#486ebd"> 
