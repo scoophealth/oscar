@@ -30,7 +30,7 @@
   String user_no = (String) session.getAttribute("user");
   String resource_baseurl = "http://67.69.12.117:8080/oscarResource/";
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.URLEncoder, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
 
@@ -194,6 +194,8 @@ function onSubmitForm() {
     rsdemo = formMainBean.queryResults(param2, "search_form_no");
     while (rsdemo.next()) { 
       bNew = false;
+      if(request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("1")==0)  // for new form
+        bNew = true;
       content = rsdemo.getString("content");
 %>
   <xml id="xml_list">
@@ -227,7 +229,7 @@ function onSubmitForm() {
     param1[0]=request.getParameter("demographic_no");
     param1[1]="ar%"; //!!! other forms can't have the name of 'ar' chars.
     rsdemo = formMainBean.queryResults(param1, "compare_form");
-    if (rsdemo.next()) { 
+    if (rsdemo.next() && !bNew) { 
       birthAttendants = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_ba>","</xml_ba>");
 	  birthAttendants = birthAttendants==null?"":birthAttendants;
       newbornCare = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_nc>","</xml_nc>");
@@ -268,6 +270,15 @@ function onSubmitForm() {
 		  <input type="hidden" name="oox" value="0">
 		  <input type="hidden" name="ooy" value="0">
 		  <input type="hidden" name="cmd" value="">
+<%
+String newFormURL = "providercontrol.jsp?";
+if (request.getParameter("demographic_no") != null) newFormURL += "demographic_no=" + request.getParameter("demographic_no");
+if (request.getParameter("appointment_no") != null) newFormURL += "&appointment_no=" + request.getParameter("appointment_no");
+if (request.getParameter("reason") != null) newFormURL += "&reason=" + URLEncoder.encode(request.getParameter("reason"));
+newFormURL += "&bNewForm=1&displaymode=ar1&dboperation=search_demograph";
+
+%>
+		  <a href="<%=newFormURL%>"><font color="yellow">New Form</font></a>&nbsp;
         </div>
       </th>
   </tr>

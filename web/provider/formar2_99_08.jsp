@@ -214,6 +214,7 @@ function onSubmitForm() {
   }
   //boolean bNewDemoAcc=true;
   if( request.getParameter("bNew")!=null && request.getParameter("bNew").compareTo("1")==0 ) bNew = true; //here for another ar2 new form, continue from finished previous ar2 form
+  if( request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("1")==0 ) bNew = true; //here for a total new ar2 form
 %>
 
 
@@ -248,6 +249,15 @@ function onSubmitForm() {
 		  <input type="hidden" name="oox" value="0">
 		  <input type="hidden" name="ooy" value="0">
 		  <input type="hidden" name="cmd" value="">
+<%
+String newFormURL = "providercontrol.jsp?";
+if (request.getParameter("demographic_no") != null) newFormURL += "demographic_no=" + request.getParameter("demographic_no");
+if (request.getParameter("appointment_no") != null) newFormURL += "&appointment_no=" + request.getParameter("appointment_no");
+if (request.getParameter("reason") != null) newFormURL += "&reason=" + URLEncoder.encode(request.getParameter("reason"));
+newFormURL += "&bNewForm=1&displaymode=ar2&dboperation=search_demograph&template=";
+
+%>
+		  <a href="<%=newFormURL%>"><font color="yellow">New Form</font></a>&nbsp;		  		  		  
         </div>
       </th>
   </tr>
