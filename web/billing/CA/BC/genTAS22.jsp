@@ -41,36 +41,38 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       raNo = request.getParameter("rano");
       if (raNo.compareTo("") == 0 || raNo == null){
       flag = "0";
-      }
-      else{
+      }else{
       
       %>
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       	      <tr bgcolor="#333333">
-      	        <th align='CENTRE'><form action="genRAError.jsp"><input type="hidden" name="rano" value="<%=raNo%>"><select name="proNo"><option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
-	
-	<%   
-	    ResultSet rsdemo3 = null;
-	    ResultSet rsdemo2 = null;
-      	    ResultSet rsdemo = null;
-      	  	    rsdemo = apptMainBean.queryResults(raNo, "search_taprovider");
-      	     while (rsdemo.next()) {   
-      	     pohipno = rsdemo.getString("t_practitionerno");
-      	     plast = rsdemo.getString("last_name");
-      	     pfirst = rsdemo.getString("first_name");
-	  
-	  %>
-	 <option value="<%=pohipno%>" <%=proNo.equals(pohipno)?"selected":""%>><%=plast%>,<%=pfirst%></option>
-	   <%
-	  
-	  }
-      %>
-      </select><input type=submit name=submit value=Generate></form></th></tr>
+      	        <th align='CENTRE'>
+                <form action="genRAError.jsp">
+                <input type="hidden" name="rano" value="<%=raNo%>">
+                <select name="proNo">
+                <option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>	
+                  <%   
+                        ResultSet rsdemo3 = null;
+                        ResultSet rsdemo2 = null;
+                        ResultSet rsdemo = null;
+                        rsdemo = apptMainBean.queryResults(raNo, "search_taprovider");
+                        while (rsdemo.next()) {   
+                          pohipno = rsdemo.getString("t_practitionerno");
+                          plast = rsdemo.getString("last_name");
+                          pfirst = rsdemo.getString("first_name");
+
+                    %>
+                <option value="<%=pohipno%>" <%=proNo.equals(pohipno)?"selected":""%>><%=plast%>,<%=pfirst%></option>
+                    <%  }  %>
+                </select>
+                <input type=submit name=submit value=Generate>
+                </form>
+                </th>       
+              </tr>
       </table>
       
       
-      <% if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){ 
-      %>
+      <% if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){  %>
       <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
         <tr> 
          <td width="10%" height="16">Payment Date</td>
@@ -86,15 +88,15 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       
       
          String[] param = new String[3];
-                param[0] = raNo;
+          param[0] = raNo;
           param[1] = "S01";
           param[2] = "%";
           
-                 String[] param0 = new String[2];
-                rsdemo2 = null;
-      rsdemo = null;
-            	    rsdemo = apptMainBean.queryResults(param, "search_taS22");
-            	     while (rsdemo.next()) {   
+          String[] param0 = new String[2];
+          rsdemo2 = null;
+          rsdemo = null;
+          rsdemo = apptMainBean.queryResults(param, "search_taS22");
+          while (rsdemo.next()) {   
             	 //   account = rsdemo.getString("t_officeno");
             	    
             	   // param0[0]=raNo;
@@ -136,7 +138,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 
        
            </table>
- <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
+           <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
               <tr> 
                <td width="10%" height="16">Payment Date</td>
                <td width="5%" height="16">Payee</td>
@@ -155,19 +157,14 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                
                    
                 </tr>
-            <%
-            
-            
+            <%                        
                String[] param1 = new String[3];
-                      param1[0] = raNo;
+                param1[0] = raNo;
                 param1[1] = "S01";
                 param1[2] = "%";
                 
-                     
-                      rsdemo = null;
-            rsdemo = null;
-                   	    rsdemo = apptMainBean.queryResults(param1, "search_taS23");
-                  	     while (rsdemo.next()) {   
+               rsdemo = apptMainBean.queryResults(param1, "search_taS23");
+               while (rsdemo.next()) {   
              %>
               <tr> 
         
@@ -188,10 +185,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
         </tr>
             
             
-            <%
-            }
-            
-            %>
+           <%  }  %>
             </table>
             
              <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
@@ -207,15 +201,12 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 	                
 	                
 	                   String[] param2 = new String[3];
-	                          param2[0] = raNo;
+	                    param2[0] = raNo;
 	                    param2[1] = "S01";
 	                    param2[2] = "%";
-	                    
-	                         
-	                          rsdemo = null;
-	                rsdemo = null;
-	                      	    rsdemo = apptMainBean.queryResults(param2, "search_taS25");
-	                      	     while (rsdemo.next()) {   
+
+	                    rsdemo = apptMainBean.queryResults(param2, "search_taS25");
+	                    while (rsdemo.next()) {   
 	                 %>
 	                  <tr> 
 	            
@@ -226,16 +217,11 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 	            </tr>
 	                
 	                
-	                <%
-	                }
-	                
-	                %>
+	                <%  }  %>
             </table>
      <%
       
-      }
-      
-      else {
+      }else {
       
       }
       
