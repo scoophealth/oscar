@@ -24,6 +24,8 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*,oscar.*" errorPage="errorpage.jsp" %>
 
@@ -36,9 +38,9 @@
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
   mygroupno = (String) session.getAttribute("groupno");  
-  int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
-  int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
-  int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
+  int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
+  int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
+  int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
   int view=0;
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -62,9 +64,29 @@
   int day = Integer.parseInt(request.getParameter("day"));
   String strYear=null, strMonth=null, strDay=null;
   String strDayOfWeek=null;
-  String[] arrayDayOfWeek = new String[] {"Sun","Mon","Tue","Wed","Thu","Fri","Sat" };
+  java.util.ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
+  String[] arrayDayOfWeek = new String[] {prop.getString("provider.appointmentprovideradminmonth.msgSun"),
+                                          prop.getString("provider.appointmentprovideradminmonth.msgMon"),
+                                          prop.getString("provider.appointmentprovideradminmonth.msgTue"),
+                                          prop.getString("provider.appointmentprovideradminmonth.msgWed"),
+                                          prop.getString("provider.appointmentprovideradminmonth.msgThu"),
+                                          prop.getString("provider.appointmentprovideradminmonth.msgFri"),
+                                          prop.getString("provider.appointmentprovideradminmonth.msgSat")
+                                          };
   String[] arrayMonthOfYear = new String[] {
-    "January","February","March","April","May","June","July","August","September","October","November","December" };
+                                            prop.getString("provider.appointmentprovideradminmonth.msgJanuary"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgFebruary"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgMarch"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgApril"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgMay"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgJune"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgJuly"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgAugust"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgSeptember"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgOctober"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgNovember"),
+                                            prop.getString("provider.appointmentprovideradminmonth.msgDecember"),
+                                           };
 
   //verify the input date is really existed 
   now=new GregorianCalendar(year,(month-1),day);
@@ -114,9 +136,9 @@
 
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>Receptionist Appointment Access</title>
+<title><bean:message key="receptionist.appointmentrecepcionistmonth.title"/></title>
 <link rel="stylesheet" href="receptionistapptstyle.css" type="text/css">
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
@@ -189,21 +211,21 @@ function refresh1() {
     <table BORDER="0" CELLPADDING="0" CELLSPACING="0" height="20">
       <tr>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap height="20"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="receptionistcontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='View your daily schedule' OnMouseOver="window.status='View your daily schedule' ; return true"> 
-         &nbsp;&nbsp;Day&nbsp;&nbsp; </a></font></td>
+         <a href="receptionistcontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="receptionist.appointmentrecepcionistmonth.msgDaySched"/>' OnMouseOver="window.status='<bean:message key="receptionist.appointmentrecepcionistmonth.msgDaySched"/>' ; return true"> 
+         &nbsp;&nbsp;<bean:message key="receptionist.appointmentrecepcionistmonth.btnDay"/>&nbsp;&nbsp; </a></font></td>
         <td></td><td rowspan="2" BGCOLOR="ivory" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth"   TITLE='View your monthly template' OnMouseOver="window.status='View your monthly template' ; return true">Month</a></font></td>
+         <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth"   TITLE='<bean:message key="receptionist.appointmentrecepcionistmonth.msgMonthTemplate"/>' OnMouseOver="window.status='<bean:message key="receptionist.appointmentrecepcionistmonth.msgMonthTemplate"/>' ; return true"><bean:message key="receptionist.appointmentrecepcionistmonth.btnMonth"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="#" ONCLICK ="popupPage(550,800,'<%=resourcebaseurl%>');return false;" title="Manage Clinical Resource" >Resource</a></font></td>
+         <a href="#" ONCLICK ="popupPage(550,800,'<%=resourcebaseurl%>');return false;" title="<bean:message key="receptionist.appointmentrecepcionistmonth.msgResources"/>" ><bean:message key="receptionist.appointmentrecepcionistmonth.btnResource"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="receptionist.appointmentrecepcionistmonth.msgRecords"/>' OnMouseOver="window.status='<bean:message key="receptionist.appointmentrecepcionistmonth.msgRecords"/>' ; return true"><bean:message key="receptionist.appointmentrecepcionistmonth.btnSearch"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='Generate a billing report' onmouseover="window.status='Generate a billing report';return true">Billing</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="receptionist.appointmentrecepcionistmonth.msgBilling"/>' onmouseover="window.status='<bean:message key="receptionist.appointmentrecepcionistmonth.msgBilling"/>';return true"><bean:message key="receptionist.appointmentrecepcionistmonth.btnBilling"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=userfirstname%>%20<%=userlastname%>')">
          <oscarmessage:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href=# onClick ="popupPage(200,680,'receptionistpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;">Pref</a></font></td>
+         <a href=# onClick ="popupPage(200,680,'receptionistpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;"><bean:message key="receptionist.appointmentrecepcionistmonth.btnPref"/></a></font></td>
         <td></td>
       </tr><tr>
         <td valign="bottom"><img src="../images/tabs_l_inactive_end.gif" width="14" height="20" border="0"></td>
@@ -228,7 +250,8 @@ function refresh1() {
    <INPUT TYPE="hidden" NAME="curProviderName" VALUE="<%=request.getParameter("curProviderName")%>" >
    <INPUT TYPE="hidden" NAME="displaymode" VALUE="day" >
    <INPUT TYPE="hidden" NAME="dboperation" VALUE="searchappointmentday" >
-   <INPUT TYPE="SUBMIT" NAME="Go" VALUE="GO" SIZE="5">
+   <input type="hidden" name="Go" value="GO">
+   <INPUT TYPE="SUBMIT" VALUE="<bean:message key="receptionist.appointmentrecepcionistmonth.btnGo"/>" SIZE="5">
   </td></form>
 </tr>
 </table>
@@ -244,13 +267,13 @@ function refresh1() {
          <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=(month+1)%>&day=<%=day%>&displaymode=month&dboperation=searchappointmentmonth">
          <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<%=arrayMonthOfYear[month%12]%>" vspace="2">&nbsp;&nbsp;</a></td>
         <TD ALIGN="center" width="33%"><B><%= arrayMonthOfYear[(month+11)%12] %> </b> </TD>
-        <td ALIGN="RIGHT"><b>View:</b> 
+        <td ALIGN="RIGHT"><b><bean:message key="receptionist.appointmentrecepcionistmonth.formView"/>:</b> 
   <select name="provider_no" onChange="selectprovider(this)">
-  <option value="all"  >All Doctors</option>
+  <option value="all"  ><bean:message key="receptionist.appointmentrecepcionistmonth.formAllDocs"/></option>
 <% rsgroup = apptMainBean.queryResults("searchmygroupno");
  	 while (rsgroup.next()) { 
 %>
-  <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> >GRP: <%=rsgroup.getString("mygroup_no")%></option>
+  <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><bean:message key="receptionist.appointmentrecepcionistmonth.formGRP"/>: <%=rsgroup.getString("mygroup_no")%></option>
 <% } %>
   
 <% rsgroup = apptMainBean.queryResults("searchprovider");
@@ -261,7 +284,7 @@ function refresh1() {
  	 }
 %>
                 </select>
-         <a href="../logout.jsp">Log Out <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
+         <a href="../logout.jsp"><bean:message key="receptionist.appointmentrecepcionistmonth.btnLogOut"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
       </tr>
       <tr>
         <td align="center" VALIGN="TOP" colspan="3" bgcolor="ivory"> 
@@ -273,13 +296,13 @@ function refresh1() {
 
           <table width="98%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
             <tr bgcolor="#FOFOFO" align="center"> 
-              <td width="14.2%"><font SIZE="2" color="red">Sun</font></td>
-              <td width="14.3%"><font SIZE="2">Mon</font></td>
-              <td width="14.3%"><font SIZE="2">Tue</font></td>
-              <td width="14.3%"><font SIZE="2">Wed</font></td>
-              <td width="14.3%"><font SIZE="2">Thu</font></td>
-              <td width="14.3%"><font SIZE="2">Fri</font></td>
-              <td width="14.2%"><font SIZE="2" color="green">Sat</font></td>
+              <td width="14.2%"><font SIZE="2" color="red"><bean:message key="provider.appointmentprovideradminmonth.msgSun"/></font></td>
+              <td width="14.3%"><font SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgMon"/></font></td>
+              <td width="14.3%"><font SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgTue"/></font></td>
+              <td width="14.3%"><font SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgWed"/></font></td>
+              <td width="14.3%"><font SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgThu"/></font></td>
+              <td width="14.3%"><font SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgFri"/></font></td>
+              <td width="14.2%"><font SIZE="2" color="green"><bean:message key="provider.appointmentprovideradminmonth.msgSat"/></font></td>
             </tr>
             
 <%
@@ -351,18 +374,18 @@ function refresh1() {
             %>
                 <td><b> <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=(month)%>&day=<%=(day)%>&displaymode=month&dboperation=searchappointmentmonth"  title="Last Month: <%=arrayMonthOfYear[((month+10)%12)]%>"> 
                   &nbsp; &nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Last Month: <%=arrayMonthOfYear[((month+10)%12)]%>" vspace="2"> 
-                  Last Month </a>&nbsp; &nbsp;  &nbsp;<%=year%>-<%=month%> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;<%=arrayMonthOfYear[((month+11)%12)]%> </b> <br>
+                  <bean:message key="receptionist.appointmentrecepcionistmonth.btnLastMonth"/> </a>&nbsp; &nbsp;  &nbsp;<%=year%>-<%=month%> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;<%=arrayMonthOfYear[((month+11)%12)]%> </b> <br>
               <table width="98%" border="1" cellspacing="1" cellpadding="6"  bgcolor="#EEE9BF" >
                 <tr bgcolor="#FOFOFO"> 
             
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="blue">Week</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Sun</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Mon</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Tue</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Wed</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Thu</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Fri</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green">Sat</font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="blue"><bean:message key="provider.appointmentprovideradminmonth.msgWeek"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="provider.appointmentprovideradminmonth.msgSun"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgMon"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgTue"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgWed"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgThu"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgFri"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="provider.appointmentprovideradminmonth.msgSat"/></font></div></td>
             </tr>
             
             <%
@@ -404,20 +427,20 @@ function refresh1() {
                   aDate = new DateInMonthTable(year, month-1, 1);
                   dateGrid = aDate.getMonthDateGrid();
             %>
-                <td align='right'><b><%= arrayMonthOfYear[(month+11)%12]%>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  <%=year%>-<%=month%></b> <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=(month)%>&day=<%=day%>&displaymode=month&dboperation=searchappointmentmonth"  title="Next Month: <%=arrayMonthOfYear[month%12]%>">
-                &nbsp; &nbsp; &nbsp; Next Month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Next Month: <%=arrayMonthOfYear[(month)%12]%>" vspace="2">&nbsp;&nbsp;</a><br>
+                <td align='right'><b><%= arrayMonthOfYear[(month+11)%12]%>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  <%=year%>-<%=month%></b> <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=(month)%>&day=<%=day%>&displaymode=month&dboperation=searchappointmentmonth"  title="<bean:message key="receptionist.appointmentrecepcionistmonth.msgNextMonth"/>: <%=arrayMonthOfYear[month%12]%>">
+                &nbsp; &nbsp; &nbsp; <bean:message key="receptionist.appointmentrecepcionistmonth.msgNextMonth"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Next Month: <%=arrayMonthOfYear[(month)%12]%>" vspace="2">&nbsp;&nbsp;</a><br>
 
               <table width="98%" border="1" cellspacing="1" cellpadding="6"  bgcolor="#EEE9BF" >
                 <tr bgcolor="#FOFOFO"> 
             
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="blue">Week</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Sun</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Mon</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Tue</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Wed</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Thu</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Fri</font></div></td>
-              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green">Sat</font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="blue"><bean:message key="provider.appointmentprovideradminmonth.msgWeek"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="provider.appointmentprovideradminmonth.msgSun"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgMon"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgTue"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgWed"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgThu"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="provider.appointmentprovideradminmonth.msgFri"/></font></div></td>
+              <td width="12.5%"><div align="center"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="provider.appointmentprovideradminmonth.msgSat"/></font></div></td>
             </tr>
             
             <%
@@ -466,11 +489,11 @@ function refresh1() {
          <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next MONTH" vspace="2">&nbsp;&nbsp;</a></td>
         <TD ALIGN="center"  BGCOLOR="ivory" width="33%"></TD>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
-         <a href="../logout.jsp">Log Out <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
+         <a href="../logout.jsp"><bean:message key="receptionist.appointmentrecepcionistmonth.btnLogOut"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
       </tr>
   </table>
   </td></tr>
 </table>
 
 </body>
-</html>
+</html:html>
