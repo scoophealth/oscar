@@ -397,7 +397,7 @@ function BackToOscar()
                                     <td >
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
                                             <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
-                                             <bean:message key="oscarMessenger.CreateMessage.btnDisplay"/>
+                                             <bean:message key="oscarMessenger.ViewMessage.btnInbox"/>
                                             </html:link>
                                         </td></tr></table>
                                     </td>
