@@ -368,7 +368,7 @@ function showHideLayers() { //v3.0
       <td valign="top" height="221"> 
         <table width="107%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.patient"/></b>:</font></td>
+            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.patient"/></b>:</font></td>
             <td><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><u><%=demo.getLastName()%>, <%=demo.getFirstName()%></u></font></td>
             <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.patient.status"/></b>:</font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getPatientStatus()%> 
               &nbsp;&nbsp;&nbsp;&nbsp; <b><bean:message key="billing.patient.roster"/>: <%=demo.getRosterStatus()%></b></font></b></td>
@@ -376,7 +376,7 @@ function showHideLayers() { //v3.0
             <td width="29%"><%=billform.getProviderName(demo.getProviderNo())%></td>
           </tr>
           <tr> 
-            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><bean:message key="billing.patient.age"/>:</font></b><br>
+            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><bean:message key="billing.patient.age"/>:</font></b><br>
               </font></td>
             <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getAge()%></font></b></td>
             <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show');return false;">
@@ -399,7 +399,7 @@ function showHideLayers() { //v3.0
               </font></td>
           </tr>
           <tr> 
-            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.billingtype"/></b> </font></td>
+            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.billingtype"/></b> </font></td>
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <html:select property="xml_billtype"  >
                 <html:option value="MSP" >Bill MSP</html:option>
@@ -433,9 +433,10 @@ function showHideLayers() { //v3.0
               </font></td>
           </tr>
           <tr> 
-            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=service","380","300","0")'><bean:message key="billing.servicedate"/></a> </font>                
+            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=service","380","300","0")'><bean:message key="billing.servicedate"/></a> </font>                
             </td>
-            <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">                                           
+            <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2" nowrap>                                           
               <html:text property="xml_appointment_date" value="<%=bean.getApptDate()%>" size="12" />
               <strong><bean:message key="billing.servicedate.starttime"/></strong> 
               <html:text property="xml_starttime" size="12" maxlength="4" />
