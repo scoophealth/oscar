@@ -493,7 +493,14 @@ function faxNumSelect() {
 </tr>
 <tr>
     <td class="subTitles">
-       <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFamilyDoc"/> : <%=reqFrm.getFamilyDoctor() %>
+    <%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
+     should really be rewritten more elegantly at some later point in time. --%>    
+       <% if (props.getProperty("clinic_no", "").startsWith("1022")) { %>
+       Physician
+       <% } else { %>
+       <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFamilyDoc"/>
+       <% } %>
+        : <%=reqFrm.getFamilyDoctor() %>
        &nbsp;<br>
     </td>
 </tr>
