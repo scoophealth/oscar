@@ -654,7 +654,7 @@ border-right: 2px solid #cfcfcf;
                                 if(pforms.length>0) {
                                     EctFormData.PatientForm pfrm = pforms[0];
                             %>
-                            <option value="<%=frm.getFormPage()+demoNo+"&formId="+pfrm.getFormId()+"&provNo="+provNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
+                            <option value="<%="../form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+demoNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
                             <%}}
 
                             %>
