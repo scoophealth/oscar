@@ -80,9 +80,10 @@ public class EctTypeDisplayNameBeanHandler {
                 String sqlGr = "SELECT DISTINCT typeDisplayName FROM measurementGroup WHERE name='" +groupName+ "'";  
                 System.out.println("Sql Statement: " + sqlGr);
                 ResultSet rsGr;
+                
                 for(rs = db.GetSQL(sql); rs.next(); )
                 {
-                    boolean foundInGroup = true;
+                    boolean foundInGroup = false;
                     for(rsGr = db.GetSQL(sqlGr); rsGr.next();){                        
                         if(rs.getString("typeDisplayName").compareTo(rsGr.getString("typeDisplayName"))==0){
                             foundInGroup = true;

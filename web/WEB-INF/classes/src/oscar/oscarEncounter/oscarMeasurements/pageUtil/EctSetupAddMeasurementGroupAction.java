@@ -57,7 +57,7 @@ public class EctSetupAddMeasurementGroupAction extends Action {
         
         EctTypeDisplayNameBeanHandler hd = new EctTypeDisplayNameBeanHandler(groupName, false);
         Collection existingTypeDisplayName = hd.getTypeDisplayNameVector();
-        hd = new EctTypeDisplayNameBeanHandler(groupName, true);
+        hd = new EctTypeDisplayNameBeanHandler();
         Collection allTypeDisplayName = hd.getTypeDisplayNameVector();
         
         HttpSession session = request.getSession();
