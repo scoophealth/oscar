@@ -404,9 +404,11 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 	      //  }
               //  thisForm.setAllergies(stringBuffer2.toString());
   	//	thisForm.setCurrentMedications(stringBuffer.toString());
+				thisForm.setAppointmet
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
                 thisForm.setConcurrentProblems(bean.ongoingConcerns);
+				thisForm.setAppointmentYear(year);
         }
         %>
 
@@ -605,7 +607,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                     </tr>
                     <tr>
                         <td class="tite3">
-                            <html:text size="5" maxlength="4" property="appointmentYear" value="<%=year%>"/>
+                            <html:text size="5" maxlength="4" property="appointmentYear" />
                         </td>
                         <td class="tite3">
                             <html:select property="appointmentMonth">
