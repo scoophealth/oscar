@@ -15,7 +15,7 @@ select       { width: 300px; }
 <html>
 <head>
 <title>
-Select Provider
+<bean:message key="oscarMDS.selectProvider.title"/>
 </title>
 </head>
 
@@ -45,7 +45,7 @@ function doStuff() {
 <body>
     <form name="providerSelectForm" method="post" action="AssignLab.do">
         <center>
-        <p><font size="-1">Select the provider(s)<br>who will receive the selected labs:</font></p>        
+        <p><font size="-1"><bean:message key="oscarMDS.selectProvider.msgSelectProvider"/>:</font></p>        
             <select name="selectedProviders" size="10" multiple>
                 <% ArrayList providers = ProviderData.getProviderList();
                        for (int i=0; i < providers.size(); i++) { %>
@@ -53,8 +53,8 @@ function doStuff() {
                 <% } %>
             </select>
             <p>
-                <input type="button" class="button" value="Ok" onclick="doStuff()">
-                <input type="button" class="button" value="Cancel" onclick="window.close()">
+                <input type="button" class="button" value="<bean:message key="oscarMDS.selectProvider.btnOk"/>" onclick="doStuff()">
+                <input type="button" class="button" value="<bean:message key="oscarMDS.selectProvider.btnCancel"/>" onclick="window.close()">
             </p>
         </center>
     </form>

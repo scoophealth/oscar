@@ -212,7 +212,10 @@ function checkSelected() {
                             <td align="center" valign="center" width="40%" class="Nav">
                                 &nbsp;&nbsp;&nbsp;
                                 <% if (demographicNo == null) { %>
-                                    <span class="white"><%= ( ackStatus.equals("N") ? "New" : ( ackStatus.equals("A") ? "Acknowledged" : "All" )) %> lab reports for <%= ( searchProviderNo.equals("") ? "all physicians" : ( searchProviderNo.equals("0") ? "unclaimed" : ProviderData.getProviderName(searchProviderNo) ) ) %></span>                                
+                                    <span class="white"><%= ( ackStatus.equals("N") ? "New" : ( ackStatus.equals("A") ? "Acknowledged" : "All" )) %>
+                                     lab reports for
+                                     <%= ( searchProviderNo.equals("") ? "all physicians" : ( searchProviderNo.equals("0") ? "unclaimed" : ProviderData.getProviderName(searchProviderNo) ) ) %>
+                                     </span>                                
                                 <% } %>
                             </td>                            
                             <td align="right" valign="center" width="30%">

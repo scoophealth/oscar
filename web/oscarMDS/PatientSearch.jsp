@@ -44,7 +44,7 @@
 
 <html> 
 <head>
-<title> Patient Matching</title>
+<title><bean:message key="oscarMDS.segmentDisplay.patientSearch.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -85,28 +85,28 @@ function checkTypeIn() {
 			
       <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
         <input type="radio"  checked name="search_mode" value="search_name">
-        Name </font></td>
+<bean:message key="oscarMDS.segmentDisplay.patientSearch.formName"/></font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
           <input type="radio"  name="search_mode" value="search_phone">
-          Phone</font></td> 
+          <bean:message key="oscarMDS.segmentDisplay.patientSearch.formPhone"/></font></td> 
         <td nowrap><font size="1" face="Verdana" color="#0000FF">
           <input type="radio"  name="search_mode" value="search_dob">
-          DOB(yyyymmdd)</font></td> 
+          <bean:message key="oscarMDS.segmentDisplay.patientSearch.formDOB"/></font></td> 
       <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
         <input type="hidden" name="displaymode" value="Search " >
-        <input type="SUBMIT" name="displaymode" value="Search " size="17">
+        <input type="SUBMIT" name="displaymode" value="oscarMDS.segmentDisplay.patientSearch.btnSearch" size="17">
 		</tr><tr>
 			
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
         <input type="radio" name="search_mode" value="search_address">
-        Address </font></td>
+       <bean:message key="oscarMDS.segmentDisplay.patientSearch.formAddress"/></font></td>
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
           <input type="radio" name="search_mode" value="search_hin">
-          HIN</font></td>
+          <bean:message key="oscarMDS.segmentDisplay.patientSearch.formHIN"/></font></td>
         <td></td>
 		</tr>
 	</form>
@@ -114,7 +114,7 @@ function checkTypeIn() {
 
 <table width="95%" border="0">
 <tr>
-<td align="left"><font size="-1"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></font></td>
+<td align="left"><font size="-1"><i><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgResults"/></i> : <%=request.getParameter("keyword")%></font></td>
 </tr>
 </table>
 
@@ -135,14 +135,14 @@ function addName(lastname, firstname, chartno) {
 	<form method="post" name="addform" action="PatientMatch.do" >
         <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
 <tr bgcolor="#339999">
-<TH align="center" width="20%"><b>DEMOGP' ID</b></TH>
-<TH align="center" width="20%"><b>LAST NAME </b></TH>
-<TH align="center" width="20%"><b>FIRST NAME </b></TH>
-<TH align="center" width="5%"><b>A'</b></TH>
-<TH align="center" width="10%"><b>ROSTER STATUS</b></TH>
-<TH align="center" width="5%"><b>X</B></TH>
-<TH align="center" width="10%"><b>DOB(yy/mm/dd)</B></TH>
-<TH align="center" width="10%"><b>DOCTOR</B></TH>
+<TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgPatientId"/></b></TH>
+<TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgLastName"/></b></TH>
+<TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgFirstName"/></b></TH>
+<TH align="center" width="5%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgAge"/></b></TH>
+<TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgRosterStatus"/></b></TH>
+<TH align="center" width="5%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgSex"/></B></TH>
+<TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgDOB"/></B></TH>
+<TH align="center" width="10%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgDoctor"/></B></TH>
 </tr>
 
 <%
@@ -278,17 +278,17 @@ function next() {
 <%
   if(nLastPage>=0) {
 %>
-<input type="submit" name="submit" value="Last Page"  onClick="last()">
+<input type="submit" name="submit" value="<bean:message key="oscarMDS.segmentDisplay.patientSearch.btnLastPage"/>"  onClick="last()">
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<input type="submit" name="submit" value="Next Page"  onClick="next()">
+<input type="submit" name="submit" value="<bean:message key="oscarMDS.segmentDisplay.patientSearch.btnNextPage"/>"  onClick="next()">
 <%
 }
 %>
 </form>
 
-Please select the patient corresponding to this lab</center>
+<bean:message key="oscarMDS.segmentDisplay.patientSearch.msgSearchMessage"/></center>
 </body>
 </html>

@@ -21,7 +21,7 @@ String AbnFlag = "";
 <html>
 
 <head>
-<title>Lab Results</title>
+<title><bean:message key="oscarMDS.segmentDisplay.title"/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <style type="text/css">
@@ -133,7 +133,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 <script language="JavaScript">
 function getComment() {
-    this.acknowledgeForm.comment.value = prompt("Please enter a comment (max. 255 characters):", "");
+    this.acknowledgeForm.comment.value = prompt("<bean:message key="oscarMDS.segmentDisplay.msgComment"/>", "");
     return true;
 }
 
@@ -160,12 +160,12 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("providerNo") != null && ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) ) { %>
                         <input type="submit" value="Acknowledge" onclick="getComment()">
                         <% } %>
-                        <input type="button" value=" Close " onClick="window.close()">
-                        <input type="button" value=" Print " onClick="window.print()">
+                        <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                        <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
-                            <input type="button" value=" E-Chart " onClick="window.close()">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
-                            <input type="button" value=" E-Chart " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
                 </tr>
@@ -176,12 +176,12 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                 <tr>
                     <td width="66%" align="middle" class="Cell">
                         <div class="Field2">
-                            Detail Results: Patient Info.
+                             <bean:message key="oscarMDS.segmentDisplay.formDetailResults"/> 
                         </div>
                     </td>
                     <td width="33%" align="middle" class="Cell">
                         <div class="Field2">
-                            Results Info
+                            <bean:message key="oscarMDS.segmentDisplay.formResultsInfo"/>
                         </div>
                     </td>
                 </tr>
@@ -197,7 +197,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <tr>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData">
-                                                                <strong>Patient Name : </strong>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formPatientName"/>: </strong>
                                                             </div>
                                                         </td>
                                                         <td colspan="2" nowrap>
@@ -215,7 +215,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <tr>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData">
-                                                                <strong>Date of Birth : </strong>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formDateBirth"/>: </strong>
                                                             </div>
                                                         </td>
                                                         <td colspan="2" nowrap>
@@ -227,19 +227,24 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <tr>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData">
-                                                                <strong>Age : </strong><%=pd.getAge()%>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formAge"/>: </strong><%=pd.getAge()%>
                                                             </div>
                                                         </td>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData">
-                                                                <strong>Sex : </strong><%=pd.getSex()%>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formSex"/>: </strong><%=pd.getSex()%>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData">
-                                                                <strong><%=(pd.getHealthNumber().startsWith("X")?"Health # : ":"MDS ID # : ")%></strong>
+                                                                <strong><% if (pd.getHealthNumber().startsWith("X")) {%>
+                                                                               <bean:message key="oscarMDS.segmentDisplay.formHealthNumber"/>
+                                                                           <%} else {%>
+                                                                               <bean:message key="oscarMDS.segmentDisplay.formMDSIDNumber"/>
+                                                                           <%}%>
+                                                                </strong>
                                                             </div>
                                                         </td>
                                                         <td colspan="2" nowrap>
@@ -255,7 +260,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <tr>
                                                         <td nowrap>
                                                             <div align="left" class="FieldData">
-                                                                <strong>Home Phone : </strong>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formHomePhone"/>: </strong>
                                                             </div>
                                                         </td>
                                                         <td nowrap>
@@ -267,7 +272,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <tr>
                                                         <td nowrap>
                                                             <div align="left" class="FieldData">
-                                                                <strong>Work Phone : </strong>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formWorkPhone"/>: </strong>
                                                             </div>
                                                         </td>
                                                         <td nowrap>
@@ -289,7 +294,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                     <tr>
                                                         <td nowrap>
                                                             <div align="left" class="FieldData">
-                                                                <strong>Patient Location : </strong>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formPatientLocation"/>: </strong>
                                                             </div>
                                                         </td>
                                                         <td nowrap>
@@ -311,7 +316,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             <tr>
                                 <td>
                                     <div class="FieldData">
-                                        <strong>Date of Service :</strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formDateService"/>:</strong>
                                     </div>
                                 </td>
                                 <td>
@@ -323,7 +328,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             <tr>
                                 <td>
                                     <div class="FieldData">
-                                        <strong>Report Status :</strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formReportStatus"/>:</strong>
                                     </div>
                                 </td>
                                 <td>
@@ -338,7 +343,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             <tr>
                                 <td nowrap>
                                     <div class="FieldData">
-                                        <strong>Client Ref. # :</strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formClientRefer"/>:</strong>
                                     </div>
                                 </td>
                                 <td nowrap>
@@ -350,7 +355,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             <tr>
                                 <td>
                                     <div class="FieldData">
-                                        <strong>Accession # :</strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formAccession"/>:</strong>
                                     </div>
                                 </td>
                                 <td>
@@ -368,19 +373,19 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             <tr>
                                 <td bgcolor="white">
                                     <div class="FieldData">
-                                        <strong>Requesting Client : </strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formRequestingClient"/>: </strong>
                                             <%= mDSSegmentData.providers.referringDoctor %>
                                     </div>
                                 </td>
                                 <td bgcolor="white">
                                     <div class="FieldData">
-                                        <strong>Report to Client : </strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formReportToClient"/>: </strong>
                                             <%= mDSSegmentData.providers.admittingDoctor %>
                                     </div>
                                 </td>
                                 <td bgcolor="white" align="right">
                                     <div class="FieldData">
-                                        <strong>cc: Client : </strong>
+                                        <strong><bean:message key="oscarMDS.segmentDisplay.formCCClient"/>cc: Client : </strong>
                                             <%= mDSSegmentData.providers.consultingDoctor %>
                                     </div>
                                 </td>
@@ -457,23 +462,23 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         </table>
                         <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
                             <tr class="Field2">
-                                <td width="25%" align="middle" valign="bottom" class="Cell">Test Name(s)</td>
-                                <td width="12%" align="middle" valign="bottom" class="Cell">Result</td>
-                                <td width="12%" align="middle" valign="bottom" class="Cell">Abn</td>
-                                <td width="12%" align="middle" valign="bottom" class="Cell">Reference Range</td>
-                                <td width="12%" align="middle" valign="bottom" class="Cell">Units</td>
-                                <td width="12%" align="middle" valign="bottom" class="Cell">Date/Time Completed</td>
-                                <td width="6%" align="middle" valign="bottom" class="Cell">Test Location</td>
-                                <td width="6%" align="middle" valign="bottom" class="Cell">New</td>
+                                <td width="25%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
+                                <td width="12%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+                                <td width="12%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAbn"/></td>
+                                <td width="12%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formReferenceRange"/></td>
+                                <td width="12%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formUnits"/></td>
+                                <td width="12%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestLocation"/></td>
+                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                             </tr>
                             <tr class="NormalRes">
                                 <td align="middle" colspan="8">&nbsp;</td>
                             </tr>
                             <tr class="NormalRes">
-                                <td align="middle" colspan="8">MICROBIOLOGY</td>
+                                <td align="middle" colspan="8"><bean:message key="oscarMDS.segmentDisplay.msgMicrobiology"/></td>
                             </tr>
                             <tr class="NormalRes">
-                                <td align="middle" colspan="8">CULTURE AND SENSITIVITY</td>
+                                <td align="middle" colspan="8"><bean:message key="oscarMDS.segmentDisplay.msgCultureAndSensitivity"/></td>
                             </tr>
 
 
@@ -495,7 +500,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                        
                                     <% for (m=firstorgindex;m<=lastorgindex;m++) {  // print headers %>
                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-                                               <td align="right">ORG <%=m-firstorgindex+1%></td>
+                                               <td align="right"><bean:message key="oscarMDS.segmentDisplay.formORG"/> <%=m-firstorgindex+1%></td>
                                                <td align="left" colspan="7"><%=((oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(m)).resultsArray.get(0)).notes.get(0)%></td>
                                            </tr>
                                     <%     linenum++;
@@ -503,9 +508,9 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                        
 
                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-                                           <td align="left">ANTIBIOTIC</td>
+                                           <td align="left"><bean:message key="oscarMDS.segmentDisplay.msgAntibiotic"/></td>
                                     <% for (m=firstorgindex;m<=lastorgindex;m++) {  // more headers %>
-                                           <td align="middle">ORGANISM <%=m-firstorgindex+1%></td>                                           
+                                           <td align="middle"><bean:message key="oscarMDS.segmentDisplay.msgOrganism"/> <%=m-firstorgindex+1%></td>                                           
                                     <% }
                                        linenum++; %>
                                            <td align="left" colspan="<%=6-lastorgindex+firstorgindex%>"></td>
@@ -603,14 +608,14 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         </table>
                         <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
                             <tr class="Field2">
-                                <td width="25%" align="middle" valign="bottom" class="Cell">Test Name(s)</td>
-                                <td width="15%" align="middle" valign="bottom" class="Cell">Result</td>
-                                <td width="5%" align="middle" valign="bottom" class="Cell">Abn</td>
-                                <td width="15%" align="middle" valign="bottom" class="Cell">Reference Range</td>
-                                <td width="10%" align="middle" valign="bottom" class="Cell">Units</td>
-                                <td width="15%" align="middle" valign="bottom" class="Cell">Date/Time Completed</td>
-                                <td width="6%" align="middle" valign="bottom" class="Cell">Test Location</td>
-                                <td width="6%" align="middle" valign="bottom" class="Cell">New</td>
+                                <td width="25%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
+                                <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+                                <td width="5%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAbn"/></td>
+                                <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formReferenceRange"/></td>
+                                <td width="10%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formUnits"/></td>
+                                <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestLocation"/></td>
+                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                             </tr>
 
 
@@ -680,18 +685,18 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                 <tr>
                     <td align="left" width="40%">
                         <% if ( request.getParameter("providerNo") != null && ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) ) { %>
-                        <input type="submit" value="Acknowledge" onclick="getComment()">
+                        <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
                         <% } %>
-                        <input type="button" value=" Close " onClick="window.close()">
-                        <input type="button" value=" Print " onClick="window.print()">
+                        <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                        <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
-                            <input type="button" value=" E-Chart " onClick="window.close()">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
-                            <input type="button" value=" E-Chart " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
                     <td width="20%" valign="center" align="middle">
-                        <span class="Field2"><i>END OF REPORT</i></span>
+                        <span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEnd"/></i></span>
                     </td>
                     <td width="40%">
                         &nbsp;
