@@ -19,6 +19,7 @@ String service_form="";
 <%
 String clinicview = oscarVariables.getProperty("clinic_view", "");
 String clinicNo = oscarVariables.getProperty("clinic_no", "");
+String visitType = oscarVariables.getProperty("visit_type", "");
 %>
 
 <html>
@@ -343,11 +344,11 @@ if (appt_no.compareTo("0") == 0) {
 		<td width="19%"><font size="-2" ><b>Visit Type</b> </font></td>
 		<td width="24%"> <font size="-2" > 
 		<select name="xml_visittype" datafld='xml_visittype'>
-			<option value="00| Clinic Visit"  selected>00 | Clinic Visit</option>
-			<option value="01| Outpatient Visit">01 | Outpatient Visit</option>
-			<option value="02| Hospital Visit">02 | Hospital Visit</option>
-			<option value="03| ER">03 | ER</option>
-			<option value="04| Nursing Home">04 | Nursing Home</option>
+			<option value="00| Clinic Visit" <%=visitType.equals("Clinic Visit")?"selected":""%>>00 | Clinic Visit</option>
+			<option value="01| Outpatient Visit" <%=visitType.equals("Outpatient Visit")?"selected":""%>>01 | Outpatient Visit</option>
+			<option value="02| Hospital Visit" <%=visitType.equals("Hospital Visit")?"selected":""%>>02 | Hospital Visit</option>
+			<option value="03| ER" <%=visitType.equals("ER")?"selected":""%>>03 | ER</option>
+			<option value="04| Nursing Home" <%=visitType.equals("Nursing Home")?"selected":""%>>04 | Nursing Home</option>
 		</select>
 		</font></td>
 	</tr><tr> 
