@@ -80,6 +80,7 @@ function setfocus() {
 
 <CENTER><table width="100%" border="0" bgcolor="silver" cellspacing="2" cellpadding="2"> 
 <tr bgcolor='<%=deepcolor%>'> 
+<TH align="center" ><b>#</b></TH>
 <TH align="center" width="10%" nowrap><b><bean:message key="report.reportnewdblist.msgEDB"/></b></TH>
 <TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
 <!--TH align="center" width="20%"><b>Demog' No </b></TH-->

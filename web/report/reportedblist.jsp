@@ -73,6 +73,7 @@ function setfocus() {
       <table width="100%" border="1" bgcolor="#ffffff" cellspacing="0" cellpadding="1"> 
          <tr bgcolor="silver"> 
             <TH >&nbsp;</TH>
+            <TH align="center" ><b>#</b></TH>
             <TH align="center" width="10%" nowrap><b>EDB</b></TH>
             <TH align="center" width="30%"><b>Patient's Name </b></TH>
             <!--TH align="center" width="20%"><b>Demog' No </b></TH-->
