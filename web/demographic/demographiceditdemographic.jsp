@@ -177,6 +177,16 @@ function refresh() {
   //history.go(0);
 }
 
+function newStatus() {
+    newOpt = prompt("Please enter the new status:", "");
+    if (newOpt != "") {
+        document.updatedelete.patient_status.options[document.updatedelete.patient_status.length] = new Option(newOpt, newOpt);
+        document.updatedelete.patient_status.options[document.updatedelete.patient_status.length-1].selected = true;
+    } else {
+        alert("Invalid entry");
+    }
+}
+
 </script>
 
 </head>
@@ -567,8 +577,13 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
           <option value="DE"<%=patientStatus.equals("DE")?" selected":""%>>DE - Deceased</option>
           <option value="MO"<%=patientStatus.equals("MO")?" selected":""%>>MO - Moved</option>
           <option value="FI"<%=patientStatus.equals("FI")?" selected":""%>>FI - Fired</option>
+          <% ResultSet rsstatus = apptMainBean.queryResults("search_ptstatus");
+             while (rsstatus.next()) { %>
+               <option<%=patientStatus.equals(rsstatus.getString("patient_status"))?" selected":""%>><%=rsstatus.getString("patient_status")%></option>
+          <% } // end while %>
         </select>
-        <% } %>
+        <input type="button" onClick="newStatus();" value="Add New">
+        <% } // end if...then...else %>
       </td>
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formChartNo"/>:</b> </td>
       <td align="left"> 

@@ -14,6 +14,7 @@
 <% 
   String [][] dbQueries=new String[][] { 
     {"search_provider", "select * from provider order by last_name"},
+    {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
   };
   String[][] responseTargets=new String[][] {  };
   addDemoBean.doConfigure(dbParams,dbQueries,responseTargets);
@@ -102,6 +103,16 @@ function checkTypeIn() {
 	}
 	if(!typeInOK) alert ("<bean:message key="demographic.demographicaddrecordhtm.msgMissingFields"/>");
 	return typeInOK;
+}
+
+function newStatus() {
+    newOpt = prompt("Please enter the new status:", "");
+    if (newOpt != "") {
+        document.adddemographic.patient_status.options[document.adddemographic.patient_status.length] = new Option(newOpt, newOpt);
+        document.adddemographic.patient_status.options[document.adddemographic.patient_status.length-1].selected = true;
+    } else {
+        alert("Invalid entry");
+    }
 }
 
 </script>
@@ -468,8 +479,6 @@ function checkTypeIn() {
           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
           <%
   }
-  addDemoBean.closePstmtConn();
-  
 %>
         </select>
       </td>
@@ -508,8 +517,13 @@ function checkTypeIn() {
           <option value="DE">DE - Deceased</option>
           <option value="MO">MO - Moved</option>
           <option value="FI">FI - Fired</option>
+          <% ResultSet rsstatus = addDemoBean.queryResults("search_ptstatus");
+             while (rsstatus.next()) { %>
+               <option><%=rsstatus.getString("patient_status")%></option>
+          <% } // end while %>          
         </select>
-        <% } %>
+        <input type="button" onClick="newStatus();" value="Add New">
+        <% } // end if...then...else %>
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartNo"/>:</b></td>
       <td align="left"> 
@@ -583,5 +597,6 @@ function checkTypeIn() {
   </form>
 </table>
  * <font face="Courier New, Courier, mono" size="-1"><bean:message key="demographic.demographicaddrecordhtm.formDateFormat"/> </font> 
+<% addDemoBean.closePstmtConn(); %>
 </body>
 </html:html>
