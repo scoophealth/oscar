@@ -357,7 +357,7 @@ rslocal.close();
 		<select name="xml_billtype" datafld='xml_billtype' >
 			<option value="ODP | Bill OHIP" selected>Bill OHIP</option>
 			<option value="PAT | Bill Patient">Bill Patient</option>
-			<option value="NOB | Do Not Bill" <%=DemoStatus.toUpperCase().compareTo("UHIP")==0?"selected":DemoStatus.toUpperCase().compareTo("IFH")==0?"selected":""%>>Do Not Bill</option>
+			<option value="NOB | Do Not Bill" <%=DemoStatus.toUpperCase().compareTo("UHIP")==0?"selected":DemoStatus.toUpperCase().compareTo("IFH")==0?"selected":DemoStatus.toUpperCase().compareTo("NO COVERAGE")==0?"selected":DemoStatus.toUpperCase().compareTo("DO NOT BILL")==0?"selected":DemoStatus.toUpperCase().compareTo("NO HEALTH COVERAGE")==0?"selected":""%>>Do Not Bill</option>
 			<option value="WCB | Worker's Compensation Board">WSIB</option>
 		</select>
 		</font></td>
