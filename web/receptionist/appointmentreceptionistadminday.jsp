@@ -423,9 +423,9 @@ function findProvider(p,m,d) {
 		            	  		tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
           	  	}
 		            	  	
-          	  String reason = rs.getString("reason");
-          	  String notes = rs.getString("notes");
-          	  String status = rs.getString("status");
+          	  String reason = rs.getString("reason").trim();
+          	  String notes = rs.getString("notes").trim();
+          	  String status = rs.getString("status").trim();
           	  bFirstTimeRs=true;
 			  //ApptStatusData as = new ApptStatusData();
 			    as.setApptStatus(status);
