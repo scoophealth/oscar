@@ -1054,7 +1054,7 @@
                 name="EctAddMeasurementGroupForm"
                 scope="request"
                 input="/oscarEncounter/oscarMeasurements/AddMeasurementGroup.jsp">                
-       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessAddMeasurementGroupAction.jsp"/>
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp"/>
     </action>
 <!-- end measurements actions-->    
 
