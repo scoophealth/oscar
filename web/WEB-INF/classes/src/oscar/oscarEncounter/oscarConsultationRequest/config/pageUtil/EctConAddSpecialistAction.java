@@ -17,7 +17,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -37,9 +37,8 @@ import oscar.oscarMessenger.util.MsgStringQuote;
 
 public class EctConAddSpecialistAction extends Action {
     
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        System.err.println("Addspecialist Action Jackson");
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {        
         EctConAddSpecialistForm addSpecailistForm = (EctConAddSpecialistForm)form;
         String fName = addSpecailistForm.getFirstName();
         String lName = addSpecailistForm.getLastName();
