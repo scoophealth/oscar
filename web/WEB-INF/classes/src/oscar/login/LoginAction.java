@@ -54,9 +54,7 @@ public final class LoginAction extends Action {
       oscar.oscarDB.DBHandler.init(pvar.getProperty("db_name"),pvar.getProperty("db_driver"),pvar.getProperty("db_uri"),pvar.getProperty("db_username"),pvar.getProperty("db_password")  ) ;
 
       //get View Type
-      LoginViewTypeHlp lvt = new LoginViewTypeHlp();
-      LoginViewTypeHlp.init(pvar.getProperty("project_home")+pathSeparator+"WEB-INF"+pathSeparator);
-      String viewType = LoginViewTypeHlp.getViewType(strAuth[3].toLowerCase());
+      String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());
 
       session.setAttribute("user", strAuth[0]);
       session.setAttribute("userfirstname", strAuth[1]);

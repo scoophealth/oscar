@@ -9,35 +9,37 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Class LoginViewTypeHlp : read mapping file from loginView.txt
+ * Class LoginViewTypeHlp : read mapping file from loginView.properties
  * 2003-01-05
 */
-public class LoginViewTypeHlp {
-    static Properties viewtype = null;
 
-    public static void init(String filename) {
-        viewtype = new Properties();
+/*
+ This class implements the pattern singleton.
+ If you need instanciate it, instead 'new LoginViewTypeHlp()',
+ use 'LoginViewTypeHlp.getInstance()'
 
-        if(viewtype.isEmpty()) {
-            try {
-			          File file = new File("/" + filename + "/loginView.txt");
+ Use the method getProperty(String) to recover info
+ about the login view type
+ */
+public class LoginViewTypeHlp extends Properties{
+	
+	public static LoginViewTypeHlp getInstance() {
+		return myself;
+	}
 
-          			if(!file.isFile() || !file.canRead()) {
-            				throw new IOException();
-          			}
+	static LoginViewTypeHlp myself = new LoginViewTypeHlp();
 
-                FileInputStream fis = new FileInputStream(file ) ;
-                viewtype.load(fis); 
-                fis.close();
-            } catch(Exception e) {
-                System.out.println("*** No ViewType File ***");
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static String getViewType(String pro) {
-        return viewtype.getProperty(pro);
-    }
+	private LoginViewTypeHlp() {
+		/* getResourceAsStream is a method from Class() */
+		InputStream is = getClass().getResourceAsStream("/loginView.properties");
+		try { 
+			load(is);
+			is.close(); 
+		} catch(Exception e) {
+			System.out.println("*** No ViewType File ***");
+			e.printStackTrace();
+		}
+	}
 
 }
+
