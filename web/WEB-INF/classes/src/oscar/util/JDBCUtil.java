@@ -90,6 +90,7 @@ public class JDBCUtil
              row.appendChild(node);
           }
        }
+       rs.close();
        return doc;
     }
     
@@ -152,6 +153,8 @@ public class JDBCUtil
                 rs = toResultSet(doc, rs);
                 rs.insertRow();
             }
+            rs.close();
+            db.CloseConn();
         }   
         catch(Exception e)
         {
