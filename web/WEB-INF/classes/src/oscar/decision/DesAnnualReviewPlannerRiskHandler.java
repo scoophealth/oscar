@@ -49,8 +49,8 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
 	}
 
 	public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
-		// System.out.print("startElement: " + localName);
-		if (localName.equals("section_title")) { 
+		// System.out.print("startElement: " + rawName);
+		if (rawName.equals("section_title")) { 
 			if (interiortable == 1) { //close content table
 				results += "</center></td></tr></table>";
 				interiortable = 0;
@@ -59,7 +59,7 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
 			results += "<table border=0 cellspacing=1 cellpadding=1 width=\"100%\">\n";
 			results += "<tr><td BGCOLOR='#009966' align='center'>\n";
 			results += "<font size=-1 color='#FFFFFF'>";
-	  } else if (localName.equals("subsection_title")) {
+	  } else if (rawName.equals("subsection_title")) {
 			if (interiortable == 1) { //close table
 				results += "</center></td></tr></table>";
 				interiortable = 0;
@@ -68,7 +68,7 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
 				results += "<center><table border=0 cellpadding=0 cellspacing=0 width=\"98%\">";
 			  results += "<tr><td BGCOLOR='#CCFFCC' align='center'>\n";
 			  results += "<font size=-1>";
-		}	else if (localName.equals("risk") || localName.equals("entry")) {
+		}	else if (rawName.equals("risk") || rawName.equals("entry")) {
 			if (interiortable == 0) { //table beginning
 				results += "<center><table border=0 cellpadding=1 cellspacing=1 width=\"98%\" datasrc='#xml_risklist'>";
 				interiortable = 1;
@@ -82,7 +82,7 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
 			}
 			results += "<font size=-2>";
 			colcount += 1;
-		} else if (localName.equals("heading")) {
+		} else if (rawName.equals("heading")) {
 			if (interiortable == 1) { //close table
 				results += "</center></td></tr></table>";
 				interiortable = 0;
@@ -92,17 +92,17 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
 			results += "<tr><td align='center'><font size=-2><b>\n";
 		}
 		for (int i=0; i < atts.getLength(); i++) {
-			if (atts.getLocalName(i) == "name") {
+			if (atts.getQName(i) == "name") {
 				riskName = atts.getValue(i);
 			}
-			if (atts.getLocalName(i) == "href") {
+			if (atts.getQName(i) == "href") {
 				results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
 				href = 1; //there is a href there
 			}
-			// System.out.println(" Attribute: " + atts.getLocalName(i) + "=" + atts.getValue(i));
+			// System.out.println(" Attribute: " + atts.getQName(i) + "=" + atts.getValue(i));
 		}
 		for (int i=0; i < atts.getLength(); i++) {
-		  if (atts.getLocalName(i) == "riskno") {
+		  if (atts.getQName(i) == "riskno") {
 		  	riskNameObj.setProperty(atts.getValue(i), "xml_"+riskName);
         break;
 		  }
@@ -114,20 +114,20 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
 			results += "</a>";
 			href = 0;
 		}
-		if (localName.equals("section_title")) {
+		if (rawName.equals("section_title")) {
 			results += "</font></td></tr></table>\n";
-		} else if (localName.equals("subsection_title")) {
+		} else if (rawName.equals("subsection_title")) {
 			results += "</font></td></tr></table></center>\n";
-		} else if (localName.equals("heading")) {
+		} else if (rawName.equals("heading")) {
 			results += "</b></font></td></tr></table>\n";
-		} else if (localName.equals("risk")) {
+		} else if (rawName.equals("risk")) {
 			results += "</font></td><td><input type=checkbox name=\"xml_" + riskName + "\" value='checked' datafld='xml_" +riskName+ "'>"; 
 			riskName = "";
-		} else if (localName.equals("entry")) {
+		} else if (rawName.equals("entry")) {
 			results += "</font></td><td><input type=text size=6 name=\"xml_" + riskName + "\" datafld='xml_" +riskName+ "'>";
 			riskName = "";
 		}
-		// System.out.println("endElement: " + localName + "\n");
+		// System.out.println("endElement: " + rawName + "\n");
 	}
 
 	public void characters(char[] ch, int start, int length) throws SAXException {
