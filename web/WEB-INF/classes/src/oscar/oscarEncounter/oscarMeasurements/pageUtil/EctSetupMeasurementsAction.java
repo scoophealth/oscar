@@ -55,16 +55,32 @@ public final class EctSetupMeasurementsAction extends Action {
         HttpSession session = request.getSession();
         
         String groupName = (String) request.getParameter("groupName");
-        System.out.println("The selected group is" + groupName);
-        EctMeasurementTypesBeanHandler hd = new EctMeasurementTypesBeanHandler(groupName);
-        session.setAttribute("measurementTypes", hd);
-        Vector mInstrcVector = hd.getMeasuringInstrcVectorVector();
-        for(int i=0; i<mInstrcVector.size(); i++){
-            Collection mInstrcs = (Vector) mInstrcVector.elementAt(i);
-            String mInstrcName = "mInstrcs" + i;
-            session.setAttribute(mInstrcName, mInstrcs);
+        EctValidation ectValidation = new EctValidation();             
+        String css = ectValidation.getCssPath(groupName);
+        
+        request.setAttribute("groupName", groupName);
+        request.setAttribute("css", css);
+        EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+        
+        if (bean!=null){
+            request.getSession().setAttribute("EctSessionBean", bean);
+            String demo = (String) bean.getDemographicNo();
+                               
+            EctMeasurementTypesBeanHandler hd = new EctMeasurementTypesBeanHandler(groupName, demo);
+            session.setAttribute("measurementTypes", hd);
+            Vector mInstrcVector = hd.getMeasuringInstrcVectorVector();
+            for(int i=0; i<mInstrcVector.size(); i++){
+                Collection mInstrcs = (Vector) mInstrcVector.elementAt(i);
+                String mInstrcName = "mInstrcs" + i;
+                session.setAttribute(mInstrcName, mInstrcs);
+
+            }
+            
+            
             
         }
         return (mapping.findForward("continue"));
     }
+    
+    
 }
