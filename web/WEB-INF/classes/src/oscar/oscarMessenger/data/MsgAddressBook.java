@@ -259,7 +259,7 @@ public class MsgAddressBook {
             }
          }
 
-       }catch(Exception e){System.out.println("didn't work moron");
+       }catch(Exception e){System.out.println("didn't work");
                            e.getMessage();
                            e.printStackTrace();}
    }
@@ -288,7 +288,7 @@ public class MsgAddressBook {
          out.print("      <td> \n");
 
          if ((element.getTagName()).equals("group")){
-            out.print("<span class=\"treeNode\" onclick=\"javascript:showTbl('tblDFR"+(depth+1)+"');\">");
+            out.print("<span class=\"treeNode\" onclick=\"javascript:showTbl('tblDFR"+(depth+1)+"',event);\">");
 
             if (depth < 2){
                out.print("<img class=\"treeNode\" src=\"img/minusblue.gif\" border=\"0\" />");
@@ -297,9 +297,9 @@ public class MsgAddressBook {
             }
             out.print("</span>");
             if (depth == 1){
-               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"');\"><font color=#ff9452><b>"+((String)remoteLocationDesc.elementAt(remoId))+"</b></font><br>");
+               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"',event);\"><font color=#ff9452><b>"+((String)remoteLocationDesc.elementAt(remoId))+"</b></font><br>");
             }else{
-               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"');\"><font color=#ff9452><b>"+element.getAttribute("desc")+"</b></font><br>");
+               out.print("<input type=\"checkbox\" name=tblDFR"+depth+" onclick=\"javascript:checkGroup('tblDFR"+(depth+1)+"',event);\"><font color=#ff9452><b>"+element.getAttribute("desc")+"</b></font><br>");
             }
 
          }else{
@@ -328,14 +328,14 @@ public class MsgAddressBook {
             if (node.getNextSibling() == null){
                out.print("</table id="+depth+">\n");
                if (depth == 2)
-                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"   onclick=\"javascript:showTbl('tblDFR"+(depth)+"');\" src=\"img/collapse.gif\" border=\"0\" />");
+                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"   onclick=\"javascript:showTbl('tblDFR"+(depth)+"',event);\" src=\"img/collapse.gif\" border=\"0\" />");
                else
-                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"  style=\"display:none\" onclick=\"javascript:showTbl('tblDFR"+(depth)+"');\" src=\"img/collapse.gif\" border=\"0\" />");
+                  out.print("<img id=\"tblDFR"+depth+"\" class=\"collapse\"  style=\"display:none\" onclick=\"javascript:showTbl('tblDFR"+(depth)+"',event);\" src=\"img/collapse.gif\" border=\"0\" />");
 
             }
          }
 
-       }catch(Exception e){System.out.println("didn't work moron");
+       }catch(Exception e){System.out.println("didn't work");
                            e.getMessage();
                            e.printStackTrace();}
    }
