@@ -38,7 +38,7 @@
 	{"search_form_aredb", "select * from form where demographic_no = ? and form_name like ? order by form_date desc, form_time desc limit 1 offset 0" }, 
     {"search_form_demo", "select demographic_no from form group by demographic_no"},
 
-    {"search_demo_active", "select * from demographic where end_date = '0000-00-00' order by last_name limit ? offset ?"},
+    {"search_demo_active", "select * from demographic where end_date = '0001-01-01' order by last_name limit ? offset ?"},
   };
 
   reportMainBean.doConfigure(dbParams,dbQueries);

@@ -8,24 +8,28 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-{"search_eform", "select * from eform where status = 1 order by ?, form_date desc, form_time desc" }, 
+// Postgres cant execute this query
+//{"search_eform", "select * from eform where status = 1 order by ?, form_date desc, form_time desc" }, 
+{"search_eform", "select * from eform where status = 1 order by form_date desc, form_time desc" }, 
   };
   myFormBean.doConfigure(dbParams,dbQueries);
 
-  ResultSet rs = myFormBean.queryResults(param, "search_eform");
+//  ResultSet rs = myFormBean.queryResults(param, "search_eform");
+  ResultSet rs = myFormBean.queryResults("search_eform");
 %>
-
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>Upload</title>
+<title><bean:message key="eform.uploadhtml.title"/></title>
 <link rel="stylesheet" href="../web.css">
 </head>
 <script language="javascript">
 <!--
   function checkHtml(){
     if(document.myForm.FileName.value==""){ 
-      alert("Please input a file first, then click 'Upload' button.");
+      alert("<bean:message key="eform.uploadhtml.msgFileMissing"/>");
     } else {
       document.myForm.submit();
     } 
@@ -61,24 +65,24 @@
 <body topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica">UPLOAD E-FORM</font></th></tr>
+  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica"><bean:message key="eform.uploadhtml.msgUploadEForm"/></font></th></tr>
 </table>
 <table border="0" cellspacing="2" cellpadding="2" width="100%" >
-  <tr><td align='right'><a href=# onclick="javascript:BackHtml()">Back to Admin Page</a></td></tr>
+  <tr><td align='right'><a href=# onclick="javascript:BackHtml()"><bean:message key="eform.uploadhtml.btnBack"/></a></td></tr>
 </table>
 
 <table cellspacing="2" cellpadding="2" width="80%" border="0" BGCOLOR="<%=weakColor%>">
-<FORM NAME="myForm" ENCTYPE="multipart/form-data" ACTION="../servlet/oscar.eform.UploadServlet" METHOD="post" onSubmit="return checkHtml()">
-  <tr><td align='right'><b>Form name </b></td><td><input type="text" size="50" name="form_name"></td></tr>
-  <tr><td align='right'><b>Subject </b></td><td><input type="text" size="50" name="subject"></td></tr>
-  <tr><td align='right'><b>File name </b></td><td><input type="file" name="FileName" size="80"></td></tr>
-  <tr><td></td><td><input type="button" value="Upload" onclick="javascript:checkHtml()"></td></tr>
+<FORM NAME="myForm" ENCTYPE="multipart/form-data" ACTION="../servletsoscar.eform.UploadServlet" METHOD="post" onSubmit="return checkHtml()">
+  <tr><td align='right'><b><bean:message key="eform.uploadhtml.formName"/> </b></td><td><input type="text" size="50" name="form_name"></td></tr>
+  <tr><td align='right'><b><bean:message key="eform.uploadhtml.formSubject"/> </b></td><td><input type="text" size="50" name="subject"></td></tr>
+  <tr><td align='right'><b><bean:message key="eform.uploadhtml.formFileName"/> </b></td><td><input type="file" name="FileName" size="80"></td></tr>
+  <tr><td></td><td><input type="button" value="<bean:message key="eform.uploadhtml.btnUpload"/>" onclick="javascript:checkHtml()"></td></tr>
  </form>
 </table>
 
 <table border="0" cellspacing="0" cellpadding="0" width="98%">
-  <tr><td>Form Library </td>
-  <td align='right'><a href="calldeletedform.jsp">List Deleted Forms </a></td></tr>
+  <tr><td><bean:message key="eform.uploadhtml.msgLibrary"/> </td>
+  <td align='right'><a href="calldeletedform.jsp"><bean:message key="eform.uploadhtml.btnDeleted"/> </a></td></tr>
 </table>
 
 <table border="0" cellspacing="0" cellpadding="0" width="98%" >
@@ -86,12 +90,12 @@
     <td>
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
       <tr bgcolor=<%=deepColor%> >
-      <th><a href="uploadhtml.jsp?orderby=form_name">Form Name</a></th>
-      <th><a href="uploadhtml.jsp?orderby=subject">Subject</a></th>
-      <th><a href="uploadhtml.jsp?orderby=file_name">File</a></th>
-      <th><a href="uploadhtml.jsp?">Form Date</a></th>
-      <th><a href="uploadhtml.jsp?">Form Time</a></th> 
-      <th>Action</th> 
+      <th><a href="uploadhtml.jsp?orderby=form_name"><bean:message key="eform.uploadhtml.btnFormName"/></a></th>
+      <th><a href="uploadhtml.jsp?orderby=subject"><bean:message key="eform.uploadhtml.btnSubject"/></a></th>
+      <th><a href="uploadhtml.jsp?orderby=file_name"><bean:message key="eform.uploadhtml.btnFile"/></a></th>
+      <th><a href="uploadhtml.jsp?"><bean:message key="eform.uploadhtml.btnDate"/></a></th>
+      <th><a href="uploadhtml.jsp?"><bean:message key="eform.uploadhtml.btnTime"/></a></th> 
+      <th><bean:message key="eform.uploadhtml.msgAction"/></th> 
       </tr> 
 <%
   String bgcolor = null;
@@ -105,7 +109,7 @@
 		<td width=25% ><%=rs.getString("file_name")%></td>
 		<td nowrap align='center'><%=rs.getString("form_date")%></td>
 		<td nowrap align='center'><%=rs.getString("form_time")%></td>
-		<td nowrap align='center'><a href="deleteform.jsp?fid=<%=rs.getInt("fid")%>">Delete</td>
+		<td nowrap align='center'><a href="deleteform.jsp?fid=<%=rs.getInt("fid")%>"><bean:message key="eform.uploadhtml.btnDelete"/></td>
 	  </tr>
 <%
   }  
@@ -114,6 +118,6 @@
 </center>
 
 </body>
-</html>
+</html:html>
 
   

@@ -29,7 +29,7 @@ String Total="0", mNum="", fNum="";
  String dateBegin = request.getParameter("xml_vdate");
    String dateEnd = request.getParameter("xml_appointment_date");
    if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-   if (dateBegin.compareTo("") == 0) dateBegin="0000-00-00";
+   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
 
 ResultSet rs;
 ResultSet rs2;

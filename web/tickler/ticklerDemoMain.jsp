@@ -220,7 +220,7 @@ function refresh() {
     function allYear()
     {       
     var newD = "9999-12-31";
-    var beginD = "0000-00-00"
+    var beginD = "0001-01-01"
     	document.serviceform.xml_appointment_date.value = newD;
     		document.serviceform.xml_vdate.value = beginD;
 }
@@ -341,7 +341,7 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
  String dateBegin = xml_vdate;
    String dateEnd = xml_appointment_date;
   if (dateEnd.compareTo("") == 0) dateEnd = "9999-12-31";
-   if (dateBegin.compareTo("") == 0) dateBegin="0000-00-00";
+   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
  ResultSet rs=null ;
   String[] param =new String[4];
    boolean bodd=false;

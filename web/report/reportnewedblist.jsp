@@ -93,8 +93,8 @@ function setfocus() {
   }
     
   String[] param =new String[3];
-  param[0]=startDate; //"0000-00-00"; 
-  param[1]=endDate; //"0000-00-00"; 
+  param[0]=startDate; //"0001-01-01"; 
+  param[1]=endDate; //"0001-01-01"; 
   int[] itemp1 = new int[2];
   itemp1[1] = Integer.parseInt(strLimit1);
   itemp1[0] = Integer.parseInt(strLimit2);

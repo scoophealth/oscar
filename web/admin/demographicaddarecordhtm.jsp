@@ -115,7 +115,7 @@ function upCaseCtrl(ctrl) {
     <tr valign="top"> 
       <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formDatejoined"/>: </b></td>
       <td align="left" > 
-        <input type="text" name="date_joined" value="0000-00-00">
+        <input type="text" name="date_joined" value="0001-01-01">
       </td>
       <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formHCType"/>: </b></td>
       <td align="left">
@@ -149,11 +149,11 @@ function upCaseCtrl(ctrl) {
     <tr valign="top"> 
       <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formEndDate"/>: </b></td>
       <td align="left" > 
-        <input type="text" name="end_date" value="0000-00-00">
+        <input type="text" name="end_date" value="0001-01-01">
       </td>
       <td align="right"> <b><bean:message key="admin.demographicaddrecordhtm.formEFF"/>: </b></td>
       <td align="left"> 
-        <input type="text" name="eff_date" value="0000-00-00">
+        <input type="text" name="eff_date" value="0001-01-01">
       </td>
     </tr>
     <tr valign="top"> 
@@ -168,7 +168,7 @@ function upCaseCtrl(ctrl) {
     <tr valign="top"> 
       <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formHCRenewDate"/>: </b></td>
       <td align="left" > 
-        <input type="text" name="hc_renew_date" value="0000-00-00">
+        <input type="text" name="hc_renew_date" value="0001-01-01">
       </td>
       <td align="right"><b><bean:message key="admin.demographicaddrecordhtm.formFamilyDoc"/>: </b></td>
       <td align="left">

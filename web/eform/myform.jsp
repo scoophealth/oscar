@@ -9,12 +9,16 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-{"search_eform", "select * from eform where status = 1 order by ?, form_date desc, form_time desc" }, 
+// Postgres cant execute this query
+//{"search_eform", "select * from eform where status = 1 order by ?, form_date desc, form_time desc" }, 
+{"search_eform", "select * from eform where status = 1 order by form_date desc, form_time desc" }, 
   };
   myFormBean.doConfigure(dbParams,dbQueries);
 
-  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"";
-  ResultSet rs = myFormBean.queryResults(param, "search_eform");
+  // Postgres cant execute this query
+  //String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"0";
+  //ResultSet rs = myFormBean.queryResults(param, "search_eform");
+  ResultSet rs = myFormBean.queryResults("search_eform");
 %>
 
 <html>

@@ -110,7 +110,7 @@ function upCaseCtrl(ctrl) {
       <tr> 
         <td align="right"><bean:message key="admin.provider.formDOB"/>(<font size="-1"><i><bean:message key="admin.provideraddrecordhtm.dateFormat"/></i></font>): </td>
         <td> 
-          <input type="text" name="dob" value="0000-00-00" >
+          <input type="text" name="dob" value="0001-01-01" >
         </td>
       </tr>
       <tr> 

@@ -101,7 +101,7 @@ function setfocus() {
     while (rsdemo.next()) {
 	    int []itemp = new int[] {Integer.parseInt(rsdemo.getString("demographic_no"))};
 	    String[] param2 =new String[5];
-  	  param2[0]=rsdemo.getString("content")!=null?(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_fedb")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_fedb"):"0000-00-00"):"0000-00-00";
+  	  param2[0]=rsdemo.getString("content")!=null?(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_fedb")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_fedb"):"0001-01-01"):"0001-01-01";
 	    param2[1]=rsdemo.getString("content")!=null?(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_name")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_name"):""):"";
 	    param2[2]=rsdemo.getString("provider_no");
 	    param2[3]="<age>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age"):"") + "</age>" +  "<gravida>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra"):"") + "</gravida>" +   "<term>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term"):"") + "</term>" +   "<phone>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp"):"") + "</phone>";
@@ -112,8 +112,8 @@ function setfocus() {
   } 
 
 	String[] param =new String[4];
-	param[0]=startDate; //"0000-00-00"; 
-	param[1]=endDate; //"0000-00-00"; 
+	param[0]=startDate; //"0001-01-01"; 
+	param[1]=endDate; //"0001-01-01"; 
 	param[2]=curUser_no; 
 	param[3]="edb";
   int[] itemp1 = new int[2];

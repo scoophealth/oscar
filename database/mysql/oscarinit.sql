@@ -43,7 +43,7 @@ CREATE TABLE allergies (
 CREATE TABLE appointment (
   appointment_no int(12) NOT NULL auto_increment,
   provider_no varchar(6) NOT NULL default '',
-  appointment_date date NOT NULL default '0000-00-00',
+  appointment_date date NOT NULL default '0001-01-01',
   start_time time NOT NULL default '00:00:00',
   end_time time NOT NULL default '00:00:00',
   name varchar(50) default NULL,
@@ -161,7 +161,7 @@ CREATE TABLE billinginr (
   service_desc varchar(255) default NULL,
   billing_amount varchar(6) default NULL,
   billing_unit char(1) default NULL,
-  createdatetime datetime NOT NULL default '0000-00-00 00:00:00',
+  createdatetime datetime NOT NULL default '0001-01-01 00:00:00',
   status char(1) default NULL,
   PRIMARY KEY  (billinginr_no)
 ) TYPE=MyISAM;
@@ -435,7 +435,7 @@ CREATE TABLE demographicstudy (
 
 CREATE TABLE desannualreviewplan (
   des_no int(10) NOT NULL auto_increment,
-  des_date date NOT NULL default '0000-00-00',
+  des_date date NOT NULL default '0001-01-01',
   des_time time NOT NULL default '00:00:00',
   demographic_no int(10) default '0',
   form_no int(10) default '0',
@@ -451,7 +451,7 @@ CREATE TABLE desannualreviewplan (
 
 CREATE TABLE desaprisk (
   desaprisk_no int(10) NOT NULL auto_increment,
-  desaprisk_date date NOT NULL default '0000-00-00',
+  desaprisk_date date NOT NULL default '0001-01-01',
   desaprisk_time time NOT NULL default '00:00:00',
   demographic_no int(10) default '0',
   form_no int(10) default '0',
@@ -509,8 +509,8 @@ CREATE TABLE drugs (
   drugid int(10) NOT NULL auto_increment,
   provider_no varchar(6) NOT NULL default '',
   demographic_no int(10) NOT NULL default '0',
-  rx_date date NOT NULL default '0000-00-00',
-  end_date date NOT NULL default '0000-00-00',
+  rx_date date NOT NULL default '0001-01-01',
+  end_date date NOT NULL default '0001-01-01',
   BN varchar(30) default NULL,
   GCN_SEQNO decimal(10,0) NOT NULL default '0',
   customName varchar(60) default NULL,
@@ -535,8 +535,8 @@ CREATE TABLE drugs (
 CREATE TABLE dxresearch (
   dxresearch_no int(10) NOT NULL auto_increment,
   demographic_no int(10) default '0',
-  start_date date default '0000-00-00',
-  update_date date default '0000-00-00',
+  start_date date default '0001-01-01',
+  update_date date default '0001-01-01',
   status char(1) default 'A',
   dxresearch_code varchar(10) default '',
   PRIMARY KEY  (dxresearch_no)
@@ -643,7 +643,7 @@ CREATE TABLE eforms_data (
 CREATE TABLE encounter (
   encounter_no int(12) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL default '0',
-  encounter_date date NOT NULL default '0000-00-00',
+  encounter_date date NOT NULL default '0001-01-01',
   encounter_time time NOT NULL default '00:00:00',
   provider_no varchar(6) NOT NULL default '',
   subject varchar(100) default NULL,
@@ -708,7 +708,7 @@ CREATE TABLE form (
   form_no int(12) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL default '0',
   provider_no varchar(6) NOT NULL default '',
-  form_date date NOT NULL default '0000-00-00',
+  form_date date NOT NULL default '0001-01-01',
   form_time time NOT NULL default '00:00:00',
   form_name varchar(50) default NULL,
   content text,
@@ -2713,7 +2713,7 @@ CREATE TABLE immunizations (
   demographic_no int(10) NOT NULL default '0',
   provider_no varchar(6) NOT NULL default '',
   immunizations text,
-  save_date date NOT NULL default '0000-00-00',
+  save_date date NOT NULL default '0001-01-01',
   archived tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
@@ -2799,7 +2799,7 @@ CREATE TABLE prescribe (
   prescribe_no int(12) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL default '0',
   provider_no varchar(6) NOT NULL default '',
-  prescribe_date date NOT NULL default '0000-00-00',
+  prescribe_date date NOT NULL default '0001-01-01',
   prescribe_time time NOT NULL default '00:00:00',
   content text,
   PRIMARY KEY  (prescribe_no)
@@ -2955,7 +2955,7 @@ CREATE TABLE reportagesex (
   provider_no varchar(6) default NULL,
   reportdate date default NULL,
   status char(2) default '',
-  date_joined date default '0000-00-00'
+  date_joined date default '0001-01-01'
 ) TYPE=MyISAM;
 
 --
@@ -2975,7 +2975,7 @@ CREATE TABLE reportprovider (
 
 CREATE TABLE reporttemp (
   demographic_no int(10) NOT NULL default '0',
-  edb date NOT NULL default '0000-00-00',
+  edb date NOT NULL default '0001-01-01',
   demo_name varchar(60) NOT NULL default '',
   provider_no varchar(6) default NULL,
   address text,
@@ -2989,7 +2989,7 @@ CREATE TABLE reporttemp (
 
 CREATE TABLE rschedule (
   provider_no varchar(6) NOT NULL default '',
-  sdate date NOT NULL default '0000-00-00',
+  sdate date NOT NULL default '0001-01-01',
   edate date default NULL,
   available char(1) NOT NULL default '',
   day_of_week varchar(30) default NULL,
@@ -3004,7 +3004,7 @@ CREATE TABLE rschedule (
 --
 
 CREATE TABLE scheduledate (
-  sdate date NOT NULL default '0000-00-00',
+  sdate date NOT NULL default '0001-01-01',
   provider_no varchar(6) NOT NULL default '',
   available char(1) NOT NULL default '',
   priority char(1) default NULL,
@@ -3020,7 +3020,7 @@ CREATE TABLE scheduledate (
 
 CREATE TABLE scheduledaytemplate (
   provider_no varchar(6) NOT NULL default '',
-  day date NOT NULL default '0000-00-00',
+  day date NOT NULL default '0001-01-01',
   template_name varchar(20) default NULL,
   PRIMARY KEY  (provider_no,day)
 ) TYPE=MyISAM;
@@ -3030,7 +3030,7 @@ CREATE TABLE scheduledaytemplate (
 --
 
 CREATE TABLE scheduleholiday (
-  sdate date NOT NULL default '0000-00-00',
+  sdate date NOT NULL default '0001-01-01',
   holiday_name varchar(100) NOT NULL default '',
   PRIMARY KEY  (sdate)
 ) TYPE=MyISAM;
@@ -3132,7 +3132,7 @@ CREATE TABLE tickler (
   demographic_no int(10) default '0',
   message text,
   status char(1) default NULL,
-  update_date datetime default '0000-00-00 00:00:00',
+  update_date datetime default '0001-01-01 00:00:00',
   service_date date default NULL,
   creator varchar(6) default NULL,
   PRIMARY KEY  (tickler_no)

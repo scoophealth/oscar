@@ -4037,3 +4037,5 @@ COMMIT;
 CREATE FUNCTION CONCAT (varchar, varchar, varchar) returns varchar
   AS 'select $1 || $2 || $3;' LANGUAGE 'sql';
 
+CREATE FUNCTION CONCAT (varchar, varchar, varchar, varchar, varchar, varchar, varchar) returns varchar
+  AS 'select $1 || $2 || $3 || $4 || $5 || $6 || $7;' LANGUAGE 'sql';
