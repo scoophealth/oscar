@@ -114,6 +114,12 @@
         var popup=window.open(varpage, "<bean:message key="global.immunizations"/>", windowprops);
     }
 
+    function popUpMeasurements(vheight,vwidth,varpage) {
+        var page = varpage;
+        windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+        var popup=window.open(varpage, "<bean:message key="global.measurements.general"/>", windowprops);
+    }
+
     function popupStart1(vheight,vwidth,varpage) {
         var page = varpage;
         windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
@@ -236,7 +242,7 @@ function rowOneNormal(){
     document.encForm.shTextarea.style.height=normal;
     document.encForm.fhTextarea.style.height=normal;
     document.encForm.mhTextarea.style.height=normal;
-setBoxesFullWidth();
+    setBoxesFullWidth();
 }
 function rowOneLarge(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -276,7 +282,7 @@ function rowTwoNormal(){
     document.encForm.reTextarea.style.overflow="auto";
     document.encForm.ocTextarea.style.height=normal;
     document.encForm.reTextarea.style.height=normal;
-setBoxesFullWidth();
+    setBoxesFullWidth();
 }
 function rowTwoLarge(){
     document.encForm.ocTextarea.style.overflow="auto";
@@ -291,7 +297,7 @@ function rowTwoFull(){
     document.encForm.ocTextarea.style.height=full;
     document.encForm.reTextarea.style.height=full;
     document.encForm.ocInput.scrollIntoView(top);
-setBoxesFullWidth();
+    setBoxesFullWidth();
 }
 
 function rowThreeX(){
@@ -307,7 +313,7 @@ function rowThreeSmall(){
 function rowThreeNormal(){
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=normal;
-setBoxesFullWidth();
+    setBoxesFullWidth();
 }
 function rowThreeLarge(){
     document.encForm.enTextarea.style.overflow="auto";
@@ -343,14 +349,20 @@ function presBoxSmall(){
     setBoxesFullWidth();
 }
 function presBoxNormal(){
+
+
     document.getElementById("presBox").style.height=normal;
     setBoxesFullWidth();
 }
 function presBoxLarge(){
+
+
     document.getElementById("presBox").style.height=large;
     setBoxesFullWidth();
 }
 function presBoxFull(){
+
+
     document.getElementById("presBox").style.height=full;
     document.getElementById("presTopTable").scrollIntoView(top);
     setBoxesFullWidth();
@@ -485,18 +497,18 @@ function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
 </script>
 
 <style type="text/css">
-        td.menuLayer{
-                background-color: #ccccff;
-                font-size: 14px;
-        }
-        table.layerTable{
-                border-top: 2px solid #cfcfcf;
-                border-left: 2px solid #cfcfcf;
-                border-bottom: 2px solid #333333;
-                border-right: 2px solid #333333;
-        }
+td.menuLayer{
+        background-color: #ccccff;
+        font-size: 14px;
+}
+table.layerTable{
+        border-top: 2px solid #cfcfcf;
+        border-left: 2px solid #cfcfcf;
+        border-bottom: 2px solid #333333;
+        border-right: 2px solid #333333;
+}
 
-        table.messButtonsA{
+table.messButtonsA{
 border-top: 2px solid #cfcfcf;
 border-left: 2px solid #cfcfcf;
 border-bottom: 2px solid #333333;
@@ -570,10 +582,10 @@ border-right: 2px solid #cfcfcf;
                     <td>
  	            <%if (vLocale.getCountry().equals("BR")) {%>
                         <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr');return false;" 
-    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
+                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
 		    <%}else{%>
 	                <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;" 
-    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
+                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
     		    <%}%><br>
              <% 
                 if (vLocale.getCountry().equals("BR")) { %>  
@@ -589,7 +601,7 @@ border-right: 2px solid #cfcfcf;
              <% } %>  
                 <br>
                         <%  if (!vLocale.getCountry().equals("BR")) { %>
-                        <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
+                            <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
                         <% } %>
                         <a href=# onClick="popupOscarCon(100,355,'oscarConsultationRequest/ConsultChoice.jsp');return false;"><bean:message key="global.consultations"/></a><br>
                         <a href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
@@ -643,6 +655,7 @@ border-right: 2px solid #cfcfcf;
 
                             }
                         }
+
                         %>
                         </select>
 
@@ -682,6 +695,31 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr><td>&nbsp;</td></tr>
             </form>
+            </table>
+            <table class="LeftTable">           
+                <tr class="Header">
+                    <td style="font-weight:bold" colspan="2"><bean:message key="oscarEncounter.Index.measurements"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <form name="measurementGroupForm">
+                        <select name="measurementGroupSelect" class="ControlSelect" onchange="popupOscarCon(500,1000,'./oscarMeasurements/SetupMeasurements.do?groupName='+document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
+                        <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
+                         <%                            
+                            for(int j=0; j<bean.measurementGroupNames.size(); j++) {
+                            String tmp = (String)bean.measurementGroupNames.get(j);
+                         %>
+                         <option value="<%=tmp%>"><%=tmp %>
+                         <%}%>
+                        </select>
+                        </form>
+                    </td>
+                </tr>                
+                <tr>
+                    <td><input type="button" style="height:20px" name="displayHistoryButton" value="<bean:message key="oscarEncounter.Index.btnViewHistory"/>" class="ControlPushButton" onClick="popupOscarCon(1000,800,'oscarMeasurements/ProcessDisplayHistoryAction.jsp');"/></td>                
+                    <td><input type="button" style="height:20px" name="editMeasurementButton" value="<bean:message key="oscarEncounter.Index.btnCustomize"/>" class="ControlPushButton" onClick="popupOscarCon(200,400,'oscarMeasurements/EditMeasurementTypes.jsp');"/></td>
+                </tr>
+            
             </table>
             <table class="LeftTable">
                 <tr class="Header">
@@ -788,7 +826,7 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
     <!--social history row-->
                 <tr>
                     <td>
-                        <table bgcolor="#CCCCFF" id="rowTwo">
+                        <table bgcolor="#CCCCFF" name="rowTwo">
                             <tr>
                                 <td>
                                     <div class="RowTop" ><bean:message key="oscarEncounter.Index.msgConcerns"/>:</div><input type="hidden" name="ocInput"/>
@@ -826,8 +864,6 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                         </table>
                     </td>
                 </tr>
-
-<!--jay start on NOV 17 2002-->
 		<tr>
 		   <td >
 		      <table bgcolor="#ccccff" id="presTopTable">
@@ -888,14 +924,10 @@ ults?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                       </table>	
 		   </td>
 		</tr>
-		<!--jay stop-->
-
-
-
     <!--encounter row-->
                 <tr>
                     <td>
-                        <table bgcolor="#CCCCFF" id="rowThree">
+                        <table bgcolor="#CCCCFF" name="rowThree">
                            <tr>
                                 <td nowrap width='80%' >
                                     <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
