@@ -111,7 +111,7 @@ String immName = request.getParameter("name").toString();
                 var dt = new Date();
                 txtYear.value = dt.getFullYear();
                 txtDay.value = dt.getDate();
-                cmbMonth.selectedIndex = dt.getMonth() + 1;
+                cmbMonth.selectedIndex = dt.getMonth();
             }
         }
     }
@@ -123,7 +123,7 @@ String immName = request.getParameter("name").toString();
             var y = txtYear.value;
             var m = cmbMonth.selectedIndex;
             var d = txtDay.value;
-            var dt = new Date(y, m - 1, d);
+            var dt = new Date(y, m, d);
             var s = (dt.getFullYear() + '/' + (dt.getMonth() + 1) + '/' + dt.getDate());
             txtHidden.value = s;
             return true;
@@ -170,7 +170,7 @@ String immName = request.getParameter("name").toString();
                 txtYear.value = dt.getFullYear(); //y2k compliance is very important
                 txtDay.value = dt.getDate();
                 var m = dt.getMonth();
-                cmbMonth.selectedIndex = m + 1; //js dates are 0-based
+                cmbMonth.selectedIndex = m; //js dates are 0-based
             }
         }
         catch (ex)
