@@ -14827,7 +14827,7 @@ INSERT INTO billingvisit VALUES ('I','Hospital Inpatient','BC');
 INSERT INTO billingvisit VALUES ('E','Hospital Emergency Depart. or Diagnostic & Treatment Centre','BC');
 INSERT INTO billingvisit VALUES ('P','Outpatient','BC');
 INSERT INTO billingvisit VALUES ('D','Diagnostic Facility','BC');
-INSERT INTO billingvisit VALUES ('S','Future Use','BC');
+INSERT INTO billingvisit VALUES ('S','Community Location','BC');
 INSERT INTO billingvisit VALUES ('Z','None of the above','BC');
 
 
