@@ -41,6 +41,7 @@ public final class WCBAction extends Action {
             
         request.getSession().putValue("WCBForm", form);
         if (null != form && ((WCBForm)form).Valid()) {
+           request.setAttribute("GOBACKWCB", "true");
            return (mapping.findForward("success"));
         } else {
            return (mapping.findForward("failure"));
