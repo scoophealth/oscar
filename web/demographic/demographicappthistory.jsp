@@ -1,9 +1,9 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String curProvider_no = (String) session.getAttribute("user");
-  
+  String demographic_no = request.getParameter("demographic_no");
   String strLimit1="0";
-  String strLimit2="10";
+  String strLimit2="25";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String demolastname = request.getParameter("last_name")==null?"":request.getParameter("last_name");
@@ -12,7 +12,9 @@
 %>
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-
+<%
+	String country = request.getLocale().getCountry();
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <!--  
@@ -40,14 +42,16 @@
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
-<head>
-<title> <bean:message key="demographic.demographicappthistory.title"/></title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
 
-<script language="JavaScript">
+<html:html locale="true">
+
+<head>
+<title>
+<bean:message key="demographic.demographicappthistory.title"/>
+</title>
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+<meta http-equiv="Pragma" content="no-cache">
+<script type="text/javascript">
 <!--
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
@@ -64,20 +68,75 @@ function refresh() {
 }
 
 //-->
-</SCRIPT>
+
+
+</script>
+
+<style type="text/css">
+	table.outline{
+	   margin-top:50px;
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	table.grid{
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	td.gridTitles{
+		border-bottom: 2pt solid #888888;
+		font-weight: bold;
+		text-align: center;
+	}
+        td.gridTitlesWOBottom{
+                font-weight: bold;
+                text-align: center;
+        }
+	td.middleGrid{
+	   border-left: 1pt solid #888888;	   
+	   border-right: 1pt solid #888888;
+           text-align: center;
+	}	
+</style>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepColor%>">
-    <th><font face="Helvetica"><bean:message key="demographic.demographicappthistory.msgTitle"/> </font></th>
-  </tr>
-</table>
-
-<table width="95%" border="0">
-  <tr bgcolor="<%=weakColor%>"><td align="left"><i><bean:message key="demographic.demographicappthistory.msgResults"/></i> :<%=demolastname%>,<%=demofirstname%> (<%=request.getParameter("demographic_no")%>)</td></tr>
-</table>
-<CENTER>
+<body class="BodyStyle"demographic.demographicappthistory.msgTitle= vlink="#0000FF" onLoad="setValues()" >
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                <bean:message key="demographic.demographicappthistory.msgHistory"/>
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+						<bean:message key="demographic.demographicappthistory.msgResults"/></i>: <%=demolastname%>,<%=demofirstname%> (<%=request.getParameter("demographic_no")%>)
+                        </td>
+                        <td  >&nbsp;
+							
+                        </td>
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top">
+            <% if (country.equals("BR")) { %>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
+            <%}else{%>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
+            <%}%>   
+                
+                
+            </td>
+            <td class="MainTableRightColumn">
 <table width="95%" border="0" bgcolor="#ffffff"> 
 <tr bgcolor="<%=deepColor%>">
       <TH width="10%"><b><bean:message key="demographic.demographicappthistory.msgApptDate"/></b></TH>
@@ -120,12 +179,12 @@ function refresh() {
 </table>
 <br>
 <%
-  int nLastPage=0,nNextPage=0;
+  int nPrevPage=0,nNextPage=0;
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
-  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
-  if(nLastPage>=0) {
+  nPrevPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
+  if(nPrevPage>=0) {
 %>
-<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicappthistory.btnLastPage"/></a> |
+<a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&last_name=<%=URLEncoder.encode(demolastname,"UTF-8")%>&first_name=<%=URLEncoder.encode(demofirstname,"UTF-8")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nPrevPage%>&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicappthistory.btnPrevPage"/></a> 
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
@@ -135,7 +194,16 @@ function refresh() {
 }
 %>
 <p>
-<%@ include file="zfooterbackclose.jsp" %> 
-</center>
+
+			</td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
 </body>
 </html:html>
