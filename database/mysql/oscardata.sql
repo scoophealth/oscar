@@ -10989,7 +10989,41 @@ INSERT INTO ichppccode VALUES ('203','650','Uncomplicated Pregnancy, normal deli
 -- Dumping data for table 'immunizations'
 --
 
+--
+-- Dumping data for table 'measurementType'
+--
+INSERT INTO measurementType(type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("HT", "HT", "Height", "in cm",  "5");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("WT", "WT", "Weight", "in kg", "5");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("WT", "WT", "Weight", "in BMI", "4");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("BP", "BP", "Blood Pressure", "sitting position", "6");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("HbAi", "HbAic", "Glucose HbAic", "HbAic", "1");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FBS", "FBS", "Glucose FBS", "FBS", "3");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("MACA", "Macroalbuminuria", "Renal Macrobalbumnuria", "q 3-6 months", "3");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("UALB", "Urine alb", "Renal Urine alb", "Create ratio yearly", "3");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("24UR", "24-hr Urine cr clearance & albuminuria", "Renal 24-hr Urine cr clearance & albuminuria", "q 6-12 months, unit mg", "3");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("TG", "TG", "LIPIDS TG", "monitor every 1-3 year", "3");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("LDL", "LDL", "LIPIDS LDL", "monitor every 1-3 year", "3");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("TCHD", "TC/HDL", "LIPIDS TD/HDL", "monitor every 1-3 year", "3");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "sensation (Yes/No)", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "vibration (Yes/No)", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "reflexes (Yes/No)", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "pulses (Yes/No)", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "infection (Yes/No)", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("SMK", "Smoking", "Smoking", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("EXE", "Exercise", "Exercise", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("ALC", "Alcohol", "Alcohol", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("SEXF", "Sexual Function", "Sexual Function", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIET", "Diet", "Diet", "Yes/No", "7");
 
+--
+-- Dumping data for table 'measurementGroup'
+--
+INSERT INTO measurementGroup VALUES("General", "HT");
+INSERT INTO measurementGroup VALUES("General", "WT");
+INSERT INTO measurementGroup VALUES("General", "BP");
+INSERT INTO measurementGroup VALUES("GroupA", "BP");
+INSERT INTO measurementGroup VALUES("GroupB", "BP");
+INSERT INTO measurementGroup VALUES("GroupC", "BP");
 
 --
 -- Dumping data for table 'messagelisttbl'
@@ -11210,4 +11244,13 @@ INSERT INTO specialistsJavascript VALUES ('1','function makeSpecialistslist(dec)
 -- Dumping data for table 'tmpdiagnosticcode'
 --
 
-
+--
+-- Dumping data for table 'validations'
+--
+INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Value: 0 to 1", "10", "0", "1");
+INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Value: 0 to 10", "10", "0", "1");
+INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Value: 0 to 50", "50", "0", "1");
+INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Value: 0 to 100", "100", "0", "1");
+INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Value: 0 to 300", "300", "0", "1");
+INSERT INTO validations(name, regularExp) VALUES ("Blood Pressure","[0-9]{2,3}/{1}[0-9]{2,3}");
+INSERT INTO validations(name, regularExp) VALUES ("Yes/No","YES|yes|Yes|Y|NO|no|No|N");
