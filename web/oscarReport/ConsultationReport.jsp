@@ -128,18 +128,18 @@ ArrayList proList = conData.providerList();
                         <td ><bean:message key="oscarReport.ConsultationReport.msgTitle"/></td>
                         <td>
                            <select name="numMonth">
-                              <option value="1" <%=selled("1",mons)%> >1 Month</option>
-                              <option value="2" <%=selled("2",mons)%> >2 Months</option>
-                              <option value="3" <%=selled("3",mons)%> >3 Months</option>
-                              <option value="4" <%=selled("4",mons)%> >4 Months</option>
-                              <option value="5" <%=selled("5",mons)%> >5 Months</option>
-                              <option value="6" <%=selled("6",mons)%> >6 Months</option>
-                              <option value="7" <%=selled("7",mons)%> >7 Months</option>
-                              <option value="8" <%=selled("8",mons)%> >8 Months</option>
-                              <option value="9" <%=selled("9",mons)%> >9 Months</option>
-                              <option value="10" <%=selled("10",mons)%> >10 Months</option>
-                              <option value="11" <%=selled("11",mons)%> >11 Months</option>
-                              <option value="12" <%=selled("12",mons)%> >12 Months</option>
+                              <option value="1" <%=selled("1",mons)%> >1 <bean:message key="oscarReport.ConsultationReport.formMonth"/></option>
+                              <option value="2" <%=selled("2",mons)%> >2 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="3" <%=selled("3",mons)%> >3 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="4" <%=selled("4",mons)%> >4 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="5" <%=selled("5",mons)%> >5 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="6" <%=selled("6",mons)%> >6 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="7" <%=selled("7",mons)%> >7 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="8" <%=selled("8",mons)%> >8 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="9" <%=selled("9",mons)%> >9 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="10" <%=selled("10",mons)%> >10 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="11" <%=selled("11",mons)%> >11 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
+                              <option value="12" <%=selled("12",mons)%> >12 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
                            </select>
                            <select name="proNo">
                                  <option value="-1" <%=selled("-1",pros)%> ><bean:message key="oscarReport.ConsultationReport.formAllProviders"/></option>
