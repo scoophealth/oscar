@@ -47,7 +47,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       	      <tr bgcolor="#333333">
       	        <th align='CENTRE'>
-                <form action="genRAError.jsp">
+                <form action="genTAS22.jsp">
                 <input type="hidden" name="rano" value="<%=raNo%>">
                 <select name="proNo">
                 <option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>	
@@ -72,7 +72,9 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       </table>
       
       
-      <% if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){  %>
+      <% if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0 || proNo == null){  
+         proNo = "%"; 
+         }%>
       <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
         <tr> 
          <td width="10%" height="16">Payment Date</td>
@@ -90,7 +92,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
          String[] param = new String[3];
           param[0] = raNo;
           param[1] = "S01";
-          param[2] = "%";
+          param[2] = proNo;
           
           String[] param0 = new String[2];
           rsdemo2 = null;
@@ -161,7 +163,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                String[] param1 = new String[3];
                 param1[0] = raNo;
                 param1[1] = "S01";
-                param1[2] = "%";
+                param1[2] = proNo;
                 
                rsdemo = apptMainBean.queryResults(param1, "search_taS23");
                while (rsdemo.next()) {   
@@ -203,7 +205,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 	                   String[] param2 = new String[3];
 	                    param2[0] = raNo;
 	                    param2[1] = "S01";
-	                    param2[2] = "%";
+	                    param2[2] = proNo;
 
 	                    rsdemo = apptMainBean.queryResults(param2, "search_taS25");
 	                    while (rsdemo.next()) {   
@@ -221,9 +223,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
             </table>
      <%
       
-      }else {
       
-      }
       
       }
      %>
