@@ -21,8 +21,8 @@
       <td width="10%"><span class="formLabel">Situa&ccedil;&atilde;o</span></td>
       <td width="90%"> 
        <html:radio property="tipoPesquisa" value="<%= oscar.billing.model.Appointment.PENDENTE %>"/><span class="formLabel">Pendente</span> &nbsp;
-       <html:radio property="tipoPesquisa" value="<%= oscar.billing.model.Appointment.AGENDADO %>"/><span class="formLabel">Agendado</span> &nbsp;
-       <html:radio property="tipoPesquisa" value="<%= oscar.billing.model.Appointment.FATURADO %>"/><span class="formLabel">Faturado</span> &nbsp;
+       <html:radio property="tipoPesquisa" value="<%= oscar.billing.model.Appointment.AGENDADO %>"/><span class="formLabel">Faturado</span> &nbsp;
+       <html:radio property="tipoPesquisa" value="<%= oscar.billing.model.Appointment.FATURADO %>"/><span class="formLabel">BPA</span> &nbsp;
        <html:radio property="tipoPesquisa" value="<%= oscar.billing.model.Appointment.TODOS %>"/><span class="formLabel">Todos</span> &nbsp;
       </td>
     </tr>
