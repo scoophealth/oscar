@@ -57,6 +57,9 @@ BillingFormData billform = new BillingFormData();
 BillingFormData.BillingService[] billlist1 = billform.getServiceList("Group1", bean.getBillForm(), bean.getBillRegion());
 BillingFormData.BillingService[] billlist2 = billform.getServiceList("Group2", bean.getBillForm(), bean.getBillRegion());
 BillingFormData.BillingService[] billlist3 = billform.getServiceList("Group3", bean.getBillForm(), bean.getBillRegion());
+String group1Header = billform.getServiceGroupName("Group1");
+String group2Header = billform.getServiceGroupName("Group2");
+String group3Header = billform.getServiceGroupName("Group3");
 
 BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
 BillingFormData.BillingVisit[] billvisit = billform.getVisitType(bean.getBillRegion());
@@ -372,7 +375,7 @@ function showHideLayers() { //v3.0
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><bean:message key="billing.patient.age"/>:</font></b><br>
               </font></td>
             <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getAge()%></font></b></td>
-            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show');">
+            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show');return false;">
                     <bean:message key="billing.billingform"/></a>:</font></b>
                 <%=billform.getBillingFormDesc(billformlist,bean.getBillForm())%>                        
               </font></td>
@@ -451,7 +454,7 @@ function showHideLayers() { //v3.0
                 
                 <tr bgcolor="#CCCCFF"> 
                   <td width="25%"><b></b> 
-                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><bean:message key="billing.service.service"/>
+                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><%=group1Header%>
                       </font></b></font></div>
                   </td>
                   <td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="billing.service.desc"/></font></b></td>
@@ -460,20 +463,8 @@ function showHideLayers() { //v3.0
                       <bean:message key="billing.service.fee"/></font></b></div>
                   </td>
                 </tr>
-                   <% for (int i=0; i< billlist1.length; i++){ 
-                   
-                   if (colorflag.compareTo("1")==0) {
-                   
-                   color = "#EEEEFF";
-                   colorflag = "0";
-                   }
-                   else{
-                   color = "#FFFFFF";
-		   colorflag = "1";
-                   
-                   }
-                   %>
-                     <tr bgcolor=<%=color%>> 
+                   <% for (int i=0; i< billlist1.length; i++){                    %>
+                     <tr bgcolor=<%=i%2==0?"#EEEEFF":"white"%>> 
                                 <td width="25%" height="14"><b></b> <font face="Verdana, Arial, Helvetica, sans-serif"> 
                                    <html:multibox property="service" value="<%=billlist1[i].getServiceCode()%>"/>
                                    <font size="1"><%=billlist1[i].getServiceCode()%></font></font></td>
@@ -586,7 +577,7 @@ function showHideLayers() { //v3.0
               <table width="100%" border="1" cellspacing="0" cellpadding="0">
                 <tr bgcolor="#CCCCFF"> 
                   <td width="21%"><b></b> 
-                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><bean:message key="billing.service.procedure"/></font></b></font></div>
+                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><%=group2Header%></font></b></font></div>
                   </td>
                   <td width="60%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="billing.service.desc"/></font></b></td>
                   <td width="19%"> 
@@ -595,20 +586,8 @@ function showHideLayers() { //v3.0
                   </td>
                 </tr>
                 
-                 <% for (int i=0; i< billlist2.length; i++){ 
-	                         
-	                         if (colorflag.compareTo("1")==0) {
-	                         
-	                         color = "#EEEEFF";
-	                         colorflag = "0";
-	                         }
-	                         else{
-	                         color = "#FFFFFF";
-	      		   colorflag = "1";
-	                         
-	                         }
-	                         %>
-	      		                         <tr bgcolor=<%=color%>> 
+                 <% for (int i=0; i< billlist2.length; i++){	                         %>
+	      		                         <tr bgcolor=<%=i%2==0?"#EEEEFF":"white"%>> 
 	      				                    <td width="21%" height="14"><b></b> <font face="Verdana, Arial, Helvetica, sans-serif"> 
 	      				                   <html:multibox property="service" value="<%=billlist2[i].getServiceCode()%>"/>
 	      				                      <font size="1"><%=billlist2[i].getServiceCode()%></font></font></td>
@@ -707,27 +686,15 @@ function showHideLayers() { //v3.0
                 
                 <tr bgcolor="#CCCCFF"> 
                   <td width="25%"><b></b> 
-                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><bean:message key="billing.service.premium"/></font></b></font></div>
+                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><%=group3Header%></font></b></font></div>
                   </td>
                   <td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="billing.service.desc"/></font></b></td>
                   <td width="14%"> 
                     <div align="right"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">$<bean:message key="billing.service.fee"/></font></b></div>
                   </td>
                 </tr>
-                   <% for (int i=0; i< billlist3.length; i++){ 
-		                   
-		                   if (colorflag.compareTo("1")==0) {
-		                   
-		                   color = "#EEEEFF";
-		                   colorflag = "0";
-		                   }
-		                   else{
-		                   color = "#FFFFFF";
-				   colorflag = "1";
-		                   
-		                   }
-		                   %>
-				                         <tr bgcolor=<%=color%>> 
+                   <% for (int i=0; i< billlist3.length; i++){             %>
+				                         <tr bgcolor=<%=i%2==0?"#EEEEFF":"white"%>> 
 						                    <td width="25%" height="14"><b></b> <font face="Verdana, Arial, Helvetica, sans-serif"> 
 						                   <html:multibox property="service" value="<%=billlist3[i].getServiceCode()%>"/>
 						                      <font size="1"><%=billlist3[i].getServiceCode()%></font></font></td>
@@ -746,7 +713,7 @@ function showHideLayers() { //v3.0
                         <td width="91%" height="103" valign="top"> 
                           <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
                             <tr> 
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide')"><bean:message key="billing.diagnostic.code"/></a></font></b></td>
+                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide');return false;"><bean:message key="billing.diagnostic.code"/></a></font></b></td>
                               <td><b></b></td>
                             </tr>
                             <tr> 
