@@ -304,6 +304,13 @@ public static Hashtable attribStringHash(String S){
     }
   return H;
 }
+
+public static String stripLineBreaks(String input) {
+   if (input != null) {
+      input = input.replaceAll("\\n", " ").replaceAll("\\r", "");
+   }
+   return input;
+}
   
 public static String insertDecimalPoint(String input){
    String moneyStr = "0.00";
