@@ -2927,6 +2927,12 @@ CREATE TABLE formIntakeInfo(
   backpainRefused tinyint(1),
   backpainN tinyint(1),
   backpainDoNotKnow tinyint(1),
+  weightY tinyint(1),
+  weightRefused tinyint(1),
+  weightN tinyint(1),
+  weightDoNotKnow tinyint(1),
+  weight varchar(10),
+  height varchar(10),
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
