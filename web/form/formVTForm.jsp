@@ -472,7 +472,7 @@ function disableFTExam(control){
 }
 
 function DMCheck(){
-    if(document.forms[0].elements[DMValue].checked==false){
+    if(document.forms[0].elements[DMValue].checked==false && document.forms[0].elements[PVDValue].checked==false){
         disableFTExam(true);
         document.forms[0].elements[HbA1Value].disabled= true;
         document.forms[0].elements[HbA1Date].disabled= true;
@@ -493,7 +493,7 @@ function DMCheck(){
 }
 
 function PVDCheck(){
-    if(document.forms[0].elements[PVDValue].checked==false){
+    if(document.forms[0].elements[DMValue].checked==false && document.forms[0].elements[PVDValue].checked==false){
         disableFTExam(true);
     }
     else{
