@@ -28,6 +28,7 @@ import java.lang.*;
 import java.math.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager;
 import oscar.oscarBilling.ca.bc.data.*;
@@ -122,8 +123,12 @@ public class BillingViewBean {
       
    }
    
-   public String getMessageNotes(){
-      return new BillingNote().getNote(this.getBillingMasterNo());
+   public String getMessageNotes(){      
+      return new BillingNote().getNote(this.getBillingMasterNo());      
+   }
+   
+   public String getMSPBillingNote(){
+      return new MSPBillingNote().getNote(this.getBillingMasterNo());      
    }
    
    public String getPatientAge(){return this.patientAge;}
