@@ -1,11 +1,11 @@
 <%
-  if(session.getValue("user") == null || !( ((String) session.getValue("userprofession")).equalsIgnoreCase("doctor") ))
-    response.sendRedirect("../../logout.jsp");
+if(session.getAttribute("user") == null || !( ((String) session.getAttribute("userprofession")).equalsIgnoreCase("doctor") ))
+	response.sendRedirect("../../logout.jsp");
 %>
 
 
 <%@ page contentType="text/xml" %>
-<%@ page import="java.util.*, java.sql.*, javax.xml.parsers.*, org.w3c.dom.*, oscar.util.*,java.io.*,org.xml.sax.InputSource"  errorPage="../../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"  errorPage="../../appointment/errorpage.jsp"%>
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
 <%--database command part  --%>
@@ -16,7 +16,7 @@
     {"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"}, 
     {"search_echart", "select ongoingConcerns from eChart where demographicNo=? order by timeStamp desc limit 1"}, 
     {"search_allergies", "select DESCRIPTION from allergies where demographic_no=? "}, 
-    {"search_drugs", "select * from drugs where demographic_no=? and rx_date >= ? order by rx_date desc, drugid desc "}, 
+    //{"search_drugs", "select * from drugs where demographic_no=? and rx_date >= ? order by rx_date desc, drugid desc "}, 
   };
   studyBean.doConfigure(dbParams,dbQueries);
 %>
@@ -101,7 +101,7 @@
 		k++;
 	}
 
-    //take data from drugs
+/*    //take data from drugs
     GregorianCalendar now=new GregorianCalendar();
     now.add(now.DATE, -7);
     String rxLastTime = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) ;
@@ -137,6 +137,7 @@
 
 		k++;
 	}
+*/
 
     studyBean.closePstmtConn();
 
@@ -275,7 +276,7 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
 	UtilXML.addNode(adverse_reactions, "adverse_reactions_offending_drug", allergy.getProperty("encounter.adverse_reactions.adverse_reactions_offending_drug^"+n_adverse_reactions));
 	n_adverse_reactions++;
 	}
-	
+/*	
     int n_medication = 0;
     Node medication = null;
 	while (drug.getProperty(studyMapping.getProperty("encounter.medication.medication_EHR_supplied_drug_name^*")+n_medication) != null) {
@@ -295,7 +296,7 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
     n_medication++;
 	UtilXML.addNode(medication, "medication_drug_named_frequency_description", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_drug_named_frequency_description^*") + n_medication));
 	}
-	
+*/	
 	out.clear();
     out.flush();
     out.println(UtilXML.toXML(doc, "encounter1_3.dtd"));
