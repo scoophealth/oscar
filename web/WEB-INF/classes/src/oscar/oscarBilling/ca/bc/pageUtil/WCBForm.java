@@ -315,7 +315,7 @@ public final class WCBForm extends ActionForm {
         try{           
            String fee =    ( (BillingBillingManager.BillingItem)  bean.getBillItem().get(0) ).getServiceCode();            
            if (fee != null){
-              this.w_feeitem = fee;
+              this.w_extrafeeitem = fee;
            }
         }catch(Exception efee){}
         
