@@ -40,7 +40,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ page import="oscar.oscarDemographic.data.*" %>
-<%@ page import="java.text.*, java.util.*, oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*" %>
+<%@ page import="java.text.*, java.util.*, oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*,oscar.*" %>
 <%
 
  int year = 0;//Integer.parseInt(request.getParameter("year"));
@@ -261,25 +261,23 @@ function showHideLayers() { //v3.0
     </tr>
    <% for (int i=0; i< diaglist.length; i++){ 
 	                         
-	                         if (colorflag.compareTo("1")==0) {
-	                         
-	                         color = "#EEEEFF";
-	                         colorflag = "0";
-	                         }
-	                         else{
-	                         color = "#FFFFFF";
-	      		   colorflag = "1";
-	                         
-	                         }
-	                         %>
-	                                               <tr bgcolor=<%=color%>> 
-				       <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
-                              <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');showHideLayers('Layer2','','hide');return false;">
-                                 <%=diaglist[i].getDiagnosticCode()%>
-                              </a></font></b></td>
-				       <td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><%=diaglist[i].getDescription()%></font></td>
-    </tr>                  
-	                          <%}%>
+         if (colorflag.compareTo("1")==0) {
+            color = "#EEEEFF";
+            colorflag = "0";
+         }else{
+	    color = "#FFFFFF";
+	    colorflag = "1";	                         
+	 }
+    %>
+       <tr bgcolor=<%=color%>> 
+          <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
+               <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');showHideLayers('Layer2','','hide');return false;">
+                                <%=diaglist[i].getDiagnosticCode()%>
+               </a></font></b>
+          </td>
+	  <td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><%=diaglist[i].getDescription()%></font></td>
+       </tr>                  
+    <%}%>
 	                          
 	                          
                      
@@ -305,30 +303,22 @@ function showHideLayers() { //v3.0
       <td width="3%" bgcolor="#FFCC00" height="7"><font face="Verdana, Arial, Helvetica, sans-serif" ><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">x</a></b></font></td>
     </tr>
      <% for (int i=0; i< billformlist.length; i++){ 
-    	                         
-    	                         if (colorflag.compareTo("1")==0) {
-    	                         
-    	                         color = "#EEEEFF";
-    	                         colorflag = "0";
-    	                         }
-    	                         else{
-    	                         color = "#FFFFFF";
-    	      		   colorflag = "1";
-    	                         
-    	                         }
-    	                         %>
-                                    <tr bgcolor=<%=color%>> 
-                                        <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
-                                        <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
-                                        </font></b>
-                                        </td>
-                                    </tr>
-    
-    	                          <%}%>
+            if (colorflag.compareTo("1")==0) {    	                         
+                color = "#EEEEFF";
+    	        colorflag = "0";
+    	    }else{
+    	        color = "#FFFFFF";
+    	      	colorflag = "1";    	                         
+    	    }
+     %>
+            <tr bgcolor=<%=color%>> 
+               <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
+                  <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
+                  </font></b>
+               </td>
+            </tr>    
+     <%}%>
 	               
-    
-  
-  
     
      </table>
 </div>
@@ -336,31 +326,22 @@ function showHideLayers() { //v3.0
 <html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();" >   
         
         <%
-         BillingCreateBillingForm thisForm;
-         thisForm = (BillingCreateBillingForm)request.getSession().getAttribute("BillingCreateBillingForm");
-  System.out.println("BillForm " + thisForm); 
-  if (thisForm != null){
-  //thisForm.setXml_location("P1|PEMBERTON");
-  System.out.println("BillLoc " + thisForm.getXml_location()); 
-  sxml_provider = ((String) thisForm.getXml_provider());
-  sxml_location =((String) thisForm.getXml_location());
-  sxml_visittype = ((String) thisForm.getXml_visittype());
-  if (sxml_location.compareTo("")==0){
-  thisForm.setXml_location("P1|PEMBERTON");
-  sxml_location =((String) thisForm.getXml_location());
-  thisForm.setXml_provider( bean.getApptProviderNo());
-   System.out.println("BillProvider " + thisForm.getXml_provider()); 
-  sxml_provider =((String) thisForm.getXml_provider());
-  thisForm.setXml_visittype("O|Physician's office");
-  sxml_visittype = ((String) thisForm.getXml_visittype());
-  }
-  }else{
-//thisForm.setXml_location("P1|PEMBERTON");
-    System.out.println("BillLoc 1" + thisForm.getXml_location()); 
- sxml_location ="P1|PEMBERTON";
- 
-  }
-  
+        BillingCreateBillingForm thisForm;
+        thisForm = (BillingCreateBillingForm)request.getSession().getAttribute("BillingCreateBillingForm");        
+        if (thisForm != null){                
+            sxml_provider = ((String) thisForm.getXml_provider());
+            sxml_location =((String) thisForm.getXml_location());
+            sxml_visittype = ((String) thisForm.getXml_visittype());
+            if (sxml_location.compareTo("")==0){
+                sxml_location  = OscarProperties.getInstance().getProperty("visitlocation");
+                sxml_visittype = OscarProperties.getInstance().getProperty("visittype");
+                sxml_provider  = bean.getApptProviderNo();
+
+                thisForm.setXml_location(sxml_location);  
+                thisForm.setXml_provider( sxml_provider);       
+                thisForm.setXml_visittype(sxml_visittype);    
+            }
+        }  
         %>
         
   <table width="100%" border="0" cellspacing="0" cellpadding="0" >
@@ -409,7 +390,7 @@ function showHideLayers() { //v3.0
             <td width="33%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <b><bean:message key="billing.visitlocation"/></b> 
        
-              <html:select property="xml_location" value="<%=sxml_location%>">
+              <html:select property="xml_location" >
               
                   <% for (int i=0; i< billlocation.length; i++){
                      String locationDescription = billlocation[i].getBillingLocation()+"|"+billlocation[i].getDescription();
@@ -423,7 +404,7 @@ function showHideLayers() { //v3.0
               </font></td>
             <td width="14%"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif"><b><bean:message key="billing.visittype"/></b> </font></td>
             <td width="29%"> <font size="-2" face="Verdana, Arial, Helvetica, sans-serif"> 
-              <html:select property="xml_visittype" value="<%=sxml_visittype%>">
+              <html:select property="xml_visittype" >
                         <% for (int i=0; i< billvisit.length; i++){ 
                         String visitTypeDescription = billvisit[i].getVisitType()+"|"+billvisit[i].getDescription();
                         %>
