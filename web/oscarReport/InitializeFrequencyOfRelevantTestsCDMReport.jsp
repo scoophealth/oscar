@@ -228,9 +228,9 @@ function unCheckAll(field){
                                         <td width="4"   class="fieldBox" bgcolor="#ddddff"><bean:write name="measurementType" property="typeDisplayName" /></td>
                                         <td width="200" class="fieldBox" bgcolor="#ddddff"><bean:write name="measurementType" property="typeDesc" /></td>
                                         <td width="200" class="fieldBox" bgcolor="#ddddff"></td>
-                                        <td width="80"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="exactly" size="6" />  <bean:message key="oscarReport.CDMReport.msgTimes"/></td>
-                                        <td width="80"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="moreThan" size="6" />  <bean:message key="oscarReport.CDMReport.msgTimes"/></td>     
-                                        <td width="80"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="lessThan" size="6" />  <bean:message key="oscarReport.CDMReport.msgTimes"/></td>     
+                                        <td width="80"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="exactly" size="6" /></td>
+                                        <td width="80"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="moreThan" size="6" /></td>     
+                                        <td width="80"  class="fieldBox" bgcolor="#ddddff"><input type="text" name="lessThan" size="6" /></td>     
                                         <td width="120" class="fieldBox" bgcolor="#ddddff">
                                             <input type="text" name="startDateD" value='<bean:write name="lastYear"/>'  size="10">
                                             <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="startDateD[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializeFrequencyOfRelevantTestsCDMReportForm"%>','','width=300,height=300')"/>                                                                                
