@@ -42,7 +42,7 @@ public final class dxSetupResearchAction extends Action {
         throws Exception {
           
         String demographicNo = request.getParameter("demographicNo");
-        String providerNo = request.getParameter("providerNos");
+        String providerNo = request.getParameter("providerNo");
         String selectedQuickList = request.getParameter("quickList");        
         dxResearchBeanHandler hd = new dxResearchBeanHandler(demographicNo);
         dxQuickListBeanHandler quicklistHd = null;
@@ -62,6 +62,7 @@ public final class dxSetupResearchAction extends Action {
         session.setAttribute("allQuickListItems", quicklistItemsHd);
         session.setAttribute("allDiagnostics", hd );
         session.setAttribute("demographicNo", demographicNo ); 
+        session.setAttribute("providerNo", providerNo ); 
        
         return (mapping.findForward("success"));
     }
