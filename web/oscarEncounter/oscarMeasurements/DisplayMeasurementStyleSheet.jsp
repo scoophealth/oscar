@@ -52,10 +52,7 @@
             <td class="MainTableTopRowRightColumn" width="400">
                 <table class="TopStatusBar" >                 
                     <tr>
-                        <td ><bean:message key="oscarEncounter.Measurements.msgDisplayMeasurementStyleSheets"/></td>                        
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
+                        <td ><bean:message key="oscarEncounter.Measurements.msgDisplayMeasurementStyleSheets"/></td>                                                
                     </tr>                  
                 </table>
             </td>
@@ -86,7 +83,7 @@
                                         </td>
                                      </tr>
                                     <logic:iterate id="styleSheet" name="styleSheets" property="styleSheetNameVector" indexId = "ctr" >
-                                    <tr>
+                                    <tr class="data">
                                         <td width="300"><bean:write name="styleSheet" property="styleSheetName" /></td>                                        
                                         <td width="10"><input type="checkbox" name="deleteCheckbox" value="<bean:write name="styleSheet" property="cssId" />"</td>                            
                                     </tr>                        

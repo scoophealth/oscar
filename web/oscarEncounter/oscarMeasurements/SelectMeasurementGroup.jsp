@@ -69,10 +69,7 @@ function confirmDelete(target) {
             <td class="MainTableTopRowRightColumn" width="400">
                 <table class="TopStatusBar" >                 
                     <tr>
-                        <td ><bean:message key="oscarEncounter.Measurements.msgSelectMeasurementGroup"/></td>                        
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
+                        <td ><bean:message key="oscarEncounter.Measurements.msgSelectMeasurementGroup"/></td>                                                
                     </tr>                  
                 </table>
             </td>
@@ -100,7 +97,7 @@ function confirmDelete(target) {
                                             <table>
                                                 <tr>
                                                     <input type="hidden" name="forward" value="error"/>
-                                                    <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
+                                                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
                                                     <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.modifyMeasurementTypeBtn"/>" onclick="set('type');submit();"/></td>
                                                     <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.modifyMeasurementStyleBtn"/>" onclick="set('style');submit();"/></td>
                                                     <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.deleteBtn"/>" onclick="confirmDelete('delete');"/></td>
