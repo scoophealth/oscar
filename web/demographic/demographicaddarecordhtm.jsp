@@ -345,16 +345,17 @@ function checkTypeIn() {
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formHCType"/>: </b></td>
       <td> 
         <select name="hc_type">
-          <option value="ON" selected>ON-Ontario</option>
-          <option value="AB">AB-Alberta</option>
-          <option value="BC">BC-British Columbia</option>
-          <option value="MB">MB-Manitoba</option>
-          <option value="NF">NF-Newfoundland</option>
-          <option value="NB">NB-New Brunswick</option>
-          <option value="YT">YT-Yukon</option>
-          <option value="NS">NS-Nova Scotia</option>
-          <option value="PE">PE-Prince Edward Island</option>
-          <option value="SK">SK-Saskatchewan</option>
+        <% String billregion = props.getProperty("billregion", ""); %>
+          <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
+          <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
+          <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
+          <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>
+          <option value="NF"<%=billregion.equals("NF")?" selected":""%>>NF-Newfoundland</option>
+          <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+          <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>
+          <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+          <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+          <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
         </select>
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formNurse"/>: </b></td>
