@@ -226,7 +226,7 @@ function unCheckAll(field){
                                             <input type="text" name="endDateC" value='<bean:write name="today"/>'  size="10">
                                             <img src="img/calendar.gif" border="0" onClick="window.open('../oscarReport/oscarReportCalendarPopup.jsp?type=<%="endDateC[" + ctr + "]"%>&amp;year=<%=curYear%>&amp;month=<%=curMonth%>&amp;form=<%="RptInitializePatientsInAbnormalRangeCDMReportForm"%>','','width=300,height=300')"/>
                                         </td>
-                                        <input type="hidden" name='<%="value(measurementTypeC"+ctr+")"%>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>
+                                        <input type="hidden" name='<%="value(measurementTypeC"+ctr+")"%>' value="<bean:write name="measurementType" property="type" />"/>
                                     </tr>
                                     <tr>
                                         <td width="2" class="fieldBox" bgcolor="#ddddff"></td>
