@@ -557,13 +557,8 @@ public class ExtractBean extends Object implements Serializable {
     }
     
     public String moneyFormat(String y, int x) {
-        String returnZeroValue = new String();
-        for(int i=y.substring(0, y.indexOf(".")).length(); i < x-2; i++) {
-            returnZeroValue += "0";
-        }
-        returnZeroValue = returnZeroValue + y.substring(0, y.indexOf(".")) + y.substring(y.indexOf(".")+1);
-        return cutFrontString(returnZeroValue,x);        
-        //return returnZeroValue;
+        String returnZeroValue = forwardZero(y.replaceAll("\\.",""),x);
+        return cutFrontString(returnZeroValue,x);                
     }
     
     public String getOhipReciprocal() {
