@@ -55,7 +55,11 @@
 <html:errors/>
 <table>
     <tr>
-        <td> Update waiting list </td>              
+        <td> Update waiting list </td> 
+        <script language="javascript">
+            self.close();
+            self.opener.refresh();
+        </script>
     </tr>
 </table>
 
