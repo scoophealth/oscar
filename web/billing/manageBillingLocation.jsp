@@ -24,29 +24,27 @@
  */
 -->
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
- <%      
-  if(session.getValue("user") == null)
-      response.sendRedirect("../logout.jsp");
-  String user_no; 
-  user_no = (String) session.getAttribute("user");
-  String asstProvider_no = "";
-   String color ="";
-  String premiumFlag="";
+<%      
+if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+String user_no = (String) session.getAttribute("user");
+String asstProvider_no = "";
+String color ="";
+String premiumFlag="";
 String service_form="", service_name="";
-%>       
+%>
+
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %>            
-<%
-  String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
-   String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
- 
-%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%
+String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
+String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
+%>
 
 <html:html locale="true">
 <head>
@@ -161,12 +159,6 @@ function refresh() {
     history.go(0);
   }
 }
-
-function onUnbilled(url) {
-  if(confirm("<bean:message key="billing.manageBillingLocation.msgDeleteBillingConfirm"/>")) {
-    popupPage(700,720, url);
-  }
-}
 //-->
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
@@ -175,90 +167,87 @@ function onUnbilled(url) {
 <body leftmargin="0" topmargin="5" rightmargin="0">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
-    <td height="40" width="10%"> </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.manageBillingLocation.msgBilling"/></font></font></b></font> 
-      </p>
-    </td>
-  </tr>
+<tr bgcolor="#000000"> 
+	<td height="40" width="10%"> </td>
+	<td width="90%" align="left"> 
+	<p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.manageBillingLocation.msgBilling"/></font></font></b></font> 
+	</p>
+	</td>
+</tr>
 </table> 
+
 <table width="100%" border="0" bgcolor="#EEEEFF">
- 
-    <tr>  <td width="27%" align="left">
-	  <form name="serviceform" method="post" action="dbManageBillingLocation.jsp">
-        <p><bean:message key="billing.manageBillingLocation.msgCodeDescription"/></p>
-        <p>
-          <input type="text" name="location1" size="10">
-          <input type="text" name="location1desc" size="30">
-          <br>
-          <input type="text" name="location2" size="10">
-          <input type="text" name="location2desc" size="30">
-          <br>
-          <input type="text" name="location3" size="10">
-          <input type="text" name="location3desc" size="30">
-          <br>
-          <input type="text" name="location4" size="10">
-          <input type="text" name="location4desc" size="30">
-          <br>
-          <input type="text" name="location5" size="10">
-          <input type="text" name="location5desc" size="30">
-          <br>
-          <input type="submit" name="action" value="<bean:message key="billing.manageBillingLocation.btnAdd"/>">
-          <br>
-        </p>
-      </form></td>
+<tr>
+	<td width="27%" align="left">
+	<form name="serviceform" method="post" action="dbManageBillingLocation.jsp">
+	<p><bean:message key="billing.manageBillingLocation.msgCodeDescription"/></p>
+	<input type="text" name="location1" size="10">
+	<input type="text" name="location1desc" size="30">
+	<br>
+	<input type="text" name="location2" size="10">
+	<input type="text" name="location2desc" size="30">
+	<br>
+	<input type="text" name="location3" size="10">
+	<input type="text" name="location3desc" size="30">
+	<br>
+	<input type="text" name="location4" size="10">
+	<input type="text" name="location4desc" size="30">
+	<br>
+	<input type="text" name="location5" size="10">
+	<input type="text" name="location5desc" size="30">
+	<br><br>
+	<input type="submit" name="action" value="<bean:message key="billing.manageBillingLocation.btnAdd"/>">
+	<br>
+	</p>
+	</form>
+	</td>
       
     <td width="39%" valign="top">
-<table width="90%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td><bean:message key="billing.manageBillingLocation.msgClinicLocation"/></td>
-          <td><bean:message key="billing.manageBillingLocation.msgDescription"/></td>
-        </tr>
+
+	<table width="90%" border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td><bean:message key="billing.manageBillingLocation.msgClinicLocation"/></td>
+		<td><bean:message key="billing.manageBillingLocation.msgDescription"/></td>
+	</tr>
         
-          <% 
-	  
-	 ResultSet rs=null ;
-	  ResultSet rs2=null ;
-	  String[] param =new String[1];
-	  String[] param2 =new String[10];
-	
-	    String[] service_code = new String[45];
-	
-	    
-	  param[0] = "1";
-	  rs = apptMainBean.queryResults(param, "search_clinic_location");
-	int rCount = 0;
-	  boolean bodd=false;
-	  
-	 
-	  String servicetype_name="";
-	  if(rs==null) {
-	   out.println("failed!!!"); 
-	  } else {
-	  %>
-	  <% 
-	   while (rs.next()) {
-	     
-	      bodd=bodd?false:true; //for the color of rows
-	  %>     <tr>
-          <td><%=rs.getString("clinic_location_no")%></td>
-          <td><%=rs.getString("clinic_location_name")%></td>
-        </tr>
-	  <%
-	  
-	  
-	  }
-	 }     
-	 
-	  apptMainBean.closePstmtConn();
-  %> 
-   
-        
-      </table>
-    </td>
-      <td width="34%">&nbsp;</td>
-    </tr>  
+<% 
+ResultSet rs=null ;
+ResultSet rs2=null ;
+String[] param =new String[1];
+String[] param2 =new String[10];
+String[] service_code = new String[45];
+
+param[0] = "1";
+rs = apptMainBean.queryResults(param, "search_clinic_location");
+int rCount = 0;
+boolean bodd=false;
+String servicetype_name="";
+
+if(rs==null) {
+	out.println("failed!!!"); 
+} else {
+%>
+<% 
+	while (rs.next()) {
+		bodd=bodd?false:true; //for the color of rows
+%>
+
+	<tr>
+		<td><%=rs.getString("clinic_location_no")%></td>
+		<td><%=rs.getString("clinic_location_name")%></td>
+	</tr>
+<%
+	}
+}     
+
+apptMainBean.closePstmtConn();
+%> 
+
+	</table>
+
+	</td>
+	<td width="34%">&nbsp;</td>
+	</tr>  
 
 </table>
 </body>
