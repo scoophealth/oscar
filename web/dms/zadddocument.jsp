@@ -34,7 +34,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="self.focus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="dms.zadddocument.msgUpload"/></font></th></tr>
 </table>
@@ -54,7 +54,7 @@
 <br>
 <br>
 <form>
-  <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick=self.close();>
+  <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="self.close();">
 </form>
 </body>
 </html:html>
