@@ -1110,38 +1110,38 @@
     </action>
     
     <!-- oscarBilling start for BC -->
-    <action   path="/oscarBilling/billing"
+    <action   path="/oscarBilling/CA/BC/billing"
               type="oscar.oscarBilling.pageUtil.BillingAction"
               name="BillingForm"
               scope="request"
-              input="/oscarBilling/billing.jsp" >
-              <forward name="BC" path="/oscarBilling/billingBC.jsp" />
+              input="/oscarBilling/CA/BC/billing.jsp" >
+              <forward name="BC" path="/oscarBilling/CA/BC/billingBC.jsp" />
               <forward name="ON" path="/billing/billingOB.jsp" />                                                                                                                                                                                                                                                                                                                                                                                                          
               <!--<forward name="ON" path="/oscarBilling/billingON.jsp" />-->
     </action>
                                                                                                                                                                                                      
-    <action   path="/oscarBilling/CreateBilling"
+    <action   path="/oscarBilling/CA/BC/CreateBilling"
               type="oscar.oscarBilling.pageUtil.BillingCreateBillingAction"
               name="BillingCreateBillingForm"
               scope="session"
               input="/oscarBilling/billingBC.jsp">
-              <forward name="success" path="/oscarBilling/billingCreated.jsp"/>
+              <forward name="success" path="/oscarBilling/CA/BC/billingCreated.jsp"/>
      </action>
                                                                                                                                                                                                      
-     <action  path="/oscarBilling/SaveBilling"
+     <action  path="/oscarBilling/CA/BC/SaveBilling"
               type="oscar.oscarBilling.pageUtil.BillingSaveBillingAction"
               name="BillingSaveBillingForm"
               scope="request"
               input="/oscarBilling/billingCreated.jsp">
-              <forward name="success" path="/oscarBilling/billingSaved.jsp"/>
+              <forward name="success" path="/oscarBilling/CA/BC/billingSaved.jsp"/>
     </action>
     
-    <action   path="/oscarBilling/billingView"
+    <action   path="/oscarBilling/CA/BC/billingView"
               type="oscar.oscarBilling.pageUtil.BillingViewAction"
               name="BillingViewForm"
               scope="request"
-              input="/oscarBilling/billingView.jsp">
-              <forward name="success" path="/oscarBilling/billingView.jsp"/>
+              input="/oscarBilling/CA/BC/billingView.jsp">
+              <forward name="success" path="/oscarBilling/CA/BC/billingView.jsp"/>
               <forward name="ON"   path="/billing/billingOB2.jsp"/>
     </action>
     <!-- oscarBilling end -->
