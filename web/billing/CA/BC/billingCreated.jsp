@@ -40,7 +40,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@ page import="java.util.*, oscar.oscarDemographic.data.*" %>
-<%@ page import="oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*;" %>
+<%@ page import="oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*" %>
 <%
 
 String color = "", colorflag ="";
