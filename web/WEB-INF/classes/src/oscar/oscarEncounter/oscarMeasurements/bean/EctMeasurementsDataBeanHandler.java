@@ -39,15 +39,19 @@ public class EctMeasurementsDataBeanHandler {
         init(demo);
     }
     
+    public EctMeasurementsDataBeanHandler(String demo, String type) {
+        init(demo, type);
+    }
+    
     public boolean init(String demo) {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql ="SELECT m.id, m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,  " + 
-                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last, " +
-                        "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v, " +
-                        "measurementType mt WHERE m.demographicNo='" + demo + "' AND  m.providerNo= p.provider_no AND mt.type = m.type " +
-                        "AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC, " +
+            String sql ="SELECT m.id, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
+                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
+                        "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
+                        "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.providerNo= p.provider_no AND m.type = mt.type " +
+                        "AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC," +
                         "m.dateEntered DESC";
             System.out.println("sql: " + sql);
             ResultSet rs;
@@ -58,8 +62,8 @@ public class EctMeasurementsDataBeanHandler {
                         canPlot = "true";
                     else
                         canPlot = null;
-                    System.out.println("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("demographicNo"), 
+                    //System.out.println("canPlot value: " + canPlot);
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
                                                                                rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
                                                                                rs.getString("comments"), rs.getString("dateObserved"), 
@@ -77,6 +81,45 @@ public class EctMeasurementsDataBeanHandler {
         return verdict;
     }
 
+    
+    public boolean init(String demo, String type) {
+        boolean verdict = true;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql ="SELECT m.id, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
+                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
+                        "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
+                        "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
+                        "AND m.type = mt.type AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC," +
+                        "m.dateEntered DESC";
+            System.out.println("sql: " + sql);
+            ResultSet rs;
+            String canPlot = null;
+            for(rs = db.GetSQL(sql); rs.next(); )
+            {                               
+                    if (rs.getInt("numericValidation")==1 || rs.getString("validationName").compareTo("Blood Pressure")==0)
+                        canPlot = "true";
+                    else
+                        canPlot = null;
+                    //System.out.println("canPlot value: " + canPlot);
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
+                                                                               rs.getString("provider_first"), rs.getString("provider_last"), 
+                                                                               rs.getString("dataField"), rs.getString("measuringInstruction"), 
+                                                                               rs.getString("comments"), rs.getString("dateObserved"), 
+                                                                               rs.getString("dateEntered"), canPlot);
+                    measurementsDataVector.add(data);                
+            }
+
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
+    
     public Collection getMeasurementsDataVector(){
         return measurementsDataVector;
     }
