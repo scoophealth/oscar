@@ -19,6 +19,15 @@
   addDemoBean.doConfigure(dbParams,dbQueries,responseTargets);
   
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+
+  OscarProperties props = OscarProperties.getInstance();
+
+  GregorianCalendar now=new GregorianCalendar();
+  String curYear = Integer.toString(now.get(Calendar.YEAR));
+  String curMonth = Integer.toString(now.get(Calendar.MONTH)+1);
+  if (curMonth.length() < 2) curMonth = "0"+curMonth;
+  String curDay = Integer.toString(now.get(Calendar.DAY_OF_MONTH));
+  if (curDay.length() < 2) curDay = "0"+curDay;
 %>
 
 <html:html locale="true">
@@ -213,7 +222,7 @@ function checkTypeIn() {
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formprovince"/>: </b> </td>
       <td  align="left"> 
-        <input type="text" name="province" value="ON">
+        <input type="text" name="province" value="<%=props.getProperty("billregion", "ON")%>">
       </td>
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPostal"/>: </b> </td>
       <td  align="left"> 
@@ -224,7 +233,7 @@ function checkTypeIn() {
     <tr valign="top"> 
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPhoneHome"/>: </b> </td>
       <td align="left" > 
-        <input type="text" name="phone" value="905-">
+        <input type="text" name="phone" value="<%=props.getProperty("phoneprefix", "905-")%>">
       </td>
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPhoneWork"/>:</b> </td>
       <td  align="left"> 
@@ -445,9 +454,9 @@ function checkTypeIn() {
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDateJoined"/></b><b>: </b></td>
       <td align="left" > 
-        <input type="text" name="date_joined_year" size="4" maxlength="4">
-        <input type="text" name="date_joined_month" size="2" maxlength="2">
-        <input type="text" name="date_joined_date" size="2" maxlength="2">
+        <input type="text" name="date_joined_year" size="4" maxlength="4" value="<%=curYear%>">
+        <input type="text" name="date_joined_month" size="2" maxlength="2" value="<%=curMonth%>">
+        <input type="text" name="date_joined_date" size="2" maxlength="2" value="<%=curDay%>">
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formEndDate"/></b><b>: </b> </td>
       <td align="left"> 

@@ -33,7 +33,7 @@
 	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
 	  String year, month, day;
-    String[] param =new String[26];
+    String[] param =new String[27];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -51,11 +51,13 @@
 	  param[14]=request.getParameter("ver");
 	  param[15]=request.getParameter("roster_status");
 	  param[16]=request.getParameter("patient_status");
-	  // Databases have an alias for today. It is not necessary give the current date.
-	  //param[17]=request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
-	  param[17]=request.getParameter("chart_no");
-	  param[18]=request.getParameter("staff");
-	  param[19]=request.getParameter("sex");
+	  // Databases have an alias for today. It is not necessary give the current date.          
+          // ** Overridden - we want to give users option to change if needed
+          // ** Now defaults to current date on the add demographic screen
+	  param[17]=request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
+	  param[18]=request.getParameter("chart_no");
+	  param[19]=request.getParameter("staff");
+	  param[20]=request.getParameter("sex");
 
 	  // If null, set year, month and date
 	  if (request.getParameter("end_date_year").equals("")) {
@@ -76,7 +78,7 @@
 	    day = request.getParameter("end_date_date");
 	  }
 
-	  param[20] = year + "-" + month + "-" + day;
+	  param[21] = year + "-" + month + "-" + day;
 
 	  // If null, set year, month and date
 	  if (request.getParameter("eff_date_year").equals("")) {
@@ -97,10 +99,10 @@
 	    day = request.getParameter("eff_date_date");
 	  }
 
-	  param[21] =  year + "-" + month + "-" + day;
+	  param[22] =  year + "-" + month + "-" + day;
 
-	  param[22]=request.getParameter("pcn_indicator");
-	  param[23]=request.getParameter("hc_type");
+	  param[23]=request.getParameter("pcn_indicator");
+	  param[24]=request.getParameter("hc_type");
 
 	  // If null, set year, month and date
 	  if (request.getParameter("hc_renew_date_year").equals("")) {
@@ -121,8 +123,8 @@
 	    day = request.getParameter("hc_renew_date_date");
 	  }
 
-	  param[24] =  year + "-" + month + "-" + day;
-	  param[25]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "");    
+	  param[25] =  year + "-" + month + "-" + day;
+	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "");    
 
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].trim();
