@@ -104,6 +104,8 @@ public final class BillingReProcessBillForm extends ActionForm {
     String notes=null;
     String dependent=null;
     
+    String messageNotes=null;
+    
     String debitRequestSeqNum = null;
     String debitRequestDate = null;
     /*
@@ -908,6 +910,22 @@ clinic_ref_code
    */
   public void setDebitRequestDate(java.lang.String debitRequestDate) {
      this.debitRequestDate = debitRequestDate;
+  }
+  
+  /**
+   * Getter for property messageNotes.
+   * @return Value of property messageNotes.
+   */
+  public java.lang.String getMessageNotes() {
+     return messageNotes;
+  }
+  
+  /**
+   * Setter for property messageNotes.
+   * @param messageNotes New value of property messageNotes.
+   */
+  public void setMessageNotes(java.lang.String messageNotes) {
+     this.messageNotes = messageNotes;
   }
   
   /**
