@@ -190,12 +190,12 @@ public class FrmFormAction extends Action {
                 String comments = (String) frm.getValue(type+"Comments");
                 comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
                 
-                
+                System.out.println("type: " + type + " inputValue: " + inputValue);
                 //parse the checkbox value
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
-                System.out.println("write2Measurement type: " + type + " inputValue: " + inputValue);
+                //System.out.println("write2Measurement type: " + type + " inputValue: " + inputValue);
                 if(inputValue!=null){
                     if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))                    //System.out.println("write to measurement table: " + mt.getType());
                         write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
@@ -440,12 +440,15 @@ public class FrmFormAction extends Action {
     private String parseCheckBoxValue(String inputValue, String validationName){        
         //System.out.println("validationName: " + validationName);
         if(validationName.equalsIgnoreCase("Yes/No")){
-            if(inputValue==null)
+            /*if(inputValue==null)
                 inputValue="no";
-            else if (inputValue.equalsIgnoreCase("on"))
-                    inputValue="yes";    
-            else if (inputValue.equalsIgnoreCase("off"))
-                    inputValue="no";
+            else*/ 
+            if(inputValue!=null){
+                if (inputValue.equalsIgnoreCase("on"))
+                        inputValue="yes";    
+                else if (inputValue.equalsIgnoreCase("off"))
+                        inputValue="no";
+            }
         }        
         return inputValue;
     }
