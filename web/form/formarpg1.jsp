@@ -64,24 +64,19 @@
 </head>
 
 <script type="text/javascript" language="Javascript">
-
-    function reset() {
-        document.forms[0].target = "apptProviderSearch";
+    function reset() {        
+        document.forms[0].target = "";
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
-	}
+    }
     function onPrint() {
         document.forms[0].submit.value="print"; //printAR1
         var ret = checkAllDates();
         if(ret==true)
-        {
-            //ret = confirm("Do you wish to save this form and view the print preview?");
-            popupFixedPage(650,850,'../provider/notice.htm');
-            document.forms[0].action = "formar1print.jsp";
-            document.forms[0].target="planner";
-            document.forms[0].submit();
-            document.forms[0].target="apptProviderSearch";
+        {                        
+            document.forms[0].action = "formar1print.jsp";         
+            document.forms[0].target="_blank";            
         }
-        return ret;
+       return ret;
     }
     function onSave() {
         document.forms[0].submit.value="save";
