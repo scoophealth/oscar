@@ -137,9 +137,7 @@ public class ExtractBean extends Object implements Serializable {
     
     
     
-    public ExtractBean() {
-        
-        
+    public ExtractBean() {                
         formatter = new SimpleDateFormat("yyyyMMddHmm");
         today = new java.util.Date();
         output = formatter.format(today);
@@ -153,6 +151,7 @@ public class ExtractBean extends Object implements Serializable {
         surl = dbParam[1];
         user = dbParam[2];
         password = dbParam[3];
+        String dataCenterId = OscarProperies.getProperty("dataCenterId");
         try{
             
             //htmlClass="class='bodytext'";
@@ -160,7 +159,7 @@ public class ExtractBean extends Object implements Serializable {
             
             if (vsFlag == 0) {
                 logNo = getSequence(sdriver, surl, user, password);
-                batchHeader = "VS1" + "V6242" + forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + space(25) + space(57) + "\r";
+                batchHeader = "VS1" + "dataCenterId" + forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + space(25) + space(57) + "\r";
                 System.out.println("BH:" + batchHeader);
                 logValue = batchHeader;
                 setLog(logNo, logValue);
@@ -199,6 +198,7 @@ public class ExtractBean extends Object implements Serializable {
             
             dbExt.openConnection(sdriver, surl, user, password);
             query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
+            System.out.println("1st billing query "+query);
             ResultSet rs = dbExt.executeQuery(query);
             if (rs != null){
                 while(rs.next()) {
@@ -299,12 +299,11 @@ public class ExtractBean extends Object implements Serializable {
                     
                     invCount = 0;
                     query2 = "select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'";
+                    System.out.println("2nd query " + query2);
                     ResultSet rs2 = dbExt.executeQuery2(query2);
                     while (rs2.next()) {
-                        recordCount = recordCount + 1;
-                        
-                        count = 0;
-                        
+                        recordCount = recordCount + 1;                        
+                        count = 0;                        
                         logNo = getSequence(sdriver, surl, user, password);
                         value = value + "\n" +rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") + rs2.getString("phn")+ rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6)+"\r";
                         logValue = rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") + rs2.getString("phn")+ rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6);
@@ -313,26 +312,16 @@ public class ExtractBean extends Object implements Serializable {
                         bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
                         BigTotal = BigTotal.add(bdFee);
                         
-                        if (invCount == 0) {
-                            
+                        if (invCount == 0) {                            
                             htmlContent = htmlContent + "<tr><td class='bodytext'>" + invNo+ "</td><td class='bodytext'>" + demoName + "</td><td class='bodytext'>" +rs2.getString("phn")+ "</td><td class='bodytext'>" +rs2.getString("service_date")+ "</td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
-                        }
-                        else {
+                        }else{
                             htmlContent = htmlContent + "<tr><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
-                        }
-                        
-                        invCount = invCount + 1;
-                        
-                    }
-                    
-                    
+                        }                        
+                        invCount = invCount + 1;                        
+                    }                                        
                     if (eFlag.compareTo("1") == 0) {
                         //setAsBilled(invNo, sdriver, surl, user, password);
-                    }
-                    
-                    
-                    
-                    
+                    }                                                                                
                 }
                 //      hcCount = hcCount + healthcardCount;
                 pCount = pCount + patientCount;
@@ -406,8 +395,7 @@ public class ExtractBean extends Object implements Serializable {
         
         nsql = "insert into log_teleplantx (log_no, claim)";
         nsql = nsql + " values('\\N','" + "New Log" + "')";
-        try {
-            
+        try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(nsql);
             ResultSet  rs = db.GetSQL("SELECT LAST_INSERT_ID()");
@@ -422,10 +410,8 @@ public class ExtractBean extends Object implements Serializable {
         }
         return n;
     }
-    public void writeFile(String value1){
-        
-        
-        
+    
+    public void writeFile(String value1){                       
         try{
             int fileCount = 0;
             String home_dir;
@@ -436,32 +422,24 @@ public class ExtractBean extends Object implements Serializable {
             
             Properties ap = new Properties();
             ap.load(pStream);
-            
-            
+                        
             home_dir = ap.getProperty("HOME_DIR");
             pStream.close();
-            
-            
+                        
             FileOutputStream out;
             out = new FileOutputStream(home_dir+ ohipFilename);
             PrintStream p;
-            p = new PrintStream(out);
-            
-            
-            p.println(value1);
-            
+            p = new PrintStream(out);                        
+            p.println(value1);            
             //System.out.println(sqlE.record);
             p.close();
         }
         catch(Exception e) {
             System.err.println("Error");
-        }
-        
+        }        
     }
-    public void writeHtml(String htmlvalue1){
-        
-        
-        
+    
+    public void writeHtml(String htmlvalue1){                        
         try{
             int fileCount = 0;
             String home_dir1;
@@ -471,9 +449,7 @@ public class ExtractBean extends Object implements Serializable {
             FileInputStream pStream1 = new FileInputStream(pFile1.getPath());
             
             Properties ap1 = new Properties();
-            ap1.load(pStream1);
-            
-            
+            ap1.load(pStream1);                        
             home_dir1 = ap1.getProperty("HOME_DIR");
             pStream1.close();
             
