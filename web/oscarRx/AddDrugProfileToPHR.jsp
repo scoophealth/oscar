@@ -29,7 +29,7 @@
 
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 String actorTicket = null;
-String actor = "rene@citizenhealth.ca";
+String actor = "clinic@citizenhealth.ca";
 String actorPassword = "password";
 
 DemographicData demoData = new DemographicData();
@@ -131,14 +131,15 @@ String level2 = CddmLevels.MEDICATIONS;
                             oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;                                                               
                             prescribedDrugs = patient.getPrescribedDrugsUnique();
 
+                            oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();
+                            OscarPrescriptions oscarPres = _respFactory.createOscarPrescriptions();
+                            List drugList = oscarPres.getPrescription();
+                            oscarPres.setSubject("Clinic Prescription");
                             for(int i=0; i<prescribedDrugs.length; i++) {
                                 oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
-
-                                if(drug.isCurrent() == true && !drug.isArchived() ){
-
-                                    oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();
+                                if(drug.isCurrent() == true && !drug.isArchived() ){                                                                                                        
                                     Prescription Prescription = _respFactory.createPrescription();
-                                    Prescription.setComments(drug.getSpecialDisplay());
+                                    Prescription.setComments(drug.getSpecial());
                                     Prescription.setDiagnosis("");
                                     Prescription.setDose("");
                                     Prescription.setDrug(drug.getDrugName());
@@ -146,40 +147,47 @@ String level2 = CddmLevels.MEDICATIONS;
                                     Prescription.setFrequency(drug.getFullFrequency());
                                     Prescription.setRoute("");
                                     Prescription.setUnit("");                           
-
-                                    DataType dataType = ping.getDataType(Prescription);
-                                    CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);
-
                                     
-                                    try{                                        
-                                        ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
-                                    }catch(Exception sendCon){
-                                        connectErrorMsg = "<font style=\"font-size: 19px; color: red; font-family : tahoma, Arial,Helvetica,Sans Serif;\">Could Not Send to PHR</font>";
-                                    }
-
-                      %>
-                
-                        
-                        
-                        <%= drug.getRxDisplay() %><br>
-                        <!--
-                        Prescription.setComments(<%=drug.getSpecial()%>);
-                        Prescription.setDiagnosis(<%=""%>);
-                        Prescription.setDose(<%=""%>);
-                        Prescription.setDrug(<%=drug.getDrugName()%>);
-                        Prescription.setDuration(<%=drug.getFullDuration()%>);
-                        Prescription.setFrequency(<%=drug.getFullFrequency()%>);
-                        Prescription.setRoute(<%=""%>);
-                        Prescription.setUnit(<%=""%>);                           
-                        -->
-                      
-
-                
-                      <%        }
-                            }                                                
+                                    drugList.add(Prescription);                             
+                      %>                                                                
+                                    <%= drug.getRxDisplay() %><br>
+                                    <!--
+                                    Prescription.setComments(<%=drug.getSpecial()%>);
+                                    Prescription.setDiagnosis(<%=""%>);
+                                    Prescription.setDose(<%=""%>);
+                                    Prescription.setDrug(<%=drug.getDrugName()%>);
+                                    Prescription.setDuration(<%=drug.getFullDuration()%>);
+                                    Prescription.setFrequency(<%=drug.getFullFrequency()%>);
+                                    Prescription.setRoute(<%=""%>);
+                                    Prescription.setUnit(<%=""%>);                           
+                                    -->
+                      <%        }//if                                
+                            }  //for 
+                            try{    
+                                DataType dataType = ping.getDataType(oscarPres);
+                                CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);                                
+                                //
+                                JAXBContext context = JAXBContext.newInstance("org.chip.ping.xml.talk:org.chip.ping.xml.record");
+                                Marshaller marshaller = context.createMarshaller();
+                                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);        
+                       %>
+                                <!--<textarea cols="100" rows="40">
+                                <%
+                                if(cddmType != null){
+                                marshaller.marshal(cddmType, out);
+                                }%>
+                                </textarea>-->
+                                <%
+                                //
+                                ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
+                            }catch(Exception sendCon){
+                                sendCon.printStackTrace();
+                                connectErrorMsg = "<font style=\"font-size: 19px; color: red; font-family : tahoma, Arial,Helvetica,Sans Serif;\">Could Not Send to PHR</font>";
+                            }
                         }else{
                             out.write("none"); 
-                        }        %><%=connectErrorMsg%>
+                        }        %>
+                        <%=connectErrorMsg%>
                     </td>
                   </tr>
                   
