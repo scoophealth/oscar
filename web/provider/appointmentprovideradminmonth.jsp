@@ -54,7 +54,7 @@
 <jsp:useBean id="myGrpBean" class="java.util.Properties" scope="page" />
 
 <%
-  String resourcebaseurl = "http://209.61.188.77:8888/oscarResource/";
+  String resourcebaseurl = "http://67.69.12.117:8080/oscarResource/";
   ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
   while (rsgroup1.next()) { 
  	  resourcebaseurl = rsgroup1.getString("value");
