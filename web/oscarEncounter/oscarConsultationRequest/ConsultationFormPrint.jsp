@@ -239,10 +239,10 @@ function faxNumSelect() {
             </tr>
             <tr>
                 <td class="address" id="clinicPhone">
-                    Tel: <%=vecPhones.elementAt(0)%>
+                    Tel: <%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%>
                 </td>
                 <td class="address" id="clinicFax">
-                    Fax: <%=vecFaxes.elementAt(0)%>
+                    Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%>
                 </td>
             </tr>
         </table>      
