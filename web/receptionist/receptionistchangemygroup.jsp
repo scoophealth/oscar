@@ -40,8 +40,11 @@
   groupBean.doConfigure(dbParams,dbQueries);
 %>
 
-<html>
-<head><title> My Group</title></head>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
+<head><title> <bean:message key="recepcionist.recepcionistchangemygroup.title"/></title></head>
 <meta http-equiv="Cache-Control" content="no-cache" >
 
 <script language="javascript">
@@ -56,13 +59,13 @@ function setfocus() {
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="receptionistcontrol.jsp">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#486ebd"> 
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">CHANGE GROUP NO</font></th>
+    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="recepcionist.recepcionistchangemygroup.msgTitle"/></font></th>
   </tr>
 </table>
 
 <center>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr><td>Change Your Group NO.: </TD>
+<tr><td><bean:message key="recepcionist.recepcionistchangemygroup.formChange"/>: </TD>
 <TD align="right"> 
 <select name="mygroup_no">
 <% ResultSet rsgroup = groupBean.queryResults("searchmygroupno");
@@ -73,8 +76,8 @@ function setfocus() {
  	 }
 %>
 </select>
- &nbsp;<INPUT TYPE = "submit" VALUE = "Change">
-<INPUT TYPE = "RESET" VALUE = "Cancel" onClick="window.close();"> 
+ &nbsp;<INPUT TYPE = "submit" VALUE = "<bean:message key="recepcionist.recepcionistchangemygroup.btnChange"/>">
+<INPUT TYPE = "RESET" VALUE = "<bean:message key="recepcionist.recepcionistchangemygroup.btnCancel"/>" onClick="window.close();"> 
 </td></tr>
 </TABLE>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -82,8 +85,8 @@ function setfocus() {
   
         <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
           <tr BGCOLOR="#C4D9E7" > 
-            <td ALIGN="center"> <font face="arial"> Group</font></td>
-            <td ALIGN="center"> <font face="arial"> Name</font> </td>
+            <td ALIGN="center"> <font face="arial"> <bean:message key="recepcionist.recepcionistchangemygroup.msgGroup"/></font></td>
+            <td ALIGN="center"> <font face="arial"> <bean:message key="recepcionist.recepcionistchangemygroup.msgName"/></font> </td>
           </tr>
 <%
    rsgroup = null;
@@ -119,7 +122,7 @@ function setfocus() {
 
 <table width="100%" BGCOLOR="#486ebd">
   <tr>
-    <TD align="center"><INPUT TYPE = "button" VALUE = "Cancel" onClick="window.close();"></TD>
+    <TD align="center"><INPUT TYPE = "button" VALUE = "<bean:message key="recepcionist.recepcionistchangemygroup.btnCancel"/>" onClick="window.close();"></TD>
   </tr>
 </TABLE>
               <INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
@@ -129,4 +132,4 @@ function setfocus() {
 </FORM>
 
 </body>
-</html>
+</html:html>
