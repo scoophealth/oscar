@@ -1,27 +1,27 @@
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 
@@ -34,7 +34,7 @@
 
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
-	
+
 	String curProvider_no = (String) session.getAttribute("user");
 	String demographic_no = request.getParameter("demographic_no") ;
 	String userfirstname = (String) session.getAttribute("userfirstname");
@@ -43,10 +43,10 @@
 	String str = null;
 	int nStrShowLen = 14;
         String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
-        
+
         OscarProperties oscarProps = OscarProperties.getInstance();
-        
-        ProvinceNames pNames = ProvinceNames.getInstance();                       
+
+        ProvinceNames pNames = ProvinceNames.getInstance();
 
 %>
 
@@ -91,7 +91,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var popup=window.open(page, "demodetail", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
-      popup.opener = self; 
+      popup.opener = self;
     }
   }
 }
@@ -101,7 +101,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
   var popup=window.open(page, "apptProvider", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
-      popup.opener = self; 
+      popup.opener = self;
     }
   }
 }
@@ -118,7 +118,7 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
 
 function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = false;
-  
+
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
@@ -129,14 +129,14 @@ function checkTypeIn() {
       alert("<bean:message key="demographic.search.msgWrongDOB"/>");
       typeInOK = false;
     }
-    
+
     return typeInOK ;
   } else {
     return true;
   }
 }
 
-function checkTypeInEdit() {  
+function checkTypeInEdit() {
   var typeInOK = false;
     if(document.updatedelete.last_name.value!="" && document.updatedelete.first_name.value!="" && document.updatedelete.sex.value!="") {
       if(checkTypeNum(document.updatedelete.year_of_birth.value) && checkTypeNum(document.updatedelete.month_of_birth.value) && checkTypeNum(document.updatedelete.date_of_birth.value) ){
@@ -146,7 +146,7 @@ function checkTypeInEdit() {
   if(!typeInOK) alert ("<bean:message key="demographic.demographicaddrecordhtm.msgMissingFields"/>");
   return typeInOK;
 }
-  
+
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
 	var i = 0;
@@ -166,19 +166,19 @@ function checkTypeNum(typeIn) {
 	} else typeInOK = false;
 	return typeInOK;
 }
-function formatPhoneNum() {    
+function formatPhoneNum() {
     if (document.updatedelete.phone.value.length == 10) {
         document.updatedelete.phone.value = document.updatedelete.phone.value.substring(0,3) + "-" + document.updatedelete.phone.value.substring(3,6) + "-" + document.updatedelete.phone.value.substring(6);
         }
     if (document.updatedelete.phone.value.length == 11 && document.updatedelete.phone.value.charAt(3) == '-') {
         document.updatedelete.phone.value = document.updatedelete.phone.value.substring(0,3) + "-" + document.updatedelete.phone.value.substring(4,7) + "-" + document.updatedelete.phone.value.substring(7);
-    }        
+    }
     if (document.updatedelete.phone2.value.length == 10) {
         document.updatedelete.phone2.value = document.updatedelete.phone2.value.substring(0,3) + "-" + document.updatedelete.phone2.value.substring(3,6) + "-" + document.updatedelete.phone2.value.substring(6);
-        }  
+        }
     if (document.updatedelete.phone2.value.length == 11 && document.updatedelete.phone2.value.charAt(3) == '-') {
         document.updatedelete.phone2.value = document.updatedelete.phone2.value.substring(0,3) + "-" + document.updatedelete.phone2.value.substring(4,7) + "-" + document.updatedelete.phone2.value.substring(7);
-    }        
+    }
 }
 function checkONReferralNo() {
   var referralNo = document.updatedelete.r_doctor_ohip.value ;
@@ -211,11 +211,11 @@ function newStatus() {
                 <bean:message key="demographic.demographiceditdemographic.msgPatientDetailRecord"/>
             </td>
             <td class="MainTableTopRowRightColumn" width="400">
-                <table class="TopStatusBar" >                 
+                <table class="TopStatusBar" >
                     <tr>
-                        <td>                        
+                        <td>
                         <%
-                           java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);   
+                           java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
                                 //----------------------------REFERRAL DOCTOR------------------------------
                                 String rdohip="", rd="", fd="", family_doc = "";
 
@@ -228,7 +228,7 @@ function newStatus() {
                                         alert = rs.getString("cust3");
                                         midwife = rs.getString("cust4");
                                         notes = SxmlMisc.getXmlContent(rs.getString("content"),"unotes") ;
-                                        notes = notes==null?"":notes; 
+                                        notes = notes==null?"":notes;
                                 }
 
                                 GregorianCalendar now=new GregorianCalendar();
@@ -268,7 +268,7 @@ function newStatus() {
                         %>
                         <%=rs.getString("last_name")%>, <%=rs.getString("first_name")%> <%=rs.getString("sex")%> <%=age%> years
                         </td>
-                    </tr>                  
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -292,17 +292,17 @@ function newStatus() {
                     </td>
                 </tr>
                 <tr><td>
-                    <% if (vLocale.getCountry().equals("BR")) { %>  
+                    <% if (vLocale.getCountry().equals("BR")) { %>
                     <!--a href="#" onClick="popupPage(500,600,'../billing/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing History</a-->
                     <a href='../oscar/billing/consultaFaturamentoPaciente/init.do?demographic_no=<%=rs.getString("demographic_no")%>'>Hist&oacute;rico do Faturamento</a></th>
-                    <% } else  { %>  
+                    <% } else  { %>
                     <!--a href="#" onClick="popupPage(500,600,'../billing/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing History</a-->
                     <a href='../billing/CA/<%=prov%>/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10'><bean:message key="demographic.demographiceditdemographic.btnBillingHist"/></a></th>
-                    <% } %>  
+                    <% } %>
                 </td></tr>
-                <% if (!vLocale.getCountry().equals("BR")) { %>    
+                <% if (!vLocale.getCountry().equals("BR")) { %>
                 <tr><td>
-                    <a href=# onclick="popupPage(700, 1000, '../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Add Billing</a>    
+                    <a href=# onclick="popupPage(700, 1000, '../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Add Billing</a>
                 </td></tr>
                 <% if (!oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // part 2 of quick hack to make Dr. Hunter happy %>
                 <tr><td>
@@ -314,8 +314,8 @@ function newStatus() {
                 </td></tr>
                 <tr><td>
                     <a href=# onclick="window.open('../billing/CA/ON/inr/reportINR.jsp?provider_no=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600');return false;" title='INR Billing'>Bill INR</a></th>
-                </td></tr>                
-                <% } %>  
+                </td></tr>
+                <% } %>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="oscarEncounter.Index.clinicalModules"/>
@@ -324,7 +324,7 @@ function newStatus() {
                 <tr><td>
                     <a href="javascript: function myFunction() {return false; }" onclick="popupPage(700,960,'../oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')"><bean:message key="demographic.demographiceditdemographic.btnConsultation"/></a>
                 </td></tr>
-                <% if (!vLocale.getCountry().equals("BR")) { %>    
+                <% if (!vLocale.getCountry().equals("BR")) { %>
                 <tr><td>
                     <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message key="global.prescriptions"/></a></th>
                 </td></tr>
@@ -334,7 +334,7 @@ function newStatus() {
                     <a href=# onClick="popupEChart(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
                     <bean:message key="demographic.demographiceditdemographic.btnEChart"/></a>
                 </td></tr>
-                <% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy %>    
+                <% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy %>
                 <tr><td>
                     <a href=# onClick="popupPage(700,1000,'../form/forwardshortcutname.jsp?formname=AR1&demographic_no=<%=request.getParameter("demographic_no")%>');">AR1</a>
                 </td></tr>
@@ -350,7 +350,7 @@ function newStatus() {
                 <tr><td>
                     <!--th><a href="#" onClick="popupPage(500,600,'demographicsummary.jsp?demographic_no=<%=rs.getString("demographic_no")%>')">Patient Summary</a> </th-->
                     <a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=rs.getString("demographic_no")%>&curUser=<%=curProvider_no%>')"><bean:message key="demographic.demographiceditdemographic.msgDocuments"/></a>
-                </td></tr>                
+                </td></tr>
                 <tr><td>
                     <a href=# onclick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300');return false;"><bean:message key="demographic.demographiceditdemographic.btnAddDocument"/></a>
                 </td></tr>
@@ -358,11 +358,11 @@ function newStatus() {
                     <a href="../eform/showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="demographic.demographiceditdemographic.btnEForm"/></a>
                 </td></tr>
                 <tr><td>
-                    <a href="../eform/myform.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="demographic.demographiceditdemographic.btnAddEForm"/> </a>   
+                    <a href="../eform/myform.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="demographic.demographiceditdemographic.btnAddEForm"/> </a>
                 </td></tr>
             </table>
             </td>
-            <td class="MainTableRightColumn">                
+            <td class="MainTableRightColumn">
                 <table border=0 cellspacing=4 width="100%">
                     <tr>
                         <td colspan="4">
@@ -370,7 +370,7 @@ function newStatus() {
                             <%@ include file="zdemographicfulltitlesearch.jsp" %>
                         </td>
                     </tr>
-                    <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeInEdit();">    
+                    <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeInEdit();">
                     <input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
                     <tr><td>
                     <table width="100%" bgcolor="#CCCCFF">
@@ -379,32 +379,32 @@ function newStatus() {
                         </td></tr>
                         <tr><td>
                         <table width="100%" bgcolor="#EEEEFF">
-                            <tr> 
+                            <tr>
                               <td align="right" title='<%=rs.getString("demographic_no")%>'> <b><bean:message key="demographic.demographiceditdemographic.formLastName"/>: </b></td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="last_name" size="30" value="<%=rs.getString("last_name")%>" onBlur="upCaseCtrl(this)">
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formFirstName"/>: </b> </td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="first_name" size="30" value="<%=rs.getString("first_name")%>" onBlur="upCaseCtrl(this)">
                               </td>
                             </tr>
 
-                            <% 
-                            if (vLocale.getCountry().equals("BR")) { %>  
+                            <%
+                            if (vLocale.getCountry().equals("BR")) { %>
                             <tr>
                               <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formRG"/>:</b></td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="rg" value="<%=rs.getString("rg")==null?"":rs.getString("rg")%>" onBlur="upCaseCtrl(this)">
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formCPF"/>:</b> </td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="cpf" value="<%=rs.getString("cpf")==null?"":rs.getString("cpf")%>" onBlur="upCaseCtrl(this)">
                               </td>
                             </tr>
                             <tr>
                               <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formMaritalState"/>:</b></td>
-                              <td align="left"> 
+                              <td align="left">
                                 <select name="marital_state">
                                     <option value="-">-</option>
                                         <option value="S" <%if (rs.getString("marital_state").trim().equals("S")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSingle"/></option>
@@ -415,122 +415,122 @@ function newStatus() {
                                 </select>
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formBirthCertificate"/>:</b> </td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="birth_certificate" value="<%=rs.getString("birth_certificate")==null?"":rs.getString("birth_certificate")%>" onBlur="upCaseCtrl(this)">
                               </td>
                             </tr>
                             <tr>
                               <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formMarriageCertificate"/>:</b></td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="marriage_certificate" value="<%=rs.getString("marriage_certificate")==null?"":rs.getString("marriage_certificate")%>" onBlur="upCaseCtrl(this)">
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPartnerName"/>:</b> </td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="partner_name" value="<%=rs.getString("partner_name")==null?"":rs.getString("partner_name")%>" onBlur="upCaseCtrl(this)">
                               </td>
                             </tr>
                             <tr>
                               <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formFatherName"/>:</b></td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="father_name" value="<%=rs.getString("father_name")==null?"":rs.getString("father_name")%>" onBlur="upCaseCtrl(this)">
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formMotherName"/>:</b> </td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="mother_name" value="<%=rs.getString("mother_name")==null?"":rs.getString("mother_name")%>" onBlur="upCaseCtrl(this)">
                               </td>
                             </tr>
-                            <%}%> 
-                            <tr valign="top"> 
+                            <%}%>
+                            <tr valign="top">
                               <td  align="right"> <b><bean:message key="demographic.demographiceditdemographic.formAddr"/>: </b></td>
-                              <td align="left" > 
+                              <td align="left" >
                                 <input type="text" name="address" size="30" value="<%=rs.getString("address")%>"><% if (vLocale.getCountry().equals("BR")) { %>
                                 <b><bean:message key="demographic.demographicaddrecordhtm.formAddressNo"/>:</b>
-                                <input type="text" name="address_no" size="30" value="<%=rs.getString("address_no")==null?"":rs.getString("address_no")%>" size="6">        
+                                <input type="text" name="address_no" size="30" value="<%=rs.getString("address_no")==null?"":rs.getString("address_no")%>" size="6">
                                 <%}%>
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formCity"/>: </b></td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="city" size="30" value="<%=rs.getString("city")%>">
                               </td>
                             </tr>
                             <% if (vLocale.getCountry().equals("BR")) { %>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formComplementaryAddress"/>: </b> </td>
-                              <td  align="left"> 
+                              <td  align="left">
                                 <input type="text" name="complementary_address" value="<%=rs.getString("complementary_address")==null?"":rs.getString("complementary_address")%>" onBlur="upCaseCtrl(this)">
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDistrict"/>: </b> </td>
-                              <td  align="left"> 
+                              <td  align="left">
                                 <input type="text" name="district" value="<%=rs.getString("district")==null?"":rs.getString("district")%>" onBlur="upCaseCtrl(this)">
                               </td>
                             </tr>
                             <%}%>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formProcvince"/>: </b> </td>
                               <td  align="left">
                                 <% if (vLocale.getCountry().equals("BR")) { %>
                                 <input type="text" name="province" value="<%=rs.getString("province")%>">
                                 <% } else { %>
-                                <% String province = rs.getString("province"); %>          
+                                <% String province = rs.getString("province"); %>
                                 <select name="province" style="width:200px">
                                   <option value="OT"<%=(province.equals("OT") || province.equals("") || province.length() > 2)?" selected":""%>>Other</option>
-                                <% if (pNames.isDefined()) { 
-                                       for (ListIterator li = pNames.listIterator(); li.hasNext(); ) { 
+                                <% if (pNames.isDefined()) {
+                                       for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                                            String pr2 = (String) li.next(); %>
                                            <option value="<%=pr2%>"<%=pr2.equals(province)?" selected":""%>><%=li.next()%></option>
                                        <% } %>
                                     <% } else { %>
                                       <option value="AB"<%=province.equals("AB")?" selected":""%>>AB-Alberta</option>
                                       <option value="BC"<%=province.equals("BC")?" selected":""%>>BC-British Columbia</option>
-                                      <option value="MB"<%=province.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+                                      <option value="MB"<%=province.equals("MB")?" selected":""%>>MB-Manitoba</option>
                                       <option value="NB"<%=province.equals("NB")?" selected":""%>>NB-New Brunswick</option>
                                       <option value="NL"<%=province.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-                                      <option value="NT"<%=province.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+                                      <option value="NT"<%=province.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
                                       <option value="NS"<%=province.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
                                       <option value="NU"<%=province.equals("NU")?" selected":""%>>NU-Nunavut</option>
                                       <option value="ON"<%=province.equals("ON")?" selected":""%>>ON-Ontario</option>
                                       <option value="PE"<%=province.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
                                       <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
                                       <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-                                      <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option> 
-                                      <option value="US"<%=province.equals("US")?" selected":""%>>US resident</option> 
-                                    <% } %>                                  
+                                      <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option>
+                                      <option value="US"<%=province.equals("US")?" selected":""%>>US resident</option>
+                                    <% } %>
                                 </select>
                                 <% } %>
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPostal"/>: </b> </td>
-                              <td  align="left"> 
+                              <td  align="left">
                                 <input type="text" name="postal" size="30" value="<%=rs.getString("postal")%>" onBlur="upCaseCtrl(this)">
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneH"/>: </b> </td>
-                              <td align="left" > 
+                              <td align="left" >
                                 <%-- // <input type="text" name="phone" size="30" value="<%=rs.getString("phone")!=null && rs.getString("phone").length()==10?rs.getString("phone").substring(0,3) + "-" + rs.getString("phone").substring(3,6) +"-"+  rs.getString("phone").substring(6):rs.getString("phone")%>">--%>
                                 <input type="text" name="phone" size="30" onblur="formatPhoneNum();" value="<%=rs.getString("phone")%>">
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:</b> </td>
-                              <td  align="left"> 
+                              <td  align="left">
                                 <input type="text" name="phone2" size="30" onblur="formatPhoneNum();" value="<%=rs.getString("phone2")%>">
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formEmail"/>: </b> </td>
-                              <td  align="left"> 
+                              <td  align="left">
                                 <input type="text" name="email" size="30" value="<%=rs.getString("email")!=null? rs.getString("email") : ""%>">
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPIN"/>: </b> </td>
-                              <td  align="left"> 
+                              <td  align="left">
                                 <input type="text" name="pin" size="30" value="<%=rs.getString("pin")!=null? rs.getString("pin") : ""%>" >
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formDOB"/></b><bean:message key="demographic.demographiceditdemographic.formDOBDetais"/><b>:</b> </td>
-                              <td  align="left" nowrap> 
+                              <td  align="left" nowrap>
                                 <input type="text" name="year_of_birth" value="<%=rs.getString("year_of_birth")%>" size="3" maxlength="4">
                                 <input type="text" name="month_of_birth" value="<%=rs.getString("month_of_birth")%>" size="2" maxlength="2">
                                 <input type="text" name="date_of_birth" value="<%=rs.getString("date_of_birth")%>" size="2" maxlength="2">
-                                <b>Age: 
+                                <b>Age:
                                 <input type="text" name="age" readonly value="<%=age%>" size="3">
                                 </b> </td>
                               <td  align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formSex"/>:</b> </td>
@@ -538,11 +538,11 @@ function newStatus() {
                                 <input type="text" name="sex" value="<%=rs.getString("sex")%>" onBlur="upCaseCtrl(this)" size="1" maxlength="1">
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formHin"/>: </b></td>
-                              <td align="left" nowrap> 
+                              <td align="left" nowrap>
                                 <input type="text" name="hin" value="<%=rs.getString("hin")%>" size="17">
-                                <b><bean:message key="demographic.demographiceditdemographic.formVer"/></b> 
+                                <b><bean:message key="demographic.demographiceditdemographic.formVer"/></b>
                                 <input type="text" name="ver" value="<%=rs.getString("ver")%>" size="3">
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:</b></td>
@@ -563,9 +563,9 @@ function newStatus() {
                                 <input type="text" name="eff_date_date" size="2" maxlength="2" value="<%= effDateDay%>">
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formHCType"/>:</b> </td>
-                              <td align="left" > 
+                              <td align="left" >
                                 <% if(vLocale.getCountry().equals("BR")) { %>
                                    <% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
                                    <input type="text" name="hc_type" value="<%=hctype%>">
@@ -573,41 +573,41 @@ function newStatus() {
                                 <% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
                                 <select name="hc_type" style="width:200px">
                                 <option value="OT"<%=(hctype.equals("OT") || hctype.equals("") || hctype.length() > 2)?" selected":""%>>Other</option>
-                                <% if (pNames.isDefined()) { 
-                                       for (ListIterator li = pNames.listIterator(); li.hasNext(); ) { 
+                                <% if (pNames.isDefined()) {
+                                       for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                                            String province = (String) li.next(); %>
                                            <option value="<%=province%>"<%=province.equals(hctype)?" selected":""%>><%=li.next()%></option>
                                        <% } %>
-                                <% } else { %>                                    
+                                <% } else { %>
                                   <option value="AB"<%=hctype.equals("AB")?" selected":""%>>AB-Alberta</option>
                                   <option value="BC"<%=hctype.equals("BC")?" selected":""%>>BC-British Columbia</option>
-                                  <option value="MB"<%=hctype.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+                                  <option value="MB"<%=hctype.equals("MB")?" selected":""%>>MB-Manitoba</option>
                                   <option value="NB"<%=hctype.equals("NB")?" selected":""%>>NB-New Brunswick</option>
                                   <option value="NL"<%=hctype.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-                                  <option value="NT"<%=hctype.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+                                  <option value="NT"<%=hctype.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
                                   <option value="NS"<%=hctype.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
                                   <option value="NU"<%=hctype.equals("NU")?" selected":""%>>NU-Nunavut</option>
                                   <option value="ON"<%=hctype.equals("ON")?" selected":""%>>ON-Ontario</option>
                                   <option value="PE"<%=hctype.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
                                   <option value="QC"<%=hctype.equals("QC")?" selected":""%>>QC-Quebec</option>
                                   <option value="SK"<%=hctype.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-                                  <option value="YT"<%=hctype.equals("YT")?" selected":""%>>YT-Yukon</option>                                       
-                                  <option value="US"<%=hctype.equals("US")?" selected":""%>>US resident</option> 
-                                <% } %>                                
+                                  <option value="YT"<%=hctype.equals("YT")?" selected":""%>>YT-Yukon</option>
+                                  <option value="US"<%=hctype.equals("US")?" selected":""%>>US resident</option>
+                                <% } %>
                                 </select>
                                 <% }%>
                               </td>
                               <td>&nbsp;</td>
                               <td>&nbsp;</td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDoctor"/>: </b></td>
-                              <td align="left" > 
+                              <td align="left" >
                                 <select name="provider_no" style="width:200px">
                                   <option value="" ></option>
                         <%
                           ResultSet rsdemo = apptMainBean.queryResults("search_provider");
-                          while (rsdemo.next()) { 
+                          while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(rs.getString("provider_no"))?"selected":""%> >
                           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
@@ -620,7 +620,7 @@ function newStatus() {
                                   <option value="" ></option>
                         <%
                           rsdemo.beforeFirst();
-                          while (rsdemo.next()) { 
+                          while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(resident)?"selected":""%> >
                           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
@@ -628,14 +628,14 @@ function newStatus() {
                                 </select>
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formMidwife"/>: </b></td>
-                              <td align="left" > 
+                              <td align="left" >
                                 <select name="midwife" style="width:200px">
                                   <option value="" ></option>
                         <%
                           rsdemo.beforeFirst();
-                          while (rsdemo.next()) { 
+                          while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(midwife)?"selected":""%> >
                           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
@@ -648,7 +648,7 @@ function newStatus() {
                                   <option value="" ></option>
                         <%
                           rsdemo.beforeFirst();
-                          while (rsdemo.next()) { 
+                          while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%> >
                           <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
@@ -668,9 +668,9 @@ function newStatus() {
                                   </td>
                             </tr>
 
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: </b></td>
-                              <td align="left" > 
+                              <td align="left" >
                                 <%String rosterStatus = rs.getString("roster_status");
                                   if (rosterStatus == null) {
                                      rosterStatus = "";
@@ -693,7 +693,7 @@ function newStatus() {
                                 <input type="text" name="hc_renew_date_date" size="2" maxlength="2" value="<%= hcRenewDay %>">
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:</b> <b> </b></td>
                               <td align="left" >
                                 <% if (vLocale.getCountry().equals("BR")) { %>
@@ -703,7 +703,7 @@ function newStatus() {
                                   }
                                   %>
                                   <input type="text" name="patient_status" value="<%=pacStatus%>">
-                                <% } else { 
+                                <% } else {
                                 String patientStatus = rs.getString("patient_status"); %>
                                 <select name="patient_status" style="width:120">
                                   <option value="AC"<%=patientStatus.equals("AC")?" selected":""%>>AC - Active</option>
@@ -720,40 +720,40 @@ function newStatus() {
                                 <% } // end if...then...else %>
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formChartNo"/>:</b> </td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="chart_no" size="30" value="<%=rs.getString("chart_no")%>">
                               </td>
                             </tr>
-                            <% 
-                            if (vLocale.getCountry().equals("BR")) { %>  
-                            <tr valign="top"> 
+                            <%
+                            if (vLocale.getCountry().equals("BR")) { %>
+                            <tr valign="top">
                               <td align="right"><b></b></td>
-                              <td align="left" > 
+                              <td align="left" >
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartAddress"/>: </b></td>
-                              <td align="left"> 
+                              <td align="left">
                                 <input type="text" name="chart_address" value="<%=rs.getString("chart_address")==null?"":rs.getString("chart_address")%>">
                               </td>
                             </tr>
                             <%}%>
                             <tr valign="top">
                               <td align="right" nowrap><b>Waiting List: </b></td>
-                              <td align="left" > 
-                              <% 
+                              <td align="left" >
+                              <%
                                 ResultSet rsWLStatus = apptMainBean.queryResults(demographic_no,"search_wlstatus");
                                 String listID = "", wlnote="";
                                 if (rsWLStatus.next()){
-                                    listID = rsWLStatus.getString("listID");                                    
+                                    listID = rsWLStatus.getString("listID");
                                     wlnote = rsWLStatus.getString("note");
-                                }                                
+                                }
                                %>
                                 <select name="list_id">
                                   <option value="" ></option>
                                   <%
                                       ResultSet rsWL = apptMainBean.queryResults("search_waiting_list");
-                                      while (rsWL.next()) { 
+                                      while (rsWL.next()) {
                                     %>
-                                              <option value="<%=rsWL.getString("ID")%>" <%=rsWL.getString("ID").equals(listID)?" selected":""%>> 
+                                              <option value="<%=rsWL.getString("ID")%>" <%=rsWL.getString("ID").equals(listID)?" selected":""%>>
                                               <%=rsWL.getString("name")%></option>
                                               <%
                                       }
@@ -761,13 +761,13 @@ function newStatus() {
                                 </select>
                               </td>
                               <td align="right" nowrap><b>Waiting List Note: </b></td>
-                              <td align="left"> 
-                                <input type="text" name="waiting_list_note" value="<%=wlnote%>" >        
+                              <td align="left">
+                                <input type="text" name="waiting_list_note" value="<%=wlnote%>" >
                               </td>
                             </tr>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
-                              <td align="left" > 
+                              <td align="left" >
                               <%
                                  // Format year
                                  decF.applyPattern("0000");
@@ -781,7 +781,7 @@ function newStatus() {
                                 <input type="text" name="date_joined_date" size="2" maxlength="2" value="<%= dateJoinedDay %>">
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formEndDate"/>: </b></td>
-                              <td align="left"> 
+                              <td align="left">
                               <%
                                  // Format year
                                  decF.applyPattern("0000");
@@ -794,11 +794,11 @@ function newStatus() {
                                 <input type="text" name="end_date_month" size="2" maxlength="2" value="<%= endMonth %>">
                                 <input type="text" name="end_date_date" size="2" maxlength="2" value="<%= endDay %>">
                               </td>
-                            <tr valign="top"> 
+                            <tr valign="top">
                               <td nowrap colspan="4">
                                     <table width="100%" bgcolor="#EEEEFF">
                                   <tr>
-                                    <td width="7%" align="right"><font color="#FF0000"><b><bean:message key="demographic.demographiceditdemographic.formAlert"/>: </b></font> 
+                                    <td width="7%" align="right"><font color="#FF0000"><b><bean:message key="demographic.demographiceditdemographic.formAlert"/>: </b></font>
                                     </td>
                                     <td>
                                       <textarea name="alert" style="width:100%" cols="80" rows="2"><%=alert%></textarea>
@@ -814,26 +814,27 @@ function newStatus() {
                             </td></tr>
                         </table>
                         </td></tr>
-                    <tr bgcolor="#CCCCFF"> 
-                      <td colspan="4"> 
+                    <tr bgcolor="#CCCCFF">
+                      <td colspan="4">
                         <table border=0  width="100%" cellpadding="0" cellspacing="0">
-                          <tr> 
-                            <td width="30%"> 
+                          <tr>
+                            <td width="30%" valign="top">
                               <input type="hidden" name="dboperation" value="update_record">
-                                  <% 
-                                  if (vLocale.getCountry().equals("BR")) { %>  
-                                  <input type="hidden" name="dboperation2" value="update_record_ptbr">          
-                                  <%}%> 
+                                  <%
+                                  if (vLocale.getCountry().equals("BR")) { %>
+                                  <input type="hidden" name="dboperation2" value="update_record_ptbr">
+                                  <%}%>
                               <input type="button" name="Button" value="<bean:message key="global.btnBack" />" onclick=history.go(-1);>
                               <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onclick=self.close();>
                             </td>
-                            <td  width="30%" align='center'> 
+                            <td  width="30%" align='center' valign="top">
                               <input type="hidden" name="displaymode" value="Update Record" >
                               <input type="submit" value="<bean:message key="demographic.demographiceditdemographic.btnUpdate"/>">
                             </td>
-                            <td width="40%" align='right'> 
+                            <td width="40%" align='right' valign="top">
                                <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="window.open('zdemographicswipe.jsp','', 'scrollbars=yes,resizable=yes,width=600,height=300, top=360, left=0')";>
-                              <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'";>
+                              <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'";>
+                              <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>" onclick="window.location='printDemoLabelAction.do?demographic_no=<%=rs.getString("demographic_no")%>'";>
                             </td>
                         </table>
                     </tr>
