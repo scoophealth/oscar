@@ -61,7 +61,7 @@
 	  			action = "search";
 			    prop.setProperty("service_code", serviceCode);
 			} else {
-	  			msg = serviceCode + " is NOT updated. Action failed! Try edit it again." ;
+	  			msg = serviceCode + " is <font color='red'>NOT</font> updated. Action failed! Try edit it again." ;
 			    action = "edit" + serviceCode;
 			    prop.setProperty("service_code", serviceCode);
 			    prop.setProperty("description", request.getParameter("description"));
@@ -70,9 +70,9 @@
 			    prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
 			}
 		} else {
-	  			msg = "Type in a service code and search first to see if it is available.";
-	  			action = "search";
-			    prop.setProperty("service_code", serviceCode);
+      		msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode + ". Please search the service code first.";
+  			action = "search";
+		    prop.setProperty("service_code", serviceCode);
 		}
     } else if (request.getParameter("action").startsWith("add")) {
       	// insert into the service code
@@ -89,7 +89,7 @@
 	  			action = "search";
 			    prop.setProperty("service_code", serviceCode);
 			} else {
-	  			msg = serviceCode + " is NOT added. Action failed! Try edit it again." ;
+	  			msg = serviceCode + " is <font color='red'>NOT</font> added. Action failed! Try edit it again." ;
 			    action = "add" + serviceCode;
 			    prop.setProperty("service_code", serviceCode);
 			    prop.setProperty("description", request.getParameter("description"));
@@ -98,12 +98,12 @@
 			    prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
 			}
 		} else {
-	  			msg = "Type in a service code and search first to see if it is available.";
-	  			action = "search";
-			    prop.setProperty("service_code", serviceCode);
+      		msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode + ". Please search the service code first.";
+  			action = "search";
+		    prop.setProperty("service_code", serviceCode);
 		}
     } else {
-      msg = "You can NOT save the service code. Please search the service code first.";
+      msg = "You can <font color='red'>NOT</font> save the service code. Please search the service code first.";
     }
   } else if (request.getParameter("submit") != null && request.getParameter("submit").equals("Search")) {
     // check the input data
@@ -200,7 +200,11 @@
 		            b = false;
 		            alert ("The percentage should be less than 1.");
 		        }
+	        } else if(document.forms[0].value.value.length==0 && document.forms[0].percentage.value.length==0) {
+	            b = false;
+	            alert ("You must type in a number in the field fee");
 	        }
+
 			if(document.forms[0].billingservice_date.value.length<10) {
 	            b = false;
 	            alert ("You need to select a date from the calendar.");
