@@ -24,60 +24,63 @@
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");
 //  mygroupno = (String) session.getAttribute("groupno");  
- String UpdateDate = "";
- String DemoNo = "";
- String DemoName = "";
- String DemoAddress = "";
- String DemoCity="";
- String DemoProvince="";
- String DemoPostal="";
- String DemoDOB="";
- String DemoSex="";
- String hin=""; 
- String location="";
- String BillLocation="";
- String BillLocationNo="";
- String BillDate="";
- String Provider="";
- String BillType="";
- String BillTotal="";
- String visitdate="";
- String visittype="";
- String BillDTNo="";
- String HCTYPE="";
- String HCSex="";
- String r_doctor_ohip="";
- String r_doctor="";
- String m_review="";
+  String UpdateDate = "";
+  String DemoNo = "";
+  String DemoName = "";
+  String DemoAddress = "";
+  String DemoCity="";
+  String DemoProvince="";
+  String DemoPostal="";
+  String DemoDOB="";
+  String DemoSex="";
+  String hin=""; 
+  String location="";
+  String BillLocation="";
+  String BillLocationNo="";
+  String BillDate="";
+  String Provider="";
+  String BillType="";
+  String BillTotal="";
+  String visitdate="";
+  String visittype="";
+  String BillDTNo="";
+  String HCTYPE="";
+  String HCSex="";
+  String r_doctor_ohip="";
+  String r_doctor="";
+  String m_review="";
   String specialty="";
- String r_status="";
+  String r_status="";
   String roster_status="";
   String billRegion = OscarProperties.getInstance().getProperty("billRegion","BC");
- int rowCount = 0; 
- int rowReCount = 0;
+  int rowCount = 0; 
+  int rowReCount = 0;
   ResultSet rslocation = null;  
- ResultSet rsPatient = null; 
- ////
- BillingFormData billform = new BillingFormData();
-BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
-BillingFormData.BillingVisit[] billvisit = billform.getVisitType(billRegion);
-BillingFormData.Location[] billlocation = billform.getLocationList(billRegion);
-BillingFormData.BillingForm[] billformlist = billform.getFormList();
-   int bFlag = 0;	
-   String billNo = request.getParameter("billing_no");  
-   if (billNo == null){
+  ResultSet rsPatient = null; 
+  ////
+  BillingFormData billform = new BillingFormData();
+  BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
+  BillingFormData.BillingVisit[] billvisit = billform.getVisitType(billRegion);
+  BillingFormData.Location[] billlocation = billform.getLocationList(billRegion);
+  BillingFormData.BillingForm[] billformlist = billform.getFormList();
+  int bFlag = 0;	
+  String billNo = request.getParameter("billing_no");  
+  if (billNo == null){
     billNo = (String) request.getAttribute("billing_no");  
-   }   
-   MSPReconcile msp = new MSPReconcile();
-   Properties allFields = msp.getBillingMasterRecord(billNo);
-   MSPBillingNote billingNote = new MSPBillingNote();
-   String corrNote = billingNote.getNote(billNo);
-   //TODO get note for this record and put it on screen and then be able to save a new note
+  }   
+  MSPReconcile msp = new MSPReconcile();
+  Properties allFields = msp.getBillingMasterRecord(billNo);
+  MSPBillingNote billingNote = new MSPBillingNote();
+  String corrNote = billingNote.getNote(billNo);
+  BillingNote  bNote = new BillingNote();
+  String messageNotes = bNote.getNote(billNo);
+  //TODO get note for this record and put it on screen and then be able to save a new note
 
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);  
+    
 %>
 
 <!--  
@@ -424,13 +427,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
                 <option value="Z" <%=BillType.equals("Z")?"selected":""%>>Z | Held Bill</option>          
                 <option value="C" <%=BillType.equals("C")?"selected":""%>>C | Data Center Changed</option>                            
                 <option value="E" <%=BillType.equals("E")?"selected":""%>>E | Paid With Explanation</option>          
-                <option value="F" <%=BillType.equals("F")?"selected":""%>>F | Refused Bill</option>          
-    
-    
-    
-    
-    
-    
+                <option value="F" <%=BillType.equals("F")?"selected":""%>>F | Refused Bill</option>              
       </select>
     </td>
     <td   class="bCellData">
@@ -762,6 +759,14 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             </td>
             
        </tr>      
+       <tr>     
+            <td class="bCellData">Billing Notes</td><!--CLAIM-SHORT-COMMENT-->            
+            <td colspan="3">                
+                  <textarea cols="60" rows="5" name="messageNotes" ><%=messageNotes%></textarea>               
+            </td>
+            
+       </tr>      
+       
        <!--<tr>
             <td>Facility Num</td><%! /*FACILITY-NUM*/ %>
             <td><input type="text" name="facilityNum" value="<%=allFields.getProperty("facility_no")%>" size="5"/></td>            
