@@ -227,3 +227,9 @@ TH {
     color:white;
 
 }
+@media print {
+    INPUT
+    {
+        display: none;
+    }
+}
