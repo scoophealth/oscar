@@ -49,12 +49,21 @@ public class dxResearchAction extends Action {
         request.getSession().setAttribute("dxResearchForm", frm);
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
         String demographicNo = frm.getDemographicNo();
-        String[] xml_research = new String[5];
-        xml_research[0] = frm.getXml_research1();
-        xml_research[1] = frm.getXml_research2();
-        xml_research[2] = frm.getXml_research3();
-        xml_research[3] = frm.getXml_research4();
-        xml_research[4] = frm.getXml_research5();
+        String forward = frm.getForward();
+        String [] xml_research = null;
+        
+        if(!forward.equals("")){
+            xml_research = new String[1];
+            xml_research[0] = forward;
+        }
+        else{
+            xml_research = new String[5];
+            xml_research[0] = frm.getXml_research1();
+            xml_research[1] = frm.getXml_research2();
+            xml_research[2] = frm.getXml_research3();
+            xml_research[3] = frm.getXml_research4();
+            xml_research[4] = frm.getXml_research5();
+        }
         boolean valid = true;
         ActionErrors errors = new ActionErrors();  
         
@@ -66,34 +75,36 @@ public class dxResearchAction extends Action {
                 if (xml_research[i].compareTo("")!=0){
                         ResultSet rsdemo2 = null;
 
-                        sql = "select dxresearch_no from dxresearch where demographic_no=" + demographicNo +
-                              " and dxresearch_code=" + xml_research[i] + " and (status='A' or status='C')";
-                        System.out.println(sql);
+                        sql = "select dxresearch_no from dxresearch where demographic_no='" + demographicNo +
+                              "' and dxresearch_code='" + xml_research[i] + "' and (status='A' or status='C')";
+                        //System.out.println("Look for non-deleted code" + sql);
                         rsdemo2 = db.GetSQL(sql);
                         if(rsdemo2!=null){
                             while(rsdemo2.next()){
                                     Count = Count +1;
                                     sql = "update dxresearch set update_date='"+nowDate+"', status='A' where dxresearch_no='"+rsdemo2.getString("dxresearch_no")+"'";
                                     db.RunSQL(sql);                                        
-                                     System.out.println(sql);
+                                    //System.out.println("update" + sql);
                             } 
                         }
 
                         if (Count == 0){
                                 //need to validate the dxresearch code before write to the database
-                                sql = "select * from ichppccode where ichppccode = '" + xml_research[i] +"'";
+                                sql = "select * from ichppccode where ichppccode like '" + xml_research[i] +"'";
+                                //System.out.println("Validate: " + sql);
                                 ResultSet rsCode = db.GetSQL(sql);
-                                if(rsCode.next()){
-                                    sql = "insert into dxresearch (demographic_no, start_date, update_date, status, dxresearch_code) values('"
-                                            + demographicNo +"','" + nowDate + "','" + nowDate + "', 'A','" + xml_research[i]+ "')";
-                                    System.out.println(sql);
-                                    db.RunSQL(sql);
-                                }
-                                else{
+                               
+                                if(!rsCode.next() || rsCode==null){
                                     valid = false;
                                     errors.add(errors.GLOBAL_ERROR,
                                     new ActionError("errors.codeNotFound", xml_research[i], "ICHPPC"));
-                                    saveErrors(request, errors);                                    
+                                    saveErrors(request, errors);   
+                                }
+                                else{
+                                    sql = "insert into dxresearch (demographic_no, start_date, update_date, status, dxresearch_code) values('"
+                                            + demographicNo +"','" + nowDate + "','" + nowDate + "', 'A','" + xml_research[i]+ "')";
+                                    //System.out.println("insert" + sql);
+                                    db.RunSQL(sql);                                                                     
                                 }
                         }	    
                 }
