@@ -30,7 +30,7 @@ public class RptConsultReportData {
               }
               rs.close();
               db.CloseConn();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
+        }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  e.printStackTrace();}
     return arrayList;
     }
 
