@@ -52,14 +52,54 @@ public class EctSelectMeasurementGroupAction extends Action {
         EctSelectMeasurementGroupForm frm = (EctSelectMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctSelectMeasurementGroupForm", frm);
         
-        String groupName = (String) frm.getValue("groupName");
-        System.out.println("The selected group is: " + groupName);
+        String groupName = frm.getSelectedGroupName();
+        String forward = frm.getForward();
+        
+        System.out.println("The forward message is: " + forward);
         
         HttpSession session = request.getSession();
         session.setAttribute( "groupName", groupName);
         
-        return mapping.findForward("continue");
+        if(forward.compareTo("style")==0){
+            //get the current style
+            EctValidation ectValidation = new EctValidation();             
+            EctStyleSheetBeanHandler sshd = new EctStyleSheetBeanHandler();
+            Collection allStyleSheets = sshd.getStyleSheetNameVector();                            
+            String css = ectValidation.getCssName(groupName);
+            request.setAttribute("css", css);
+            request.setAttribute( "allStyleSheets", allStyleSheets);
+            request.setAttribute( "groupName", groupName);
+            return mapping.findForward("style");
+        }
+        else if(forward.compareTo("delete")==0){
+            deleteGroup(groupName);
+            return mapping.findForward("delete");
+        }
+        else{
+            return mapping.findForward("type");
+        }
 
+    }
+    
+    /*****************************************************************************************
+     * delete the selected group
+     *
+     * @return 
+     ******************************************************************************************/
+    private void deleteGroup(String inputGroupName){
+        
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "DELETE FROM measurementGroupStyle WHERE groupName='" + inputGroupName + "'";
+            System.out.println("Sql Statement: " + sql);
+            db.RunSQL(sql);            
+            sql = "DELETE FROM measurementGroup WHERE name='" + inputGroupName + "'";
+            db.RunSQL(sql);
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());            
+        }        
     }
 }
     

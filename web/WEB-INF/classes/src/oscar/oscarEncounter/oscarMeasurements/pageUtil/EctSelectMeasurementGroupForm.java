@@ -44,7 +44,21 @@ public final class EctSelectMeasurementGroupForm extends ActionForm{
         return values.get(key);
     }
     
+    private String forward;
+    public String getForward(){
+        return forward;
+    }
+    public void setForward(String forward){
+        this.forward = forward;
+    }
     
+    private String selectedGroupName;
+    public String getSelectedGroupName(){
+        return selectedGroupName;
+    }
+    public void setSelectedGroupName(String selectedGroupName){
+        this.selectedGroupName = selectedGroupName;
+    }
 /*    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
     {
         ActionErrors errors = new ActionErrors();
