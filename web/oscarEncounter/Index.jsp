@@ -540,8 +540,13 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;"
-                        title="<bean:message key="oscarEncounter.Index.masterFile"/>"><bean:message key="global.master"/></a><br>
+ 	            <%if (vLocale.getCountry().equals("BR")) {%>
+                        <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr');return false;" 
+    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
+		    <%}else{%>
+	                <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;" 
+    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
+    		    <%}%><br>
              <% 
                 if (vLocale.getCountry().equals("BR")) { %>  
                <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
