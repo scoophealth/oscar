@@ -162,74 +162,57 @@ public final class FrmSetupFormAction extends Action {
                     request.setAttribute(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
                     request.setAttribute(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", "")); 
                 }
-                else{                                        
-                                      
-                    frm.setValue(mt.getType() + "Date", today);    
-                    request.setAttribute(mt.getType() + "Date", today);
+                else{                                                                                                                      
+                    //prefill data from Miles if its dataentered date is > than the one in measurements                                        
+                    if(mt.getCanPrefill()){  
+                        String value="";
+                        String date=today;
                         
-                    //prefill data from Miles if its dataentered date is > than the one in measurements                    
-                    String valueMethodCall = (String) nameProps.get(mt.getType()+"Value");    
-                    //System.out.println("key: " + mt.getType()+"Value value: " + valueMethodCall);
-                    if(mt.getType().equalsIgnoreCase("BP")){
-                        valueMethodCall = (String) nameProps.get("SBPValue");
-                        String valueMethodCall2 =(String) nameProps.get("DBPValue");
-                        if (vtData!=null && vtDataC!=null && valueMethodCall != null){                      
+                        String valueMethodCall = (String) nameProps.get(mt.getType()+"Value");
+                        String dateMethodCall = (String) nameProps.get(mt.getType()+"Date");                        
+                        
+                        if (vtData!=null && vtDataC!=null && valueMethodCall != null){                                                  
                             Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});                        
-                            String sbp = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                            vtGetMethods = vtDataC.getMethod("get"+valueMethodCall2, new Class[] {});   
-                            String dbp = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                            if(sbp!=null && dbp!=null){
-                                frm.setValue(mt.getType()+"Value", sbp + "/" + dbp);                              
-                                String dateMethodCall = (String) nameProps.get(mt.getType()+"Date");
-
-                                if (dateMethodCall != null){                      
+                            value = (String) vtGetMethods.invoke(vtData, new Object[]{});
+                                                                                   
+                            if(value!=null){
+                                vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});                            
+                                String dMiles = (String) vtGetMethods.invoke(vtData, new Object[]{});                                                            
+                                date = dMiles;
+                                
+                                if(dateMethodCall!=null){
                                     vtGetMethods = vtDataC.getMethod("get"+dateMethodCall, new Class[] {});
-                                    String value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                                    frm.setValue(mt.getType() + "Date", value);
-                                    request.setAttribute(mt.getType() + "Date", value);                                
-                                }
+                                    date = (String) vtGetMethods.invoke(vtData, new Object[]{});
+                                    date = date.equalsIgnoreCase("")?"0001-01-01":date;
+                                                                        
+                                    String dObsMeas = mt.getLastDateObserved()==null?"0001-01-01":mt.getLastDateObserved();                                     
+                                    System.out.println(mt.getType() + " Miles: " + date + " Measurements: " + dObsMeas);
+                                    Date milesDate = UtilDateUtilities.StringToDate(date, _dateFormat);
+                                    Date obsMeasDate = UtilDateUtilities.StringToDate(dObsMeas, _dateFormat);
+                                    
+                                    if(mt.getLastData()!=null){
+                                        if(obsMeasDate.compareTo(milesDate)>=0){
+                                            String dMeas = mt.getLastDateEntered()==null?"0001-01-01":mt.getLastDateEntered();                            
+                                
+                                            Date dateMiles = UtilDateUtilities.StringToDate(dMiles, _dateFormat);
+                                            Date dateMeas = UtilDateUtilities.StringToDate(dMeas, _dateFormat);
+
+                                            if(dateMeas.compareTo(dateMiles)>0){
+                                                value = mt.getLastData();
+                                                date = dObsMeas;
+                                            }                                        
+                                        }
+                                    }
+                                }   
                             }
-                        }
+                        }    
+                        frm.setValue(mt.getType()+"Value", value); 
+                        frm.setValue(mt.getType()+"Date", date);       
+                        request.setAttribute(mt.getType() + "Comments", "");
                     }
                     else{
-                                                
-                        if (vtData!=null && vtDataC!=null && valueMethodCall != null){                      
-                            Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});                        
-                            String value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-
-                            vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});
-                            //System.out.println("data date " + (String) vtGetMethods.invoke(vtData, new Object[]{}));
-                            String dMiles = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                            String dMeas = mt.getLastDateEntered();
-
-                            if(value!=null){
-                                value = translate(value, valueMethodCall);
-                                frm.setValue(mt.getType()+"Value", value);  
-                                //System.out.println("prefill " + mt.getType() + ": " + value);
-                            
-                                if(dMiles!=null&&dMeas!=null){
-                                    if(dMiles.compareTo(dMeas)>0){                                                             
-                                        String dateMethodCall = (String) nameProps.get(mt.getType()+"Date");
-
-                                        if (dateMethodCall != null){                      
-                                            vtGetMethods = vtDataC.getMethod("get"+dateMethodCall, new Class[] {});
-                                            value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                                            frm.setValue(mt.getType() + "Date", value);
-                                            request.setAttribute(mt.getType() + "Date", value);                                
-                                        }
-                                        else{
-
-                                            frm.setValue(mt.getType() + "Date", dMiles==null?"":dMiles.substring(0,10));    
-                                            request.setAttribute(mt.getType() + "Date", dMiles);
-                                        } 
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
+                        frm.setValue(mt.getType() + "Date", today);    
+                        request.setAttribute(mt.getType() + "Date", today);  
                         request.setAttribute(mt.getType() + "Comments", "");
                     }
                 }
