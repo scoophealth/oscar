@@ -39,6 +39,7 @@ public class ProviderNameBeanHandler {
     
     Vector providerNameVector = new Vector();
     Vector doctorNameVector = new Vector();
+    Vector thisGroupProviderVector = new Vector();
  
     public ProviderNameBeanHandler() {
         init();
@@ -80,6 +81,26 @@ public class ProviderNameBeanHandler {
     
     public Collection getDoctorNameVector(){
         return doctorNameVector;
+    }
+    
+    public void setThisGroupProviderVector(String groupNo){
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select provider_no, last_name, first_name from mygroup where mygroup_no='" + groupNo + "' order by first_name";
+            ResultSet rs;
+            for(rs = db.GetSQL(sql); rs.next(); )
+            {                
+                ProviderNameBean pNameBean = new ProviderNameBean(rs.getString("last_name") + ", " + rs.getString("first_name"), rs.getString("provider_no"));
+                thisGroupProviderVector.add(pNameBean);
+            }
+        }
+         catch(SQLException e) {
+            System.out.println(e.getMessage());         
+        }
+    }
+    
+    public Collection getThisGroupProviderVector(){
+        return thisGroupProviderVector;
     }
 }
 
