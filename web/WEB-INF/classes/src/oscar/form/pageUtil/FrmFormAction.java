@@ -70,8 +70,7 @@ public class FrmFormAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        
-                     
+                             
         System.out.println("FrmFormAction is called");        
         System.gc();
         FrmFormForm frm = (FrmFormForm) form;               
@@ -126,6 +125,9 @@ public class FrmFormAction extends Action {
             props.setProperty("provider_no", providerNo);
             props.setProperty("visitCod", visitCod);
             
+            //for VTForm
+            props.setProperty("diagnosis", (String) frm.getValue("diagnosisVT"));
+           
             startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
                 mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
@@ -340,7 +342,7 @@ public class FrmFormAction extends Action {
     
     private Properties convertName(String formName){
         Properties osdsf = new Properties();
-        InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".properties");
+        InputStream is = getClass().getResourceAsStream("/../../form/" + formName + "2Osdsf.properties");
         try {
                 osdsf.load(is);
         } catch (Exception e) {
