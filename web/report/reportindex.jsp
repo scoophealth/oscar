@@ -143,8 +143,14 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
         <td width="300"><a HREF="#" ONCLICK ="ogo()" ><bean:message key="report.reportindex.btnEDBList"/></a></td>
-        <td><bean:message key="report.reportindex.formFrom"/><INPUT TYPE="text" NAME="startDate" VALUE="0001/01/01" size='10'></td>
-        <td><bean:message key="report.reportindex.formTo"/><INPUT TYPE="text" NAME="endDate" VALUE="<%=today%>" size='10'></td>
+        <td>
+        <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.startDate.value")%>')">
+        <bean:message key="report.reportindex.formFrom"/></a>
+        <INPUT TYPE="text" NAME="startDate" VALUE="0001/01/01" size='10'></td>
+        <td>
+        <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.endDate.value")%>')">
+        <bean:message key="report.reportindex.formTo"/></a>
+        <INPUT TYPE="text" NAME="endDate" VALUE="<%=today%>" size='10'></td>
         <td><INPUT TYPE="button" NAME="button" VALUE="<bean:message key="report.reportindex.btnCreateReport"/>" onClick="ogo()"></td>
         <td></td>
     </tr>
