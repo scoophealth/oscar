@@ -9578,6 +9578,23 @@ INSERT INTO ctl_document VALUES ('demographic',2147483647,4955,'A');
 --
 -- Dumping data for table 'ctl_frequency'
 --
+INSERT INTO ctl_frequency VALUES (1,'OD',1,1);
+INSERT INTO ctl_frequency VALUES (2,'BID',2,2);
+INSERT INTO ctl_frequency VALUES (3,'TID',3,3);
+INSERT INTO ctl_frequency VALUES (4,'QID',4,4);
+INSERT INTO ctl_frequency VALUES (5,'Q1H',24,24);
+INSERT INTO ctl_frequency VALUES (6,'Q2H',12,12);
+INSERT INTO ctl_frequency VALUES (7,'Q1-2H',12,24);
+INSERT INTO ctl_frequency VALUES (8,'Q3-4H',6,8);
+INSERT INTO ctl_frequency VALUES (9,'Q4H',6,6);
+INSERT INTO ctl_frequency VALUES (10,'Q4-6H',4,6);
+INSERT INTO ctl_frequency VALUES (11,'Q6H',4,4);
+INSERT INTO ctl_frequency VALUES (12,'Q8H',3,3);
+INSERT INTO ctl_frequency VALUES (13,'Q12H',2,2);
+INSERT INTO ctl_frequency VALUES (14,'QAM',1,1);
+INSERT INTO ctl_frequency VALUES (15,'QPM',1,1);
+INSERT INTO ctl_frequency VALUES (16,'QHS',1,1);
+
 
 
 --
@@ -9587,6 +9604,35 @@ INSERT INTO ctl_document VALUES ('demographic',2147483647,4955,'A');
 --
 -- Dumping data for table 'ctl_specialinstructions'
 --
+
+
+INSERT INTO ctl_specialinstructions VALUES (1,'as needed');
+INSERT INTO ctl_specialinstructions VALUES (2,'as needed for pain');
+INSERT INTO ctl_specialinstructions VALUES (3,'on an empty stomach');
+INSERT INTO ctl_specialinstructions VALUES (4,'until gone');
+INSERT INTO ctl_specialinstructions VALUES (5,'before meals');
+INSERT INTO ctl_specialinstructions VALUES (6,'after meals');
+INSERT INTO ctl_specialinstructions VALUES (7,'with meals');
+INSERT INTO ctl_specialinstructions VALUES (8,'before meals and at bedtime');
+INSERT INTO ctl_specialinstructions VALUES (9,'as directed');
+INSERT INTO ctl_specialinstructions VALUES (10,'in the morning');
+INSERT INTO ctl_specialinstructions VALUES (11,'in the evening');
+INSERT INTO ctl_specialinstructions VALUES (12,'at bedtime');
+INSERT INTO ctl_specialinstructions VALUES (13,'as needed for pain or itching');
+INSERT INTO ctl_specialinstructions VALUES (14,'as needed for fever');
+INSERT INTO ctl_specialinstructions VALUES (15,'as needed for wheezing');
+INSERT INTO ctl_specialinstructions VALUES (16,'while awake');
+INSERT INTO ctl_specialinstructions VALUES (17,'1 hour before or 2 hours after');
+INSERT INTO ctl_specialinstructions VALUES (18,'with food');
+INSERT INTO ctl_specialinstructions VALUES (19,'Apply to affected areas');
+INSERT INTO ctl_specialinstructions VALUES (20,'Apply sparingly');
+INSERT INTO ctl_specialinstructions VALUES (21,'Insert in left ear');
+INSERT INTO ctl_specialinstructions VALUES (22,'Insert in right ear');
+INSERT INTO ctl_specialinstructions VALUES (23,'Insert in both ears');
+INSERT INTO ctl_specialinstructions VALUES (24,'Insert in left eye');
+INSERT INTO ctl_specialinstructions VALUES (25,'Insert in right eye');
+INSERT INTO ctl_specialinstructions VALUES (26,'Insert in both eyes');
+
 
 --
 -- Dumping data for table 'demographic'
