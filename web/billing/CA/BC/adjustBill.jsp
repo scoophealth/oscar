@@ -70,6 +70,9 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
    }   
    MSPReconcile msp = new MSPReconcile();
    Properties allFields = msp.getBillingMasterRecord(billNo);
+   MSPBillingNote billingNote = new MSPBillingNote();
+   String corrNote = billingNote.getNote(billNo);
+   //TODO get note for this record and put it on screen and then be able to save a new note
 
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -115,6 +118,16 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
 		  //document.form1.billing_no.focus();
 		  //document.form1.billing_no.select();
 		}
+		
+		function checkTextLimit(textField, maximumlength) {
+         if (textField.value.length > maximumlength + 1){   
+            alert("Maximun "+maximumlength+" characters");
+         }
+         if (textField.value.length > maximumlength){
+            textField.value = textField.value.substring(0, maximumlength);
+         } 
+      }
+ 		
 		function rs(n,u,w,h,x) {
 		  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
 		  remote=window.open(u,n,args);
@@ -669,8 +682,8 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
                 <select name="correspondenceCode" >
                     <option value="0" <%=allFields.getProperty("correspondence_code").equals("0")?"selected":""%>>None</option> 
                     <option value="C" <%=allFields.getProperty("correspondence_code").equals("C")?"selected":""%>>Paper Note</option>            
-                    <option value="N" <%=allFields.getProperty("correspondence_code").equals("C")?"selected":""%>>Elec Note</option>            
-                    <option value="B" <%=allFields.getProperty("correspondence_code").equals("C")?"selected":""%>>Both</option>            
+                    <option value="N" <%=allFields.getProperty("correspondence_code").equals("N")?"selected":""%>>Elec Note</option>            
+                    <option value="B" <%=allFields.getProperty("correspondence_code").equals("B")?"selected":""%>>Both</option>            
                 </select>        
                 <!--<input type="text" name="correspondenceCode" value="<%=allFields.getProperty("correspondence_code")%>" size="1"/>-->
             </td>
@@ -687,6 +700,8 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
        <tr>     
             <td class="bCellData">Claim Short Comment</td><!--CLAIM-SHORT-COMMENT-->
             <td><input type="text" name="shortComment" value="<%=allFields.getProperty("claim_comment")%>"size="20" maxlength="20"/></td>
+            <td class="bCellData">Note</td>
+            <td><textarea cols="60" rows="5"name="notes" onkeyup="checkTextLimit(this.form.notes,400);"><%=corrNote%></textarea></td>
             
        </tr>      
        <!--<tr>
