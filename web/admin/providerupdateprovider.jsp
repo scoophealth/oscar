@@ -61,8 +61,22 @@ function setfocus() {
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formType"/>: </td>
-    <td><input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>"></td>
-  </tr>
+    <td>
+          <% if (vLocale.getCountry().equals("BR")) { %>  
+          <select name="provider_type">
+            <option value="receptionist"<% if (rs.getString("provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
+            <option value="doctor"<% if (rs.getString("provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
+            <option value="doctor"><bean:message key="admin.provider.formType.optionNurse"/></option>
+            <option value="doctor"><bean:message key="admin.provider.formType.optionResident"/></option>
+            <option value="admin"<% if (rs.getString("provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
+            <option value="admin_billing"<% if (rs.getString("provider_type").equals("admin_billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdminBilling"/></option>
+            <option value="billing"<% if (rs.getString("provider_type").equals("billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionBilling"/></option>
+          </select>
+		  <% } else { %>
+            <input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>">
+          <% } %>
+     </td>
+  </tr> 
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
     <td><input type="text" name="specialty" value="<%= rs.getString("specialty") %>"></td>
