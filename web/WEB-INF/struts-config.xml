@@ -1038,6 +1038,12 @@
 
 
 <!-- immunization actions -->
+    <action     path="/oscarEncounter/immunization/deleteSchedule"
+                type="oscar.oscarEncounter.immunization.pageUtil.EctImmDeleteImmScheduleAction"
+                name="EctImmPassThruForm"
+                scope="request">
+        <forward name="success" path="/oscarEncounter/immunization/Schedule.jsp" />
+    </action> 
     <action     path="/oscarEncounter/immunization/initSchedule"
                 type="oscar.oscarEncounter.immunization.pageUtil.EctImmInitScheduleAction"
                 name="EctImmPassThruForm"
