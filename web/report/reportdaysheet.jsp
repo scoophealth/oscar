@@ -14,8 +14,8 @@
     String [][] dbQueries=new String[][] { 
 {"search_daysheetall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date>=? and a.appointment_date<=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby }, 
 {"search_daysheetsingleall", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date>=? and a.appointment_date<=? and a.provider_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
-{"search_daysheetnew", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby }, 
-{"search_daysheetsinglenew", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
+{"search_daysheetnew", "select a.appointment_date as appointment_date, a.provider_no as provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status = 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby }, 
+{"search_daysheetsinglenew", "select a.appointment_date as appointment_date, a.provider_no as provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status = 't' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
 {"searchmygroupall", "select * from mygroup where mygroup_no= ?"}, 
 {"update_apptstatus", "update appointment set status='T' where appointment_date=? and status='t' " }, 
 {"update_apptstatussingle", "update appointment set status='T' where appointment_date=? and provider_no=? and status='t' " }, 
@@ -95,12 +95,12 @@ function setfocus() {
   while (rsdemo.next()) { 
     //if it is a group and a group member
 	if(!myGroupBean.isEmpty()) {
-	  if(myGroupBean.getProperty(rsdemo.getString("a.provider_no"))==null) continue;
+	  if(myGroupBean.getProperty(rsdemo.getString("provider_no"))==null) continue;
 	}
   
   bodd = bodd?false:true;
-	if(!strTemp.equals(rsdemo.getString("a.provider_no")) ) { //new provider for a new table
-	  strTemp = rsdemo.getString("a.provider_no") ;
+	if(!strTemp.equals(rsdemo.getString("provider_no")) ) { //new provider for a new table
+	  strTemp = rsdemo.getString("provider_no") ;
 	  bFistL = true;
 	  out.println("</table> <p>") ;
 	}
@@ -109,7 +109,7 @@ function setfocus() {
     bodd = false ;
 %>
 <table width="480" border="0" cellspacing="1" cellpadding="0" ><tr> 
-<td><%=providerBean.getProperty(rsdemo.getString("a.provider_no")) + " - " +sdate + " " + edate%>  </td>
+<td><%=providerBean.getProperty(rsdemo.getString("provider_no")) + " - " +sdate + " " + edate%>  </td>
 <td align="right"></td>
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
@@ -126,7 +126,7 @@ function setfocus() {
     }
 %> 
 <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-      <td align="center" nowrap><%=rsdemo.getString("a.appointment_date")%></td>
+      <td align="center" nowrap><%=rsdemo.getString("appointment_date")%></td>
       <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("a.end_time")%>"><%=rsdemo.getString("a.start_time")%></td>
       <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name"))%></td>
       <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("d.first_name"))%></td>
