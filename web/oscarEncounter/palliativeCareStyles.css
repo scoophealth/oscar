@@ -1,0 +1,92 @@
+BODY
+{
+    FONT-SIZE: 12pt;
+    FONT-FAMILY: Arial, Verdana, Tahoma, sans-serif;
+    background-color: #FFEFDB; //#FFCC99;
+}
+
+TABLE
+{
+	FONT-SIZE: 12pt;
+    border-color:#999999;
+}
+
+TEXTAREA {
+    overflow: auto;
+}
+
+
+TABLE TD {
+    vertical-align: top;
+}
+
+.Head {
+    background-color:#BBBBBB;
+    padding-top:3px;
+    padding-bottom:3px;
+    width:940px;
+    font-size:12pt;
+}
+
+.Head INPUT {
+    width: 100px;
+}
+
+.Head A {
+    font-size:12pt;
+}
+
+.title {
+	text-align: center;
+	font-weight: bold;
+	font-size: 14pt;
+}
+
+.format TD{
+	vertical-align: top;
+}
+
+.format A {
+	font-weight: bold;
+}
+
+.format TEXTAREA {
+	width: 100%;
+    overflow: auto;
+}
+
+.date TD {
+	font-size:8pt;
+}
+
+.date A {
+	font-size: 12pt;
+}
+.pain TEXTAREA{
+	height: 100px;
+    overflow: auto;
+}
+
+.signature INPUT{
+	width: 100%;
+}
+
+.giBowels TEXTAREA {
+	height: 75px;
+    overflow: auto;
+}
+
+.gu TEXTAREA {
+	height: 60px;
+    overflow: auto;
+}
+
+.psychAgitation TEXTAREA {
+	height: 60px;
+    overflow: auto;
+}
+
+.other TEXTAREA {
+	height: 100px;
+    overflow: auto;
+}
