@@ -64,37 +64,46 @@ public class FrmFormAction extends Action {
 
     
     private String _dateFormat = "yyyy/MM/dd";
-    ActionErrors errors = new ActionErrors();    
-    boolean valid = true;       
+    
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
+        throws ServletException, IOException{
                              
-        System.out.println("FrmFormAction is called");        
+        ActionErrors errors = new ActionErrors();    
+        boolean valid = true;          
+        System.out.println("FrmFormAction is called "+currentMem());        
         System.gc();
+        System.out.println("current mem 1 "+currentMem());
         FrmFormForm frm = (FrmFormForm) form;               
         
         HttpSession session = request.getSession();        
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         request.getSession().setAttribute("EctSessionBean", bean);
         
-        String formName = (String) frm.getValue("formName");                        
+        String formName = (String) frm.getValue("formName"); 
+        System.out.println("formNme Top "+formName);
         String formId = (String) frm.getValue("formId");
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         String timeStamp = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd hh:mm:ss");
         String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
                         
+        System.out.println("current mem 2 "+currentMem());
+        
         Properties props = new Properties();
         EctFormProp formProp = EctFormProp.getInstance();
         Vector measurementTypes = formProp.getMeasurementTypes();
+        System.out.println("num measurements "+measurementTypes.size());
         String demographicNo = null;
         String providerNo = (String) session.getValue("user");
         if ( bean != null)
             demographicNo = bean.getDemographicNo();                        
         
+        System.out.println("current mem 3 "+currentMem());
+        
         errors.clear();
         valid = true;
+        
+        System.out.println("current mem 4 "+currentMem());
         
         String submit = request.getParameter("submit");
         
@@ -104,6 +113,7 @@ public class FrmFormAction extends Action {
         //Validate each measurement
         long startTime = System.currentTimeMillis();
         
+        System.out.println("current mem 5 "+currentMem());
         for(int i=0; i<measurementTypes.size(); i++){
             mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
             validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
@@ -114,9 +124,9 @@ public class FrmFormAction extends Action {
             inputValue = parseCheckBoxValue(inputValue, validation.getName());
             
             //validate
-            valid = validate( inputValue, observationDate, mt, validation, request);                
+            valid = validate( inputValue, observationDate, mt, validation, request,errors);                
         } 
-        
+        System.out.println("current mem 6 "+currentMem());
         long endTime = System.currentTimeMillis();
         long delTime = endTime - startTime;
         System.out.println("Time spent on validation: " + Long.toString(delTime));
@@ -134,6 +144,7 @@ public class FrmFormAction extends Action {
            
             startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
+                System.out.println("current mem 7.1."+i+" "+currentMem()); 
                 mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
                 validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
                 String type = mt.getType();
@@ -157,11 +168,11 @@ public class FrmFormAction extends Action {
                 if(lastDataEnteredDate!=null)
                     props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
                 System.out.println("type: " + type + " input: " + inputValue);
-                org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+                
                 props.setProperty(type+"Date", observationDate);
                 props.setProperty(type+"Comments", comments);                
                     
-                if(!gValidator.isBlankOrNull(inputValue)){
+                if(!GenericValidator.isBlankOrNull(inputValue)){
                     props.setProperty(type+"Value", inputValue);
                     
                     if(type.equalsIgnoreCase("BP")){
@@ -178,31 +189,31 @@ public class FrmFormAction extends Action {
                         }
                     }
                 }
+                System.out.println("current mem 7.2."+i+" "+currentMem()); 
             }
             endTime = System.currentTimeMillis();
             delTime = endTime - startTime;
             System.out.println("Time spent on write2Measurements: " + Long.toString(delTime));
             
             //Store the the form table for keeping the current record            
+            System.out.println("current mem 8 "+currentMem()); 
             try{
                 String sql = "SELECT * FROM form"+formName + " WHERE demographic_no='"+demographicNo + "' AND ID=0";
                 FrmRecordHelp frh = new FrmRecordHelp();
                 frh.setDateFormat(_dateFormat);
                 (frh).saveFormRecord(props, sql);
-            }
-            catch(SQLException e){
+            }catch(SQLException e){
                 System.out.println(e.getMessage());
             }
             
-            
+            System.out.println("current mem 9 "+currentMem()); 
             //Send to Mils thru xml-rpc            
             Properties nameProps = convertName(formName);
             String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
             String decisionSupportURL = connect2OSDSF(xmlData);
             request.setAttribute("decisionSupportURL", decisionSupportURL);
-            
-        }
-        else{                             
+            System.out.println("current mem 9 "+currentMem()); 
+        }else{                             
             //return to the orignal form
             return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId=0"));
         }
@@ -218,12 +229,13 @@ public class FrmFormAction extends Action {
             return (new ActionForward("/form/formSaveAndExit.jsp"));
         }
         EctFormData fData = new EctFormData();
+        System.out.println("formName from Frm ForamAction"+formName);
         String formNameByFormTable = fData.getFormNameByFormTable("../form/SetupForm.do?formName="+formName+"&demographic_no=");
+        System.out.println("formNameByFormTable"+formNameByFormTable);
         String[] formPath = {"","0"};
         try{
             formPath = (new FrmData()).getShortcutFormValue(demographicNo, formNameByFormTable);    
-        }
-        catch(SQLException e){            
+        }catch(SQLException e){            
             e.printStackTrace();
         }
         return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId="+formPath[1]));
@@ -233,8 +245,9 @@ public class FrmFormAction extends Action {
     
     
     
-    private boolean validate(String inputValue, String observationDate, EctMeasurementTypesBean mt, EctValidationsBean validation, HttpServletRequest request ){
-        EctValidation ectValidation = new EctValidation();                            
+    private boolean validate(String inputValue, String observationDate, EctMeasurementTypesBean mt, EctValidationsBean validation, HttpServletRequest request,ActionErrors errors ){
+        EctValidation ectValidation = new EctValidation();    
+        boolean valid = true;
         
         String inputTypeDisplay = mt.getTypeDesc();
         String inputValueName = mt.getType()+"Value";   
@@ -249,8 +262,8 @@ public class FrmFormAction extends Action {
         int iIsDate = Integer.parseInt(validation.getIsDate()==null?"0":validation.getIsDate());
         int iIsNumeric = Integer.parseInt(validation.getIsNumeric()==null?"0":validation.getIsNumeric());
         
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-        if(!gValidator.isBlankOrNull(inputValue)){            
+        
+        if(!GenericValidator.isBlankOrNull(inputValue)){            
             if(iIsNumeric==1 && !ectValidation.isInRange(dMax, dMin, inputValue)){                       
                 errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
                 saveErrors(request, errors);            
@@ -386,4 +399,8 @@ public class FrmFormAction extends Action {
         return inputValue;
     }
      
+    public String currentMem(){        
+       long Used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
+       return ""+Used;
+    }
 }
