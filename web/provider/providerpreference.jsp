@@ -23,7 +23,7 @@ function setfocus() {
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
 }
-<!--
+
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
 	var i = 0;
@@ -43,12 +43,12 @@ function checkTypeNum(typeIn) {
 	} else typeInOK = false;
 	return typeInOK;
 }
+
 function checkTypeIn(obj) {
     if(!checkTypeNum(obj.value) ) {
 	  alert ("You must type in a number in the field.");
 	}
 }
--->
 
 function checkTypeInAll() {
   var checkin = false;
@@ -114,7 +114,7 @@ function isNumeric(strString){
 // stop javascript -->
 </script>
 
-<body bgproperties="fixed"  onLoad="setfocus()" topmargin="0"leftmargin="0" rightmargin="0">
+<body bgproperties="fixed"  onLoad="setfocus();" topmargin="0"leftmargin="0" rightmargin="0">
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="<%=deepcolor%>"> 
