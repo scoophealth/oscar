@@ -447,7 +447,7 @@ function controlEyeExam(){
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport();">
 <!--  -->
     
-    <html:form action="/form/SubmitForm" enctype="multipart/form-data">    
+    <html:form action="/form/SubmitForm" >    
     <link rel="stylesheet" type="text/css" href="../oscarEncounter/oscarMeasurements/styles/measurementStyle.css">    
     <link rel="stylesheet" type="text/css" media="print" href="print.css"/>
     <input type="hidden" name="value(formName)" value="VTForm"/>
