@@ -40,7 +40,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ page import="oscar.oscarDemographic.data.*" %>
-<%@ page import="java.text.*, java.util.*, oscar.oscarBilling.data.*,oscar.oscarBilling.pageUtil.*,oscar.*" %>
+<%@ page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*" %>
 <%
 
  int year = 0;//Integer.parseInt(request.getParameter("year"));
@@ -87,6 +87,10 @@ if (request.getParameter("loadFromSession") == null ){
 <head>
 <title><bean:message key="billing.bc.title"/></title>
 <html:base/>
+<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" /> 
+<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
+<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
 <style type="text/css">
 	<!--
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
@@ -94,7 +98,22 @@ if (request.getParameter("loadFromSession") == null ){
 	-->
 </style>  
 <script language="JavaScript">
-<!--
+<!--                          
+
+function HideICBC(){
+	document.getElementById('ICBC').style.display='none';
+}
+function ShowICBC(){
+	document.getElementById('ICBC').style.display='';
+}
+function CheckType(){
+	if (document.BillingCreateBillingForm.xml_billtype.value == "ICBC"){
+		ShowICBC();
+	}else{
+		HideICBC();
+	}
+}
+
 function quickPickDiagnostic(diagnos){
 
 	if (document.BillingCreateBillingForm.xml_diagnostic_detail1.value == ""){
@@ -250,7 +269,7 @@ function showHideLayers() { //v3.0
 
 
 
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')">
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide');CheckType();">
 <div id="Layer2" style="position:absolute; left:362px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden"> 
   <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
     <tr> 
@@ -388,11 +407,19 @@ function showHideLayers() { //v3.0
           <tr> 
             <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.billingtype"/></b> </font></td>
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
-              <html:select property="xml_billtype"  >
-                <html:option value="MSP" >Bill MSP</html:option>
-				<html:option value="MSP" >Bill WCB</html:option>
+              <html:select property="xml_billtype"  onchange="CheckType();" >
+                  <html:option value="MSP" >Bill MSP</html:option>
+		  <html:option value="WCB" >Bill WCB</html:option>
+		  <html:option value="ICBC" >Bill ICBC</html:option>
+		  <html:option value="PRIV" >Private</html:option>
               </html:select>
-              </font></td>
+              </font><font face="Verdana" size="-2"><b>Encounter:</b></font>
+              
+              <html:select property="xml_encounter">
+              <html:option value="E">Yes</html:option>
+              <html:option value="0">No</html:option>
+              </html:select>
+            </td>
             <td width="33%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <b><bean:message key="billing.visitlocation"/></b> 
        
@@ -419,25 +446,44 @@ function showHideLayers() { //v3.0
               </html:select>
               </font></td>
           </tr>
-          <tr> 
-            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
-                <a href="javascript: function myFunction() {return false; }"  onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=service","380","300","0")'><bean:message key="billing.servicedate"/></a> </font>                
+          </table>
+          <table width="100%">
+            <td>
+                <bean:message key="billing.servicedate"/>:
             </td>
-            <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2" nowrap>                                           
-              <html:text property="xml_appointment_date"  size="12" />
-              <strong><bean:message key="billing.servicedate.starttime"/></strong> 
-              <html:text property="xml_starttime" size="12" maxlength="4" />
-              <strong><bean:message key="billing.servicedate.endtime"/></strong> 
-              <html:text property="xml_endtime" size="12" maxlength="4" />
-              </font></td>
-            <td width="14%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">                                  
-              <a href="javascript: function myFunction() {return false; }"  onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=admission","380","300","0")'><bean:message key="billing.admissiondate"/></a> </font></td>
-            <td width="29%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
-              <html:text property="xml_vdate" />
-              </font></td>  
+            <td>
+                <html:text property="xml_appointment_date" value="<%=bean.getApptDate()%>" size="10" readonly="true" styleId="xml_appointment_date"/>
+                <a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
+            </td>
+            <td>
+    				<font size="-2"><strong><bean:message key="billing.servicedate.starttime"/></strong></font>
+    				<html:text property="xml_starttime" size="4" maxlength="4" />
+        		</td>
+            <td>
+                <font size="-2"><strong><bean:message key="billing.servicedate.endtime"/></strong></font>
+                <html:text property="xml_endtime" size="4" maxlength="4" />
+            </td>
+            <td>
+                <bean:message  key="billing.admissiondate"/>: <html:text property="xml_vdate" readonly="true" value="" size="10" styleId="xml_vdate" />
+                <a id="hlADate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
+            </td>          
           </tr>
         </table>
+        <script language='javascript'>
+           Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
+           //Calendar.setup({inputField:"xml_appointment_date", ifFormat:""%d/%m/%Y",",button:"hlSDate", align:"Bl", singleClick:true});
+           Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});
+           //Calendar.setup({inputField:"xml_vdate", ifFormat:"y-m-d",button:"hlADate", align:"Bl", singleClick:true});
+        </script>
+        
         <div align="left"></div>
+        <div id="ICBC">
+           <table width="100%">
+	      <tr>
+	         <td>ICBC Claim No: <html:text name="icbc_claim_no" property="icbc_claim_no" maxlength="8" value="<%=""%>" /></td>
+	      </tr>
+           </table>
+        </div>
         <table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
           
           <tr> 
