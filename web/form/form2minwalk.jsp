@@ -203,11 +203,11 @@
                     <td width="5%" align="right">
                     </td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="1tried" <%= props.getProperty("1tried", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q1tried" <%= props.getProperty("Q1tried", "") %>/>
                     </td>
                     <td width="40%">Tried but unable</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="1FullTandem3To9" <%= props.getProperty("1FullTandem3To9", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q1FullTandem3To9" <%= props.getProperty("Q1FullTandem3To9", "") %>/>
                     </td>
                     <td width="55%">3-9 secs. full tandem</td>                
                 </tr>
@@ -215,11 +215,11 @@
                     <td width="5%" align="right">
                     </td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="1SideBySide10" <%= props.getProperty("1SideBySide10", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q1SideBySide10" <%= props.getProperty("Q1SideBySide10", "") %>/>
                     </td>
                     <td width="40%">10 secs. side by side</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="1FullTandem10" <%= props.getProperty("1FullTandem10", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q1FullTandem10" <%= props.getProperty("Q1FullTandem10", "") %>/>
                     </td>
                     <td width="55%">10 secs. full tandem</td>
                 </tr>
@@ -227,7 +227,7 @@
                     <td width="5%" align="right">
                     </td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="1SemiTandem10" <%= props.getProperty("1SemiTandem10", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q1SemiTandem10" <%= props.getProperty("Q1SemiTandem10", "") %>/>
                     </td>
                     <td width="40%">10 secs semi tandem</td>
                     <td width="5%"></td>
@@ -237,7 +237,7 @@
                     <td width="5%" align="right">
                     </td>
                     <td colspan="4">
-                        Comments: <input type="text" size="80" name="1Cmt" value="<%= props.getProperty("1Cmt", "") %>"/>
+                        Comments: <input type="text" size="80" name="Q1Cmt" value="<%= props.getProperty("Q1Cmt", "") %>"/>
                     </td>
                 </tr>
                 <tr>                    
@@ -269,7 +269,7 @@
                 <tr bgcolor="white">
                     <td width="5%" align="right">
                     </td>                    
-                    <td colspan="2">Time 1:<input type="text" size="10" name="2time1" value="<%= props.getProperty("2time1", "") %>"/></td>                
+                    <td colspan="2">Time 1:<input type="text" size="10" name="Q2time1" value="<%= props.getProperty("Q2time1", "") %>"/></td>                
                     <td width="5%" align="right">                        
                     </td>
                     <td width="55%"></td>
@@ -277,7 +277,7 @@
                 <tr bgcolor="white">
                     <td width="5%" align="right">
                     </td>
-                    <td colspan="2">Time 2:<input type="text" size="10" name="2time2" value="<%= props.getProperty("2time2", "") %>"/></td>                
+                    <td colspan="2">Time 2:<input type="text" size="10" name="Q2time2" value="<%= props.getProperty("Q2time2", "") %>"/></td>                
                     <td width="5%" align="right">                        
                     </td>
                     <td width="55%"></td>
@@ -286,7 +286,7 @@
                     <td width="5%" align="right">
                     </td>
                     <td colspan="4">
-                        Comments: <input type="text" size="80" name="2Cmt" value="<%= props.getProperty("2Cmt", "") %>"/>
+                        Comments: <input type="text" size="80" name="Q2Cmt" value="<%= props.getProperty("Q2Cmt", "") %>"/>
                     </td>
                 </tr>
                 <tr>                    
@@ -315,11 +315,11 @@
                     <td width="5%" align="right">
                     </td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="3Unable" <%= props.getProperty("3Unable", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q3Unable" <%= props.getProperty("Q3Unable", "") %>/>
                     </td>
                     <td width="40%">Unable to stand without using arms</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="3From11To13s" <%= props.getProperty("3From11To13s", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q3From11To13s" <%= props.getProperty("Q3From11To13s", "") %>/>
                     </td>
                     <td width="55%">(11.2 - 13.6 seconds)</td>                
                 </tr>
@@ -327,11 +327,11 @@
                     <td width="5%" align="right">
                     </td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="3LessThan16s" <%= props.getProperty("3LessThan16s", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q3LessThan16s" <%= props.getProperty("Q3LessThan16s", "") %>/>
                     </td>
                     <td width="40%">(Greater than or equal to 16.7 seconds)</td>                
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="3LessThan11s" <%= props.getProperty("3LessThan11s", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q3LessThan11s" <%= props.getProperty("Q3LessThan11s", "") %>/>
                     </td>
                     <td width="55%">(Less than or equal to 11.1 seconds)</td>
                 </tr>
@@ -339,7 +339,7 @@
                     <td width="5%" align="right">
                     </td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="3From13To16s" <%= props.getProperty("3From13To16s", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="Q3From13To16s" <%= props.getProperty("Q3From13To16s", "") %>/>
                     </td>
                     <td width="40%">(13.7 - 16.6 seconds)</td>
                     <td width="5%"></td>
@@ -349,7 +349,7 @@
                     <td width="5%" align="right">
                     </td>
                     <td colspan="4">
-                        Comments: <input type="text" size="80" name="3Cmt" value="<%= props.getProperty("3Cmt", "") %>"/>
+                        Comments: <input type="text" size="80" name="Q3Cmt" value="<%= props.getProperty("Q3Cmt", "") %>"/>
                     </td>
                 </tr>
             </table>            
