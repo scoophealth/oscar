@@ -90,7 +90,8 @@ public class FrmARRecord extends FrmRecord {
             String sql = "select email from demographic where demographic_no=" + demographic_no;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                if (rs.getString("email") != null && rs.getString("email").length() > 5)
+                if (rs.getString("email") != null && rs.getString("email").length() > 5
+                        && rs.getString("email").matches(".*@.*"))
                     ret = true;
             }
 
