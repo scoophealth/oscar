@@ -85,7 +85,7 @@ public class FrmFormAction extends Action {
         String formId = (String) frm.getValue("formId");
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         String timeStamp = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd hh:mm:ss");
-        String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
+        //String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd");
                         
         System.out.println("current mem 2 "+currentMem());
@@ -110,7 +110,7 @@ public class FrmFormAction extends Action {
         
         EctMeasurementTypesBean mt;
         EctValidationsBean validation;
-        
+        EctValidation ectValidation = new EctValidation();
         //Validate each measurement
         long startTime = System.currentTimeMillis();
         
@@ -133,6 +133,8 @@ public class FrmFormAction extends Action {
             //validate
             valid = validate( inputValue, observationDate, mt, validation, request,errors);                
         } 
+        valid = ectValidation.isDate((String) frm.getValue("visitCod"));
+        
         System.out.println("current mem 6 "+currentMem());
         long endTime = System.currentTimeMillis();
         long delTime = endTime - startTime;
@@ -143,7 +145,7 @@ public class FrmFormAction extends Action {
             //Store form information as properties for saving to form table
             props.setProperty("demographic_no", demographicNo);
             props.setProperty("provider_no", providerNo);
-            props.setProperty("visitCod", visitCod);
+            props.setProperty("visitCod", (String) frm.getValue("visitCod"));
             String diagnosisVT = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT"));
             //System.out.println("diagnosisVT >"+diagnosisVT+"< form val >"+frm.getValue("diagnosisVT"));
             String subjective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("subjective"));
@@ -383,10 +385,14 @@ public class FrmFormAction extends Action {
         Vector data2OSDSF = new Vector();
         data2OSDSF.add("xml");
         data2OSDSF.add(xmlResult);
+        String osdsfRPCURL = OscarProperties.getInstance().getProperty("osdsfRPCURL", null);
+        if (osdsfRPCURL == null){
+            return null;
+        }
         //data2OSDSF.add("dummy");
         //send to osdsf thru XMLRPC
-        try{
-            XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
+        try{            
+            XmlRpcClient xmlrpc = new XmlRpcClient(osdsfRPCURL);
             String result = (String) xmlrpc.execute("vt.getAndSaveRlt", data2OSDSF);
             System.out.println("Reverse result: " + result);
             return result;
