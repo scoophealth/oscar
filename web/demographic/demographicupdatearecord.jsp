@@ -106,7 +106,7 @@
     //check if patient has already added to the waiting list and check if the patient already has an appointment in the future
     rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
     ResultSet rsfa = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_future_appt");
-    if(!rs.next() || rsfa.next()){
+    if(!rs.next() && !rsfa.next()){
         String[] paramWLPosition = new String[1];
         paramWLPosition[0] = request.getParameter("list_id");
         if(paramWLPosition[0].compareTo("")!=0){
@@ -116,7 +116,7 @@
                 paramWL[0] = request.getParameter("list_id");
                 paramWL[1] = request.getParameter("demographic_no");
                 paramWL[2] = request.getParameter("waiting_list_note");
-                System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
+                //System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
                 paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
                 apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
             }
@@ -176,7 +176,8 @@
 </script>
 --%>
 <%  
-    response.sendRedirect("search.jsp");
+    response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
+    //response.sendRedirect("search.jsp");
   } else {
 %>
   <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.
