@@ -24,7 +24,7 @@
 <%
   String            clinicview        = oscarVariables.getProperty("clinic_view", "");
   String            clinicNo          = oscarVariables.getProperty("clinic_no", "");
-  String            visitType         = oscarVariables.getProperty("visit_type", "");
+  String            visitType         = "02"; //oscarVariables.getProperty("visit_type", "");
   String            appt_no           = request.getParameter("appointment_no");
   String            demoname          = request.getParameter("demographic_name");
   String            demo_no           = request.getParameter("demographic_no");
@@ -44,7 +44,7 @@
   String            action            = "edit";
   Properties        propHist          = null;
   Vector            vecHist           = new Vector();
-System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;" + msg);
+//System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;" + msg);
   // get provider's detail
   String proOHIPNO="", proRMA="";
   String sql = "select * from provider where provider_no='" + request.getParameter("xml_provider") + "'";
@@ -93,239 +93,17 @@ System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;" + msg);
 
 	if (rs.getString("hin") == null ) {
 		errorFlag = "1";
-		errorMsg = errorMsg + "<br><font color='red'>Error: The patient does not have a valid HIN. </font><br>";
+		errorMsg = errorMsg + "<br><b><font color='red'>Error: The patient does not have a valid HIN. </font></b><br>";
 	} else if (rs.getString("hin").equals("")) {
-		warningMsg += "<br><font color='orange'>Warning: The patient does not have a valid HIN. </font><br>";
+		warningMsg += "<br><b><font color='orange'>Warning: The patient does not have a valid HIN. </font></b><br>";
 	}
 	if (r_doctor_ohip != null && r_doctor_ohip.length()>0 && r_doctor_ohip.length() != 6) {
 		warningMsg += "<br><font color='orange'>Warning: the referral doctor's no is wrong. </font><br>";
 	}
 	if (demoDOB.length() != 8) {
 		errorFlag = "1";
-		errorMsg = errorMsg + "<br><font color='red'>Error: The patient does not have a valid DOB. </font><br>";
+		errorMsg = errorMsg + "<br><b><font color='red'>Error: The patient does not have a valid DOB. </font></b><br>";
 	}
-  }
-
-  // save the billing if needed
-  if(request.getParameter("submit")!=null && "Save".equals(request.getParameter("submit"))) {
-    // parse billing date
-    int NUMTYPEINFIELD = 5;
-    String billingDate = request.getParameter("billDate");
-    String [] tempDate = billingDate.split("\\s");
-	// get billing detail info
-	// get form service code
-	Vector vecServiceCode = new Vector();
-	Vector vecServiceCodeDesc = new Vector();
-	Vector vecServiceCodeUnit = new Vector();
-	Vector vecServiceCodePrice = new Vector();
-	Vector vecServiceCodePerc = new Vector();
-	String rulePerc = "allAboveCode"; // onlyAboveCode;
-	rulePerc = request.getParameter("rulePerc")!=null?request.getParameter("rulePerc"):"allAboveCode";
-	int rulePercLabelNum = -1; //only use when onlyAboveCode
-
-	int recordCount = 0;
-	String[] billrec = new String[]{"","","","",""};
-	String[] billrecunit = new String[]{"","","","",""};
-	String[] billrecdesc = new String[]{"","","","",""};
-	String[] pricerec = new String[]{"","","","",""};
-	String[] percrec = new String[]{"","","","",""};
-	for(int i=0; i<NUMTYPEINFIELD; i++) {
-		if("".equals(request.getParameter("serviceDate"+i))) break;
-		else {
-			billrec[i] = request.getParameter("serviceDate"+i);
-			billrecunit[i] = request.getParameter("serviceUnit"+i);
-			if("".equals(billrecunit[i])) billrecunit[i]="1";
-			recordCount++;
-		}
-	}
-	for(int i=0; i<recordCount; i++) {
-		sql = "select service_code, description, value, percentage from billingservice where service_code='"
-			+ billrec[i] + "'";
-		rs = dbObj.searchDBRecord(sql);
-		while (rs.next()) {
-			billrecdesc[i] = rs.getString("description");
-			//otherdbcode2 = rs.getString("service_code");
-			pricerec[i] = rs.getString("value")==null?"":rs.getString("value");
-			percrec[i] = rs.getString("percentage");
-			//otherperc2 = rs.getString("percentage");
-
-			if( (!"".equals(pricerec[i]) && Double.parseDouble(pricerec[i])>0.) || ( "".equals(percrec[i])) ) {
-				vecServiceCode.add( billrec[i] );
-				vecServiceCodeDesc.add( billrecdesc[i] );
-				vecServiceCodePrice.add( pricerec[i] );
-				vecServiceCodeUnit.add( billrecunit[i] );
-			} else {
-				if(!"allAboveCode".equals(rulePerc) ) rulePercLabelNum = i-1;
-				vecServiceCodePerc.add( billrec[i] ); // code
-				vecServiceCodePerc.add( percrec[i] ); // price
-				vecServiceCodePerc.add( billrecunit[i] ); // unit
-				vecServiceCodePerc.add( billrecdesc[i] ); // desc
-			}
-
-		}
-	}
-	//get the form service code
-	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-		String temp=e.nextElement().toString();
-		if( temp.indexOf("code_xml_")==-1 ) continue;
-
-		temp = temp.substring("code_".length());
-		String desc = request.getParameter("desc_" + temp);
-		String fee = request.getParameter("price_" + temp);
-		String perc = request.getParameter("perc_" + temp);
-		String tempUnit = request.getParameter("unit_" + temp);
-		tempUnit = (tempUnit==null||"".equals(tempUnit) )? "1":tempUnit;
-		String code = temp.substring("xml_".length()).toUpperCase();
-		if( (!"".equals(fee) && Double.parseDouble(fee)>0.) || ( "".equals(perc)) ) {
-			vecServiceCodePrice.add( fee );
-			vecServiceCodeUnit.add( tempUnit );
-			vecServiceCode.add( code );
-			vecServiceCodeDesc.add( desc );
-		} else {
-			vecServiceCodePerc.add( code );
-			vecServiceCodePerc.add( perc );
-			vecServiceCodePerc.add( tempUnit ); // unit
-			vecServiceCodePerc.add( desc ); // desc
-		}
-		//vecServiceCode.add( code );
-	}
-	//check perc code limitation
-	boolean bLimit = false;
-	String minFee = "", maxFee = "";
-	if(vecServiceCodePerc.size()>0) {
-		//TODO: only one perc code allowed, otherwise error msg
-		sql = "select min, max from billingperclimit where service_code='"
-			+ vecServiceCodePerc.get(0) + "'";
-		rs = dbObj.searchDBRecord(sql);
-		while (rs.next()) {
-			bLimit = true;
-			minFee = rs.getString("min");
-			maxFee = rs.getString("max");
-		}
-	}
-
-    // calculate total
-    BigDecimal bdTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-    BigDecimal bdPercBase = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-	BigDecimal bdPerc = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-    // calculate base
-	for(int i=0; i<vecServiceCodePrice.size(); i++) {
-    	BigDecimal price = new BigDecimal(Double.parseDouble((String)vecServiceCodePrice.get(i))).setScale(2, BigDecimal.ROUND_HALF_UP);
-    	BigDecimal unit = new BigDecimal(Double.parseDouble((String)vecServiceCodeUnit.get(i))).setScale(2, BigDecimal.ROUND_HALF_UP);
-    	bdTotal = bdTotal.add(price.multiply(unit).setScale(2, BigDecimal.ROUND_HALF_UP));
-    	if(i==rulePercLabelNum) bdPercBase = bdTotal;
-System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
-	}
-	if(vecServiceCodePerc.size()>1) {
-		// calculate perc base
-		if("allAboveCode".equals(rulePerc) ) {
-			bdPercBase = bdTotal;
-		}
-		// calculate perc
-		BigDecimal perc = new BigDecimal(Double.parseDouble((String)vecServiceCodePerc.get(1))).setScale(2, BigDecimal.ROUND_HALF_UP);
-		bdPerc = bdPercBase.multiply(perc).setScale(2, BigDecimal.ROUND_HALF_UP);
-System.out.println("Percentage :" + bdPercBase + " x " + perc + " = " + bdPerc);
-		// adjust perc by min/max
-		if(bLimit) {
-			bdPerc = bdPerc.min(new BigDecimal(Double.parseDouble(maxFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
-			bdPerc = bdPerc.max(new BigDecimal(Double.parseDouble(minFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
-System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
-		}
-    	bdTotal = bdTotal.add(bdPerc);
-	}
-
-    String total = "" + bdTotal;
-    System.out.println(billingDate + "***************total****************:" + bdTotal);
-	// referral
-    String content = "";
-    String referalCode = (request.getParameter("referralCode")!=null&&request.getParameter("referralCode").length()==6)?request.getParameter("referralCode"):null;
-    if(referalCode!=null) {
-    	content += "<xml_referral>checked</xml_referral>" ;
-    	content += "<rdohip>" + referalCode + "</rdohip>" ;
-    }
-    content += "<hctype>" + demoHCTYPE + "</hctype>" ;
-    content += "<demosex>" + demoSex + "</demosex>" ;
-
-    for(int k=0; k<tempDate.length; k++) {
-    	if(tempDate[k].trim().length()!=10) continue;
-		String[] param =new String[23];
-		param[0]=request.getParameter("clinic_no");
-		param[1]=request.getParameter("demographic_no");
-		param[2]=request.getParameter("xml_provider"); //request.getParameter("provider_no");
-		param[3]=request.getParameter("appointment_no");
-
-		param[4]=request.getParameter("ohip_version");
-		param[5]=request.getParameter("demographic_name");
-		param[6]=request.getParameter("hin");
-		param[7] = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
-		param[8] = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
-		//param[7]=request.getParameter("billing_date");
-		//param[8]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("billing_time"));
-		param[9]= tempDate[k] ; // parse(billingDate) ;//request.getParameter("appointment_date");
-		param[10]=request.getParameter("start_time");
-		param[11]=request.getParameter("xml_location"); //request.getParameter("clinic_ref_code");
-		param[12]=content; //request.getParameter("content");
-		param[13]=total; // calculate total; //request.getParameter("total");
-		param[14]=request.getParameter("xml_billtype").substring(0,1);
-		param[15]=request.getParameter("demographic_dob");
-
-		param[16]=request.getParameter("xml_vdate"); // don't consider the appt date. request.getParameter("visitdate");
-		param[17]=request.getParameter("xml_visittype").substring(0,2); //request.getParameter("visittype");
-		param[18]=proOHIPNO; //request.getParameter("pohip_no");
-		param[19]=proRMA; //request.getParameter("prma_no");
-		param[20]=request.getParameter("apptProvider_no"); //"none"; //
-		param[21]=""; //request.getParameter("asstProvider_no"); //"";//
-		param[22] = user_no;//request.getParameter("user_no");
-		int nBillNo = 0;
-		int nBillDetailNo = 0;
-		//BillingONDataHelp billObj = new BillingONDataHelp();
-		//String sql = "insert into billing values('\\N',?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)";
-		sql = "insert into billing(clinic_no, demographic_no, provider_no, appointment_no, organization_spec_code, demographic_name, hin, update_date, update_time, billing_date, billing_time, clinic_ref_code, content, total, status, dob, visitdate, visittype, provider_ohip_no, provider_rma_no, apptProvider_no, asstProvider_no, creator) values( "
-			+ param[0] + "," + param[1] + "," + UtilMisc.nullMySQLEscape(param[2]) + "," + param[3] + "," + UtilMisc.nullMySQLEscape(param[4]) + ","
-			+ UtilMisc.nullMySQLEscape(param[5]) + "," + UtilMisc.nullMySQLEscape(param[6]) + "," + UtilMisc.nullMySQLEscape(param[7]) + "," + UtilMisc.nullMySQLEscape(param[8]) + "," + UtilMisc.nullMySQLEscape(param[9]) + ","
-			+ UtilMisc.nullMySQLEscape(param[10]) + "," + UtilMisc.nullMySQLEscape(param[11]) + "," + UtilMisc.nullMySQLEscape(param[12]) + "," + UtilMisc.nullMySQLEscape(param[13]) + "," + UtilMisc.nullMySQLEscape(param[14]) + ","
-			+ UtilMisc.nullMySQLEscape(param[15]) + "," + UtilMisc.nullMySQLEscape(param[16]) + "," + UtilMisc.nullMySQLEscape(param[17]) + "," + UtilMisc.nullMySQLEscape(param[18]) + "," + UtilMisc.nullMySQLEscape(param[19]) + ","
-			+ UtilMisc.nullMySQLEscape(param[20]) + "," + UtilMisc.nullMySQLEscape(param[21]) + ",'" + param[22] + "')";
-	    System.out.println("*******************************" + sql);
-		nBillNo = dbObj.saveBillingRecord(sql);
-
-
-		//int recordCount = Integer.parseInt(request.getParameter("record"));
-		// combine two vecs into one
-		if(vecServiceCodePerc.size()>1) {
-			vecServiceCodePrice.add( "" + bdPerc); //vecServiceCodePerc.get(1) );
-			vecServiceCodeUnit.add( vecServiceCodePerc.get(2) );
-			vecServiceCode.add( vecServiceCodePerc.get(0) );
-			vecServiceCodeDesc.add( vecServiceCodePerc.get(3) );
-		}
-
-		for (int i=0; i<vecServiceCode.size(); i++){ //recordCount
-			String[] param2 = new String[8];
-			param2[0] = "" + nBillNo; // billNo;
-			param2[1] = (String)vecServiceCode.get(i);//billrec[i]; //request.getParameter("billrec"+i);
-			param2[2] = (String)vecServiceCodeDesc.get(i);//billrecdesc[i]; //request.getParameter("billrecdesc"+i);
-			param2[3] = ((String)vecServiceCodePrice.get(i)).replaceAll("\\.", "");//pricerec[i]; //request.getParameter("pricerec"+i);
-			param2[4] = request.getParameter("dxCode"); //request.getParameter("diagcode");
-			param2[5] = tempDate[k]; //request.getParameter("appointment_date");
-			param2[6] = request.getParameter("xml_billtype").substring(0,1); //request.getParameter("billtype");
-			param2[7] = (String)vecServiceCodeUnit.get(i);//billrecunit[i]; //request.getParameter("billrecunit"+i);
-
-			//insert into billingdetail values('\\N',?,?,?,?,?, ?,?,?)
-	    	sql = "insert into billingdetail(billing_no, service_code, service_desc, billing_amount, diagnostic_code, appointment_date, status, billingunit) values( "
-	    	+ param2[0] + "," + UtilMisc.nullMySQLEscape(param2[1]) + "," + UtilMisc.nullMySQLEscape(param2[2]) + "," + UtilMisc.nullMySQLEscape(param2[3]) + "," + UtilMisc.nullMySQLEscape(param2[4]) + ","
-	    	+ UtilMisc.nullMySQLEscape(param2[5]) + "," + UtilMisc.nullMySQLEscape(param2[6]) + "," + UtilMisc.nullMySQLEscape(param2[7]) + ")";
-			nBillDetailNo = 0;
-	    	nBillDetailNo = dbObj.saveBillingRecord(sql);
-	    	if (nBillDetailNo == 0) {
-	    		// roll back
-	    		sql = "update billing set status='D' where billing_no = " + nBillNo;
-				dbObj.updateDBRecord(sql);
-	    		break;
-	    	}
-	    	System.out.println(nBillNo + sql);
-		}
-	} // end of for loop
-	msg += "<br>Billing records were added.";
   }
 
   // get patient's billing history
@@ -338,9 +116,9 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
     propHist = new Properties();
 
     propHist.setProperty("billing_no", "" + rs.getInt("billing_no"));
-    propHist.setProperty("visitdate", rs.getString("visitdate"));
-    propHist.setProperty("billing_date", rs.getString("billing_date"));
-    propHist.setProperty("update_date", rs.getString("update_date"));
+    propHist.setProperty("visitdate", rs.getString("visitdate")); // admission date
+    propHist.setProperty("billing_date", rs.getString("billing_date")); // service date
+    propHist.setProperty("update_date", rs.getString("update_date")); // create date
     propHist.setProperty("visitType", rs.getString("visitType"));
     propHist.setProperty("clinic_ref_code", rs.getString("clinic_ref_code"));
     vecHist.add(propHist);
@@ -426,7 +204,14 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
     clinicview = clinicview==null? "":clinicview;
   }
 
-  String visitdate = request.getParameter("xml_vdate")==null?"":request.getParameter("xml_vdate");
+  String visitdate = null;
+  paraName = request.getParameter("xml_vdate");
+  String xml_vdate = getDefaultValue(paraName, vecHist, "visitdate");
+  if(!"".equals(xml_vdate)) {
+    visitdate = xml_vdate;
+  } else {
+    visitdate = visitdate==null? "":visitdate;
+  }
 
 
   // get billing dx/form info
@@ -441,7 +226,6 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
   //int Count2 = 0;
   sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
    + ctlBillForm + "' and c.service_group ='" + "Group1" + "' order by c.service_order";
-//System.out.println(ctlBillForm+" * ******************************" + sql);
   rs = dbObj.searchDBRecord(sql);
   while (rs.next()) {
     propT = new Properties();
@@ -458,13 +242,15 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
     //propT.setProperty("headerTitle1",rs.getString("service_group_name"));
 	vecCodeCol1.add(propT);
   }
-  sql = "select service_code,status from ctl_billingservice_premium where ";
-  for(int i=0; i<vecCodeCol1.size(); i++) {
-  	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol1.get(i)).getProperty("serviceCode") + "'";
-  }
-  rs = dbObj.searchDBRecord(sql);
-  while (rs.next()) {
-    propPremium.setProperty(rs.getString("service_code"), "A");
+  if(vecCodeCol1.size()>0) {
+	  sql = "select service_code,status from ctl_billingservice_premium where ";
+	  for(int i=0; i<vecCodeCol1.size(); i++) {
+	  	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol1.get(i)).getProperty("serviceCode") + "'";
+	  }
+	  rs = dbObj.searchDBRecord(sql);
+	  while (rs.next()) {
+	    propPremium.setProperty(rs.getString("service_code"), "A");
+	  }
   }
 
   sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
@@ -500,6 +286,7 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
     propT.setProperty("servicePercentage",rs.getString("percentage"));
 	vecCodeCol3.add(propT);
   }
+//System.out.println(" * ******************************" + sql);
   sql = "select service_code,status from ctl_billingservice_premium where ";
   for(int i=0; i<vecCodeCol3.size(); i++) {
   	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol3.get(i)).getProperty("serviceCode") + "'";
@@ -511,7 +298,7 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
 
   // create msg
   msg += errorMsg + warningMsg;
-System.out.println(" * ******************************" + sql);
+//System.out.println(" * ******************************" + sql);
 
 %>
 
@@ -645,12 +432,31 @@ function isChecked(s) {
 	}
 	return false;
 }
+var remote=null;
+function rs(n,u,w,h,x) {
+  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+  remote=window.open(u,n,args);
+  if (remote != null) {
+    if (remote.opener == null)
+      remote.opener = self;
+  }
+  if (x == 1) { return remote; }
+}
+var awnd=null;
+function referralScriptAttach(elementName) {
+     var d = elementName;
+     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
+     //t1 = escape("");
+     //alert(('searchRefDoc.jsp?param='+t0));
+     awnd=rs('att',('searchRefDoc.jsp?param='+t0),600,600,1);
+     awnd.focus();
+}
 
 //-->
 
   </script>
   <body onload="setfocus();" topmargin="0" >
-<div id="Layer1" style="position:absolute; left:1px; top:159px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+<div id="Layer1" style="position:absolute; left:360px; top:165px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr bgcolor="#393764">
 		<td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif" color="#000000"><b>Billing Form</b></font></td>
@@ -676,7 +482,7 @@ int ctlCount = 0;
 %>
 	</table>
 </div>
-<div id="Layer2" style="position:absolute; left:362px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+<div id="Layer2" style="position:absolute; left:1px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr>
 		<td width="18%"><b><font size="-2">Dx Code</font></b></td>
@@ -695,8 +501,8 @@ ctlCount = 0;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
 		<td width="18%"><b><font size="-2" color="#7A388D"><a href="#" onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
-		<td colspan="2"><font size="-2" color="#7A388D">
-		<%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0,55)%></font></td>
+		<td colspan="2"><font size="-2" color="#7A388D"><a href="#" onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;">
+		<%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0,55)%></a></font></td>
 	</tr>
 <%
 }
@@ -714,7 +520,8 @@ ctlCount = 0;
           	<b>OscarBilling </b>
         	</td>
 			<td align="right">
-            <input type="submit" name="submit" value="Next"  />
+            <input type="submit" name="submit" value="Next" style="width: 120px;" />
+            <input type="button" name="button" value="Exit" style="width: 120px;" onClick="self.close();"/>
             </td>
 			</tr>
 		  </table>
@@ -762,8 +569,9 @@ ctlCount = 0;
                 </table>
 
                 <hr>
-                Referral Doctor<br>
-                <input type="text" name="referralCode" size="5" maxlength="6" value=""> Code search
+                Refer. Doctor<br>
+                <input type="text" name="referralCode" size="5" maxlength="6" value="<%=r_doctor_ohip%>" title="<%=r_doctor%>">
+                <a href="javascript:referralScriptAttach('referralCode')">Code search</a>
               </td>
               </tr>
               </table>
@@ -826,7 +634,8 @@ ctlCount = 0;
 				for(int i=0; i<vecLocation.size(); i++) {
 					propT = (Properties) vecLocation.get(i);
 				%>
-					<option value="<%=propT.getProperty("clinic_location_no")%>" <%=clinicview.equals(propT.getProperty("clinic_location_no"))?"selected":""%>><%=propT.getProperty("clinic_location_name")%></option>
+					<option value="<%=propT.getProperty("clinic_location_no") + "|" + propT.getProperty("clinic_location_name")%>" <%=clinicview.equals(propT.getProperty("clinic_location_no"))?"selected":""%>>
+					<%=propT.getProperty("clinic_location_name")%></option>
 				<%
 				}
 				%>
