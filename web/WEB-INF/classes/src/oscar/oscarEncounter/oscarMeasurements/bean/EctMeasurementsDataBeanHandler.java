@@ -43,22 +43,28 @@ public class EctMeasurementsDataBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' ORDER BY dateEntered DESC";
+            String sql ="SELECT m.id, m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,  " + 
+                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last, " +
+                        "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v, " +
+                        "measurementType mt WHERE m.demographicNo='" + demo + "' AND  m.providerNo= p.provider_no AND mt.type = m.type " +
+                        "AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC, " +
+                        "m.dateEntered DESC";
+            System.out.println("sql: " + sql);
             ResultSet rs;
+            String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); )
-            {
-                String providerNo = rs.getString("providerNo");
-                String sqlProvider = "SELECT * FROM provider WHERE provider_no='" + providerNo + "'";
-                ResultSet rsProvider = db.GetSQL(sqlProvider);
-                if(rsProvider.next()){
+            {                               
+                    if (rs.getInt("numericValidation")==1 || rs.getString("validationName").compareTo("Blood Pressure")==0)
+                        canPlot = "true";
+                    else
+                        canPlot = null;
+                    System.out.println("canPlot value: " + canPlot);
                     EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("demographicNo"), 
-                                                                               rsProvider.getString("first_name"), rsProvider.getString("last_name"), 
+                                                                               rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
                                                                                rs.getString("comments"), rs.getString("dateObserved"), 
-                                                                               rs.getString("dateEntered"));
-                    measurementsDataVector.add(data);
-                }
-                rsProvider.close();
+                                                                               rs.getString("dateEntered"), canPlot);
+                    measurementsDataVector.add(data);                
             }
 
             rs.close();

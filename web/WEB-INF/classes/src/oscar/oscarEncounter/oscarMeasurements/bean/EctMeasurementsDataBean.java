@@ -42,12 +42,14 @@ public class EctMeasurementsDataBean{
        String comments = "";
        String dateObserved = "";
        String dateEntered = "";
+       String canPlot = null;
        
        public EctMeasurementsDataBean(){
        }
 
        public EctMeasurementsDataBean(int id, String type, String demo, String providerFirstName, String providerLastName, 
-                                      String dataField, String measuringInstrc, String comments, String dateObserved, String dateEntered){
+                                      String dataField, String measuringInstrc, String comments, String dateObserved, 
+                                      String dateEntered, String canPlot){
             this.id = id;
             this.type = type;
             this.demo = demo;
@@ -58,6 +60,7 @@ public class EctMeasurementsDataBean{
             this.comments = comments;
             this.dateObserved = dateObserved;
             this.dateEntered = dateEntered;
+            this.canPlot = canPlot;
        }
 
        public int getId(){
@@ -89,9 +92,13 @@ public class EctMeasurementsDataBean{
            return dateObserved.substring(0,10);
        }
        public String getDateEntered(){
-           return dateEntered.substring(0,10);
+           //return dateEntered.substring(0,10);
+           return dateEntered;
        }       
-
+       public String getCanPlot(){           
+           return canPlot;
+       }
+       
        public void setId(int id){
            this.id = id;
        }
@@ -121,5 +128,8 @@ public class EctMeasurementsDataBean{
        }      
        public void setDateEntered(String dateEntered){
            this.dateEntered = dateEntered;
+       }
+       public void setCanPlot (String canPlot){
+           this.canPlot = canPlot;
        }
 }
