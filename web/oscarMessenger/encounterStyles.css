@@ -39,7 +39,7 @@
 .ChooseRecipientsBox{
 	font-size: 80%;
 	height: 450px;
-	/*width: 800px;*/
+	min-width: 200px;
 	overflow: auto;
     margin-left: 4px;
 	border: 1px solid #dcdcdc;
