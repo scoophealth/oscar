@@ -45,7 +45,7 @@
 
 <head>
 <title>
-<bean:message key="oscarEncounter.Measurements.msgDisplayHistory"/>
+<bean:message key="oscarEncounter.Index.oldMeasurements"/>
 </title>
 <html:base/>
 
@@ -101,8 +101,8 @@
                         <logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId = "ctr" >
                         <logic:present name="data" property="canPlot">
                         <tr class="data">
-                            <td width="5"><img src="img/chart.gif" onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>')"/></td>
-                            <td width="5"><a href="../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>"><bean:write name="data" property="type" /></a></td>
+                            <td width="5"><img src="img/chart.gif" title="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.plot"/>" onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>')"/></td>
+                            <td width="5"><bean:write name="data" property="type" /></td>
                             <td width="20"><bean:write name="data" property="providerFirstName" /> <bean:write name="data" property="providerLastName" /></td>                                                        
                             <td width="200"><bean:write name="data" property="measuringInstrc" /></td>
                             <td width="10"><bean:write name="data" property="dataField" /></td>
