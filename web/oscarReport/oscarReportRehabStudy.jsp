@@ -221,7 +221,7 @@ function showHideLayers() { //v6.0
                     <td nowrap><a href="#" onClick="generateResult('formSelfManagement');">Self Management</a></td>
                   </tr>
                   <tr>
-                    <td nowrap><a href="#" onClick="generateResult('formTreamentPref');">Treatment Preference</a></td>
+                    <td nowrap><a href="#" onClick="generateResult('formTreatmentPref');">Treatment Preference</a></td>
                   </tr>
                   <tr>
                     <td nowrap><a href="#" onClick="generateResult('formInternetAccess');">Internet Access</a></td>
