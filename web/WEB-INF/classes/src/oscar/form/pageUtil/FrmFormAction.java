@@ -327,12 +327,13 @@ public class FrmFormAction extends Action {
     
     private String connect2OSDSF(String xmlResult){
         Vector data2OSDSF = new Vector();
+        data2OSDSF.add("xml");
         data2OSDSF.add(xmlResult);
-        data2OSDSF.add("dummy");
+        //data2OSDSF.add("dummy");
         //send to osdsf thru XMLRPC
         try{
             XmlRpcClient xmlrpc = new XmlRpcClient("http://oscartest.oscarmcmaster.org:8080/osdsf/VTRpcServlet.go");
-            String result = (String) xmlrpc.execute("vt.saveAndGetRlt", data2OSDSF);
+            String result = (String) xmlrpc.execute("vt.getAndSaveRlt", data2OSDSF);
             System.out.println("Reverse result: " + result);
             return result;
         }
