@@ -40,6 +40,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.lang.*;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -110,9 +111,8 @@ public class ScatterPlotChartServlet extends HttpServlet
 	 * @return scatterPlotDataSeries
 	 ******************************************************************************************/
 	private ScatterPlotDataSeries createScatterPlotDataSeries(String demo, String type, String mInstrc)
-	{
-                
-                double[] results = generateResult(demo, type, mInstrc);
+	{                
+                long[][] results = generateResult(demo, type, mInstrc);
                 String chartTitle = type + "-" + mInstrc;                
                 ScatterPlotDataSet scatterPlotDataSet = new ScatterPlotDataSet( this.createScatterPlotProperties() );
                 ScatterPlotDataSeries scatterPlotDataSeries = null;
@@ -120,16 +120,17 @@ public class ScatterPlotChartServlet extends HttpServlet
                 if (results!=null){
                                         
                     if (type.compareTo("BP")!=0){                        
-                        Point2D.Double[] points = new Point2D.Double[ results.length ];
-                        for( int x = 0; x < results.length; x++ )
+                        Point2D.Double[] points = new Point2D.Double[ results[0].length ];
+                        for( int x = 0; x < results[0].length; x++ )
                         {                                
                                 points[ x ] = ScatterPlotDataSet.createPoint2DDouble();
-                                points[ x ].setLocation( x+1, results[x] );
+                                points[ x ].setLocation( results[0][x]-results[0][0], results[1][x] );
                         }                    
                        
+        
                         scatterPlotDataSet.addDataPoints( points, Color.red, chartTitle );                    
                         scatterPlotDataSeries = new ScatterPlotDataSeries( scatterPlotDataSet,
-                                                                           "Test Performed",
+                                                                           "Day (note: only the last data on the same observation date is plotted)",
                                                                            "Test Results",
                                                                             chartTitle);
                     }
@@ -146,36 +147,36 @@ public class ScatterPlotChartServlet extends HttpServlet
 	private DataSeries createBloodPressureDataSeries(String demo, String type, String mInstrc)
 	{
                 
-                double[] results = generateResult(demo, type, mInstrc);
+                long[][] results = generateResult(demo, type, mInstrc);
                 DataSeries dataSeries = null;           
                 String chartTitle = type + "-" + mInstrc;                
-                String xAxisTitle= "Tests";
+                String xAxisTitle= "Tests (note: only the last data on the same observation date is plotted)";
                 String yAxisTitle= "Hgmm";
                 
                 if (results!=null){
                                         
                     if (type.compareTo("BP")==0){
-                        double[][] points = new double[2][results.length/2];
+                        double[][] points = new double[2][results[1].length/2];
                         String[] legendLabels= { "Systolic", "Diastolic"};
                         Paint[] paints= {Color.red, Color.blue};
                         LineChartProperties lineChartProperties = this.createLineChartProperties();                        
-                        int offset = results.length/2;                               
+                        int offset = results[1].length/2;                               
                         String[] xAxisLabels= new String[offset];
                         
-                        for( int x = 0; x < results.length/2; x++ )
+                        for( int x = 0; x < results[1].length/2; x++ )
                         {                                
-                                System.out.println("systolic" + x + " " + results[x]);
-                                points[0][x] = results[x];
+                                System.out.println("systolic" + x + " " + results[1][x]);
+                                points[0][x] = results[1][x];
                                 int testNum = x + 1;
                                 String xAxisLabel = "test" + testNum;
                                 xAxisLabels[x] = xAxisLabel;
                                 System.out.println("xAxisLabel is " + xAxisLabels[x]);
                         }                                           
                         
-                        for( int x = 0; x < results.length/2; x++ )
+                        for( int x = 0; x < results[1].length/2; x++ )
                         {                                                               
-                                System.out.println("Diastolic" + x + results[x+offset]);
-                                points[1][x] = results[x+offset];                                                               
+                                System.out.println("Diastolic" + x + results[1][x+offset]);
+                                points[1][x] = results[1][x+offset];                                                               
                         }
                         
                         try{
@@ -200,24 +201,36 @@ public class ScatterPlotChartServlet extends HttpServlet
 	 *
 	 * @return DataSeries
 	 ******************************************************************************************/			                
-        private double[] generateResult(String demo, String type, String mInstrc){
+        private long[][] generateResult(String demo, String type, String mInstrc){
+            //plot only last data of the day?!
                         
-            double[] points = null;
+            long[][] points = null;
+            
             try{
                 if(isNumeric(type, mInstrc)){
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                    String sql = "SELECT * FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
+                    String sql = "SELECT DISTINCT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
                                  + "' ORDER BY dateObserved";
                     System.out.println("SQL Statement: " + sql);
                     ResultSet rs;
                     rs = db.GetSQL(sql);                
                     rs.last();
-                    int nbPatient = rs.getRow();
+                    int nbData = rs.getRow();
                     rs.first();
-                    points = new double[nbPatient];
-
-                    for(int i=0; i<nbPatient; i++){
-                        points[i] = rs.getDouble("dataField");
+                    points = new long[2][nbData];
+                    
+                    for(int i=0; i<nbData; i++){ 
+                        sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
+                                + "' AND dateObserved='"+rs.getString("dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                        ResultSet rsData;
+                        rsData = db.GetSQL(sql);
+                        if(rsData.next()){
+                            Date dateObserved = rs.getDate("dateObserved");
+                            points[0][i] = dateObserved.getTime()/1000/60/60/24;                        
+                            points[1][i] = rsData.getLong("dataField");
+                            System.out.println("Date: " + points[0][i] + " Value: " + points[1][i]);
+                        }
+                        rsData.close();
                         rs.next();
                     }
                     rs.close();
@@ -225,36 +238,49 @@ public class ScatterPlotChartServlet extends HttpServlet
                 }
                 else if (type.compareTo("BP")==0){
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                    String sql = "SELECT * FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
-                                 + "' ORDER BY dateObserved";
+                    String sql = "SELECT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
+                                 + "' GROUP BY dateObserved ORDER BY dateObserved";
                     System.out.println("SQL Statement: " + sql);
                     ResultSet rs;
                     rs = db.GetSQL(sql);                
-                    rs.last();
+                    rs.last();                    
                     int nbPatient = rs.getRow();
                     rs.first();
                     rs.previous();
-                    points = new double[nbPatient*2];                    
+                    points = new long[2][nbPatient*2];                    
+                    
                     boolean hasNext = true;
-                    System.out.println("size of array: " + points.length);
-                    for(int i=0; i<nbPatient; i++){                        
-                        if(rs.next()){
-                            String bloodPressure = rs.getString("dataField");
-                            int slashIndex = bloodPressure.indexOf("/");            
-                            if (slashIndex >= 0){
-                                String systolic = bloodPressure.substring(0, slashIndex);
-                                points[i] = Double.parseDouble(systolic);
-                                System.out.println("systolic: " + i + " " + systolic);
+                    System.out.println("number of record: " + Integer.toString(nbPatient));
+                    for(int i=0; i<nbPatient; i++){
+                        if(rs.next()){                            
+                            sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
+                                    + "' AND dateObserved='"+rs.getString("dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                            System.out.println("sql dateObserved: " + sql);
+                            ResultSet rsData;
+                            rsData = db.GetSQL(sql);
+                            if(rsData.next()){
+                                String bloodPressure = rsData.getString("dataField");
+                                System.out.println("bloodPressure: " + bloodPressure);
+                                int slashIndex = bloodPressure.indexOf("/");            
+                                if (slashIndex >= 0){
+                                    String systolic = bloodPressure.substring(0, slashIndex);
+                                    Date dateObserved = rs.getDate("dateObserved");
+                                    points[0][i] = dateObserved.getTime()/1000/60/60/24;                                
+                                    points[1][i] = Long.parseLong(systolic);
+                                    System.out.println("systolic: " + i + " " + systolic);
 
-                                String diastolic = bloodPressure.substring(slashIndex+1);
-                                points[i+nbPatient] = Double.parseDouble(diastolic);
-                                System.out.println("diastolic: " + points[i+nbPatient]);
-                            }                                                                          
+                                    String diastolic = bloodPressure.substring(slashIndex+1);
+                                    points[0][i+nbPatient] = dateObserved.getTime()/1000/60/60/24;
+                                    points[1][i+nbPatient] = Long.parseLong(diastolic);
+                                    System.out.println("diastolic: " + points[1][i+nbPatient]);
+                                }                                                                          
+                            }
+                            rsData.close();
                         }
                     }
-                    for(int i=0; i<nbPatient; i++){ 
+                    /*for(int i=0; i<nbPatient; i++){ 
                         System.out.println("the result is: " + points[i]);
-                    }
+                    }*/
                     System.out.println("Store blood pressure data to a new array successfully" );
                     rs.close();
                     db.CloseConn();
