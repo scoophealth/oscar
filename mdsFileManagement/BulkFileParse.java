@@ -778,9 +778,9 @@ public class BulkFileParse {
                     ((MDSHL7Message)aList.get(i)).getOBXNode(o).setObservationValue(thisSegment);
                     thisSegment = getSegment(stringToken,3);
                     ((MDSHL7Message)aList.get(i)).getOBXNode(o).setAbnormalFlags(thisSegment);
-                    thisSegment = getSegment(stringToken,2);
+                    thisSegment = getSegment(stringToken,3);
                     ((MDSHL7Message)aList.get(i)).getOBXNode(o).setObservationResultStatus(thisSegment);
-                    thisSegment = getSegment(stringToken,2);
+                    thisSegment = getSegment(stringToken,4);
                     ((MDSHL7Message)aList.get(i)).getOBXNode(o).setProducersID(thisSegment);
                     ((MDSHL7Message)aList.get(i)).getOBXNode(o).setAssociatedOBR(q);
                     //Increment l to prepare for the next pass through this block for this
