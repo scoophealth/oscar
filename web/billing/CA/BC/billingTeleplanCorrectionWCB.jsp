@@ -444,11 +444,11 @@ Form Needed <input type="checkbox" value="1" name="formNeeded" onclick="isformNe
 		<select style="font-size:80%;" name="status">
                 <option value="">--- Select Bill Type ---</option>
       		<!--<option value="H" <%=status.equals("H")?"selected":""%>>H | Capitated</option>-->
-                <option value="O" <%=status.equals("O")?"selected":""%>>O | Bill MSP</option>
+                <option value="O" <%=status.equals("O")?"selected":""%>>O | Bill WCB</option>
                 <option value="P" <%=status.equals("P")?"selected":""%>>P | Bill Patient</option>
                 <option value="A" <%=status.equals("A")?"selected":""%>>A | Paid Private</option>
                 <option value="N" <%=status.equals("N")?"selected":""%>>N | Do Not Bill</option>
-                <option value="W" <%=status.equals("W")?"selected":""%>>W | Bill Worker's Compensation Board</option>
+                <!--<option value="W" <%=status.equals("W")?"selected":""%>>W | Bill Worker's Compensation Board</option>-->
                 <option value="B" <%=status.equals("B")?"selected":""%>>B | Summitted MSP</option>
                 <option value="S" <%=status.equals("S")?"selected":""%>>S | Settled/Paid by MSP</option>
                 <option value="X" <%=status.equals("X")?"selected":""%>>X | Bad Debt</option>
