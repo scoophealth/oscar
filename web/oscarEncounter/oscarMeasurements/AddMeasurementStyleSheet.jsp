@@ -35,7 +35,7 @@
 <html:html locale="true">
 <head>
 <title>
-<bean:message key="oscarEncounter.Measurements.msgDefineNewMeasurementGroup"/>
+<bean:message key="oscarEncounter.Measurements.msgAddMeasurementStyleSheet"/>
 </title>
 
 </head>
@@ -52,7 +52,7 @@
             <td class="MainTableTopRowRightColumn" width="400">
                 <table class="TopStatusBar" >                 
                     <tr>
-                        <td ><bean:message key="oscarEncounter.Measurements.msgDefineNewMeasurementGroup"/></td>                        
+                        <td ><bean:message key="oscarEncounter.Measurements.msgAddMeasurementStyleSheet"/></td>                        
                         <td style="text-align:right">
                                 <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
@@ -69,8 +69,7 @@
                     <td>
                         <table>
                             <tr>
-                                <td>
-                                    
+                                <td>                                    
                                     <logic:present name="messages">
                                         <tr>
                                             <logic:iterate id="msg" name="messages">
@@ -80,7 +79,7 @@
                                     </logic:present>              
                                     <tr>
                                         <td align="left">
-                                            <bean:message key="oscarEncounter.oscarMeasurements.addMeasurementGroup.createNewMeasurementGroupName"/>
+                                            <bean:message key="oscarEncounter.oscarMeasurements.createNewMeasurementStyleSheet"/>
                                         </td>
                                     </tr>                                    
                                     <tr>
