@@ -1,0 +1,43 @@
+<!-- edited with XML Spy v4.4 (http://www.xmlspy.com) by Neil Grigor (Killdara Corporation) -->
+<!-- Developed to comply with XML 1.0 specifications. This DTD has been custom developed to meet the needs of the COMPETE II Project. -->
+<!--	
+    $Revision: 1.1 $	
+    $Date: 2004-02-13 15:13:52 $	
+    COMPETE II Project DTD	
+    Copyright 2002, All Rights Reserved	
+
+    $Name:  $	
+
+All date formats to be ISO: YYYY-MM-DD	
+
+-->
+<!ELEMENT contact (contact_healthnumber, contact_firstname?, contact_middlename?, contact_lastname, contact_sex?, contact_dob, conidentity*, conphone*, conEHRpatient*)>
+<!ELEMENT conidentity (conidentity_type?, conidentity_addrstreet?, conidentity_addrcity?, conidentity_addrprovince?, conidentity_addrcountry?, conidentity_addrpostal?)>
+<!ELEMENT conphone (conphone_phonetype?, conphone_phonenumber)>
+<!ELEMENT conEHRpatient (conEHRpatient_EHR_id, conEHRpatient_EHRpatient_id?)>
+<!ELEMENT contact_healthnumber (#PCDATA)>
+<!-- provincial healthcard number to uniquely identify patient -->
+<!ELEMENT contact_firstname (#PCDATA)>
+<!ELEMENT contact_middlename (#PCDATA)>
+<!ELEMENT contact_lastname (#PCDATA)>
+<!-- if first and last name are combined in the vendor EMR, place data in here -->
+<!ELEMENT contact_sex (#PCDATA)>
+<!-- {M, F} -->
+<!ELEMENT contact_dob (#PCDATA)>
+<!-- the following elements provide details on the patient's address information -->
+<!ELEMENT conidentity_type (#PCDATA)>
+<!-- specifies the type of address, example home, business, cottage, etc. -->
+<!ELEMENT conidentity_addrstreet (#PCDATA)>
+<!ELEMENT conidentity_addrcity (#PCDATA)>
+<!ELEMENT conidentity_addrprovince (#PCDATA)>
+<!-- please provide a 2 letter province abbreviation, Quebec = QC -->
+<!ELEMENT conidentity_addrcountry (#PCDATA)>
+<!ELEMENT conidentity_addrpostal (#PCDATA)>
+<!-- the following elements provide details on the patient's phone information -->
+<!ELEMENT conphone_phonetype (#PCDATA)>
+<!ELEMENT conphone_phonenumber (#PCDATA)>
+<!-- the following elements provide details on the patient's EHR specific details -->
+<!ELEMENT conEHRpatient_EHR_id (#PCDATA)>
+<!-- {PEPPER=1, OSCAR=2, MacMedical=3, Clinicare=4} -->
+<!ELEMENT conEHRpatient_EHRpatient_id (#PCDATA)>
+<!-- Patient ID within the EHR system.  This prevents the system from confusing the same patient who may be seeing multiple doctors -->

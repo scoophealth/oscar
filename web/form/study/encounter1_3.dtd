@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 (http://www.xmlspy.com) by Neil Grigor (Killdara Corporation) -->
+<!-- Developed to comply with XML 1.0 specifications. This DTD has been custom developed to meet the needs of the COMPETE II Project. -->
+<!--
+    $Revision: 1.1 $
+    $Date: 2004-02-13 15:13:52 $
+    COMPETE II Project DTD
+    Copyright 2003, All Rights Reserved
+
+    $Name:  $
+
+-->
+<!ELEMENT encounter (contact_healthnumber, encounter_date?, encounter_entry_date, encounter_class_ID, vitals*, lab*, health_conditions*, surgical*, med_alert*, referal*, risk_factors*, family_history*, other_treatment*, immunization*, adverse_reactions*, medication*, health_status*)>
+<!ELEMENT vitals (vital_sign_name, vitals_result, vital_notes?)>
+<!ELEMENT lab (lab_test_name, test_order_date?, test_done_date?, lab_results, lab_uom?, lab_normal_range?)>
+<!ELEMENT health_conditions (health_condition_name?, health_condition_code?, health_condition_code_format?, health_condition_onset_date?, health_condition_notes?, health_condition_original_notes?, health_condition_diagnosis_confidence?, health_condition_date_resolved?, health_condition_past_history_flag?)>
+<!ELEMENT surgical (surgical_procedure_name?, surgical_procedure_date?, surgical_procedure_code?, surgical_surgery_date?, surgical_code_format?, surgical_notes?)>
+<!ELEMENT med_alert (med_alert_name, med_alert_date?, med_alert_notes?)>
+<!ELEMENT referal (referal_type?, referal_hospitalization_reason?, referal_result?, referal_date_of_hospitalization?)>
+<!ELEMENT risk_factors (risk_factors_name, risk_factors_date?, risk_factors_notes?, risk_factors_stop_date?, risk_factors_quantity?, risk_factors_intensity?, risk_factors_frequency?, risk_factors_code?)>
+<!ELEMENT family_history (family_history_relationship_type?, family_history_health_condition_name?, family_history_onset_age?, family_history_treatment?, family_history_notes?)>
+<!ELEMENT other_treatment (other_treatment_name, other_treatment_date?, other_treatment_outcome?)>
+<!ELEMENT immunization (immunization_name, immunization_date?, immunization_refuse_date?, immunization_notes?)>
+<!ELEMENT adverse_reactions (adverse_reactions_name, adverse_reactions_date?, adverse_reactions_type?, adverse_reactions_intensity?, adverse_reactions_offending_drug?, adverse_reactions_offending_non_Rx?, adverse_reactions_resolve_date?, adverse_reactions_notes?)>
+<!ELEMENT medication (medication_EHR_supplied_drug_name, medication_GPI?, medication_prescription_date?, medication_drug_strength?, medication_drug_dose?, medication_drug_quantity?, medication_drug_PRN?, medication_duration_days?, medication_repeats?, medication_special_instructions?, medication_outcome?, medication_stop_date?, medication_stop_comment?, medication_effective_date?, medication_end_date?, medication_stop_reason_description?, medication_drug_form_description?, medication_drug_route_description?, medication_drug_unit_description?, medication_drug_named_frequency_description?, medication_drug_named_frequency_val?)>
+<!ELEMENT health_status (health_status_diagnosis_severity?, health_status_level_of_function?, health_status_discomfort?, health_status_charlson_index?, health_status_chronic_disease_score?)>
+<!ELEMENT contact_healthnumber (#PCDATA)>
+<!ELEMENT encounter_date (#PCDATA)>
+<!ELEMENT encounter_entry_date (#PCDATA)>
+<!-- current date when the XML document is generated -->
+<!ELEMENT encounter_class_ID (#PCDATA)> <!-- for the hdCourier this value is "2" -->
+<!-- the following elements provide details on the patient's vital signs -->
+<!ELEMENT vital_sign_name (#PCDATA)>
+<!-- See enumerated list, or free text -->
+<!ELEMENT vitals_result (#PCDATA)>
+<!ELEMENT vital_notes (#PCDATA)>
+<!-- the following elements provide details on the patient's lab tests and results -->
+<!ELEMENT lab_test_name (#PCDATA)>
+<!ELEMENT test_order_date (#PCDATA)>
+<!ELEMENT test_done_date (#PCDATA)>
+<!ELEMENT lab_results (#PCDATA)>
+<!ELEMENT lab_uom (#PCDATA)>
+<!-- Unit of measurement of the lab test result, e.g, mg, U, mL, mmol/L, etc -->
+<!ELEMENT lab_normal_range (#PCDATA)>
+<!-- the following elements provide details on the patient's medical conditions; e.g., diabetes, atrial fibrillation -->
+<!ELEMENT health_condition_name (#PCDATA)>
+<!-- condition obtained form a pick list, if not from list use health_condition_notes instead-->
+<!ELEMENT health_condition_code (#PCDATA)>
+<!-- the code applicable to the health condition in the format specified below -->
+<!ELEMENT health_condition_code_format (#PCDATA)>
+<!-- e.g., ICD9, ICD9-CM, ICD10, ENCODE FM, etc. -->
+<!ELEMENT health_condition_onset_date (#PCDATA)>
+<!ELEMENT health_condition_notes (#PCDATA)>
+<!-- the text desc. of the condition if it was not obtained from a pick list -->
+<!ELEMENT health_condition_original_notes (#PCDATA)>
+<!-- any notes that qualify or describe the health condition in more detail -->
+<!ELEMENT health_condition_diagnosis_confidence (#PCDATA)>
+<!-- free text, if available.  E.g., 'query', differential, etc. -->
+<!ELEMENT health_condition_date_resolved (#PCDATA)>
+<!ELEMENT health_condition_past_history_flag (#PCDATA)>
+<!-- true if in past history, false if not in past history -->
+<!-- the following elements provide details on the patient's surgical conditions -->
+<!ELEMENT surgical_procedure_name (#PCDATA)>
+<!ELEMENT surgical_procedure_date (#PCDATA)>
+<!ELEMENT surgical_procedure_code (#PCDATA)>
+<!ELEMENT surgical_surgery_date (#PCDATA)>
+<!ELEMENT surgical_code_format (#PCDATA)>
+<!-- e.g., CPT, CCA, ICD9, ICD9-CM, ICD10, ENCODE FM, etc. -->
+<!ELEMENT surgical_notes (#PCDATA)>
+<!-- any notes that qualify or describe the surgery in more detail -->
+<!-- the following elements provide details on medical alerts  -->
+<!ELEMENT med_alert_name (#PCDATA)>
+<!-- Brief descriptor of alert -e.g., No blood transfusion (Jehovah's Witness), etc. -->
+<!ELEMENT med_alert_date (#PCDATA)>
+<!ELEMENT med_alert_notes (#PCDATA)>
+<!-- the following elements provide details on referrals made to specialists OR visits to hospital -->
+<!ELEMENT referal_type (#PCDATA)>
+<!-- see enumerated list "Referral Type"-->
+<!ELEMENT referal_hospitalization_reason (#PCDATA)>
+<!-- reason for hospitalization or for referral -->
+<!ELEMENT referal_result (#PCDATA)>
+<!-- diagnosis or outcome of referral -->
+<!ELEMENT referal_date_of_hospitalization (#PCDATA)>
+<!-- the following elements provide details on the patient's risk factors for disease, such as smoking, drugs and alcohol -->
+<!ELEMENT risk_factors_name (#PCDATA)>
+<!-- See enumerated list, or free text -->
+<!ELEMENT risk_factors_date (#PCDATA)>
+<!-- date on which the risk factor was started -e.g, smoking start date -->
+<!ELEMENT risk_factors_notes (#PCDATA)>
+<!ELEMENT risk_factors_stop_date (#PCDATA)>
+<!ELEMENT risk_factors_quantity (#PCDATA)>
+<!-- packs/ozs per day; minutes of exercise/workout-->
+<!ELEMENT risk_factors_intensity (#PCDATA)>
+<!-- {mild, moderate, intense} -->
+<!ELEMENT risk_factors_frequency (#PCDATA)>
+<!-- workouts/week -->
+<!ELEMENT risk_factors_code (#PCDATA)>
+<!-- the following elements provide details on the patient's family history -->
+<!ELEMENT family_history_relationship_type (#PCDATA)>
+<!-- describes relationship TO the patient; e.g., father (of patient), -->
+<!ELEMENT family_history_health_condition_name (#PCDATA)>
+<!ELEMENT family_history_onset_age (#PCDATA)>
+<!ELEMENT family_history_treatment (#PCDATA)>
+<!ELEMENT family_history_notes (#PCDATA)>
+<!-- the following elements provide details on the treatments other than medications prescribed for the patient -->
+<!ELEMENT other_treatment_name (#PCDATA)>
+<!-- name of treatment other than medication; e.g., herbals, acupuncture, physiotherapy-->
+<!ELEMENT other_treatment_date (#PCDATA)>
+<!ELEMENT other_treatment_outcome (#PCDATA)>
+<!-- the following elements provide details on the patient's immunization history -->
+<!ELEMENT immunization_name (#PCDATA)>
+<!ELEMENT immunization_date (#PCDATA)>
+<!ELEMENT immunization_refuse_date (#PCDATA)>
+<!ELEMENT immunization_notes (#PCDATA)>
+<!-- the following elements provide details on the patient's adverse reactions to medications or other offending agents (e.g. food, pets, chemicals, environmental), including allergies, intolerances and sensitivities -->
+<!ELEMENT adverse_reactions_name (#PCDATA)>
+<!-- allergy,-->
+<!ELEMENT adverse_reactions_date (#PCDATA)>
+<!ELEMENT adverse_reactions_type (#PCDATA)>
+<!-- E.g., hives, respiratory difficulty, anaphylaxis, etc.-->
+<!ELEMENT adverse_reactions_intensity (#PCDATA)>
+<!-- {mild, moderate, severe} -->
+<!ELEMENT adverse_reactions_offending_drug (#PCDATA)>
+<!-- drug only.  Use drug code listed below in medication records-->
+<!ELEMENT adverse_reactions_offending_non_Rx (#PCDATA)>
+<!-- non-drug causes, including pets, etc.-->
+<!ELEMENT adverse_reactions_resolve_date (#PCDATA)>
+<!ELEMENT adverse_reactions_notes (#PCDATA)>
+<!-- the following elements provide details on the patient's medications -->
+<!ELEMENT medication_EHR_supplied_drug_name (#PCDATA)>
+<!-- name of drug as entered by physician-->
+<!ELEMENT medication_GPI (#PCDATA)>
+<!-- GPI code of drug, if available -->
+<!ELEMENT medication_prescription_date (#PCDATA)>
+<!ELEMENT medication_drug_strength (#PCDATA)>
+<!-- # of units of medication in a single tablet or other dose form -->
+<!-- e.g., mg, mL, units,   -->
+<!ELEMENT medication_drug_dose (#PCDATA)>
+<!-- # of dose units prescribed per administration; e.g., tablet, caplet, teaspoons, etc.-->
+<!-- tablet, caplet, syrup, injectible, etc. -->
+<!-- e.g., po, pr, im, iv, etc.  -->
+<!ELEMENT medication_drug_frequency (#PCDATA)>
+<!-- frequency of administration; e.g., od, bid, tid, q4h, q8h etc.-->
+<!ELEMENT medication_drug_quantity (#PCDATA)>
+<!-- amount dispensed; e.g., 40 tablets, 200 mL, etc. -->
+<!ELEMENT medication_drug_PRN (#PCDATA)>
+<!-- true or false-->
+<!ELEMENT medication_duration_days (#PCDATA)>
+<!-- number of days for which the medication is prescribed-->
+<!ELEMENT medication_repeats (#PCDATA)>
+<!-- number of repeats -->
+<!ELEMENT medication_special_instructions (#PCDATA)>
+<!ELEMENT medication_outcome (#PCDATA)>
+<!ELEMENT medication_stop_date (#PCDATA)>
+<!-- date on which the medication was stopped -->
+<!ELEMENT medication_stop_comment (#PCDATA)>
+<!-- reason for stopping the medication-->
+<!ELEMENT medication_effective_date (#PCDATA)>
+<!-- date medication was started -->
+<!ELEMENT medication_end_date (#PCDATA)>
+<!-- date medication is expected to end -->
+<!ELEMENT medication_stop_reason_description (#PCDATA)>
+<!ELEMENT medication_drug_form_description (#PCDATA)>
+<!ELEMENT medication_drug_route_description (#PCDATA)>
+<!ELEMENT medication_drug_unit_description (#PCDATA)>
+<!ELEMENT medication_drug_named_frequency_description (#PCDATA)>
+<!ELEMENT medication_drug_named_frequency_val (#PCDATA)>
+<!ELEMENT health_status_diagnosis_severity (#PCDATA)>
+<!ELEMENT health_status_level_of_function (#PCDATA)>
+<!ELEMENT health_status_discomfort (#PCDATA)>
+<!ELEMENT health_status_charlson_index (#PCDATA)>
+<!ELEMENT health_status_chronic_disease_score (#PCDATA)>

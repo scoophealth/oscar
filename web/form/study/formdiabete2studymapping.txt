@@ -1,0 +1,85 @@
+# add form glucose for lab
+contact.contact_firstname			:demographic.first_name
+contact.contact_lastname			:demographic.last_name
+contact.contact_sex				:demographic.sex
+contact.contact_dob				:demographic.dob
+contact.conidentity.conidentity_type		:home
+contact.conidentity.conidentity_addrstreet	:demographic.address
+contact.conidentity.conidentity_addrcity	:demographic.city
+contact.conidentity.conidentity_addrprovince	:demographic.province
+contact.conidentity.conidentity_addrcountry	:Canada
+contact.conidentity.conidentity_addrpostal	:demographic.postal
+contact.conphone.conphone_phonetype		:Phone
+contact.conphone.conphone_phonenumber		:demographic.phone
+contact.conEHRpatient.conEHRpatient_EHR_id	:2
+contact.conEHRpatient.conEHRpatient_EHRpatient_id	:demographic.demographic_no
+
+encounter.contact_healthnumber			:demographic.hin
+encounter.encounter_date			:formType2Diabetes.formEdited
+encounter.encounter_entry_date				:formType2Diabetes.formEdited
+encounter.encounter_class_ID             	:2
+
+encounter.vitals.vital_sign_name^1             	:BP
+encounter.vitals.vitals_result^1             	:formType2Diabetes.bp
+encounter.vitals.vital_notes^1             	:
+encounter.vitals.vital_sign_name^2             	:WT
+encounter.vitals.vitals_result^2             	:formType2Diabetes.weight
+encounter.vitals.vital_notes^2             	:
+encounter.vitals.vital_sign_name^3             	:HT
+encounter.vitals.vitals_result^3             	:formType2Diabetes.height
+encounter.vitals.vital_notes^3             	:
+
+encounter.lab.lab_test_name^1             	:TG
+encounter.lab.lab_results^1             	:formType2Diabetes.lipidsA
+encounter.lab.lab_test_name^2             	:LDL
+encounter.lab.lab_results^2             	:formType2Diabetes.lipidsB
+encounter.lab.lab_test_name^3             	:TC/HDL
+encounter.lab.lab_results^3             	:formType2Diabetes.lipidsC
+
+encounter.health_conditions.health_condition_name^1        		:Eye Exam
+encounter.health_conditions.health_condition_notes^1			:formType2Diabetes.eyes
+encounter.health_conditions.health_condition_past_history_flag^1       	:N
+encounter.health_conditions.health_condition_name^2        		:Foot Exam
+encounter.health_conditions.health_condition_notes^2			:formType2Diabetes.feet
+encounter.health_conditions.health_condition_past_history_flag^2       	:N
+
+encounter.health_conditions.health_condition_name^*        		:eChart.ongoingConcerns
+encounter.health_conditions.health_condition_past_history_flag^*       	:Y
+
+encounter.risk_factors.risk_factors_name^1	        		:Smoking
+encounter.risk_factors.risk_factors_notes^1	        		:formType2Diabetes.lifestyle
+encounter.risk_factors.risk_factors_quantity^1	        		:
+encounter.risk_factors.risk_factors_name^2	        		:Exercise
+encounter.risk_factors.risk_factors_notes^2	        		:
+encounter.risk_factors.risk_factors_quantity^2	        		:formType2Diabetes.exercise
+encounter.risk_factors.risk_factors_name^3	        		:Alcohol
+encounter.risk_factors.risk_factors_notes^3	        		:formType2Diabetes.alcohol
+encounter.risk_factors.risk_factors_quantity^3	        		:
+encounter.risk_factors.risk_factors_name^4	        		:Sexual Function
+encounter.risk_factors.risk_factors_notes^4	        		:formType2Diabetes.sexualFunction
+encounter.risk_factors.risk_factors_quantity^4	        		:
+encounter.risk_factors.risk_factors_name^5	        		:Diet
+encounter.risk_factors.risk_factors_notes^5	        		:formType2Diabetes.diet
+encounter.risk_factors.risk_factors_quantity^5	        		:
+
+encounter.adverse_reactions.adverse_reactions_name        		:Allergy
+encounter.adverse_reactions.adverse_reactions_offending_drug^*       	:allergies.DESCRIPTION
+
+encounter.medication.medication_EHR_supplied_drug_name^*       		:drugs.BN
+encounter.medication.medication_prescription_date^*		       	:drugs.rx_date
+encounter.medication.medication_drug_strength^*		       		:RxDrugData.GCN.getStrength()
+# encounter.medication.medication_drug_dose^*		       		:RxDrugData.GCN.getDoseForm() 
+
+encounter.medication.medication_drug_quantity^*		     		:drugs.quantity
+encounter.medication.medication_drug_PRN^*		       		:drugs.prn
+encounter.medication.medication_duration_days^*		       		:drugs.duration
+encounter.medication.medication_special_instructions^*		       	:drugs.special
+encounter.medication.medication_end_date^*			       	:drugs.end_date
+
+encounter.medication.medication_drug_form_description^*  		:RxDrugData.GCN.getDoseForm() 
+encounter.medication.medication_drug_named_frequency_description^*     	:drugs.freqcode
+encounter.medication.medication_drug_route_description^*	       	:RxDrugData.GCN.getRoute()
+
+
+
+
