@@ -86,7 +86,11 @@ extends org.apache.struts.action.ActionForm {
    w_feeitem = "",
    w_extrafeeitem = "",
    status = "",
-   formNeeded = "";
+   formNeeded = "",
+   providerNo = "",
+   w_payeeno = "",
+   w_pracno = "";
+
    ;
    public TeleplanCorrectionFormWCB() {
       super();
@@ -153,6 +157,9 @@ extends org.apache.struts.action.ActionForm {
             w_extrafeeitem = result.getString("w_extrafeeitem");
             status = result.getString("billingstatus");  
             formNeeded = result.getString("formNeeded");
+            providerNo = result.getString("wcb.provider_no");
+            w_payeeno = result.getString("w_payeeno");
+            w_pracno = result.getString("w_pracno");
          }
       }
       catch (java.lang.Exception ex) {
@@ -533,6 +540,7 @@ extends org.apache.struts.action.ActionForm {
    }
    //TODO check to see if this works.  i think if you escape a prepared statement you end up with double escaped text
    public String[] getWcb(String billamt) {
+      System.out.println("reseting wcb with bill amount "+billamt);
       DemographicData demoData = new DemographicData();
       DemographicData.Demographic demo = demoData.getDemographic(this.demographicNumber);      
       return new String[] {
@@ -614,6 +622,54 @@ extends org.apache.struts.action.ActionForm {
     */
    public void setFormNeeded(java.lang.String formNeeded) {
       this.formNeeded = formNeeded;
+   }
+   
+   /**
+    * Getter for property providerNo.
+    * @return Value of property providerNo.
+    */
+   public java.lang.String getProviderNo() {
+      return providerNo;
+   }
+   
+   /**
+    * Setter for property providerNo.
+    * @param providerNo New value of property providerNo.
+    */
+   public void setProviderNo(java.lang.String providerNo) {
+      this.providerNo = providerNo;
+   }
+   
+   /**
+    * Getter for property w_payeeno.
+    * @return Value of property w_payeeno.
+    */
+   public java.lang.String getW_payeeno() {
+      return w_payeeno;
+   }
+   
+   /**
+    * Setter for property w_payeeno.
+    * @param w_payeeno New value of property w_payeeno.
+    */
+   public void setW_payeeno(java.lang.String w_payeeno) {
+      this.w_payeeno = w_payeeno;
+   }
+   
+   /**
+    * Getter for property w_pracno.
+    * @return Value of property w_pracno.
+    */
+   public java.lang.String getW_pracno() {
+      return w_pracno;
+   }
+   
+   /**
+    * Setter for property w_pracno.
+    * @param w_pracno New value of property w_pracno.
+    */
+   public void setW_pracno(java.lang.String w_pracno) {
+      this.w_pracno = w_pracno;
    }
    
 }
