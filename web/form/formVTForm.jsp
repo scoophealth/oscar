@@ -252,6 +252,11 @@ function showHideDetail(){
     showHideItem('detailCounselling');
     showHideItem('showDetailTitle');
     showHideItem('hideDetailTitle');
+    showHideItem('bigS');
+    showHideItem('bigO');
+    showHideItem('bigA');
+    showHideItem('bigP');
+    showHideItem('assessment');
     
 }
 
@@ -649,6 +654,13 @@ function clearAll(yRadio, nRadio){
                                                     <tr>
                                                         <td valign="top" width="22%">
                                                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
+                                                            <table width="100%" id="showDetailTitle" >
+                                                                <tr><th><a href="javascript: showHideDetail();">Show Details >></a></th></tr>
+                                                            </table>
+                                                            <table style="display:none" width="100%" id="hideDetailTitle">
+                                                                <tr><th><a href="javascript: showHideDetail();">Hide Details << </a></th></tr>
+                                                            </table>    
+                                                            
                                                         </td>
                                                         <td  width="53%">
                                                             <table>
@@ -691,7 +703,7 @@ function clearAll(yRadio, nRadio){
                                                 </table>                                                
                                             </td>
                                         </tr>            
-                                        <tr>                                            
+                                        <!--tr>                                            
                                             <th colspan='2'>
                                                 <table width="100%" id="showDetailTitle" >
                                                     <tr><th><a href="javascript: showHideDetail();">Show Details >></a></th></tr>
@@ -700,9 +712,9 @@ function clearAll(yRadio, nRadio){
                                                     <tr><th><a href="javascript: showHideDetail();">Hide Details << </a></th></tr>
                                                 </table>
                                             </th>
-                                        </tr>
+                                        </tr-->                                        
                                         <tr>
-                                            <th class="soap" width="2%">S</th>
+                                            <th class="soap" width="2%"><span id="bigS" style="display:none;" >S</span></th>
                                             <th>
                                                 <table id="subjective" style="display:none">
                                                     <tr>
@@ -712,7 +724,7 @@ function clearAll(yRadio, nRadio){
                                                     </tr> 
                                                 </table>
                                             </th>
-                                        </tr>
+                                        </tr>                                        
                                         <tr>
                                             <th></th>
                                             <th class="title" width="98%">
@@ -808,7 +820,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="subTitle" width="39%">                                                        
                                                     </td>                                                    
                                                     <td class="subTitle" width="16%">
-                                                        Last Data<br> Entered on
+                                                        Last Data
                                                     </td>
                                                     <td class="subTitle" width="10%">
                                                         New Data
@@ -1007,8 +1019,8 @@ function clearAll(yRadio, nRadio){
                                              </table></td></tr>
                                             </table></td>
                                         </tr>
-                                        <tr>
-                                            <th class="soap" width="2%">O</th>
+                                        <tr >
+                                            <th class="soap" width="2%"><span id="bigO" style="display:none;" >O</span></th>
                                             <th>
                                                 <table id="objective" style="display:none">
                                                     <tr>
@@ -1541,9 +1553,9 @@ function clearAll(yRadio, nRadio){
                                             </table></td>
                                         </tr>
                                         <tr>
-                                            <th class="soap" width="2%">A</th>
-                                            <th>
-                                                <html:textarea property="value(assessment)" cols="78" style="height:40"></html:textarea>
+                                            <th class="soap" width="2%"><span id="bigA" style="display:none;" >A</span></th>
+                                            <th>                                               
+                                                <html:textarea property="value(assessment)" cols="78" style="height:40;display:none;" styleId="assessment"></html:textarea>
                                             </th>
                                         </tr>
                                         <tr>
@@ -1570,7 +1582,7 @@ function clearAll(yRadio, nRadio){
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th class="soap" width="2%">P</th>
+                                            <th class="soap" width="2%"><span id="bigP" style="display:none;" >P</span></th>
                                             <th>
                                                 <table id="plan" style="display:none">
                                                     <tr>
