@@ -64,35 +64,19 @@ public class DocumentMgtUploadServlet extends HttpServlet{
     String temp = request.getContentType().substring(count+1);
     String filename = "test.txt", fileoldname="", foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="", doctype="", docxml="";
   String home_dir="", doc_forward="";
-java.util.Enumeration enum = request.getParameterNames();
-while (enum.hasMoreElements()){
-   String Daparam = ((String) enum.nextElement());
-   System.out.println("parametro: " + Daparam + "\tvalor: "+ request.getParameter(Daparam));
-}
- String userHomePath = System.getProperty("user.home", "user.dir");
-  //    System.out.println(userHomePath);
-      //File pFile = new File(userHomePath, backupfilepath+".properties");
-      //FileInputStream pStream = new FileInputStream(pFile.getPath());
 
-      // Get properties from oscar_mcmaster.properties
-       Properties ap = OscarProperties.getInstance();
-      //ap.load(pStream);
-      //Main configuration file. This file must be saved on WEB-INF at the webapp diretory.
-      //The file name is defined on the page an its read as a parameter (propName).
-      // String pathSeparator = System.getProperty("file.separator");
-      //String mainConfigFileName = getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+"oscar_mcmaster.properties";
-      //ap.load(new FileInputStream(new File(mainConfigFileName)));
+    // Get properties from oscar_mcmaster.properties
+    Properties ap = OscarProperties.getInstance();
       
-      forwardTo  = ap.getProperty("DOC_FORWARD");
-      foldername = ap.getProperty("DOCUMENT_DIR");
-      //pStream.close();
+    forwardTo  = ap.getProperty("DOC_FORWARD");
+    foldername = ap.getProperty("DOCUMENT_DIR");
 
    // function = request.getParameter("function");
    // function_id = request.getParameter("functionid");
    // filedesc = request.getParameter("filedesc");
    // creator = request.getParameter("creator");
 
-   ServletInputStream sis = request.getInputStream();
+    ServletInputStream sis = request.getInputStream();
     BufferedOutputStream dest = null;
     FileOutputStream fos = null;
     boolean bwri = false;
@@ -104,28 +88,39 @@ while (enum.hasMoreElements()){
     while (bf?true:((count = sis.readLine(data, 0, BUFFER)) != -1)) {
       bf = false;
      	benddata = false;
+
+	/* if the line is a blank line */
      	if(count==2 && data[0]==13 && data[1]==10) {
      		enddata[0] = 13;
      		enddata[1] = 10;
      		for(int i=0;i<BUFFER;i++) data[i]=0;
 
      		count = sis.readLine(data, 0, BUFFER);
-     	  if(count==2 && data[0]==13 && data[1]==10) {
-    		  dest.write(enddata, 0, 2);
-          bf = true;
-          continue;
-        } else {
-          benddata = true;
-        }
-      }
+		if(count==2 && data[0]==13 && data[1]==10) {
+		    dest.write(enddata, 0, 2);
+		    bf = true;
+		    continue;
+		} else {
+		    benddata = true;
+		}
+	} /* end blank line */
+
+
      	String s = new String(data,2,temp.length());
      	if(temp.equals(s)) {
     		if(benddata) break;
      		if((c =sis.readLine(data1, 0, BUFFER)) != -1) {
      			filename = new String(data1);
       		if(filename.length()>2 && filename.indexOf("filename")!=-1) {
-     			  filename = filename.substring(filename.lastIndexOf('\\')+1,filename.lastIndexOf('\"'));
-            //System.out.println("filename: "+filename);
+		    /* extract the filename of this string.
+		       On windows, filename should be filename="C:\file.name"
+		       But on linux filename is filename="file.name"
+		    */
+		    filename = filename.substring(filename.lastIndexOf("filename=\"") + "filename\"".length() +1,
+						  filename.lastIndexOf('"'));
+		    /* on windows, this is necessary. If the file has the string '\', this will fail. */
+		    filename = filename.substring(filename.lastIndexOf('\\')+1, filename.length());
+			  
         fileheader = output +  filename;
             fos = new FileOutputStream(foldername+ output + filename);
             dest = new BufferedOutputStream(fos, BUFFER);

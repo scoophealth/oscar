@@ -33,7 +33,7 @@
  
    <%   
    String filename="", filetype="", doc_no="";
-                         String docdownload = oscarVariables.getProperty("DOCUMENT_DIR") ;;
+                         String docdownload = oscar.OscarProperties.getInstance() .getProperty("DOCUMENT_DIR") ;
        session.setAttribute("docdownload", docdownload);      
 
    
@@ -44,16 +44,18 @@
   doc_no = request.getParameter("doc_no");
 // response.sendRedirect("../document/"+filename);
 
+   String filePath = request.getContextPath() + System.getProperty("file.separator") + docdownload + System.getProperty("file.separator") + filename;
 if (filetype.compareTo("active") == 0){
+
 %>
 <html:html locale="true">
 <head>
 <title><bean:message key="dms.documentGetFile.title"/></title>
 <meta http-equiv="Content-Type" content="text/html;">
 </head>
-<frameset rows="21,*" frameborder="NO" border="0" framespacing="0" cols="*"> 
+<frameset rows="21,*" frameborder="NO" border="0" frames.opera/cache4/pacing="0" cols="*"> 
   <frame name="topFrame" scrolling="NO" noresize src="docViewerHead.jsp" >
-  <frame name="mainFrame" src="../../OscarDocument/<%=oscarVariables.getProperty("project_home")%>/document/<%=filename%>">
+  <frame name="mainFrame" src="<%=filePath%>">
 </frameset>
 <noframes>
 <body bgcolor="#FFFFFF" text="#000000">
@@ -68,12 +70,14 @@ if (filetype.compareTo("active") == 0){
  	  
 
    %>
+
 <%= rslocal2.getString("docxml")%>
   
  <%
  }
    }
    }else{
+
    %>
    <jsp:forward page='../dms/errorpage.jsp' >
    <jsp:param name="msg" value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>' />

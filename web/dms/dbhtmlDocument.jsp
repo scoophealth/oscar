@@ -134,9 +134,9 @@ else {
 		 	      
 		 	     
 		 	           String[] param2 = new String[4];
-		 	           param2[0] = module;
-		 	           param2[1] = module_id;
-		 	           param2[2] = docNo;
+		 	           param2[0] = module.trim();
+		 	           param2[1] = module_id.trim();
+		 	           param2[2] = docNo.trim();
 		 	           param2[3] = "H";
 		 	          
 		 	           

@@ -81,7 +81,6 @@
 	  param[0]=nowDate;
 	 param[1]=request.getParameter("document_no");
 	 
-	  
     rowsAffected = apptMainBean.queryExecuteUpdate(param, "delete_document");
 
   if (rowsAffected ==1) {

@@ -24,7 +24,7 @@
      {"share_document", "select distinct d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime from document d, ctl_document c where  d.status=c.status and d.status <> 'D' and c.document_no=d.document_no and c.module=?  and d.doctype='share' order by d.updatedatetime desc"},
     {"search_doctype_by_module", "select * from ctl_doctype where (status = 'A' or status='H') and module = ?"},
     {"search_doctype_by_type", "select * from ctl_doctype where (status = 'A' or status='H') and doctype = ?"},
-    {"delete_document", "update document set status='D' and updatedatetime=? where document_no=?"},
+    {"delete_document", "update document set status='D', updatedatetime=? where document_no=?"},
     {"update_document", "update document set doctype=?, docdesc=?, updatedatetime=? where document_no=?"},
  };
   
