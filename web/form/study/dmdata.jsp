@@ -174,7 +174,7 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
 	UtilXML.addNode(dt, "encounter");
 */
 
-	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria"} ;
+	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria", "footCheck", "eyeCheck"} ;
 	String nodeName = "DMRecord";
 	String dtdFileName = "ping_dm_1_0.dtd";
 
