@@ -16,6 +16,51 @@ public class FrmVTData {
     String signed_who;
     String signed_how;
     
+    String b_MI;
+    String b_MI$signed_when;
+    String b_MI$signed_who;
+    String b_MI$signed_how;
+    
+    String b_ACS;
+    String b_ACS$signed_when;
+    String b_ACS$signed_who;
+    String b_ACS$signed_how;
+
+    String b_Angina;
+    String b_Angina$signed_when;
+    String b_Angina$signed_who;
+    String b_Angina$signed_how;
+
+    String b_Revascularization;
+    String b_Revascularization$signed_when;
+    String b_Revascularization$signed_who;
+    String b_Revascularization$signed_how;
+
+    String b_Stroke;
+    String b_Stroke$signed_when;
+    String b_Stroke$signed_who;
+    String b_Stroke$signed_how;
+
+    String b_PVD;
+    String b_PVD$signed_when;
+    String b_PVD$signed_who;
+    String b_PVD$signed_how;
+
+    String b_Diabetes;
+    String b_Diabetes$signed_when;
+    String b_Diabetes$signed_who;
+    String b_Diabetes$signed_how;
+    
+    String b_Hypertension;
+    String b_Hypertension$signed_when;
+    String b_Hypertension$signed_who;
+    String b_Hypertension$signed_how;
+
+    String b_Hypercholesterolemia;
+    String b_Hypercholesterolemia$signed_when;
+    String b_Hypercholesterolemia$signed_who;
+    String b_Hypercholesterolemia$signed_how;
+    
     String int_SmokingAverage_CigsPerDay;
     String int_SmokingAverage_CigsPerDay$signed_when;
     String int_SmokingAverage_CigsPerDay$signed_who;
@@ -291,6 +336,222 @@ public class FrmVTData {
     String b_Referred_EyeExam$signed_who;
     String b_Referred_EyeExam$signed_how;
 
+    public String getB_ACS() {
+        return b_ACS;
+    }
+    public void setB_ACS(String b_acs) {
+        b_ACS = b_acs;
+    }
+    public String getB_ACS$signed_how() {
+        return b_ACS$signed_how;
+    }
+    public void setB_ACS$signed_how(String b_acs$signed_how) {
+        b_ACS$signed_how = b_acs$signed_how;
+    }
+    public String getB_ACS$signed_when() {
+        return b_ACS$signed_when;
+    }
+    public void setB_ACS$signed_when(String b_acs$signed_when) {
+        b_ACS$signed_when = b_acs$signed_when;
+    }
+    public String getB_ACS$signed_who() {
+        return b_ACS$signed_who;
+    }
+    public void setB_ACS$signed_who(String b_acs$signed_who) {
+        b_ACS$signed_who = b_acs$signed_who;
+    }
+    public String getB_Angina() {
+        return b_Angina;
+    }
+    public void setB_Angina(String angina) {
+        b_Angina = angina;
+    }
+    public String getB_Angina$signed_how() {
+        return b_Angina$signed_how;
+    }
+    public void setB_Angina$signed_how(String angina$signed_how) {
+        b_Angina$signed_how = angina$signed_how;
+    }
+    public String getB_Angina$signed_when() {
+        return b_Angina$signed_when;
+    }
+    public void setB_Angina$signed_when(String angina$signed_when) {
+        b_Angina$signed_when = angina$signed_when;
+    }
+    public String getB_Angina$signed_who() {
+        return b_Angina$signed_who;
+    }
+    public void setB_Angina$signed_who(String angina$signed_who) {
+        b_Angina$signed_who = angina$signed_who;
+    }
+    public String getB_Diabetes() {
+        return b_Diabetes;
+    }
+    public void setB_Diabetes(String diabetes) {
+        b_Diabetes = diabetes;
+    }
+    public String getB_Diabetes$signed_how() {
+        return b_Diabetes$signed_how;
+    }
+    public void setB_Diabetes$signed_how(String diabetes$signed_how) {
+        b_Diabetes$signed_how = diabetes$signed_how;
+    }
+    public String getB_Diabetes$signed_when() {
+        return b_Diabetes$signed_when;
+    }
+    public void setB_Diabetes$signed_when(String diabetes$signed_when) {
+        b_Diabetes$signed_when = diabetes$signed_when;
+    }
+    public String getB_Diabetes$signed_who() {
+        return b_Diabetes$signed_who;
+    }
+    public void setB_Diabetes$signed_who(String diabetes$signed_who) {
+        b_Diabetes$signed_who = diabetes$signed_who;
+    }
+    public String getB_Hypercholesterolemia() {
+        return b_Hypercholesterolemia;
+    }
+    public void setB_Hypercholesterolemia(String hypercholesterolemia) {
+        b_Hypercholesterolemia = hypercholesterolemia;
+    }
+    public String getB_Hypercholesterolemia$signed_how() {
+        return b_Hypercholesterolemia$signed_how;
+    }
+    public void setB_Hypercholesterolemia$signed_how(String hypercholesterolemia$signed_how) {
+        b_Hypercholesterolemia$signed_how = hypercholesterolemia$signed_how;
+    }
+    public String getB_Hypercholesterolemia$signed_when() {
+        return b_Hypercholesterolemia$signed_when;
+    }
+    public void setB_Hypercholesterolemia$signed_when(String hypercholesterolemia$signed_when) {
+        b_Hypercholesterolemia$signed_when = hypercholesterolemia$signed_when;
+    }
+    public String getB_Hypercholesterolemia$signed_who() {
+        return b_Hypercholesterolemia$signed_who;
+    }
+    public void setB_Hypercholesterolemia$signed_who(String hypercholesterolemia$signed_who) {
+        b_Hypercholesterolemia$signed_who = hypercholesterolemia$signed_who;
+    }
+    public String getB_Hypertension() {
+        return b_Hypertension;
+    }
+    public void setB_Hypertension(String hypertension) {
+        b_Hypertension = hypertension;
+    }
+    public String getB_Hypertension$signed_how() {
+        return b_Hypertension$signed_how;
+    }
+    public void setB_Hypertension$signed_how(String hypertension$signed_how) {
+        b_Hypertension$signed_how = hypertension$signed_how;
+    }
+    public String getB_Hypertension$signed_when() {
+        return b_Hypertension$signed_when;
+    }
+    public void setB_Hypertension$signed_when(String hypertension$signed_when) {
+        b_Hypertension$signed_when = hypertension$signed_when;
+    }
+    public String getB_Hypertension$signed_who() {
+        return b_Hypertension$signed_who;
+    }
+    public void setB_Hypertension$signed_who(String hypertension$signed_who) {
+        b_Hypertension$signed_who = hypertension$signed_who;
+    }
+    public String getB_MI() {
+        return b_MI;
+    }
+    public void setB_MI(String b_mi) {
+        b_MI = b_mi;
+    }
+    public String getB_MI$signed_how() {
+        return b_MI$signed_how;
+    }
+    public void setB_MI$signed_how(String b_mi$signed_how) {
+        b_MI$signed_how = b_mi$signed_how;
+    }
+    public String getB_MI$signed_when() {
+        return b_MI$signed_when;
+    }
+    public void setB_MI$signed_when(String b_mi$signed_when) {
+        b_MI$signed_when = b_mi$signed_when;
+    }
+    public String getB_MI$signed_who() {
+        return b_MI$signed_who;
+    }
+    public void setB_MI$signed_who(String b_mi$signed_who) {
+        b_MI$signed_who = b_mi$signed_who;
+    }
+    public String getB_PVD() {
+        return b_PVD;
+    }
+    public void setB_PVD(String b_pvd) {
+        b_PVD = b_pvd;
+    }
+    public String getB_PVD$signed_how() {
+        return b_PVD$signed_how;
+    }
+    public void setB_PVD$signed_how(String b_pvd$signed_how) {
+        b_PVD$signed_how = b_pvd$signed_how;
+    }
+    public String getB_PVD$signed_when() {
+        return b_PVD$signed_when;
+    }
+    public void setB_PVD$signed_when(String b_pvd$signed_when) {
+        b_PVD$signed_when = b_pvd$signed_when;
+    }
+    public String getB_PVD$signed_who() {
+        return b_PVD$signed_who;
+    }
+    public void setB_PVD$signed_who(String b_pvd$signed_who) {
+        b_PVD$signed_who = b_pvd$signed_who;
+    }
+    public String getB_Revascularization() {
+        return b_Revascularization;
+    }
+    public void setB_Revascularization(String revascularization) {
+        b_Revascularization = revascularization;
+    }
+    public String getB_Revascularization$signed_how() {
+        return b_Revascularization$signed_how;
+    }
+    public void setB_Revascularization$signed_how(String revascularization$signed_how) {
+        b_Revascularization$signed_how = revascularization$signed_how;
+    }
+    public String getB_Revascularization$signed_when() {
+        return b_Revascularization$signed_when;
+    }
+    public void setB_Revascularization$signed_when(String revascularization$signed_when) {
+        b_Revascularization$signed_when = revascularization$signed_when;
+    }
+    public String getB_Revascularization$signed_who() {
+        return b_Revascularization$signed_who;
+    }
+    public void setB_Revascularization$signed_who(String revascularization$signed_who) {
+        b_Revascularization$signed_who = revascularization$signed_who;
+    }
+    public String getB_Stroke() {
+        return b_Stroke;
+    }
+    public void setB_Stroke(String stroke) {
+        b_Stroke = stroke;
+    }
+    public String getB_Stroke$signed_how() {
+        return b_Stroke$signed_how;
+    }
+    public void setB_Stroke$signed_how(String stroke$signed_how) {
+        b_Stroke$signed_how = stroke$signed_how;
+    }
+    public String getB_Stroke$signed_when() {
+        return b_Stroke$signed_when;
+    }
+    public void setB_Stroke$signed_when(String stroke$signed_when) {
+        b_Stroke$signed_when = stroke$signed_when;
+    }
+    public String getB_Stroke$signed_who() {
+        return b_Stroke$signed_who;
+    }
+    public void setB_Stroke$signed_who(String stroke$signed_who) {
+        b_Stroke$signed_who = stroke$signed_who;
+    }
     public String getDat_BP() {
         return dat_BP;
     }

@@ -367,8 +367,8 @@
      </measurement>
      <measurement>
         <type>DpSc</type>
-        <typeDesc>Depression Screen</typeDesc>
-        <typeDisplayName>Feeling Sad, blue or depressed for 2 weeks or more</typeDisplayName>
+        <typeDesc>Feeling Sad, blue or depressed for 2 weeks or more</typeDesc>
+        <typeDisplayName>Depression Screen</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -377,8 +377,8 @@
      </measurement>
      <measurement>
         <type>StSc</type>
-        <typeDesc>Stress Screen</typeDesc>
-        <typeDisplayName>Several periods of irritability, feeling filled with anxiety, or difficulty sleeping b/c of stress</typeDisplayName>
+        <typeDesc>Several periods of irritability, feeling filled with anxiety, or difficulty sleeping b/c of stress</typeDesc>
+        <typeDisplayName>Stress Screen</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -387,8 +387,8 @@
      </measurement>
      <measurement>
         <type>LcCt</type>
-        <typeDesc>Locus of Control Screen</typeDesc>
-        <typeDisplayName>Feeling lack of control over daily life</typeDisplayName>
+        <typeDesc>Feeling lack of control over daily life</typeDesc>
+        <typeDisplayName>Locus of Control Screen</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -397,8 +397,8 @@
      </measurement>
      <measurement>
         <type>MedG</type>
-        <typeDesc>Medication adherence general problem</typeDesc>
-        <typeDisplayName>Any missed days or doses of meds</typeDisplayName>
+        <typeDesc>Any missed days or doses of meds</typeDesc>
+        <typeDisplayName>Medication adherence general problem</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -407,8 +407,8 @@
      </measurement>
      <measurement>
         <type>MedN</type>
-        <typeDesc>Medication adherence negative beliefs</typeDesc>
-        <typeDisplayName>Concerns about side effects or medication is not working</typeDisplayName>
+        <typeDesc>Concerns about side effects or medication is not working</typeDesc>
+        <typeDisplayName>Medication adherence negative beliefs</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -417,8 +417,8 @@
      </measurement>
      <measurement>
         <type>MedR</type>
-        <typeDesc>Medication adherence recall barriers</typeDesc>
-        <typeDisplayName>Difficulty remembering to take meds</typeDisplayName>
+        <typeDesc>Difficulty remembering to take meds</typeDesc>
+        <typeDisplayName>Medication adherence recall barriers</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -427,8 +427,8 @@
      </measurement>
      <measurement>
         <type>MedA</type>
-        <typeDesc>Medication adherence access barriers</typeDesc>
-        <typeDisplayName>Difficulty affording meds or getting refills on time</typeDisplayName>
+        <typeDesc>Difficulty affording meds or getting refills on time</typeDesc>
+        <typeDisplayName>Medication adherence access barriers</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -489,6 +489,96 @@
         <type>OthC</type>
         <typeDesc>Other Counseling Given</typeDesc>
         <typeDisplayName>Other Counseling Given</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>MI</type>
+        <typeDesc></typeDesc>
+        <typeDisplayName>MI</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>ACS</type>
+        <typeDesc>Acute Conronary Syndrome</typeDesc>
+        <typeDisplayName>Acute Conronary Syndrome</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>Ang</type>
+        <typeDesc>Angina</typeDesc>
+        <typeDisplayName>Angina</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>RVTN</type>
+        <typeDesc>Revascularization</typeDesc>
+        <typeDisplayName>Revascularization</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>CVD</type>
+        <typeDesc>Cerebrovascular disease</typeDesc>
+        <typeDisplayName>CVD</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>
+     <measurement>
+        <type>PVD</type>
+        <typeDesc>Peripheral vascular disease</typeDesc>
+        <typeDisplayName>PVD</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>     
+     <measurement>
+        <type>DM</type>
+        <typeDesc>Diabetes</typeDesc>
+        <typeDisplayName>DM</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>    
+     <measurement>
+        <type>HTN</type>
+        <typeDesc>Hypertension</typeDesc>
+        <typeDisplayName>HTN</typeDisplayName>
+        <measuringInstrc>Yes/No</measuringInstrc>
+        <validationRule>
+           <name>Yes/No</name>
+           <regularExp>YES|yes|Yes|Y|NO|no|No|N</regularExp>
+        </validationRule>
+     </measurement>    
+     <measurement>
+        <type>Hchl</type>
+        <typeDesc>Hypercholesterolemia</typeDesc>
+        <typeDisplayName>Hypercholesterolemia</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
