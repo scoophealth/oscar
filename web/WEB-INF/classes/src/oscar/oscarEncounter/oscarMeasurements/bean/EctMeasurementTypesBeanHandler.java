@@ -36,12 +36,13 @@ public class EctMeasurementTypesBeanHandler {
     Vector measuringInstrcVector = new Vector();
     Vector measuringInstrcVectorVector = new Vector();
     Vector typeVector = new Vector();
+    Vector measurementsDataVector = new Vector();
 
     public EctMeasurementTypesBeanHandler() {
         init();
     }
-    public EctMeasurementTypesBeanHandler(String groupName) {
-        init(groupName);
+    public EctMeasurementTypesBeanHandler(String groupName, String demo) {
+        init(groupName, demo);
     }
 
     public boolean init() {
@@ -77,7 +78,7 @@ public class EctMeasurementTypesBeanHandler {
         return verdict;
     }
     
-    public boolean init(String groupName) {
+    public boolean init(String groupName, String demo) {
         
         boolean verdict = true;
         try {
@@ -97,12 +98,57 @@ public class EctMeasurementTypesBeanHandler {
                     measuringInstrcVector.add(mInstrc);
                 }
                 rsMT.previous();
-                EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(rsMT.getInt("id"), rsMT.getString("type"), rsMT.getString("typeDisplayName"), rsMT.getString("typeDescription"), rsMT.getString("measuringInstruction"), rsMT.getString("validation"));
-                System.out.println(rsMT.getString("type"));
-                measurementTypeVector.add(measurementTypes);
-                System.out.println("Add the instructions vector to the big Vector");
-                measuringInstrcVectorVector.add(measuringInstrcVector);
-                measuringInstrcVector = new Vector();
+                
+                //Get the data last entered for the current measurement type
+                String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + rsMT.getString("type")
+                                 + "' ORDER BY dateEntered DESC";
+                ResultSet rsData = db.GetSQL(sqlData);
+                boolean hasPreviousData = false;
+                if(rsData.next()){
+                    String providerNo = rsData.getString("providerNo");
+                    String sqlProvider = "SELECT * FROM provider WHERE provider_no='" + providerNo + "'";
+                    ResultSet rsProvider = db.GetSQL(sqlProvider);
+                    if(rsProvider.next()){
+                        EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rsMT.getInt("id"), 
+                                                                                        rsMT.getString("type"), 
+                                                                                        rsMT.getString("typeDisplayName"), 
+                                                                                        rsMT.getString("typeDescription"), 
+                                                                                        rsMT.getString("measuringInstruction"), 
+                                                                                        rsMT.getString("validation"),
+                                                                                        rsProvider.getString("first_name"), 
+                                                                                        rsProvider.getString("last_name"),
+                                                                                        rsData.getString("dataField"), 
+                                                                                        rsData.getString("measuringInstruction"), 
+                                                                                        rsData.getString("comments"), 
+                                                                                        rsData.getString("dateObserved"), 
+                                                                                        rsData.getString("dateEntered"));                        
+                        System.out.println("last data added to measurementsDataVector");
+                        System.out.println(rsMT.getString("type"));
+                        measurementTypeVector.add(measurementTypes);
+                        System.out.println("Add the instructions vector to the big Vector");
+                        measuringInstrcVectorVector.add(measuringInstrcVector);
+                        measuringInstrcVector = new Vector();
+                        hasPreviousData = true;
+                    }
+                }
+                if(!hasPreviousData){
+                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rsMT.getInt("id"), 
+                                                                                        rsMT.getString("type"), 
+                                                                                        rsMT.getString("typeDisplayName"), 
+                                                                                        rsMT.getString("typeDescription"), 
+                                                                                        rsMT.getString("measuringInstruction"), 
+                                                                                        rsMT.getString("validation")); 
+                    System.out.println("blank data added");
+                    System.out.println(rsMT.getString("type"));
+                    measurementTypeVector.add(measurementTypes);
+                    System.out.println("Add the instructions vector to the big Vector");
+                    measuringInstrcVectorVector.add(measuringInstrcVector);
+                    measuringInstrcVector = new Vector();
+                }
+                
+                
+                                                                                        
+                
                 
             }
             
@@ -126,6 +172,10 @@ public class EctMeasurementTypesBeanHandler {
     
     public Vector getMeasuringInstrcVectorVector(){
         return measuringInstrcVectorVector;
+    }
+    
+    public Vector getMeasurementsDataVector(){
+        return measurementsDataVector;
     }
 }
 
