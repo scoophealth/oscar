@@ -52,6 +52,10 @@ studyBean.doConfigure(dbParams,dbQueries);
 
 <% response.setHeader("Cache-Control","no-cache");%>
 <%
+out.println("Please wait ...<br>");
+out.flush();
+
+
 String actorTicket = null;
 String actor = "clinic@iampregnant.org"; //"clinic@citizenhealth.ca"; // marcelle@citizenhealth.ca
 String actorPassword = "password";
@@ -61,12 +65,18 @@ String patientPingId = demoData.getDemographic(request.getParameter("demographic
 OscarPingTalk ping = new OscarPingTalk();
 boolean connected = true;
 String connectErrorMsg = "";
-try{
-	actorTicket = ping.connect(actor,actorPassword);
-}catch(Exception eCon){
-    connectErrorMsg = eCon.getMessage();
-    connected = false;
+if(session.getAttribute("ticket") == null) {
+	try{
+		actorTicket = ping.connect(actor,actorPassword);
+		session.setAttribute("ticket", actorTicket);
+	}catch(Exception eCon){
+	    connectErrorMsg = eCon.getMessage();
+	    connected = false;
+	}
+} else {
+	actorTicket = (String)session.getAttribute("ticket");
 }
+		//System.out.println(" 2 :" + actorTicket);
 
 String owner = actor;
 String originAgent = actor;
@@ -128,7 +138,7 @@ if (rsdemo.next()) {
 		if (type.equals("TINY") || name.equals("ID")) {
 			prop.setProperty(jaxbName, "" + rsdemo.getInt(name) );
 			//if (name.equals("pg1Yes37off")) System.out.println(" l :" + rsdemo.getString("pg1_yes37off"));
-			System.out.println(jaxbName + "  : :" + name);
+			//System.out.println(jaxbName + "  : :" + name);
 		} else {
 			prop.setProperty(jaxbName, (rsdemo.getString(name)==null?"":rsdemo.getString(name) ) );
 			//if (name.equals("pg1DateOfBirth")) System.out.println(" l :" + rsdemo.getString("pg1_dateOfBirth"));
