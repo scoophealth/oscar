@@ -246,6 +246,40 @@ public class EfmDataOpt {
     return temp;
   }
   
+  public String getAge(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = String.valueOf(UtilDateUtilities.calcAge(rs.getString("year_of_birth"),rs.getString("month_of_birth"),rs.getString("date_of_birth")));
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
+  public String getSex(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select sex from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("sex");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
   public String getNameAddress(int demographic_no){
     String temp = ""; 
     try {
