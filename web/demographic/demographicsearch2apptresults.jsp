@@ -78,21 +78,21 @@
         cursor: hand
     }
     .subject {
-        background-color: #000000;
+        background-color: #003399;
         color: #FFFFFF;  
         font-size: 14pt;
         font-weight: bold;
         text-align: centre;        
     }
     .searchTitle {
-        background-color: #486ebd;
+        background-color: #6699CC;
         color: #000000;            
         font-weight: bold;
         text-align: left;
         height="20px"
     }
     .title {
-        background-color: #486ebd;
+        background-color: #6699CC;
         color: #000000;            
         font-weight: bold;
         text-align: center;
@@ -136,12 +136,12 @@ function searchAll() {
 
 </SCRIPT>
 </head>
-<body  bgcolor="#C0C0C0" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
+<body  bgcolor="white" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
 	  <tr class="subject"><th><bean:message key="demographic.demographicsearch2apptresults.patientsRecord"/></th></tr>
 </table>
 
-  <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
+  <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#CCCCFF">
 	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
 	<%--@ include file="zdemographictitlesearch.htm"--%>
         <tr>
