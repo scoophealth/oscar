@@ -203,3 +203,29 @@
         }
         return true;
     }
+    
+    function confirmRange(formNb, allId, msg){
+        var isValid = true;
+        var confirmed = true;
+        if (allId !=null){
+            for(var i = 0; i<allId.length; i++){
+                var lower = allId[i][0];  
+                var upper = allId[i][1]; 
+                for(var j = 2; j<allId[i].length; j++){
+                    document.forms[formNb].elements[allId[i][j]].style.backgroundColor='white';
+                    var s = document.forms[formNb].elements[allId[i][j]].value;
+                    if(s!=""){
+                        if(isNumeric(s)==false || s<lower || s>upper){
+                            isValid = false;
+                            document.forms[formNb].elements[allId[i][j]].style.backgroundColor='red';
+                        }
+                    }
+                }
+            }
+            if (isValid==false){
+                confirmed = confirm(msg);
+                return confirmed;
+            } 
+        }
+        return confirmed;
+    }
