@@ -37,7 +37,7 @@
 <html:html locale="true">
 <head>
 <title>
-<bean:message key="oscarEncounter.Measurements.msgEditMeasurementTypes"/>
+<bean:message key="oscarEncounter.Measurements.msgCustomization"/>
 </title>
 <style type="text/css">
 body{
