@@ -206,7 +206,10 @@ public class FrmData {
 
         rs.close();
         db.CloseConn();
+        if(ret.compareTo("")==0)
+            ret = "http://67.69.12.117:8080/oscarResource/";
         return ret;
+        
     }
 
     public String getResource(String name) throws java.sql.SQLException {
