@@ -249,7 +249,7 @@
         </td>
     </tr>
     <tr>        
-        <td colspan="2">
+        <td  valign="top" colspan="2">
             <table width="740px" height="550px" border="0"  cellspacing="0" cellpadding="0" >
                 <tr class="title">
                     <th colspan="4">B. Marital Status / Accomodation</th>
@@ -425,194 +425,201 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="660px" id="page2" >    
     <tr>        
-        <td colspan="2">
-            <table width="740px" height="170px" border="0"  cellspacing="0" cellpadding="0" >
-                <tr class="title" >
-                    <th colspan="4">C. Education</th>
-                </tr>
-                <tr>                    
-                    <th colspan="4" class="question">What is the highest grade <font style="text-decoration:underline">or</font> level of education you ever completed?</th>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduNoSchool" <%= props.getProperty("eduNoSchool", "") %>/>
-                    </td>
-                    <td width="25%">No School</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduSomeCommunity" <%= props.getProperty("eduSomeCommunity", "") %>/>
-                    </td>
-                    <td width="65%">Some community or technical college, nurses' training</td>                
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduSomeElementary" <%= props.getProperty("eduSomeElementary", "") %>/>
-                    </td>
-                    <td width="25%">Some elementary</td>                
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduCompletedCommunity" <%= props.getProperty("eduCompletedCommunity", "") %>/>
-                    </td>
-                    <td width="65%">Completed community or technical college, nurses' training</td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduCompletedElementary" <%= props.getProperty("eduCompletedElementary", "") %>/>
-                    </td>
-                    <td width="25%">Completed elementary</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduSomeUni" <%= props.getProperty("eduSomeUni", "") %>/>
-                    </td>
-                    <td width="65%">Some university or teacher's college</td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduSomeSec" <%= props.getProperty("eduSomeSec", "") %>/>
-                    </td>
-                    <td width="25%">Some secondary</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduCompletedUni" <%= props.getProperty("eduCompletedUni", "") %>/>
-                    </td>
-                    <td width="65%">Completed university or teacher's college</td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="eduCompletedSec" <%= props.getProperty("eduCompletedSec", "") %>/>
-                    </td>
-                    <td width="25%">Completed secondary</td>
-                    <td width="5%" align="right"></td>
-                    <td width="65%"></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="290px" border="0"  cellspacing="0" cellpadding="0" >
-                <tr class="title">
-                    <th colspan="4">D. Income</th>
-                </tr>
-                <tr>                    
-                    <th colspan="4" class="question">
-                    What was the approximate total household income in the past 12 months; before taxes? <br>
-                    Please include income from all sources such as as wages, commissions, pensions, family allowance, rental investments income and so forth.
-                    </th>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="incomeBelow10" <%= props.getProperty("incomeBelow10", "") %>/>
-                    </td>
-                    <td width="45%">Below $10,000</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="income40To50" <%= props.getProperty("income40To50", "") %>/>
-                    </td>
-                    <td width="45%">$40,000 - $50,000</td>                
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="income10To20" <%= props.getProperty("income10To20", "") %>/>
-                    </td>
-                    <td width="45%">$10,000 - $20,000</td>                
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="incomeOver50" <%= props.getProperty("incomeOver50", "") %>/>
-                    </td>
-                    <td width="45%">Over $50,000</td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="income20To30" <%= props.getProperty("income20To30", "") %>/>
-                    </td>
-                    <td width="45%">$20,000 - $30,000</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="incomeDoNotKnow" <%= props.getProperty("incomeDoNotKnow", "") %>/>
-                    </td>
-                    <td width="45%">Do not know</td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="income30To40" <%= props.getProperty("income30To40", "") %>/>
-                    </td>
-                    <td width="45%">$30,000 - $40,000</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="incomeRefusedToAns" <%= props.getProperty("incomeRefusedToAns", "") %>/>
-                    </td>
-                    <td width="45%">Refused to answer</td>
-                </tr>
-                <tr>                    
-                    <th colspan="4" class="question">Thinking about your financial situation, would you say that you are...</th>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="financialDifficult" <%= props.getProperty("financialDifficult", "") %>/>
-                    </td>
-                    <td colspan="3">Having difficulty making ends meet?</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="financialEnough" <%= props.getProperty("financialEnough", "") %>/>
-                    </td>
-                    <td colspan="3">Having just enough to get along?</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="financialComfortable" <%= props.getProperty("financialComfortable", "") %>/>
-                    </td>
-                    <td colspan="3">Are you comfortable?</td>               
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="140px" border="0"  cellspacing="0" cellpadding="0" >
-                <tr class="title">
-                    <th colspan="3">E. Activity</th>
-                </tr>
-                <tr>                                        
-                    <th colspan="3" class="question">
-                        Are you currently engaged in any of the following activites? 
-                    </th>                      
-                </tr>  
+        <td  valign="top" colspan="2">
+            <table width="740px" height="630px" border="0"  cellspacing="0" cellpadding="0" >
                 <tr>
-                    <th colspan="3" class="question">
-                        How many hours per week are you involved in each activity?
-                    </th>
+                    <td valign="top">
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                            <tr class="title" >
+                                <th colspan="4">C. Education</th>
+                            </tr>                                    
+                            <tr>                            
+                                <th colspan="4" class="question">What is the highest grade <font style="text-decoration:underline">or</font> level of education you ever completed?</th>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduNoSchool" <%= props.getProperty("eduNoSchool", "") %>/>
+                                </td>
+                                <td width="25%">No School</td>
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduSomeCommunity" <%= props.getProperty("eduSomeCommunity", "") %>/>
+                                </td>
+                                <td width="65%">Some community or technical college, nurses' training</td>                
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduSomeElementary" <%= props.getProperty("eduSomeElementary", "") %>/>
+                                </td>
+                                <td width="25%">Some elementary</td>                
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduCompletedCommunity" <%= props.getProperty("eduCompletedCommunity", "") %>/>
+                                </td>
+                                <td width="65%">Completed community or technical college, nurses' training</td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduCompletedElementary" <%= props.getProperty("eduCompletedElementary", "") %>/>
+                                </td>
+                                <td width="25%">Completed elementary</td>
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduSomeUni" <%= props.getProperty("eduSomeUni", "") %>/>
+                                </td>
+                                <td width="65%">Some university or teacher's college</td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduSomeSec" <%= props.getProperty("eduSomeSec", "") %>/>
+                                </td>
+                                <td width="25%">Some secondary</td>
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduCompletedUni" <%= props.getProperty("eduCompletedUni", "") %>/>
+                                </td>
+                                <td width="65%">Completed university or teacher's college</td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="eduCompletedSec" <%= props.getProperty("eduCompletedSec", "") %>/>
+                                </td>
+                                <td width="25%">Completed secondary</td>
+                                <td width="5%" align="right"></td>
+                                <td width="65%"></td>
+                            </tr>
+                        </table>
+                    </td>
                 </tr>
-                <tr class="subTitle">                     
-                    <td width="30%">Activity</td>
-                    <td width="30%">Hours/week</td>
-                    <td width="40%"></td>
+                
+                <tr>
+                    <td valign="top">
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                            <tr class="title">
+                                <th colspan="4">D. Income</th>
+                            </tr>
+                            <tr>                    
+                                <th colspan="4" class="question">
+                                What was the approximate total household income in the past 12 months; before taxes? <br>
+                                Please include income from all sources such as as wages, commissions, pensions, family allowance, rental investments income and so forth.
+                                </th>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="incomeBelow10" <%= props.getProperty("incomeBelow10", "") %>/>
+                                </td>
+                                <td width="45%">Below $10,000</td>
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="income40To50" <%= props.getProperty("income40To50", "") %>/>
+                                </td>
+                                <td width="45%">$40,000 - $50,000</td>                
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="income10To20" <%= props.getProperty("income10To20", "") %>/>
+                                </td>
+                                <td width="45%">$10,000 - $20,000</td>                
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="incomeOver50" <%= props.getProperty("incomeOver50", "") %>/>
+                                </td>
+                                <td width="45%">Over $50,000</td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="income20To30" <%= props.getProperty("income20To30", "") %>/>
+                                </td>
+                                <td width="45%">$20,000 - $30,000</td>
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="incomeDoNotKnow" <%= props.getProperty("incomeDoNotKnow", "") %>/>
+                                </td>
+                                <td width="45%">Do not know</td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="income30To40" <%= props.getProperty("income30To40", "") %>/>
+                                </td>
+                                <td width="45%">$30,000 - $40,000</td>
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="incomeRefusedToAns" <%= props.getProperty("incomeRefusedToAns", "") %>/>
+                                </td>
+                                <td width="45%">Refused to answer</td>
+                            </tr>
+                            <tr>                    
+                                <th colspan="4" class="question">Thinking about your financial situation, would you say that you are...</th>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="financialDifficult" <%= props.getProperty("financialDifficult", "") %>/>
+                                </td>
+                                <td colspan="3">Having difficulty making ends meet?</td>                    
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="financialEnough" <%= props.getProperty("financialEnough", "") %>/>
+                                </td>
+                                <td colspan="3">Having just enough to get along?</td>                    
+                            </tr>
+                            <tr bgcolor="white">
+                                <td width="5%" align="right">
+                                    <input type="checkbox"  class="checkbox" name="financialComfortable" <%= props.getProperty("financialComfortable", "") %>/>
+                                </td>
+                                <td colspan="3">Are you comfortable?</td>               
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td valign="top">
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%">                       
+                            <tr class="title">                
+                                <th colspan="3">E. Activity</th>
+                            </tr>
+                            <tr>                                        
+                                <th colspan="3" class="question">
+                                    Are you currently engaged in any of the following activites? 
+                                </th>                      
+                            </tr>  
+                            <tr>
+                                <th colspan="3" class="question">
+                                    How many hours per week are you involved in each activity?
+                                </th>
+                            </tr>
+                            <tr class="subTitle">                     
+                                <td width="30%">Activity</td>
+                                <td width="30%">Hours/week</td>
+                                <td width="40%"></td>
+                            </tr>                
+                            <tr bgcolor="white">                   
+                                <td>Paid work</td>
+                                <td align="center">
+                                    <input type="text" name="ActPaidWk" value="<%= props.getProperty("ActPaidWk", "") %>"/>
+                                </td>
+                                <td width="40%"></td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td>Unpaid work</td>
+                                <td align="center">
+                                    <input type="text" name="ActUnpaidWk" value="<%= props.getProperty("ActUnpaidWk", "") %>"/>
+                                </td>
+                                <td width="40%"></td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td>Volunteering</td>
+                                <td align="center">
+                                    <input type="text" name="ActVolunteering" value="<%= props.getProperty("ActVolunteering", "") %>"/>
+                                </td>
+                                <td width="40%"></td>
+                            </tr>
+                            <tr bgcolor="white">
+                                <td>Caregiving</td>
+                                <td align="center">
+                                    <input type="text" name="ActCaregiving" value="<%= props.getProperty("ActCaregiving", "") %>"/>
+                                </td>
+                                <td width="40%"></td>
+                            </tr>
+                        </table>
+                    </td>
                 </tr>                
-                <tr bgcolor="white">                   
-                    <td>Paid work</td>
-                    <td align="center">
-                        <input type="text" name="ActPaidWk" value="<%= props.getProperty("ActPaidWk", "") %>"/>
-                    </td>
-                    <td width="40%"></td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>Unpaid work</td>
-                    <td align="center">
-                        <input type="text" name="ActUnpaidWk" value="<%= props.getProperty("ActUnpaidWk", "") %>"/>
-                    </td>
-                    <td width="40%"></td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>Volunteering</td>
-                    <td align="center">
-                        <input type="text" name="ActVolunteering" value="<%= props.getProperty("ActVolunteering", "") %>"/>
-                    </td>
-                    <td width="40%"></td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>Caregiving</td>
-                    <td align="center">
-                        <input type="text" name="ActCaregiving" value="<%= props.getProperty("ActCaregiving", "") %>"/>
-                    </td>
-                    <td width="40%"></td>
-                </tr>
             </table>            
         </td>
     </tr>
@@ -625,12 +632,11 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="660px" id="page3" >    
     <tr>        
-        <td colspan="2">
-            <table width="740px" height="300px" border="0"  cellspacing="0" cellpadding="0" >
+        <td  valign="top" colspan="2">
+            <table width="740px" height="630px" border="0"  cellspacing="0" cellpadding="0" >
                 <tr class="title" >
                     <th colspan="4">F. Health</th>
                 </tr>
@@ -697,14 +703,11 @@
                     <td></td>
                     <td></td>                                    
                 </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="330px" border="0"  cellspacing="0" cellpadding="0" >
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
                 <tr class="title" >
-                    <th colspan="8">G. Diagnosis</th>
+                    <th  valign="top" colspan="8">G. Diagnosis</th>
                 </tr>
                 <tr>
                     <th class="question" colspan="8"><font style='text-decoration:italic'>
@@ -829,14 +832,13 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="660px" id="page4" >    
     <tr> 
-        <td colspan='2'>
+        <td  valign="top" colspan='2'>
             <table width="740px" height="630px" border="0"  cellspacing="0" cellpadding="0" >
                 <tr class="title" >
-                    <th colspan="8">G. Diagnosis (continue...)</th>
+                    <th valign="top" colspan="8">G. Diagnosis (continue...)</th>
                 </tr> 
                 <tr>                    
                     <th>4. </th>
@@ -1088,11 +1090,10 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="660px" id="page5" >    
     <tr>        
-        <td colspan="2">
+        <td  valign="top" colspan="2">
         <table width="740px" height="630px" border="0"  cellspacing="0" cellpadding="0" >
                 <tr class="title" >
                     <th colspan="8">G. Diagnosis (continue...)</th>
@@ -1234,8 +1235,8 @@
                     </td>
                 </tr> 
                 <tr>
-                    <td>
-                        <table height="250px"><tr><td></td></tr></table>
+                    <td colspan="4">
+                    <table height="250px"><tr><td>&nbsp;</td></tr></table>
                     </td>
                 </tr>
             </table>              

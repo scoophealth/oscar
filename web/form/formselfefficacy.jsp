@@ -85,7 +85,8 @@
 
         TH{
             font-size:14pt;
-            font-weight: normal;            
+            font-weight: normal;
+            height:10px;
         }
 
         .checkbox{
@@ -468,8 +469,7 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page2" >    
     <tr>        
         <td colspan="2">
@@ -603,7 +603,7 @@
         </td>
     </tr>
 </table>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page3" >    
     <tr>        
         <td colspan="2">
@@ -717,8 +717,7 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page4" >    
     <tr>        
         <td colspan="2">
@@ -868,8 +867,7 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page5" >    
     <tr>        
         <td colspan="2">
@@ -983,8 +981,7 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page6" >    
     <tr>        
         <td valign="top" colspan="2">
@@ -1144,8 +1141,7 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page7" >    
     <tr>        
         <td colspan="2">
@@ -1292,8 +1288,7 @@
         </td>
     </tr>
 </table>
-</td></tr>
-<tr><td valign="top">
+
 <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page8" >    
     <tr>        
         <td colspan="2">
