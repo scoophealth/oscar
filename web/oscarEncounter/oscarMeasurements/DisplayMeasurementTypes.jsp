@@ -23,7 +23,9 @@
  * Ontario, Canada 
  */
 -->
-
+ <%
+  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+%>
 <%@ page language="java" %>
 <%@ page import="java.util.*,oscar.oscarReport.pageUtil.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -89,7 +91,7 @@
             <td class="MainTableLeftColumn">             
             </td>
             <td class="MainTableRightColumn">
-               <table border=0 cellspacing=4 width=400>
+               <table border=0 cellspacing=4 width=700>
                 <tr>
                     <td>
                         <table>
@@ -118,7 +120,7 @@
                                         <th align="left" class="VCRheads" width="300">
                                             <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValidation"/>
                                         </th>
-                                        <th align="left" class="VCRheads" width="300">
+                                        <th align="left" class="VCRheads" width="10">
                                             <bean:message key="oscarEncounter.oscarMeasurements.MeasurementAction.headingDelete"/>
                                         </th>
                                      </tr>

@@ -24,7 +24,9 @@
  * Ontario, Canada 
  */
 -->
-
+ <%
+  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+%>
 <%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -94,13 +96,13 @@ function write2Parent(text){
                             <th align="left" class="td.tite" width="200">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingTypeDesc"/>
                             </th>
-                            <th align="left" class="td.tite" width="160">
+                            <th align="left" class="td.tite" width="250">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
                             </th>
                             <th align="left" class="td.tite" width="50">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValue"/>
                             </th>
-                            <th align="left" class="td.tite" width="350">
+                            <th align="left" class="td.tite" width="250">
                                 <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
                             </th>
                             <th align="left" class="td.tite" width="250">
@@ -118,7 +120,7 @@ function write2Parent(text){
                                 </html:select>
                             </td>
                             <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" />     
-                            <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="50"/>
+                            <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="30"/>
                             <td><select name='<%= "value(month-" + ctr + ")" %>'>
                                     <% for (int j=1; j < 13; j++){
                                         String monthObserved = Integer.toString(j);
@@ -166,12 +168,6 @@ function write2Parent(text){
                         </logic:iterate>
                         <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>
                         <html:hidden property="value(dateEntered)" value="<%=formattedDate%>"/>
-                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.between"/>"/>    
-                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.mustBe"/>"/>    
-                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.and"/>"/>  
-                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.numericValue"/>"/>  
-                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.inThisFormat"/>"/>  
-                        <input type="hidden" name="msgBetween" value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.bloodPressure"/>"/> 
                         <tr>
                             <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
                             <td><input type="button" name="Button" value="<bean:message key="global.btnSubmit"/>" onclick="document.forms['EctMeasurementsForm'].submit();"/></td>
