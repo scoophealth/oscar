@@ -41,14 +41,14 @@ if(session.getValue("user") == null)
 
 ProSignatureData sig = new ProSignatureData();
 %>
-<html>
+<html:html locale="true">
 <head>
 
 <html:base/>
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 
 <title>
-Provider Signature
+<bean:message key="provider.editSignature.title"/>
 </title>
 
 </head>
@@ -58,19 +58,19 @@ Provider Signature
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                prefs
+                <bean:message key="provider.editSignature.msgPrefs"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                          Provider Signature
+                          <bean:message key="provider.editSignature.msgProviderSignature"/>
                         </td>
                         <td  >
                           &nbsp;
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -82,19 +82,19 @@ Provider Signature
             </td>
             <td class="MainTableRightColumn">
             <html:form action = "/EnterSignature.do" >
-            <% boolean hasSig = sig.hasSignature(curUser_no);
-               String buttonName = "Submit";
-               if (hasSig){
-               buttonName = "Update";
+            <%
                ProEditSignatureForm thisForm = ( ProEditSignatureForm ) request.getAttribute("ProEditSignatureForm");
                thisForm.setSignature(sig.getSignature(curUser_no));
+               if (sig.hasSignature(curUser_no)) {
             %>
-               Please edit your Signature and press Update <br>
+               <bean:message key="provider.editSignature.msgEdit"/> <br>
+               <html:text property="signature" size="40"/><br>
+               <input type="submit" value="<bean:message key="provider.editSignature.btnUpdate"/>" />               
             <% }else{%>
-               Please type in your signature and press submit<br>
+               <bean:message key="provider.editSignature.msgNew"/><br>
+               <html:text property="signature" size="40"/><br>
+               <input type="submit" value="<bean:message key="provider.editSignature.btnSubmit"/>" />
             <%}%>
-            <html:text property="signature" size="40"/><br>
-            <input type="submit" value="<%=buttonName%>" />
             </html:form> 
             </td>
         </tr>
@@ -108,4 +108,4 @@ Provider Signature
         </tr>
     </table>
 </body>
-</html>
+</html:html>

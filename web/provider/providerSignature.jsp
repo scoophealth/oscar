@@ -39,14 +39,17 @@ if(session.getValue("user") == null)
 
 ProSignatureData sig = new ProSignatureData();
 %>
-<html>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<html:html locale="true">
 <head>
 
 <html:base/>
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 
 <title>
-Provider Signature
+<bean:message key="provider.providerSignature.title"/>
 </title>
 
 </head>
@@ -56,19 +59,19 @@ Provider Signature
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                prefs
+                <bean:message key="provider.providerSignature.msgPrefs"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                          Provider Signature
+                          <bean:message key="provider.providerSignature.msgTitle"/>
                         </td>
                         <td  >
                           &nbsp;
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -82,11 +85,11 @@ Provider Signature
             <% boolean hasSig = sig.hasSignature(curUser_no);
                if (hasSig){
             %>
-               Your current Signature is <u><%=sig.getSignature(curUser_no)%></u> <br>
-               Click <a href="editSignature.jsp">here</a> to change it
+               <bean:message key="provider.providerSignature.msgCurrentSignature"/> <u><%=sig.getSignature(curUser_no)%></u> <br>
+               <a href="editSignature.jsp"><bean:message key="provider.providerSignature.btnClickHere"/></a> <bean:message key="provider.providerSignature.msgChangeIt"/>
             <% }else{%>
-               You do not have a Signature set<br>
-               Click <a href="editSignature.jsp">here</a> to create one
+               <bean:message key="provider.providerSignature.msgSigNotSet"/><br>
+               <a href="editSignature.jsp"><bean:message key="provider.providerSignature.btnClickHere"/></a> <bean:message key="provider.providerSignature.msgCreate"/>
             <%}%> 
             </td>
         </tr>
@@ -100,4 +103,4 @@ Provider Signature
         </tr>
     </table>
 </body>
-</html>
+</html:html>
