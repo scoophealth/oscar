@@ -201,7 +201,11 @@
     <form-bean      name="EctEditMeasurementGroupForm"
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctEditMeasurementGroupForm"/> 
     <form-bean      name="EctDefineNewMeasurementGroupForm"
-                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDefineNewMeasurementGroupForm"/> 
+                    type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDefineNewMeasurementGroupForm">
+                    <form-property
+                        name="groupName"
+                        type="java.lang.String"/>                                                 
+    </form-bean> 
     <form-bean      name="EctSetupAddMeasurementGroupForm"
                     type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasurementGroupForm"/> 
     <form-bean      name="EctAddMeasurementGroupForm"
@@ -1039,7 +1043,7 @@
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDefineNewMeasurementGroupAction"
                 name="EctDefineNewMeasurementGroupForm"
                 scope="request"
-                input="/oscarEncounter/oscarMeasurements/DefineNewMeasurementGroup">                
+                input="/oscarEncounter/oscarMeasurements/DefineNewMeasurementGroup.jsp">                
        <forward name="continue" path="/oscarEncounter/oscarMeasurements/ProcessAddMeasurementGroupAction.jsp"/>
     </action>
     <action     path="/oscarEncounter/oscarMeasurements/SetupAddMeasurementGroup"
