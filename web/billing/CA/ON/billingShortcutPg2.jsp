@@ -108,7 +108,7 @@
   }
 
   // save the billing if needed
-  if(request.getParameter("submit")!=null && "Save".equals(request.getParameter("submit"))) {
+  if(request.getParameter("submit")!=null && ("Next".equals(request.getParameter("submit"))||"Save".equals(request.getParameter("submit"))  ) ) {
     // parse billing date
     int NUMTYPEINFIELD = 5;
 	// get billing detail info
@@ -334,6 +334,7 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
 			}
 		} // end of for loop
 		msg = "<br>Billing records were added.<br>";
+		msg += "<script language=\"JavaScript\"> self.close();</script>/>";
 		msg += "<input type=\"button\" name=\"submit\" value=\" Close \" onclick=\"self.close();\"/>";
 	}
   }
@@ -357,19 +358,25 @@ System.out.println(" * ******************************" + sql);
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
   <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+	<script language="JavaScript">
+	<!--
+	    function onSave() {
+	        //document.forms[0].submit.value="save";
+	        var ret = true;
+	        if(ret==true)
+	        {
+	            ret = confirm("Are you sure you want to save this form?");
+	        }
+	        return ret;
+	    }
+	//-->
+	</script>
 </head>
 
-  <script language="JavaScript">
-
-            <!--
-
-//-->
-
-  </script>
-  <body topmargin="0" >
+<body topmargin="0" >
 
   <table border="0" cellpadding="0" cellspacing="2" width="100%" bgcolor="#CCCCFF">
-    <form method="post" name="titlesearch" action="billingShortcutPg2.jsp" >
+    <form method="post" name="titlesearch" action="billingShortcutPg2.jsp"  onsubmit="return onSave();">
       <tr>
         <td>
           <table border="0" cellspacing="0" cellpadding="0" width="100%">
