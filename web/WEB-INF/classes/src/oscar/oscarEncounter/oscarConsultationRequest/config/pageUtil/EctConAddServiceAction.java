@@ -37,7 +37,7 @@ import oscar.oscarDB.DBHandler;
 public class EctConAddServiceAction extends Action
 {
 
-    public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
         EctConAddServiceForm addServiceForm = (EctConAddServiceForm)form;

@@ -45,7 +45,7 @@ import org.apache.struts.util.MessageResources;
 public class BillingCreateBillingAction extends Action {
     
     
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
