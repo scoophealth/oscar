@@ -75,6 +75,7 @@ public class BillingViewBean {
    private String billingPracNo = null;
    private String billingGroupNo = null;
    private String billingMasterNo = null;
+   private String billingNo = null;
    
    public void loadBilling(String billing_no) {
       try{
@@ -111,6 +112,7 @@ public class BillingViewBean {
             this.xml_starttime = rs.getString("service_start_time");
             this.xml_endtime = rs.getString("service_end_time");
             this.billingMasterNo = rs.getString("billingmaster_no");
+            this.billingNo = rs.getString("billing_no");
          }
          //setBillItem(billingItemsArray);
          rs.close();
@@ -223,5 +225,21 @@ public class BillingViewBean {
    public void setBillingMasterNo(java.lang.String billingMasterNo) {
       this.billingMasterNo = billingMasterNo;
    }   
+   
+   /**
+    * Getter for property billingNo.
+    * @return Value of property billingNo.
+    */
+   public java.lang.String getBillingNo() {
+      return billingNo;
+   }
+   
+   /**
+    * Setter for property billingNo.
+    * @param billingNo New value of property billingNo.
+    */
+   public void setBillingNo(java.lang.String billingNo) {
+      this.billingNo = billingNo;
+   }
    
 }
