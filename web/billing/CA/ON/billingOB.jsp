@@ -148,8 +148,10 @@ function checkData() {
     } else if(document.forms[0].xml_diagnostic_detail.value == ""){
     	alert("Please input a diagnostic code!");
         b = false;
+    } else if(document.forms[0].xml_billtype.options[document.forms[0].xml_billtype.selectedIndex].value == "NOB | Do Not Bill"){
+    	alert("The billing type is 'do not bill'.");
+        b = false;
 	}
-
     return b;
 }
 
