@@ -59,6 +59,18 @@
     <title>Antenatal Record 2</title>
     <html:base/>
     <link rel="stylesheet" type="text/css" href="<%=bView?"bcArStyleView.css" : "bcArStyle.css"%>">
+  <!-- calendar stylesheet -->
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+  <!-- main calendar program -->
+  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+  <!-- language for the calendar -->
+  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+  <!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <style type="text/css">
 <!--
 .demo  {color:#000033; background-color:#cccccc; layer-background-color:#cccccc;
@@ -69,6 +81,9 @@
         z-index:99;  visibility:hidden;}
 .demo2  {color:#000033; background-color:silver; layer-background-color:#cccccc;
         position:absolute; top:40px; left:370px; width:190px; height:80px;
+        z-index:99;  visibility:hidden;}
+.demo3  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:220px; left:300px; width:80px; height:30px;
         z-index:99;  visibility:hidden;}
 -->
 </style>
@@ -718,6 +733,13 @@ function calToday(field) {
      <tr><td><a href=# onclick="insertBox('transv', 'Langdiv'); return false;">transv</a></td></tr>
    </table>
 </div>
+<div ID="GBSdiv" class="demo3">
+   <table bgcolor='silver' width='100%'>
+     <tr><td align='right'><a href=# onclick="showHideBox('GBSdiv',0); return false;">X</a></td></tr>
+     <tr><th><a href=# onclick="insertBox('+', 'GBSdiv'); return false;">&nbsp;&nbsp;+&nbsp;&nbsp;</a></th></tr>
+     <tr><th><a href=# onclick="insertBox('-', 'GBSdiv'); return false;">&nbsp;&nbsp;-&nbsp;&nbsp;</a></th></tr>
+   </table>
+</div>
 <div ID="UrineDiv" class="demo">
    <table bgcolor='silver' width='100%'>
      <tr><td align='right'><a href=# onclick="showHideBox('UrineDiv',0); return false;">X</a></td></tr>
@@ -879,22 +901,25 @@ function calToday(field) {
 		  <td align="center" width="50%"><span class="small9"><I>D M Y</I></font></td>
 		  <td align="center"><span class="small9"><I>Results</I></font></td>
 		</tr><tr>
-		  <td>
-          <input type="text" name="ar2_labRATDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRATDate1", "") %>" />
+		  <td nowrap>
+          <input type="text" name="ar2_labRATDate1" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate1", "") %>" />
+          <img src="../images/cal.gif" id="ar2_labRATDate1_cal">
 		  </td>
 		  <td>
           <input type="text" name="ar2_labRATRes1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRATRes1", "") %>"  />
 		  </td>
 		</tr><tr>
-		  <td>
-          <input type="text" name="ar2_labRATDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRATDate2", "") %>" />
+		  <td nowrap>
+          <input type="text" name="ar2_labRATDate2" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate2", "") %>" />
+          <img src="../images/cal.gif" id="ar2_labRATDate2_cal">
 		  </td>
 		  <td>
           <input type="text" name="ar2_labRATRes2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRATRes2", "") %>"  />
 		  </td>
 		</tr><tr>
-		  <td>
-          <input type="text" name="ar2_labRATDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRATDate3", "") %>" />
+		  <td nowrap>
+          <input type="text" name="ar2_labRATDate3" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate3", "") %>" />
+          <img src="../images/cal.gif" id="ar2_labRATDate3_cal">
 		  </td>
 		  <td>
           <input type="text" name="ar2_labRATRes3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRATRes3", "") %>"  />
@@ -905,9 +930,11 @@ function calToday(field) {
 		</tr><tr>
 		  <td>
           <input type="text" name="ar2_labRhIgG" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRhIgG", "") %>" />
+          <img src="../images/cal.gif" id="ar2_labRhIgG_cal">
 		  </td>
 		  <td>
           <input type="text" name="ar2_labRhIgG2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRhIgG2", "") %>" />
+          <img src="../images/cal.gif" id="ar2_labRhIgG2_cal">
 		  </td>
 		</tr>
       </table>
@@ -1012,8 +1039,9 @@ function calToday(field) {
           <td>
           <input type="text" name="ar2_labGWeek" style="width:100%" size="3" maxlength="5" value="<%= props.getProperty("ar2_labGWeek", "") %>"  />
           </td>
-          <td>
-          <input type="text" name="ar2_labDiabDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labDiabDate", "") %>" />
+          <td nowrap>
+          <input type="text" name="ar2_labDiabDate" size="8" maxlength="10" value="<%= props.getProperty("ar2_labDiabDate", "") %>" />
+          <img src="../images/cal.gif" id="ar2_labDiabDate_cal">
           </td>
 		  <td>
           <input type="text" name="ar2_labDiabRes" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labDiabRes", "") %>"  />
@@ -1037,7 +1065,7 @@ function calToday(field) {
 		  Yes</span>
           </td>
           <td>
-          <input type="text" name="ar2_labGBSRes" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labGBSRes", "") %>"  />
+          <input type="text" name="ar2_labGBSRes" class="spe" onDblClick="showPGBox('GBSdiv',1, this, event, 'ar2_labGBSRes', 400, 331, 26);" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labGBSRes", "") %>"  />
           </td>
 		</tr>
       </table>
@@ -2055,5 +2083,21 @@ function calToday(field) {
 
 
 </html:form>
+<script type="text/javascript">
+    Calendar.setup({
+        inputField     :    "ar2_labDiabDate",      // id of the input field
+        ifFormat       :    "%d/%m/%Y",       // format of the input field
+        showsTime      :    false,            // will display a time selector
+        button         :    "ar2_labDiabDate_cal",   // trigger for the calendar (button ID)
+        singleClick    :    true,           // double-click mode
+        step           :    1                // show all years in drop-down boxes (instead of every other year as default)
+    });
+Calendar.setup({ inputField : "ar2_labRATDate1", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRATDate1_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "ar2_labRATDate2", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRATDate2_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "ar2_labRATDate3", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRATDate3_cal", singleClick : true, step : 1 });
+
+Calendar.setup({ inputField : "ar2_labRhIgG", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRhIgG_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "ar2_labRhIgG2", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRhIgG2_cal", singleClick : true, step : 1 });
+</script>
 </body>
 </html:html>

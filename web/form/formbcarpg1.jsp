@@ -68,6 +68,9 @@
 .demo1  {color:#000033; background-color:silver; layer-background-color:#cccccc;
         position:absolute; top:40px; left:370px; width:190px; height:80px;
         z-index:99;  visibility:hidden;}
+.demo2  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:40px; left:320px; width:150px; height:220px;
+        z-index:99;  visibility:hidden;}
 -->
 </style>
 </head>
@@ -112,7 +115,7 @@ function showDef(str, field) {
         var ret = checkAllDates();
         if(ret==true)
         {
-            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+Part+1&__cfgfile=bcar1PrintCfgPg1&__cfgfile=bcar1PrintCfgPg2&__template=bcar1";
+            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+Part+1&__cfgfile=bcar1PrintCfgPg1&__template=bcar1";
             document.forms[0].target="_blank";            
         }
         return ret;
@@ -340,6 +343,24 @@ function calByLMP() {
      <tr><td><a href=# onclick="insertBox('Urdu','pg1_langPref', 'Langdiv'); return false;">Urdu</a></td></tr>
    </table>
 </div>
+<div ID="Origdiv" class="demo2">
+   <table bgcolor='silver' width='100%'>
+     <tr><td align='right'><a href=# onclick="showHideBox('Origdiv',0); return false;">X</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Caucasian','pg1_ethOrig', 'Origdiv'); return false;">Caucasian</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Black','pg1_ethOrig', 'Origdiv'); return false;">Black</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('South Asian','pg1_ethOrig', 'Origdiv'); return false;">South Asian</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Pakistani','pg1_ethOrig', 'Origdiv'); return false;">Pakistani</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Sri Lankan','pg1_ethOrig', 'Origdiv'); return false;">Sri Lankan</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Japanese','pg1_ethOrig', 'Origdiv'); return false;">Japanese</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Filipino','pg1_ethOrig', 'Origdiv'); return false;">Filipino</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Chinese','pg1_ethOrig', 'Origdiv'); return false;">Chinese</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Vietnamese','pg1_ethOrig', 'Origdiv'); return false;">Vietnamese</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Hispanic','pg1_ethOrig', 'Origdiv'); return false;">Hispanic</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('First Nations','pg1_ethOrig', 'Origdiv'); return false;">First Nations</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Jewish','pg1_ethOrig', 'Origdiv'); return false;">Jewish</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Other','pg1_ethOrig', 'Origdiv'); return false;">Other</a></td></tr>
+   </table>
+</div>
 <div ID="Instrdiv" class="demo1">
 	<center>
    <table bgcolor='#007FFF' width='99%'>
@@ -445,7 +466,7 @@ function calByLMP() {
       <input type="text" name="pg1_maidenName" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_maidenName", "") %>" @oscar.formDB  />
       </td>
 	  <td width="33%">ETHNIC ORIGIN<br>
-      <input type="text" name="pg1_ethOrig" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_ethOrig", "") %>" @oscar.formDB  />
+      <input type="text" name="pg1_ethOrig" class="spe" onDblClick="showHideBox('Origdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_ethOrig", "") %>" @oscar.formDB  />
 	  </td>
 	  
 	  <td><span class="small9">LANGUAGE PREFERRED</span><br>

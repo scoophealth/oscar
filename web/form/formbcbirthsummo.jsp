@@ -59,6 +59,18 @@
 <head>
     <title>Birth Summary (Mother:)</title>
     <link rel="stylesheet" type="text/css" href="bcArStyle.css" >
+  <!-- calendar stylesheet -->
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+  <!-- main calendar program -->
+  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+  <!-- language for the calendar -->
+  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+  <!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
     <html:base/>
 </head>
 
@@ -456,7 +468,9 @@ var maxYear=9900;
 
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
     <tr>
-      <td width="55%" >DATE<br>
+      <td width="55%" >DATE
+		<img src="../images/cal.gif" id="pg1_formDate_cal">
+      <br>
       <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
       <td >MOTHER'S I.D. NUMBER<br>
@@ -1075,7 +1089,8 @@ var maxYear=9900;
 		<input type="text" name="birTimeHour1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour1", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate1", "") %>" @oscar.formDB  dbType="date"/>
+		<input type="text" name="birTimeDate1" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate1", "") %>" @oscar.formDB  dbType="date"/>
+          <img src="../images/cal.gif" id="birTimeDate1_cal">
 		</td>
 	  </tr><tr>
 		<td align="right">1st STAGE STARTED</td>
@@ -1083,7 +1098,8 @@ var maxYear=9900;
 		<input type="text" name="birTimeHour2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour2", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate2", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate2" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate2", "") %>" @oscar.formDB dbType="date" />
+          <img src="../images/cal.gif" id="birTimeDate2_cal">
 		</td>
 	  </tr><tr>
 		<td align="right">2nd STAGE STARTED</td>
@@ -1091,7 +1107,8 @@ var maxYear=9900;
 		<input type="text" name="birTimeHour3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour3", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate3", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate3" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate3", "") %>" @oscar.formDB dbType="date" />
+          <img src="../images/cal.gif" id="birTimeDate3_cal">
 		</td>
 	  </tr><tr>
 		<td align="right">NEWBORN DELIVERED</td>
@@ -1099,7 +1116,8 @@ var maxYear=9900;
 		<input type="text" name="birTimeHour4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour4", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate4", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate4" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate4", "") %>" @oscar.formDB dbType="date" />
+          <img src="../images/cal.gif" id="birTimeDate4_cal">
 		</td>
 	  </tr><tr>
 		<td align="right">PLACENTA DELIVERED</td>
@@ -1107,7 +1125,8 @@ var maxYear=9900;
 		<input type="text" name="birTimeHour5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour5", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate5", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate5" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate5", "") %>" @oscar.formDB dbType="date" />
+          <img src="../images/cal.gif" id="birTimeDate5_cal">
 		</td>
 	  </tr>
 	  </table>
@@ -1171,6 +1190,7 @@ var maxYear=9900;
 		</td>
 		<td align="center" rowspan="2"><B>STILLBIRTH</B> (dd/mm/yyyy)<br>
 		Last FHR
+          <img src="../images/cal.gif" id="birFHR_cal">
 		<input type="text" name="birFHR" size="10" maxlength="10" value="<%= props.getProperty("birFHR", "") %>" @oscar.formDB  dbType="date"/>
 		</td>
 	  </tr><tr>
@@ -1333,5 +1353,15 @@ var maxYear=9900;
 </table>
 
 </html:form>
+<script type="text/javascript">
+Calendar.setup({ inputField : "pg1_formDate", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_formDate_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "birTimeDate1", ifFormat : "%d/%m/%Y", showsTime :false, button : "birTimeDate1_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "birTimeDate2", ifFormat : "%d/%m/%Y", showsTime :false, button : "birTimeDate2_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "birTimeDate3", ifFormat : "%d/%m/%Y", showsTime :false, button : "birTimeDate3_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "birTimeDate4", ifFormat : "%d/%m/%Y", showsTime :false, button : "birTimeDate4_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "birTimeDate5", ifFormat : "%d/%m/%Y", showsTime :false, button : "birTimeDate5_cal", singleClick : true, step : 1 });
+
+Calendar.setup({ inputField : "birFHR", ifFormat : "%d/%m/%Y", showsTime :false, button : "birFHR_cal", singleClick : true, step : 1 });
+</script>
 </body>
 </html:html>

@@ -58,6 +58,18 @@
 <head>
     <title>New Born Record (Baby)</title>
     <link rel="stylesheet" type="text/css" href="<%=bView?"bcArStyleView.css" : "bcArStyle.css"%>">
+  <!-- calendar stylesheet -->
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+  <!-- main calendar program -->
+  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+  <!-- language for the calendar -->
+  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+  <!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
     <html:base/>
 </head>
 
@@ -456,10 +468,19 @@ function onCheckSlave(a, masterName) {
       <input type="text" name="c_l" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_l", "") %>" @oscar.formDB />
       </th>
       <td width="20%">EDD dd/mm/yyyy
-      <input type="text" name="pg1_eddByDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg1_eddByDate" size="8" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" @oscar.formDB dbType="date" />
+          <img src="../images/cal.gif" id="pg1_eddByDate_cal">
       </td>
-	  <td width="20%" nowrap>BLOOD GROUP/Rh<br>
-      <input type="text" name="pg1_bloodGrpRh" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_bloodGrpRh", "") %>" @oscar.formDB  />
+	  <td width="20%" nowrap align="center">BLOOD GROUP/Rh<br>
+      <!--input type="text" name="pg1_bloodGrpRh" style="width:100%" size="10" maxlength="20" value="<%--= props.getProperty("pg1_bloodGrpRh", "") --%>" @oscar.formDB  /-->
+          <select name="pg1_bloodGrpRh">
+          <%
+          String[] optBG1 = {"", "O", "A", "B", "AB"};
+          for (int i=0; i<optBG1.length; i++) {
+          %>
+            <option value="<%=optBG1[i]%>" <%=props.getProperty("pg1_bloodGrpRh", "").equals(optBG1[i])?"selected":""%> ><%=optBG1[i]%></option>
+          <%}%>
+          </select>
 	  </td>
 	  <td nowrap>RH ANTIB<br>
       <input type="text" name="pg1_RhAntib" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_RhAntib", "") %>" @oscar.formDB  />
@@ -486,7 +507,9 @@ function onCheckSlave(a, masterName) {
       <td width="55%">HOSPITAL NAME<br>
       <input type="text" name="c_hospitalName" style="width:100%" size="30" maxlength="80" value="<%= props.getProperty("c_hospitalName", "") %>" @oscar.formDB />
       </td>
-      <td>DATE<br>
+      <td>DATE
+          <img src="../images/cal.gif" id="pg1_formDate_cal">
+      <br>
       <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
     </tr><tr>
@@ -625,6 +648,7 @@ function onCheckSlave(a, masterName) {
   </tr><tr>
 	<td colspan="2">BIRTHDATE
 	<input type="text" name="pg1_delRomBirthDay" size="10" maxlength="10" value="<%= props.getProperty("pg1_delRomBirthDay", "") %>" @oscar.formDB  dbType="date"/>
+          <img src="../images/cal.gif" id="pg1_delRomBirthDay_cal">
 	TIME
 	<input type="text" name="pg1_delRomBirthTime" size="5" maxlength="5" value="<%= props.getProperty("pg1_delRomBirthTime", "") %>" @oscar.formDB  dbType="time"/>
 	</td>
@@ -976,7 +1000,7 @@ function onCheckSlave(a, masterName) {
 	RM/RN</td>
 	<td>SIGNATURE
 	<input type="text" name="pg1_ResSig3" size="20" maxlength="60" value="<%= props.getProperty("pg1_ResSig3", "") %>" @oscar.formDB /> 
-	RM/RN</td>
+	MD</td>
   </tr>
   </table>
 
@@ -1336,7 +1360,9 @@ function onCheckSlave(a, masterName) {
   
 	<table class="small9" width="100%" border="0"  cellspacing="0" cellpadding="0">
 	<tr>
-	  <td width="20%">DATE<br>
+	  <td width="20%">DATE
+		<img src="../images/cal.gif" id="pg1_Date_cal">
+	  <br>
 	  <input type="text" name="pg1_Date" size="10" maxlength="10" value="<%= props.getProperty("pg1_Date", "") %>" @oscar.formDB  dbType="date"/> 
 	  </td>
 	  <td width="10%">TIME<br>
@@ -1387,10 +1413,18 @@ function onCheckSlave(a, masterName) {
     </tr>
 </table>
 
-
-
-
+<br>
+<br>
+<br>
+<br>
 
 </html:form>
+<script type="text/javascript">
+Calendar.setup({ inputField : "pg1_eddByDate", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_eddByDate_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_formDate", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_formDate_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_delRomBirthDay", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_delRomBirthDay_cal", singleClick : true, step : 1 });
+
+Calendar.setup({ inputField : "pg1_Date", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_Date_cal", singleClick : true, step : 1 });
+</script>
 </body>
 </html:html>
