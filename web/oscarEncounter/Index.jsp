@@ -623,8 +623,11 @@ border-right: 2px solid #cfcfcf;
                         <% } else {%>
                             <a href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')"><bean:message key="global.immunizations"/></a><br>
                         <% } %>
-                        <!--<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')">oscarComm</a><br> -->
-                        <a href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')"><bean:message key="global.oscarComm"/></a><br>
+                        <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
+                        	<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')"><bean:message key="global.oscarComm"/></a><br> 
+                        <% } else {%>
+                        	<a href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')"><bean:message key="global.oscarComm"/></a><br>
+                        <% } %>
                         <a href=# onClick="popupOscarCon(580,900,'../oscarResearch/oscarDxResearch/dxResearch.jsp?demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.disease"/></a><br>
                   <a href=# onClick="popupOscarCon(580,800,'../appointment/appointmentcontrol.jsp?keyword=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&displaymode=<%=URLEncoder.encode("Search ")%>&search_mode=search_name&originalpage=<%=URLEncoder.encode("../tickler/ticklerAdd.jsp")%>&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="oscarEncounter.Index.addTickler"/></a><br>                
                  </td>
