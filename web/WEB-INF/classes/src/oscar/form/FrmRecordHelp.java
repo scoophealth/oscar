@@ -1,125 +1,122 @@
 /*
- * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ * This software is published under the GPL GNU General Public License. This program is free
+ * software; you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version. * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details. * * You should have
+ * received a copy of the GNU General Public License along with this program; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * <OSCAR
+ * TEAM> This software was written for the Department of Family Medicine McMaster Unviersity
+ * Hamilton Ontario, Canada
  */
 package oscar.form;
 
-import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Properties;
+
+import org.w3c.dom.Document;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
-import oscar.util.*;
-import oscar.OscarProperties;
-import org.w3c.dom.Document;
+import oscar.util.JDBCUtil;
+import oscar.util.UtilDateUtilities;
 
 public class FrmRecordHelp {
-	private String _dateFormat = "yyyy/MM/dd";
+    private String _dateFormat = "yyyy/MM/dd";
 
-	public void setDateFormat(String s) {// "dd/MM/yyyy" 
-		_dateFormat = s;
-	}
+    public void setDateFormat(String s) {// "dd/MM/yyyy"
+        _dateFormat = s;
+    }
 
     public Properties getFormRecord(String sql) //int demographicNo, int existingID)
-        throws SQLException  {
+            throws SQLException {
         Properties props = new Properties();
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
-		ResultSet rs = db.GetSQL(sql);
-		if(rs.next()) {
-			ResultSetMetaData md = rs.getMetaData();
-			for(int i = 1; i <= md.getColumnCount(); i++)  {
-				String name = md.getColumnName(i);
-				String value;
+        ResultSet rs = db.GetSQL(sql);
+        if (rs.next()) {
+            ResultSetMetaData md = rs.getMetaData();
+            for (int i = 1; i <= md.getColumnCount(); i++) {
+                String name = md.getColumnName(i);
+                String value;
 
-				if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))  {
-					if(rs.getInt(i) == 1)	value = "checked='checked'";
-					else	value = "";
-				} else if(md.getColumnTypeName(i).equalsIgnoreCase("date"))	value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
-				else if(md.getColumnTypeName(i).equalsIgnoreCase("timestamp")) value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd HH:mm:ss");
-				else	value = rs.getString(i);
+                if (md.getColumnTypeName(i).equalsIgnoreCase("TINY")) {
+                    if (rs.getInt(i) == 1)
+                        value = "checked='checked'";
+                    else
+                        value = "";
+                } else if (md.getColumnTypeName(i).equalsIgnoreCase("date"))
+                    value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
+                else if (md.getColumnTypeName(i).equalsIgnoreCase("timestamp"))
+                    value = UtilDateUtilities.DateToString(rs.getTimestamp(i), "yyyy/MM/dd HH:mm:ss");
+                else
+                    value = rs.getString(i);
 
-				if(value != null)	props.setProperty(name, value);
-			}
-		}
+                if (value != null)
+                    props.setProperty(name, value);
+            }
+        }
         rs.close();
         db.CloseConn();
 
         return props;
     }
 
-    public synchronized int saveFormRecord(Properties props, String sql)  throws SQLException  {
+    public synchronized int saveFormRecord(Properties props, String sql) throws SQLException {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        
-        ResultSet rs = db.GetSQL(sql, true);        
-        rs.moveToInsertRow();        
-	rs = updateResultSet(props,  rs, true);
+
+        ResultSet rs = db.GetSQL(sql, true);
+        rs.moveToInsertRow();
+        rs = updateResultSet(props, rs, true);
         rs.insertRow();
-        String saveAsXml = OscarProperties.getInstance().getProperty("save_as_xml", "false"); 
+        String saveAsXml = OscarProperties.getInstance().getProperty("save_as_xml", "false");
         System.out.println("the value of save_as_xml is: " + saveAsXml);
-        
-	if(saveAsXml.equalsIgnoreCase("true")){
+
+        if (saveAsXml.equalsIgnoreCase("true")) {
             //System.out.println("savs as XML");
             String demographicNo = props.getProperty("demographic_no");
             int index = sql.indexOf("form");
-            int spaceIndex = sql.indexOf(" ",index);;            
-            String formClass = sql.substring(index, spaceIndex);            
+            int spaceIndex = sql.indexOf(" ", index);
+            ;
+            String formClass = sql.substring(index, spaceIndex);
             Date d = UtilDateUtilities.now();
-            String now = UtilDateUtilities.DateToString(d,"yyyyMMddHHmmss");
-            String place= OscarProperties.getInstance().getProperty("form_record_path", "/root");            
-            
-            if(!place.endsWith(System.getProperty("file.separator")))
-                place = place+System.getProperty("file.separator");
-            String fileName = place+formClass+"_"+demographicNo+"_"+now+".xml";
+            String now = UtilDateUtilities.DateToString(d, "yyyyMMddHHmmss");
+            String place = OscarProperties.getInstance().getProperty("form_record_path", "/root");
 
-            try{
+            if (!place.endsWith(System.getProperty("file.separator")))
+                place = place + System.getProperty("file.separator");
+            String fileName = place + formClass + "_" + demographicNo + "_" + now + ".xml";
+
+            try {
                 Document doc = JDBCUtil.toDocument(rs);
-                JDBCUtil.saveAsXML(doc,fileName);
-            }
-            catch (Exception e){            
+                JDBCUtil.saveAsXML(doc, fileName);
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
-            }        
+            }
         }
         rs.close();
 
         int ret = 0;
-        /* if db_type = mysql return LAST_INSERT_ID()
-         * but if db_type = postgresql, return a prepared statement, since
-         * here we dont know which sequence will be used
-         */ 
-        String db_type = OscarProperties.getInstance() != null ? OscarProperties.getInstance().getProperty("db_type", "") : "";
+        /*
+         * if db_type = mysql return LAST_INSERT_ID() but if db_type = postgresql, return a prepared
+         * statement, since here we dont know which sequence will be used
+         */
+        String db_type = OscarProperties.getInstance() != null ? OscarProperties.getInstance().getProperty("db_type",
+                "") : "";
         if (db_type.equals("") || db_type.equalsIgnoreCase("mysql")) {
-        	sql = "SELECT LAST_INSERT_ID()";
+            sql = "SELECT LAST_INSERT_ID()";
         } else if (db_type.equalsIgnoreCase("postgresql")) {
-        	sql = "SELECT CURRVAL('?')";
+            sql = "SELECT CURRVAL('?')";
         } else {
-        	throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+            throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
         }
         rs = db.GetSQL(sql);
-        if(rs.next())
+        if (rs.next())
             ret = rs.getInt(1);
         rs.close();
         db.CloseConn();
@@ -127,20 +124,20 @@ public class FrmRecordHelp {
         return ret;
     }
 
-
-    public ResultSet updateResultSet(Properties props,  ResultSet rs, boolean bInsert)  throws SQLException  {
+    public ResultSet updateResultSet(Properties props, ResultSet rs, boolean bInsert) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
-        for(int i = 1; i <= md.getColumnCount(); i++)  {
+        for (int i = 1; i <= md.getColumnCount(); i++) {
             String name = md.getColumnName(i);
-            if(name.equalsIgnoreCase("ID")) {
-				if (bInsert)	rs.updateInt(name, 0);
+            if (name.equalsIgnoreCase("ID")) {
+                if (bInsert)
+                    rs.updateInt(name, 0);
                 continue;
             }
 
             String value = props.getProperty(name, null);
-            if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))  {
-                if(value != null) {
-                    if(value.equalsIgnoreCase("on") || value.equalsIgnoreCase("checked='checked'"))
+            if (md.getColumnTypeName(i).equalsIgnoreCase("TINY")) {
+                if (value != null) {
+                    if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("checked='checked'"))
                         rs.updateInt(name, 1);
                     else
                         rs.updateInt(name, 0);
@@ -150,74 +147,78 @@ public class FrmRecordHelp {
                 continue;
             }
 
-            if(md.getColumnTypeName(i).equalsIgnoreCase("date")) {
+            if (md.getColumnTypeName(i).equalsIgnoreCase("date")) {
                 java.util.Date d;
-                if(md.getColumnName(i).equalsIgnoreCase("formEdited"))
+                if (md.getColumnName(i).equalsIgnoreCase("formEdited"))
                     d = UtilDateUtilities.Today();
                 else
                     d = UtilDateUtilities.StringToDate(value, _dateFormat);
-                if(d == null)
+                if (d == null)
                     rs.updateNull(name);
                 else
                     rs.updateDate(name, new java.sql.Date(d.getTime()));
                 continue;
             }
 
-            if(md.getColumnTypeName(i).equalsIgnoreCase("timestamp")) {
+            if (md.getColumnTypeName(i).equalsIgnoreCase("timestamp")) {
                 Date d;
-                if(md.getColumnName(i).equalsIgnoreCase("formEdited"))  {
+                if (md.getColumnName(i).equalsIgnoreCase("formEdited")) {
                     d = UtilDateUtilities.Today();
                 } else {
                     d = UtilDateUtilities.StringToDate(value, "yyyyMMddHHmmss");
                 }
-                if(d == null)
+                if (d == null)
                     rs.updateNull(name);
                 else
                     rs.updateTimestamp(name, new java.sql.Timestamp(d.getTime()));
                 continue;
             }
 
-            if(value == null)
+            if (value == null)
                 rs.updateNull(name);
             else
                 rs.updateString(name, value);
         }
-		return rs;
-	}
+        return rs;
+    }
 
-	//for page form
-    public void updateFormRecord(Properties props, String sql)  throws SQLException  {
+    //for page form
+    public void updateFormRecord(Properties props, String sql) throws SQLException {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
         ResultSet rs = db.GetSQL(sql, true);
         //rs.relative(0);
 
-		rs = updateResultSet(props,  rs, false);
+        rs = updateResultSet(props, rs, false);
         rs.updateRow();
 
         rs.close();
         db.CloseConn();
-	}
+    }
 
-
-    public Properties getPrintRecord(String sql) throws SQLException  {
+    public Properties getPrintRecord(String sql) throws SQLException {
         Properties props = new Properties();
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
         ResultSet rs = db.GetSQL(sql);
-        if(rs.next())  {
+        if (rs.next()) {
             ResultSetMetaData md = rs.getMetaData();
-            for(int i = 1; i <= md.getColumnCount(); i++)  {
+            for (int i = 1; i <= md.getColumnCount(); i++) {
                 String name = md.getColumnName(i);
                 String value;
 
-                if(md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1) {
-                    if(rs.getInt(i) == 1) value = "on";
-                    else value = "off";
-                } else if(md.getColumnTypeName(i).equalsIgnoreCase("date")) value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
-                else value = rs.getString(i);
+                if (md.getColumnTypeName(i).equalsIgnoreCase("TINY") && md.getScale(i) == 1) {
+                    if (rs.getInt(i) == 1)
+                        value = "on";
+                    else
+                        value = "off";
+                } else if (md.getColumnTypeName(i).equalsIgnoreCase("date"))
+                    value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
+                else
+                    value = rs.getString(i);
 
-                if(value != null) props.setProperty(name, value);
+                if (value != null)
+                    props.setProperty(name, value);
             }
         }
         rs.close();
@@ -225,7 +226,6 @@ public class FrmRecordHelp {
 
         return props;
     }
-
 
     public String findActionValue(String submit) throws SQLException {
         if (submit != null && submit.equalsIgnoreCase("print")) {
@@ -242,16 +242,20 @@ public class FrmRecordHelp {
     public String createActionURL(String where, String action, String demoId, String formId) throws SQLException {
         String temp = null;
 
-        if(action.equalsIgnoreCase("print")) {
-            temp = where + "?demoNo=" + demoId + "&formId=" + formId;   // + "&study_no=" + studyId + "&study_link" + studyLink;
+        if (action.equalsIgnoreCase("print")) {
+            temp = where + "?demoNo=" + demoId + "&formId=" + formId; // + "&study_no=" + studyId +
+                                                                      // "&study_link" + studyLink;
         } else if (action.equalsIgnoreCase("save")) {
-            temp = where + "?demographic_no=" + demoId + "&formId=" + formId ;  // "&study_no=" + studyId + "&study_link" + studyLink;  //+
+            temp = where + "?demographic_no=" + demoId + "&formId=" + formId; // "&study_no=" +
+                                                                              // studyId +
+                                                                              // "&study_link" +
+                                                                              // studyLink; //+
         } else if (action.equalsIgnoreCase("exit")) {
             temp = where;
         } else {
             temp = where;
         }
-        
+
         return temp;
     }
 }

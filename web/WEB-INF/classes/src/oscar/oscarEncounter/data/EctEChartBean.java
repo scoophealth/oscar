@@ -40,7 +40,7 @@ public class EctEChartBean {
 					+ " ORDER BY eChartId DESC limit 1";
 			ResultSet rs = db.GetSQL(sql);
 			if (rs.next()) {
-				eChartTimeStamp = rs.getDate("timeStamp");
+				eChartTimeStamp = rs.getTimestamp("timeStamp");
 				socialHistory = rs.getString("socialHistory");
 				familyHistory = rs.getString("familyHistory");
 				medicalHistory = rs.getString("medicalHistory");
