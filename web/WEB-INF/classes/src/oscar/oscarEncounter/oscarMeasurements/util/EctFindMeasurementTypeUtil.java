@@ -49,6 +49,7 @@ public class EctFindMeasurementTypeUtil {
             digester.addBeanPropertySetter("formProp/measurement/typeDesc", "typeDesc");
             digester.addBeanPropertySetter("formProp/measurement/typeDisplayName", "typeDisplayName");
             digester.addBeanPropertySetter("formProp/measurement/measuringInstrc", "measuringInstrc");
+            digester.addBeanPropertySetter("formProp/measurement/canPrefill", "canPrefill");
             
             digester.addObjectCreate("formProp/measurement/validationRule", EctValidationsBean.class);
             digester.addBeanPropertySetter("formProp/measurement/validationRule/name", "name");
