@@ -308,7 +308,7 @@
 
 <!-- OscarBilling ON start-->
     <form-bean      name="BillingDocumentErrorReportUploadForm"
-                    type="oscar.oscarBilling.ca.bc.pageUtil.BillingDocumentErrorReportUploadForm"/>    
+                    type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadForm"/>    
 
     </form-beans>
 <!-- OscarBilling ON stop -->    
@@ -1585,7 +1585,7 @@
 
     <!-- oscarBilling ON start -->
     <action     path="/oscarBilling/DocumentErrorReportUpload"
-                type="oscar.oscarBilling.ca.bc.pageUtil.BillingDocumentErrorReportUploadAction"  
+                type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadAction"  
                 name="BillingDocumentErrorReportUploadForm"              
                 scope="request"
                 input="/billing/CA/ON/billingOBECEA.jsp">                
