@@ -168,7 +168,7 @@ Vascular Tracker
         storeSMKSupportData();
         storeFTExamSupportData();
         storeEyeExamSupportData();
-            var ret = confirm("Are you sure you want to save this form?");
+            var ret = confirm("Are you sure you want to update Vascular Tracker?");
         
         return ret;
     }
