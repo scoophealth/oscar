@@ -703,7 +703,7 @@ border-right: 2px solid #cfcfcf;
                 <tr>
                     <td colspan="2">
                         <form name="measurementGroupForm">
-                        <select name="measurementGroupSelect" class="ControlSelect" onchange="popupOscarCon(500,1000,'./oscarMeasurements/SetupMeasurements.do?groupName='+document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
+                        <select name="measurementGroupSelect" class="ControlSelect" onchange="popUpMeasurements(500,1000,'./oscarMeasurements/SetupMeasurements.do?groupName='+document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
                          <%                            
                             for(int j=0; j<bean.measurementGroupNames.size(); j++) {
@@ -716,8 +716,8 @@ border-right: 2px solid #cfcfcf;
                     </td>
                 </tr>                
                 <tr>
-                    <td><input type="button" style="height:20px" name="displayHistoryButton" value="<bean:message key="oscarEncounter.Index.btnViewHistory"/>" class="ControlPushButton" onClick="popupOscarCon(600,1000,'oscarMeasurements/ProcessDisplayHistoryAction.jsp');"/></td>                
-                    <td><input type="button" style="height:20px" name="editMeasurementButton" value="<bean:message key="oscarEncounter.Index.btnCustomize"/>" class="ControlPushButton" onClick="popupOscarCon(200,400,'oscarMeasurements/EditMeasurementTypes.jsp');"/></td>
+                    <td><input type="button" style="height:20px" name="displayHistoryButton" value="<bean:message key="oscarEncounter.Index.btnViewHistory"/>" class="ControlPushButton" onClick="popUpMeasurements(600,1000,'oscarMeasurements/ProcessDisplayHistoryAction.jsp');"/></td>                
+                    <td><input type="button" style="height:20px" name="editMeasurementButton" value="<bean:message key="oscarEncounter.Index.btnCustomize"/>" class="ControlPushButton" onClick="popUpMeasurements(200,350,'oscarMeasurements/EditMeasurementTypes.jsp');"/></td>
                 </tr>                
             </table>
             <table class="LeftTable">
