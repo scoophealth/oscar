@@ -782,7 +782,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(BPComments)" size="34%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BPComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="WHRDisplay"/><br><font class="eightyPercent"><bean:write name="WHRMeasuringInstrc"/></font></td>
@@ -798,7 +798,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WHRComments)" size="34%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WHRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="WCDisplay"/><br><font class="eightyPercent"><bean:write name="WCMeasuringInstrc"/></font></td>
@@ -814,7 +814,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="34%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="HCDisplay"/><br><font class="eightyPercent"><bean:write name="HCMeasuringInstrc"/></font></td>
@@ -830,7 +830,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="34%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>                                                 
                                                  <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="WTDisplay"/><br><font class="eightyPercent"><bean:write name="WTMeasuringInstrc"/></font></td>
@@ -846,7 +846,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="34%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr class="dataEntryTable">                                                    
                                                     <td class="dataEntryTable"><bean:write name="HTDisplay"/><br><font class="eightyPercent"><bean:write name="HTMeasuringInstrc"/></font></td>   
@@ -859,7 +859,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HTValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HTDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTComments)" size="34%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="HRDisplay"/><br><font class="eightyPercent"><bean:write name="HRMeasuringInstrc"/></font></td>
@@ -872,7 +872,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HRComments)" size="34%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                             </table></td>
                                         </tr> 
@@ -1147,7 +1147,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Value)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Date)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HbA1Comments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HbA1Comments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="BGDesc"/><br><font class="eightyPercent"><bean:write name="BGMeasuringInstrc"/></font></td>
@@ -1160,7 +1160,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BGValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BGDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGComments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="LDLDesc"/><br><font class="eightyPercent"><bean:write name="LDLMeasuringInstrc"/></font></td>
@@ -1173,7 +1173,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(LDLValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(LDLDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(LDLComments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(LDLComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="HDLDesc"/><br><font class="eightyPercent"><bean:write name="HDLMeasuringInstrc"/></font></td>
@@ -1186,7 +1186,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HDLValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HDLDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HDLComments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HDLComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="TCHLDesc"/><br><font class="eightyPercent"><bean:write name="TCHLMeasuringInstrc"/></font></td>
@@ -1199,7 +1199,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TCHLValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TCHLDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(TCHLComments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TCHLComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="TRIGDesc"/><br><font class="eightyPercent"><bean:write name="TRIGMeasuringInstrc"/></font></td>
@@ -1212,7 +1212,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TRIGValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TRIGDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGComments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="UALBDesc"/><br><font class="eightyPercent"><bean:write name="UALBMeasuringInstrc"/></font></td>
@@ -1225,7 +1225,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(UALBValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(UALBDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(UALBComments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(UALBComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="24UADesc"/><br><font class="eightyPercent"><bean:write name="24UAMeasuringInstrc"/></font></td>
@@ -1238,7 +1238,7 @@ function controlEyeExam(){
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(24UAValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(24UADate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(24UAComments)" size="35%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(24UAComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                             </table></td>
                                         </tr>
