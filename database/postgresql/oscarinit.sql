@@ -3250,7 +3250,7 @@ CREATE TABLE provider (
   first_name varchar(30) NOT NULL DEFAULT '',
   provider_type varchar(15) NOT NULL DEFAULT '',
   specialty varchar(20) NOT NULL DEFAULT '',
-  team varchar(20) DEFAULT NULL,
+  team varchar(20) DEFAULT '',
   sex char(1) NOT NULL DEFAULT '',
   dob DATE DEFAULT NULL,
   address varchar(40) DEFAULT NULL,

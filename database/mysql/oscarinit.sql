@@ -2843,7 +2843,7 @@ CREATE TABLE provider (
   first_name varchar(30) NOT NULL default '',
   provider_type varchar(15) NOT NULL default '',
   specialty varchar(20) NOT NULL default '',
-  team varchar(20) default NULL,
+  team varchar(20) default '',
   sex char(1) NOT NULL default '',
   dob date default NULL,
   address varchar(40) default NULL,
