@@ -3301,6 +3301,48 @@ CREATE TABLE mdsZRG (
   KEY segmentID (segmentID)
 ) TYPE=MyISAM;
 
+
+--
+-- Table structure for table `measurements`
+--
+DROP TABLE IF EXISTS measurements;
+CREATE TABLE measurements(
+  id int UNSIGNED AUTO_INCREMENT,
+  type varchar(4) NOT NULL,
+  demographicNo int(10) NOT NULL default '0', 
+  providerNo varchar(6) NOT NULL default '',
+  dataField  varchar(10) NOT NULL,
+  measuringInstruction varchar(255) NOT NULL,  
+  comments varchar(255) NOT NULL, 
+  dateObserved datetime NOT NULL, 
+  dateEntered datetime NOT NULL,
+  PRIMARY KEY(id)
+) TYPE=MYISAM;
+
+--
+-- Table structure for table `measurementGroup`
+--
+DROP TABLE IF EXISTS measurementGroup;
+CREATE TABLE measurementGroup(
+  name varchar(100) NOT NULL,
+  typeDisplayName varchar(20) 
+) TYPE =MyISAM;
+
+--
+-- Table structure for table `measurementType`
+--
+DROP TABLE IF EXISTS measurementType;
+CREATE TABLE measurementType (
+  id int UNSIGNED AUTO_INCREMENT,
+  type varchar(4) NOT NULL,
+  typeDisplayName varchar(20) NOT NULL,
+  typeDescription varchar(255) NOT NULL, 
+  measuringInstruction varchar(255) NOT NULL, 
+  validation varchar(100) NOT NULL,
+  PRIMARY KEY(id)
+) TYPE =MyISAM;
+
+
 --
 -- Table structure for table `messagelisttbl`
 --
@@ -3792,3 +3834,19 @@ CREATE TABLE tmpdiagnosticcode (
   PRIMARY KEY  (diagnosticcode_no)
 ) TYPE=MyISAM;
 
+--
+-- Table structure for table `validations`
+--
+DROP TABLE IF EXISTS validations;
+CREATE TABLE validations(
+  id int UNSIGNED AUTO_INCREMENT,
+  name varchar(100) NOT NULL,
+  regularExp varchar(100) ,
+  maxValue double, 
+  minValue double, 
+  maxLength int(3), 
+  minLength int(3), 
+  isNumeric bool, 
+  isTrue bool,
+ PRIMARY KEY(id)
+) TYPE =MyISAM;
