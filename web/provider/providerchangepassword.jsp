@@ -67,7 +67,7 @@ function checkPwdLength() {
 
 <table width="100%" border="0" cellpadding="2" bgcolor="#eeeeee">
 <tr>
-      <td><font face="arial" size="2"><bean:message key="provider.providerchangepassword.msgInstructions"/><b><bean:message key="provider.providerchangepassword.msgUpdate"/></b><bean:message key="provider.providerchangepassword.msgClickButton"/></font></td>
+      <td><font face="arial" size="2"><bean:message key="provider.providerchangepassword.msgInstructions"/><b><bean:message key="provider.providerchangepassword.msgUpdate"/></b> <bean:message key="provider.providerchangepassword.msgClickButton"/></font></td>
     </tr>
 </table>
 <center>
