@@ -1,0 +1,503 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// *
+// *
+// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+// * This software is published under the GPL GNU General Public License. 
+// * This program is free software; you can redistribute it and/or 
+// * modify it under the terms of the GNU General Public License 
+// * as published by the Free Software Foundation; either version 2 
+// * of the License, or (at your option) any later version. * 
+// * This program is distributed in the hope that it will be useful, 
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+// * along with this program; if not, write to the Free Software 
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+// * 
+// * <OSCAR TEAM>
+// * This software was written for the 
+// * Department of Family Medicine 
+// * McMaster Unviersity 
+// * Hamilton 
+// * Ontario, Canada 
+// *
+// -----------------------------------------------------------------------------------------------------------------------
+package oscar.oscarMessenger.pageUtil;
+import oscar.oscarDB.DBHandler;
+
+public class MsgDisplayMessagesBean {
+  private String sample = "Start value";
+  //Access sample property
+
+  private String providerNo;
+  private java.util.Vector messageid;
+  private java.util.Vector status;
+  private java.util.Vector date;
+  private java.util.Vector sentby;
+  private java.util.Vector subject;
+  private java.util.Vector attach;
+  private int counter;
+  private String currentLocationId;
+
+
+
+  public java.util.Vector getAttach (){
+    return attach;
+  }
+
+
+
+  public String getCurrentLocationId(){
+        if (currentLocationId == null){
+            try{
+              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              java.sql.ResultSet rs;
+              rs = db.GetSQL("select locationId from oscarcommlocations where current = '1'");
+
+              if (rs.next()) {
+                currentLocationId = rs.getString("locationId");
+              }
+              rs.close();
+              db.CloseConn();
+            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+        }
+        return currentLocationId;
+  }
+
+
+
+  /**
+   * Used to set message ids to be viewed on the DisplayMessages.jsp
+   * @param messageid Vector, Contains all the messageids to be displayed
+   */
+  public void setMessageid(java.util.Vector messageid){
+    this.messageid = messageid;
+  }
+
+  /**
+   * calls getMessageIDS and getInfo which are used to fill the Vectors
+   * with the Message headers for the current provider No
+   * @return Vector, Contains the messageids for use on the DisplayMessage.jsp
+   * @see getMessageIDs , getInfo
+   */
+  public java.util.Vector getMessageid(){
+    getMessageIDs();
+    getInfo();
+    estInbox();
+
+    return this.messageid;
+  }
+
+  public java.util.Vector getDelMessageid(){
+    getDeletedMessageIDs();
+    getInfo();
+    estDeletedInbox();
+    return this.messageid;
+  }
+
+  public java.util.Vector getSentMessageid(){
+    getSentMessageIDs();
+    estSentItemsInbox();
+    return this.messageid;
+  }
+
+  /**
+   * Used to set the Status vector. either read, new, del
+   * @param status Vector, Strings either read , new or del
+   */
+  public void setStatus(java.util.Vector status){
+    this.status = status;
+  }
+
+  /**
+   * Will check to see if the status has already been set, if not it will intialize the
+   * Vectors of this Bean with getMessageIDs and get Info
+   * @return Vector Strings either read, new or del
+   * @see getMessageIDs, getInfo
+   */
+  public java.util.Vector getStatus(){
+    if (status == null){
+       getMessageIDs();
+       getInfo();
+    }
+  return this.status;
+  }
+
+
+  public void setDate(java.util.Vector date){
+    this.date = date;
+  }
+
+  /**
+   * Will check to see if the date has already been set, if not it will intialize the
+   * Vectors of this Bean with getMessageIDs and get Info
+   * @return Vector Strings either read, new or del
+   * @see getMessageIDs, getInfo
+   */
+  public java.util.Vector getDate(){
+    if (date == null){
+       getMessageIDs();
+       getInfo();
+    }
+  return this.date;
+  }
+
+  /**
+   * used to set the sentby Vector
+   * @param sentby Vector contains Strings of who sent the message
+   */
+  public void setSentby(java.util.Vector sentby){
+    this.sentby = sentby;
+  }
+
+  /**
+   * Will check to see if the sentby has already been set, if not it will intialize the
+   * Vectors of this Bean with getMessageIDs and get Info
+   * @return Vector Strings either read, new or del
+   * @see getMessageIDs, getInfo
+   */
+  public java.util.Vector getSentby (){
+    if (sentby == null){
+       getMessageIDs();
+       getInfo();
+    }
+  return this.sentby;
+  }
+
+  /**
+   * used to set the subject Vector of the messages
+   * @param subject Vector, contains Strings of subjects
+   */
+  public void setSubject(java.util.Vector subject){
+    this.subject = subject;
+  }
+
+  /**
+   * Will check to see if the subject has already been set, if not it will intialize the
+   * Vectors of this Bean with getMessageIDs and get Info
+   * @return Vector Strings either read, new or del
+   * @see getMessageIDs, getInfo
+   */
+   public java.util.Vector getSubject(){
+     if (subject == null){
+        getMessageIDs();
+        getInfo();
+     }
+   return this.subject;
+   }
+
+
+
+  /**
+   * Used to set the providerNo that will determine what this bean will fill itself with
+   * @param providerNo String, provider No
+   */
+   public void setProviderNo(String providerNo){
+
+     this.providerNo = providerNo;
+   }
+
+  /**
+   * gets the current provider No
+   * @return
+   */
+   public String getProviderNo(){
+     return this.providerNo;
+   }
+
+  /**
+   * This method uses the ProviderNo and searches for messages for this providerNo
+   * in the messagelisttbl
+   */
+  void getMessageIDs(){
+
+     String providerNo= this.getProviderNo();
+
+     messageid = new java.util.Vector();
+     status  = new java.util.Vector();
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        String sql = new String("select message, status from messagelisttbl where provider_no = '"+ providerNo+"' and status not like \"del\" and remoteLocation = '"+getCurrentLocationId()+"' order by message");
+        rs = db.GetSQL(sql);
+
+        while (rs.next()) {
+           System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           messageid.add( rs.getString("message")  );
+           status.add( rs.getString("status")  );
+        }
+
+       rs.close();
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+
+  }//getMessageIDs
+////////////////////////////////////////////////////////////////////////////////
+//INBOX
+  public java.util.Vector estInbox(){
+
+     String providerNo= this.getProviderNo();
+     java.util.Vector msg = new java.util.Vector();
+
+
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        +" where provider_no = '"+ providerNo+"' and status not like \"del\" and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" and ml.message = m.messageid order by message");
+        rs = db.GetSQL(sql);
+
+        while (rs.next()) {
+
+           oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
+           dm.status     = rs.getString("status");
+           dm.messageId  = rs.getString("message");
+           dm.thesubject = rs.getString("thesubject");
+           dm.thedate    = rs.getString("thedate");
+           dm.sentby     = rs.getString("sentby");
+           String att    = rs.getString("attachment");
+              if (att == null || att.equals("null") ){
+                dm.attach = "0";
+              }else{
+                dm.attach = "1";
+              }
+           msg.add(dm);
+
+           System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+
+        }
+
+       rs.close();
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+
+    return msg;
+  }
+//
+//////////////////////////////////////////////=---------------------------------
+
+////////////////////////////////////////////////////////////////////////////////
+//
+public java.util.Vector estDeletedInbox(){
+
+     String providerNo= this.getProviderNo();
+     java.util.Vector msg = new java.util.Vector();
+
+
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        +" where provider_no = '"+ providerNo+"' and status like \"del\" and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" and ml.message = m.messageid order by message");
+        rs = db.GetSQL(sql);
+
+        while (rs.next()) {
+
+           oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
+           dm.status     = "deleted";
+           dm.messageId  = rs.getString("message");
+           dm.thesubject = rs.getString("thesubject");
+           dm.thedate    = rs.getString("thedate");
+           dm.sentby     = rs.getString("sentby");
+           String att    = rs.getString("attachment");
+              if (att == null || att.equals("null") ){
+                dm.attach = "0";
+              }else{
+                dm.attach = "1";
+              }
+           msg.add(dm);
+
+           System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+
+        }
+
+       rs.close();
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+
+    return msg;
+  }
+//
+/////////////////////////////////////////////=----------------------------------
+
+
+
+  /**
+   * This method uses the ProviderNo and searches for messages for this providerNo
+   * in the messagelisttbl
+   */
+  void getDeletedMessageIDs(){
+    System.out.println("In deleted MEssages");
+     String providerNo= this.getProviderNo();
+
+     messageid = new java.util.Vector();
+     status  = new java.util.Vector();
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        String sql = new String("select message from messagelisttbl where provider_no = '"+ providerNo+"' and status like \"del\" and remoteLocation = '"+getCurrentLocationId()+"'");
+        rs = db.GetSQL(sql);
+        int cou = 0;
+        while (rs.next()) {
+           messageid.add( rs.getString("message")  );
+           status.add("deleted");
+           cou++;
+        }
+        System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
+
+       rs.close();
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
+  }//getDeletedMessageIDs
+
+  /**
+   * This method uses the ProviderNo and searches for messages for this providerNo
+   * in the messagelisttbl
+   */
+  void getSentMessageIDs(){
+    System.out.println("In sent MEssages");
+     String providerNo= this.getProviderNo();
+
+     messageid = new java.util.Vector();
+     status  = new java.util.Vector();
+     sentby = new java.util.Vector();
+     date  = new java.util.Vector();
+     subject  = new java.util.Vector();
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        String sql = new String("select messageid, thedate,  thesubject, sentby from messagetbl where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'");
+        rs = db.GetSQL(sql);
+        int cou = 0;
+        while (rs.next()) {
+           messageid.add( rs.getString("messageid")  );
+           status.add("sent");
+           sentby.add(rs.getString("sentby"));
+           date.add(rs.getString("thedate"));
+           subject.add(rs.getString("thesubject"));
+           cou++;
+        }
+        System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
+
+       rs.close();
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
+  }//getSentMessageIDs
+
+////////////////////////////////////////////////////////////////////////////////
+//INBOX
+  public java.util.Vector estSentItemsInbox(){
+
+     String providerNo= this.getProviderNo();
+     java.util.Vector msg = new java.util.Vector();
+
+
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        String sql = new String("select messageid, thedate,  thesubject, sentby, attachment from messagetbl where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'");
+
+
+        rs = db.GetSQL(sql);
+
+        while (rs.next()) {
+
+           oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
+           dm.status     = "sent";
+           dm.messageId  = rs.getString("messageid");
+           dm.thesubject = rs.getString("thesubject");
+           dm.thedate    = rs.getString("thedate");
+           dm.sentby     = rs.getString("sentby");
+           String att    = rs.getString("attachment");
+              if (att == null || att.equals("null") ){
+                dm.attach = "0";
+              }else{
+                dm.attach = "1";
+              }
+           msg.add(dm);
+
+           //System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+
+        }
+
+       rs.close();
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+
+    return msg;
+  }
+//
+//////////////////////////////////////////////=---------------------------------
+
+
+
+
+
+
+
+
+  /**
+   * This method uses the Vector initialized by getMessageIDs and fills the Vectors with
+   * the Message header Info
+   */
+  void getInfo(){
+    System.out.println("Get Info called ms = "+messageid.size());
+     sentby  = new java.util.Vector();
+     date    = new java.util.Vector();
+     subject = new java.util.Vector();
+     attach  = new java.util.Vector();
+     String att;
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        System.out.println("Messages in getInfo = "+messageid.size());
+        //make search string
+        StringBuffer stringBuffer = new StringBuffer();
+        for ( int i = 0; i < messageid.size() ; i++){
+            if (messageid.size()-1 == i){
+                stringBuffer.append(" messageid = '"+messageid.get(i)+"' ");
+            }else{
+                stringBuffer.append(" messageid = '"+messageid.get(i)+"' or ");
+            }
+        }
+
+//        for ( int i = 0; i < messageid.size() ; i++){
+//           String sql = new String("select thesubject, thedate ,sentby from messagetbl where messageid = "+ messageid.get(i) );
+           String sql = new String("select thesubject, thedate ,sentby, attachment from messagetbl where "+stringBuffer.toString()+" order by thedate");
+           rs = db.GetSQL(sql);
+           while (rs.next()) {
+              sentby.add( rs.getString("sentby")  );
+              date.add( rs.getString("thedate")  );
+              subject.add ( rs.getString("thesubject") );
+              att = rs.getString("attachment");
+              if (att == null || att.equals("null") ){
+                attach.add("0");
+              }else{
+                attach.add("1");
+              }
+           }//while
+        rs.close();
+//        }//for
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+  } //getInfo
+
+}//DisplayMessageBean
