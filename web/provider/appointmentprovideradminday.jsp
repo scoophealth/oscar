@@ -604,8 +604,13 @@ function goZoomView(s, n) {
 reason: <%=UtilMisc.htmlEscape(reason)%>
 notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
-<a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="<bean:message key="global.encounter"/>">
+<% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+rs.getString("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status;%>
+<!--<a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="<bean:message key="global.encounter"/>">-->
+<a href=# onClick="popupPage(700,980,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
+<!--<a href=# onClick="popupPage(700,980,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
+            |e</a>-->
+            
             <%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%>
             <%= bShortcutForm2?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName2+"&demographic_no="+demographic_no+"\")' title='form'>|"+formName2Short+"</a>" : ""%>
              <% if(status.indexOf('B')==-1) {             
