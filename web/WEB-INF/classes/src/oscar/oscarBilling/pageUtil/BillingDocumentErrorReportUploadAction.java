@@ -314,7 +314,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
                         String sqlAlert = "SELECT * FROM demographiccust where demographic_no ='" + rsDemo.getString("demographic_no") + "'";
                         System.out.println("Select Demo sql: " + sqlAlert);
                         ResultSet rsAlert = db.GetSQL(sqlAlert);
-                        if(rsAlert.next() && rs.next()){
+                        if(rsAlert.next()){
                             String newAlert = rsAlert.getString("cust3") + "\n" + "Invalid old version code: " + bean.getVersion() + "\nReason: " + rs.getString("MOHResponse") + "- " + rs.getString("reason");
                             String newAlertSql = "UPDATE demographiccust SET cust3 = '" + newAlert + "' where demographic_no='" + rsDemo.getString("demographic_no") + "'";
                             System.out.println("Update alert msg: " + newAlertSql);
