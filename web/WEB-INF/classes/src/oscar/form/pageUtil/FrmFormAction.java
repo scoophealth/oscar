@@ -82,6 +82,7 @@ public class FrmFormAction extends Action {
         String formName = (String) frm.getValue("formName");                        
         String formId = (String) frm.getValue("formId");
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
+        String timeStamp = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd hh:mm:ss");
         String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
                         
         Properties props = new Properties();
@@ -94,6 +95,8 @@ public class FrmFormAction extends Action {
         
         errors.clear();
         valid = true;
+        
+        String submit = request.getParameter("submit");
         
         EctMeasurementTypesBean mt;
         EctValidationsBean validation;
@@ -125,8 +128,9 @@ public class FrmFormAction extends Action {
             props.setProperty("provider_no", providerNo);
             props.setProperty("visitCod", visitCod);
             
-            //for VTForm
-            props.setProperty("diagnosis", (String) frm.getValue("diagnosisVT"));
+            //for VTForm            
+            props.setProperty("diagnosis", org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT")));
+            //System.out.println("diagnosis: " + props.getProperty("diagnosis"));
            
             startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
@@ -144,7 +148,7 @@ public class FrmFormAction extends Action {
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
-                if(!inputValue.equalsIgnoreCase(""))
+                if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))
                     write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
                 
                 //Store all input value as properties for saving to form table
@@ -173,6 +177,7 @@ public class FrmFormAction extends Action {
             delTime = endTime - startTime;
             System.out.println("Time spent on write2Measurements: " + Long.toString(delTime));
             
+            //Store the the form table for keeping the current record            
             try{
                 String sql = "SELECT * FROM form"+formName + " WHERE demographic_no='"+demographicNo + "' AND ID=0";
                 FrmRecordHelp frh = new FrmRecordHelp();
@@ -182,6 +187,7 @@ public class FrmFormAction extends Action {
             catch(SQLException e){
                 System.out.println(e.getMessage());
             }
+            
             
             //Send to Mils thru xml-rpc            
             Properties nameProps = convertName(formName);
@@ -198,9 +204,11 @@ public class FrmFormAction extends Action {
          //return mapping.findForward("success");
         //forward to the for with updated formId  
         
-        String submit = request.getParameter("submit");
+        
         System.out.println("submit value: " + submit);
         if(submit.equalsIgnoreCase("exit")){
+            String toEChart = "[" + timeStamp + ".: Vascular Tracker] \n " + (String) frm.getValue("diagnosisVT");
+            request.setAttribute("diagnosisVT", org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(toEChart));
             return (new ActionForward("/form/formSaveAndExit.jsp"));
         }
         EctFormData fData = new EctFormData();
