@@ -131,5 +131,7 @@ if ( docdesc.compareTo("") == 0 || docfilename.compareTo("") == 0 || doctype.com
             <jsp:param name="docfilename" value='' />
         </jsp:forward>
 <%  }
-} %> 
+} 
+apptMainBean.closePstmtConn();
+%> 
 </html:html>
