@@ -59,7 +59,7 @@
    </servlet>			       
    <servlet>
 	   <servlet-name>UploadTeleplanServlet</servlet-name>
-	   <servlet-class>oscar.DocumentTeleplanReportUploadServlet</servlet-class>
+	   <servlet-class>oscar.oscarBilling.MSP.DocumentTeleplanReportUploadServlet</servlet-class>
 	   <load-on-startup>0</load-on-startup>
    </servlet>
   <!-- Action Servlet Mapping -->
