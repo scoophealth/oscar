@@ -197,6 +197,7 @@ function popupDecisiontSupport(){
     var posY = 0;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=600";
     var popup=window.open(varpage, "Decision Support", windowprops);  
+    popup.focus();
     
  }
   
@@ -503,42 +504,21 @@ function controlEyeExam(){
                                                 <tr class="dataEntryTable">
                                                     <td class="dataEntryTable">Last Data</td>
                                                     <td class="dataEntryTable"><font style="font-size:80%">
-                                                        <logic:present name="SmkSLastData">
-                                                            <bean:write name="SmkSLastData"/>
-                                                            <html:hidden property="value(SmkSLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(SmkSLastData)"/>                                                        
-                                                        </logic:present>
-                                                        <logic:notPresent name="SmkSLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent></font>
+                                                            <%=request.getAttribute("SmkSLastData")%>                                                       
+
+                                                        </font>
                                                     </td>
                                                     <td class="dataEntryTable"><font style="font-size:80%">
-                                                        <logic:present name="SmkHLastData">
-                                                            <bean:write name="SmkHLastDataEnteredDate"/>
-                                                            <html:hidden property="value(SmkHLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(SmkHLastData)"/>                                                        
-                                                        </logic:present>
-                                                        <logic:notPresent name="SmkHLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent></font>
+                                                        <%=request.getAttribute("SmkHLastData")%>                                                                                                               
+                                                        </font>
                                                     </td>
                                                     <td class="dataEntryTable">
-                                                        <logic:present name="SmkCLastData"><font style="font-size:80%">                                                       
-                                                            <bean:write name="SmkCLastDataEnteredDate"/>
-                                                            <html:hidden property="value(SmkCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(SmkCLastData)"/>
-                                                        </logic:present>
-                                                        <logic:notPresent name="SmkCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent></font>
+                                                        <%=request.getAttribute("SmkCLastData")%>
+                                                        </font>
                                                     </td>
                                                     <td class="dataEntryTable"><font style="font-size:80%">
-                                                        <logic:present name="SmkCLastDataEnteredDate">
-                                                            <bean:write name="SmkCLastDataEnteredDate"/>
-                                                        </logic:present>
-                                                        <logic:notPresent name="SmkCLastDataEnteredDate">    
-                                                            &nbsp;
-                                                        </logic:notPresent></font>                                                        
+                                                        <%=request.getAttribute("SmkSLDDate")%>
+                                                        </font>                                                        
                                                     </td>
                                                     <td class="dataEntryTable">&nbsp;</td>
                                                 </tr>
@@ -580,17 +560,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="ExerDesc"/> <font class="eightyPercent"><bean:write name="ExerMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="ExerLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="ExerLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="ExerLastData"/></td></tr>
-                                                            <html:hidden property="value(ExerLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(ExerLastData)"/>
-                                                        </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="ExerLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("ExerLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("ExerLastData")%></td></tr>
+                                                            
+                                                        </table>                                                        
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(ExerValue)" size="4%" /></td>
                                                     <html:hidden property="value(ExerDate)"/>
@@ -599,17 +573,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="DietDesc"/> <font class="eightyPercent"><bean:write name="DietMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="DietLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="DietLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="DietLastData"/></td></tr>
-                                                            <html:hidden property="value(DietLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(DietLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DietLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("DietLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="DietLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(DietValue)" size="4%" /></td>
                                                     <html:hidden property="value(DietDate)"/>
@@ -639,17 +607,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="DpScDisplay"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="DpScLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="DpScLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="DpScLastData"/></td></tr>
-                                                            <html:hidden property="value(DpScLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(DpScLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DpScLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("DpScLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="DpScLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(DpScValue)" value="yes" />Yes
@@ -661,17 +623,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="StScDisplay"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="StScLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="StScLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="StScLastData"/></td></tr>
-                                                            <html:hidden property="value(StScLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(StScLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("StScLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("StScLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="StScLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(StScValue)" value="Yes" />Yes 
@@ -683,17 +639,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="LcCtDisplay"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="LcCtLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="LcCtLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="LcCtLastData"/></td></tr>
-                                                            <html:hidden property="value(LcCtLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(LcCtLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("LcCtLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("LcCtLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="LcCtLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(LcCtValue)" value="yes" />Yes 
@@ -726,17 +676,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="MedGDisplay"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="MedGLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedGLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedGLastData"/></td></tr>
-                                                            <html:hidden property="value(MedGLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(MedGLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedGLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("MedGLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="MedGLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedGValue)" value="yes" />Yes 
@@ -748,17 +692,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="MedNDisplay"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="MedNLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedNLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedNLastData"/></td></tr>
-                                                            <html:hidden property="value(MedNLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(MedNLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedNLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("MedNLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="MedNLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedNValue)" value="yes" />Yes 
@@ -770,17 +708,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="MedRDisplay"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="MedRLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedRLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedRLastData"/></td></tr>
-                                                            <html:hidden property="value(MedRLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(MedRLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedRLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("MedRLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="MedRLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedRValue)" value="yes" />Yes 
@@ -792,17 +724,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="MedADisplay"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="MedALastData">
                                                         <table cellpadding='0' cellspacing='0'>
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedALastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedALastData"/></td></tr>                                                            
-                                                            <html:hidden property="value(MedALastDataEnteredDate)"/>
-                                                            <html:hidden property="value(MedALastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedALDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("MedALastData")%></td></tr>                                                            
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="MedALastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(MedAValue)" value="yes" />Yes
@@ -846,17 +772,11 @@ function controlEyeExam(){
                                                 <tr>
                                                     <td class="dataEntryTable"><bean:write name="BPDisplay"/><br><font class="eightyPercent"><bean:write name="BPMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="BPLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="BPLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="BPLastData"/></td></tr>
-                                                            <html:hidden property="value(BPLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(BPLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("BPLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("BPLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="BPLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPDate)" size="10%" tabindex="9999"/></td>
@@ -867,15 +787,12 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="WHRLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="WHRLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="WHRLastData"/></td></tr>
-                                                            <html:hidden property="value(WHRLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(WHRLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WHRLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WHRLastData")%></td></tr>
+                                                            
                                                         </table>
                                                         </logic:present>
-                                                        <logic:notPresent name="WHRLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
+                                                        
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRValue)" size="5%"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WHRDate)" size="10%" tabindex="9999"/></td>
@@ -886,15 +803,12 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="WCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="WCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="WCLastData"/></td></tr>
-                                                            <html:hidden property="value(WCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(WCLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WCLastData")%></td></tr>
+                                                            
                                                         </table>
                                                         </logic:present>
-                                                        <logic:notPresent name="WCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
+                                                        
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="5%"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCDate)" size="10%" tabindex="9999"/></td>
@@ -905,15 +819,12 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="HCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HCLastData"/></td></tr>
-                                                            <html:hidden property="value(HCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(HCLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HCLastData")%></td></tr>
+                                                            
                                                         </table>
                                                         </logic:present>
-                                                        <logic:notPresent name="HCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
+                                                        
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
@@ -924,15 +835,12 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center">
                                                         <logic:present name="WTLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="WTLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="WTLDDate"/></td></tr>
                                                             <tr><td class="eightyPercent" align="right"><bean:write name="WTLastData"/></td></tr>
-                                                            <html:hidden property="value(WTLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(WTLastData)"/>
+                                                            
                                                         </table>
                                                         </logic:present>
-                                                        <logic:notPresent name="WTLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
+                                                        
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WTDate)" size="10%" tabindex="9999"/></td>
@@ -941,17 +849,11 @@ function controlEyeExam(){
                                                  <tr class="dataEntryTable">                                                    
                                                     <td class="dataEntryTable"><bean:write name="HTDisplay"/><br><font class="eightyPercent"><bean:write name="HTMeasuringInstrc"/></font></td>   
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="HTLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HTLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HTLastData"/></td></tr>
-                                                            <html:hidden property="value(HTLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(HTLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HTLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HTLastData")%></td></tr>
+                                                           
                                                         </table>
-                                                        </logic:present>                                                        
-                                                        <logic:notPresent name="HTLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HTValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HTDate)" size="10%" tabindex="9999"/></td>
@@ -960,17 +862,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="HRDisplay"/><br><font class="eightyPercent"><bean:write name="HRMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="HRLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HRLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HRLastData"/></td></tr>
-                                                            <html:hidden property="value(HRLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(HRLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HRLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HRLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="HRLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRDate)" size="10%" tabindex="9999"/></td>
@@ -1013,17 +909,11 @@ function controlEyeExam(){
                                                 <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="FTNoDesc"/></td>   
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="FTNoLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTNoLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTNoLastData"/></td></tr>
-                                                            <html:hidden property="value(FTNoLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(FTNoLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTNoLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTNoLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>                                                
-                                                        <logic:notPresent name="FTNoLastData">
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTNoValue)" value="yes" />Yes
@@ -1036,17 +926,11 @@ function controlEyeExam(){
                                                  <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="FTNeDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="FTNeLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTNeLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTNeLastData"/></td></tr>
-                                                            <html:hidden property="value(FTNeLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(FTNeLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTNeLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTNeLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="FTNeLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTNeValue)" value="yes" />Yes
@@ -1058,17 +942,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="FTIsDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="FTIsLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTIsLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTIsLastData"/></td></tr>
-                                                            <html:hidden property="value(FTIsLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(FTIsLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTIsLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTIsLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="FTIsLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTIsValue)" value="yes" />Yes
@@ -1080,17 +958,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="FTUlDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="FTUlLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTUlLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTUlLastData"/></td></tr>
-                                                            <html:hidden property="value(FTUlLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(FTUlLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTUlLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTUlLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="FTUlLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTUlValue)" value="yes" />Yes
@@ -1102,17 +974,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="FTInDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="FTInLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTInLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTInLastData"/></td></tr>
-                                                            <html:hidden property="value(FTInLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(FTInLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTInLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTInLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="FTInLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTInValue)" value="yes" />Yes
@@ -1124,17 +990,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="FTOtDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="FTOtLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTOtLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTOtLastData"/></td></tr>
-                                                            <html:hidden property="value(FTOtLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(FTOtLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTOtLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTOtLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="FTOtLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTOtValue)" value="yes" />Yes
@@ -1146,17 +1006,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="FTReDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="FTReLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTReLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTReLastData"/></td></tr>
-                                                            <html:hidden property="value(FTReLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(FTReLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTReLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTReLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="FTReLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>                                                  
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(FTReValue)" value="yes" />Yes
@@ -1175,17 +1029,11 @@ function controlEyeExam(){
                                                 <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="iNoDesc"/></td>   
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="iNoLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iNoLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iNoLastData"/></td></tr>
-                                                            <html:hidden property="value(iNoLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(iNoLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iNoLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iNoLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>                                                
-                                                        <logic:notPresent name="iNoLastData">
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iNoValue)" value="yes"/>Yes
@@ -1198,17 +1046,11 @@ function controlEyeExam(){
                                                  <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="iHypDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="iHypLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iHypLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iHypLastData"/></td></tr>
-                                                            <html:hidden property="value(iHypLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(iHypLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iHypLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iHypLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="iHypLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iHypValue)" value="yes" />Yes
@@ -1220,17 +1062,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="iDiaDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="iDiaLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iDiaLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iDiaLastData"/></td></tr>
-                                                            <html:hidden property="value(iDiaLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(iDiaLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iDiaLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iDiaLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="FTIsLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iDiaValue)" value="yes" />Yes
@@ -1242,17 +1078,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="iOthDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="iOthLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iOthLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iOthLastData"/></td></tr>
-                                                            <html:hidden property="value(iOthLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(iOthLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iOthLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iOthLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="iOthLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iOthValue)" value="yes" />Yes
@@ -1264,17 +1094,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="iRefDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="iRefLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iRefLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iRefLastData"/></td></tr>
-                                                            <html:hidden property="value(iRefLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(iRefLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iRefLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iRefLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="iRefLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center">
                                                         <html:radio property="value(iRefValue)" value="yes" />Yes
@@ -1313,17 +1137,11 @@ function controlEyeExam(){
                                                 <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="HbA1Desc"/><br><font class="eightyPercent"><bean:write name="HbA1MeasuringInstrc"/></font></td>   
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="HbA1LastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HbA1LastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HbA1LastData"/></td></tr>
-                                                            <html:hidden property="value(HbA1LastDataEnteredDate)"/>
-                                                            <html:hidden property="value(HbA1LastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HbA1LDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HbA1LastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>                                                
-                                                        <logic:notPresent name="HBA1LastData">
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Value)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Date)" size="10%" tabindex="9999"/></td>
@@ -1332,17 +1150,11 @@ function controlEyeExam(){
                                                  <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="BGDesc"/><br><font class="eightyPercent"><bean:write name="BGMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="BGLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="BGLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="BGLastData"/></td></tr>
-                                                            <html:hidden property="value(BGLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(BGLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("BGLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("BGLastData")%></td></tr>
+                                                           
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="BGLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BGValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BGDate)" size="10%" tabindex="9999"/></td>
@@ -1351,17 +1163,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="LDLDesc"/><br><font class="eightyPercent"><bean:write name="LDLMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="LDLLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="LDLLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="LDLLastData"/></td></tr>
-                                                            <html:hidden property="value(LDLLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(LDLLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("LDLLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("LDLLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="LDLLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(LDLValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(LDLDate)" size="10%" tabindex="9999"/></td>
@@ -1370,17 +1176,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="HDLDesc"/><br><font class="eightyPercent"><bean:write name="HDLMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="HDLLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HDLLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HDLLastData"/></td></tr>
-                                                            <html:hidden property="value(HDLLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(HDLLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HDLLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HDLLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="HDLLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HDLValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HDLDate)" size="10%" tabindex="9999"/></td>
@@ -1389,17 +1189,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="TCHLDesc"/><br><font class="eightyPercent"><bean:write name="TCHLMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="TCHLLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="TCHLLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="TCHLLastData"/></td></tr>
-                                                            <html:hidden property="value(TCHLLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(TCHLLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("TCHLLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("TCHLLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="TCHLLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TCHLValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TCHLDate)" size="10%" tabindex="9999"/></td>
@@ -1408,17 +1202,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="TRIGDesc"/><br><font class="eightyPercent"><bean:write name="TRIGMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="TRIGLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="TRIGLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="TRIGLastData"/></td></tr>
-                                                            <html:hidden property="value(TRIGLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(TRIGLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("TRIGLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("TRIGLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="TRIGLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TRIGValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TRIGDate)" size="10%" tabindex="9999"/></td>
@@ -1427,17 +1215,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="UALBDesc"/><br><font class="eightyPercent"><bean:write name="UALBMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="UALBLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="UALBLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="UALBLastData"/></td></tr>
-                                                            <html:hidden property="value(UALBLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(UALBLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("UALBLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("UALBLastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="UALBLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(UALBValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(UALBDate)" size="10%" tabindex="9999"/></td>
@@ -1446,17 +1228,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="24UADesc"/><br><font class="eightyPercent"><bean:write name="24UAMeasuringInstrc"/></font></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="24UALastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="24UALastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="24UALastData"/></td></tr>
-                                                            <html:hidden property="value(24UALastDataEnteredDate)"/>
-                                                            <html:hidden property="value(24UALastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("24UALDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("24UALastData")%></td></tr>
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="24UALastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(24UAValue)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(24UADate)" size="10%" tabindex="9999"/></td>
@@ -1538,17 +1314,11 @@ function controlEyeExam(){
                                                 <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="NtrCDesc"/></td>   
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="NtrCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="NtrCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="NtrCLastData"/></td></tr>                                                            
-                                                            <html:hidden property="value(NtrCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(NtrCLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("NtrCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("NtrCLastData")%></td></tr>                                                            
+                                                            
                                                         </table>
-                                                        </logic:present>                                                        
-                                                        <logic:notPresent name="NtrCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:checkbox property="value(NtrCValue)" /></td>
                                                     <html:hidden property="value(NtrCDate)"/>
@@ -1557,17 +1327,11 @@ function controlEyeExam(){
                                                  <tr class="dataEntryTable">
                                                     <td class="dataEntryTable"><bean:write name="ExeCDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="ExeCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="ExeCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="ExeCLastData"/></td></tr>                                                           
-                                                            <html:hidden property="value(ExeCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(ExeCLastData)"/>                                                            
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("ExeCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("ExeCLastData")%></td></tr>                                                           
+                                                                                                                   
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="ExeCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:checkbox property="value(ExeCValue)" /></td>
                                                     <html:hidden property="value(ExeCDate)"/>
@@ -1576,17 +1340,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="SmCCDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="SmCCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="SmCCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="SmCCLastData"/></td></tr>                                                           
-                                                            <html:hidden property="value(SmCCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(SmCCLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("SmCCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("SmCCLastData")%></td></tr>                                                           
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="SmCCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:checkbox property="value(SmCCValue)" /></td>
                                                     <html:hidden property="value(SmCCDate)"/>
@@ -1595,17 +1353,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="DiaCDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="DiaCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="DiaCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="DiaCLastData"/></td></tr>                                                           
-                                                            <html:hidden property="value(DiaCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(DiaCLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DiaCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("DiaCLastData")%></td></tr>                                                           
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="DiaCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:checkbox property="value(DiaCValue)" /></td>
                                                     <html:hidden property="value(DiaCDate)"/>
@@ -1614,17 +1366,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="PsyCDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="PsyCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="PsyCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="PsyCLastData"/></td></tr>                                                           
-                                                            <html:hidden property="value(PsyCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(PsyCLastData)"/>
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("PsyCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("PsyCLastData")%></td></tr>                                                           
+                                                            
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="PsyCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:checkbox property="value(PsyCValue)" /></td>
                                                     <html:hidden property="value(PsyCDate)"/>
@@ -1633,17 +1379,11 @@ function controlEyeExam(){
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="OthCDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
-                                                        <logic:present name="OthCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><bean:write name="OthCLastDataEnteredDate"/></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><bean:write name="OthCLastData"/></td></tr>                                                           
-                                                            <html:hidden property="value(OthCLastDataEnteredDate)"/>
-                                                            <html:hidden property="value(OthCLastData)"/>                                                            
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("OthCLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("OthCLastData")%></td></tr>                                                           
+                                                                                                       
                                                         </table>
-                                                        </logic:present>
-                                                        <logic:notPresent name="OthCLastData">    
-                                                            &nbsp;
-                                                        </logic:notPresent>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:checkbox property="value(OthCValue)" /></td>
                                                     <html:hidden property="value(OthCDate)"/>
