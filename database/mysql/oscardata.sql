@@ -262,8 +262,10 @@ INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','for
 INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf', '1');
 INSERT INTO encounterForm VALUES ('ADFv2', '../form/formadfv2.jsp?demographic_no=', 'formAdfV2', '1');
 INSERT INTO encounterForm VALUES ('ImmunAllergies', '../form/formimmunallergy.jsp?demographic_no=', 'formImmunAllergy', '0');
-INSERT INTO encounterForm values('Falls', '../form/formfalls.jsp?demographic_no=','formFalls',1);
-INSERT INTO encounterForm values('Self Administered', '../form/formselfadministered.jsp?demographic_no=','formSelfAdministered',1);
+INSERT INTO encounterForm VALUES ('Falls', '../form/formfalls.jsp?demographic_no=','formFalls',1);
+INSERT INTO encounterForm VALUES ('Self Administered', '../form/formselfadministered.jsp?demographic_no=','formSelfAdministered',1);
+INSERT INTO encounterForm VALUES ('Intake Information', '../form/formintakeinfo.jsp?demographic_no=','formIntakeInfo',1);
+INSERT INTO encounterForm VALUES ('SF36', '../form/formSF36.jsp?demographic_no=','formSF36',1);
 
 --
 -- Dumping data for table 'encountertemplate'
