@@ -41,7 +41,6 @@ import java.sql.SQLException;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarBilling.ca.bc.pageUtil.*;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
