@@ -203,6 +203,15 @@ function isformNeeded(){
      var windowName = field;  
      popup(height,width,url,windowName);        
   }
+  
+  function checkTextLimit(textField, maximumlength) {
+     if (textField.value.length > maximumlength + 1){   
+        alert("Maximun "+maximumlength+" characters");
+     }
+     if (textField.value.length > maximumlength){
+        textField.value = textField.value.substring(0, maximumlength);
+     }
+  }
 </script>
 </head>
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
@@ -455,7 +464,7 @@ function isformNeeded(){
 		<td td align="left" valign="top">
 		Clinical Information:<br><small>What happened?<br>Subjective Symptoms<br>Examination<br>Investigations<br>Treatment, Meds</small>
 		</td><td td align="left" valign="top">
-		<textarea name="w_clinicinfo" class="mhAssTextarea" id="w_clinicinfo" style="height:80px;width:100%;" ><%=form.getW_clinicinfo()%></textarea> 
+		<textarea name="w_clinicinfo" class="mhAssTextarea" id="w_clinicinfo" style="height:80px;width:100%;"  onkeyup="checkTextLimit(this.form.w_clinicinfo,400);" ><%=form.getW_clinicinfo()%></textarea> 
 		</td>
 	</tr>
 	<tr id="forthSectionTitle">
