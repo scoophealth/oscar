@@ -366,7 +366,7 @@ function refresh() {
           <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option> 
-          <option value=""<%=province.equals("")?" selected":""%>>Other</option>
+          <option value=""<%=(province.equals("") || province.length() > 2)?" selected":""%>>Other</option>
         </select>
         <% } %>
       </td>
