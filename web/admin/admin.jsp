@@ -85,21 +85,71 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 
 //-->
 </script>
+<style type="text/css">
+        a:link{
+            text-decoration: none;
+            color:#003399;
+        }
+
+        a:active{
+            text-decoration: none;
+            color:#003399;
+        }
+
+        a:visited{
+            text-decoration: none;
+            color:#003399;
+        }
+
+        a:hover{
+            text-decoration: none;
+            color:#003399;
+        }
+
+        BODY {
+            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
+            background-color: #A9A9A9;            
+        }
+
+        TABLE {
+            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+        }
+        
+        TD{
+            font-size:14pt;
+        }
+
+        TH{
+            font-size:14pt;   
+            font-weight: bold;
+            text-align: left;
+            background-color:#486ebd;
+            color:#FFFFFF;
+        }
+        .title{
+            font-size: 15pt;
+            font-weight: bold;
+            text-align: center;
+            background-color: #000000;
+            color:#FFFFFF;
+        }
+        
+    </style>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
   <table cellspacing="0" cellpadding="2" width="100%" border="0">
-    <tr><th align="CENTER" bgcolor="#CCCCFF"><bean:message key="admin.admin.description"/></th></tr>
+    <tr><th  class="title"><bean:message key="admin.admin.description"/></th></tr>
   </table>
   <table border="0" cellspacing="0" cellpadding="2" width="90%">
   <tr>      
       <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a></td>
   </tr>
     <tr bgcolor="#CCCCFF"> 
-      <td> 
+      <th> 
         <p><bean:message key="admin.admin.provider"/></p>
-      </td>
+      </th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -108,7 +158,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
-      <td><bean:message key="admin.admin.groupNo"/></td>
+      <th><bean:message key="admin.admin.groupNo"/></th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -117,7 +167,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"><bean:message key="admin.admin.preference"/></td>
+      <th colspan="2"><bean:message key="admin.admin.preference"/></th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -126,7 +176,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       </td>
     </tr>
     <tr bgcolor="#CCCCFF"> 
-      <td><bean:message key="admin.admin.security"/></td>
+      <th><bean:message key="admin.admin.security"/></th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -136,9 +186,9 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     </tr>
       
     <tr bgcolor="#CCCCFF"> 
-      <td> 
+      <th> 
         <p><bean:message key="admin.admin.schedule"/></p>
-      </td>
+      </th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -150,9 +200,9 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
            <%-- This links doesnt make sense on Brazil. There are other billing engines that we must use for billing --%>
            <% if (!country.equals("BR")) { %>
     <tr bgcolor="#CCCCFF"> 
-      <td> 
+      <th> 
         <p><bean:message key="admin.admin.billing"/></p>
-      </td>
+      </th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
@@ -189,9 +239,9 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       <td> <a href="demographicaddarecordhtm.jsp"><bean:message key="admin.admin.btnAddDemographicRecord"/></a></td>
     </tr>--%>
     <tr bgcolor="#CCCCFF"> 
-      <td> 
+      <th> 
         <p><bean:message key="admin.admin.resource"/></p>
-      </td>
+      </th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> <a href="#" ONCLICK ="popupPage(200,300,'resourcebaseurl.jsp');return false;" title="<bean:message key="admin.admin.baseURLSettingTitle"/>"><bean:message key="admin.admin.btnBaseURLSetting"/></a> </td>
@@ -200,7 +250,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   <!--oscarReport Code block -->
 
       <tr bgcolor="#EEEEFF">
-        <td bgcolor="#CCCCFF" colspan="2"><bean:message key="admin.admin.oscarReport"/></td>
+        <th bgcolor="#CCCCFF" colspan="2"><bean:message key="admin.admin.oscarReport"/></th>
       </tr>
       <tr bgcolor="#EEEEFF">
           <td colspan="2" nowrap>
@@ -228,7 +278,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   <!--backup download Code block -->
   
       <tr  bgcolor="#CCCCFF">
-        <td><bean:message key="admin.admin.oscarBackup"/></td>
+        <th><bean:message key="admin.admin.oscarBackup"/></th>
       </tr>
       <tr bgcolor="#EEEEFF">
           <td nowrap>
@@ -241,7 +291,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <!--oscarMessenger Code block -->
   
     <tr>
-      <td bgcolor="#CCCCFF"><bean:message key="admin.admin.oscarMessenger"/></td>
+      <th bgcolor="#CCCCFF"><bean:message key="admin.admin.oscarMessenger"/></th>
     </tr>
     <tr  bgcolor="#EEEEFF">
         <td nowrap>
@@ -261,7 +311,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <!--e forms block -->
   
     <tr bgcolor="#CCCCFF"> 
-      <td><bean:message key="admin.admin.eForms"/></td>
+      <th><bean:message key="admin.admin.eForms"/></th>
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> <a href="../eform/uploadhtml.jsp"><bean:message key="admin.admin.btnUploadForm"/></a><br>
@@ -274,12 +324,15 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   
 <!--// end e forms block -->
 
-<!--// start oscar measurement block-->  
+<!--// start oscarEncounter block-->  
     <tr bgcolor="#CCCCFF"> 
-      <td><bean:message key="admin.admin.oscarEncounter"/></td>
+      <th><bean:message key="admin.admin.oscarEncounter"/></th>
     </tr>
     <tr bgcolor="#EEEEFF">
       <td><a href="#" ONCLICK ="popupPage(500,1000,'../form/setupSelect.do');return false;" ><bean:message key="admin.admin.btnSelectForm"/></a></td>
+    </tr>
+    <tr bgcolor="#EEEEFF">
+      <td><a href="#" ONCLICK ="popupPage(250,450,'../oscarResearch/oscarDxResearch/dxResearchCustomization.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/> <bean:message key="oscar.admin.diseaseRegistryQuickList"/></a></td>
     </tr>
     <tr bgcolor="#EEEEFF">
       <td><a href="#" ONCLICK ="popupPage(250,450,'../oscarEncounter/oscarMeasurements/Customization.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/> <bean:message key="admin.admin.oscarMeasurements"/></a></td>
@@ -287,7 +340,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <!--// end of oscar measuremnt block-->
 
     <tr bgcolor="#CCCCFF"> 
-      <td><bean:message key="admin.admin.misc"/></td>
+      <th><bean:message key="admin.admin.misc"/></th>
     </tr>
     <tr bgcolor="#EEEEFF">
       <td><a href="#" ONCLICK ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></td>
@@ -304,11 +357,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 
   </table>
 
-  <hr color='orange'>
+  <hr color='black'>
   <table border="0" cellspacing="0" cellpadding="0" width="90%">
   <tr>
       <td></td>
-      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a></td>
   </tr>
   </table>
 </center>
