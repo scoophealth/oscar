@@ -115,59 +115,47 @@ function refresh() {
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
   <form name="serviceform" method="get" action="oscarReportVisitControl.jsp">
-    <tr> 
-      <td width="50%" align="left"> <font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
-       <input type="radio" name="reportAction" value="lk"  <%=reportAction.equals("lk")?"checked":""%>>
-        Larry Kain Report
-        <input type="radio" name="reportAction" value="vr"  <%=reportAction.equals("vr")?"checked":""%>>
-       Visit Report</font> </td>
-      <td width="40%"> 
-  <!--     <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b>Select 
+    <tr>       
+      <td width="90%" align="left">
+      <input type="hidden" name="reportAction" value="vr">
+       <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b>Select 
             provider </b></font> 
           <select name="providerview">
             <% String proFirst="";
-           String proLast="";
-           String proOHIP="";
-           String specialty_code; 
-String billinggroup_no; 
-           int Count = 0; 
-        ResultSet rslocal;
-        rslocal = null;
- rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
- while(rslocal.next()){
- proFirst = rslocal.getString("first_name");
- proLast = rslocal.getString("last_name");
- proOHIP = rslocal.getString("provider_no"); 
- billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
- specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-
+            String proLast="";
+            String proOHIP="";
+            String specialty_code; 
+            String billinggroup_no; 
+            int Count = 0; 
+            ResultSet rslocal;
+            rslocal = null;
+            rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
+            while(rslocal.next()){
+                proFirst = rslocal.getString("first_name");
+                proLast = rslocal.getString("last_name");
+                proOHIP = rslocal.getString("provider_no"); 
+                billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+                specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 %>
-            <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, 
-            <%=proFirst%></option>
+                <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
             <%
       }      
    
   %>
-          </select>   
-        </div> -->
+          </select>           
       </td>
       <td width="10%"> <font color="#333333" size="1" face="Verdana, Arial, Helvetica, sans-serif"> 
         <input type="submit" name="Submit" value="Create Report">
         </font></td>
     </tr>
-<tr> 
-      <td width="50%"> 
-        <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><b> 
-          
-          <font color="#333333">Service Date-Range</font></b></font></font> &nbsp; &nbsp;  <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin Date:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-          
-   </div>
-      </td>
-      <td colspan='2' > 
-        <div align="left">    <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End Date:</a></font> <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
-         
-
-              </div>
+    <tr> 
+      <td colspan="2"> 
+        <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><b>           
+          <font color="#333333">
+            Service Date-Range</font></b></font></font> &nbsp; &nbsp;  <font size="1" face="Arial, Helvetica, sans-serif">
+            <a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin Date:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
+            <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End Date:</a></font> <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
+        </div>
       </td>
        </tr>
   </form>
