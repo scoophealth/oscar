@@ -194,7 +194,7 @@ function popupDecisionSupport(){
     var posY = 0;
     if(varpage!="null"){
         windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=680";
-        var popup=window.open(varpage, "Decision Support", windowprops);  
+        var popup=window.open(varpage, "DecisionSupport", windowprops);  
         popup.focus();
     }
     else{
