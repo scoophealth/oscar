@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<riskFactors>
+  <section>
+    <section_title>Risk Factors (check if present)</section_title>
+    <risk name="001" riskno="4" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Peripheral vascular disease</risk>
+    <risk name="002" riskno="5" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Hx of previous stroke or TIA</risk>
+    <risk name="003" riskno="6" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Cognitively intact</risk>
+    <risk name="004" riskno="12" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Hx of angina or MI</risk>
+    <risk name="005" riskno="91" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Diabetes</risk>
+    <risk name="006" riskno="92" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Hypertension</risk>
+    <risk name="007" riskno="93" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Osteoarthritis</risk>
+    <risk name="008" riskno="94" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         CHD</risk>
+    <risk name="009" riskno="95" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         CHF</risk>
+    <risk name="010" riskno="96" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         COPD</risk>
+    <risk name="011" riskno="97" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Dementia</risk>
+    <risk name="012" riskno="98" href="http://67.69.12.117:8080/oscarResource/decision/annualreview/info.html">
+         Urinary Incontinence</risk>
+  </section>
+</riskFactors>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<riskFactors>
+  <section>
+    <section_title>Other Risk Factors</section_title>
+    <section_title>(check if present)</section_title>
+    <subsection>
+      <subsection_title>Past OB History</subsection_title>
+      <risk name="risk101" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/stillbirth">Stillbirth</risk>
+      <risk name="risk102" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/sga">SGA</risk>
+      <risk name="risk103" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/preterm">Peterm labour or PROM</risk>
+      <risk name="risk104" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/gbs">Infant with invasive GBStrep</risk>
+      <risk name="risk105" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/abruption">Abruption</risk>
+      <risk name="risk106" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/htn">HTN disease of pregnancy</risk>
+      <risk name="risk107" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/csection">Previous C/S</risk>
+    </subsection>
+    <subsection>
+      <subsection_title>Other Medical Problems</subsection_title>
+      <risk name="risk128" href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/seizure">Seizure Disorder</risk>
+    </subsection>
+  </section>
+  <section>
+    <section_title>Research</section_title>
+      <risk name="audit01">Chart Audit</risk>
+  </section>
+</riskFactors>

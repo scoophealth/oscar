@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<riskFactors>
+  <section>
+    <section_title>Risk Factors (check if present)</section_title>
+    <risk name="001" protocol="4" href="info.html">Peripheral vascular disease</risk>
+    <risk name="002" protocol="5" href="info.html">Hx of previous stroke or TIA</risk>
+    <risk name="003" protocol="6" href="info.html">Cognitively intact</risk>
+    <risk name="004" protocol="12" href="info.html">Hx of angina or MI</risk>
+    <risk name="005" protocol="91" href="info.html">Diabetes</risk>
+    <risk name="006" protocol="92" href="info.html">Hypertension</risk>
+    <risk name="007" protocol="93" href="info.html">Osteoarthritis</risk>
+    <risk name="008" protocol="94" href="info.html">CHD</risk>
+    <risk name="009" protocol="95" href="info.html">CHF</risk>
+    <risk name="010" protocol="96" href="info.html">COPD</risk>
+    <risk name="011" protocol="97" href="info.html">Dementia</risk>
+    <risk name="012" protocol="98" href="info.html">Urinary Incontinence</risk>
+  </section>
+</riskFactors>
+
+
+
+
+
+
+
+
+
+
+
