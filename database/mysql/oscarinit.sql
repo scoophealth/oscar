@@ -4837,6 +4837,11 @@ CREATE TABLE formVTForm(
   Objective Text,
   Assessment Text,
   Plan Text,
+  WHRBValue varchar(10),
+  WHRBDate varchar(10),
+  WHRBComments varchar(255),
+  WHRBLastData varchar(10),
+  WHRBLastDataEnteredDate varchar(10),
   PRIMARY KEY  (ID),
   INDEX (ID),
   INDEX (demographic_no)
