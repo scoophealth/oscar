@@ -169,13 +169,18 @@ function showHideLayers() { //v3.0
     if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
     obj.visibility=v; }
 }
+
+function gotoPrintReceipt(){
+   document.location.href="<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath() %>/billing/CA/BC/billingView.do?billing_no=<%=bean.getBillingNo()%>&receipt=yes";
+}
+
 //-->
 </script>
 <link rel="stylesheet" href="../billing/billing.css" type="text/css">
 </head>
 
 
-
+<html:base/>
 
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -341,13 +346,14 @@ function showHideLayers() { //v3.0
                 <td>&nbsp;</td>
                 <td align="right">
                    <html:form action="/billing/CA/BC/SaveBilling" >  
+                      <input type="button" name="Submit3" value="Print Receipt" onclick="javascript:gotoPrintReceipt();"/>
                       <input type="button" name="Submit" value="Print Bill" onClick="javascript:window.print()">
-                      <input type="button" name="Submit2" value="Cancel" onClick="javascript:window.close()">
+                      <input type="button" name="Submit2" value="Cancel" onClick="javascript:window.close()">                      
                    </html:form>
                 </td>
               </tr>
             </table>
-
+            
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr> 
                 <td align="right"> 
