@@ -76,11 +76,19 @@ function ResearchScriptAttach() {
 	awnd.focus();
 }
 
-function submitform(){	
+function submitform(target){	
+        document.forms[0].forward.value = target;
 	document.forms[0].submit()
 }
+
 function set(target) {
      document.forms[0].forward.value=target;
+}
+
+function changeList(){
+    var quickList = document.forms[0].quickList.options[document.forms[0].quickList.selectedIndex].value;
+    var demographicNo = escape(document.forms[0].demographicNo.value);    
+    rs('<bean:message key="oscarEncounter.Index.msgOscarConsultation"/>','/oscar/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo='+demographicNo+'&quickList='+quickList,600,600,1);    
 }
 //-->
 </SCRIPT>
@@ -90,7 +98,8 @@ function set(target) {
             font-size: 10pt ; 
             font-family: 
             verdana,arial,helvetica; 
-            color: #336666; }
+            color: #336666;
+            cursor: hand }
 	A:visited{
             font-size: 10pt ; 
             font-family: verdana,arial,helvetica; 
@@ -171,65 +180,81 @@ function set(target) {
 </table>
 
 <html:form action="/oscarResearch/oscarDxResearch/dxResearch.do">
-<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="173">
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="300">
 <tr> 
 	<td width="25%" valign="top"> 
 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="173" bgcolor="#FFFFFF">
+	<table width="100%" border="0" cellspacing="0" cellpadding="2" height="300" bgcolor="#FFFFFF">
             <tr> 
                 <td class="heading">Coding System: <select name="codingSys" style="width:80px">
                                                         <option value="ICHPPC">ICHPPC</option>
                                                    </select>
                 </td>
-                <td></td>
             </tr>
             <tr>
                 <td><html:errors/></td>
-                <td></td>
             </tr>
             <tr> 
                 <td>
-                    <input type="text" name="xml_research1" size="32"><input type="hidden" name="demographicNo" value="<bean:write name="demographicNo"/>">
+                    <input type="text" name="xml_research1" size="30"><input type="hidden" name="demographicNo" value="<bean:write name="demographicNo"/>">
                 </td>
-                <td></td>
             </tr>
             <tr> 
                 <td>
-                    <input type="text" name="xml_research2" size="32">
+                    <input type="text" name="xml_research2" size="30">
                 </td>
-                <td></td>
             </tr>
             <tr> 
                 <td>
-                    <input type="text" name="xml_research3" size="32">
+                    <input type="text" name="xml_research3" size="30">
                 </td>
-                <td></td>
             </tr>
             <tr> 
                 <td>
-                    <input type="text" name="xml_research4" size="32">
+                    <input type="text" name="xml_research4" size="30">
                 </td>
-                <td></td>
             </tr>
             <tr> 
                 <td>
-                    <input type="text" name="xml_research5" size="32">
+                    <input type="text" name="xml_research5" size="30">
                 </td>
-                <td></td>
             </tr>
             <tr> 
-		<td colspan="2"> 
+		<td> 
                     <input type="hidden" name="forward" value="none"/>
                     <input type="button" name="button" class=mbttn value="Code Search" onClick="javascript: ResearchScriptAttach();")>
-                    <input type="button" name="button" class=mbttn value="Add" onClick="submitform()">
+                    <input type="button" name="button" class=mbttn value="Add" onClick="submitform('')">
 		</td>
+            </tr>
+            <tr>
+                <td class="heading">
+                    QuickList
+                </td>                
+            </tr>
+            <tr>
+                <td>
+                    <html:select property="quickList" style="width:200px" onclick="javascript:changeList()">
+                        <logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector">
+                            <option value="<bean:write name="quickLists" property="quickListName" />" <bean:write name="quickLists" property="lastUsed" />><bean:write name="quickLists" property="quickListName" /></option>
+                        </logic:iterate>
+                    </html:select>
+                </td>
+            </tr>
+            <logic:iterate id="item" name="allQuickListItems" property="dxQuickListItemVector">
+            <tr>
+                <td>
+                    <a href="#" title='<bean:write name="item" property="dxSearchCode"/>' onclick="javascript:submitform('<bean:write name="item" property="dxSearchCode"/>')"><bean:write name="item" property="description"/></a>
+                </td>
+            </tr>
+            </logic:iterate>            
+            <tr>
             </tr>
 	</table>
 
 	</td>
 	<td width="75%" valign="top">
 
-	<table width="100%" border="0"  cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
 	<tr class="heading"> 
 		<td width="48%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis"/></b></td>
 		<td width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit"/></b></td>
