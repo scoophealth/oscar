@@ -1,5 +1,5 @@
 <%      
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 String providerview = request.getParameter("providerview")==null?"":request.getParameter("providerview") ;
 String asstProvider_no = "";
@@ -296,8 +296,6 @@ while (rsctlcode.next()){
 rsctlcode.close();
 %>
 <%=ctlcodename.length()<30 ? ctlcodename : ctlcodename.substring(0,30)%>
-%>
-
 		</td><td width="19%"><font size="-2"> 
 <%
 /*
