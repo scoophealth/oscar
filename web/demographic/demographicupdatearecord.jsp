@@ -1,4 +1,7 @@
 <%@ page import="java.sql.*, java.util.*, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--  
 /*
@@ -25,13 +28,17 @@
  * Ontario, Canada 
  */
 -->
-<html> 
-<head><title>demographic: the following records</title>
+<%
+    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+    response.setHeader("Pragma","no-cache"); //HTTP 1.0
+    response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
+%>
+<html:html locale="true"> 
+<head></head>
 
-</head>
-<link rel="stylesheet" href="../web.css" />
-<body onLoad="this.focus()" >
-  <center>
+<body> 
+  <center>  
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
@@ -97,35 +104,7 @@
 	    param2[4]=request.getParameter("midwife");
 	    param2[5]="<unotes>"+ request.getParameter("notes")+"</unotes>";
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord");
-    }
-    //add to waiting list if the waiting_list parameter in the property file is set to true
-   
-    WaitingList wL = WaitingList.getInstance();
-    if(wL.getFound()){
-    
-        String[] paramWLChk = new String[2];
-        paramWLChk[0] = request.getParameter("demographic_no");
-        paramWLChk[1] = request.getParameter("list_id");    
-        //check if patient has already added to the waiting list and check if the patient already has an appointment in the future
-        rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
-
-        if(!rs.next()){
-            String[] paramWLPosition = new String[1];
-            paramWLPosition[0] = request.getParameter("list_id");
-            if(paramWLPosition[0].compareTo("")!=0){
-                ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
-                if(rsWL.next()){
-                    String[] paramWL = new String[4];
-                    paramWL[0] = request.getParameter("list_id");
-                    paramWL[1] = request.getParameter("demographic_no");
-                    paramWL[2] = request.getParameter("waiting_list_note");
-                    //System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
-                    paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
-                    apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
-                }
-            }
-        }
-    }
+    }    
     
     if (vLocale.getCountry().equals("BR")) {
 	    //find the demographic_ptbr record for update
@@ -170,9 +149,69 @@
 	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros,"add_record_ptbr");
 	    }
 	}
+    
+    //add to waiting list if the waiting_list parameter in the property file is set to true
+   
+    WaitingList wL = WaitingList.getInstance();
+    if(wL.getFound()){
+        %>
+        <form name="add2WLFrm" action="../oscarWaitingList/Add2WaitingList.jsp"> 
+            <input type="hidden" name="listId" value="<%=request.getParameter("list_id")%>"/>
+            <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographic_no")%>"/>        
+            <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>"/>        
+            <input type="hidden" name="waitingListNote" value="<%=request.getParameter("waiting_list_note")%>"/>   
+            <input type="hidden" name="displaymode" value="edit"/>
+            <input type="hidden" name="dboperation" value="search_detail"/>
+        <%
+        if(!request.getParameter("list_id").equalsIgnoreCase("0")){
+            String[] paramWLChk = new String[2];
+            paramWLChk[0] = request.getParameter("demographic_no");
+            paramWLChk[1] = request.getParameter("list_id");    
+            //check if patient has already added to the waiting list and check if the patient already has an appointment in the future
+            rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
+
+            if(!rs.next()){
+                System.out.println("not on the selected waiting list");
+                ResultSet rsAppt = apptMainBean.queryResults(paramWLChk[0], "search_future_appt");
+                if(rsAppt.next()){                
+                    System.out.println("has appointment in the future");
+            %>                                              
+                    <script language="JavaScript">                    
+                    var add2List = confirm("The patient already has an appointment, do you still want to add him/her to the waiting list?");                
+                    if(add2List){                       
+                        document.add2WLFrm.action = "../oscarWaitingList/Add2WaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listId=<%=request.getParameter("list_id")%>&waitingListNote=<%=request.getParameter("waiting_list_note")==null?"":request.getParameter("waiting_list_note")%>";
+                    }
+                    else{
+                        document.add2WLFrm.action ="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=edit&dboperation=search_detail";
+                    }                    
+                    document.add2WLFrm.submit();  
+                    </script>
+                   
+                <%}            
+                else{%>
+                <script language="JavaScript">
+                    document.add2WLFrm.action = "../oscarWaitingList/Add2WaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listId=<%=request.getParameter("list_id")%>&waitingListNote=<%=request.getParameter("waiting_list_note")==null?"":request.getParameter("waiting_list_note")%>";                                                        
+                    document.add2WLFrm.submit();  
+                </script> 
+
+                <%}
+            }
+            else{
+                response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
+            }
+        }
+        else{
+            response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
+        }
+        %>
+    </form><%
+    }
+    else{
+        response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
+    }
 %>
   <h2> Update a Provider Record Successfully ! 
-  <p><a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%= request.getParameter("demographic_no") %></a>
+  <p><a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%= request.getParameter("demographic_no") %></a></p>
   </h2>
 <%--
 <script LANGUAGE="JavaScript">
@@ -181,20 +220,17 @@
 </script>
 --%>
 <%  
-    response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
+    //response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
     //response.sendRedirect("search.jsp");
   } else {
 %>
-  <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.
+  <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.</h1>
 <%  
   }
   apptMainBean.closePstmtConn(); 
 %>
   <p></p>
-<%@ include file="footer.jsp" %>
-<script language="JavaScript">
-this.focus();
-</SCRIPT>  
+
   </center>
 </body>
-</html>
+</html:html>
