@@ -35,6 +35,7 @@
     <!--
     function start(){
       this.focus();
+      this.resizeTo(1000,700);
     }
     function closeit() {
       //parent.refresh();
@@ -43,7 +44,7 @@
     //-->
 </script>
 </head>
-<body  onload="start()"  background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body  onload="start()" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
@@ -191,8 +192,25 @@
 	    param2[5]="<unotes>"+request.getParameter("content")+"</unotes>";
 	    System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
-      
-      
+        
+        //add to waiting list if the waiting_list parameter in the property file is set to true
+        
+        String[] paramWLPosition = new String[1];
+        paramWLPosition[0] = request.getParameter("list_id");
+        if(paramWLPosition[0].compareTo("")!=0){
+            ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
+
+            if(rsWL.next()){
+                System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
+                String[] paramWL = new String[4];
+                paramWL[0] = request.getParameter("list_id");
+                paramWL[1] = rs.getString("demographic_no");
+                paramWL[2] = request.getParameter("waiting_list_note");
+                paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
+                apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
+            }
+        }
+
 	  	if (request.getParameter("dboperation2") != null) {
 	  	  	String[] parametros = new String[13];
   	  	

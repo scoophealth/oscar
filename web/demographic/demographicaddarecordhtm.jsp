@@ -15,6 +15,7 @@
   String [][] dbQueries=new String[][] { 
     {"search_provider", "select * from provider order by last_name"},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
+    {"search_waiting_list", "select * from waitingListName order by name"},
   };
   String[][] responseTargets=new String[][] {  };
   addDemoBean.doConfigure(dbParams,dbQueries,responseTargets);
@@ -204,9 +205,6 @@ function formatPhoneNum() {
 </table>
 	
 <%@ include file="zdemographicfulltitlesearch.jsp" %>	
-<table>
-    <tr><td>&nbsp;</td></tr>
-</table>
 <table width="100%" bgcolor="#CCCCFF">
 <tr><td class="RowTop">
     <b><bean:message key="demographic.record"/></b>
@@ -564,7 +562,7 @@ function formatPhoneNum() {
       <td align="left" height="10"> 
         <input type="text" name="r_doctor_ohip" maxlength="6">
       </td>
-    </tr>
+    </tr>    
     <tr valign="top"> 
       <td align="right" nowrap><b><bean:message key="demographic.demographicaddrecordhtm.formPCNRosterStatus"/>: </b></td>
       <td align="left" > 
@@ -614,6 +612,27 @@ function formatPhoneNum() {
       </td>
     </tr>
     <%}%>
+    <tr valign="top">
+      <td align="right" nowrap><b>Add patient to waiting list: </b></td>
+      <td align="left" > 
+        <select name="list_id">
+          <option value="" ></option>
+          <%
+              ResultSet rsWL = addDemoBean.queryResults("search_waiting_list");
+              while (rsWL.next()) { 
+            %>
+                      <option value="<%=rsWL.getString("ID")%>"> 
+                      <%=rsWL.getString("name")%></option>
+                      <%
+              }
+            %>
+        </select>
+      </td>
+      <td align="right" nowrap><b>Waiting List Note: </b></td>
+      <td align="left"> 
+        <input type="text" name="waiting_list_note" >        
+      </td>
+    </tr>
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDateJoined"/></b><b>: </b></td>
       <td align="left" > 

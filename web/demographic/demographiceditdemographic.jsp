@@ -283,6 +283,9 @@ function newStatus() {
                 <tr><td>
                     <a href='demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message key="demographic.demographiceditdemographic.btnApptHist"/></a>
                 </td></tr>
+                <tr><td>
+                    <a href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=rs.getString("demographic_no")%>">Waiting List</a>
+                </td></tr>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="admin.admin.billing"/>
@@ -733,6 +736,35 @@ function newStatus() {
                               </td>
                             </tr>
                             <%}%>
+                            <tr valign="top">
+                              <td align="right" nowrap><b>Waiting List: </b></td>
+                              <td align="left" > 
+                              <% 
+                                ResultSet rsWLStatus = apptMainBean.queryResults(demographic_no,"search_wlstatus");
+                                String listID = "", wlnote="";
+                                if (rsWLStatus.next()){
+                                    listID = rsWLStatus.getString("listID");                                    
+                                    wlnote = rsWLStatus.getString("note");
+                                }                                
+                               %>
+                                <select name="list_id">
+                                  <option value="" ></option>
+                                  <%
+                                      ResultSet rsWL = apptMainBean.queryResults("search_waiting_list");
+                                      while (rsWL.next()) { 
+                                    %>
+                                              <option value="<%=rsWL.getString("ID")%>" <%=rsWL.getString("ID").equals(listID)?" selected":""%>> 
+                                              <%=rsWL.getString("name")%></option>
+                                              <%
+                                      }
+                                    %>
+                                </select>
+                              </td>
+                              <td align="right" nowrap><b>Waiting List Note: </b></td>
+                              <td align="left"> 
+                                <input type="text" name="waiting_list_note" value="<%=wlnote%>" >        
+                              </td>
+                            </tr>
                             <tr valign="top"> 
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
                               <td align="left" > 

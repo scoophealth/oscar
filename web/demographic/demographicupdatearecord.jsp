@@ -98,6 +98,29 @@
 	    param2[5]="<unotes>"+ request.getParameter("notes")+"</unotes>";
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord");
     }
+    //add to waiting list if the waiting_list parameter in the property file is set to true
+   
+    String[] paramWLChk = new String[2];
+    paramWLChk[0] = request.getParameter("demographic_no");
+    paramWLChk[1] = request.getParameter("list_id");    
+    //check if patient has already added to the waiting list
+    rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
+    if(!rs.next()){
+        String[] paramWLPosition = new String[1];
+        paramWLPosition[0] = request.getParameter("list_id");
+        if(paramWLPosition[0].compareTo("")!=0){
+            ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
+            if(rsWL.next()){
+                String[] paramWL = new String[4];
+                paramWL[0] = request.getParameter("list_id");
+                paramWL[1] = request.getParameter("demographic_no");
+                paramWL[2] = request.getParameter("waiting_list_note");
+                System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
+                paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
+                apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
+            }
+        }
+    }
     if (vLocale.getCountry().equals("BR")) {
 	    //find the demographic_ptbr record for update
 	    rs = apptMainBean.queryResults(request.getParameter("demographic_no"),"search_demographic_ptbr");
