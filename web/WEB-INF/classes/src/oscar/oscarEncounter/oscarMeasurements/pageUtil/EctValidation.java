@@ -38,7 +38,7 @@ import oscar.oscarDB.DBHandler;
 
 public class EctValidation{
 
-    public String regCharacterExp = "^[0-9a-zA-Z]*$";        
+    public String regCharacterExp = "^[\\w\\s]*$";        
 
     public EctValidation(){
     }
