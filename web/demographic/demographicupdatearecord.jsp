@@ -105,22 +105,28 @@
     paramWLChk[1] = request.getParameter("list_id");    
     //check if patient has already added to the waiting list and check if the patient already has an appointment in the future
     rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
-    ResultSet rsfa = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_future_appt");
-    if(!rs.next() && !rsfa.next()){
-        String[] paramWLPosition = new String[1];
-        paramWLPosition[0] = request.getParameter("list_id");
-        if(paramWLPosition[0].compareTo("")!=0){
-            ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
-            if(rsWL.next()){
-                String[] paramWL = new String[4];
-                paramWL[0] = request.getParameter("list_id");
-                paramWL[1] = request.getParameter("demographic_no");
-                paramWL[2] = request.getParameter("waiting_list_note");
-                //System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
-                paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
-                apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
+    
+    if(!rs.next()){
+        //System.out.println("not on the waiting list");
+        //ResultSet rsfa = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_future_appt");
+        //System.out.println("nb of row: " + rsfa.getRow());
+        //if(rsfa.getRow()<=0){         
+            //System.out.println(request.getParameter("demographic_no") + " has no appointment yet");
+            String[] paramWLPosition = new String[1];
+            paramWLPosition[0] = request.getParameter("list_id");
+            if(paramWLPosition[0].compareTo("")!=0){
+                ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
+                if(rsWL.next()){
+                    String[] paramWL = new String[4];
+                    paramWL[0] = request.getParameter("list_id");
+                    paramWL[1] = request.getParameter("demographic_no");
+                    paramWL[2] = request.getParameter("waiting_list_note");
+                    //System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
+                    paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
+                    apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
+                }
             }
-        }
+        //}
     }
     if (vLocale.getCountry().equals("BR")) {
 	    //find the demographic_ptbr record for update
