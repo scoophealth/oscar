@@ -74,19 +74,24 @@ public class LoginCheckLogin {
         pvar.setProperty("working_dir", System.getProperty("user.dir"));
         char sep = pvar.getProperty("file_separator").toCharArray()[0];
         String strTemp = pvar.getProperty("working_dir").substring(0,pvar.getProperty("working_dir").indexOf(sep));
-
+        String propFileName = "";
         try {
 	   //This line commented because it was substituted by the code below it.
            //There's no need to mount the file name this way because now we suppose the parameter 'propFile'
            //brings the complete configuration file name.
            //It was made because we don't want it to read files from the root diretory anymore.
-	   //FileInputStream fis = new FileInputStream(strTemp + sep + "root" + sep + propFile ) ;
-
-  	    FileInputStream fis = new FileInputStream(propFile);
+           //FileInputStream fis = new FileInputStream(strTemp + sep + "root" + sep + propFile ) ;
+           
+           //This has been used to look in the users home directory that started tomcat 
+           propFileName = System.getProperty("user.home")+sep+propFile;	   
+           FileInputStream fis = new FileInputStream(propFileName) ;
+  	    
             pvar.load(fis); 
             fis.close();
         } catch(Exception e) {
             System.out.println("*** No Property File ***");
+            System.out.println("Property file not found at:");
+            System.out.println(propFileName);
             e.printStackTrace();
         }
     }
