@@ -11,7 +11,7 @@
   //display the main provider page
   //includeing the provider name and a month calendar
 
-  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 %>
 <!--  
 /*

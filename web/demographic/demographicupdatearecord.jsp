@@ -47,7 +47,7 @@
     </table>
 <%
   ResultSet rs = null;
-  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   //if action is good, then give me the result
     String[] param =new String[27];
