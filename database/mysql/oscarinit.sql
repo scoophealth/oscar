@@ -3931,6 +3931,8 @@ CREATE TABLE tickler (
   update_date datetime default '0001-01-01 00:00:00',
   service_date date default NULL,
   creator varchar(6) default NULL,
+  priority varchar(6) default 'Normal',
+  task_assigned_to varchar(255),
   PRIMARY KEY  (tickler_no)
 ) TYPE=MyISAM;
 
