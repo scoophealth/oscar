@@ -28,7 +28,7 @@
 
 
 <% 
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.htm");
+  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
   // String curProvider_no = (String) session.getAttribute("user");
   String curProvider_no = request.getParameter("provider_no");
       
@@ -222,8 +222,14 @@ function addName(demographic_no, lastname, firstname, chartno, messageID) {
 </tr>
 
 <%@ include file="../demographic/zdemographicsearchresult.jsp" %>
+<%
+String bgColor = bodd?"#EEEEFF":"white";
+%>
  
-<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>" align="center">
+<tr bgcolor="<%=bgColor%>" align="center" 
+onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" 
+onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no")%>;addName('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"
+>
       <td><input type="submit" class="mbttn" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="addName('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
