@@ -147,11 +147,7 @@ public class ExtractBean extends Object implements Serializable {
     }
     
     
-    
-    
-    
-    
-    
+                    
     public synchronized void dbQuery(){        
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
         if (HasBillingItemsToSubmit()) {
@@ -218,14 +214,8 @@ public class ExtractBean extends Object implements Serializable {
                                  dFee = Double.parseDouble(rs2.getString("bill_amount"));
                                  bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
                                  BigTotal = BigTotal.add(bdFee);
-
-                                 if (invCount == 0) {                            
-                                    htmlContent += "<tr><td class='bodytext'>" + "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no="
-                                    + misc.forwardZero(rs2.getString("billingmaster_no"), 7)
-                                    + "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">" + invNo + "</a>" + "</td><td class='bodytext'>" + demoName + "</td><td class='bodytext'>" +rs2.getString("phn")+ "</td><td class='bodytext'>" +rs2.getString("service_date")+ "</td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ misc.backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ misc.backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ misc.backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+misc.forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
-                                 }else{
-                                    htmlContent += "<tr><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'></td><td class='bodytext'>"+rs2.getString("billing_code") +"</td><td align='right' class='bodytext'>"+ rs2.getString("bill_amount")+"</td><td align='right' class='bodytext'>"+ misc.backwardSpace(rs2.getString("dx_code1"), 5)+"</td><td align='right' class='bodytext'>"+ misc.backwardSpace(rs2.getString("dx_code2"), 5) +"</td><td align='right' class='bodytext'>"+ misc.backwardSpace(rs2.getString("dx_code3"), 5)+"</td><td class='bodytext'>"+misc.forwardZero(rs2.getString("billingmaster_no"), 7)+"</td><td class='bodytext'>&nbsp;</td></tr>";
-                                 }
+                                                                 
+                                 htmlContent += htmlLine(rs2.getString("billingmaster_no"),invNo,demoName, rs2.getString("phn"), rs2.getString("service_date"),rs2.getString("billing_code") ,rs2.getString("bill_amount"),rs2.getString("dx_code1"),rs2.getString("dx_code2"),rs2.getString("dx_code3"));                           
                            
                                  errorMsg = checkData.checkC02(rs2.getString("billingmaster_no"), rs2); 
                                  htmlContent += errorMsg;
@@ -244,53 +234,45 @@ public class ExtractBean extends Object implements Serializable {
                            + invNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') AND billingservice.service_code=wcb.w_feeitem");
 
                            if (rs2.next()) {
-                              
-                              System.out.println("here1");
+                                                            
                               WcbSb sb = new WcbSb(rs2);
-                              
-                              System.out.println("here2");
+                              htmlContent += sb.getHtmlLine();
+                                                            
                               logNo = getSequence();
                               String lines = sb.Line1(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
                               setLog(logNo, lines);
-                              
-                              System.out.println("here3");
+                                                            
                               logNo = getSequence();
                               lines = sb.Line2(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
                               setLog(logNo, lines);
-
-                              System.out.println("here4");
+                              
                               logNo = getSequence();
                               lines = sb.Line3(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
                               setLog(logNo, lines);
-
-                              System.out.println("here5");
+                              
                               logNo = getSequence();
                               lines = sb.Line4(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
                               setLog(logNo, lines);
-                              
-                              System.out.println("here6");
+                                                            
                               logNo = getSequence();
                               lines = sb.Line5(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
                               setLog(logNo, lines);
-                              
-                              System.out.println("here7");
+                                                            
                               logNo = getSequence();
                               lines = sb.Line6(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
                               setLog(logNo, lines);
-                              
-                              System.out.println("here8");
+                                                            
                               logNo = getSequence();
                               lines = sb.Line7(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
                               setLog(logNo, lines);
-                              
-                              System.out.println("here9");
+                                                            
                               logNo = getSequence();
                               lines = sb.Line8(String.valueOf(logNo));                              
                               value += "\n"+ lines +"\r";
@@ -306,9 +288,9 @@ public class ExtractBean extends Object implements Serializable {
                                     setLog(logNo, lines);
                                  }
                                  rs3.close();
-                              }
-                              System.out.println("here10");
+                              }                              
                            }
+                           
                            rs2.close();
                            rs2 = db.GetSQL("SELECT billingmaster_no FROM billingmaster WHERE billing_no="+ invNo);
                            if (rs2.next()) {
@@ -429,71 +411,16 @@ public class ExtractBean extends Object implements Serializable {
         }
       }        
     }
-    ////
-    /*
-    public String space(int i) {
-        String returnValue = new String();
-        for(int j=0; j < i; j++) {
-            returnValue += " ";
-        }
-        return returnValue;
-    }
     
-    public String backwardSpace(String y,int i) {
-        String returnValue = new String();
-        for(int j=y.length(); j < i; j++) {
-            returnValue += " ";
-        }
-        return cutBackString(y+returnValue,i);
-    }    
-    
-    public String zero(int x) {
-        String returnZeroValue = new String();
-        for(int y=0; y < x; y++) {
-            returnZeroValue += "0";
-        }
-        return returnZeroValue;
-    }
-    public String forwardZero(String y, int x) {
-        String returnZeroValue = new String();
-        for(int i=y.length(); i < x; i++) {
-            returnZeroValue += "0";
-        }        
-        return cutFrontString(returnZeroValue+y,x);
-    }
-    public String cutFrontString(String str,int len){
-        return str.substring(str.length() - len, str.length());
-    }
-    public String cutBackString(String str,int len){
-        return str.substring(0,len);
-    }
-    
-    public String forwardSpace(String y, int x) {
-        String returnZeroValue = new String();
-        for(int i=y.length(); i < x; i++) {
-            returnZeroValue += " ";
-        }        
-        return cutFrontString(returnZeroValue+y,x);
-    }
-    
-    public String moneyFormat(String y, int x) {
-        String returnZeroValue = forwardZero(y.replaceAll("\\.",""),x);
-        return cutFrontString(returnZeroValue,x);                
-    }
-     */
-    ////
     public String getOhipReciprocal() {
         return ohipReciprocal;
-    }
-    
-    
+    }        
     public String getOhipRecord() {
         return ohipRecord;
     }
     public String getOhipClaim() {
         return ohipClaim;
-    }
-    
+    }    
     public String getTotalAmount() {
         return totalAmount;
     }
@@ -505,16 +432,13 @@ public class ExtractBean extends Object implements Serializable {
     }
     public String getValue() {
         return value;
-    }
-    
+    }    
     public String getOhipVer() {
         return ohipVer;
-    }
-    
+    }    
     public synchronized void setOhipVer(String newOhipVer) {
         ohipVer = newOhipVer;
-    }
-    
+    }    
     public synchronized void setGroupNo(String newGroupNo) {
         groupNo = newGroupNo;
     }
@@ -529,48 +453,38 @@ public class ExtractBean extends Object implements Serializable {
     }
     public synchronized void setOhipCenter(String newOhipCenter) {
         ohipCenter = newOhipCenter;
-    }
-    
+    }    
     public synchronized void setProviderNo(String newProviderNo) {
         providerNo = newProviderNo;
-    }
-    
+    }    
     public synchronized void setOhipFilename(String newOhipFilename) {
         ohipFilename = newOhipFilename;
-    }
-    
+    }    
     public synchronized void setHtmlFilename(String newHtmlFilename) {
         htmlFilename = newHtmlFilename;
     }
     public String getInvNo(){
         return invNo;
-    }
-    
-    
+    }       
     public synchronized void setOscarHome(String oscarHOME){
         oscar_home = oscarHOME;
-    }
-    
+    }    
     public synchronized void seteFlag(String neweFlag){
         eFlag = neweFlag;
-    }
-    
+    }    
     public synchronized void setVSFlag(int newVSFlag){
         vsFlag = newVSFlag;
     }
     public synchronized void setDateRange(String newDateRange){
         dateRange = newDateRange;
-    }
-    
-    
+    }        
     public String  roundUp (String str){
        String retval = "1";
        try{
           retval = new java.math.BigDecimal(str).setScale(0,BigDecimal.ROUND_UP).toString();               
        }catch(Exception e){ e.printStackTrace();}
        return retval;
-    }
-    
+    }   
     public String getClaimDetailRecord(ResultSet rs2,String LogNo) throws SQLException{        
         String dataLine =     misc.forwardSpace(rs2.getString("claimcode"),3)            //p00   3
                             + misc.forwardSpace(rs2.getString("datacenter"),5)           //p02   5
@@ -671,6 +585,31 @@ public class ExtractBean extends Object implements Serializable {
       htmlContentHeader += errorMsg;
       return htmlContentHeader;
     }
+    
+    public String htmlLine(String billingMasterNo,String invNo, String demoName, String phn, String serviceDate,String billingCode,String billAmount,String dx1,String dx2,String dx3){                           
+       String htmlContent = 
+       "<tr>" +
+          "<td class='bodytext'>" +
+             "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no=" +
+                misc.forwardZero(billingMasterNo, 7) +
+                 "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"  +
+               invNo + 
+             "</a>" + 
+          "</td>" +
+          "<td class='bodytext'>" + demoName    + "</td>" +
+          "<td class='bodytext'>" + phn         + "</td>" +
+          "<td class='bodytext'>" + serviceDate + "</td>" +
+          "<td class='bodytext'>" + billingCode + "</td>" +
+          "<td align='right' class='bodytext'>"+ billAmount +"</td>" +
+          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx1, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx2, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx3, 5) + "</td>" +
+          "<td class='bodytext'>" + misc.forwardZero(billingMasterNo, 7)+"</td>" +
+          "<td class='bodytext'>&nbsp;</td>" +
+       "</tr>";              
+       return htmlContent;
+    }
+    
     
     public static boolean HasBillingItemsToSubmit() {
       boolean tosubmit = false;
