@@ -61,10 +61,7 @@ public final class EctSetupDisplayHistoryAction extends Action {
             if(type!=null){
                 hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, type);
                 request.setAttribute("type", type);
-            }
-            else{
-                hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);           
-            }
+            }            
             HttpSession session = request.getSession();
             session.setAttribute( "measurementsData", hd );            
         }
