@@ -329,6 +329,10 @@ function showHideLayers() { //v3.0
               </tr>
               <tr bgcolor="#F6F6F6"><td colspan="4">notes</td></tr>
               <tr><td colspan="4"><%= bean.getNotes() %>&nbsp;</td></tr>              
+              
+              <tr bgcolor="#F6F6F6"><td colspan="4">Internal Notes</td></tr>
+              <tr><td colspan="4"><%= bean.getMessageNotes() %>&nbsp;</td></tr>              
+              
             </table>
             <table width="100%" border="0">
               <tr>
