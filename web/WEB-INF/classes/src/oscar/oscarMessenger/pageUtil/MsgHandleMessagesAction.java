@@ -17,7 +17,7 @@
 // * <OSCAR TEAM>
 // * This software was written for the 
 // * Department of Family Medicine 
-// * McMaster Unviersity 
+// * McMaster University 
 // * Hamilton 
 // * Ontario, Canada 
 // *
@@ -54,13 +54,14 @@ public  class MsgHandleMessagesAction extends Action {
         MessageResources messages = getResources();
         MsgSessionBean bean = (MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
         String providerNo = bean.getProviderNo();
-        String messageNo = ((MsgHandleMessagesForm)form).getMessageNo();
+        MsgHandleMessagesForm frm = (MsgHandleMessagesForm) form;
+        String messageNo = frm.getMessageNo();
         String sentbyNo ;
         String sentByLocation;
-        String reply = ((MsgHandleMessagesForm)form).getReply();
-        String replyAll = ((MsgHandleMessagesForm)form).getReplyAll();
-        String delete = ((MsgHandleMessagesForm)form).getDelete();
-        String forward = ((MsgHandleMessagesForm)form).getForward();
+        String reply = frm.getReply();
+        String replyAll = frm.getReplyAll();
+        String delete = frm.getDelete();
+        String forward = frm.getForward();
 
         oscar.oscarMessenger.data.MsgReplyMessageData replyMessageData;
         replyMessageData = new oscar.oscarMessenger.data.MsgReplyMessageData();
@@ -93,7 +94,7 @@ public  class MsgHandleMessagesAction extends Action {
           try{    //sents this message status to del
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              java.sql.ResultSet rs;
-             String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\'");
+             String sql = "update messagelisttbl set status = 'del' where provider_no = '"+providerNo+"' and message = '"+messageNo+"'";
              db.RunSQL(sql);
             
             db.CloseConn();
@@ -101,7 +102,7 @@ public  class MsgHandleMessagesAction extends Action {
           }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
         }
-        else if(reply.compareToIgnoreCase("Reply") == 0 || (replyAll.compareToIgnoreCase("reply All") == 0)){
+        else if(reply.equalsIgnoreCase("Reply") || (replyAll.equalsIgnoreCase("reply All") )){
 
           String[] replyval = new String[] {};
           java.util.Vector vector = new java.util.Vector();
@@ -131,9 +132,9 @@ public  class MsgHandleMessagesAction extends Action {
               }
 
               if(replyAll.compareToIgnoreCase("reply All") == 0){  // add every one that got the message
-                 rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = \'"+messageNo+"\'");
+                 rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = '"+messageNo+"'");
                  while (rs.next()){
-                     // System.out.println("pro no "+rs.getString("provider_no")+" remo Loco "+rs.getString("remoteLocation"));
+                     System.out.println("LOOK4ME pro no "+rs.getString("provider_no")+" remo Loco "+rs.getString("remoteLocation"));
                      vector.add(rs.getString("provider_no"));
                      replyMessageData.add(rs.getString("provider_no"),rs.getString("remoteLocation"));
                  }
