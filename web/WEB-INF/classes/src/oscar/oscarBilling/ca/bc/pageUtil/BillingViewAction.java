@@ -116,8 +116,15 @@ public final class BillingViewAction extends Action {
             //}
             
             
+            ActionForward actionForward = mapping.findForward("success");
             
-            return (mapping.findForward("success"));
+            String receipt = request.getParameter("receipt");
+            if (receipt != null && receipt.equals("yes")){  
+              System.out.println("forwarding to receipt");
+              actionForward = mapping.findForward("private");
+            }
+            
+            return actionForward;
         }
     }
     
