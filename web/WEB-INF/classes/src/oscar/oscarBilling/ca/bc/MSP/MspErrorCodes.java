@@ -38,10 +38,11 @@ import java.util.*;
 public class MspErrorCodes extends Properties{
    
    /** Creates a new instance of MspErrorCodes */
-   public MspErrorCodes() {         
+   public MspErrorCodes() {  
+      super();
       try {
             load(new FileInputStream(oscar.OscarProperties.getInstance().getProperty("msp_error_codes"))); 
-      } catch (IOException e) {
+      } catch (Exception e) {
 		e.printStackTrace();
                 System.out.println("Error loading MSP Error codes file");
       }      
