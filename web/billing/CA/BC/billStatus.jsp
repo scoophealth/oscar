@@ -296,10 +296,11 @@ if (billTypes == null){
         <input type="radio" name="billTypes" value="<%=MSPReconcile.PAIDWITHEXP%>" title="Paid with Explanation"     <%=billTypes.equals(MSPReconcile.PAIDWITHEXP)?"checked":""%>/> PwE
         <input type="radio" name="billTypes" value="<%=MSPReconcile.BADDEBT%>"      <%=billTypes.equals(MSPReconcile.BADDEBT)?"checked":""%>/> Bad Debt
         <input type="radio" name="billTypes" value="<%=MSPReconcile.WCB%>"          <%=billTypes.equals(MSPReconcile.WCB)?"checked":""%>/> WCB
-        <input type="radio" name="billTypes" value="<%=MSPReconcile.CAPITATED%>"    <%=billTypes.equals(MSPReconcile.CAPITATED)?"checked":""%>/> Capitated
-        <input type="radio" name="billTypes" value="<%=MSPReconcile.DONOTBILL%>"    <%=billTypes.equals(MSPReconcile.DONOTBILL)?"checked":""%>/> Do Not Bill
+        <input type="radio" name="billTypes" value="<%=MSPReconcile.CAPITATED%>"   title="Capitated"   <%=billTypes.equals(MSPReconcile.CAPITATED)?"checked":""%>/> Cap
+        <input type="radio" name="billTypes" value="<%=MSPReconcile.DONOTBILL%>"   title="Do Not Bill"    <%=billTypes.equals(MSPReconcile.DONOTBILL)?"checked":""%>/> DNBill
         <input type="radio" name="billTypes" value="<%=MSPReconcile.BILLPATIENT%>"  <%=billTypes.equals(MSPReconcile.BILLPATIENT)?"checked":""%>/> Bill Patient
-        <input type="radio" name="billTypes" value="<%=MSPReconcile.COLLECTION%>"   title="Transfered to Collection"<%=billTypes.equals(MSPReconcile.COLLECTION)?"checked":""%>/> Collection
+        <input type="radio" name="billTypes" value="<%=MSPReconcile.PAIDPRIVATE%>" title="Paid Private"  <%=billTypes.equals(MSPReconcile.PAIDPRIVATE)?"checked":""%>/> PPrivate
+        <input type="radio" name="billTypes" value="<%=MSPReconcile.COLLECTION%>"  title="Transfered to Collection"<%=billTypes.equals(MSPReconcile.COLLECTION)?"checked":""%>/> Collection
         <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/> All
         <input type="hidden" name="submitted" value="yes"/>
       </td>
