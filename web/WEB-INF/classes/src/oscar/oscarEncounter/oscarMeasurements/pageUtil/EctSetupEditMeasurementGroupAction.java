@@ -52,21 +52,21 @@ public class EctSetupEditMeasurementGroupAction extends Action {
         EctSetupEditMeasurementGroupForm frm = (EctSetupEditMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctSetupEditMeasurementGroupForm", frm);
         
-        String groupName = (String) frm.getValue("groupName");
-        System.out.println("The selected groupName is: " + groupName);
+        String groupName = (String) frm.getValue("groupName");                        
         
         EctTypeDisplayNameBeanHandler hd = new EctTypeDisplayNameBeanHandler(groupName, false);
         Collection existingTypeDisplayName = hd.getTypeDisplayNameVector();
         hd = new EctTypeDisplayNameBeanHandler(groupName, true);
         Collection allTypeDisplayName = hd.getTypeDisplayNameVector();
-        
+
         HttpSession session = request.getSession();
         session.setAttribute( "existingTypeDisplayNames", existingTypeDisplayName );   
         session.setAttribute( "allTypeDisplayNames", allTypeDisplayName ); 
         session.setAttribute( "groupName", groupName);
-        
         return mapping.findForward("continue");
+                      
 
     }
+
 }
     
