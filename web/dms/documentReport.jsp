@@ -8,6 +8,9 @@
   userlastname = (String) session.getAttribute("userlastname");
 
 %>  
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -23,9 +26,9 @@ GregorianCalendar now=new GregorianCalendar();
   String functionid = request.getParameter("functionid");
   String doctype = request.getParameter("doctype");
 %>
-<html> 
+<html:html locale="true"> 
 <head>
-<title>DOCUMENT MANAGEMENT SYSTEM</title>
+<title><bean:message key="dms.documentReport.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -55,11 +58,11 @@ function popPage(url) {
 
 function checkDelete(url, c, u,n){
 if (c == u || n == '<%=oscarVariables.getProperty("SUPERUSER")%>'){
- if(confirm("You are about to delete the document, are you sure?")) {
+ if(confirm("<bean:message key="dms.documentReport.msgDelete"/>")) {
     popPage(url);
   }
 }else{
-alert("You're not allowed to delete this document!");
+alert("<bean:message key="dms.documentReport.msgNotAllowed"/>");
 }
 
 
@@ -76,9 +79,9 @@ function setfocus() {
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr bgcolor="#486ebd">
      <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='RIGHT'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">DOCUMENT REPORT &nbsp;&nbsp;&nbsp;&nbsp;</font></th>
-      <th align='RIGHT'><input type="button" name="Button" value="Add HTML Code" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";><input type="button" name="Button" value="Add Document" onclick="window.open('../dms/adddocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";><input type='button' name='close' value='Done' onClick='window.close()'></th>
+		<input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'> </th> 
+    <th align='RIGHT'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"><bean:message key="dms.documentReport.msgDocReport"/> &nbsp;&nbsp;&nbsp;&nbsp;</font></th>
+      <th align='RIGHT'><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddHTML"/>" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddDoc"/>" onclick="window.open('../dms/adddocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";><input type='button' name='close' value='<bean:message key="global.btnClose"/>' onClick='window.close()'></th>
   </tr>
 </table>
 
@@ -91,11 +94,11 @@ function setfocus() {
           <table width="100%" border="1" cellspacing="0" cellpadding="0">
           <tr><td colspan='5'><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%>'s folder</b></td></td>
 <tr>
-          <td width="34%"><b>Document Description</b></td>
-          <td width="15%"><b>Document Type</b></td>
+          <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
+          <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
           <td width="17%"><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%></b></td>
-          <td width="21%"><b>Updatedate</b></td> 
-          <td width="13%"><b>Action</b></td>
+          <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate"/></b></td> 
+          <td width="13%"><b><bean:message key="dms.documentReport.msgAction"/></b></td>
   </tr>
   
   <%String creator="%", docfilename="", docdesc="", dispDesc="", dispType="", dispDocNo="", dispFunction="", dispCreator="", dispUpdatedate="", dispFilename="", dispStatus="";
@@ -144,7 +147,7 @@ function setfocus() {
           <td width="15%"><%=dispType%></td>
           <td width="17%"><%=proLast%>, <%=proFirst%></td>
           <td width="21%"><%=dispUpdatedate%></td>
-          <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>','<%=userlastname%>')">Delete</a> &nbsp; &nbsp; <a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')">Edit</a></td>
+          <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>','<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; <a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a></td>
   </tr> 
 
 <%
@@ -153,7 +156,7 @@ function setfocus() {
 
 if (count0 == 0) {
   %>
-    <tr><td colspan='5'>no match found</td></tr>
+    <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
     <%
     }
   %>
@@ -171,13 +174,13 @@ if (count0 == 0) {
          <td rowspan="2" ALIGN="center" valign="middle"> 
       
           <table width="100%" border="1" cellspacing="0" cellpadding="0" >  
-<tr><td colspan='5'><b>Share folder</b></td></td>
+<tr><td colspan='5'><b><bean:message key="dms.documentReport.msgShareFolder"/></b></td></td>
 <tr>
-          <td width="34%"><b>Document Description</b></td>
-          <td width="15%"><b>Document Type</b></td>
+          <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
+          <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
           <td width="17%"><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%></b></td>
-          <td width="21%"><b>Updatedate</b></td> 
-          <td width="13%"><b>Active</b></td>
+          <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate"/></b></td> 
+          <td width="13%"><b><bean:message key="dms.documentReport.msgActive"/></b></td>
   </tr>
    <% creator="%"; docfilename="";docdesc="";dispDesc=""; dispType=""; dispFunction=""; dispCreator=""; dispUpdatedate=""; dispFilename=""; dispStatus="";
 
@@ -218,7 +221,7 @@ if (count0 == 0) {
             <td width="15%"><%=dispType%></td>
             <td width="17%"><%=proLast%>, <%=proFirst%></td>
             <td width="21%"><%=dispUpdatedate%></td>
-            <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')">Delete</a>&nbsp; &nbsp;<a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')">Edit</a>&nbsp; &nbsp;</td>
+            <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a>&nbsp; &nbsp;<a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a>&nbsp; &nbsp;</td>
     </tr> 
   
   <%
@@ -226,7 +229,7 @@ if (count0 == 0) {
 }
 if (count == 0) {
   %>
-    <tr><td colspan='5'>no match found</td></td>
+    <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></td>
     <%
     }
     %> 
@@ -237,7 +240,7 @@ if (count == 0) {
 
 <br>
 <form>
-  <input type="button" name="Button" value="Done - Close Window" onclick=self.close();>
+  <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
 </form>
 </body>
-</html>
+</html:html>

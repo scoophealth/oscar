@@ -31,7 +31,6 @@
 
 <html:html locale="true">
 
-<html>
 <head>
 <title>
 Group Configurator

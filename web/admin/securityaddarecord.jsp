@@ -24,6 +24,8 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
 <%
   if(session.getValue("user") == null && session.getValue("user").equals("admin") )  response.sendRedirect("../logout.jsp");
@@ -32,15 +34,16 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <%
   String [][] dbQueries=new String[][] {
-    {"provider_search_providerno", "select provider_no, first_name, last_name from provider order by ?"},
+    {"provider_search_providerno", "select provider_no, first_name, last_name from provider order by last_name"},
   };
   String[][] responseTargets=new String[][] {  };
   apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<html>
+
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>Add a Login User</title>
+<title><bean:message key="admin.securityaddarecord.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
     <!--
@@ -55,7 +58,7 @@
 		 document.searchprovider.password.value=="" 
 		 ||document.searchprovider.provider_no.value=="" 
 		) {
-        alert("You forgot to input a keyword!");
+        alert('<bean:message key="global.msgInputKeyword"/>');
         return false;
       } else return true;
       // do nothing at the moment
@@ -69,15 +72,14 @@
 <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A LOGIN USER</font></th>
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.securityaddarecord.description"/></font></th>
       </tr>
     </table>
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
       <tr> 
         <td> 
-          <div align="right">User Name <font color="red">:</font> </div>
+          <div align="right"><bean:message key="admin.securityrecord.formUserName"/><font color="red">:</font> </div>
         </td>
         <td> 
           <input type="text" name="user_name">
@@ -85,20 +87,20 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">Password <font color="red">:</font> </div>
+          <div align="right"><bean:message key="admin.securityrecord.formPassword"/><font color="red">:</font> </div>
         </td>
         <td> 
           <input type="text" name="password">
         </td>
       </tr>
       <tr> 
-        <td width="50%" align="right">Provider No.<font color="red"> </font>: 
+        <td width="50%" align="right"><bean:message key="admin.securityrecord.formProviderNo"/><font color="red"> </font>: 
         </td>
         <td> 
                 <select name="provider_no">
                   <option value="">---None---</option>
 <%
-   ResultSet rsgroup = apptMainBean.queryResults("last_name", "provider_search_providerno");
+   ResultSet rsgroup = apptMainBean.queryResults("provider_search_providerno");
  	 while (rsgroup.next()) { 
 %>
                   <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
@@ -113,18 +115,18 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">PIN : </div>
+          <div align="right"><bean:message key="admin.securityrecord.formPIN"/>: </div>
         </td>
         <td> 
           <input type="text" name="pin">
-          <font size="-1">(only for Internet access.) </font> </td>
+          <font size="-1"><bean:message key="admin.securityaddarecord.onlyInternet"/></font> </td>
       </tr>
       <tr> 
         <td colspan="2"> 
           <div align="center"> 
             <input type="hidden" name="dboperation" value="security_add_record">
             <input type="hidden" name="displaymode" value="Security_Add_Record">
-            <input type="submit" name="subbutton" value="Add Record">
+            <input type="submit" name="subbutton" value='<bean:message key="admin.securityaddarecord.btnSubmit"/>'>
           </div>
         </td>
       </tr>
@@ -135,12 +137,11 @@
   <hr width="100%" color="orange">
   <table border="0" cellspacing="0" cellpadding="0" width="100%">
     <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
+      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"><bean:message key="global.btnBack"/></a></td>
+      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/><img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
     </tr>
   </table>
 
 </center>
 </body>
-</html>
+</html:html>

@@ -33,7 +33,7 @@
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-<title>Rourke Baby Record</title>
+<title><bean:message key="oscarEncounter.formRourke2.title"/></title>
 <html:base/>
 <link rel="stylesheet" type="text/css" media="screen" href="rourkeStyle.css" >
 <link rel="stylesheet" type="text/css" media="print" href="printRourke.css">
@@ -57,7 +57,7 @@
 //        var ret = checkAllDates();
 //        if(ret==true)
 //        {
-//            ret = confirm("Do you wish to save this form and view the print preview?");
+//            ret = confirm("<bean:message key="oscarEncounter.formRourke2.msgSavePrintPreview"/>");
 //        }
 //        return ret;
         window.print();
@@ -67,12 +67,12 @@
         var ret = checkAllDates();
         if(ret==true)
         {
-            ret = confirm("Are you sure you want to save this form?");
+            ret = confirm("<bean:message key="oscarEncounter.formRourke2.msgSave"/>");
         }
         return ret;
     }
     function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
+        if(confirm("<bean:message key="oscarEncounter.formRourke2.msgExit"/>")==true)
         {
             window.close();
         }
@@ -83,7 +83,7 @@
         var ret = checkAllDates();
         if(ret == true)
         {
-            ret = confirm("Are you sure you wish to save and close this window?");
+            ret = confirm("<bean:message key="oscarEncounter.formRourke2.msgSaveExit"/>");
         }
         return ret;
     }
@@ -170,7 +170,7 @@ var maxYear=3100;
 
     function checkTypeIn(obj) {
       if(!checkTypeNum(obj.value) ) {
-          alert ("You must type in a number in the field.");
+          alert ("<bean:message key="oscarEncounter.formRourke2.msgTypeNumbers"/>");
         }
     }
 
@@ -253,43 +253,43 @@ var maxYear=3100;
 <table class="Header" class="hidePrint">
     <tr>
         <td nowrap="true">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();">
-            <input type="button" value="Print" onclick="javascript:return onPrint();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formRourke2.btnSave"/>" onclick="javascript:return onSave();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formRourke2.btnSaveExit"/>" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formRourke2.btnExit"/> " onclick="javascript:return onExit();"/>
+            <input type="button" value="<bean:message key="oscarEncounter.formRourke2.btnPrint"/>" onclick="javascript:return onPrint();" />
         </td>
         <td align="center" width="100%">
             <a name="length" href="javascript:popup('graphLengthWeight.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">
-                Graph Length and Weight</a><br>
+                <bean:message key="oscarEncounter.formRourke2.btnGraphLenght"/></a><br>
             <a name="headCirc" href="javascript:popup('graphHeadCirc.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">
-                Graph Head Circumference</a>
+                <bean:message key="oscarEncounter.formRourke2.btnGraphHead"/></a>
         </td>
         <td nowrap="true">
-            <a href="formRourke1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Page 1</a>&nbsp;|&nbsp;
-            <a >Page 2</a>&nbsp;|&nbsp;
-            <a href="formRourke3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Page 3</a>
+            <a href="formRourke1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message key="oscarEncounter.formRourke2.btnpage1"/></a>&nbsp;|&nbsp;
+            <a ><bean:message key="oscarEncounter.formRourke2.msgPage2"/></a>&nbsp;|&nbsp;
+            <a href="formRourke3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message key="oscarEncounter.formRourke2.btnPage3"/></a>
         </td>
     </tr>
 </table>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr class="titleBar">
-        <th>Rourke Baby Record: EVIDENCE BASED INFANT/CHILD HEALTH MAINTENANCE GUIDE II</th>
+        <th><bean:message key="oscarEncounter.formRourke2.msgTitle"/></th>
     </tr>
 </table>
 <table width="100%" border="0" cellspacing="1" cellpadding="2">
     <tr valign="top">
-        <td nowrap align="center">Birth remarks<br>
+        <td nowrap align="center"><bean:message key="oscarEncounter.formRourke2.formBirthRemarks"/><br>
             <textarea name="c_birthRemarks" rows="2" cols="17"><%= props.getProperty("c_birthRemarks", "") %></textarea>
         </td>
-        <td nowrap align="center">Risk Factors/Family History<br>
+        <td nowrap align="center"><bean:message key="oscarEncounter.formRourke2.formRiskFactors"/><br>
             <textarea name="c_riskFactors" rows="2" cols="17"><%= props.getProperty("c_riskFactors", "") %></textarea>
         </td>
         <td width="65%" nowrap align="center">
             <p>
-                Name: <input type="text" name="c_pName" maxlength="60" size="30" value="<%= props.getProperty("c_pName", "") %>" readonly="true" />
+                <bean:message key="oscarEncounter.formRourke2.msgName"/>: <input type="text" name="c_pName" maxlength="60" size="30" value="<%= props.getProperty("c_pName", "") %>" readonly="true" />
                 &nbsp;&nbsp;
-                Birth Date (yyyy/mm/dd): <input type="text" name="c_birthDate" size="10" maxlength="10" value="<%= props.getProperty("c_birthDate", "") %>" readonly="true">
+                <bean:message key="oscarEncounter.formRourke2.msgBirthDate"/> (yyyy/mm/dd): <input type="text" name="c_birthDate" size="10" maxlength="10" value="<%= props.getProperty("c_birthDate", "") %>" readonly="true">
                 &nbsp;&nbsp;
                 <% if(!rec.isFemale(demoNo))
                 {
@@ -301,13 +301,13 @@ var maxYear=3100;
                 %>
             </p>
             <p>
-                Length: <input type="text" name="c_length" size="6" maxlength="6" value="<%= props.getProperty("c_length", "") %>"/> cm
+                <bean:message key="oscarEncounter.formRourke2.formLenght"/>: <input type="text" name="c_length" size="6" maxlength="6" value="<%= props.getProperty("c_length", "") %>"/> cm
                 &nbsp;&nbsp;
-                Head Circ: <input type="text" name="c_headCirc" size="6" maxlength="6" value="<%= props.getProperty("c_headCirc", "") %>"/> cm
+                <bean:message key="oscarEncounter.formRourke2.formHeadCirc"/>: <input type="text" name="c_headCirc" size="6" maxlength="6" value="<%= props.getProperty("c_headCirc", "") %>"/> cm
                 &nbsp;&nbsp;
-                Birth Wt: <input type="text" name="c_birthWeight" size="6" maxlength="7" value="<%= props.getProperty("c_birthWeight", "") %>"/> kg
+                <bean:message key="oscarEncounter.formRourke2.formBirthWt"/> <input type="text" name="c_birthWeight" size="6" maxlength="7" value="<%= props.getProperty("c_birthWeight", "") %>"/> <bean:message key="oscarEncounter.formRourke2.msgBirthWtUnit"/>
                 &nbsp;&nbsp;
-                Discharge Wt: <input type="text" name="c_dischargeWeight" size="6" maxlength="7"  value="<%= props.getProperty("c_dischargeWeight", "") %>"> kg
+                <bean:message key="oscarEncounter.formRourke2.formDischargeWt"/>: <input type="text" name="c_dischargeWeight" size="6" maxlength="7"  value="<%= props.getProperty("c_dischargeWeight", "") %>"> <bean:message key="oscarEncounter.formRourke2.msgDischargeWtUnit"/>
             </p>
         </td>
     </tr>
@@ -315,13 +315,13 @@ var maxYear=3100;
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
     <tr align="center">
         <td class="column"><a>AGE</a><br></td>
-        <td colspan="3" class="row"><a>4 months</a></td>
-        <td colspan="3" class="row"><a>6 months</a></td>
-        <td colspan="3" class="row"><a>9 months</a> (optional)</td>
-        <td colspan="3" class="row"><a>12-13 months</a></td>
+        <td colspan="3" class="row"><a><bean:message key="oscarEncounter.formRourke2.form4Months"/></a></td>
+        <td colspan="3" class="row"><a><bean:message key="oscarEncounter.formRourke2.form6Months"/></a></td>
+        <td colspan="3" class="row"><a><bean:message key="oscarEncounter.formRourke2.form9Months"/></a> <bean:message key="oscarEncounter.formRourke2.msgOptional"/></td>
+        <td colspan="3" class="row"><a><bean:message key="oscarEncounter.formRourke2.form12Months"/></a></td>
     </tr>
     <tr align="center">
-        <td class="column"><a>DATE</a></td>
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.msgDate"/></a></td>
         <td colspan="3">(yyyy/mm/dd) <input type="text" name="p2_date4m" size="10" value="<%=props.getProperty("p2_date4m", "")%>" /></td>
         <td colspan="3">(yyyy/mm/dd) <input type="text" name="p2_date6m" size="10" value="<%=props.getProperty("p2_date6m", "")%>" /></td>
         <td colspan="3">(yyyy/mm/dd) <input type="text" name="p2_date9m" size="10" value="<%=props.getProperty("p2_date9m", "")%>" /></td>
@@ -329,18 +329,18 @@ var maxYear=3100;
     </tr>
     <tr align="center">
         <td class="column" rowspan="2"><a>GROWTH</a></td>
-        <td>Ht. <small>(cm)</small></td>
-        <td>Wt. <small>(kg)</small></td>
-        <td>Hd. Circ <small>(cm)</small></td>
-        <td>Ht. <small>(cm)</small></td>
-        <td>Wt. <small>(kg)<br>(x2 BW)</small></td>
-        <td>Hd. Circ <small>(cm)</small></td>
-        <td>Ht. <small>(cm)</small></td>
-        <td>Wt. <small>(kg)</small></td>
-        <td>Hd. Circ <small>(cm)</small></td>
-        <td>Ht. <small>(cm)</small></td>
-        <td>Wt. <small>(kg)<br>(x3 BW)</small></td>
-        <td>Hd. Circ <small>(cm)<br>(av. 47cm)</small></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formHt"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formWt"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formHt"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formWt2"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formHt"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formWt"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formHt"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.formWt3"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2.HdCirc47"/></td>
     </tr>
     <tr align="center">
         <td><input type="text" class="wide" name="p2_ht4m" size="4" maxlength="5" value="<%= props.getProperty("p2_ht4m", "") %>"></td>
@@ -357,7 +357,7 @@ var maxYear=3100;
         <td><input type="text" class="wide" name="p2_hc12m" size="4" maxlength="5" value="<%= props.getProperty("p2_hc12m", "") %>"></td>
     </tr>
     <tr align="center">
-        <td class="column"><a>PARENTAL CONCERNS</a></td>
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.msgParentalConcerns"/></a></td>
         <td colspan="3">
             <textarea name="p2_pConcern4m" style="width:100%" cols="10" rows="2"><%= props.getProperty("p2_pConcern4m", "") %></textarea>
         </td>
@@ -372,7 +372,7 @@ var maxYear=3100;
         </td>
     </tr>
     <tr>
-        <td class="column"><a>NUTRITION</a></td>
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.msgnutrition"/></a></td>
         <td colspan="3" valign="top">
             <table width="100%">
                 <tr align="center">
@@ -380,15 +380,15 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_breastFeeding4m" <%= props.getProperty("p2_breastFeeding4m", "") %>/></td>
-                    <td><b><a href="<%=resource%>n_breastFeeding">Breast feeding</a>*<br> &nbsp;&nbsp;Vit.D 10ug=400IU/day*</b></td>
+                    <td><b><a href="<%=resource%>n_breastFeeding"><bean:message key="oscarEncounter.formRourke2.btnBreastFeeding"/></a><bean:message key="oscarEncounter.formRourke2.msgBreastFeedingUnit"/></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_formulaFeeding4m" <%= props.getProperty("p2_formulaFeeding4m", "") %>/></td>
-                    <td><i>Formula Feeding</i> (Fe fortified)</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formFormulaFeeding"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_cereal4m" <%= props.getProperty("p2_cereal4m", "") %>/></td>
-                    <td><i>Iron fortified cereal</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formIronFortified"/></td>
                 </tr>
             </table>
         </td>
@@ -399,27 +399,27 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_breastFeeding6m" <%= props.getProperty("p2_breastFeeding6m", "") %>></td>
-                    <td><b><a href="<%=resource%>n_breastFeeding">Breast feeding</a>*<br> &nbsp;&nbsp;Vit.D 10ug=400IU/day*</b></td>
+                    <td><b><a href="<%=resource%>n_breastFeeding"><bean:message key="oscarEncounter.formRourke2.btnBreastFeeding"/></a><bean:message key="oscarEncounter.formRourke2.msgBreastFeedingUnit"/></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_formulaFeeding6m" <%= props.getProperty("p2_formulaFeeding6m", "") %>></td>
-                    <td><i>Formula Feeding<br>Iron fortified follow-up formula</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formFormulaFeedingIronFortified"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_bottle6m" <%= props.getProperty("p2_bottle6m", "") %>></td>
-                    <td>No bottles in bed</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formNoBottles"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_vegFruit6m" <%= props.getProperty("p2_vegFruit6m", "") %>></td>
-                    <td>Veg/fruits</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formVeg"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_egg6m" <%= props.getProperty("p2_egg6m", "") %>></td>
-                    <td>No egg white, nuts, or honey</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formNoEgg"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_choking6m" <%= props.getProperty("p2_choking6m", "") %>></td>
-                    <td><a href="<%=resource%>s_choking">Choking/safe food</a>*</td>
+                    <td><a href="<%=resource%>s_choking"><bean:message key="oscarEncounter.formRourke2.formChokingSafeFood"/></a>*</td>
                 </tr>
             </table>
         </td>
@@ -430,23 +430,23 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_breastFeeding9m" <%= props.getProperty("p2_breastFeeding9m", "") %>></td>
-                    <td><b><a href="<%=resource%>n_breastFeeding">Breast feeding</a>*<br> &nbsp;&nbsp;Vit.D 10ug=400IU/day*</b></td>
+                    <td><b><a href="<%=resource%>n_breastFeeding"><bean:message key="oscarEncounter.formRourke2.btnBreastFeeding"/></a><bean:message key="oscarEncounter.formRourke2.msgBreastFeedingUnit"/></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_formulaFeeding9m" <%= props.getProperty("p2_formulaFeeding9m", "") %>></td>
-                    <td><i>Formula Feeding<br>Iron fortified follow-up formula</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formFormulaFeeding"/><br><bean:message key="oscarEncounter.formRourke2.formIronFortified"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_bottle9m" <%= props.getProperty("p2_bottle9m", "") %>></td>
-                    <td>No bottles in bed</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formNoBottles"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_meat9m" <%= props.getProperty("p2_meat9m", "") %>></td>
-                    <td>Meat & alternatives*</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formMeat"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_milk9m" <%= props.getProperty("p2_milk9m", "") %>></td>
-                    <td>Milk Products*</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formMilk"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_egg9m" <%= props.getProperty("p2_egg9m", "") %>></td>
@@ -454,7 +454,7 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_choking9m" <%= props.getProperty("p2_choking9m", "") %>></td>
-                    <td><a href="<%=resource%>s_choking">Choking/safe food</a>*</td>
+                    <td><a href="<%=resource%>s_choking"><bean:message key="oscarEncounter.formRourke2.formChokingSafeFood"/></a>*</td>
                 </tr>
             </table>
         </td>
@@ -465,15 +465,15 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_milk12m" <%= props.getProperty("p2_milk12m", "") %>></td>
-                    <td>Homogenized milk</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHomogenizedMilk"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_bottle12m" <%= props.getProperty("p2_bottle12m", "") %>></td>
-                    <td>Encourage cup vs bottle</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formEncourageCup"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_appetite12m" <%= props.getProperty("p2_appetite12m", "") %>></td>
-                    <td>Appetite reduced</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formAppetiteReduced"/></td>
                 </tr>
             </table>
         </td>
@@ -482,26 +482,26 @@ var maxYear=3100;
         <td class="column">
             <table width="100%">
                 <tr>
-                    <td><a>EDUCATION &amp; ADVICE</a></td>
+                    <td><a><bean:message key="oscarEncounter.formRourke2.msgEducationAdvice"/></a></td>
                 </tr>
                 <tr>
-                    <td align="right"><b>Safety</b></td>
-                </tr>
-                <tr><td>&nbsp;</td></tr>
-                <tr><td>&nbsp;</td></tr>
-                <tr><td>&nbsp;</td></tr>
-                <tr>
-                    <td align="right"><b>Behaviour</b></td>
-                </tr>
-                <tr><td>&nbsp;</td></tr>
-                <tr>
-                    <td align="right"><b>Family</b></td>
+                    <td align="right"><b><bean:message key="oscarEncounter.formRourke2.msgSafety"/></b></td>
                 </tr>
                 <tr><td>&nbsp;</td></tr>
                 <tr><td>&nbsp;</td></tr>
                 <tr><td>&nbsp;</td></tr>
                 <tr>
-                    <td align="right"><b>Other</b></td>
+                    <td align="right"><b><bean:message key="oscarEncounter.formRourke2.msgBehaviour"/></b></td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td align="right"><b><bean:message key="oscarEncounter.formRourke2.msgFamily"/></b></td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td align="right"><b><bean:message key="oscarEncounter.formRourke2.msgOther"/></b></td>
                 </tr>
             </table>
         </td>
@@ -512,15 +512,15 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_carSeat4m" <%= props.getProperty("p2_carSeat4m", "") %>></td>
-                    <td><b><a href="<%=resource%>s_motorVehicleAccidents">Car seat (toddler)</a>*</b></td>
+                    <td><b><a href="<%=resource%>s_motorVehicleAccidents"><bean:message key="oscarEncounter.formRourke2.formCarSeat"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_stairs4m" <%= props.getProperty("p2_stairs4m", "") %>></td>
-                    <td><i>Stairs/walker</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formWalker"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_bath4m" <%= props.getProperty("p2_bath4m", "") %>></td>
-                    <td><i><a href="<%=resource%>s_drowning">Bath safety*; safe toys</a>*</i></td>
+                    <td><i><a href="<%=resource%>s_drowning"><bean:message key="oscarEncounter.formRourke2.formBathSafety"/></a>*</i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_sleeping4m" <%= props.getProperty("p2_sleeping4m", "") %>></td>
@@ -531,22 +531,22 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_parent4m" <%= props.getProperty("p2_parent4m", "") %>></td>
-                    <td>Parent/child interaction</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formParentChildInteraction"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_childCare4m" <%= props.getProperty("p2_childCare4m", "") %>></td>
-                    <td>Child care/return to work</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formChildCare"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_family4m" <%= props.getProperty("p2_family4m", "") %>></td>
-                    <td>Family conflict/stress</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formFamilyConflict"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_teething4m" <%= props.getProperty("p2_teething4m", "") %>></td>
-                    <td>Siblings</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formSiblings"/></td>
                 </tr>
             </table>
         </td>
@@ -557,29 +557,29 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_poison6m" <%= props.getProperty("p2_poison6m", "") %>></td>
-                    <td><b><a href="<%=resource%>s_poisons">Poisons*; PCC#</a>*</b></td>
+                    <td><b><a href="<%=resource%>s_poisons"><bean:message key="oscarEncounter.formRourke2.btnPoisons"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_electric6m" <%= props.getProperty("p2_electric6m", "") %>></td>
-                    <td><i>Electric plugs</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formElectricPlugs"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_sleeping6m" <%= props.getProperty("p2_sleeping6m", "") %>></td>
-                    <td><b><a href="<%=resource%>b_nightWaking">Night waking/crying</a>*</b></td>
+                    <td><b><a href="<%=resource%>b_nightWaking"><bean:message key="oscarEncounter.formRourke2.formNightWaking"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_parent6m" <%= props.getProperty("p2_parent6m", "") %>></td>
-                    <td>Parent/child interaction</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formParentChildInteraction"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_childCare6m" <%= props.getProperty("p2_childCare6m", "") %>></td>
-                    <td>Child care/return to work</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formChildCare"/></td>
                 </tr>
             </table>
         </td>
@@ -590,36 +590,36 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_childProof9m" <%= props.getProperty("p2_childProof9m", "") %>></td>
-                    <td>Childproofing</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formChildProofing"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_separation9m" <%= props.getProperty("p2_separation9m", "") %>></td>
-                    <td>Separation anxiety</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formSeparation"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_sleeping9m" <%= props.getProperty("p2_sleeping9m", "") %>></td>
-                    <td><b><a href="<%=resource%>b_nightWaking">Night waking/crying</a>*</b></td>
+                    <td><b><a href="<%=resource%>b_nightWaking"><bean:message key="oscarEncounter.formRourke2.formNightWaking"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_dayCare9m" <%= props.getProperty("p2_dayCare9m", "") %>></td>
-                    <td><b><a href="<%=resource%>hri_dayCare">Assess day care need</a>*</b></td>
+                    <td><b><a href="<%=resource%>hri_dayCare"><bean:message key="oscarEncounter.formRourke2.formAssessDay"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_homeVisit9m" <%= props.getProperty("p2_homeVisit9m", "") %>></td>
-                    <td><b><a href="<%=resource%>hri_homeVisits">Assess home visit need</a>*</b></td>
+                    <td><b><a href="<%=resource%>hri_homeVisits"><bean:message key="oscarEncounter.formRourke2.formAssessHomeVisit"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_smoke9m" <%= props.getProperty("p2_smoke9m", "") %>></td>
-                    <td><b><a href="<%=resource%>o_secondHandSmoke">Second hand smoke</a>*</b></td>
+                    <td><b><a href="<%=resource%>o_secondHandSmoke"><bean:message key="oscarEncounter.formRourke2.formSecondHandSmoke"/></a>*</b></td>
                 </tr>
             </table>
         </td>
@@ -630,46 +630,44 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_poison12m" <%= props.getProperty("p2_poison12m", "") %>/></td>
-                    <td><b><a href="<%=resource%>s_poisons">Poisons/PCC#</a>*</b></td>
+                    <td><b><a href="<%=resource%>s_poisons"><bean:message key="oscarEncounter.formRourke2.btnPoisons"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_electric12m" <%= props.getProperty("p2_electric12m", "") %>/></td>
-                    <td><i>Electrical plugs</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formElectricPlugs"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_carbon12m" <%= props.getProperty("p2_carbon12m", "") %>/></td>
-                    <td>Carbon monoxide/<br> &nbsp;&nbsp;<i><a href="<%=resource%>s_burns">Smoke detectors</a>*</i></td>
+                    <td>Carbon monoxide/<br> &nbsp;&nbsp;<i><a href="<%=resource%>s_burns"><bean:message key="oscarEncounter.formRourke2.formSmokeDetectors"/></a>*</i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hotWater12m" <%= props.getProperty("p2_hotWater12m", "") %>/></td>
-                    <td><i>Hot Water &lt; 54&deg;C</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHotWater"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_sleeping12m" <%= props.getProperty("p2_sleeping12m", "") %>/></td>
-                    <td><b><a href="<%=resource%>b_nightWaking">Night waking/crying</a>*</b></td>
+                    <td><b><a href="<%=resource%>b_nightWaking"><bean:message key="oscarEncounter.formRourke2.formNightWaking"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_parent12m" <%= props.getProperty("p2_parent12m", "") %>/></td>
-                    <td>Parent/child interaction</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formParentChildInteraction"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                      <td valign="top"><input type="checkbox" name="p2_teething12m" <%= props.getProperty("p2_teething12m", "") %>/></td>
-                     <td>Teething/<b><a href="<%=resource%>o_dentalCare">Dental care</a>*</b></td>
+                     <td><bean:message key="oscarEncounter.formRourke2.formTeething"/><b><a href="<%=resource%>o_dentalCare"><bean:message key="oscarEncounter.formRourke2.btnDentalCare"/></a>*</b></td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
-        <td class="column"><a>DEVELOPMENT</a><br>
-                (Inquiry &amp; observation of milestones)<br>
-                Tasks are set after the time of normal milestone acquisition.<br>
-                Absence of any item suggests the need for further assessment of development<br>
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.msgDevelopment"/></a><br>
+                <bean:message key="oscarEncounter.formRourke2.msgDecelopmentDesc"/>
         </td>
         <td colspan="3" valign="top">
             <table width="100%">
@@ -678,23 +676,23 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_turnHead4m" <%= props.getProperty("p2_turnHead4m", "") %>></td>
-                    <td>Turns head toward sounds</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formTurnsHead"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_laugh4m" <%= props.getProperty("p2_laugh4m", "") %>></td>
-                    <td>Laughs/squeals at parent</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formLaughs"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_headSteady4m" <%= props.getProperty("p2_headSteady4m", "") %>></td>
-                    <td>Head steady</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHeadSteady"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_grasp4m" <%= props.getProperty("p2_grasp4m", "") %>></td>
-                    <td>Grasps/reaches</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formGrasps"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_concern4m" <%= props.getProperty("p2_concern4m", "") %>></td>
-                    <td>No parent concern</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formNoParentConcern"/></td>
                 </tr>
             </table>
         </td>
@@ -705,31 +703,31 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_follow6m" <%= props.getProperty("p2_follow6m", "") %>></td>
-                    <td>Follows a moving object</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formFollowsMovingObjects"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_respond6m" <%= props.getProperty("p2_respond6m", "") %>></td>
-                    <td>Responds to own name</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formRespondsName"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_babbles6m" <%= props.getProperty("p2_babbles6m", "") %>></td>
-                    <td>Babbles</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formBabbles"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_rolls6m" <%= props.getProperty("p2_rolls6m", "") %>></td>
-                    <td>Rolls from back to stomach or stomach to back</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formRollsFromBack"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_sits6m" <%= props.getProperty("p2_sits6m", "") %>></td>
-                    <td>Sits with support</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formSitsWithSupport"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_mouth6m" <%= props.getProperty("p2_mouth6m", "") %>></td>
-                    <td>Brings hands/toys to mouth</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formBringHandsToMouth"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_concern6m" <%= props.getProperty("p2_concern6m", "") %>></td>
-                    <td>No parent concern</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formNoParentConcern"/></td>
                 </tr>
             </table>
         </td>
@@ -740,31 +738,31 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_looks9m" <%= props.getProperty("p2_looks9m", "") %>></td>
-                    <td>Looks for hidden toy</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formLooksForHiddenToy"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_babbles9m" <%= props.getProperty("p2_babbles9m", "") %>></td>
-                    <td>Babbles different sounds & to get attention</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formDifferentSounds"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_sits9m" <%= props.getProperty("p2_sits9m", "") %>></td>
-                    <td>Sits without support</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formSitsWithoutSupport"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_stands9m" <%= props.getProperty("p2_stands9m", "") %>></td>
-                    <td>Stands with support</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formStandsWithSupport"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_opposes9m" <%= props.getProperty("p2_opposes9m", "") %>></td>
-                    <td>Opposes thumb & index finger</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formOpposesThumbAndIndex"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_reaches9m" <%= props.getProperty("p2_reaches9m", "") %>></td>
-                    <td>Reaches to be picked up & held</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formReachestobePicked"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_noParentsConcerns9m" <%= props.getProperty("p2_noParentsConcerns9m", "") %>></td>
-                    <td>No parent concerns</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formNoParentConcern"/></td>
                 </tr>
             </table>
         </td>
@@ -775,36 +773,34 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_understands12m" <%= props.getProperty("p2_understands12m", "") %>></td>
-                    <td>Understands simple requests, e.g. find your shoes</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formUnderstandsSimpleRequests"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_chatters12m" <%= props.getProperty("p2_chatters12m", "") %>></td>
-                    <td>Chatters using 3 different sounds</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formChatters"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_crawls12m" <%= props.getProperty("p2_crawls12m", "") %>></td>
-                    <td>Crawls or 'bum' shuffles</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formCrawls"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_pulls12m" <%= props.getProperty("p2_pulls12m", "") %>></td>
-                    <td>Pulls to stand/walks holding on</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formPullsToStand"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_emotions12m" <%= props.getProperty("p2_emotions12m", "") %>></td>
-                    <td>Shows many emotions</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formShowsManyEmotions"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_noParentConcerns12m" <%= props.getProperty("p2_noParentConcerns12m", "") %>></td>
-                    <td>No parent concerns</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formNoParentConcern"/></td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
-        <td class="column"><a>PHYSICAL EXAMINATION</a><br>
-                Evidence based screening for specific conditions is highlighted, but an
-                appropriate age-specific focused physical examination is recommended at
-                each visit
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.msgPhysicalExamination"/></a><br>
+                <bean:message key="oscarEncounter.formRourke2.msgPhysicalExaminationDesc"/>
         </td>
         <td colspan="3" valign="top">
             <table width="100%">
@@ -813,23 +809,23 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_eyes4m" <%= props.getProperty("p2_eyes4m", "") %>></td>
-                    <td><i>Eyes (red reflex)</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formRedReflex"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_cover4m" <%= props.getProperty("p2_cover4m", "") %>></td>
-                    <td><b><a href="<%=resource%>pe_cover">Cover/uncover test & inquiry</a>*</b></td>
+                    <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke2.formCover"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hearing4m" <%= props.getProperty("p2_hearing4m", "") %>></td>
-                    <td><b>Hearing inquiry</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHearing"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_babbling4m" <%= props.getProperty("p2_babbling4m", "") %>></td>
-                    <td>Babbling</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formBabbling"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hips4m" <%= props.getProperty("p2_hips4m", "") %>></td>
-                    <td><b>Hips</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHips"/></td>
                 </tr>
             </table>
         </td>
@@ -840,23 +836,23 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_fontanelles6m" <%= props.getProperty("p2_fontanelles6m", "") %>></td>
-                    <td>Fontanelles</td>
-                </tr>
+                    <td><bean:message key="oscarEncounter.formRourke2.form<b>Hearing inquiry</b>"/></td>
+                </tr><bean:message key="oscarEncounter.formRourke2.formFontanelles"/>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_eyes6m" <%= props.getProperty("p2_eyes6m", "") %>></td>
-                    <td><i>Eyes (red reflex)</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formRedReflex"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_cover6m" <%= props.getProperty("p2_cover6m", "") %>></td>
-                    <td><b><a href="<%=resource%>pe_cover">Cover/uncover test & inquiry</a>*</b></td>
+                    <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke2.formCover"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hearing6m" <%= props.getProperty("p2_hearing6m", "") %>></td>
-                    <td><b>Hearing inquiry</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHearing"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hips6m" <%= props.getProperty("p2_hips6m", "") %>></td>
-                    <td><b>Hips</b> </td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHips"/></td>
                 </tr>
             </table>
         </td>
@@ -867,15 +863,15 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_eyes9m" <%= props.getProperty("p2_eyes9m", "") %>></td>
-                    <td><i>Eyes (red reflex)</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formRedReflex"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_cover9m" <%= props.getProperty("p2_cover9m", "") %>></td>
-                    <td><b><a href="<%=resource%>pe_cover">Cover/uncover test &amp; inquiry</a>*</b></td>
+                    <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke2.formCover"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hearing9m" <%= props.getProperty("p2_hearing9m", "") %>></td>
-                    <td><b> Hearing inquiry</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHearing"/></td>
                 </tr>
             </table>
         </td>
@@ -886,25 +882,25 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_eyes12m" <%= props.getProperty("p2_eyes12m", "") %>></td>
-                    <td width="100%"><i>Eyes (red reflex)</i></td>
+                    <td width="100%"><bean:message key="oscarEncounter.formRourke2.formRedReflex"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_cover12m" <%= props.getProperty("p2_cover12m", "") %>></td>
-                    <td><b><a href="<%=resource%>pe_cover">Cover/uncover test &amp; inquiry</a>*</b></td>
+                    <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke2.formCover"/></a>*</b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hearing12m" <%= props.getProperty("p2_hearing12m", "") %>></td>
-                    <td><b> Hearing inquiry</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHearing"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hips12m" <%= props.getProperty("p2_hips12m", "") %>></td>
-                    <td><b>Hips</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHips"/></td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
-        <td class="column"><a>PROBLEMS &amp; PLANS</a></td>
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.msgProblems"/></a></td>
         <td colspan="3" valign="top">
             <table width="100%">
                 <tr align="center">
@@ -919,7 +915,7 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_tb6m" <%= props.getProperty("p2_tb6m", "") %>></td>
-                    <td width="100%">Inquire about possible TB exposure</td>
+                    <td width="100%"><bean:message key="oscarEncounter.formRourke2.formTBexposure"/></td>
                 </tr>
             </table>
         </td>
@@ -930,11 +926,11 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_antiHbs9m" <%= props.getProperty("p2_antiHbs9m", "") %>></td>
-                    <td width="100%"><b><a href="<%=resource%>i_hepB">Anti-HBs & HbsAG</a>*</b><br> &nbsp;&nbsp;(If HbsAg pos mother)</td>
+                    <td width="100%"><b><a href="<%=resource%>i_hepB"><bean:message key="oscarEncounter.formRourke2.btnAntiHB"/></a><bean:message key="oscarEncounter.formRourke2.formAntiHB"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hgb9m" <%= props.getProperty("p2_hgb9m", "") %>></td>
-                    <td>Hgb. (If at risk)*</td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formHgb"/></td>
                 </tr>
             </table>
         </td>
@@ -945,18 +941,18 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hgb12m" <%= props.getProperty("p2_hgb12m", "") %>></td>
-                    <td width="100%">Hgb. (If at risk)*</td>
+                    <td width="100%"><bean:message key="oscarEncounter.formRourke2.formHgb"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_serum12m" <%= props.getProperty("p2_serum12m", "") %>></td>
-                    <td><i>Serum lead (If at risk)*</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formSerumLead"/></td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
-        <td class="column"><a>IMMUNIZATION</a><br>
-                Guidelines may vary by province
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.msgImmunization"/></a><br>
+                <bean:message key="oscarEncounter.formRourke2.msgImmunizarionDesc"/>
         </td>
         <td colspan="3" valign="top">
             <table width="100%">
@@ -965,11 +961,11 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hib4m" <%= props.getProperty("p2_hib4m", "") %>></td>
-                    <td width="100%"><b>HIB</b></td>
+                    <td width="100%"><bean:message key="oscarEncounter.formRourke2.formHIB"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_polio4m" <%= props.getProperty("p2_polio4m", "") %>></td>
-                    <td><b>aPDT polio</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formAPDT"/></td>
                 </tr>
             </table>
         </td>
@@ -980,15 +976,15 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hib6m" <%= props.getProperty("p2_hib6m", "") %>></td>
-                    <td width="100%"><b>HIB</b></td>
+                    <td width="100%"><bean:message key="oscarEncounter.formRourke2.formHIB"/>></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_polio6m" <%= props.getProperty("p2_polio6m", "") %>></td>
-                    <td><b>aPDT polio</b></td>
+                    <td><bean:message key="oscarEncounter.formRourke2.formAPDT"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_hepB6m" <%= props.getProperty("p2_hepB6m", "") %>></td>
-                    <td><b><a href="<%=resource%>i_hepB">Hep.B vaccine</a>*</b></td>
+                    <td><b><a href="<%=resource%>i_hepB"><bean:message key="oscarEncounter.formRourke2.formHep"/></a>*</b></td>
                 </tr>
             </table>
         </td>
@@ -999,7 +995,7 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_tbSkin9m" <%= props.getProperty("p2_tbSkin9m", "") %>></td>
-                    <td width="100%"><a href="<%=resource%>i_tbSkinTesting">TB skin text?</a>*</td>
+                    <td width="100%"><a href="<%=resource%>i_tbSkinTesting"><bean:message key="oscarEncounter.formRourke2.formTB"/></a>*</td>
                 </tr>
             </table>
         </td>
@@ -1010,17 +1006,17 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_mmr12m" <%= props.getProperty("p2_mmr12m", "") %>></td>
-                    <td width="100%"><b>MMR</b></td>
+                    <td width="100%"><bean:message key="oscarEncounter.formRourke2.formMMR"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p2_varicella12m" <%= props.getProperty("p2_varicella12m", "") %>></td>
-                    <td><b><a href="<%=resource%>i_varicellaVaccine">Varicella vaccine</a>*</b></td>
+                    <td><b><a href="<%=resource%>i_varicellaVaccine"><bean:message key="oscarEncounter.formRourke2.formVaricella"/></a>*</b></td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
-        <td class="column"><a>Signature</a></td>
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke2.formSignature"/></a></td>
         <td colspan="3">
             <input type="text" class="wide" style="width:100%" name="p2_signature4m" value="<%= props.getProperty("p2_signature4m", "") %>" />
         </td>
@@ -1040,18 +1036,18 @@ var maxYear=3100;
 <table class="Header" class="hidePrint">
     <tr>
         <td nowrap="true">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();">
-            <input type="button" value="Print" onclick="javascript:return onPrint();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formRourke2.btnSave"/>" onclick="javascript:return onSave();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formRourke2.btnSaveExit"/>" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formRourke2.btnExit"/>" onclick="javascript:return onExit();">
+            <input type="button" value="<bean:message key="oscarEncounter.formRourke2.btnPrint"/>" onclick="javascript:return onPrint();" />
         </td>
         <td align="center" width="100%">
         <% if(formId > 0)
         { %>
             <a name="length" href="javascript:popup('graphLengthWeight.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">
-                Graph Length and Weight</a><br>
+                <bean:message key="oscarEncounter.formRourke2.btnGraphLenght"/></a><br>
             <a name="headCirc" href="javascript:popup('graphHeadCirc.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">
-                Graph Head Circumference</a>
+                <bean:message key="oscarEncounter.formRourke2.btnGraphHead"/></a>
         <% }else
         {
             %>&nbsp;<%
@@ -1059,9 +1055,9 @@ var maxYear=3100;
         %>
         </td>
         <td nowrap="true">
-            <a href="formRourke1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Page 1</a>&nbsp;|&nbsp;
-            <a >Page 2</a>&nbsp;|&nbsp;
-            <a href="formRourke3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Page 3</a>
+            <a href="formRourke1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message key="oscarEncounter.formRourke2.btnpage1"/></a>&nbsp;|&nbsp;
+            <a ><bean:message key="oscarEncounter.formRourke2.msgPage2"/></a>&nbsp;|&nbsp;
+            <a href="formRourke3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>"><bean:message key="oscarEncounter.formRourke2.btnPage3"/></a>
         </td>
     </tr>
 </table>

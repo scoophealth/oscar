@@ -24,22 +24,23 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*,java.security.*" errorPage="errorpage.jsp" %>
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
-<head><title>add a login user</title>
+<html:html locale="true">
+<head><title><bean:message key="admin.securityaddsecurity.title"/></title>
 <link rel="stylesheet" href="../web.css">
 </head>
 <body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
 <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A LOGIN USER RECORD</font></th>
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.securityaddsecurity.description"/></font></th>
       </tr>
     </table>
 <%
@@ -58,17 +59,16 @@
   if (rowsAffected ==1) {
   //System.out.println("********************");}
 %>
-  <h1>Successful Addition of a Login User Record.
-  </h1>
+  <h1><bean:message key="admin.securityaddsecurity.msgAdditionSuccess"/></h1>
 <%  
   } else {
 %>
-  <h1>Sorry, addition has failed.
+  <h1><bean:message key="admin.securityaddsecurity.msgAdditionFailure"/></h1>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-<%@ include file="footer2.htm" %>
+<%@ include file="footer2htm.jsp" %>
 </center>
 </body>
-</html>
+</html:html>

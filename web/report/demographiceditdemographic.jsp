@@ -102,7 +102,7 @@ function checkTypeIn() {
   <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font></th></tr>
 </table>
 
-<%@ include file="zdemographicfulltitlesearch.htm" %>
+<%@ include file="zdemographicfulltitlesearch.jsp" %>
 
 <%
   String resident="", nurse="", alert="", notes="";

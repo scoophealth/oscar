@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
  <%   
   if(session.getValue("user") == null)
     response.sendRedirect("../../logout.jsp");
@@ -39,9 +42,9 @@ String service_form="";
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbDxResearch.jsp" %>
-<html>
+<html:html locale="true">
 <head>
-<title>oscarDxResearch</title>
+<title><bean:message key="oscarResearch.oscarDxResearch.dxResearch.title"/></title>
 <script language="JavaScript">
 <!--
 
@@ -137,7 +140,7 @@ document.serviceform.submit()
  <table width="100%" border="0" cellspacing="0" cellpadding="0">
        <tr bgcolor="#000000"> 
          <td height="40" colspan="2"> <font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF" size="5"><b> 
-           &nbsp;&nbsp;&nbsp;oscarDxResearch</b></font></td>
+           &nbsp;&nbsp;&nbsp;<bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch"/></b></font></td>
        </tr>
 </table>
 <form name=serviceform method=post>
@@ -146,7 +149,7 @@ document.serviceform.submit()
       <td width="12%" valign="top"> 
         <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
           <tr> 
-            <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research 
+            <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgResearch"/> 
               </font></b></td>
             <td><b></b></td>
           </tr>
@@ -191,10 +194,10 @@ document.serviceform.submit()
       <td width="88%" valign="top">
         <table width="100%" border="0"  cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
           <tr bgcolor="#CCCCFF"> 
-            <td width="32%"><b>Diagnosis</b></td>
-            <td width="20%"><b>First Visit</b></td>
-            <td width="20%"><b>Last Visit</b></td>
-            <td width="28%"><b>Action</b></td>
+            <td width="32%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis"/></b></td>
+            <td width="20%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit"/></b></td>
+            <td width="20%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgLastVisit"/></b></td>
+            <td width="28%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgAction"/></b></td>
           </tr>
           
           
@@ -225,7 +228,12 @@ document.serviceform.submit()
       				                  <td width="32%"><%=rsdemo2.getString("description")%></td>
       				                  <td width="20%"><%=rsdemo2.getString("start_date")%></td>
       				                  <td width="20%"><%=rsdemo2.getString("update_date")%></td>
-      				                  <td width="28%"><%=rsdemo2.getString("status").compareTo("A")==0?"<a href='dxResearchUpdate.jsp?status=C&did=" + rsdemo2.getString("dxresearch_no") + "&demographicNo=" +request.getParameter("demographicNo")+"'>Resolve</a> | <a href='dxResearchUpdate.jsp?status=D&did=" + rsdemo2.getString("dxresearch_no")+"&demographicNo=" +request.getParameter("demographicNo")+"'>Delete</a>":"Resolved| <a href='dxResearchUpdate.jsp?status=D&did=" + rsdemo2.getString("dxresearch_no")+"&demographicNo=" +request.getParameter("demographicNo")+"'>Delete</a>"%></td>
+      				                  <td width="28%">
+						  <%= if (rsdemo2.getString("status").compareTo("A")==0) { %>
+						  <a href='dxResearchUpdate.jsp?status=C&did=" + rsdemo2.getString("dxresearch_no") + "&demographicNo=" +request.getParameter("demographicNo")+"'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/></a> | <a href='dxResearchUpdate.jsp?status=D&did=" + rsdemo2.getString("dxresearch_no")+"&demographicNo=" +request.getParameter("demographicNo")+"'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>
+						  <%= } else { %>
+						  <bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolved"/>| <a href='dxResearchUpdate.jsp?status=D&did=" + rsdemo2.getString("dxresearch_no")+"&demographicNo=" +request.getParameter("demographicNo")+"'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a></td>
+						  <%= } %>
              				   </tr>      	  		 	   
       	  		 	   <%
       		 	          }
@@ -239,4 +247,4 @@ document.serviceform.submit()
   </table>
 </form>
                           </body>
-                          </html>
+                          </html:html>

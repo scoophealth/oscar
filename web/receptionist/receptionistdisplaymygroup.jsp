@@ -65,7 +65,7 @@ function setfocus() {
    ResultSet rsgroup = null;
    boolean bNewNo=false;
    String oldNo="";
-   rsgroup = apptMainBean.queryResults("mygroup_no", "searchmygroupall");
+   rsgroup = apptMainBean.queryResults("searchmygroupall");
    while (rsgroup.next()) { 
      bNewNo=bNewNo?false:true;
 %>

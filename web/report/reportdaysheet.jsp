@@ -4,6 +4,8 @@
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -20,9 +22,9 @@
     };
     daySheetBean.doConfigure(dbParams,dbQueries);
 %>
-<html>
+<html:html locale="true">
 <head>
-<title> DAY SHEET </title>
+<title><bean:message key="report.reportdaysheet.title"/></title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" >
@@ -59,9 +61,9 @@ function setfocus() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepColor%>"><th>DAY SHEET</th>
+  <tr bgcolor="<%=deepColor%>"><th><bean:message key="report.reportdaysheet.msgMainLabel"/></th>
     <th width="10%" nowrap><%=createtime%> 
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+      <input type="button" name="Button" value="<bean:message key="report.reportdaysheet.btnPrint"/>" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="window.close()"></th></tr>
 </table>
 
 <%
@@ -112,13 +114,13 @@ function setfocus() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.appointment_date">Appt Date</a></b></TH>
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.start_time">Appt Time</a></b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.last_name">Patient's Last Name</a> </b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.first_name">Patient's First Name</a> </b></TH>
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.chart_no">Chart No</a></b></TH>
-<TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.roster_status">Roster Status</a></b></TH>
-<TH width="20%"><b>Comments</b></TH>
+<TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.appointment_date"><bean:message key="report.reportdaysheet.msgAppointmentDate"/></a></b></TH>
+<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.start_time"><bean:message key="report.reportdaysheet.msgAppointmentTime"/></a></b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.last_name"><bean:message key="report.reportdaysheet.msgPatientLastName"/></a> </b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>
+<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.chart_no">Chart No<bean:message key="report.reportdaysheet.msgChartNo"/></a></b></TH>
+<TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.roster_status"><bean:message key="report.reportdaysheet.msgRosterStatus"/></a></b></TH>
+<TH width="20%"><b><bean:message key="report.reportdaysheet.msgComments"/></b></TH>yy
 </tr>
 <%
     }
@@ -139,4 +141,4 @@ function setfocus() {
 
 </table>
 </body>
-</html>
+</html:html>

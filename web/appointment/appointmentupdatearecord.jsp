@@ -1,7 +1,10 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
  
-<html>
+<html:html locale="true">
 <head>
 <script LANGUAGE="JavaScript">
 <!--
@@ -21,7 +24,7 @@ function closeit() {
     <table border="0" cellspacing="0" cellpadding="0" width="90%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            UPDATE AN APPOINTMENT RECORD</font></th>
+            <bean:message key="appointment.appointmentupdatearecord.msgMainLabel"/></font></th>
       </tr>
     </table>
 <%
@@ -62,7 +65,7 @@ function closeit() {
   }
   if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Update of an Appointment Record.</h1></p>
+  <p><h1><bean:message key="appointment.appointmentupdatearecord.msgUpdateSuccess"/></h1></p>
 <script LANGUAGE="JavaScript">
      	self.opener.refresh();
       self.close();
@@ -70,7 +73,7 @@ function closeit() {
 <%  
   } else {
 %>
-  <p><h1>Sorry, update has failed.</h1></p>
+  <p><h1><bean:message key="appointment.appointmentupdatearecord.msgUpdateFailure"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();
@@ -78,8 +81,8 @@ function closeit() {
   <p></p>
   <hr width="90%"></hr>
   <form>
-    <input type="button" value="Close this window" onClick="closeit()">
+    <input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
   </form>
 </center>
 </body>
-</html>
+</html:html>

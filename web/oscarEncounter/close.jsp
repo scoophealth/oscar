@@ -23,14 +23,16 @@
  * Ontario, Canada 
  */
 -->
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<html>
+<html:html locale="true">
     <head>
         <script language=javascript>
         window.close();
         </script>
     </head>
     <body>
-        Click <a href="javascript:window.close();">here</a> to close this window.
+        <bean:message key="oscarEncounter.close.msgClick1"/><a href="javascript:window.close();"><bean:message key="oscarEncounter.close.btnHere"/></a>
     </body>
-</html>
+</html:html>

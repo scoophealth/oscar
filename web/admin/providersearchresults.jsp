@@ -24,6 +24,8 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%
   if(session.getValue("user") == null )
     response.sendRedirect("../logout.jsp");
@@ -33,8 +35,8 @@
 <%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
-<head><title>Provider: the following records</title>
+<html:html locale="true">
+<head><title><bean:message key="admin.providersearchresults.title"/></title>
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
     <!--
@@ -44,7 +46,7 @@
 		}
     function onsub() {
       if(document.searchprovider.keyword.value=="") {
-        alert("You forgot to input a keyword!");
+        alert("<bean:message key="global.msgInputKeyword"/>");
         return false;
       } else return true;
       // do nothing at the moment
@@ -56,44 +58,43 @@
 <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
   <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="<%=deepcolor%>"><th>PROVIDER LIST</font></th></tr>
+      <tr bgcolor="<%=deepcolor%>"><th><bean:message key="admin.providersearchresults.description"/></font></th></tr>
     </table>
   <table cellspacing="0" cellpadding="0" width="100%" border="0" BGCOLOR="<%=weakcolor%>">
   <form method="post" action="admincontrol.jsp" name="searchprovider">
   	<tr valign="top">
-      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search Criteria</i></b></font></td>
+      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="admin.search.formSearchCriteria"/></i></b></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-      <input type="radio" checked name="search_mode" value="search_name">Name </font></td>
+      <input type="radio" checked name="search_mode" value="search_name"><bean:message key="admin.providersearch.formName"/></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_providerno">
-          Provider No.</font></td>
+          <input type="radio" name="search_mode" value="search_providerno"><bean:message key="admin.provider.formProviderNo"/></font></td>
       <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="provider_search_titlename" >
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Provider_Search" >
-				<INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"></td>
+				<INPUT TYPE="SUBMIT" NAME="button" VALUE=<bean:message key="admin.providersearchresults.btnSubmit"/> SIZE="17"></td>
     </tr><tr> 
-       <td nowrap><font size="1" face="Verdana" color="#0000FF">Reserved </font></td>
+       <td nowrap><font size="1" face="Verdana" color="#0000FF"><bean:message key="admin.providersearchresults.reserved"/></font></td>
        <td nowrap><font size="1" face="Verdana" color="#0000FF"> </font></td>
     </tr>
   </form>
   </table>
 
 <table width="100%" border="0">
-<tr><td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td></tr>
+<tr><td align="left"><i><bean:message key="admin.search.keywords"/></i> : <%=request.getParameter("keyword")%></td></tr>
 </table>
 
 <CENTER><table width="100%" cellspacing="2" cellpadding="2" border="0"  bgcolor="ivory"> 
   <tr bgcolor="<%=deepcolor%>">
-  <TH align="center" width="10%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="provider_no"%>&limit1=0&limit2=10">ID</a></b></TH>
-  <TH align="center" width="19%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="first_name"%>&limit1=0&limit2=10">First Name</a> </b></TH>
-  <TH align="center" width="19%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="last_name"%>&limit1=0&limit2=10">Last Name</a></b></TH>
-  <TH align="center" width="16%"><b>Specialty</b></TH>
-  <TH align="center" width="9%"><b>Team</b></TH>
-  <TH align="center" width="2%"><b>Sex</B></TH>
-  <TH align="center" width="15%"><b>Phone</B></TH>
+  <TH align="center" width="10%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="provider_no"%>&limit1=0&limit2=10"><bean:message key="admin.providersearchresults.ID"/></a></b></TH>
+  <TH align="center" width="19%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="first_name"%>&limit1=0&limit2=10"><bean:message key="admin.provider.formFirstName"/></a> </b></TH>
+  <TH align="center" width="19%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="last_name"%>&limit1=0&limit2=10"><bean:message key="admin.provider.formLastName"/></a></b></TH>
+  <TH align="center" width="16%"><b><bean:message key="admin.provider.formSpecialty"/></b></TH>
+  <TH align="center" width="9%"><b><bean:message key="admin.provider.formTeam"/></b></TH>
+  <TH align="center" width="2%"><b><bean:message key="admin.provider.formSex"/></B></TH>
+  <TH align="center" width="15%"><b><bean:message key="admin.providersearchresults.phone"/></B></TH>
   </tr>
 <%
   ResultSet rs = null;
@@ -166,17 +167,17 @@
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="admin.providersearchresults.btnLastPage"/></a> |
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message key="admin.providersearchresults.btnNextPage"/></a>
 <%
 }
 %>
-<p>Please select by clicking on the provider's id for editing.</p></center>
-<%@ include file="footer.htm" %>
+<p><bean:message key="admin.providersearchresults.msgClickForEditing"/></p></center>
+<%@ include file="footerhtm.jsp" %>
   </center>
 </body>
-</html>
+</html:html>

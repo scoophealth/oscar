@@ -30,12 +30,14 @@
   String provider_no = request.getParameter("provider_no");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
-<html>
+<html:html locale="true">
 <head>
-<title>SCHEDULE SETTING</title>
+<title><bean:message key="schedule.scheduledatesave.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 </head>
@@ -89,4 +91,4 @@ if(request.getParameter("Submit")!=null && request.getParameter("Submit").equals
 </script>
 <body >
 </body>
-</html>
+</html:html>

@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
 <%
   if(session.getValue("user") == null)
@@ -32,10 +35,10 @@
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>OSCAR Project</title>
+<title><bean:message key="admin.preferenceupdatepreference.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
     <!--
@@ -58,7 +61,7 @@
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             
-      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> UPDATE A PREFERENCE RECORD</font></th>
+      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferenceupdatepreference.description"/></font></th>
       </tr>
     </table>
   <table cellspacing="0" cellpadding="2" width="100%" border="0">
@@ -72,7 +75,7 @@
     // the cursor of ResultSet only goes through once from top
 %>
       <tr> 
-        <td width="50%" align="right">Provider No.: </td>
+        <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/>: </td>
         <td> 
           <% String provider_no = rs.getString("provider_no"); %>
           <%= provider_no %> 
@@ -81,7 +84,7 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">Start Hour: </div>
+          <div align="right"><bean:message key="admin.preference.formStartHour"/>: </div>
         </td>
         <td> 
           <input type="text"  index="3" name="start_hour" value="<%= rs.getString("start_hour") %>">
@@ -89,20 +92,20 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">End Hour: </div>
+          <div align="right"><bean:message key="admin.preference.formEndHour"/>: </div>
         </td>
         <td> 
           <input type="text"  index="4" name="end_hour" value="<%= rs.getString("end_hour") %>">
         </td>
       </tr>
       <tr> 
-        <td align="right">Period (in min.): </td>
+        <td align="right"><bean:message key="admin.preference.formPeriod"/> (<bean:message key="admin.preference.inMin"/>):</td>
         <td> 
           <input type="text" name="every_min" value="<%= rs.getString("every_min") %>">
         </td>
       </tr>
       <tr> 
-        <td align="right">Group No: </td>
+        <td align="right"><bean:message key="admin.preference.formGroupNo"/>: </td>
         <td> 
           <input type="text" name="mygroup_no" value="<%= rs.getString("mygroup_no") %>">
         </td>
@@ -114,9 +117,9 @@
             <input type="hidden"  name="preference_no" value="<%= rs.getString("preference_no")%>">
             <input type="hidden"  name="dboperation" value="preference_update_record">
             <input type="hidden" name="displaymode" value="Preference_Update_Record">
-            <input type="submit" name="subbutton" value="Update Record">
+            <input type="submit" name="subbutton" value="<bean:message key="admin.preferenceupdatepreference.btnSubmit"/>">
             <a href='admincontrol.jsp?keyword=<%=rs.getString("preference_no")%>&displaymode=Preference_Delete&dboperation=preference_delete'> 
-            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="Delete the Record"></a> 
+            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="<bean:message key="admin.preferenceupdatepreference.altImgDelete"/>"></a> 
             <!--input type="button" name="Button" value="Cancel" onClick="onCancel()"-->
           </div>
         </td>
@@ -129,7 +132,7 @@
   </table>
   
   <p></p>
-<%@ include file="footer.htm" %>
+<%@ include file="footerhtm.jsp" %>
 </center>
 </body>
-</html>
+</html:html>

@@ -31,10 +31,11 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<html>
+
+<html:html locale="true">
 <head>
 <title>
-Configure Immunization Schedule
+<bean:message key="oscarEncounter.immunization.ScheduleConfig.title"/>
 </title>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
@@ -46,7 +47,7 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                immunizations
+                <bean:message key="oscarEncounter.immunization.ScheduleConfig.msgImm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -57,7 +58,7 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
                         <td>
                         </td>
                         <td style="text-align:right;width:650;">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -88,9 +89,10 @@ for(int i=0; i<cfgSets.getLength(); i++)
 }
 
 %>
-<html:submit value="Save Configuration" />
-<input type="button" value="Cancel" onclick="javascript:location.href='loadSchedule.do';" />
-<input type="button" value="Config" onclick="javascript:location.href='config/initConfig.do';" />
+<input type="hidden" name="submit_form" value="Save Configuration" />
+<input type="button" value="<bean:message key="oscarEncounter.immunization.ScheduleConfig.btnSaveConfig"/>" onclick="document.forms['EctImmPassThruForm'].submit.value='Save Configuration';document.forms['EctImmPassThruForm'].submit();" />
+<input type="button" value="<bean:message key="global.btnCancel"/>" onclick="javascript:location.href='loadSchedule.do';" />
+<input type="button" value="<bean:message key="oscarEncounter.immunization.ScheduleConfig.btnConfig"/>" onclick="javascript:location.href='config/initConfig.do';" />
 </html:form>
 
             </td>
@@ -105,4 +107,4 @@ for(int i=0; i<cfgSets.getLength(); i++)
         </tr>
     </table>
 </body>
-</html>
+</html:html>

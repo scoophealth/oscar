@@ -31,10 +31,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<html>
+<html:html locale="true">
 <head>
 <title>
-<bean:message key="ectViewConsultationRequests.title"/>
+<bean:message key="oscarEncounter.search.demographicSearch.title"/>
 </title>
 </head>
 <html:base/>
@@ -84,10 +84,10 @@ function BackToOscar()
 </script>
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.search.demographicSearch.msgEncounter"/>">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn" NOWRAP>
-                patient search
+                <bean:message key="oscarEncounter.search.demographicSearch.msgPatSearch"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -99,7 +99,7 @@ function BackToOscar()
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -120,35 +120,35 @@ function BackToOscar()
                 <table>
                    <tr>
                         <td class="tite4">
-                            First Name:
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgFisrtName"/>:
                         </td>
                         <td >
                             <html:text property="firstName"/>
                         </td>
 
                         <td class="tite4">
-                            Last Name:
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgLastName"/>:
                         </td>
                         <td >
                            <html:text property="lastName"/>
                         </td>
                         <td class="tite4">
-                            sex:
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgSex"/>:
                         </td>
                         <td >
                             <table height="100%">
                             <tr>
                                 <td >
-                                M
+                                <bean:message key="oscarEncounter.search.demographicSearch.formMale"/>
                                 </td>
                                 <td >
-                                <html:radio property="sex" value="M"/>
+                                <html:radio property="sex" value="<bean:message key="oscarEncounter.search.demographicSearch.formMale"/>"/>
                                 </td>
                                 <td >
-                                F
+                                <bean:message key="oscarEncounter.search.demographicSearch.formFemale"/>
                                 </td>
                                 <td >
-                                <html:radio property="sex" value="F"/>
+                                <html:radio property="sex" value="<bean:message key="oscarEncounter.search.demographicSearch.formFemale"/>"/>
                                 </td>
                             </tr>
                             </table>
@@ -156,21 +156,21 @@ function BackToOscar()
                     </tr>
                     <tr>
                         <td class="tite4">
-                            Year Of Birth:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formBirthYear"/>:
                         </td>
                         <td>
                             <html:text property="yearOfBirth"/>
                         </td>
 
                         <td class="tite4">
-                            Month Of Birth:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formBirthMonth"/>:
                         </td>
                         <td>
                             <html:text property="monthOfBirth"/>
                         </td class="tite4">
 
                         <td class="tite4">
-                            Day Of Birth:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formBirthDay"/>:
                         </td>
                         <td >
                             <html:text property="dayOfBirth"/>
@@ -179,13 +179,13 @@ function BackToOscar()
 
                     <tr>
                         <td class="tite4">
-                            Address:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formAddr"/>:
                         </td>
                         <td >
                            <html:text property="address"/>
                         </td>
                         <td class="tite4">
-                            City:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formCity"/>:
                         </td>
                         <td colspan="3">
                            <html:text property="city"/>
@@ -193,7 +193,7 @@ function BackToOscar()
                     </tr>
                     <tr>
                         <td class="tite4">
-                            Phone:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formPhone"/>:
                         </td>
                         <td colspan="5">
                            <html:text property="phone"/>
@@ -201,7 +201,7 @@ function BackToOscar()
                     </tr>
                     <tr>
                         <td class="tite4">
-                            HIN:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formHIN"/>:
                         </td>
                         <td colspan="5">
                            <html:text property="hin"/>
@@ -209,7 +209,7 @@ function BackToOscar()
                     </tr>
                     <tr>
                         <td class="tite4">
-                            Chart Number:
+                            <bean:message key="oscarEncounter.search.demographicSearch.formCNumber"/>:
                         </td>
                         <td colspan="5">
                            <html:text property="chartNumber"/>
@@ -237,34 +237,34 @@ function BackToOscar()
                     <table >
                         <tr>
                             <th class="title">
-                            Demo #
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgDemoN"/>
                             </th>
                             <th class="title">
-                            Last Name
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgLastName"/>
                             </th>
                             <th class="title">
-                            First Name
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgFirstName"/>
                             </th>
                             <th class="title">
-                            Address
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgAddr"/>
                             </th>
                             <th class="title">
-                            City
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgCity"/>
                             </th>
                             <th class="title">
-                            Province
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgProvice"/>
                             </th>
                             <th class="title">
-                            Sex
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgSex"/>
                             </th>
                             <th class="title">
-                            Hin
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgHin"/>
                             </th>
                             <th class="title">
-                            DOB
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgDOB"/>
                             </th>
                             <th class="title">
-                            Phone
+                            <bean:message key="oscarEncounter.search.demographicSearch.msgPhone"/>
                             </th>
                         </tr>
                     <%
@@ -312,7 +312,7 @@ function BackToOscar()
                         <%}/*for*/%>
                         </table>
                     <%}else{%>
-                    <h3 class="noFound">Your Search produced no results</h3>
+                    <h3 class="noFound"><bean:message key="oscarEncounter.search.demographicSearch.msgNoResult"/></h3>
                     <%}
                 }%>
 
@@ -338,6 +338,6 @@ function BackToOscar()
         </tr>
     </table>
 </body>
-</html>
+</html:html>
 
 

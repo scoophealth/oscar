@@ -24,12 +24,15 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page language="java"%>
 <%@ page import="oscar.oscarEncounter.data.EctAnnualRecord" %>
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-<title>Annual Female Health Review</title>
+<title><bean:message key="oscarEncounter.formFemaleAnnualPrint.title"/></title>
 <link rel="stylesheet" type="text/css" href="annualStyle.css">
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
 <html:base/>
@@ -75,16 +78,16 @@
 <table cellspacing="3" cellpadding="0" width="100%">
     <tr>
         <td>
-            <big><i><b>ANNUAL FEMALE HEALTH REVIEW</b></i></big>
+            <big><i><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgAnnualFemaleHealthReview"/></b></i></big>
         </td>
         <td>
-            <b>Name:</b> <%= props.getProperty("pName", "") %>
+            <b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgName"/>:</b> <%= props.getProperty("pName", "") %>
         </td>
         <td>
-            <b>Age:</b> <%= props.getProperty("age", "") %>
+            <b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgAge"/>:</b> <%= props.getProperty("age", "") %>
         </td>
         <td>
-            <b>Date</b><small>(yyyy/mm/dd)</small>: <%=props.getProperty("formDate", "") %>
+            <b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgDate"/></b><small>(yyyy/mm/dd)</small>: <%=props.getProperty("formDate", "") %>
         </td>
     </tr>
 </table>
@@ -93,18 +96,18 @@
         <td rowspan="4">
             <table class="DashedBorder" width="100%">
                 <tr>
-                    <td><b>CURRENT CONCERNS:</b></td>
+                    <td><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgCurrentConcerns"/>:</b></td>
                 </tr>
                 <tr>
                     <td valign="top" width="30%" style="height:480px;"><%= props.getProperty("currentConcerns", "") %></td>
                 </tr>
                 <tr>
                     <td align="center">
-                        See chart for continuation<br>
+                        <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgSeeChart"/><br>
                         <%= checkMarks(props.getProperty("currentConcernsNo", "")) %>
-                        &nbsp;No&nbsp;&nbsp;&nbsp;
+                        &nbsp;<bean:message key="oscarEncounter.formFemaleAnnualPrint.msgNo"/>&nbsp;&nbsp;&nbsp;
                         <%= checkMarks(props.getProperty("currentConcernsYes", "")) %>
-                        &nbsp;Yes
+                        &nbsp;<bean:message key="oscarEncounter.formFemaleAnnualPrint.msgyes"/>
                     </td>
                 </tr>
             </table>
@@ -112,65 +115,65 @@
         <td>
             <table width="100%">
                 <tr>
-                    <td colspan="3"><b>SYSTEMS REVIEW:</b></td>
+                    <td colspan="3"><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgSystemReview"/>:</b></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td><b>N</b></td>
-                    <td colspan="2"><b>AbN</b></td>
+                    <td><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgN"/></b></td>
+                    <td colspan="2"><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgAbN"/></b></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("headN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("headAbN", "")) %></td>
-                    <td align="left" nowrap="true">Head & Neck:</td>
+                    <td align="left" nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgHeadNeck"/>:</td>
                     <td align="right"><%= props.getProperty("head", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("respN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("respAbN", "")) %></td>
-                    <td>Resp:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgResp"/>:</td>
                     <td align="right"><%= props.getProperty("resp", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("cardioN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("cardioAbN", "")) %></td>
-                    <td>Cardio:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgCardio"/>:</td>
                     <td align="right"><%= props.getProperty("cardio", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("giN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("giAbN", "")) %></td>
-                    <td>G.I.:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgGI"/>:</td>
                     <td align="right"><%= props.getProperty("gi", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("guN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("guAbN", "")) %></td>
-                    <td>G.U.:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgGU"/>:</td>
                     <td align="right"><%= props.getProperty("gu", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("skinN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("skinAbN", "")) %></td>
-                    <td>Skin:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgSkin"/>:</td>
                     <td colspan="3" align="right"><%= props.getProperty("skin", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("mskN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("mskAbN", "")) %></td>
-                    <td>MSK:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.MSK"/>:</td>
                     <td colspan="3" align="right"><%= props.getProperty("msk", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("endocrinN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("endocrinAbN", "")) %></td>
-                    <td>Endocrin:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgEndocrin"/>:</td>
                     <td colspan="3" align="right"><%= props.getProperty("endocrin", "") %></td>
                 </tr>
                 <tr>
                     <td valign="top"><%= checkMarks(props.getProperty("otherN", "")) %></td>
                     <td valign="top"><%= checkMarks(props.getProperty("otherAbN", "")) %></td>
-                    <td valign="top">OTHER:</td>
+                    <td valign="top"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgOther"/>:</td>
                     <td colspan="3" align="right"><%= props.getProperty("other", "") %></td>
                 </tr>
 
@@ -183,28 +186,28 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td nowrap="true">GTPAL Revisions?&nbsp;
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgGTPAL"/>&nbsp;
                         <%= checkMarks(props.getProperty("noGtpalRevisions", "")) %>
-                        NO
+                        <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgNo"/>
                         <%= checkMarks(props.getProperty("yesGtpalRevisions", "")) %>
-                        YES<br>
+                        <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgyes"/><br>
                         <%= checkMarks(props.getProperty("frontSheet", "")) %>
-                        Front Sheet Updated
+                        <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgFrontSheet"/>
                     </td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>
-                        LMP<small>(yyyy/mm/dd)</small>: <%= props.getProperty("lmp", "") %><br>
-                        Menopause: <%= props.getProperty("menopause", "") %>
-                        /yrs.
+                        <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgLMP"/><small>(yyyy/mm/dd)</small>: <%= props.getProperty("lmp", "") %><br>
+                        <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgMenopause"/>: <%= props.getProperty("menopause", "") %>
+                        /<bean:message key="oscarEncounter.formFemaleAnnualPrint.msgMenopauseUnit"/>
                     </td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("papSmearsN", "")) %></td>
                     <td><%= checkMarks(props.getProperty("papSmearsAbN", "")) %></td>
-                    <td nowrap="true">Previous Pap. Smears: <%= props.getProperty("papSmears", "") %></td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgPreviousPaoSmears"/>: <%= props.getProperty("papSmears", "") %></td>
                 </tr>
             </table>
         </td>
@@ -215,29 +218,29 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td colspan="4">REVIEW:</td>
+                    <td colspan="4"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgReview"/>:</td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td><%= checkMarks(props.getProperty("drugs", "")) %></td>
-                    <td>Drugs</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgDrugs"/></td>
                     <td>&nbsp;</td>
                     <td align="right"><%= checkMarks(props.getProperty("medSheet", "")) %></td>
-                    <td>Med. Sheet Updated</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgMedSheet"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td><%= checkMarks(props.getProperty("allergies", "")) %></td>
-                    <td colspan="2" nowrap="true">Allergies & Drug Reactions</td>
+                    <td colspan="2" nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgAllergies"/></td>
                     <td align="right"><%= checkMarks(props.getProperty("frontSheet1", "")) %></td>
-                    <td>Front Sheet Updated</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgFrontSheet"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td><%= checkMarks(props.getProperty("familyHistory", "")) %></td>
-                    <td colspan="2">Family History</td>
+                    <td colspan="2"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgFamilyHist"/></td>
                     <td align="right"><%= checkMarks(props.getProperty("frontSheet2", "")) %></td>
-                    <td>Front Sheet Updated</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgFrontSheet"/></td>
                 </tr>
             </table>
         </td>
@@ -248,84 +251,84 @@
         <td class="DashedBorder" width="50%">
             <table>
                 <tr>
-                    <td colspan="3" nowrap="true"><b>LIFESTYLE REVIEW:</b></td>
+                    <td colspan="3" nowrap="true"><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgLifestyle"/>:</b></td>
                     <td><b><i><small>("Any concerns with ...?")</small></i></b></td>
                 </tr>
                 <tr>
-                    <td>No</td>
-                    <td colspan="2">Yes</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgNo"/></td>
+                    <td colspan="2"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgyes"/></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("smokingNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("smokingYes", "")) %></td>
-                    <td>Smoking:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgSmoking"/>:</td>
                     <td align="right"><%= props.getProperty("smoking", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("alcoholNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("alcoholYes", "")) %></td>
-                    <td>Alcohol:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgAlcohol"/>:</td>
                     <td align="right"><%= props.getProperty("alcohol", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("otcNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("otcYes", "")) %></td>
-                    <td>OTC/Illicit Drugs:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgIllicitDrugs"/>:</td>
                     <td align="right"><%= props.getProperty("otc", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("exerciseNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("exerciseYes", "")) %></td>
-                    <td>Exercise/Sports</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgExercise"/></td>
                     <td align="right"><%= props.getProperty("exercise", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("nutritionNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("nutritionYes", "")) %></td>
-                    <td>Nutrition:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgNutrition"/>:</td>
                     <td align="right"><%= props.getProperty("nutrition", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("dentalNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("dentalYes", "")) %></td>
-                    <td>Dental Hygiene:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgDentalHygiene"/>:</td>
                     <td align="right"><%= props.getProperty("dental", "") %></td>
                 </tr>
                 <tr>
                     <td valign="top"><%= checkMarks(props.getProperty("relationshipNo", "")) %></td>
                     <td valign="top"><%= checkMarks(props.getProperty("relationshipYes", "")) %></td>
-                    <td valign="top">Relationship Issues:</td>
+                    <td valign="top"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgRelationshipIssues"/>:</td>
                     <td align="right"><%= props.getProperty("relationship", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("sexualityNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("sexualityYes", "")) %></td>
-                    <td nowrap="true">Sexuality Risks (STD/HIV):</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgSexualityRisks"/>:</td>
                     <td align="right"><%= props.getProperty("sexuality", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("occupationalNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("occupationalYes", "")) %></td>
-                    <td nowrap="true">Occupational Risks:</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgOccupationalRisks"/>:</td>
                     <td align="right"><%= props.getProperty("occupational", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("drivingNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("drivingYes", "")) %></td>
-                    <td nowrap="true">Driving Safety:</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgDrivingSafety"/>:</td>
                     <td align="right"><%= props.getProperty("driving", "") %></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("travelNo", "")) %></td>
                     <td><%= checkMarks(props.getProperty("travelYes", "")) %></td>
-                    <td nowrap="true">Foreign Travel (in last yr.):</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgForeignTravel"/>:</td>
                     <td align="right"><%= props.getProperty("travel", "") %></td>
                 </tr>
                 <tr>
                     <td valign="top"><%= checkMarks(props.getProperty("otherNo", "")) %></td>
                     <td valign="top"><%= checkMarks(props.getProperty("otherYes", "")) %></td>
-                    <td nowrap="true" valign="top">Other:</td>
+                    <td nowrap="true" valign="top"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgOther"/>:</td>
                     <td rowspan="3" align="right"><%= props.getProperty("otherLifestyle", "") %></td>
                 </tr>
             </table>
@@ -333,38 +336,38 @@
         <td width="100%" valign="top" class="DashedBorder">
             <table width="100%">
                 <tr>
-                    <td width="50%" colspan="2"><b>SCREENING REVIEW:</b></td>
+                    <td width="50%" colspan="2"><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgScreeningReview"/>:</b></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("mammogram", "")) %></td>
-                    <td>Mammogram</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgMammogram"/></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("breast", "")) %></td>
-                    <td>Breast-Self Exam</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgBreastSelfTest"/></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("pap", "")) %></td>
-                    <td>Pap Smear</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgPapSmear"/></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("femaleImmunization", "")) %></td>
-                    <td>Immunization</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgImmunization"/></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("precontraceptive", "")) %></td>
-                    <td nowrap="true">Precontraceptive Councelling (Rubella, Folate)</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgprecontraceptive"/></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("femaleCardiac", "")) %></td>
-                    <td>Cardiac Risk Factors</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgCardiacRisk"/></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("osteoporosis", "")) %></td>
-                    <td>Osteoporosis Risk</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgOsteoporosis"/></td>
                 </tr>
                 <tr>
                     <td><%= checkMarks(props.getProperty("femaleOther1c", "")) %></td>
@@ -380,28 +383,28 @@
 </table>
 <table width="100%" class="tableWithBorder">
     <tr>
-        <td colspan="9"><b>PHYSICAL EXAM:</b></td>
+        <td colspan="9"><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgPhysicalExam"/>:</b></td>
     </tr>
     <tr>
-        <td><b>VITALS:  </b></td>
+        <td><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgVitals"/>:  </b></td>
         <td>
-            B.P: <%= props.getProperty("bprTop", "") %>/
-            <%= props.getProperty("bprBottom", "") %> (R)
+            <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgBP"/>: <%= props.getProperty("bprTop", "") %>/
+            <%= props.getProperty("bprBottom", "") %> <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgR"/>
         </td>
-        <td align="right">Pulse: </td>
-        <td><%= props.getProperty("pulse", "") %> /min</td>
-        <td align="right">Height:</td>
-        <td><%= props.getProperty("height", "") %> cm.</td>
-        <td align="right">Weight: <%= props.getProperty("weight", "") %> Kg.</td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgPulse"/>: </td>
+        <td><%= props.getProperty("pulse", "") %> <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgPulseUnit"/></td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgHeight"/>:</td>
+        <td><%= props.getProperty("height", "") %> <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgHeightUnit"/></td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgWeight"/>: <%= props.getProperty("weight", "") %> <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgWeightUnit"/></td>
     <tr>
         <td>&nbsp;</td>
         <td>
-            B.P: <%= props.getProperty("bplTop", "") %>/
-            <%= props.getProperty("bplBottom", "") %> (L)
+            <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgBP"/>: <%= props.getProperty("bplTop", "") %>/
+            <%= props.getProperty("bplBottom", "") %> <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgL"/>
         </td>
-        <td align="right">Rhythm:</td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgRhythm"/>:</td>
         <td><%= props.getProperty("rhythm", "") %></td>
-        <td align="right">Urine Dipstick:</td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgUrineDipstick"/>:</td>
         <td><%= props.getProperty("urine", "") %></td>
     </tr>
 </table>
@@ -410,7 +413,7 @@
         <td rowspan="3">
             <table width="100%" class="DashedBorder">
                 <tr>
-                    <td><b> PHYSICAL SIGNS: </b></td>
+                    <td><b> <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgPhysicalSigns"/>: </b></td>
                 </tr>
                 <tr>
                     <td class="physicalSigns"><%= props.getProperty("physicalSigns", "") %></td>
@@ -424,7 +427,7 @@
         <td>
             <table width="100%">
                 <tr>
-                    <td><b>ASSESSMENT</b></td>
+                    <td><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgAssessment"/></b></td>
                 </tr>
                 <tr>
                     <td align="center" class="assessmentPlan"><%= props.getProperty("assessment", "") %></td>
@@ -434,7 +437,7 @@
         <td>
             <table width="100%">
                 <tr>
-                    <td align="center"><b>PLAN</b></td>
+                    <td align="center"><b><bean:message key="oscarEncounter.formFemaleAnnualPrint.msgPlan"/></b></td>
                 </tr>
                 <tr>
                     <td align="center" class="assessmentPlan"><%= props.getProperty("plan", "") %></td>
@@ -444,7 +447,7 @@
     </tr>
     <tr>
         <td colspan="2" align="right">
-            Signature: <%= props.getProperty("signature", "") %>
+            <bean:message key="oscarEncounter.formFemaleAnnualPrint.msgSignature"/>: <%= props.getProperty("signature", "") %>
         </td>
     </tr>
 </table>

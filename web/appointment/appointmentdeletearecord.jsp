@@ -25,9 +25,12 @@
 -->
 
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<html:html locale="true">
 <head>
 <script LANGUAGE="JavaScript">
 <!--
@@ -46,14 +49,14 @@ function closeit() {
     <table border="0" cellspacing="0" cellpadding="0" width="90%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            DELETE AN APPOINTMENT RECORD</font></th>
+            <bean:message key="appointment.appointmentdeletearecord.msgLabel"/></font></th>
       </tr>
     </table>
 <%
   int rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("appointment_no"),"delete");
   if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Deletion of an appointment Record.
+  <p><h1><bean:message key="appointment.appointmentdeletearecord.msgDeleteSuccess"/>
   </h1></p>
 <script LANGUAGE="JavaScript">
    self.opener.refresh();
@@ -62,7 +65,7 @@ function closeit() {
 <%  
   } else {
 %>
-  <p><h1>Sorry, deletion has failed.</h1></p>
+  <p><h1><bean:message key="appointment.appointmentdeletearecord.msgDeleteFailure"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();
@@ -70,8 +73,8 @@ function closeit() {
   <p></p>
   <hr width="90%"></hr>
 <form>
-<input type="button" value="Close this window" onClick="closeit()">
+<input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
 </form>
 </center>
 </body>
-</html>
+</html:html>

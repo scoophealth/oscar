@@ -31,10 +31,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
-<html>
+<html:html locale="true">
 <head>
 <title>
-Immunization Schedule
+<bean:message key="oscarEncounter.immunization.config.immunizationSetDisplay.title"/>
 </title>
 <style type="text/css">
 
@@ -149,7 +149,7 @@ String setNamed = set.getAttribute("name");
 
 int i = 0;
 %>
-<h1>Set : <%=setNamed%></h1>
+<h1><bean:message key="oscarEncounter.immunization.config.immunizationSetDisplay.msgSet"/>: <%=setNamed%></h1>
 <table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>" style="margin-bottom:10px">
     <%
     int colCount = -1;
@@ -303,4 +303,4 @@ String genCell(String id, Element cell)
 </form>
 
 </body>
-</html>
+</html:html>

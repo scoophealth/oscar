@@ -33,7 +33,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-    {"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc limit 0, 1"},  
+    {"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc limit 1 offset 0"},  
     {"search_form", "select * from form where form_no=? "},
   };
   String[][] responseTargets=new String[][] {  };

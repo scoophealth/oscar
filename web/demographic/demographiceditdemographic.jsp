@@ -152,7 +152,7 @@ function checkPhoneNum() {
 </table>
 <%-- log:info category="Demographic">Demographic [<%=demographic_no%>] is viewed by User [<%=userfirstname%> <%=userlastname %>]  </log:info --%>
 
-<%@ include file="zdemographicfulltitlesearch.htm" %>
+<%@ include file="zdemographicfulltitlesearch.jsp" %>
 
 <%
 	//----------------------------REFERRAL DOCTOR------------------------------
@@ -328,7 +328,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         <select name="resident">
           <option value="" ></option>
 <%
-  ResultSet rsdemo = apptMainBean.queryResults("last_name", "search_provider");
+  ResultSet rsdemo = apptMainBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(resident)?"selected":""%> >
@@ -343,7 +343,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         <select name="provider_no">
           <option value="" ></option>
 <%
-  rsdemo = apptMainBean.queryResults("last_name", "search_provider");
+  rsdemo = apptMainBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(rs.getString("provider_no"))?"selected":""%> >
@@ -356,7 +356,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         <select name="nurse">
           <option value="" ></option>
 <%
-  rsdemo = apptMainBean.queryResults("last_name", "search_provider");
+  rsdemo = apptMainBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%> >

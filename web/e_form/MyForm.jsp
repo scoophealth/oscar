@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String demographic_no = request.getParameter("demographic_no"); 
@@ -35,7 +38,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-{"search_eform", "select * from eforms where status = 0 order by ?" }, 
+{"search_eform", "select * from eforms where status = 0 order by " }, 
   };
   myFormBean.doConfigure(dbParams,dbQueries);
 
@@ -47,13 +50,13 @@
     if(request.getParameter("query_eforms").equals("d")) query =  "form_date DESC"  ;
     if(request.getParameter("query_eforms").equals("e")) query =  "form_time DESC"  ;
   }
-	ResultSet RS = myFormBean.queryResults(query, "search_eform");
+	ResultSet RS = myFormBean.queryResults("search_eform" + query);
 %>
 
-<html>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>MyForm</title>
+<title><bean:message key="e_form.MyForm.title"/></title>
 <link rel="stylesheet" href="web.css">
 <script language="javascript">
 <!--
@@ -61,7 +64,7 @@ if (document.all || document.layers)
   window.resizeTo(790,580)
 function checkHtml(){
   if(document.myForm.FileName.value==""){ 
-    alert("Please choose a file first, then click Upload");
+    alert("<bean:message key="e_form.MyForm.msgPleaseChooseFile"/>");
   } else {
     document.myForm.submit();
   } 
@@ -80,16 +83,16 @@ function returnMain(demographic_no) {
 <body topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica">My FORM</font></th></tr>
+  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica"><bean:message key="e_form.MyForm.msgMyForm"/></font></th></tr>
 </table>
 
 <table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="<%=weakColor%>">
-  <tr><td align='right'><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail">Back &nbsp;</a></td>
+  <tr><td align='right'><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack"/> &nbsp;</a></td>
   </tr>
 </table> 
    
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr><td>Form Library </td>
+  <tr><td><bean:message key="e_form.MyForm.msgFormLib"/> </td>
   <td align='right'></td></tr>
 </table>
 
@@ -98,11 +101,11 @@ function returnMain(demographic_no) {
     <td>
     <table border="1" cellspacing="0" cellpadding="1" width="100%">
       <tr bgcolor=<%=deepColor%> >
-      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=a">Form Name</a></th>
-      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=b">Subject</a></th>
-      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=c">File</a></th>
-      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=d">Form Date</a></th>
-      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=e">Form Time</a></th> 
+      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=a"><bean:message key="e_form.MyForm.btnFormName"/></a></th>
+      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=b"><bean:message key="e_form.MyForm.btnSubj"/></a></th>
+      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=c"><bean:message key="e_form.MyForm.btnFile"/></a></th>
+      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=d"><bean:message key="e_form.MyForm.btnFormDate"/></a></th>
+      <th><a href="MyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=e"><bean:message key="e_form.MyForm.btnFormTime"/></a></th> 
       </tr> 
 <%
   String bgcolor = null;
@@ -136,6 +139,6 @@ function returnMain(demographic_no) {
 </center>
 
 </body>
-</html>
+</html:html>
 
   

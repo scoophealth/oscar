@@ -188,7 +188,9 @@ function goZoomView(s, n) {
    ResultSet rsgroup = null;
    //initial provider bean for all the application
    if(providerBean.isEmpty()) {
-     rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
+     // the following line works only on MySQL. Should not be used
+     // rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
+     rsgroup = apptMainBean.queryResults( "searchallprovider");
  	   while (rsgroup.next()) { 
  	    providerBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
  	   }
@@ -235,7 +237,7 @@ function goZoomView(s, n) {
        DateTimeCodeBean.put(rsgroup.getString("provider_no"), rsgroup.getString("timecode"));
      } 
    }
-	 rsgroup = apptMainBean.queryResults("code", "search_timecode");
+	 rsgroup = apptMainBean.queryResults("search_timecode");
    while (rsgroup.next()) { 
      DateTimeCodeBean.put("description"+rsgroup.getString("code"), rsgroup.getString("description"));
      DateTimeCodeBean.put("duration"+rsgroup.getString("code"), rsgroup.getString("duration"));
@@ -262,7 +264,7 @@ function goZoomView(s, n) {
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="Resources" onmouseover="window.status='View Resources';return true">Resource</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.htm');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='Generate a report' OnMouseOver="window.status='Generate a report' ; return true">Report</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -335,7 +337,7 @@ function goZoomView(s, n) {
   <select name="mygroup_no" onChange="changeGroup(this)">
   <option value=".default">.default</option>
 <%
-   rsgroup = apptMainBean.queryResults("mygroup_no", "searchmygroupno");
+   rsgroup = apptMainBean.queryResults("searchmygroupno");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%=rsgroup.getString("mygroup_no")%></option>

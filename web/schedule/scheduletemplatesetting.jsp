@@ -25,6 +25,10 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="scheduleMainBeanConn.jsp" %>  
 <%  
@@ -35,9 +39,9 @@
   
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>SCHEDULE SETTING</title>
+<title><bean:message key="schedule.scheduletemplatesetting.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -104,7 +108,7 @@ function go() {
     <tr bgcolor="#486ebd"> 
             <th align="CENTER" bgcolor="#009966">
               <p>&nbsp;</p>
-              <p><font face="Helvetica" color="#FFFFFF">SCHEDULE TEMPLATE SETTING</font></p>
+              <p><font face="Helvetica" color="#FFFFFF"><bean:message key="schedule.scheduletemplatesetting.msgMainLabel"/></font></p>
             </th>
     </tr>
   </table>
@@ -112,10 +116,8 @@ function go() {
         <tr>
             <td>
               <p>&nbsp;</p>
-              <p><font size="-1">1. Select the provider's name to set up the provider's 
-                schedule.</font></p>
-              <p><font size="-1">2. Check the 'Holiday Setting' link to specify 
-                the holidays.</font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduletemplatesetting.msgStepOne"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduletemplatesetting.msgStepTwo"/></font></p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
@@ -129,7 +131,7 @@ function go() {
 <center>
       <table width="95%" border="0" cellspacing="0" cellpadding="0" >
         <tr> 
-              <td>Select a provider: </td>
+              <td><bean:message key="schedule.scheduletemplatesetting.formSelectProvider"/>: </td>
             </tr>
             <tr> 
               <td>&nbsp;</td>
@@ -137,23 +139,21 @@ function go() {
             <tr> 
               <td bgcolor="#CCFFCC"> &nbsp; 
                 <select name="provider_no" onChange="selectprovider(this)">
-                  <option value="">---None---</option>
+                  <option value=""><bean:message key="schedule.scheduletemplatesetting.msgNoProvider"/></option>
 <%
-   String [] param = new String[2];
-   param[0] = "doctor";
-   param[1] = "last_name" ;
+   String param = "doctor";
    ResultSet rsgroup = scheduleMainBean.queryResults(param, "search_provider");
  	 while (rsgroup.next()) { 
 %>
                   <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
 <% } 
-   param[0] = "receptionist";
+   param = "receptionist";
    rsgroup = scheduleMainBean.queryResults(param, "search_provider");
  	 while (rsgroup.next()) { 
 %>
                   <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
 <% } 
-   param[0] = "admin";
+   param = "admin";
    rsgroup = scheduleMainBean.queryResults(param, "search_provider");
  	 while (rsgroup.next()) { 
 %>
@@ -167,43 +167,39 @@ function go() {
             </tr>
             <tr> 
               <td> 
-                <p>Or do:</p>
+                <p><bean:message key="schedule.scheduletemplatesetting.formOrDo"/>:</p>
               </td>
             </tr>
             <tr> 
               <td>&nbsp;</td>
             </tr>
             <tr> 
-              <td nowrap bgcolor="#CCFFCC">&nbsp; <a HREF="#" ONCLICK ="popupPage(380,530,'scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>')" TITLE='Define Holidays';return true">Holiday 
-                Setting</a></td>
+              <td nowrap bgcolor="#CCFFCC">&nbsp; <a HREF="#" ONCLICK ="popupPage(380,530,'scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>')" TITLE='<bean:message key="schedule.scheduletemplatesetting.msgHolidaySettingTip"/>;return true'><bean:message key="schedule.scheduletemplatesetting.btnHolidaySetting"/></a></td>
             </tr>
             <tr> 
               <td>&nbsp;</td>
             </tr>
             <tr> 
-              <td nowrap bgcolor="#CCFFFF">&nbsp; <a HREF="#" ONCLICK ="popupPage(380,530,'scheduletemplatecodesetting.jsp')" >Template 
-                Code Setting</a></td>
+              <td nowrap bgcolor="#CCFFFF">&nbsp; <a HREF="#" ONCLICK ="popupPage(380,530,'scheduletemplatecodesetting.jsp')" ><bean:message key="schedule.scheduletemplatesetting.btnTemplateCodeSetting"/></a></td>
             </tr>
             <tr> 
-              <td nowrap bgcolor="#CCFFFF">&nbsp; <a HREF="#" onClick="go()"  >
-              Template Setting</a> for
+              <td nowrap bgcolor="#CCFFFF">&nbsp; <a HREF="#" onClick="go()"  ><bean:message key="schedule.scheduletemplatesetting.btnTemplateSetting"/></a>&nbsp;<bean:message key="schedule.scheduletemplatesetting.msgForProvider"/>&nbsp;
                 <select name="providerid">
-                  <option value="Public">Public</option>
+                  <option value="Public"><bean:message key="schedule.scheduletemplatesetting.msgPublic"/></option>
 <%
-   param[0] = "doctor";
-   param[1] = "last_name" ;
+   param = "doctor";
    rsgroup = scheduleMainBean.queryResults(param, "search_provider");
  	 while (rsgroup.next()) { 
 %>
                   <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
 <% } 
-   param[0] = "receptionist";
+   param = "receptionist";
    rsgroup = scheduleMainBean.queryResults(param, "search_provider");
  	 while (rsgroup.next()) { 
 %>
                   <option value="<%=rsgroup.getString("provider_no")%>"><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
 <% } 
-   param[0] = "admin";
+   param = "admin";
    rsgroup = scheduleMainBean.queryResults(param, "search_provider");
  	 while (rsgroup.next()) { 
 %>
@@ -220,7 +216,7 @@ function go() {
             <tr> 
               <td> 
                 <div align="right">
-                  <input type="button" name="Button" value="Cancel" onClick="window.close()">
+                  <input type="button" name="Button" value='<bean:message key="schedule.scheduletemplatesetting.btnCancel"/>' onClick="window.close()">
                 </div>
               </td>
             </tr>
@@ -236,4 +232,4 @@ function go() {
 
 </form>
 </body>
-</html>
+</html:html>

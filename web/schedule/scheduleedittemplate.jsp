@@ -28,6 +28,8 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="myTempBean" class="oscar.ScheduleTemplateBean" scope="page" />
 <% //save or delete the settings
@@ -49,9 +51,9 @@
   
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>DAY TEMPLATE SETTING</title>
+<title><bean:message key="schedule.scheduleedittemplate.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <!--link rel="stylesheet" href="../web.css" /-->
@@ -76,7 +78,7 @@ function upCaseCtrl(ctrl) {
 }
 function checkInput() {
 	if(document.schedule.holiday_name.value == "") {
-	  alert("Please check your input!!!");
+	  alert('<bean:message key="schedule.scheduleedittemplate.msgCheckInput"/>');
 	  return false;
 	} else {
 	  return true;
@@ -94,9 +96,10 @@ function checkInput() {
 	  
         <table width="100%" border="0" cellspacing="0" cellpadding="5">
 <form name="addtemplatecode1" method="post" action="scheduleedittemplate.jsp">
+<input type="hidden" name="dboperation" value="">
           <tr bgcolor="#CCFFCC"> 
             <td nowrap> 
-              <p >Provider: <%=request.getParameter("providername")%></p>
+              <p><bean:message key="schedule.scheduleedittemplate.formProvider"/>: <%=request.getParameter("providername")%></p>
             </td>
             <td align='right'>
       <select name="name" >
@@ -113,8 +116,7 @@ function checkInput() {
        //System.out.println(":"+rsdemo.getString("timecode").length()+rsdemo.getString("timecode")+"|");
      }
    }
-   param[1]="name";
-   rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
+   rsdemo = scheduleMainBean.queryResults("name", "search_scheduletemplate");
    while (rsdemo.next()) { 
 	%>
         <option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
@@ -124,7 +126,7 @@ function checkInput() {
       </select>
                 <input type="hidden" name="providerid" value="<%=request.getParameter("providerid")%>">
                 <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
-            <td align='right'><input type="submit" name="dboperation" value=" Edit "></td>
+            <td align='right'><input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnEdit"/>' onclick="document.forms['addtemplatecode1'].dboperation.value=' Edit '; document.forms['addtemplatecode1'].submit();"></td>
           </tr>
 </form>  			
         </table>
@@ -138,21 +140,21 @@ function checkInput() {
           <table width="95%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
 <form name="addtemplatecode" method="post" action="scheduleedittemplate.jsp">
             <tr bgcolor="#FOFOFO" align="center"> 
-              <td colspan=3><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Add A Template</font></td>
+              <td colspan=3><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="schedule.scheduleedittemplate.msgMainLabel"/></font></td>
             </tr>
             <tr bgcolor='ivory'>
-             <td nowrap>Template Name:</td>
-             <td><input type="text" name="name" size="30" maxlength="20" <%=bEdit?("value='"+myTempBean.getName()+"'"):"value=''"%> > <font size='-2'>(<20 chars)</font></td>
+             <td nowrap><bean:message key="schedule.scheduleedittemplate.formTemplateName"/>:</td>
+             <td><input type="text" name="name" size="30" maxlength="20" <%=bEdit?("value='"+myTempBean.getName()+"'"):"value=''"%> > <font size='-2'><bean:message key="schedule.scheduleedittemplate.msgLessTwentyChars"/></font></td>
              <td></td>
             </tr>
             <tr bgcolor='ivory'>
-             <td>Summary:</td>
+             <td><bean:message key="schedule.scheduleedittemplate.formSummary"/>:</td>
              <td><input type="text" name="summary" size="30" maxlength="30" <%=bEdit?("value='"+myTempBean.getSummary()+"'"):"value=''"%> ></td>
              <td nowrap><a href=# title="	<%
-   rsdemo = scheduleMainBean.queryResults("code", "search_scheduletemplatecode");
+   rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
    while (rsdemo.next()) {   %>
  <%=rsdemo.getString("code")+" - "+rsdemo.getString("description")%>  <%}	%>
-             ">Template Code</a></td>
+             "><bean:message key="schedule.scheduleedittemplate.formTemplateCode"/></a></td>
             </tr>
             <tr bgcolor='ivory'>
              <td colspan='3' align='center'>
@@ -181,12 +183,13 @@ function checkInput() {
             
           <table width="100%" border="0" cellspacing="0" cellpadding="2"  bgcolor="silver" >
           <tr bgcolor="#FOFOFO">
-            <td><input type="submit" name="dboperation" value="Delete"></td>
+            <td><input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnDelete"/>' onclick="document.forms['addtemplatecode'].dboperation.value='Delete'; document.forms['addtemplatecode'].submit();"></td>
 			<td align="right"> 
                 <input type="hidden" name="providerid" value="<%=request.getParameter("providerid")%>">
                 <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
-                <input type="submit" name="dboperation" value=" Save ">
-                <input type="button" name="Button" value=" Exit " onClick="window.close()">
+                <input type="hidden" name="dboperation" value="">
+                <input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnSave"/>' onclick="document.forms['addtemplatecode'].dboperation.value=' Save '; document.forms['addtemplatecode'].submit();">
+                <input type="button" name="Button" value='<bean:message key="global.btnExit"/>' onclick="window.close()">
             </td>
           </tr>
 </form>
@@ -198,4 +201,4 @@ function checkInput() {
 
 </form>
 </body>
-</html>
+</html:html>

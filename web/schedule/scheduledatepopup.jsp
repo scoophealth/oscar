@@ -51,6 +51,8 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" />
 <%
@@ -69,9 +71,9 @@
   }
 
 %>
-<html>
+<html:html locale="true">
 <head>
-<title>SCHEDULE SETTING</title>
+<title><bean:message key="schedule.scheduledatepopup.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -99,40 +101,37 @@ function upCaseCtrl(ctrl) {
         <table width="95%" border="0" cellspacing="0" cellpadding="5">
           <tr> 
             <td bgcolor="#CCFFCC"> 
-              <p align="right">Date: </p>
+              <p align="right"><bean:message key="schedule.scheduledatepopup.formDate"/>: </p>
             </td>
             <td bgcolor="#CCFFCC"><%=year%>-<%=month%>-<%=day%></td><input type="hidden" name="date" value="<%=year%>-<%=month%>-<%=day%>">
           </tr>
           <tr> 
             <td> 
-              <div align="right">Available: </div>
+              <div align="right"><bean:message key="schedule.scheduledatepopup.formAvailable"/>: </div>
             </td>
             <td> 
               <input type="radio" name="available" value="1" <%=available.equals("checked")?"checked":""%> >
-              Yes 
+              <bean:message key="schedule.scheduledatepopup.formAvailableYes"/>
               <input type="radio" name="available" value="0" <%=available.equals("checked")?"":"checked"%> >
-              No </td>
+              <bean:message key="schedule.scheduledatepopup.formAvailableNo"/></td>
           </tr>
           <tr> 
             <td> 
-              <div align="right">Template: </div>
+              <div align="right"><bean:message key="schedule.scheduledatepopup.formTemplate"/>: </div>
             </td>
             <td> 
               <!--input type="text" name="hour1" <%=strHour%> -->
    <select name="hour" >
 	<%
    ResultSet rsdemo = null;
-   String[] param =new String[2];
-   param[0]="Public";
-   param[1]=request.getParameter("name");
+   String param = "Public";
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
    while (rsdemo.next()) { 
 	%>
         <option value="<%=rsdemo.getString("name")%>" <%=strHour.equals(rsdemo.getString("name"))?"selected":""%> ><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
   <%
    }
-   param[0]=request.getParameter("provider_no");
-   param[1]=request.getParameter("name");
+   param = request.getParameter("provider_no");
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
    while (rsdemo.next()) { //System.out.println(strHour +" : "+rsdemo.getString("name"));
 	%>
@@ -153,7 +152,7 @@ function upCaseCtrl(ctrl) {
               <input type="hidden" name="reason" <%=strReason%> >
           <tr>
             <td>
-              <div align="right">By: </div>
+              <div align="right"><bean:message key="schedule.scheduledatepopup.formCreator"/>: </div>
             </td>
             <td>
               <%=strCreator%>
@@ -167,10 +166,11 @@ function upCaseCtrl(ctrl) {
           <tr>
             <td bgcolor="#CCFFCC"> 
               <div align="right"> 
+                <input type="hidden" name="Submit" value="">
                 <input type="hidden" name="provider_no" value="<%=request.getParameter("provider_no")%>">
-                <input type="submit" name="Submit" value=" Save ">
-                <input type="button" name="Button" value="Cancel" onClick="window.close()">
-                <input type="submit" name="Submit" value=" Delete ">
+                <input type="button" value='<bean:message key="schedule.scheduledatepopup.btnSave"/>' onclick="document.forms['schedule'].Submit.value=' Save '; document.forms['schedule'].submit();">
+                <input type="button" name="Button" value='<bean:message key="schedule.scheduledatepopup.btnCancel"/>' onClick="window.close()">
+                <input type="button" value='<bean:message key="schedule.scheduledatepopup.btnDelete"/>' onclick="document.forms['schedule'].Submit.value=' Delete '; document.forms['schedule'].submit();">
               </div>
             </td>
           </tr>
@@ -182,4 +182,4 @@ function upCaseCtrl(ctrl) {
 
 </form>
 </body>
-</html>
+</html:html>

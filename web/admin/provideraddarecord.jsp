@@ -1,15 +1,17 @@
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
-<head><title>add a provider - provideraddarecord</title>
+<html:html locale="true">
+<head><title><bean:message key="admin.provideraddrecord.title"/></title>
 <link rel="stylesheet" href="../web.css">
 </head>
 
 <body bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th><font face="Helvetica" color="#FFFFFF">ADD A PROVIDER RECORD</font></th>
+  <tr bgcolor="#486ebd"><th><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.provideraddrecord.description"/></font></th>
   </tr>
 </table>
 <%
@@ -35,17 +37,17 @@
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <h1>Successful Addition of a Provider Record.
+  <h1><bean:message key="admin.provideraddrecord.msgAdditionSuccess"/>
   </h1>
 <%  
   } else {
 %>
-  <h1>Sorry, addition has failed.
+  <h1><bean:message key="admin.provideraddrecord.msgAdditionFailure"/></title>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-<%@ include file="footer2.htm" %>
+<%@ include file="footer2htm.jsp" %>
 </center>
 </body>
-</html>
+</html:html>

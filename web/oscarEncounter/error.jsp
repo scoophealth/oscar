@@ -24,22 +24,18 @@
  */
 -->
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+
+<html:html locale="true">
 <head>
-<title>Oscar Prescription Module - Error</title>
+<title><bean:message key="oscarEncounter.error.title"/></title>
 </head>
 <body style="width:600px">
-<h1>Session Expired</h1>
+<h1><bean:message key="oscarEncounter.error.msgExpired"/></h1>
 <p>
-    Your oscarEncounter session has failed.
-</p>
-<p>
-    Please go back to oscar and try your request again.
-</p>
-<p>
-    If this message appears to have been shown for no reason an error may have occurred.
-    If this problem persists, please contact Oscar Technical Support.
-</p>
-<a href="javascript:window.close();">Close this window</a>
+    <bean:message key="oscarEncounter.error.msgSessionFailed"/>
+<a href="javascript:window.close();"><bean:message key="global.btnClose"/></a>
 </body>
-</html>
+</html:html>

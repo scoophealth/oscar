@@ -9,7 +9,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
     String [][] dbQueries=new String[][] { 
-        {"search_echart", "select * from eChart order by ? desc" }, 
+        {"search_echart", "select * from eChart order by timeStamp desc" }, 
     };
     studyBean.doConfigure(dbParams,dbQueries);
 %>
@@ -59,7 +59,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     String datetime =null;
     String bgcolor = null;
   
-    rsdemo = studyBean.queryResults(new String[]{"timeStamp"}, "search_echart");
+    rsdemo = studyBean.queryResults("search_echart");
     while (rsdemo.next()) { 
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";

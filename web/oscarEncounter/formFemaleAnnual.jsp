@@ -32,7 +32,7 @@
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-<title>Annual Health Review</title>
+<title><bean:message key="oscarEncounter.formFemaleAnnual.title"/></title>
 <link rel="stylesheet" type="text/css" href="annualStyle.css">
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
 <html:base/>
@@ -52,12 +52,12 @@
         var ret = checkAllDates();
         if(ret==true)
         {
-            ret = confirm("Are you sure you want to save this form?");
+            ret = confirm("<bean:message key="oscarEncounter.formFemaleAnnual.msgWannaSave"/>");
         }
         return ret;
     }
     function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
+        if(confirm("<bean:message key="oscarEncounter.formFemaleAnnual..msgNotSave"/>")==true)
         {
             window.close();
         }
@@ -68,7 +68,7 @@
         var ret = checkAllDates();
         if(ret == true)
         {
-            ret = confirm("Are you sure you wish to save and close this window?");
+            ret = confirm("<bean:message key="oscarEncounter.formFemaleAnnual.msgSaveExit"/>");
         }
         return ret;
     }
@@ -154,7 +154,7 @@ var maxYear=3100;
 
     function checkTypeIn(obj) {
       if(!checkTypeNum(obj.value) ) {
-          alert ("You must type in a number in the field.");
+          alert ("<bean:message key="oscarEncounter.formFemaleAnnual.msgTypeANumber"/>");
         }
     }
 
@@ -236,14 +236,14 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <table class="Head" class="hidePrint">
     <tr>
         <td align="left">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnSave"/>" onclick="javascript:return onSave();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnSaveExit"/>" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnExit"/>" onclick="javascript:return onExit();"/>
+            <input type="button" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnPrint"/>" onclick="javascript:return onPrint();"/>
 <a href="formAnnualFemalePrint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provN
-o=<%=provNo%>">Print Page</a>
+o=<%=provNo%>"><bean:message key="oscarEncounter.formFemaleAnnual.btnPrintPage"/></a>
         </td><td align='right'>
-            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">Annual Review Planner</a>
+            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');"><bean:message key="oscarEncounter.formFemaleAnnual.btnAnnualReview"/></a>
         </td>
     </tr>
 </table>
@@ -251,16 +251,16 @@ o=<%=provNo%>">Print Page</a>
 <table cellspacing="3" cellpadding="0" width="100%">
     <tr>
         <td>
-            <big><i><b>ANNUAL FEMALE HEALTH REVIEW</b></i></big>
+            <big><i><b><bean:message key="oscarEncounter.formFemaleAnnual.msgAnnualFemaleReview"/></b></i></big>
         </td>
         <td>
-            <b>Name:</b> <input type="text" class="Input" name="pName" readonly="true" size="30" value="<%= props.getProperty("pName", "") %>" />
+            <b><bean:message key="oscarEncounter.formFemaleAnnual.formName"/>:</b> <input type="text" class="Input" name="pName" readonly="true" size="30" value="<%= props.getProperty("pName", "") %>" />
         </td>
         <td>
-            <b>Age:</b> <input type="text" class="Input" readonly="true" name="age" size="11" value="<%= props.getProperty("age", "") %>" readonly="true" />
+            <b><bean:message key="oscarEncounter.formFemaleAnnual.formAge"/>:</b> <input type="text" class="Input" readonly="true" name="age" size="11" value="<%= props.getProperty("age", "") %>" readonly="true" />
         </td>
         <td>
-            <b>Date</b><small>(yyyy/mm/dd)</small>: <input type="text" class="Input" name="formDate" size="11" value="<%=props.getProperty("formDate", "") %>" />
+            <b><bean:message key="oscarEncounter.formFemaleAnnual.formDate"/></b><small>(yyyy/mm/dd)</small>: <input type="text" class="Input" name="formDate" size="11" value="<%=props.getProperty("formDate", "") %>" />
         </td>
     </tr>
 </table>
@@ -269,18 +269,18 @@ o=<%=provNo%>">Print Page</a>
         <td rowspan="4">
             <table class="DashedBorder" width="100%">
                 <tr>
-                    <td><b>CURRENT CONCERNS:</b></td>
+                    <td><b><bean:message key="oscarEncounter.formFemaleAnnual.msgCurrentConcerns"/>:</b></td>
                 </tr>
                 <tr>
                     <td><textarea style="height:480px; width:400px;" name="currentConcerns"><%= props.getProperty("currentConcerns", "") %></textarea></td>
                 </tr>
                 <tr>
                     <td align="center">
-                        See chart for continuation &nbsp;&nbsp;&nbsp;
+                        <bean:message key="oscarEncounter.formFemaleAnnual.msgSeeChart"/> &nbsp;&nbsp;&nbsp;
                         <input type="checkbox" name="currentConcernsNo" <%= props.getProperty("currentConcernsNo", "") %> />
-                        &nbsp;No&nbsp;&nbsp;&nbsp;
+                        &nbsp;<bean:message key="oscarEncounter.formFemaleAnnual.brtNo"/>&nbsp;&nbsp;&nbsp;
                         <input type="checkbox" name="currentConcernsYes" <%= props.getProperty("currentConcernsYes", "") %> />
-                        &nbsp;Yes
+                        &nbsp;<bean:message key="oscarEncounter.formFemaleAnnual.btnYes"/>
                     </td>
                 </tr>
             </table>
@@ -288,65 +288,65 @@ o=<%=provNo%>">Print Page</a>
         <td>
             <table width="100%">
                 <tr>
-                    <td colspan="3"><b>SYSTEMS REVIEW:</b></td>
+                    <td colspan="3"><b><bean:message key="oscarEncounter.formFemaleAnnual.msgSystemReview"/>:</b></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td><b>N</b></td>
-                    <td colspan="2"><b>AbN</b></td>
+                    <td><b><bean:message key="oscarEncounter.formFemaleAnnual.formN"/></b></td>
+                    <td colspan="2"><b><bean:message key="oscarEncounter.formFemaleAnnual.formAbN"/></b></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="headN" <%= props.getProperty("headN", "") %> /></td>
                     <td><input type="checkbox" name="headAbN" <%= props.getProperty("headAbN", "") %> /></td>
-                    <td align="left" nowrap="true">Head & Neck:</td>
+                    <td align="left" nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formHeadNeck"/>:</td>
                     <td align="right"><input type="text" name="head" class="SystemsReview" value="<%= props.getProperty("head", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="respN" <%= props.getProperty("respN", "") %> /></td>
                     <td><input type="checkbox" name="respAbN" <%= props.getProperty("respAbN", "") %> /></td>
-                    <td>Resp:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.fomrResp"/>:</td>
                     <td align="right"><input type="text" name="resp" class="SystemsReview" value="<%= props.getProperty("resp", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="cardioN" <%= props.getProperty("cardioN", "") %> /></td>
                     <td><input type="checkbox" name="cardioAbN" <%= props.getProperty("cardioAbN", "") %> /></td>
-                    <td>Cardio:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formCardio"/>:</td>
                     <td align="right"><input type="text" name="cardio" class="SystemsReview" value="<%= props.getProperty("cardio", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="giN" <%= props.getProperty("giN", "") %> /></td>
                     <td><input type="checkbox" name="giAbN" <%= props.getProperty("giAbN", "") %> /></td>
-                    <td>G.I.:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formGI"/>:</td>
                     <td align="right"><input type="text" name="gi" class="SystemsReview" value="<%= props.getProperty("gi", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="guN" <%= props.getProperty("guN", "") %> /></td>
                     <td><input type="checkbox" name="guAbN" <%= props.getProperty("guAbN", "") %> /></td>
-                    <td>G.U.:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formGU"/>:</td>
                     <td align="right"><input type="text" name="gu" class="SystemsReview" value="<%= props.getProperty("gu", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="skinN" <%= props.getProperty("skinN", "") %> /></td>
                     <td><input type="checkbox" name="skinAbN" <%= props.getProperty("skinAbN", "") %> /></td>
-                    <td>Skin:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formSkin"/>:</td>
                     <td colspan="3" align="right"><input type="text" name="skin" class="SystemsReview" value="<%= props.getProperty("skin", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="mskN" <%= props.getProperty("mskN", "") %> /></td>
                     <td><input type="checkbox" name="mskAbN" <%= props.getProperty("mskAbN", "") %> /></td>
-                    <td>MSK:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formMSK"/>:</td>
                     <td colspan="3" align="right"><input type="text" name="msk" class="SystemsReview" value="<%= props.getProperty("msk", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="endocrinN" <%= props.getProperty("endocrinN", "") %> /></td>
                     <td><input type="checkbox" name="endocrinAbN" <%= props.getProperty("endocrinAbN", "") %> /></td>
-                    <td>Endocrin:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formEndocrin"/>:</td>
                     <td colspan="3" align="right"><input type="text" name="endocrin" class="SystemsReview" value="<%= props.getProperty("endocrin", "") %>" /></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="otherN" <%= props.getProperty("otherN", "") %> /></td>
                     <td valign="top"><input type="checkbox" name="otherAbN" <%= props.getProperty("otherAbN", "") %> /></td>
-                    <td valign="top">OTHER:</td>
+                    <td valign="top"><bean:message key="oscarEncounter.formFemaleAnnual.formOther"/>:</td>
                     <td colspan="3" align="right"><textarea name="other" class="SystemsReview" style="height:50px;"><%= props.getProperty("other", "") %></textarea></td>
                 </tr>
 
@@ -359,29 +359,29 @@ o=<%=provNo%>">Print Page</a>
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td nowrap="true">GTPAL Revisions?&nbsp;
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.msgGTPALRevisions"/>&nbsp;
                         <input type="checkbox" name="noGtpalRevisions" <%= props.getProperty("noGtpalRevisions", "") %> />
-                        NO
+                        <bean:message key="oscarEncounter.formFemaleAnnual.brtNo"/>
                         <input type="checkbox" name="yesGtpalRevisions" <%= props.getProperty("yesGtpalRevisions", "") %> />
-                        YES
+                        <bean:message key="oscarEncounter.formFemaleAnnual.btnYes"/>
                         <input type="checkbox" name="frontSheet" <%= props.getProperty("frontSheet", "") %> />
-                        Front Sheet Updated
+                        <bean:message key="oscarEncounter.formFemaleAnnual.formFrontSheeyUpdated"/>
                     </td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>
-                        LMP<small>(yyyy/mm/dd)</small>: <input type="text" name="lmp" value="<%= props.getProperty("lmp", "") %>" size="11" />
+                        <bean:message key="oscarEncounter.formFemaleAnnual.formLMP"/><small>(yyyy/mm/dd)</small>: <input type="text" name="lmp" value="<%= props.getProperty("lmp", "") %>" size="11" />
                         &nbsp;&nbsp;&nbsp;
-                        Menopause: <input type="text" name="menopause" size="3" maxlength="3" value="<%= props.getProperty("menopause", "") %>" />
-                        /yrs.
+                        <bean:message key="oscarEncounter.formFemaleAnnual.formMenopause"/>: <input type="text" name="menopause" size="3" maxlength="3" value="<%= props.getProperty("menopause", "") %>" />
+                        /<bean:message key="oscarEncounter.formFemaleAnnual.formMenopauseUnit"/>
                     </td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="papSmearsN" <%= props.getProperty("papSmearsN", "") %> /></td>
                     <td><input type="checkbox" name="papSmearsAbN" <%= props.getProperty("papSmearsAbN", "") %> /></td>
-                    <td nowrap="true">Previous Pap. Smears: <input type="text" name="papSmears" style="width:285px;" value="<%= props.getProperty("papSmears", "") %>" /></td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formPreviousPap"/>: <input type="text" name="papSmears" style="width:285px;" value="<%= props.getProperty("papSmears", "") %>" /></td>
                 </tr>
             </table>
         </td>
@@ -392,29 +392,29 @@ o=<%=provNo%>">Print Page</a>
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td colspan="4">REVIEW:</td>
+                    <td colspan="4"><bean:message key="oscarEncounter.formFemaleAnnual.forReview"/>:</td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td><input type="checkbox" name="drugs" <%= props.getProperty("drugs", "") %> /></td>
-                    <td>Drugs</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formDrugs"/></td>
                     <td style="width:190px;">&nbsp;</td>
                     <td align="right"><input type="checkbox" name="medSheet" <%= props.getProperty("medSheet", "") %> /></td>
-                    <td>Med. Sheet Updated</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formMedSheet"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td><input type="checkbox" name="allergies" <%= props.getProperty("allergies", "") %> /></td>
-                    <td colspan="2" nowrap="true">Allergies & Drug Reactions</td>
+                    <td colspan="2" nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formAllergies"/></td>
                     <td align="right"><input type="checkbox" name="frontSheet1" <%= props.getProperty("frontSheet1", "") %> /></td>
-                    <td>Front Sheet Updated</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formFrontSheet"/></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td><input type="checkbox" name="familyHistory" <%= props.getProperty("familyHistory", "") %> /></td>
-                    <td colspan="2">Family History</td>
+                    <td colspan="2"><bean:message key="oscarEncounter.formFemaleAnnual.formFamilyHist"/></td>
                     <td align="right"><input type="checkbox" name="frontSheet2" <%= props.getProperty("frontSheet2", "") %> /></td>
-                    <td>Front Sheet Updated</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formFrontSheet"/></td>
                 </tr>
             </table>
         </td>
@@ -425,84 +425,84 @@ o=<%=provNo%>">Print Page</a>
         <td class="DashedBorder">
             <table>
                 <tr>
-                    <td colspan="3" nowrap="true"><b>LIFESTYLE REVIEW:</b></td>
-                    <td><b><i><small>("Any concerns with ...?")</small></i></b></td>
+                    <td colspan="3" nowrap="true"><b><bean:message key="oscarEncounter.formFemaleAnnual.msgLifestyleReview"/>:</b></td>
+                    <td><b><i><small>("<bean:message key="oscarEncounter.formFemaleAnnual.msgAnyConcerns"/>")</small></i></b></td>
                 </tr>
                 <tr>
-                    <td>No</td>
-                    <td colspan="2">Yes</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formNo"/></td>
+                    <td colspan="2"><bean:message key="oscarEncounter.formFemaleAnnual.formYes"/></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="smokingNo" <%= props.getProperty("smokingNo", "") %> /></td>
                     <td><input type="checkbox" name="smokingYes" <%= props.getProperty("smokingYes", "") %> /></td>
-                    <td>Smoking:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formSmoking"/>:</td>
                     <td align="right"><input type="text" name="smoking" class="LifestyleReview" value="<%= props.getProperty("smoking", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="alcoholNo" <%= props.getProperty("alcoholNo", "") %> /></td>
                     <td><input type="checkbox" name="alcoholYes" <%= props.getProperty("alcoholYes", "") %> /></td>
-                    <td>Alcohol:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formAlcohol"/>:</td>
                     <td align="right"><input type="text" name="alcohol" class="LifestyleReview" value="<%= props.getProperty("alcohol", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="otcNo" <%= props.getProperty("otcNo", "") %> /></td>
                     <td><input type="checkbox" name="otcYes" <%= props.getProperty("otcYes", "") %> /></td>
-                    <td>OTC/Illicit Drugs:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formIllicitDrugs"/>:</td>
                     <td align="right"><input type="text" name="otc" class="LifestyleReview" value="<%= props.getProperty("otc", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="exerciseNo" <%= props.getProperty("exerciseNo", "") %> /></td>
                     <td><input type="checkbox" name="exerciseYes" <%= props.getProperty("exerciseYes", "") %> /></td>
-                    <td>Exercise/Sports</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formExercise"/></td>
                     <td align="right"><input type="text" name="exercise" class="LifestyleReview" value="<%= props.getProperty("exercise", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="nutritionNo" <%= props.getProperty("nutritionNo", "") %> /></td>
                     <td><input type="checkbox" name="nutritionYes" <%= props.getProperty("nutritionYes", "") %> /></td>
-                    <td>Nutrition:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formNutrition"/>:</td>
                     <td align="right"><input type="text" name="nutrition" class="LifestyleReview" value="<%= props.getProperty("nutrition", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="dentalNo" <%= props.getProperty("dentalNo", "") %> /></td>
                     <td><input type="checkbox" name="dentalYes" <%= props.getProperty("dentalYes", "") %> /></td>
-                    <td>Dental Hygiene:</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formDentalHygiene"/>:</td>
                     <td align="right"><input type="text" name="dental" class="LifestyleReview" value="<%= props.getProperty("dental", "") %>" /></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="relationshipNo" <%= props.getProperty("relationshipNo", "") %> /></td>
                     <td valign="top"><input type="checkbox" name="relationshipYes" <%= props.getProperty("relationshipYes", "") %> /></td>
-                    <td valign="top">Relationship Issues:</td>
+                    <td valign="top"><bean:message key="oscarEncounter.formFemaleAnnual.formRelationship"/>:</td>
                     <td align="right"><textarea name="relationship" class="LifestyleReview" rows="2"><%= props.getProperty("relationship", "") %></textarea></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="sexualityNo" <%= props.getProperty("sexualityNo", "") %> /></td>
                     <td><input type="checkbox" name="sexualityYes" <%= props.getProperty("sexualityYes", "") %> /></td>
-                    <td nowrap="true">Sexuality Risks (STD/HIV):</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formSexualityRisks"/>:</td>
                     <td align="right"><input type="text" name="sexuality" class="LifestyleReview" value="<%= props.getProperty("sexuality", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="occupationalNo" <%= props.getProperty("occupationalNo", "") %> /></td>
                     <td><input type="checkbox" name="occupationalYes" <%= props.getProperty("occupationalYes", "") %> /></td>
-                    <td nowrap="true">Occupational Risks:</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formOccupationalRisks"/>:</td>
                     <td align="right"><input type="text" name="occupational" class="LifestyleReview" value="<%= props.getProperty("occupational", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="drivingNo" <%= props.getProperty("drivingNo", "") %> /></td>
                     <td><input type="checkbox" name="drivingYes" <%= props.getProperty("drivingYes", "") %> /></td>
-                    <td nowrap="true">Driving Safety:</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formDrivingSafety"/>:</td>
                     <td align="right"><input type="text" name="driving" class="LifestyleReview" value="<%= props.getProperty("driving", "") %>" /></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="travelNo" <%= props.getProperty("travelNo", "") %> /></td>
                     <td><input type="checkbox" name="travelYes" <%= props.getProperty("travelYes", "") %> /></td>
-                    <td nowrap="true">Foreign Travel (in last yr.):</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formForeignTravel"/>:</td>
                     <td align="right"><input type="text" name="travel" class="LifestyleReview" value="<%= props.getProperty("travel", "") %>" /></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="otherNo" <%= props.getProperty("otherNo", "") %> /></td>
                     <td valign="top"><input type="checkbox" name="otherYes" <%= props.getProperty("otherYes", "") %> /></td>
-                    <td nowrap="true" valign="top">Other:</td>
+                    <td nowrap="true" valign="top"><bean:message key="oscarEncounter.formFemaleAnnual.formOther"/>:</td>
                     <td rowspan="3" align="right"><textarea name="otherLifestyle" class="LifestyleReview" rows="6"><%= props.getProperty("otherLifestyle", "") %></textarea></td>
                 </tr>
             </table>
@@ -510,43 +510,43 @@ o=<%=provNo%>">Print Page</a>
         <td width="100%" valign="top" class="DashedBorder">
             <table width="100%">
                 <tr>
-                    <td width="50%" colspan="2"><b>SCREENING REVIEW:</b></td>
+                    <td width="50%" colspan="2"><b><bean:message key="oscarEncounter.formFemaleAnnual.msgScreeningReview"/>:</b></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td><a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provN
-o=<%=provNo%>');">Risk/Check List</a>
+o=<%=provNo%>');"><bean:message key="oscarEncounter.formFemaleAnnual.btnRisk"/></a>
 					</td>
                 </tr>
                 <!--tr>
                     <td><input type="checkbox" name="mammogram" <%= props.getProperty("mammogram", "") %> /></td>
-                    <td>Mammogram</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formMammogram"/></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="breast" <%= props.getProperty("breast", "") %> /></td>
-                    <td>Breast-Self Exam</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formBreastSelf"/></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="pap" <%= props.getProperty("pap", "") %> /></td>
-                    <td>Pap Smear</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formPapSmear"/></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="femaleImmunization" <%= props.getProperty("femaleImmunization", "") %> /></td>
-                    <td>Immunization</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formImmunization"/></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="precontraceptive" <%= props.getProperty("precontraceptive", "") %> /></td>
-                    <td nowrap="true">Precontraceptive Councelling (Rubella, Folate)</td>
+                    <td nowrap="true"><bean:message key="oscarEncounter.formFemaleAnnual.formPrecontraceptive"/></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="femaleCardiac" <%= props.getProperty("femaleCardiac", "") %> /></td>
-                    <td>Cardiac Risk Factors</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formCardiacRiskFactors"/></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="osteoporosis" <%= props.getProperty("osteoporosis", "") %> /></td>
-                    <td>Osteoporosis Risk</td>
+                    <td><bean:message key="oscarEncounter.formFemaleAnnual.formOsteoporosisRisk"/></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="femaleOther1c" <%= props.getProperty("femaleOther1c", "") %> /></td>
@@ -562,28 +562,29 @@ o=<%=provNo%>');">Risk/Check List</a>
 </table>
 <table width="100%" class="tableWithBorder">
     <tr>
-        <td colspan="9"><b>PHYSICAL EXAM:</b></td>
+        <td colspan="9"><b><bean:message key="oscarEncounter.formFemaleAnnual.msgPhysicalExam"/>:</b></td>
     </tr>
     <tr>
-        <td><b>VITALS:  </b></td>
+        <td><b><bean:message key="oscarEncounter.formFemaleAnnual.msgVitals"/>:  </b></td>
         <td>
-            B.P: <input type="text" name="bprTop" size="5" maxlength="3" value="<%= props.getProperty("bprTop", "") %>" />/
-            <input type="text" name="bprBottom" size="5" maxlength="3" value="<%= props.getProperty("bprBottom", "") %>" /> (R)
+            <bean:message key="oscarEncounter.formFemaleAnnual.formBP"/>: <input type="text" name="bprTop" size="5" maxlength="3" value="<%= props.getProperty("bprTop", "") %>" />/
+            <input type="text" name="bprBottom" size="5" maxlength="3" value="<%= props.getProperty("bprBottom", "") %>" /> <bean:message key="oscarEncounter.formFemaleAnnual.msgR"/>
         </td>
-        <td align="right">Pulse: </td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnual.formPulse"/>: </td>
         <td><input type="text" name="pulse" size="10" maxlength="10" value="<%= props.getProperty("pulse", "") %>" /> /min</td>
-        <td align="right">Height:</td>
-        <td><input type="text" name="height" size="10" maxlength="4" value="<%= props.getProperty("height", "") %>" /> cm.</td>
-        <td align="right">Weight: <input type="text" name="weight" size="10" maxlength="4" value="<%= props.getProperty("weight", "") %>" /> Kg.</td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnual.formHeight"/>:</td>
+        <td><input type="text" name="height" size="10" maxlength="4" value="<%= props.getProperty("height", "") %>" /> <bean:message key="oscarEncounter.formFemaleAnnual.HeightUnit"/></td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnual.formWeight"/>: <input type="text" name="weight" size="10" maxlength="4" value="<%= props.getProperty("weight", "") %>" /> <bean:message key="oscarEncounter.formFemaleAnnual.formWeightUnit"/></td>
     <tr>
         <td>&nbsp;</td>
         <td>
-            B.P: <input type="text" name="bplTop" size="5" maxlength="3" value="<%= props.getProperty("bplTop", "") %>" />/
-            <input type="text" name="bplBottom" size="5" maxlength="3" value="<%= props.getProperty("bplBottom", "") %>" /> (L)
+            <bean:message key="oscarEncounter.formFemaleAnnual.formBP"/>: <input type="text" name="bplTop" size="5" maxlength="3" value="<%= props.getProperty("bplTop", "") %>" />/
+            <input type="text" name="bplBottom" size="5" maxlength="3" value="<%= props.getProperty("bplBottom", "") %>" /> <bean:message key="oscarEncounter.formFemaleAnnual.msgL"/>
+
         </td>
-        <td align="right">Rhythm:</td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnual.formRhythm"/>:</td>
         <td><input type="text" name="rhythm" size="10" maxlength="10" value="<%= props.getProperty("rhythm", "") %>" /></td>
-        <td align="right">Urine Dipstick:</td>
+        <td align="right"><bean:message key="oscarEncounter.formFemaleAnnual.formUrineDipstick"/>:</td>
         <td><input type="text" name="urine" size="20" maxlength="30" value="<%= props.getProperty("urine", "") %>" /></td>
     </tr>
 </table>
@@ -592,7 +593,7 @@ o=<%=provNo%>');">Risk/Check List</a>
         <td rowspan="3">
             <table width="100%" class="DashedBorder">
                 <tr>
-                    <td><b> PHYSICAL SIGNS: </b></td>
+                    <td><b> <bean:message key="oscarEncounter.formFemaleAnnual.msgPhysicalExam"/>: </b></td>
                 </tr>
                 <tr>
                     <td><textarea name="physicalSigns" class="PhysicalSigns"><%= props.getProperty("physicalSigns", "") %></textarea></td>
@@ -606,7 +607,7 @@ o=<%=provNo%>');">Risk/Check List</a>
         <td>
             <table width="100%">
                 <tr>
-                    <td><b>ASSESSMENT</b></td>
+                    <td><b><bean:message key="oscarEncounter.formFemaleAnnual.formAssessment"/></b></td>
                 </tr>
                 <tr>
                     <td align="center"><textarea name="assessment" class="AssessmentPlan"><%= props.getProperty("assessment", "") %></textarea></td>
@@ -616,7 +617,7 @@ o=<%=provNo%>');">Risk/Check List</a>
         <td>
             <table width="100%">
                 <tr>
-                    <td align="center"><b>PLAN</b></td>
+                    <td align="center"><b><bean:message key="oscarEncounter.formFemaleAnnual.formPlan"/></b></td>
                 </tr>
                 <tr>
                     <td align="center"><textarea name="plan" class="AssessmentPlan"><%= props.getProperty("plan", "") %></textarea></td>
@@ -626,7 +627,7 @@ o=<%=provNo%>');">Risk/Check List</a>
     </tr>
     <tr>
         <td colspan="2" align="right">
-            Signature: <input type="text" name="signature" size="30" value="<%= props.getProperty("signature", "") %>" />
+            <bean:message key="oscarEncounter.formFemaleAnnual.formSignature"/>: <input type="text" name="signature" size="30" value="<%= props.getProperty("signature", "") %>" />
         </td>
     </tr>
 </table>
@@ -637,12 +638,12 @@ o=<%=provNo%>');">Risk/Check List</a>
 <table class="Head" class="hidePrint">
     <tr>
         <td align="left">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnSave"/>" onclick="javascript:return onSave();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnSaveExit"/>" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnExit"/>" onclick="javascript:return onExit();"/>
+            <input type="button" value="<bean:message key="oscarEncounter.formFemaleAnnual.btnPrint"/>" onclick="javascript:return onPrint();"/>
         </td><td align='right'>
-            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">Annual Review Planner</a>
+            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');"><bean:message key="oscarEncounter.formFemaleAnnual.btnAnnualReview"/></a>
         </td>
     </tr>
 </table>

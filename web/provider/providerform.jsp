@@ -79,7 +79,7 @@ function setfocus() {
         <select name="encounterform_name" >
 	<%
    ResultSet rsdemo = null;
-   rsdemo = apptMainBean.queryResults("encounterform_name", "search_encounterformname");
+   rsdemo = apptMainBean.queryResults("search_encounterformname");
    while (rsdemo.next()) { 
 	%>
         <option value="<%=rsdemo.getString("encounterform_name")%>"><%=rsdemo.getString("encounterform_name")%></option>

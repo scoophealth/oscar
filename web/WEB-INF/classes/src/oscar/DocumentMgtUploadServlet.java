@@ -55,7 +55,7 @@ public class DocumentMgtUploadServlet extends HttpServlet{
 
 
  HttpSession session = request.getSession(true);
-     String backupfilepath = ((String) session.getAttribute("homepath"))!=null?((String) session.getAttribute("homepath")):"null" ;
+     //String backupfilepath = ((String) session.getAttribute("homepath"))!=null?((String) session.getAttribute("homepath")):"null" ;
   formatter = new SimpleDateFormat("yyyyMMddHmmss");
   today = new java.util.Date();
   output = formatter.format(today);
@@ -66,16 +66,20 @@ public class DocumentMgtUploadServlet extends HttpServlet{
   String home_dir="", doc_forward="";
  String userHomePath = System.getProperty("user.home", "user.dir");
   //    System.out.println(userHomePath);
-      File pFile = new File(userHomePath, backupfilepath+".properties");
-      FileInputStream pStream = new FileInputStream(pFile.getPath());
+      //File pFile = new File(userHomePath, backupfilepath+".properties");
+      //FileInputStream pStream = new FileInputStream(pFile.getPath());
 
       Properties ap = new Properties();
-      ap.load(pStream);
-
-    forwardTo  = ap.getProperty("DOC_FORWARD");
-    foldername = ap.getProperty("DOCUMENT_DIR");
-      pStream.close();
-
+      //ap.load(pStream);
+      //Main configuration file. This file must be saved on WEB-INF at the webapp diretory.
+      //The file name is defined on the page an its read as a parameter (propName).
+      String pathSeparator = System.getProperty("file.separator");
+      String mainConfigFileName = getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+"oscar_mcmaster.properties";
+      ap.load(new FileInputStream(new File(mainConfigFileName)));
+      
+      forwardTo  = ap.getProperty("DOC_FORWARD");
+      foldername = ap.getProperty("DOCUMENT_DIR");
+      //pStream.close();
 
    // function = request.getParameter("function");
    // function_id = request.getParameter("functionid");

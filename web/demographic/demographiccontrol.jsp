@@ -11,10 +11,10 @@
   //construct SQL expression
   String orderby="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
-  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1")+", ";
+  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) {
     limit2=request.getParameter("limit2");
-    limit="limit "+limit1+limit2;
+    limit="limit "+limit2+" offset "+limit1;
   }
 
   String fieldname="", regularexp="like"; // exactly search is not required by users, e.g. regularexp="=";
@@ -38,9 +38,9 @@
     {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},  
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?,email=?,pin=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},
-    {"add_record", "insert into demographic values('\\N',?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" }, 
+    {"add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,'today',?, ?,?,?,?,?, ?,?,?)" }, 
   
-    {"search_provider", "select * from provider order by ?"},
+    {"search_provider", "select * from provider order by last_name"},
     {"search_demographicid", "select * from demographic where demographic_no=?"},
     {"search*", "select * from demographic "+ orderby + " "+limit }, 
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},

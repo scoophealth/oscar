@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<html:html>
+<html:html locale="true">
 <head>
   <html:base/>
 <title><bean:message key="packageNA.title"/></title>
@@ -42,7 +42,7 @@
     <td>
       <table width="100%" border="0" cellspacing="1" cellpadding="0" height="100%" bgcolor="#FFFFFF">
         <tr>
-          <td colspan="3"><h2>The package <%=pkg%> is not available</h2></td>
+          <td colspan="3"><h2><bean:message key="packageNA.msgNA1"/> <%=pkg%> <bean:message key="packageNA.msgNA2"/></h2></td>
         </tr>
         <tr>
           <td width="37%">&nbsp;</td>

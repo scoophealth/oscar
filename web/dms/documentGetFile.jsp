@@ -24,6 +24,8 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
    <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
   <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -44,9 +46,9 @@
 
 if (filetype.compareTo("active") == 0){
 %>
-<html>
+<html:html locale="true">
 <head>
-<title>OSCAR - Document Viewer</title>
+<title><bean:message key="dms.documentGetFile.title"/></title>
 <meta http-equiv="Content-Type" content="text/html;">
 </head>
 <frameset rows="21,*" frameborder="NO" border="0" framespacing="0" cols="*"> 
@@ -57,7 +59,7 @@ if (filetype.compareTo("active") == 0){
 <body bgcolor="#FFFFFF" text="#000000">
 </body>
 </noframes> 
-</html>
+</html:html>
    <%}
    else {
    ResultSet rslocal2 = null;
@@ -72,10 +74,9 @@ if (filetype.compareTo("active") == 0){
  }
    }
    }else{
-       String errormsg = "Error: File not found.";
    %>
    <jsp:forward page='../dms/errorpage.jsp' >
-   <jsp:param name="msg" value='<%=errormsg%>' />
+   <jsp:param name="msg" value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>' />
 </jsp:forward>
 
       

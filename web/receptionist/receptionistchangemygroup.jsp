@@ -34,8 +34,8 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <%
   String [][] dbQueries=new String[][] {
-    {"searchmygroupno", "select * from mygroup group by mygroup_no order by ?"}, 
-    {"searchmygroupall", "select * from mygroup order by ?"}, 
+    {"searchmygroupno", "select * from mygroup group by mygroup_no order by mygroup_no"}, 
+    {"searchmygroupall", "select * from mygroup order by mygroup_no"}, 
   };
   groupBean.doConfigure(dbParams,dbQueries);
 %>
@@ -65,7 +65,7 @@ function setfocus() {
 <tr><td>Change Your Group NO.: </TD>
 <TD align="right"> 
 <select name="mygroup_no">
-<% ResultSet rsgroup = groupBean.queryResults("mygroup_no", "searchmygroupno");
+<% ResultSet rsgroup = groupBean.queryResults("searchmygroupno");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("mygroup_no")%>" <%=oldGroup_no.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%=rsgroup.getString("mygroup_no")%></option>
@@ -89,7 +89,7 @@ function setfocus() {
    rsgroup = null;
    boolean bNewNo=false;
    String oldNo="";
-   rsgroup = groupBean.queryResults("mygroup_no", "searchmygroupall");
+   rsgroup = groupBean.queryResults("searchmygroupall");
    while (rsgroup.next()) { 
      if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
        bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");

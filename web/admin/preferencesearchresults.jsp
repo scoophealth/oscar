@@ -24,11 +24,14 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
-<head><title>Preference: the following records</title>
+<html:html locale="true">
+<head><title><bean:message key="admin.preferencesearchresults.title"/></title>
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
     <!--
@@ -39,7 +42,7 @@
 
     function onsub() {
       if(document.searchprovider.keyword.value=="") {
-        alert("You forgot to input a keyword!");
+        alert("<bean:message key="global.msgInputKeyword"/>");
         return false;
       } else return true;
       // do nothing at the moment
@@ -53,7 +56,7 @@
   <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">PREFEFENCE</font></th>
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferencesearchresults.description"/></font></th>
       </tr>
     </table>
     
@@ -62,11 +65,11 @@
 
   <form method="post" action="admincontrol.jsp" name="searchprovider">
 	<tr valign="top">
-      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search Criteria</i></b></font></td>
+      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="admin.search.formSearchCriteria"/></i></b></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  name="search_mode" value="search_preferenceno">Preference No. </font></td>
+        <input type="radio"  name="search_mode" value="search_preferenceno"><bean:message key="admin.preference.formPreferenceNo"/></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" checked name="search_mode" value="search_providerno">Provider No.</font></td>
+        <input type="radio" checked name="search_mode" value="search_providerno"><bean:message key="admin.provider.formProviderNo"/></font></td>
       <td valign="middle" rowspan="2" ALIGN="left">
         <input type="text" NAME="keyword" SIZE="17" MAXLENGTH="100">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="provider_no" >
@@ -74,7 +77,7 @@
 				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Preference_Search" >
-				<INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"></td>
+				<INPUT TYPE="SUBMIT" NAME="button" VALUE="<bean:message key="admin.search.btnSubmit"/>" SIZE="17"></td>
   </tr><tr> 
       <td nowrap><font size="1" face="Verdana" color="#0000FF">Reserved </font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> </font></td>
@@ -84,16 +87,16 @@
 
 <table width="100%" border="0">
 <tr>
-<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
+<td align="left"><i><bean:message key="admin.search.keywords"/></i> : <%=request.getParameter("keyword")%></td>
 </tr>
 </table>
 <CENTER><table width="100%" cellspacing="0" cellpadding="1" border="1" bgcolor="#ffffff"> 
   <tr bgcolor="#339999">
-      <TH align="center" width="10%"><b>Provider No</b></TH>
-      <TH align="center" width="20%"><b>Start Hour</b></TH>
-      <TH align="center" width="20%"><b>End Hour</b></TH>
-      <TH align="center" width="10%"><b>Period</b></TH>
-      <TH align="center" width="10%"><b>Group No</b></TH>
+      <TH align="center" width="10%"><b><bean:message key="admin.provider.formProviderNo"/></b></TH>
+      <TH align="center" width="20%"><b><bean:message key="admin.preference.formStartHour"/></b></TH>
+      <TH align="center" width="20%"><b><bean:message key="admin.preference.formEndHour"/></b></TH>
+      <TH align="center" width="10%"><b><bean:message key="admin.preference.formPeriod"/></b></TH>
+      <TH align="center" width="10%"><b><bean:message key="admin.preference.formGroupNo"/></b></TH>
       <!--TH align="center" width="10%"><b>Action</B></TH-->
   </tr>
 
@@ -167,17 +170,17 @@
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="admin.search.btnLastPage"/></a> |
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message key="admin.search.btnNextPage"/></a>
 <%
 }
 %>
-<p>Please select by clicking on the provider's no for details.</p></center>
-<%@ include file="footer.htm" %>
+<p><bean:message key="admin.preferencesearchresults.msgClickForDetail"/></p></center>
+<%@ include file="footerhtm.jsp" %>
   </center>
 </body>
-</html>
+</html:html>

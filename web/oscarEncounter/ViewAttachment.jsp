@@ -17,7 +17,7 @@
 
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<html>
+<html:html locale="true">
 <head>
 <style type="text/css">
     BODY
@@ -215,7 +215,9 @@
     void DrawDoc(Element root, JspWriter out)
             throws javax.servlet.jsp.JspException, java.io.IOException
     {
-        out.print(spanStartRoot + "Document Transfer" + spanEnd);
+        out.print(spanStartRoot); %>
+	Document Transfer
+	<% out.print(spanEnd);
         out.print(tblStartRoot);
 
         NodeList lst = root.getChildNodes();
@@ -296,28 +298,28 @@
 
 
 <title>
-Template
+<bean:message key="oscarEncounter.ViewAttachment.title"/>
 </title>
 </head>
 
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.ViewAttachment.msgEncounterTable"/>">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                oscarComm
+                <bean:message key="global.oscarComm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                        View Attachment
+                        <bean:message key="oscarEncounter.ViewAttachment.msgViewAtt"/>
                         </td>
                         <td  >
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -332,15 +334,15 @@ Template
                 <table  cellspacing="1" valign="top">
                                 <tr>
                                     <td bgcolor="#DDDDFF">
-                                    From:
+                                    <bean:message key="oscarEncounter.ViewAttachment.msgFrom"/>:
                                     </td>
                                     <td bgcolor="#CCCCFF">
-                                    <%= sentBy%> at <%=remoteName%>
+                                    <%= sentBy%> <bean:message key="oscarEncounter.ViewAttachment.msgAt"/> <%=remoteName%>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td bgcolor="#DDDDFF">
-                                        Subject:
+                                        <bean:message key="oscarEncounter.ViewAttachment.msgSubject"/>:
                                     </td>
                                     <td bgcolor="#BBBBFF">
                                         <%= thesubject%>
@@ -349,7 +351,7 @@ Template
 
                                 <tr>
                                   <td bgcolor="#DDDDFF">
-                                      Date:
+                                      <bean:message key="oscarEncounter.ViewAttachment.msgDate"/>:
                                   </td>
                                   <td bgcolor="#B8B8FF">
                                       <%= thedate %>&nbsp;&nbsp;
@@ -372,9 +374,9 @@ Template
                 <div style="height:6px;"></div>
                 <% DrawDoc(root, out); %>
                 <div style="font-size: 8pt; margin-top: 15px;">
-                    <a href="javascript:expandAll();">Expand All</a>
+                    <a href="javascript:expandAll();"><bean:message key="oscarEncounter.ViewAttachment.msgExpandAll"/></a>
                     &nbsp;|&nbsp;
-                    <a href="javascript:collapseAll();">Collapse All</a>
+                    <a href="javascript:collapseAll();"><bean:message key="oscarEncounter.ViewAttachment.msgColapseAll"/></a>
                 </div>
 
             </td>
@@ -389,4 +391,4 @@ Template
         </tr>
     </table>
 </body>
-</html>
+</html:html>

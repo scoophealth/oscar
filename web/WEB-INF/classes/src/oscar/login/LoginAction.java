@@ -25,7 +25,13 @@ public final class LoginAction extends Action {
       return mapping.findForward(where);
     }
 
-    LoginCheckLogin cl = new LoginCheckLogin(propName);
+    String pathSeparator = System.getProperty("file.separator");
+
+    //Main configuration file. This file must be saved on WEB-INF at the webapp diretory.
+    //The file name is defined on the page an its read as a parameter (propName).
+    String mainConfigFileName = servlet.getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+propName;
+
+    LoginCheckLogin cl = new LoginCheckLogin(mainConfigFileName);
     if(cl.isBlock(ip)) return mapping.findForward(where);  //go to block page
 
     String[] strAuth = cl.auth(userName, password, pin, ip) ;
@@ -38,7 +44,7 @@ public final class LoginAction extends Action {
         session = request.getSession();// Create a new session for this user
       }
 
-      System.out.println("Assigned new session for: " + strAuth[0]+ " : "+ strAuth[3] );
+      System.out.println("Assigned new session for: " + strAuth[0]+ " : "+ strAuth[3] ); 
       session.setMaxInactiveInterval(6800);
     
       //initial db setting
@@ -48,7 +54,7 @@ public final class LoginAction extends Action {
 
       //get View Type
       LoginViewTypeHlp lvt = new LoginViewTypeHlp();
-      LoginViewTypeHlp.init(pvar.getProperty("project_home"));
+      LoginViewTypeHlp.init(pvar.getProperty("project_home")+pathSeparator+"WEB-INF"+pathSeparator);
       String viewType = LoginViewTypeHlp.getViewType(strAuth[3].toLowerCase());
 
       session.setAttribute("user", strAuth[0]);

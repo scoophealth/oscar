@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 //  String demographic_no = request.getParameter("demographic_no"); 
@@ -46,10 +49,10 @@
   myFormBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
 
-<html>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>MakeMyForm</title>
+<title><bean:message key="e_form.MakeMyForm.title"/></title>
 </head>
 <body>
 
@@ -73,12 +76,12 @@
 //    RS.close();
   }else{
 %> 
-NO such file in database.
+<bean:message key="e_form.MakeMyForm.msgNoSuchFile"/>.
 <%
   }
 %>               
  
 </body>
-</html>
+</html:html>
 
   

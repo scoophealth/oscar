@@ -28,9 +28,12 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>    
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<html:html locale="true">
 <head>
 <script LANGUAGE="JavaScript">
 <!--
@@ -45,7 +48,7 @@ function start(){
     <table border="0" cellspacing="0" cellpadding="0" width="90%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD AN APPOINTMENT RECORD</font></th>
+            <bean:message key="appointment.addappointment.msgMainLabel"/></font></th>
       </tr>
     </table>
 <%
@@ -72,7 +75,7 @@ function start(){
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,intparam,request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Addition of an appointment Record.</h1></p>
+  <p><h1><bean:message key="appointment.addappointment.msgAddSuccess"/></h1></p>
 <script LANGUAGE="JavaScript">
      	self.opener.refresh();
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
@@ -91,7 +94,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <%
   }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+  <p><h1><bean:message key="appointment.addappointment.msgAddFailure"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();
@@ -99,8 +102,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   <p></p>
   <hr width="90%"></hr>
 <form>
-<input type="button" value="Close this window" onClick="window.close();">
+<input type="button" value="<bean:message key="global.btnClose"/>" onClick="window.close();">
 </form>
 </center>
 </body>
-</html>
+</html:html>

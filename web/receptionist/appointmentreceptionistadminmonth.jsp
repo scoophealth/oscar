@@ -102,7 +102,10 @@
         myGrpBean.setProperty(rsgroup.getString("provider_no"), mygroupno);
       }
     } else { //find all providers
-      rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
+      // the following line works only on MySQL. Should not be used
+      // rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
+      rsgroup = apptMainBean.queryResults( "searchallprovider");
+
  	    while (rsgroup.next()) { 
  	      myGrpBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
  	    }
@@ -193,7 +196,7 @@ function refresh1() {
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="#" ONCLICK ="popupPage(550,800,'<%=resourcebaseurl%>');return false;" title="Manage Clinical Resource" >Resource</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.htm');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='Generate a billing report' onmouseover="window.status='Generate a billing report';return true">Billing</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -244,13 +247,13 @@ function refresh1() {
         <td ALIGN="RIGHT"><b>View:</b> 
   <select name="provider_no" onChange="selectprovider(this)">
   <option value="all"  >All Doctors</option>
-<% rsgroup = apptMainBean.queryResults("mygroup_no", "searchmygroupno");
+<% rsgroup = apptMainBean.queryResults("searchmygroupno");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> >GRP: <%=rsgroup.getString("mygroup_no")%></option>
 <% } %>
   
-<% rsgroup = apptMainBean.queryResults("last_name", "searchprovider");
+<% rsgroup = apptMainBean.queryResults("searchprovider");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("provider_no")%>" <%=mygroupno.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>

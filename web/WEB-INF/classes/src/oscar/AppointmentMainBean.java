@@ -144,7 +144,13 @@ public class AppointmentMainBean {
    	rs = dbPH.queryResults(sqlQuery, aKeyword, nKeyword);
   	return rs;
   }
-   
+
+    /* This method is called by querys that dont need to se a PreparedStatement */
+    public ResultSet queryResults(String dboperation) throws Exception {
+      String sqlQuery = dbSQL.getDef(dboperation);
+      return dbPH.queryResults(sqlQuery);
+    }
+
   // Don't forget to clean up!
   public void closePstmtConn() throws SQLException {
     dbPH.closePstmt();

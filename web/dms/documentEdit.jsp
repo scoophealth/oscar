@@ -1,4 +1,6 @@
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
@@ -17,9 +19,9 @@ GregorianCalendar now=new GregorianCalendar();
     rslocal = null;
 
 %>
-<html>
+<html:html locale="true">
 <head>
-<title>DOCUMENT MANAGEMENT SYSTEM</title>
+<title><bean:message key="dms.documentEdit.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -47,7 +49,7 @@ function rs(n,u,w,h,x) {
 var awnd=null;
 function ScriptAttach() {
   f0 = escape(document.aDoc.docfilename.value);
-  awnd=rs('att','../dms/zadddocument.htm' ,400,200,1);
+  awnd=rs('att','../dms/zadddocument.jsp' ,400,200,1);
   awnd.focus();
 }
 //-->
@@ -58,7 +60,7 @@ function ScriptAttach() {
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ADD DOCUMENT</font></th>
+    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="dms.documentEdit.msgAddDocument"/></font></th>
   </tr>
 </table>
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7"  >
@@ -69,8 +71,7 @@ function ScriptAttach() {
           <p>&nbsp;</p>
           <table width="80%" border="1" cellspacing="0" cellpadding="0">
                   <tr> 
-                    <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Document 
-                      Description</font></td>
+                    <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.documentEdit.formDocDesc"/></font></td>
                     <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                       <input type="text" name="docdesc"  value="<%=request.getParameter("desc")%>" size="20">
                                             <input type="hidden" name="document_no"  value="<%=request.getParameter("document_no")%>" size="20">
@@ -78,11 +79,10 @@ function ScriptAttach() {
                       </font></td>
             </tr>
                    <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Document 
-                Type</font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.documentEdit.formDocType"/></font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <select name="doctype">     
-                  <option value="">Select Type</option>
+                  <option value=""><bean:message key="dms.documentEdit.formSelType"/></option>
                   <% 
                     ResultSet rsdemo2 = null;
 		  	   
@@ -104,16 +104,15 @@ function ScriptAttach() {
             </tr>
 
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Update
-                Date</font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.documentEdit.formDate"/></font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="docdate" readonly value="<%=nowDate%>" size="20" >
                 </font></td>
             </tr>
                    <tr> 
-	                 <td colspan="2"><input type=submit name=submit value="Change">  <input type="button" name="Button" value="Cancel" onclick=self.close();></td>
+	                 <td colspan="2"><input type="submit" name="submit" value="<bean:message key="dms.documentEdit.btnChange"/>">  <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick=self.close();></td>
             </tr>
   </form>
 </table>
 </body>
-</html>
+</html:html>

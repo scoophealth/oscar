@@ -28,17 +28,17 @@
 <%
   String [][] dbQueries=new String[][] {
     {"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by ?"}, 
-    {"search_group", "select * from mygroup group by mygroup_no order by ?"}, 
+    {"search_group", "select * from mygroup group by mygroup_no order by mygroup_no"}, 
     {"drop_reporttemp", "DROP TABLE ?" }, 
     {"create_reporttemp", "create table reporttemp ( edb date not null,last_name varchar(30) not null,first_name varchar(30) not null,family_doctor varchar(20) not null,address varchar(60),phone varchar(20))" }, 
     {"delete_reporttemp", "delete from reporttemp where demographic_no like ? " }, 
     {"add_reporttemp", "insert into reporttemp (demographic_no, edb,demo_name,provider_no,address) values(?,?,?,?,?)" },
     {"search_reporttemp", "select * from reporttemp where edb >= ? order by ? desc limit ?, ?" }, 
 
-	{"search_form_aredb", "select * from form where demographic_no = ? and form_name like ? order by form_date desc, form_time desc limit 0, 1" }, 
-    {"search_form_demo", "select demographic_no from form group by ?"},
+	{"search_form_aredb", "select * from form where demographic_no = ? and form_name like ? order by form_date desc, form_time desc limit 1 offset 0" }, 
+    {"search_form_demo", "select demographic_no from form group by demographic_no"},
 
-    {"search_demo_active", "select * from demographic where end_date = \"0000-00-00\" order by ? limit ?, ?"},
+    {"search_demo_active", "select * from demographic where end_date = \"0000-00-00\" order by last_name limit ? offset ?"},
   };
 
   reportMainBean.doConfigure(dbParams,dbQueries);

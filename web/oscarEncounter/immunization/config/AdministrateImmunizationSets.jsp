@@ -40,7 +40,7 @@ immuSets.estImmunizationVecs();
 
 <head>
 <title>
-Administrate Immunization Sets
+<bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.title"/>
 </title>
 <html:base/>
 
@@ -115,7 +115,7 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                immunizations
+                <bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.msgImm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -127,7 +127,7 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -140,10 +140,10 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
                  <table border=0 cellspacing=1>
                     <tr>
                             <th>
-                            Immunization Set Name
+                            <bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.msgImmName"/>
                             </th>
                             <th>
-                            Date Created
+                            <bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.msgDateCreated"/>
                             </th>
                     </tr>
                     <%for ( int i = 0; i < immuSets.setNameVec.size();i++){
@@ -165,8 +165,8 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
                     <%}%>
                 </table>
                 <br/>
-                <a href="CreateImmunizationSetInit.jsp">Add New</a>
-                <a href="javascript:window.close()">Close</a>
+                <a href="CreateImmunizationSetInit.jsp"><bean:message key="oscarEncounter.immunization.config.administrativeImmunizationSets.btnAddNew"/></a>
+                <a href="javascript:window.close()"><bean:message key="global.btnClose"/></a>
             </td>
         </tr>
         <tr>

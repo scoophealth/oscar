@@ -58,7 +58,7 @@ String formattedDate = year+"/"+mon+"/"+day;
 
 <head>
 <title>
-<bean:message key="ectOscarConsultationRequest.title"/>
+<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -342,7 +342,7 @@ function rs(n,u,w,h,x){
 function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=20,left=20";
-  var popup=window.open(varpage, "oscarCal", windowprops);
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCal"/>", windowprops);
 
   if (popup != null) {
     if (popup.opener == null) {
@@ -385,6 +385,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 
                 System.out.println("this is from in the form setter "+ consultUtil.patientName);
 
+
         }else if(request.getAttribute("validateError") == null){
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
@@ -400,15 +401,15 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
         <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
+        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
+        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
+        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
         </td>
     </tr>
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><bean:message key="ectOscarConsultationRequest.title"/></p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title"/></p>
         </td>
     </tr>
 
@@ -421,7 +422,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             <table>
                 <tr >
                     <td class="tite4" colspan="2" >
-                    Status
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus"/>
                     </td>
                 </tr>
                 <tr >
@@ -432,7 +433,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                                  <html:radio property="status" value="1"/>
                               </td>
                               <td class="stat">
-                                 Nothing:
+                                 <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNoth"/>:
                               </td>
                            </tr>
                         </table>
@@ -446,7 +447,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                                 <html:radio property="status" value="2"/>
                             </td>
                             <td class="stat">
-                                Pending Specialist Callback
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSpecCall"/>
                             </td>
                           </tr>
                        </table>
@@ -460,7 +461,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                                 <html:radio property="status" value="3"/>
                             </td>
                             <td class="stat">
-                                Pending Patient Callback
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatCall"/>
                             </td>
                           </tr>
                       </table>
@@ -474,7 +475,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                                 <html:radio property="status" value="4"/>
                             </td>
                             <td class="stat">
-                                Completed
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCompleted"/>
                             </td>
                           </tr>
                       </table>
@@ -494,7 +495,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             <table border=0 width="100%">
             <tr>
                 <td class="tite4">
-                    Referral Date:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate"/>:
                 </td>
                 <td align="right" class="tite1">
                     <%if ( request.getAttribute("id") != null) {%>
@@ -506,11 +507,11 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                    Service:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService"/>:
                 </td>
                 <td align="right" class="tite1">
                     <html:select property="service" onchange="fillSpecialistSelect(this);">
-    					<option>------ Select Service ------</option>
+    					<option>------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
 					    <option/>
 				    	<option/>
 			    		<option/>
@@ -520,11 +521,11 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                    Consultant:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons"/>:
                 </td>
                 <td align="right" class="tite2">
                     <html:select property="specialist" size="1" onchange="GetExtensionOn(this)">
-		    		    <option value="-1">--- Select Specialist ---</option>
+		    		    <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
     					<option/>
 	    				<option/>
 		    			<option/>
@@ -534,19 +535,19 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
 	    <tr>
 	        <td class="tite4">
-                   Urgency
+                   <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency"/>
                 </td>
                 <td align="right" class="tite2">
                     <html:select property="urgency">
-                         <html:option value="1">Urgent</html:option>
-                         <html:option value="2">Non-Urgent</html:option>
-                         <html:option value="3">Return</html:option>
+                         <html:option value="1"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent"/></html:option>
+                         <html:option value="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent"/></html:option>
+                         <html:option value="3"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn"/></html:option>
                     </html:select>
                 </td>
             </tr>
             <tr>
                 <td class="tite4">
-                    Phone:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPhone"/>:
                 </td>
                 <td align="right" class="tite2">
                     <input type="text" name="phone" class="righty"/>
@@ -554,7 +555,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4" >
-                    Fax:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formFax"/>:
                 </td>
                 <td align="right" class="tite3">
                     <input type="text" name="fax" class="righty"/>
@@ -562,7 +563,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4" >
-                    Address:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAddr"/>:
                 </td>
                 <td align="right" class="tite3">
                     <textarea name="address" cols=20></textarea>
@@ -570,20 +571,20 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-              <a href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')">Appointment Date:</a>
+              <a href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate"/>:</a>
    
                 </td>
                 <td align="right" class="tite3">
                     <table bgcolor="white">
                     <tr>
                         <th class="tite2">
-                        Year
+                        <bean:message key="global.year"/>
                         </th>
                         <th class="tite2">
-                        Mon
+                        <bean:message key="global.month"/>
                         </th>
                         <th class="tite2">
-                        Day
+                        <bean:message key="global.day"/>
                         </th>
                     </tr>
                     <tr>
@@ -617,7 +618,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                    Appointment Time:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime"/>:
                 </td>
                 <td align="right" class="tite3">
                     <table>
@@ -657,7 +658,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             <table border=0 width="100%" bgcolor="white">
             <tr>
                 <td class="tite4">
-                Patient:
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatient"/>:
                 </td>
                 <td class="tite1">
                     <%=consultUtil.patientName%>
@@ -665,7 +666,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                Address:
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgAddress"/>:
                 </td>
                 <td class="tite1">
                     <%=consultUtil.patientAddress%>
@@ -673,7 +674,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                Tel.No.:
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPhone"/>:
                 </td >
                 <td class="tite2">
                     <%=consultUtil.patientPhone%>
@@ -681,7 +682,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                Birthdate:
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgBirthDate"/>:
                 </td>
                 <td class="tite2">
                     <%=consultUtil.patientDOB%>
@@ -689,7 +690,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                Sex:
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSex"/>:
                 </td>
                 <td class="tite3">
                     <%=consultUtil.patientSex%>
@@ -697,7 +698,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                Health Card No.:
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgHealthCard"/>:
                 </td>
                 <td class="tite3">
                     <%=consultUtil.patientHealthNum%>&nbsp;<%=consultUtil.patientHealthCardVersionCode%>&nbsp;<%=consultUtil.patientHealthCardType%>
@@ -713,11 +714,11 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </tr>
             <tr>
                 <td class="tite4">
-                    Send to:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSendTo"/>:
                 </td>
                 <td class="tite3">
                     <html:select property="sendTo">
-                        <html:option value="-1">---- Teams ----</html:option>
+                        <html:option value="-1">---- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgTeams"/> ----</html:option>
                         <% for (int i =0; i < consultUtil.teamVec.size();i++){
                             String te = (String) consultUtil.teamVec.elementAt(i);
                         %>
@@ -737,7 +738,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            Reason for Consultation:
+            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formReason"/>:
             </td>
        </tr>
        <tr>
@@ -747,7 +748,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            Pertinent clinical information:
+            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf"/>:
             </td>
        </tr>
        <tr>
@@ -757,7 +758,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            Significant concurrent problems:
+            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems"/>:
             </td>
        </tr>
        <tr>
@@ -767,7 +768,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            Current Medications:
+            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
             </td>
        </tr>
        <tr>
@@ -777,7 +778,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            Allergies:
+            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies"/>:
             </td>
        </tr>
        <tr>
@@ -787,7 +788,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            Appointment Notes
+            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes"/>
             </td>
        </tr>
        <tr>
@@ -797,12 +798,14 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
        </tr>
        <tr>
             <td colspan=2>
+	        <input type="hidden" name="submission" value="">
                 <%if (request.getAttribute("id") != null){ %>
-                <input type="submit" name="submission" value="Update Consultation Request"/>
-                <input type="submit" name="submission" value="Update Consultation Request And Print Preview"/>   
+      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
                 <%}else{%>
-                <input type="submit" name="submission" value="Submit Consultation Request"/>
-                <input type="submit" name="submission" value="Submit Consultation Request And Print Preview"/>
+      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+
                 <%}%>
             </td>
        </tr>

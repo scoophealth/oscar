@@ -28,6 +28,9 @@
     <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
 <!--/oscarMessenger Code block -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
   String curUser_no, curProvider_no,userfirstname,userlastname,mygroupno;
@@ -37,9 +40,9 @@
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
   mygroupno = (String) session.getAttribute("groupno");  
-  int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
-  int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
-  int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
+  int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
+  int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
+  int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
   int view=0;
   String providerview = request.getParameter("providerview")==null?(mygroupno.equals(".default")?curProvider_no:("_grp_"+mygroupno)):request.getParameter("providerview") ;
   //String providerview = request.getParameter("providerview")==null?curProvider_no:request.getParameter("providerview") ;
@@ -61,9 +64,9 @@
   int curYear = now.get(Calendar.YEAR); //curYear should be the real now date
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
-  int year = Integer.parseInt(request.getParameter("year"));
-  int month = Integer.parseInt(request.getParameter("month"));
-  int day = Integer.parseInt(request.getParameter("day"));
+  int year = Integer.parseInt((request.getParameter("year")).trim());
+  int month = Integer.parseInt((request.getParameter("month")).trim());
+  int day = Integer.parseInt((request.getParameter("day")).trim());
   String strYear=null, strMonth=null, strDay=null;
   String strDayOfWeek=null;
   String[] arrayDayOfWeek = new String[] {"Sun","Mon","Tue","Wed","Thu","Fri","Sat" };
@@ -107,9 +110,9 @@
   }
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>Provider Appointment Access</title>
+<title><bean:message key="provider.appointmentprovideradminmonth.title"/></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
@@ -205,7 +208,7 @@ function refresh1() {
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="Resources" onmouseover="window.status='View Resources';return true">Resource</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.htm');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='Generate a report' OnMouseOver="window.status='Generate a report' ; return true">Report</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -270,13 +273,13 @@ function refresh1() {
         <td ALIGN="RIGHT" >
   <select name="provider_no" onChange="selectprovider(this)">
   <option value="all" <%=providerview.equals("all")?"selected":""%> >All Providers</option>
-<% rsgroup = apptMainBean.queryResults("mygroup_no", "searchmygroupno");
+<% rsgroup = apptMainBean.queryResults("searchmygroupno");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=providerview.equals("_grp_"+rsgroup.getString("mygroup_no"))?"selected":""%> >GRP: <%=rsgroup.getString("mygroup_no")%></option>
 <% } %>
   
-<% rsgroup = apptMainBean.queryResults("last_name", "searchprovider");
+<% rsgroup = apptMainBean.queryResults("searchprovider");
  	 while (rsgroup.next()) { 
  	   providerNameBean.setDef(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
 %>
@@ -497,4 +500,4 @@ function refresh1() {
 </table>
 
 </body>
-</html>
+</html:html>

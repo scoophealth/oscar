@@ -146,7 +146,7 @@ public class DBPreparedHandler  {
     return (rs);
   }
   synchronized public ResultSet queryResults(String preparedSQL) throws SQLException {
-  	stmt = conn.createStatement();
+    stmt = conn.createStatement();
     rs=stmt.executeQuery(preparedSQL);
     return rs;
   }

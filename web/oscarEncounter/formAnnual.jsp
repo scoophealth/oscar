@@ -24,12 +24,15 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page language="java"%>
 <%@ page import="oscar.oscarEncounter.data.EctPatientData" %>
-<html>
+<html:html locale="true">
 <head>
 <title>
-Annual Health Review
+<bean:message key="oscarEncounter.formAnnual.title"/>
 </title>
 </head>
 
@@ -59,4 +62,4 @@ function redirect()
 
 <body onLoad="javascript:redirect();">
 </body>
-</html>
+</html:html>

@@ -24,7 +24,7 @@ GregorianCalendar now=new GregorianCalendar();
 %>
 <html>
 <head>
-<title>DOCUMENT MANAGEMENT SYSTEM</title>
+<title><bean:message key="dms.documentList.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -62,9 +62,9 @@ function popPage(url) {
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr bgcolor="#486ebd">
      <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">DOCUMENT ACTIVITY LIST </font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Done' onClick='closeit()'></th>
+		<input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'> </th> 
+    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"><bean:message key="dms.documentList.msgDocActivity"/> </font></th>
+      <th align='RIGHT'><input type='button' name='close' value='<bean:message key="global.btnClose"/>' onClick='closeit()'></th>
   </tr>
 </table>
 <script LANGUAGE="JavaScript">
@@ -79,11 +79,11 @@ function popPage(url) {
  
           <table width="100%" border="1" cellspacing="0" cellpadding="0">  
 <tr>
-          <td width="34%">Document Description</td>
-          <td width="15%">Document Type</td>
-          <td width="17%">Creator</td>
-          <td width="21%">Updatedate</td> 
-          <td width="13%">Status</td>
+          <td width="34%"><bean:message key="dms.documentList.msgDocDesc"/></td>
+          <td width="15%"><bean:message key="dms.documentList.msgDocType"/></td>
+          <td width="17%"><bean:message key="dms.documentList.msgCreator"/></td>
+          <td width="21%"><bean:message key="dms.documentList.msgUpdate"/></td> 
+          <td width="13%"><bean:message key="dms.documentList.msgStatus"/></td>
   </tr>
   
   <%String creator="%", docfilename="",doctype="", docdesc="", dispDesc="", dispType="", dispFunction="", dispCreator="", dispUpdatedate="", dispFilename="", dispStatus="";
@@ -151,7 +151,7 @@ function popPage(url) {
 </table>
 <br>
 <form>
-  <input type="button" name="Button" value="Done - Close Window" onclick=closeit();>
+  <input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onclick=closeit();>
 </form>
 </body>
-</html>
+</html:html>

@@ -25,6 +25,10 @@
 -->
 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
@@ -59,9 +63,9 @@ GregorianCalendar now=new GregorianCalendar();
    proOHIP = rslocal.getString("provider_no");
 }
 %>
-<html>
+<html:html locale="true">
 <head>
-<title>DOCUMENT MANAGEMENT SYSTEM</title>
+<title><bean:message key="dms.addDocument.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -89,7 +93,7 @@ function rs(n,u,w,h,x) {
 var awnd=null;
 function ScriptAttach() {
   f0 = escape(document.aDoc.docfilename.value);
-  awnd=rs('att','../dms/zadddocument.htm' ,400,200,1);
+  awnd=rs('att','../dms/zadddocument.jsp' ,400,200,1);
   awnd.focus();
 }
 //-->
@@ -100,7 +104,7 @@ function ScriptAttach() {
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ADD DOCUMENT</font></th>
+    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="dms.addDocument.msgAddDocument"/></font></th>
   </tr>
 </table>
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7"  >
@@ -114,37 +118,28 @@ function ScriptAttach() {
               <td colspan="3"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
             </tr>
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Function</font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.addDocument.msgFunction"/></font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="function" value="<%=request.getParameter("function")%> " size="20">
                 </font></td>
               <td rowspan="8" width="31%" valign="middle"> 
-                <p><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000066">Instruction:<br>
-                  1. click upload file<br>
-                  2. select a file to upload<br>
-                  3. click &quot;upload&quot; button<br>
-                  4. once the file uploaded, click &quot;done&quot;<br>
-                  5. The file name will appear <br>
-                  6. Select document type<br>
-                  7. Enter document description<br>
-                  8. click submit, done.</font></p>
+                <p><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000066"><bean:message key="dms.addDocument.msgInstructionTitle"/><br>
+                  <bean:message key="dms.addDocument.msgInstructions"/></font></p>
                 <p><br>
                 </p>
                 </td>
             </tr>
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Function 
-                ID</font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.addDocument.msgID"/></font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="functionid" value="<%=request.getParameter("functionid")%>" size="20">
                 </font></td>
             </tr>
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Document 
-                Type</font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.addDocument.msgDocType"/></font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <select name="doctype">
-                  <option value="">Select Type</option>
+                  <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
                   <%
                     ResultSet rsdemo2 = null;
 		  	   
@@ -165,21 +160,19 @@ function ScriptAttach() {
                 </font></td>
             </tr>
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Document 
-                Description</font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.addDocument.formDocDesc"/></font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="docdesc"  size="20">
                 </font></td>
             </tr>
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Create 
-                Date</font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="dms.addDocument.msgDate"/></font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="docdate" readonly value="<%=nowDate%>" size="20" >
                 </font></td>
             </tr>
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000" size="1">Creator 
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000" size="1"><bean:message key="dms.addDocument.msgCreator"/>
                 </font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="dispcreator"  readonly value="<%=proLast%>, <%=proFirst%>" size="20">
@@ -192,11 +185,11 @@ function ScriptAttach() {
                 Name </font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="docfilename" value=""  size="20" >
-                <a href=javascript:ScriptAttach()>upload file</a></font></td>
+                <a href=javascript:ScriptAttach()><bean:message key="dms.addDocument.btnUpload"/></a></font></td>
             </tr>
             <tr> 
               <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF" size="1"><b><i> 
-                <input type="SUBMIT" value="Submit" name="SUBMIT">
+                <input type="SUBMIT" value="Submit" name="<bean:message key="dms.addDocument.btnSubmit"/>">
                 </i></b></font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
             </tr>
           </table>
@@ -210,7 +203,7 @@ function ScriptAttach() {
 <br>
 <br>
 <form>
-  <input type="button" name="Button" value="Cancel" onclick=self.close();>
+  <input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onclick=self.close();>
 </form>
 </body>
-</html>
+</html:html>

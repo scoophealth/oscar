@@ -4,13 +4,15 @@
   String curUser_no = (String) session.getAttribute("user");
   String userfirstname = (String) session.getAttribute("userfirstname");
   String userlastname = (String) session.getAttribute("userlastname");
-  int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
+  int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
 
   boolean bFirstDisp=true; //this is the first time to display the window
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
   String duration = request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin) ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
@@ -22,10 +24,8 @@
   addApptBean.doConfigure(dbParams,dbQueries);
 %>
 
-<html>
-<head><title>ADD APPOINTMENT</title></head>
-<meta http-equiv="Cache-Control" content="no-cache" >
-
+<html:html locale="true">
+<head><title><bean:message key="appointment.addappointment.title"/></title>
 
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
@@ -41,7 +41,7 @@ function onBlockFieldFocus(obj) {
   obj.blur();
   document.ADDAPPT.keyword.focus();
   document.ADDAPPT.keyword.select();
-  window.alert("Please type in name in the Name field and then click 'Search' button.");
+  window.alert(<bean:message key="Appointment.msgFillNameField"/>);
 }
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
@@ -64,10 +64,10 @@ function checkTypeNum(typeIn) {
 }
 function checkTimeTypeIn(obj) {
   if(!checkTypeNum(obj.value) ) {
-	  alert ("You must type in a number in the field.");
+	  alert (<bean:message key="Appointment.msgFillTimeField"/>);
 	} else {
 	  if(obj.value.indexOf(':')==-1) {
-	    if(obj.value.length < 3) alert("You must type in a right number in the field.");
+	    if(obj.value.length < 3) alert(<bean:message key="Appointment.msgFillValidTimeField"/>);
 	    obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
 	  } 
 	}
@@ -96,7 +96,7 @@ function calculateEndTime() {
   document.ADDAPPT.end_time.value = shour +":"+ smin;
   
   if(shour > 23) {
-    alert("Please check Start Time/duration!!!");
+    alert(<bean:message key="Appointment.msgCheckDuration"/>);
     return false;
   }
   
@@ -105,9 +105,11 @@ function calculateEndTime() {
     document.ADDAPPT.status.value = 'N' ;
   }
 }
-
 // stop javascript -->
 </script>
+
+</head>
+<meta http-equiv="Cache-Control" content="no-cache" >
 
 <%
   SimpleDateFormat fullform = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
@@ -137,8 +139,10 @@ function calculateEndTime() {
 %>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0"  leftmargin="0" rightmargin="0">
 <FORM NAME = "ADDAPPT" METHOD="post" ACTION="appointmentcontrol.jsp" onsubmit="return(calculateEndTime())">
+<INPUT TYPE="hidden" NAME="displaymode" value="">
+
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica">MAKE AN APPOINTMENT</font></th></tr>
+  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="appointment.addappointment.msgMainLabel"/></font></th></tr>
 </table>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -147,14 +151,14 @@ function calculateEndTime() {
         <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> 
-              <div align="right"><font face="arial"> Date <font size='-1' color='brown'>(<%=dateString1%>)</font>:</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formDate"/><font size='-1' color='brown'>(<%=dateString1%>)</font>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=dateString2%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
             <td width="5%" ></td>
             <td width="20%"> 
-              <div align="right"><font face="arial"> Status :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formStatus"/>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="status" VALUE="<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
@@ -162,14 +166,14 @@ function calculateEndTime() {
           </tr>
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> 
-              <div align="right"><font face="arial"><font face="arial"> Start Time :</font></font></div>
+              <div align="right"><font face="arial"><font face="arial"><bean:message key="Appointment.formStartTime"/>:</font></font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="start_time" VALUE="<%=request.getParameter("start_time")%>" WIDTH="25" HEIGHT="20" border="0"  onChange="checkTimeTypeIn(this)">
             </td>
             <td width="5%" ></td>
             <td width="20%" > 
-              <div align="right"><font face="arial"> Type :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formType"/>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="type" VALUE="<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
@@ -177,7 +181,7 @@ function calculateEndTime() {
           </tr>
           <tr valign="middle" BGCOLOR="#EEEEFF" > 
             <td width="20%"  align="right"> 
-              <font face="arial"> Duration<font size='-2'>(min)</font>:</font>
+              <font face="arial"><bean:message key="Appointment.formDuration"/>:</font>
               <!--font face="arial"> End Time :</font-->
             </td>
             <td width="20%"> 
@@ -192,7 +196,7 @@ function calculateEndTime() {
           </tr>
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
             <td width="20%"> 
-              <div align="right"><font face="arial"> Name :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formName"/>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="keyword" VALUE="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">
@@ -206,7 +210,7 @@ function calculateEndTime() {
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
               <!--input type="hidden" name="displaymode" value="Search " -->
-              <INPUT TYPE="submit" NAME="displaymode" VALUE="Search "></font></div>
+              <INPUT TYPE="button" onclick="document.forms['ADDAPPT'].displaymode.value='Search '; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key="appointment.addappointment.btnSearch"/>"></font></div>
             </td>
             <td width="20%" > 
               <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>" width="25" height="20" border="0" hspace="2">
@@ -214,14 +218,14 @@ function calculateEndTime() {
           </tr>
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
             <td width="20%"> 
-              <div align="right"><font face="arial">Reason :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formReason"/>:</font></div>
             </td>
             <td width="20%"><font face="Times New Roman">
               <textarea name="reason"  tabindex="2" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("reason").equals("")?"":request.getParameter("reason")%></textarea>
               </font> </TD>
             <td width="5%"><font face="Times New Roman"> </font></td>
             <td width="20%"> 
-              <div align="right"><font face="arial">Notes :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formNotes"/>:</font></div>
             </td>
             <td width="20%"><font face="Times New Roman">
               <textarea name="notes"  tabindex="3" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("notes").equals("")?"":request.getParameter("notes")%></textarea>
@@ -229,14 +233,14 @@ function calculateEndTime() {
           </tr>
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> 
-              <div align="right"><font face="arial">Location :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formLocation"/>:</font></div>
             </td>
             <td width="20%"> 
               <input type="TEXT" name="location"  tabindex="4" value="<%=bFirstDisp?"":request.getParameter("location").equals("")?"":request.getParameter("location")%>" width="25" height="20" border="0" hspace="2">
             </TD>
             <td width="5%" ></td>
             <td width="20%"> 
-              <div align="right"><font face="arial">Resources :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formResources"/>:</font></div>
             </td>
             <td width="20%"> 
               <input type="TEXT" name="resources"  tabindex="5" value="<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":request.getParameter("resources")%>" width="25" height="20" border="0" hspace="2">
@@ -244,14 +248,14 @@ function calculateEndTime() {
           </tr>
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> 
-              <div align="right"><font face="arial">Creator :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formCreator"/>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="user_id" readonly VALUE='<%=bFirstDisp?(userlastname+", "+userfirstname):request.getParameter("user_id").equals("")?"Unknown":request.getParameter("user_id")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
             <td width="5%" ></td>
             <td width="20%"> 
-              <div align="right"><font face="arial">Date Time :</font></div>
+              <div align="right"><font face="arial"><bean:message key="Appointment.formDateTime"/>:</font></div>
             </td>
             <td width="20%"> <%
 				GregorianCalendar now=new GregorianCalendar();
@@ -276,17 +280,18 @@ function calculateEndTime() {
 <table width="100%" BGCOLOR="<%=deepcolor%>">
   <tr>
     <TD nowrap>
-        <INPUT TYPE="submit" NAME="displaymode" VALUE="Group Appt" >
+        <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/>" >
 <%
   if(dateString2.equals( inform.format(inform.parse(now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH))) ) 
      || dateString2.equals( inform.format(inform.parse(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DAY_OF_MONTH))) ) ) {
-    out.println("<INPUT TYPE='submit' NAME='displaymode' VALUE='Add Appt & PrintPreview' >") ;
+    org.apache.struts.util.MessageResources resources = org.apache.struts.util.MessageResources.getMessageResources("oscarResources");
+    %><INPUT TYPE="button" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintPreview'; document.forms['ADDAPPT'].submit();" VALUE="<bean:message key='appointment.addappointment.btnAddApptPrintPreview'/>"><%
   }
 %>        
-        <INPUT TYPE="submit" NAME="displaymode" tabindex="6" VALUE="Add Appointment" SIZE="7">
+        <INPUT TYPE="button" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'; document.forms['ADDAPPT'].submit();" tabindex="6" VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>" SIZE="7">
       </TD>
     <TD></TD>
-    <TD align="right"><INPUT TYPE = "RESET" VALUE = " Cancel " onClick="window.close();"></TD>
+    <TD align="right"><INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();"></TD>
   </tr>
 </TABLE>
 
@@ -297,19 +302,27 @@ function calculateEndTime() {
 	  rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_demographic_statusroster");
       while (rsdemo.next()) { 
 		  String patientStatus = rsdemo.getString("patient_status");
-          patientStatus = (patientStatus != null && !patientStatus.equalsIgnoreCase("AC")) ? 
+            if (patientStatus == null || patientStatus.equalsIgnoreCase("AC")) {
+               patientStatus = "";
+            }
+            String rosterStatus = rsdemo.getString("roster_status");
+            if (rosterStatus == null || rosterStatus.equalsIgnoreCase("RO")) {
+               rosterStatus = "";
+            }
+/*          patientStatus = (patientStatus != null && !patientStatus.equalsIgnoreCase("AC")) ? 
 			  (" Patient Status:<font color='yellow'>" + patientStatus + "</font>" ) : "";
 
 		  String rosterStatus = rsdemo.getString("roster_status");
           rosterStatus = (rosterStatus != null && !rosterStatus.equalsIgnoreCase("RO")) ?
 			  (" Roster Status:<font color='yellow'>" + rosterStatus + "</font> ") : "";
+*/
 
 		  if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
               String rsbgcolor = "BGCOLOR=\"orange\"" ;
 			  String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
 %>
 <table width="98%" <%=rsbgcolor%> border=0 align='center'>
-  <tr><td><font color='blue' title='<%=exp%>'> <b><%=patientStatus + " " + rosterStatus%></b></td>
+  <tr><td><font color='blue' title='<%=exp%>'> <b><bean:message key="Appointment.msgPatientStatus"/>:&nbsp;<font color='yellow'><%=patientStatus%></font>&nbsp;<bean:message key="Appointment.msgRosterStatus"/>:&nbsp;<font color='yellow'><%=rosterStatus%></font></b></td>
   </tr>
 </table>
 <% 
@@ -321,7 +334,7 @@ function calculateEndTime() {
 %>
 <p>
 <table width="98%" BGCOLOR="yellow" border=1 align='center'>
-  <tr><td><font color='red'>Alert: <b><%=rsdemo.getString("cust3")%></b></td>
+  <tr><td><font color='red'><bean:message key="Appointment.formAlert"/>: <b><%=rsdemo.getString("cust3")%></b></td>
   </tr>
 </table>
 
@@ -335,11 +348,18 @@ function calculateEndTime() {
 %>
 <table width="98%" BGCOLOR="<%=deepcolor%>" border=1 align='center'>
   <tr>
-    <TH><font color='red'><%=apptnum>1?"Double ++ ":"Double"%> Booking</TH>
+<%--    <TH><font color='red'><%=apptnum>1?"Double ++ ":"Double"%> Booking</font></TH>--%>
+    <TH><font color='red'>
+    <% if(apptnum>1) {
+         %><bean:message key='appointment.addappointment.msgBooking'/><%
+       } else {
+          %><bean:message key='appointment.addappointment.msgDoubleBooking'/><%
+       }
+     %></font></TH>
   </tr>
 </TABLE>
 
 <% } %>
 
 </body>
-</html>
+</html:html>

@@ -90,7 +90,7 @@ function checkInput() {
       <select name="delcode" >
 	<%
    ResultSet rsdemo = null;
-   rsdemo = scheduleMainBean.queryResults("code", "search_scheduletemplatecode");
+   rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
    while (rsdemo.next()) { 
 	%>
         <option value="<%=rsdemo.getString("code")%>"><%=rsdemo.getString("code")+" |"+rsdemo.getString("description")%></option>

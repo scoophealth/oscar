@@ -31,7 +31,7 @@
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-<title>Antenatal Psychosocial Health Assessment (ALPHA)</title>
+<title><bean:message key="oscarEncounter.formAlpha.title"/></title>
 <link rel="stylesheet" type="text/css" href="alphaStyle.css">
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
 <html:base/>
@@ -50,10 +50,10 @@
         }
         function onSave() {
             document.forms[0].submit.value="save";
-            return(confirm("Are you sure you want to save this form?"));
+            return(confirm("<bean:message key="oscarEncounter.formAlpha.msgWannaSave"/>"));
         }
         function onExit() {
-            if(confirm("Are you sure you wish to exit without saving your changes?")==true)
+            if(confirm("<bean:message key="oscarEncounter.formAlpha.msgWannaExit"/>")==true)
             {
                 window.close();
             }
@@ -61,7 +61,7 @@
         }
         function onSaveExit() {
             document.forms[0].submit.value="exit";
-            ret = confirm("Are you sure you wish to save and close this window?");
+            ret = confirm("<bean:message key="oscarEncounter.formAlpha.msgWannaSaveClose"/>");
             return ret;
         }
     </script>
@@ -83,170 +83,168 @@
 <table class="Head" class="hidePrint">
     <tr>
         <td align="left">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formAlpha.btnSave"/>" onclick="javascript:return onSave();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formAlpha.btnSaveExit"/>" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formAlpha.btnExit"/>" onclick="javascript:return onExit();"/>
+            <input type="button" value="<bean:message key="oscarEncounter.formAlpha.btnPrint"/>" onclick="javascript:return onPrint();"/>
         </td>
     </tr>
 </table>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr bgcolor="#486ebd">
-        <th align='CENTER'><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFFFF">ANTENATAL PSYCHOSOCIAL HEALTH ASSESSMENT (ALPHA)</font></th>
+        <th align='CENTER'><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFFFF"><bean:message key="oscarEncounter.formAlpha.msgAlpha"/></font></th>
     </tr>
 </table>
 <table width="100%" border="0" bgcolor="ivory">
     <tr bgcolor="#99FF99">
-        <td><b>FAMILY FACTORS</b></td>
+        <td><b><bean:message key="oscarEncounter.formAlpha.msgFamilyFactors"/></b></td>
         <td align="right"></td>
     </tr>
     <tr>
-        <td width="50%"><b>Social support (CA, WA, PD)</b>
-            <li><font size="-1">How does your partner/family feel about your pregnancy?</font></li>
-            <li><font size="-1">Who will be helping you when you go home with your baby?</font></li>
+        <td width="50%"><b><bean:message key="oscarEncounter.formAlpha.formSocialSupport"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgFamilyFeel"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgFormWhoHelp"/></font></li>
         </td>
         <td>
             <textarea name="socialSupport" style="width:100%" cols="40" rows="3"><%= props.getProperty("socialSupport", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td><b>Recent stressful life events (CA, WA, PD, PI)</b>
-            <li><font size="-1">What life changes have you experienced this year?</font></li>
-            <li><font size="-1">What changes are you planning during this pregnancy?</font></li>
+        <td><b><bean:message key="oscarEncounter.formAlpha.formRecentStressfulEvents"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgLifeChanges"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgPlanningChanges"/></font></li>
         </td>
         <td>
             <textarea name="lifeEvents" style="width:100%" cols="40" rows="3"><%= props.getProperty("lifeEvents", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td><b>Couple's relationship (CD, PD, WA, CA)</b>
-            <li><font size="-1">How would you describe your relationship with your partner?</font></li>
-            <li><font size="-1">What do you think your relationship will be like after the birth?</font><br></li>
+        <td><b><bean:message key="oscarEncounter.formAlpha.formCoupleRelationship"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgRelationship"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgRelationshipAfterBirth"/></font><br></li>
         </td>
         <td>
             <textarea name="coupleRelationship" style="width:100%" cols="40" rows="3"><%= props.getProperty("coupleRelationship", "") %></textarea>
         </td>
     </tr>
     <tr bgcolor="#99FF99">
-        <td colspan="2"><b>MATERNAL FACTORS</b></td>
+        <td colspan="2"><b><bean:message key="oscarEncounter.formAlpha.msgMaternalFactors"/></b></td>
     </tr>
     <tr>
-        <td valign="top"><b>Prenatal care (late onset) (WA)</b>
-            <li><font size="-1">First prenatal visit in third trimester? (check records)</font></li>
+        <td valign="top"><b><bean:message key="oscarEncounter.formAlpha.formPrenatal"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgPrenatalVisit"/></font></li>
         </td>
         <td>
             <textarea name="prenatalCare" style="width:100%" cols="40" rows="2"><%= props.getProperty("prenatalCare", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td valign="top"><b>Prenatal education (refusal or quit) (CA)</b>
-            <li><font size="-1">What are your plans for prenatal classes? </font></li>
+        <td valign="top"><b><bean:message key="oscarEncounter.formAlpha.formPrenatalEducation"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgPrenatalPlans"/> </font></li>
         </td>
         <td>
             <textarea name="prenatalEducation" style="width:100%" cols="40" rows="2"><%= props.getProperty("prenatalEducation", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td valign="top"> <b>Feelings toward pregnancy after 20 weeks (CA, WA) </b>
-            <li><font size="-1">How did you feel when you just found out you were pregnant?</font></li>
-            <li><font size="-1">How do you feel about it now?</font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formFeelingsTowardpregnancy"/> </b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgFellPregnant"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgFellAboutpregnant"/></font></li>
         </td>
         <td>
             <textarea name="feelingsRePregnancy" style="width:100%" cols="40" rows="2"><%= props.getProperty("feelingsRePregnancy", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td valign="top"> <b>Relationship with parents in childhood (CA)</b>
-            <li><font size="-1">How did you get along with your parents?</font></li>
-            <li><font size="-1">Did you feel loved by your parents?</font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formRelationshipWithParents"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgRelationshipWithParents"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgLovedByParents"/></font></li>
         </td>
         <td>
             <textarea name="relationshipParents" style="width:100%" cols="40" rows="2"><%= props.getProperty("relationshipParents", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td valign="top"> <b>Self esteem (CA, WA)</b>
-            <li><font size="-1">What concerns do you have about becoming/being a mother?</font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formSelfEsteem"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgSelfEsteemConcerns"/></font></li>
         </td>
         <td>
             <textarea name="selfEsteem" style="width:100%" cols="40" rows="2"><%= props.getProperty("selfEsteem", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td   valign="top"> <b>History of psychiatric/emotional problems (CA, WA, PD)</b>
-            <li> <font size="-1">Have you ever had emotional problems?</font></li>
-            <li><font size="-1">Have you ever seen a psychiatrist or therapist?</font></li>
+        <td   valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formEmotionalProblems"/></b>
+            <li> <font size="-1"><bean:message key="oscarEncounter.formAlpha.msgEmotioanlProblems"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgPsychiatrist"/></font></li>
         </td>
         <td>
             <textarea name="psychHistory" style="width:100%" cols="40" rows="2"><%= props.getProperty("psychHistory", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td   valign="top"> <b>Depression in this pregnancy (PD)</b>
-            <li><font size="-1">How has your mood been during this pregnancy? </font></li>
+        <td   valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formDepression"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgMood"/> </font></li>
         </td>
         <td>
             <textarea name="depression" style="width:100%" cols="40" rows="2"><%= props.getProperty("depression", "") %></textarea>
         </td>
     </tr>
     <tr bgcolor="#99FF99">
-        <td valign="top" colspan="2"><b>SUBSTANCE USE</b></td>
+        <td valign="top" colspan="2"><b><bean:message key="oscarEncounter.formAlpha.msgSubstanceUse"/></b></td>
     </tr>
     <tr>
-        <td valign="top"> <b>Alcohol/drug abuse (WA, CA)</b>
-            <li><font size="-1">How many drinks of alcohol do you have per week?</font></li>
-            <li><font size="-1">Are there times when you drink more than that?</font></li>
-            <li><font size="-1">Do you or your partner use recreational drugs?</font></li>
-            <li><font size="-1">Do you or your partner have a problem with alcohol or drugs?</font></li>
-            <li><font size="-1">Consider CAGE (<b>C</b>ut down, <b>A</b>nnoyed, <b>G</b>uilty, <b>E</b>ye opener)</font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formAlcohol"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgDrinksPerWeek"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgTimesDrinkMore"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgDrugsUse"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgPartnerAlcoholAndDrugs"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgCAGE"/></font></li>
         </td>
         <td>
             <textarea name="alcoholDrugAbuse" style="width:100%" cols="40" rows="5"><%= props.getProperty("alcoholDrugAbuse", "") %></textarea>
         </td>
     </tr>
     <tr bgcolor="#99FF99">
-        <td valign="top" colspan="2"><b>FAMILY VIOLENCE</b></td>
+        <td valign="top" colspan="2"><b><bean:message key="oscarEncounter.formAlpha.msgFamilyViolence"/></b></td>
     </tr>
     <tr>
-        <td valign="top"> <b>Woman or partner experienced or witnessed abuse <br>
-              (physical, emotional, sexual) (CA, WA)</b>
-            <li><font size="-1">What was your parents' relationship like?</font></li>
-            <li><font size="-1">Did your father ever scare or hurt your mother?</font></li>
-            <li><font size="-1">Did your parents ever scare or hurt you?</font></li>
-            <li><font size="-1">Were you ever sexually abused as a child?</font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.msgAbuse"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgRelationship"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgFatherViolence"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgParentsViolence"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgAbusedAsAChild"/></font></li>
         </td>
         <td>
             <textarea name="abuse" style="width:100%" cols="40" rows="5"><%= props.getProperty("abuse", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td valign="top"> <b>Current or past woman abuse (WA, CA, PD)</b><br>
-            <li><font size="-1">How do you and your partner solve arguments? </font></li>
-            <li><font size="-1">Do you ever feel frightened by what your partner says or does? </font></li>
-            <li><font size="-1">Have you ever been hit/pushed/slapped by a partner?</font></li>
-            <li><font size="-1">Has your partner ever humiliated you or psychologically abused you in other ways? </font></li>
-            <li><font size="-1">Have you ever been forced to have sex against your will? </font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formWomanAbuse"/></b><br>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgSolveArguments"/> </font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgFeelFrightened"/> </font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgBeenHit"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgHumiliated"/> </font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgForcedSex"/> </font></li>
         </td>
         <td>
             <textarea name="womanAbuse" style="width:100%" cols="40" rows="5"><%= props.getProperty("womanAbuse", "") %></textarea>
         </td>
     </tr>
     <tr style="page-break-before:always;">
-        <td valign="top"> <b>Previous child abuse by woman or partner (CA)</b>
-            <li><font size="-1">Do you/your partner have children not living with you? If so, why? </font></li>
-            <li><font size="-1">Have you ever had involvement with a child protection agency<br>
-                (ie Children's Aid Society)? </font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formPreviousChildAbuse"/></b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgDistantChild"/> </font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgChildProtectionAgency"/> </font></li>
         </td>
         <td>
             <textarea name="childAbuse" style="width:100%" cols="40" rows="2"><%= props.getProperty("childAbuse", "") %></textarea>
         </td>
     </tr>
     <tr>
-        <td valign="top"> <b>Child discipline (CA) </b>
-            <li><font size="-1">How were you disciplined as a child?</font></li>
-            <li><font size="-1">How do you think you will discipline your child?</font></li>
-            <li><font size="-1">How do you deal with your kids at home when they misbehave?</font></li>
+        <td valign="top"> <b><bean:message key="oscarEncounter.formAlpha.formChildDiscipline"/> </b>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgDiscilinedMother"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgHowWillDiscipline"/></font></li>
+            <li><font size="-1"><bean:message key="oscarEncounter.formAlpha.msgMisbehave"/></font></li>
         </td>
         <td>
             <textarea name="childDiscipline" style="width:100%" cols="40" rows="3"><%= props.getProperty("childDiscipline", "") %></textarea>
@@ -255,67 +253,67 @@
 </table>
 <table width="100%" border="0" bgcolor="ivory">
     <tr bgcolor="#99ff99">
-        <td align="center" colspan="6"><b>FOLLOW-UP PLAN</b></td>
+        <td align="center" colspan="6"><b><bean:message key="oscarEncounter.formAlpha.msgFollowUp"/></b></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="provCounselling" <%= props.getProperty("provCounselling", "") %>></td>
-        <td> Supportive counselling by provider</td>
+        <td> <bean:message key="oscarEncounter.formAlpha.formCounselling"/></td>
         <td><input type="checkbox" name="homecare" <%= props.getProperty("homecare", "") %>></td>
-        <td>Homecare</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formHomecare"/></td>
         <td><input type="checkbox" name="assaultedWomen" <%= props.getProperty("assaultedWomen", "") %>></td>
-        <td>Assaulted women's helpline / shelter / counselling</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formAssaultedWomen"/></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="addAppts" <%= props.getProperty("addAppts", "") %>></td>
-        <td>Additional prenatal appointments </td>
+        <td><bean:message key="oscarEncounter.formAlpha.form"/> </td>
         <td><input type="checkbox" name="parentingClasses" <%= props.getProperty("parentingClasses", "") %>></td>
-        <td>Parenting classes / parents' support group</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formParentingClasses"/></td>
         <td><input type="checkbox" name="legalAdvice" <%= props.getProperty("legalAdvice", "") %>></td>
-        <td>Legal advice</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formLegalAdvise"/></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="postpartumAppts" <%= props.getProperty("postpartumAppts", "") %>></td>
-        <td>Additional postpartum appointments</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formPospartumAppointments"/></td>
         <td><input type="checkbox" name="addictPrograms" <%= props.getProperty("addictPrograms", "") %>></td>
-        <td>Addiction treatment programs</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formAddictionTreatment"/></td>
         <td><input type="checkbox" name="cas" <%= props.getProperty("cas", "") %>></td>
-        <td>Children's Aid Society</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formChildrenAid"/></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="babyVisits" <%= props.getProperty("babyVisits", "") %>></td>
-        <td>Additional well baby visits </td>
+        <td><bean:message key="oscarEncounter.formAlpha.formBabyVisits"/> </td>
         <td><input type="checkbox" name="quitSmoking" <%= props.getProperty("quitSmoking", "") %>></td>
-        <td>Smoking cessation resources</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formSmokingCessation"/></td>
         <td><input type="checkbox" name="other1" <%= props.getProperty("other1", "") %>></td>
-        <td>Other:<input type="text" name="other1Name" value="<%= props.getProperty("other1Name", "")%>"></td>
+        <td><bean:message key="oscarEncounter.formAlpha.formOther"/>:<input type="text" name="other1Name" value="<%= props.getProperty("other1Name", "")%>"></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="publicHealth" <%= props.getProperty("publicHealth", "") %>></td>
-        <td>Public Health referral </td>
+        <td><bean:message key="oscarEncounter.formAlpha.formPublicHealth"/> </td>
         <td><input type="checkbox" name="socialWorker" <%= props.getProperty("socialWorker", "") %>></td>
-        <td>Social Worker</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formSocialWorker"/></td>
         <td><input type="checkbox" name="other2" <%= props.getProperty("other2", "") %>></td>
-        <td>Other:<input type="text" name="other2Name" value="<%= props.getProperty("other2Name", "") %>"></td>
+        <td><bean:message key="oscarEncounter.formAlpha.formOther"/>:<input type="text" name="other2Name" value="<%= props.getProperty("other2Name", "") %>"></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="prenatalEdu" <%= props.getProperty("prenatalEdu", "") %>></td>
-        <td>Prenatal education services </td>
+        <td><bean:message key="oscarEncounter.formAlpha.formPrenatalEducation"/> </td>
         <td><input type="checkbox" name="psych" <%= props.getProperty("psych", "") %>></td>
-        <td>Psychologist / Psychiatrist</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formPsychologist"/></td>
         <td><input type="checkbox" name="other3" <%= props.getProperty("other3", "") %>></td>
         <td>Other:<input type="text" name="other3Name" value="<%= props.getProperty("other3Name", "") %>"></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="nutritionist" <%= props.getProperty("nutritionist", "") %>></td>
-        <td>Nutritionist </td>
+        <td><bean:message key="oscarEncounter.formAlpha.formNutrucionist"/> </td>
         <td><input type="checkbox" name="therapist" <%= props.getProperty("therapist", "") %>></td>
-        <td>Psychotherapist / marital / family therapist</td>
+        <td><bean:message key="oscarEncounter.formAlpha.formFamilyTherapist"/></td>
         <td><input type="checkbox" name="other4" <%= props.getProperty("other4", "") %>></td>
-        <td>Other:<input type="text" name="other4Name" value="<%= props.getProperty("other4Name", "") %>"></td>
+        <td><bean:message key="oscarEncounter.formAlpha.formOther"/>:<input type="text" name="other4Name" value="<%= props.getProperty("other4Name", "") %>"></td>
     </tr>
     <tr>
         <td><input type="checkbox" name="resources" <%= props.getProperty("resources", "") %>></td>
-        <td>Community resources / mothers' group </td>
+        <td><bean:message key="oscarEncounter.formAlpha.formMothersGroup"/> </td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -324,7 +322,7 @@
 </table>
 <table width="100%" border="0" bgcolor="ivory">
 	<tr>
-        <td><b>COMMENTS</b>:<br>
+        <td><b><bean:message key="oscarEncounter.formAlpha.formComments"/></b>:<br>
             <textarea name="comments" style="width:100%" cols="80"><%= props.getProperty("comments", "") %></textarea>
         </td>
 
@@ -334,10 +332,10 @@
 <table class="Head" class="hidePrint">
     <tr>
         <td align="left">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formAlpha.btnSave"/>" onclick="javascript:return onSave();" />
+            <input type="submit" value="<bean:message key="oscarEncounter.formAlpha.btnSaveExit"/>" onclick="javascript:return onSaveExit();"/>
+            <input type="submit" value="<bean:message key="oscarEncounter.formAlpha.btnExit"/>" onclick="javascript:return onExit();"/>
+            <input type="button" value="<bean:message key="oscarEncounter.formAlpha.btnPrint"/>" onclick="javascript:return onPrint();"/>
         </td>
     </tr>
 </table>

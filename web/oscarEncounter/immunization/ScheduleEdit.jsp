@@ -30,10 +30,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<html>
+<html:html locale="true">
 <head>
 <title>
-Record Immunization
+<bean:message key="oscarEncounter.immunization.ScheduleEdit.title"/>
 </title>
 <style type="text/css">
 .grey
@@ -129,7 +129,7 @@ String node = request.getParameter("node").toString();
         }
         catch (ex)
         {
-            alert('Invalid date. Please fix the value and resubmit.');
+            alert('<bean:message key="oscarEncounter.immunization.ScheduleEdit.msgInvalidDate"/>.');
             return false;
         }
     }
@@ -257,7 +257,7 @@ String node = request.getParameter("node").toString();
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                record immunization
+                <bean:message key="oscarEncounter.immunization.ScheduleEdit.msgRecordImm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBarShort">
@@ -268,7 +268,7 @@ String node = request.getParameter("node").toString();
                         <td>
                         </td>
                         <td style="text-align:right" NOWRAP>
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -283,51 +283,51 @@ String node = request.getParameter("node").toString();
                         <tr>
                             <td style="font-weight:bold">
                                 <input type="radio" name="chkStatus" onclick="javascript:changeStatus(0);" value="0" checked="checked"></input>
-                                    <span onclick="chkStatus[0].click()">Not Given</span>
+                                    <span onclick="chkStatus[0].click()"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgNotGiven"/></span>
                             </td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold">
                                 <input type="radio" name="chkStatus" onclick="javascript:changeStatus(1);" value="1"></input>
-                                    <span onclick="chkStatus[1].click()">Immunization Given</span>
+                                    <span onclick="chkStatus[1].click()"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgGivn"/></span>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <table style="margin-left:50px; border-width:2px; border-style:solid;">
                                     <tr>
-                                        <td align="right" width="120px">Given Date: </td>
+                                        <td align="right" width="120px"><bean:message key="oscarEncounter.immunization.ScheduleEdit.formGDate"/>: </td>
                                         <td>
                                             <input type="hidden" id="givenDate" />
                                             <input type="text" id="givenYear" style="width:50px" maxlength=4 />
                                             <b>-</b>
                                             <select id="givenMonth">
                                                 <option value="0"></option>
-                                                <option value="1">January</option>
-                                                <option value="2">February</option>
-                                                <option value="3">March</option>
-                                                <option value="4">April</option>
-                                                <option value="5">May</option>
-                                                <option value="6">June</option>
-                                                <option value="7">July</option>
-                                                <option value="8">August</option>
-                                                <option value="9">September</option>
-                                                <option value="10">October</option>
-                                                <option value="11">November</option>
-                                                <option value="12">December</option>
+                                                <option value="1"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgJan"/></option>
+                                                <option value="2"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgFeb"/></option>
+                                                <option value="3"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgMar"/></option>
+                                                <option value="4"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgApr"/></option>
+                                                <option value="5"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgMay"/></option>
+                                                <option value="6"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgJun"/></option>
+                                                <option value="7"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgJul"/></option>
+                                                <option value="8"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgAug"/></option>
+                                                <option value="9"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgSep"/></option>
+                                                <option value="10"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgOct"/></option>
+                                                <option value="11"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgNov"/></option>
+                                                <option value="12"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgDec"/></option>
                                             </select>
                                             <b>-</b>
                                             <input type=text id="givenDay" style="width:50px" maxlength=2 />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td align="right">Lot Number: </td>
+                                        <td align="right"><bean:message key="oscarEncounter.immunization.ScheduleEdit.formLotNumber"/>: </td>
                                         <td>
                                             <input type="text" id="lot" />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td align="right">Provider: </td>
+                                        <td align="right"><bean:message key="oscarEncounter.immunization.ScheduleEdit.formProv"/>: </td>
                                         <td>
                                             <select id="provider">
                                                 <option value="0"></option>
@@ -341,32 +341,32 @@ String node = request.getParameter("node").toString();
                         <tr>
                             <td style="font-weight:bold">
                                 <input type="radio" name="chkStatus" onclick="javascript:changeStatus(2);" value="2"></input>
-                                <span onclick="chkStatus[2].click()">Refused</span>
+                                <span onclick="chkStatus[2].click()"><bean:message key="oscarEncounter.immunization.ScheduleEdit.formRefused"/></span>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <table style="margin-left:50px; border-width:2px; border-style:solid;">
                                     <tr>
-                                        <td align="right" width="120px">Refused Date: </td>
+                                        <td align="right" width="120px"><bean:message key="oscarEncounter.immunization.ScheduleEdit.formRefusedDate"/>: </td>
                                         <td>
                                             <input type="hidden" id="refusedDate" />
                                             <input type="text" id="refusedYear" style="width:50px" maxlength=4 />
                                             <b>-</b>
                                             <select id="refusedMonth">
                                                 <option value="0"></option>
-                                                <option value="1">January</option>
-                                                <option value="2">February</option>
-                                                <option value="3">March</option>
-                                                <option value="4">April</option>
-                                                <option value="5">May</option>
-                                                <option value="6">June</option>
-                                                <option value="7">July</option>
-                                                <option value="8">August</option>
-                                                <option value="9">September</option>
-                                                <option value="10">October</option>
-                                                <option value="11">November</option>
-                                                <option value="12">December</option>
+                                                <option value="1"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgJan"/></option>
+                                                <option value="2"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgFeb"/></option>
+                                                <option value="3"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgMar"/></option>
+                                                <option value="4"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgApr"/></option>
+                                                <option value="5"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgMay"/></option>
+                                                <option value="6"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgJun"/></option>
+                                                <option value="7"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgJul"/></option>
+                                                <option value="8"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgAug"/></option>
+                                                <option value="9"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgSep"/></option>
+                                                <option value="10"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgOct"/></option>
+                                                <option value="11"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgNov"/></option>
+                                                <option value="12"><bean:message key="oscarEncounter.immunization.ScheduleEdit.msgDec"/></option>
                                             </select>
                                             <b>-</b>
                                             <input type=text id="refusedDay" style="width:50px" maxlength=2 />
@@ -378,15 +378,15 @@ String node = request.getParameter("node").toString();
                         <tr>
                             <td>
                                 <br/>
-                                <div style="font-weight: bold">Comments</div>
+                                <div style="font-weight: bold"><bean:message key="oscarEncounter.immunization.ScheduleEdit.formComments"/></div>
                                 <textarea id="comments" style='width:100%; height:80px'></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td align="right">
                                 <br/>
-                                <input type="button" style="width:120px" onclick="javascript:saveClose();" value="Save and Close" />
-                                <input type="button" style="width:120px" onclick="javascript:window.close();" value="Cancel" />
+                                <input type="button" style="width:120px" onclick="javascript:saveClose();" value="<bean:message key="oscarEncounter.immunization.ScheduleEdit.btnSaveClose"/>" />
+                                <input type="button" style="width:120px" onclick="javascript:window.close();" value="<bean:message key="global.btnCancel"/>" />
                             </td>
                         </tr>
                     </table>
@@ -422,4 +422,4 @@ String node = request.getParameter("node").toString();
         </tr>
     </table>
 </body>
-</html>
+</html:html>

@@ -30,7 +30,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@page import="oscar.oscarEncounter.pageUtil.*"%>
 
-<html:html locale="true">
 <%
 EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
 
@@ -43,10 +42,10 @@ theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctVie
 theRequests.estConsultationVecByDemographic(bean.getDemographicNo());
 %>
 
-<html>
+<html:html locale="true">
 <head>
 <title>
-<bean:message key="ectViewConsultationRequests.title"/>
+<bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.title"/>
 </title>
 <html:base/>
 
@@ -104,7 +103,7 @@ function BackToOscar()
 function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarConsultationRequest", windowprops);
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgConsReq"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -122,15 +121,15 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
         <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
+        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
+        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
+        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
         </td>
     </tr>
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><bean:message key="ectViewConsultationRequests.title"/></p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.title"/></p>
         </td>
     </tr>
     <tr>
@@ -141,13 +140,13 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
             <!----Start new rows here-->
                 <tr>
                     <td>
- 		                <div class="DivContentTitle">Consultation Requests for  <%=consultUtil.patientName%> </div>
+ 		                <div class="DivContentTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgConsReqFor"/>  <%=consultUtil.patientName%> </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div class="DivContentSectionHead">
-                        Click on a link to view Consultation Request Form
+                        <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgClickLink"/>
                         </div>
                     </td>
                 </tr>
@@ -157,19 +156,19 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
                         <table border="0" width="80%" cellspacing="1">
                             <tr>
                                 <th class="VCRheads" width="75">
-                                Status
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgStatus"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Patient
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgPat"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Provider
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgProvider"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Service
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgService"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Referal Date
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgRefDate"/>
                                 </th>
                             </tr>
                         <%  
@@ -180,21 +179,19 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
                             String provide = (String) theRequests.provider.elementAt(i);
                             String service = (String) theRequests.service.elementAt(i);
                             String date    = (String) theRequests.date.elementAt(i);
-                            String statusDis = null;
-                            if (status.equals("1")){
-                                statusDis = "Nothing has been done      ";
-                            }else if(status.equals("2")) {
-                                statusDis = "Pending Specailist Callback";
-                            }else if(status.equals("3")) {
-                                statusDis = "Pending Patient Callback   ";
-                            }else if(status.equals("4")) {
-                                statusDis = "Appointment Made           ";
-                            }
-
                         %>
                             <tr>
                                 <td class="stat<%=status%>" width="75">
-                                <%=statusDis%>
+				<% if (status.equals("1")){ %>
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgNothingDone"/>
+				<% }else if(status.equals("2")) { %>
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgSpecialistCall"/>
+				<% }else if(status.equals("3")) { %>
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgPatCall"/>
+				<% }else if(status.equals("4")) { %>
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgAppMade"/>
+                               <% } %>
+
 
                                 </td>
                                 <td class="stat<%=status%>">

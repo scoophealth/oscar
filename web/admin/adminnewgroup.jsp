@@ -24,14 +24,17 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
-<head><title> New Group</title></head>
+<html:html locale="true">
+<head><title><bean:message key="admin.adminnewgroup.title"/></title></head>
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
 
@@ -68,7 +71,7 @@ function setfocus() {
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">NEW GROUP</font></th>
+      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.adminnewgroup.description"/></font></th>
   </tr>
 </table>
 
@@ -78,7 +81,7 @@ function setfocus() {
   
           <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
             <tr BGCOLOR="#CCFFFF" > 
-              <td ALIGN="center"> <font face="arial"> Group No.</font></td>
+              <td ALIGN="center"> <font face="arial"><bean:message key="admin.adminmygroup.formGroupNo"/></font></td>
               <td ALIGN="center"> <font face="arial"> </font> 
                 <input type="text" name="mygroup_no" size="10" maxlength="10">
                 <font size="-2">(Max. 10 chars.)</font></td>
@@ -86,7 +89,7 @@ function setfocus() {
 <%
    ResultSet rsgroup = null;
    int i=0;
-   rsgroup = apptMainBean.queryResults("last_name", "searchproviderall");
+   rsgroup = apptMainBean.queryResults("searchproviderall");
    while (rsgroup.next()) { 
      i++;
 %>
@@ -115,8 +118,8 @@ function setfocus() {
 <table width="100%" BGCOLOR="#486ebd">
   <tr>
     <TD align="center">
-        <input type="submit" name="Submit" value=" Save ">
-        <INPUT TYPE = "RESET" VALUE = " Exit " onClick="window.close();"></TD>
+        <input type="submit" name="Submit" value="<bean:message key="admin.adminnewgroup.btnSubmit"/>">
+        <INPUT TYPE = "RESET" VALUE ="<bean:message key="global.btnClose"/>" onClick="window.close();"></TD>
   </tr>
 </TABLE>
 
@@ -125,4 +128,4 @@ function setfocus() {
 <div align="center"><font size="1" face="Verdana" color="#0000FF"><B></B></font></div>
 
 </body>
-</html>
+</html:html>

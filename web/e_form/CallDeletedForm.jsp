@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page import = "java.sql.ResultSet" %> 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
  
@@ -34,16 +37,16 @@
   ResultSet RS =  beanDBConnect.executeQuery(query);
 %>
 
-<html>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>Search a Provider</title>
+<title><bean:message key="e_form.CallDeletedForm.title"/></title>
 <link rel="stylesheet" href="web.css">
 </head>
 <script language="javascript"><!--
  function checkHtml(){
  if(document.myForm.FileName.value==""){ 
-   alert("Please choose a file first, then click Upload");
+   alert("<bean:message key="e_form.CallDeletedForm.msgUploadFirst"/>");
  } else {
     document.myForm.submit();
  } 
@@ -61,7 +64,7 @@ function newWindow(file,window) {
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            FORMS ADMINISTRATOR</font></th>
+            <bean:message key="e_form.CallDeletedForm.msgAdminForms"/></font></th>
       </tr>
     </table>
 
@@ -98,11 +101,11 @@ function newWindow(file,window) {
 </table>
   <table border="0" cellspacing="0" cellpadding="0" width="70%">
     <tr>
-      <td> The forms you already deleted: </td>
+      <td> <bean:message key="e_form.CallDeletedForm.msgDeletedForms"/>: </td>
       <td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a href="UploadHtml.jsp">
-         Current Form Library </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-          <a href = "../admin/admin.jsp">Return to Admin</a>
+         <bean:message key="e_form.CallDeletedForm.btnFormLib"/> </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+          <a href = "../admin/admin.jsp"><bean:message key="e_form.CallDeletedForm.btnReturn"/></a>
       </td> 
      <tr>
 </table>
@@ -130,9 +133,9 @@ if(RS.next()){
         out.print(RS.getString("form_date")+"</td>");
         out.print("<td>");
         out.print(RS.getString("form_time")+"</td>");
-        out.print("<td width=70><a href=UnDeleteForm.jsp?fid="+RS.getInt("fid")+">");
-        out.print("UnDelete");
-        out.print("</a></td></tr>");
+        out.print("<td width=70><a href=UnDeleteForm.jsp?fid="+RS.getInt("fid")+">"); %>
+        <bean:message key="e_form.CallDeletedForm.btnUnDel"/>
+        <% out.print("</a></td></tr>");
    }  
 RS.close();
 }else {
@@ -150,6 +153,6 @@ RS.close();
 </center>
 
 </body>
-</html>
+</html:html>
 
   

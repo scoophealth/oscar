@@ -7,7 +7,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-{"search_demographic", "select demographic_no, month_of_birth, date_of_birth from demographic order by ? " }, 
+{"search_demographic", "select demographic_no, month_of_birth, date_of_birth from demographic order by demographic_no" }, 
 {"update_demographicmonth", "update demographic set month_of_birth = ? where demographic_no = ?" }, 
 {"update_demographicdate", "update demographic set date_of_birth = ? where demographic_no = ?" }, 
   };
@@ -25,7 +25,7 @@ busy ... busy ... busy ..................................................<br>
 <%
 	ResultSet rsdemo = null ;
 	int rowsAffected = 0; 
-	rsdemo = daySheetBean.queryResults("demographic_no", "search_demographic");
+	rsdemo = daySheetBean.queryResults("search_demographic");
 	while (rsdemo.next()) { 
 		if (rsdemo.getString("month_of_birth")!=null && rsdemo.getString("month_of_birth").length() == 1) {
 			daySheetBean.queryExecuteUpdate(new String[] { "0"+rsdemo.getString("month_of_birth"), rsdemo.getString("demographic_no")}, "update_demographicmonth");

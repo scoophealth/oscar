@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
@@ -31,7 +34,7 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="../errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<html:html locale="true">
 <head>
 <script LANGUAGE="JavaScript">
     <!--
@@ -45,8 +48,7 @@
 <center>
     <table border="0" cellspacing="0" cellpadding="0" width="90%" >
       <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD MYGROUP RECORDS</font></th>
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.adminsavemygroup.title"/></font></th>
       </tr>
     </table>
 <%
@@ -68,7 +70,7 @@
 
   if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Addition of a Group Record.</h1></p>
+  <p><h1><bean:message key="admin.adminsavemygroup.msgAdditionSuccess"/></h1></p>
 <script LANGUAGE="JavaScript">
       self.close();
      	//self.opener.refresh();
@@ -76,7 +78,7 @@
 <%
   }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+  <p><h1><bean:message key="admin.adminsavemygroup.msgAdditionFailure"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();
@@ -84,8 +86,8 @@
   <p></p>
   <hr width="90%"></hr>
 <form>
-<input type="button" value="Close this window" onClick="window.close()">
+<input type="button" value="<bean:message key="global.btnClose"/>" onClick="window.close()">
 </form>
 </center>
 </body>
-</html>
+</html:html>

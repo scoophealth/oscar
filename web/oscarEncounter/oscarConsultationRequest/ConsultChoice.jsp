@@ -59,9 +59,10 @@ if (demo != null ){
 }
 %>
 
+<html:html locale="true">
 <head>
 <html:base/>
-<title>ConsultChoice</title>
+<title><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.title"/></title>
 
 <style type="text/css">
 body{
@@ -108,7 +109,7 @@ border-bottom: 2px solid #003399;
 function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarConNew", windowprops);
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.oscarConS"/>", windowprops);
   window.close();
 }
 
@@ -126,7 +127,7 @@ function BackToOscar() {
 <table width="100%">
 <tr>
     <td class="Title">
-        oscarConsultations
+        <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.msgTitle"/>
     </td>
 </tr>
 <tr>
@@ -141,18 +142,18 @@ function BackToOscar() {
     <tr>
         <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-           <a href=# onClick="popupOscarConS(700,960,'ConsultationFormRequest.jsp')" class="messengerButtons">New Consultation</a>
+           <a href=# onClick="popupOscarConS(700,960,'ConsultationFormRequest.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.btnNewCon"/></a>
             </td></tr></table>
         </td>
         <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-            <a href=# onClick="popupOscarConS(700,960,'DisplayDemographicConsultationRequests.jsp')" class="messengerButtons">Old Consultations</a>
+            <a href=# onClick="popupOscarConS(700,960,'DisplayDemographicConsultationRequests.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.btnOldCon"/></a>
             </td></tr></table>
         </td>
 
         <td >
             <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-            <a href="javascript:BackToOscar()" class="messengerButtons">Cancel</a>
+            <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="global.btnCancel"/></a>
             </td></tr></table>
         </td>
     </tr>

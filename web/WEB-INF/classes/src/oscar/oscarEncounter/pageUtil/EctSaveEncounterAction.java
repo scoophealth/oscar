@@ -10,7 +10,7 @@ import org.apache.struts.action.*;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.*;
-
+import java.util.ResourceBundle;
 public class EctSaveEncounterAction extends Action {
 
     public ActionForward perform(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest httpservletrequest, HttpServletResponse httpservletresponse)
@@ -26,27 +26,32 @@ public class EctSaveEncounterAction extends Action {
         sessionbean.encounter = httpservletrequest.getParameter("enTextarea");
         sessionbean.subject = httpservletrequest.getParameter("subject");
         java.util.Date date = UtilDateUtilities.Today();
-        if(httpservletrequest.getParameter("buttonPressed").equals("Sign,Save and Exit"))
-            sessionbean.encounter = sessionbean.encounter + "\n" + "[Signed on " + UtilDateUtilities.DateToString(date, "yyyy-MM-dd HH:mm:ss") + " by " + sessionbean.userName + "]";
-        if(httpservletrequest.getParameter("buttonPressed").equals("Verify and Sign"))
-            sessionbean.encounter = sessionbean.encounter + "\n" + "[Verified and Signed on " + UtilDateUtilities.DateToString(date, "yyyy-MM-dd HH:mm:ss") + " by " + sessionbean.userName + "]";
-        if(httpservletrequest.getParameter("buttonPressed").equals("Split Chart"))
-            sessionbean.subject = "SPLIT CHART";
+        if(httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit"))
+	    try {
+		ResourceBundle prop = ResourceBundle.getBundle("oscarResources", httpservletrequest.getLocale());
+		sessionbean.encounter = sessionbean.encounter + "\n" + "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + UtilDateUtilities.DateToString(date, prop.getString("date.yyyyMMddHHmmss"), httpservletrequest.getLocale()) + " " + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + sessionbean.userName + "]";
+        if(httpservletrequest.getParameter("btnPressed").equals("Verify and Sign"))
+            sessionbean.encounter = sessionbean.encounter + "\n" + "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + UtilDateUtilities.DateToString(date, prop.getString("date.yyyyMMddHHmmss"), httpservletrequest.getLocale()) + " " + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + sessionbean.userName + "]";
+        if(httpservletrequest.getParameter("btnPressed").equals("Split Chart"))
+            sessionbean.subject = prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSplitChart");
         sessionbean.template = "";
+	    } catch (Exception e) {
+		    e.printStackTrace();
+	    }
         try {
             DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-            String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" + UtilDateUtilities.DateToString(date, "yyyyMMddHHmmss") + "'," + sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +  UtilMisc.charEscape(sessionbean.subject, '\'') + "','" + UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" + UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" + UtilMisc.charEscape(sessionbean.encounter, '\'') + "')" ;
+            String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" + UtilDateUtilities.DateToString(date, "yyyyMMddHHmmss", httpservletrequest.getLocale()) + "'," + sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +  UtilMisc.charEscape(sessionbean.subject, '\'') + "','" + UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" + UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" + UtilMisc.charEscape(sessionbean.encounter, '\'') + "')" ;
             dbhandler.RunSQL(s);
 
             //change the appt status
             if (sessionbean.status != null && !sessionbean.status.equals("")) {
                 oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
                 as.setApptStatus(sessionbean.status);
-                if (httpservletrequest.getParameter("buttonPressed").equals("Sign,Save and Exit") ) {
+                if (httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit") ) {
                     s = "update appointment set status='" + as.signStatus() + "' where appointment_no=" + sessionbean.appointmentNo;
                     dbhandler.RunSQL(s);
                 }
-                if (httpservletrequest.getParameter("buttonPressed").equals("Verify and Sign") ) {
+                if (httpservletrequest.getParameter("btnPressed").equals("Verify and Sign") ) {
                     s = "update appointment set status='" + as.verifyStatus() + "' where appointment_no=" + sessionbean.appointmentNo;
                     dbhandler.RunSQL(s);
                 }
@@ -55,12 +60,12 @@ public class EctSaveEncounterAction extends Action {
         } catch(SQLException sqlexception) {
             System.out.println(sqlexception.getMessage());
         }
-        if(httpservletrequest.getParameter("buttonPressed").equals("Sign,Save and Exit") 
-                || httpservletrequest.getParameter("buttonPressed").equals("Verify and Sign"))
+        if(httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit") 
+                || httpservletrequest.getParameter("btnPressed").equals("Verify and Sign"))
             return actionmapping.findForward("success");
-        if(httpservletrequest.getParameter("buttonPressed").equals("Save"))
+        if(httpservletrequest.getParameter("btnPressed").equals("Save"))
             return actionmapping.findForward("saveAndStay");
-        if(httpservletrequest.getParameter("buttonPressed").equals("Split Chart"))
+        if(httpservletrequest.getParameter("btnPressed").equals("Split Chart"))
             return actionmapping.findForward("splitchart");
         else
             return actionmapping.findForward("failure");

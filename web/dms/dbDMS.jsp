@@ -11,13 +11,13 @@
   
   
   String [][] dbQueries=new String[][] {
-    {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no || null and provider_no like ? order by last_name"},
+    {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
      {"search_provider_details", "select * from provider where provider_no=?"},
      {"search_document_content", "select * from document where status<>'D' and document_no=?"},
     {"search_provider_name", "select * from provider where provider_no like ?"},
     {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
-    {"save_document","insert into document values('\\N',?,?,?,?,?,?,?)"},
+    {"save_document","insert into document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status) values(?,?,?,?,?,?,?)"},
     {"save_ctl_document","insert into ctl_document values(?,?,?,?)"},
     {"search_document", "select * from document where status <> 'D' and docfilename=? or doctype=? or docdesc like ?  or doccreator = ? " + orderby},
     {"match_document", "select distinct d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime from document d, ctl_document c where d.doctype <> 'share' and  d.status=c.status and d.status <> 'D' and c.document_no=d.document_no and c.module=? and c.module_id=? and d.doctype like ? order by d.updatedatetime desc"},

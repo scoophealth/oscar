@@ -14,8 +14,8 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-//{"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ?, ?" }, 
-{"search_ect","select eChartId, timeStamp, subject, encounter from eChart where demographicNo=? order by timeStamp desc limit ?, ?" }, 
+//{"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ? offset ?" }, 
+{"search_ect","select eChartId, timeStamp, subject, encounter from eChart where demographicNo=? order by timeStamp desc limit ? offset ?" }, 
 //{"search_splitectsize","select encounter from eChart where demographicNo=? and timeStamp > ? order by timeStamp limit 1" }, 
   };
   daySheetBean.doConfigure(dbParams,dbQueries);
@@ -77,8 +77,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   String[] param =new String[1];
   param[0]=demographic_no; 
   int[] itemp1 = new int[2];
-  itemp1[0] = Integer.parseInt(strLimit1);
-  itemp1[1] = Integer.parseInt(strLimit2);
+  itemp1[1] = Integer.parseInt(strLimit1);
+  itemp1[0] = Integer.parseInt(strLimit2);
 
   rsdemo = daySheetBean.queryResults(param,itemp1, "search_ect");
   while (rsdemo.next()) { 

@@ -115,7 +115,7 @@ function BackToOscar()
 function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarConsultationRequest", windowprops);
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgConsReq"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -128,7 +128,7 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
 function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "OscarConsultationConfig", windowprops);
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgConsConfig"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -149,9 +149,9 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
         <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
+        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
+        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
+        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
         </td>
     </tr>
     <tr>
@@ -165,16 +165,18 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
         <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
             <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
 
-            <!----Start new rows here-->
+            <!--Start new rows here-->
                 <tr>
                     <td>
-			<% 
-			   String disTeam = team;
-			   if (team.equals("-1")){
-				   disTeam = "View All";		
- 			   }
-			%>
- 		                <div class="DivContentTitle">Consultation Requests for team = <%=disTeam%></div>
+ 		                <div class="DivContentTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msfConsReqForTeam"/> = 
+				<%
+				   if (team.equals("-1")){
+				%>
+				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgViewAll"/>
+				<% } else { %>
+				<%= team %>
+				<% } %>
+				</div>
                     </td>
                 </tr>
                 <tr>
@@ -183,7 +185,7 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                             <tr>
                                 <td bgcolor="#9999ff">
                                 <a href="javascript:popupOscarConsultationConfig(700,960,'../oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
-                                    Edit Specialists Listing</a>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/></a>
                                 </td>
                             <tr>
                         </table>
@@ -194,9 +196,9 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                         <div class="DivContentSectionHead">
                         <html:form action="/oscarEncounter/ViewConsultation" >
 
-                            Select Team :
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formSelectTeam"/>:
                             <select name="sendTo">
-				<option value="-1">View All</option>
+				<option value="-1"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll"/></option>
                                 <%
                                    for (int i =0; i < consultUtil.teamVec.size();i++){
                                      String te = (String) consultUtil.teamVec.elementAt(i);
@@ -207,7 +209,7 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                                     <option value="<%=te%>"><%=te%></option>
                                 <%}}%>
                             </select>
-                            <input type="submit" value="Consultation Requests for this team"/>
+                            <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.btnConsReq"/>"/>
                             <html:hidden property="currentTeam"/>
                         </html:form>
                         </div>
@@ -219,19 +221,19 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                         <table border="0" width="80%" cellspacing="1">
                             <tr>
                                 <th class="VCRheads" width="75">
-                                Status
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Patient
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Provider
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgProvider"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Service
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgService"/>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                Referal Date
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
                                 </th>
                             </tr>
                         <%  
@@ -246,22 +248,18 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                             String provide = (String) theRequests.provider.elementAt(i);
                             String service = (String) theRequests.service.elementAt(i);
                             String date    = (String) theRequests.date.elementAt(i);
-                            String statusDis = null;
-                            if (status.equals("1")){
-                                statusDis = "ND      ";
-                            }else if(status.equals("2")) {
-                                statusDis = "SR      ";
-                            }else if(status.equals("3")) {
-                                statusDis = "PR      ";
-                            }else if(status.equals("4")) {
-                                statusDis = "DONE    ";
-                            }
-
                         %>
                             <tr>
                                 <td class="stat<%=status%>" width="75">
-                                <%=statusDis%>
-
+				<% if (status.equals("1")){ %>
+				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgND"/>      
+				<% }else if(status.equals("2")) { %>
+                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgSR"/>      
+				<% }else if(status.equals("3")) { %>
+				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPR"/>      
+				<% }else if(status.equals("4")) { %>
+				<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgDONE"/>    
+				<% } %>
                                 </td>
                                 <td class="stat<%=status%>">
                                 <%=patient%>

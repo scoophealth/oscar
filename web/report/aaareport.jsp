@@ -35,7 +35,7 @@
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_encounter", "select e.*, d.* from encounter e LEFT JOIN demographicaccessory d ON e.demographic_no=d.demographic_no where e.encounter_no<? order by e.demographic_no, e.encounter_date, e.encounter_time" }, 
-{"searchallprovider", "select * from provider order by ?" }, 
+{"searchallprovider", "select * from provider order by last_name" }, 
   };
   String[][] responseTargets=new String[][] {  };
   daySheetBean.doConfigure(dbParams,dbQueries,responseTargets);

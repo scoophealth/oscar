@@ -3,10 +3,14 @@
   String provider_name = (String) session.getAttribute("userlastname")+", "+(String) session.getAttribute("userfirstname");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
 
-<html>
-<head><title> UPDATE PREFERENCES</title></head>
+<html:html locale="true">
+<head><title><bean:message key="provider.providerpreference.title"/></title></head>
 <meta http-equiv="Cache-Control" content="no-cache" >
 
 <script language="javascript">
@@ -56,7 +60,7 @@ function checkTypeInAll() {
 	    alert ("Something is wrong with your data!!!");
 	  }
 	} else {
-      alert ("You must type in numbers in some fields."); 
+      alert ("<bean:message key="provider.providerpreference.msgTypeNumbers"/>"); 
 	}
 	return checkin;
 }
@@ -64,7 +68,7 @@ function checkTypeInAll() {
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
-  var popup=window.open(page, "Receptmygroup", windowprops);
+  var popup=window.open(page, <bean:message key="provider.providerpreference.titlePopup"/>, windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self; 
@@ -79,7 +83,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="<%=deepcolor%>"> 
-      <th><font face="Helvetica">PREFERENCE</font></th>
+      <th><font face="Helvetica"><bean:message key="provider.providerpreference.description"/></font></th>
   </tr>
 </table>
 
@@ -87,28 +91,28 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         <table BORDER="0" WIDTH="100%">
           <tr BGCOLOR="<%=weakcolor%>"> 
             <td width="20%"> 
-              <div align="right"><font face="arial"> Start Hour :</font></div>
+              <div align="right"><font face="arial"><bean:message key="provider.preference.formStartHour"/>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" onBlur="checkTypeIn(this)">
-              <font size="-2">hr.</font> </td>
+              <font size="-2"><bean:message key="provider.preference.hr"/></font> </td>
             <td width="20%"> 
-              <div align="right"><font face="arial"> End Hour<font size='-2' color='red'>(<=23)</font> :</font></div>
+              <div align="right"><font face="arial"><bean:message key="provider.preference.formEndHour"/><font size='-2' color='red'>(<=23)</font> :</font></div>
             </td>
             <td width="25%"> 
               <INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" onBlur="checkTypeIn(this)">
-              <font size="-2"> hr. </font></td>
+              <font size="-2"><bean:message key="provider.preference.hr"/></font></td>
           </tr>
           <tr  BGCOLOR="<%=weakcolor%>"> 
             <td width="20%"> 
-              <div align="right"><font face="arial"> Period :</font></div>
+              <div align="right"><font face="arial"><bean:message key="provider.preference.formPeriod"/>:</font></div>
             </td>
             <td width="20%"> 
               <INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" onBlur="checkTypeIn(this)">
-              <font size="-2">min.</font> </td>
+              <font size="-2"><bean:message key="provider.preference.min"/></font> </td>
             <td width="20%"> 
               <div align="right"><font face="arial"><a href=# onClick ="popupPage(360,680,'providercontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' );return false;"> 
-                <font size="-2">(View/Edit)</font>Group No. </a>:</font></div>
+                <font size="-2">(<bean:message key="provider.providerpreference.viewedit"/>)</font><bean:message key="provider.preference.formGroupNo"/></a>:</font></div>
             </td>
             <td width="25%"> 
               <INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>' WIDTH="30" HEIGHT="20" border="0" size="12" maxlength="10">
@@ -124,8 +128,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <table width="100%">
   <tr bgcolor="<%=deepcolor%>">
     <TD align="center">
-      <INPUT TYPE="submit" VALUE="Update" SIZE="7">
-      <INPUT TYPE = "RESET" VALUE = " Cancel " onClick="window.close();"></TD>
+      <INPUT TYPE="submit" VALUE='<bean:message key="provider.providerpreference.btnSubmit"/>' SIZE="7">
+      <INPUT TYPE = "RESET" VALUE ='<bean:message key="global.btnClose"/>' onClick="window.close();"></TD>
   </tr>
 </TABLE>
 
@@ -133,12 +137,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 
 <table width="100%" BGCOLOR="eeeeee">
   <tr> 
-    <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;">Change Your Password</a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;">Add/Delete 
-      a Template</a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;">Add/Delete a Form</a></td>
+    <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
   </tr>
    <tr> 
-    <TD align="center">  <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting1.jsp?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=URLEncoder.encode(provider_name)%>');return false;" title="Holiday and Schedule Setting" >Schedule Setting</a> 
-      &nbsp;&nbsp;&nbsp; | <a href="#" ONCLICK ="popupPage(550,800,'http://oscar1.mcmaster.ca:8888/oscarResource/manage?username=oscarfp&pw=oscarfp');return false;" title="Resource Management" >Manage Clinical Resource</a--> </td>
+    <TD align="center">  <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting1.jsp?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=URLEncoder.encode(provider_name)%>');return false;" title="Holiday and Schedule Setting" ><bean:message key="provider.btnScheduleSetting"/></a> 
+      &nbsp;&nbsp;&nbsp; | <a href="#" ONCLICK ="popupPage(550,800,'http://oscar1.mcmaster.ca:8888/oscarResource/manage?username=oscarfp&pw=oscarfp');return false;" title="Resource Management" ><bean:message key="provider.btnManageClinicalResource"/></a--> </td>
   </tr>
   <tr>
      <td bgcolor="#ffffff">
@@ -146,11 +149,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
      </td>
   </tr>
   <tr>
-    <td align="center"><a href=# onClick ="popupPage(230,600,'providerSignature.jsp');return false;">Edit your Signature</a>
+    <td align="center"><a href=# onClick ="popupPage(230,600,'providerSignature.jsp');return false;"><bean:message key="provider.btnEditSignature"/></a>
     </td>
   </tr>
 
 </table>
 
 </body>
-</html>
+</html:html>

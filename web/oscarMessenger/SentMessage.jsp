@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<html>
+<html:html locale="true">
 <head>
 
 <logic:notPresent name="msgSessionBean" scope="session">
@@ -171,4 +171,4 @@ function BackToOscar()
         </tr>
     </table>
 </body>
-</html>
+</html:html>

@@ -65,8 +65,8 @@
 <table class="Header">
     <tr>
         <td align="left">
-            <input type="button" value="Print" onclick="javascript:return onPrint();" />
-            <input type="button" value="Close" onclick="javascript:return onClose();"/>
+            <input type="button" value="<bean:message key="global.btnPrint"/>" onclick="javascript:return onPrint();" />
+            <input type="button" value="<bean:message key="global.btnClose"/>" onclick="javascript:return onClose();"/>
         </td>
     </tr>
 </table>
@@ -77,7 +77,7 @@
             <span style="font-weight:bold;"><%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%></span>
         </td>
         <td style="text-align:right;height:34px;">
-            <span style="font-weight:bold;">Dr. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>
+            <span style="font-weight:bold;"><bean:message key="oscarEncounter.encounterPrint.msgDr"/>. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>
         </td>
     </tr>
     <tr>
@@ -88,13 +88,13 @@
                         <table width="100%">
                             <tr>
                                <td width="33%">
-                                    <div class="RowTop">Social History:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgSocialHist"/>:</div>
                                 </td>
                                 <td width="33%">
-                                    <div class="RowTop">Family History:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgFamilyHist"/>:</div>
                                 </td>
                                 <td width="33%">
-                                    <div class="RowTop">Medical History:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgMed"/>:</div>
                                 </td>
                             </tr>
                             <tr>
@@ -116,11 +116,11 @@
                         <table width="100%">
                             <tr>
                                 <td width="50%">
-                                    <div class="RowTop">Ongoing Concerns:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgOngCon"/>:</div>
                                 </td>
 
                                 <td width="50%">
-                                    <div class="RowTop">Reminders:</div>
+                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgReminders"/>:</div>
                                 </td>
                             </tr>
                             <tr width="100%">
@@ -140,7 +140,7 @@
                         <table width="100%">
                            <tr>
                                 <td>
-                                    <div class="RowTop" >Encounter:</div>
+                                    <div class="RowTop" ><bean:message key="oscarEncounter.encounterPrint.msgEncounter"/>:</div>
                                 </td>
                             </tr>
                             <tr>
@@ -160,8 +160,8 @@
 <table class="Header">
     <tr>
         <td align="left">
-            <input type="button" value="Print" onclick="javascript:return onPrint();" />
-            <input type="button" value="Close" onclick="javascript:return onClose();"/>
+            <input type="button" value="<bean:message key="global.btnPrint"/>" onclick="javascript:return onPrint();" />
+            <input type="button" value="<bean:message key="global.btnClose"/>" onclick="javascript:return onClose();"/>
         </td>
     </tr>
 </table>

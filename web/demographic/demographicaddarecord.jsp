@@ -1,7 +1,10 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
@@ -21,14 +24,16 @@
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A DEMOGRAPHIC RECORD</font></th>
+            <bean:message key="demographic.demographicaddarecord.title"/></font></th>
       </tr>
     </table>
  
 <%
   //if action is good, then give me the result
 	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
-    String[] param =new String[27];
+	  //temp variables for test/set null dates
+	  String year, month, day;
+    String[] param =new String[26];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -46,16 +51,78 @@
 	  param[14]=request.getParameter("ver");
 	  param[15]=request.getParameter("roster_status");
 	  param[16]=request.getParameter("patient_status");
-	  param[17]=request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
-	  param[18]=request.getParameter("chart_no");
-	  param[19]=request.getParameter("staff");
-	  param[20]=request.getParameter("sex");
-	  param[21]=request.getParameter("end_date_year")+"-"+request.getParameter("end_date_month")+"-"+request.getParameter("end_date_date");
-	  param[22]=request.getParameter("eff_date_year")+"-"+request.getParameter("eff_date_month")+"-"+request.getParameter("eff_date_date");
-	  param[23]=request.getParameter("pcn_indicator");
-	  param[24]=request.getParameter("hc_type");
-	  param[25]=request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date");
-	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "");    
+	  // Databases have an alias for today. It is not necessary give the current date.
+	  //param[17]=request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
+	  param[17]=request.getParameter("chart_no");
+	  param[18]=request.getParameter("staff");
+	  param[19]=request.getParameter("sex");
+
+	  // If null, set year, month and date
+	  if (request.getParameter("end_date_year").equals("")) {
+	    year = "0001";
+	  } else {
+	    year = request.getParameter("end_date_year");
+	  }
+
+	  if (request.getParameter("end_date_month").equals("")) {
+	    month = "01";
+	  } else {
+	    month = request.getParameter("end_date_month");
+	  }
+
+	  if (request.getParameter("end_date_date").equals("")) {
+	    day = "01";
+	  } else {
+	    day = request.getParameter("end_date_date");
+	  }
+
+	  param[20] = year + "-" + month + "-" + day;
+
+	  // If null, set year, month and date
+	  if (request.getParameter("eff_date_year").equals("")) {
+	    year = "0001";
+	  } else {
+	    year = request.getParameter("eff_date_year");
+	  }
+
+	  if (request.getParameter("eff_date_month").equals("")) {
+	    month = "01";
+	  } else {
+	    month = request.getParameter("eff_date_month");
+	  }
+
+	  if (request.getParameter("eff_date_date").equals("")) {
+	    day = "01";
+	  } else {
+	    day = request.getParameter("eff_date_date");
+	  }
+
+	  param[21] =  year + "-" + month + "-" + day;
+
+	  param[22]=request.getParameter("pcn_indicator");
+	  param[23]=request.getParameter("hc_type");
+
+	  // If null, set year, month and date
+	  if (request.getParameter("hc_renew_date_year").equals("")) {
+	    year = "0001";
+	  } else {
+	    year = request.getParameter("hc_renew_date_year");
+	  }
+
+	  if (request.getParameter("hc_renew_date_month").equals("")) {
+	    month = "01";
+	  } else {
+	    month = request.getParameter("hc_renew_date_month");
+	  }
+
+	  if (request.getParameter("hc_renew_date_date").equals("")) {
+	    day = "01";
+	  } else {
+	    day = request.getParameter("hc_renew_date_date");
+	  }
+
+	  param[24] =  year + "-" + month + "-" + day;
+	  param[25]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "");    
 
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].trim();
@@ -66,9 +133,9 @@
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
     
-    if(rs.next()) { //!rs.getString("cpp_id").equals("")) 
-      out.println("***<font color='red'>You may have Demographic the  record already!!! Please search it first, then delete the duplicated one.</font>***<br>");
-      return;
+    if(rs.next()) { //!rs.getString("cpp_id").equals("")) %>
+      ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord"/></font>***<br>
+      <% return;
     }
 
     // int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, param, request.getParameter("dboperation"));
@@ -100,18 +167,18 @@
     }
     
 %>
-  <p><h2>Successful Addition of a Demographic Record.
+  <p><h2><bean:message key="demographic.demographicaddarecord.msgSuccessful"/>
   </h2></p>
 <%  
   } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+  <p><h1><bean:message key="demographic.demographicaddarecord.msgFailed"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
   <p> </p>
-<%@ include file="footer.htm" %>
+<%@ include file="footer.jsp" %>
 </center>
 </body>
-</html>
+</html:html>

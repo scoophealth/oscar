@@ -29,6 +29,8 @@
   String curProvider_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <%//operation available to the client - dboperation
@@ -41,9 +43,9 @@
   apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title> </title>
+<title><bean:message key="demographic.demographiclabelprintsetting.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
@@ -71,7 +73,7 @@ function checkTotal() {
 <body  background="../images/gray_bg.jpg" bgcolor="white" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S LABELS</font></th>
+    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="demographic.demographiclabelprintsetting.msgMainLabel"/></font></th>
   </tr>
 </table>
 
@@ -90,7 +92,8 @@ function checkTotal() {
  
   rs = apptMainBean.queryResults(param, "search_detail");
   if(rs==null) {
-    out.println("failed!!!");
+%><bean:message key="demographic.demographiclabelprintsetting.msgFailed"/><%
+   // out.println("failed!!!");
   } else {
     while (rs.next()) {
       dob_year = Integer.parseInt(rs.getString("year_of_birth"));
@@ -113,50 +116,69 @@ function checkTotal() {
     }
   }
   phone2 = phone2.equals("")?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
-  String label1 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br><br><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br></font>";
+/*  String label1 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br><br><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br></font>";
   String label2 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "  &nbsp;" +chart_no+ "</b><br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br>Home: " +phone+ "<br>" +dob+ " " +sex+ "<br>" +hin+ "<br>Bus:" +phone2+ "Dr."+  providername+ "<br></font>";
-  String label3 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +last_name+ ", " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";
+  String label3 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +last_name+ ", " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";*/
 %> 
 
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <form method="post" name="labelprint" action="demographicprintdemographic.jsp">
+    <input type="hidden" name="address" value=<%=address%>>
+    <input type="hidden" name="chart_no" value=<%=chart_no%>>
+    <input type="hidden" name="city" value=<%=city%>>
+    <input type="hidden" name="dob" value=<%=dob%>>
+    <input type="hidden" name="first_name" value=<%=first_name%>>
+    <input type="hidden" name="hin" value=<%=hin%>>
+    <input type="hidden" name="last_name" value=<%=last_name%>>
+    <input type="hidden" name="phone" value=<%=phone%>>
+    <input type="hidden" name="phone2" value=<%=phone2%>>
+    <input type="hidden" name="postal" value=<%=postal%>>
+    <input type="hidden" name="providername" value=<%=providername%>>
+    <input type="hidden" name="province" value=<%=province%>>
+    <input type="hidden" name="sex" value=<%=sex%>>
     <tr bgcolor="gold" align="center"> 
-      <td>Label</td>
-      <td>Number of Label
-      <td>Location</td>
+      <td><bean:message key="demographic.demographiclabelprintsetting.msgLabel"/></td>
+      <td><bean:message key="demographic.demographiclabelprintsetting.msgNumeberOfLabel"/>
+      <td><bean:message key="demographic.demographiclabelprintsetting.msgLocation"/></td>
     </tr>
     <tr> 
       <td align="center"><br>
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr> 
-            <td><%=label1%></td>
+            <%--<td><%=label1%></td>--%>
+            <td>
+             <font face="Courier New, Courier, mono" size="2"><b><%=last_name%>,&nbsp;<%=first_name%></b><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=hin%><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=dob%>&nbsp;<%=sex%><br><br><b><%=last_name%>,&nbsp;<%=first_name%></b><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=hin%><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=dob%>&nbsp;<%=sex%><br></font>
+            </td>
           </tr>
         </table>
       </td>
-      <td align="center" bgcolor="#CCCCCC"> <a href="#" onClick="onNewPatient()">New Patient Label</a><br>
+      <td align="center" bgcolor="#CCCCCC"> <a href="#" onClick="onNewPatient()"><bean:message key="demographic.demographiclabelprintsetting.btnNewPatientLabel"/></a><br>
         <input type="checkbox" name="label1checkbox" value="checked" >
         <input type="text" name="label1no" size="2" maxlength="2" value="1">
       </td>
       <td bgcolor="#999999" rowspan="3" valign="middle" align="right"> 
-        <p>left:
+        <p><bean:message key="demographic.demographiclabelprintsetting.formLeft"/>:
           <input type="text" name="left" size="3" maxlength="3" value="200">
-          px </p>
-        <p>top: 
+          <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
+        <p><bean:message key="demographic.demographiclabelprintsetting.formTop"/>: 
           <input type="text" name="top" size="3" maxlength="3" value="0">
-          px </p>
-        <p>height:
+          <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
+        <p><bean:message key="demographic.demographiclabelprintsetting.formHeight"/>:
           <input type="text" name="height" size="3" maxlength="3" value="145">
-          px</p>
-        <p>gap:
+          <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
+        <p><bean:message key="demographic.demographiclabelprintsetting.formGap"/>:
           <input type="text" name="gap" size="3" maxlength="3" value="0">
-          px</p>
+          <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
       </td>
     </tr>
     <tr> 
       <td align="center"><br>
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr> 
-            <td><%=label2%></td>
+            <%--<td><%=label2%></td>--%>
+            <td>
+            <font face="Courier New, Courier, mono" size="2"><b><%=last_name%>,&nbsp;<%=first_name%>&nbsp;<%=chart_no%></b><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br><bean:message key="demographic.demographiclabelprintsetting.msgHome"/>:&nbsp;<%=phone%><br><%=dob%>&nbsp;<%=sex%><br><%=hin%><br><bean:message key="demographic.demographiclabelprintsetting.msgBus"/>:<%=phone2%>&nbsp;<bean:message key="demographic.demographiclabelprintsetting.msgDr"/>&nbsp;<%=providername%><br></font>
+            </td>
           </tr>
         </table>
       </td>
@@ -169,7 +191,10 @@ function checkTotal() {
       <td align="center"><br>
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr> 
-            <td><%=label3%></td>
+<%--            <td><%=label3%></td>--%>
+            <td>
+            <font face="Courier New, Courier, mono" size="2"><%=last_name%>,&nbsp;<%=first_name%><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br></font>
+            </td>
           </tr>
         </table>
         <br>
@@ -181,15 +206,15 @@ function checkTotal() {
     </tr>
     <tr bgcolor="#486ebd"> 
       <td align="center" colspan="3"> 
-        <input type="submit" name="Submit" value="Print Preview/Print">
-        <input type="button" name="button" value="Back" onClick="javascript:history.go(-1);">
+        <input type="submit" name="Submit" value="<bean:message key='demographic.demographiclabelprintsetting.btnPrintPreviewPrint'/>">
+        <input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);">
       </td>
     </tr>
-    <input type="hidden" name="label1" value='<%=label1%>'>
+<%--    <input type="hidden" name="label1" value='<%=label1%>'>
     <input type="hidden" name="label2" value='<%=label2%>'>
-    <input type="hidden" name="label3" value='<%=label3%>'>
+    <input type="hidden" name="label3" value='<%=label3%>'>--%>
   </form>
 </table>
 
 </body>
-</html>
+</html:html>

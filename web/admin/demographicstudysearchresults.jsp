@@ -33,7 +33,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
     String [][] dbQueries=new String[][] { 
-        {"search_demo", "select d.*, s.study_no from demographic d LEFT JOIN demographicstudy s ON d.demographic_no = s.demographic_no where " + nameValue + " group by d.demographic_no order by ? limit ?, ?" }, 
+        {"search_demo", "select d.*, s.study_no from demographic d LEFT JOIN demographicstudy s ON d.demographic_no = s.demographic_no where " + nameValue + " group by d.demographic_no order by last_name limit ? offset ?" }, 
     };
     studyBean.doConfigure(dbParams,dbQueries);
 %>
@@ -135,10 +135,10 @@ function refreshstudy() {
     String bgcolor = null;
   
     int[] itemp1 = new int[2];
-    itemp1[0] = Integer.parseInt(strLimit1);
-    itemp1[1] = Integer.parseInt(strLimit2);
+    itemp1[1] = Integer.parseInt(strLimit1);
+    itemp1[0] = Integer.parseInt(strLimit2);
 
-    rsdemo = studyBean.queryResults(new String[]{"last_name"}, itemp1, "search_demo");
+    rsdemo = studyBean.queryResults(itemp1, "search_demo");
     while (rsdemo.next()) { 
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";

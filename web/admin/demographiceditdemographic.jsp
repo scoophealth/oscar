@@ -62,7 +62,7 @@ function upCaseCtrl(ctrl) {
   <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font></th></tr>
 </table>
 
-<%@ include file="zdemographicfulltitlesearch.htm" %>
+<%@ include file="zdemographicfulltitlesearch.jsp" %>
 
 <%
 	GregorianCalendar now=new GregorianCalendar();

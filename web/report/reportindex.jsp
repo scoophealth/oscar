@@ -145,7 +145,7 @@ function nsgo() {
         <li>Day Sheet
 <select name="provider_no" >
 <%
-   ResultSet rsgroup = reportMainBean.queryResults("mygroup_no", "search_group");
+   ResultSet rsgroup = reportMainBean.queryResults("search_group");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
@@ -188,7 +188,7 @@ function nsgo() {
         <li><a HREF="#" ONCLICK ="ggo('all')" >Bad Appt Sheet</a>
 <select name="pprovider_no" >
 <%
-   rsgroup = reportMainBean.queryResults("mygroup_no", "search_group");
+   rsgroup = reportMainBean.queryResults("search_group");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
@@ -220,7 +220,7 @@ function nsgo() {
         <li><a HREF="#"  ONCLICK ="pcgo()">Patient Chart List</a>
 <select name="pcprovider_no" >
 <%
-   rsgroup = reportMainBean.queryResults("mygroup_no", "search_group");
+   rsgroup = reportMainBean.queryResults("search_group");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
@@ -240,7 +240,7 @@ function nsgo() {
         <li><a HREF="#"  ONCLICK ="opcgo()">Old Patient List</a>
 <select name="opcprovider_no" >
 <%
-   rsgroup = reportMainBean.queryResults("mygroup_no", "search_group");
+   rsgroup = reportMainBean.queryResults("search_group");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
@@ -260,7 +260,7 @@ function nsgo() {
         <li><a HREF="#"  ONCLICK ="nsgo()">No Show Appointment List</a>
 <select name="nsprovider_no" >
 <%
-   rsgroup = reportMainBean.queryResults("mygroup_no", "search_group");
+   rsgroup = reportMainBean.queryResults("search_group");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>

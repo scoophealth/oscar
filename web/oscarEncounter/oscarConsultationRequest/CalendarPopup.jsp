@@ -24,6 +24,7 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"  %>
 <%
@@ -40,9 +41,9 @@
   month = now.get(Calendar.MONTH)+1;
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>CALENDAR</title>
+<title><bean:message key="OscarEncounter.oscarConsultationRequest.CalendarPopUp.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -71,21 +72,21 @@ opener.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (da
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   			<tr>
         	  <td BGCOLOR="#bbbbff" width="50%" align="center" >
-			  <a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp;
+			  <a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVLastMonth"/>" vspace="2"> <bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgLastMonth"/>&nbsp;&nbsp;
               </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+        <a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>"> &nbsp;&nbsp;<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgNextMonth"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVNextMonth"/>" vspace="2">&nbsp;&nbsp;</a></td>
   			</TR>
 		</table>
 <p>
           <table width="100%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
             <tr bgcolor="#ccccff" align="center">
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Sun</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Mon</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Tue</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Wed</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Thu</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Fri</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green">Sat</font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgSun"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgMon"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgTue"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgWed"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgThu"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgFri"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgSat"/></font></td>
             </tr>
 
             <%
@@ -132,4 +133,4 @@ opener.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (da
           </table>
 
 </body>
-</html>
+</html:html>

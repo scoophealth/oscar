@@ -24,16 +24,18 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>OSCAR Project</title>
+<title><bean:message key="admin.securityupdatesecurity.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
     <!--
@@ -53,27 +55,28 @@
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             
-      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> UPDATE A SECURITY RECORD</font></th>
+      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.securityupdatesecurity.description"/></font></th>
       </tr>
     </table>
   <table cellspacing="0" cellpadding="2" width="100%" border="0">
     <form method="post" action="admincontrol.jsp" name="updatearecord" >
       <%
   ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
-  if(rs==null) {
-    out.println("<tr><td>failed</td></tr></form>");
+  if(rs==null) {%>
+    <tr><td><bean:message key="admin.securityupdatesecurity.msgFailed"/></td></tr></form>
+<%
   } else {
     while (rs.next()) {
     // the cursor of ResultSet only goes through once from top
 %>
       <tr> 
-        <td width="50%" align="right">User Name: </td>
+        <td width="50%" align="right"><bean:message key="admin.securityrecord.formUserName"/>: </td>
         <td> 
           <input type="text"  name="user_name" value="<%= rs.getString("user_name") %>">
         </td>
       </tr>
       <tr> 
-        <td  align="right" nowrap>Password<font size='-2'>(<=10char)</font>: 
+        <td  align="right" nowrap><bean:message key="admin.securityrecord.formPassword"/><font size='-2'>(<=10char)</font>: 
         </td>
         <td> 
           <input type="text" name="password" value="<%= rs.getString("password") %>">
@@ -81,7 +84,7 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">Provider No: </div>
+          <div align="right"><bean:message key="admin.securityrecord.formProviderNo"/>: </div>
         </td>
         <td> 
           <% String provider_no = rs.getString("provider_no"); %>
@@ -90,8 +93,7 @@
         </td>
       </tr>
       <tr> 
-        <td  align="right" nowrap>PIN: 
-        </td>
+        <td  align="right" nowrap><bean:message key="admin.securityrecord.formPIN"/>:</td>
         <td> 
           <input type="text" name="pin" value="<%= rs.getString("pin")==null?"":rs.getString("pin") %>">
         </td>
@@ -101,9 +103,9 @@
             <input type="hidden"  name="security_no" value="<%= rs.getString("security_no")%>">
             <input type="hidden"  name="dboperation" value="security_update_record">
             <input type="hidden" name="displaymode" value="Security_Update_Record">
-            <input type="submit" name="subbutton" value="Update Record">
+            <input type="submit" name="subbutton" value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
             <a href='admincontrol.jsp?keyword=<%=rs.getString("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'> 
-            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="Delete the Record"></a> 
+            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt='<bean:message key="admin.securityupdatesecurity.altImgDelete"/>'></a> 
         </td>
       </tr>
       <%
@@ -114,7 +116,7 @@
   </table>
   
   <p></p>
-<%@ include file="footer.htm" %>
+<%@ include file="footerhtm.jsp" %>
 </center>
 </body>
-</html>
+</html:html>

@@ -94,7 +94,7 @@ function checkForm() {
 <%
    ResultSet rsgroup = null;
    int i=0;
-   rsgroup = apptMainBean.queryResults("last_name", "searchprovider");
+   rsgroup = apptMainBean.queryResults("searchprovider");
    while (rsgroup.next()) { 
      i++;
 %>

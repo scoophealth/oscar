@@ -193,7 +193,9 @@ function findProvider(p,m,d) {
   
    //initial provider bean for all the application
    if(providerBean.isEmpty()) {
-     rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
+     // the following line works only on MySQL. Should not be used
+     // rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
+     rsgroup = apptMainBean.queryResults( "searchallprovider");
  	   while (rsgroup.next()) { 
  	    providerBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
  	   }
@@ -265,7 +267,7 @@ function findProvider(p,m,d) {
          <a href="#" ONCLICK ="popupPage(550,800,'<%=resourcebaseurl%>');return false;" title="Manage Clinical Resource" >Resource</a></font></td>
          <!--a href="#" ONCLICK ="popupPage(550,800,'http://mcham:mcham@oscar1.mcmaster.ca:8888/oscarResource/manage');return false;" title="Manage Clinical Resource" >Resource</a></font></td-->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage(550,760,'../demographic/search.htm');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage(550,760,'../demographic/search.jsp');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='Generate a report' OnMouseOver="window.status='Generate a report' ; return true">Report</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -330,7 +332,7 @@ function findProvider(p,m,d) {
   <a href=# onClick = "popupPage(300,450,'receptionistchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="Change your Group No.">Group:</a>
   <select name="mygroup_no" onChange="changeGroup(this)">
   <option value=".default">.default</option>
-<% rsgroup = apptMainBean.queryResults("mygroup_no", "searchmygroupno");
+<% rsgroup = apptMainBean.queryResults("searchmygroupno");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%=rsgroup.getString("mygroup_no")%></option>

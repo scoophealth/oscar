@@ -31,10 +31,11 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<html>
+
+<html:html locale="true">
 <head>
 <title>
-Immunization Schedule
+<bean:message key="oscarEncounter.immunization.Schedule.title"/>
 </title>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
@@ -85,7 +86,7 @@ TD.grey
     function edit(nodeName)
     {
         windowprops = "height=440,width=630,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-        window.open('ScheduleEdit.jsp?node=' + nodeName,"RecordImmunization",windowprops);
+        window.open('ScheduleEdit.jsp?node=' + nodeName,"<bean:message key="oscarEncounter.immunization.Schedule.msgRecordImm"/>",windowprops);
     }
 
     function returnEdit(nodeName, givenDate, refusedDate, lot, provider, comments)
@@ -101,7 +102,7 @@ TD.grey
         {
             if(refusedDate != null)
             {
-                label = "Refused";
+                label = "<bean:message key="oscarEncounter.immunization.Schedule.msgRefused"/>";
             }
         }
 
@@ -152,7 +153,7 @@ TD.grey
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                immunizations
+                <bean:message key="oscarEncounter.immunization.Schedule.msgImm"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -163,7 +164,7 @@ TD.grey
                         <td  >
                         </td>
                         <td style="text-align:right" NOWRAP>
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
                         </td>
                     </tr>
                 </table>
@@ -187,13 +188,13 @@ TD.grey
                         Element root = doc.getDocumentElement();
                         NodeList sets = root.getElementsByTagName("immunizationSet");
                         %>
-                        <input type="button" value="Save" onclick="formSubmit('Save');" style="width:100px" />
+                        <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
                                 </td>
                                 <td>
-                        <input type="button" value="Configure" onclick="formSubmit('Configure');" style="width:100px" />
+                        <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
                                 </td>
                                 <td>
-                        <input type="button" value="Close" onclick="window.close();" style="width:100px" />
+                        <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
                                 </td>
                             </tr>
                         </table>
@@ -237,7 +238,7 @@ TD.grey
                                     colCount = j+2;
                                 }
 
-                                %><td class="head">Comments</td>
+                                %><td class="head"><bean:message key="oscarEncounter.immunization.Schedule.msgComments"/></td>
                                 </tr><%
                             }
 
@@ -392,13 +393,13 @@ TD.grey
                                 <input type="hidden" name="hdnAction"/>
                                         </td>
                                         <td>
-                                <input type="button" value="Save" onclick="formSubmit('Save');" style="width:100px" />
+                                <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
                                         </td>
                                         <td>
-                                <input type="button" value="Configure" onclick="formSubmit('Configure');" style="width:100px" />
+                                <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
                                         </td>
                                         <td>
-                                <input type="button" value="Close" onclick="window.close();" style="width:100px" />
+                                <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
                                         </td>
                                     </tr>
                                 </table>
@@ -423,5 +424,5 @@ TD.grey
     } %>
 
 </body>
-</html>
+</html:html>
 

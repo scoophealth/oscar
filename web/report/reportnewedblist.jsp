@@ -45,8 +45,8 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-{"select_formar", "select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no order by ? desc limit ?, ?"  }, 
-{"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by ?"}, 
+{"select_formar", "select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no order by c_finalEDB desc limit ? offset ?"  }, 
+{"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by last_name"}, 
   };
   reportMainBean.doConfigure(dbParams,dbQueries);
 %>
@@ -87,7 +87,7 @@ function setfocus() {
 </tr>
 <%
   ResultSet rs=null ;
-  rs = reportMainBean.queryResults("last_name", "search_provider");
+  rs = reportMainBean.queryResults("search_provider");
   while (rs.next()) { 
     providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
   }
@@ -95,10 +95,9 @@ function setfocus() {
   String[] param =new String[3];
   param[0]=startDate; //"0000-00-00"; 
   param[1]=endDate; //"0000-00-00"; 
-  param[2]="c_finalEDB"; //"0000-00-00"; 
   int[] itemp1 = new int[2];
-  itemp1[0] = Integer.parseInt(strLimit1);
-  itemp1[1] = Integer.parseInt(strLimit2);
+  itemp1[1] = Integer.parseInt(strLimit1);
+  itemp1[0] = Integer.parseInt(strLimit2);
   boolean bodd=false;
   int nItems=0;
   rs = reportMainBean.queryResults(param,itemp1, "select_formar");

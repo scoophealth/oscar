@@ -35,7 +35,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-    {"search_provider", "select * from provider order by ?"},
+    {"search_provider", "select * from provider order by last_name"},
   };
   String[][] responseTargets=new String[][] {  };
   addDemoBean.doConfigure(dbParams,dbQueries,responseTargets);
@@ -295,7 +295,7 @@ function checkTypeIn() {
         <select name="cust1">
           <option value="" ></option>
 <%
-  ResultSet rsdemo = addDemoBean.queryResults("last_name", "search_provider");
+  ResultSet rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(curUser_no)?"selected":""%> >
@@ -312,7 +312,7 @@ function checkTypeIn() {
         <select name="staff">
           <option value="" ></option>
 <%
-  rsdemo = addDemoBean.queryResults("last_name", "search_provider");
+  rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(curUser_no)?"selected":""%> >
@@ -327,7 +327,7 @@ function checkTypeIn() {
         <select name="cust2">
           <option value="" ></option>
 <%
-  rsdemo = addDemoBean.queryResults("last_name", "search_provider");
+  rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) { 
 %>
   <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(curUser_no)?"selected":""%> >

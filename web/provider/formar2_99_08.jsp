@@ -39,10 +39,10 @@
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_form", "select * from form where form_no=? "}, //new?delete
-{"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 0, 1"}, //new?delete
+{"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1 offset 0"}, //new?delete
 {"search_demograph", "select *  from demographic where demographic_no=?"},
 {"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
-{"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 0, 1"},
+{"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1 offset 0"},
   };
   String[][] responseTargets=new String[][] {
   };

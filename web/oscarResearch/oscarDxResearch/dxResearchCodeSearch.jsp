@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
  <% 
   if(session.getValue("user") == null)
     response.sendRedirect("../../logout.jsp");
@@ -112,9 +115,9 @@ desc4 = "%"+codeName4 + "%";
  param[8] = desc3;
  param[9] = desc4;
 %>
-<html>
+<html:html locale="true">
 <head>
-<title>Research Code Search</title>
+<title><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.title"/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">
 <!--
@@ -138,13 +141,13 @@ function CodeAttach(File0) {
 
 
 
-<h3><font face="Arial, Helvetica, sans-serif">Research (ICHPPC) Code Search </font></h3>
+<h3><font face="Arial, Helvetica, sans-serif"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCodeSearch"/> </font></h3>
 <form name="servicecode" id="servicecode" method="post" action="dxResearchCodeUpdate.jsp">
 <table width="600" border="1">
  
   <tr bgcolor="#FFBC9B"> 
-    <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>
-    <td width="88%"><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
+    <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCode"/></font></b></td>
+    <td width="88%"><b><font face="Arial, Helvetica, sans-serif" size="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgDescription"/></font></b></td>
   </tr>
  
   
@@ -186,7 +189,7 @@ String Dcode="", DcodeDesc="";
   
   <%  if (intCount == 0 ) { %>
   <tr bgcolor="<%=color%>"> 
-    <td colspan="2"><font face="Arial, Helvetica, sans-serif" size="2">No match found. <%// =i%></font></td>
+    <td colspan="2"><font face="Arial, Helvetica, sans-serif" size="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgNoMatch"/>. <%// =i%></font></td>
     
   </tr>
   <%  }%>
@@ -200,10 +203,10 @@ String Dcode="", DcodeDesc="";
 </script>
 <% } %>
 </table>
-<input type="submit" name="submit" value="Confirm"><input type="button" name="cancel" value="Cancel" onclick="javascript:window.close()">
+<input type="submit" name="submit" value="Confirm"><input type="button" name="<bean:message key="global.btnCancel"/>" value="Cancel" onclick="javascript:window.close()">
 <form>
 <p></p>
 <p>&nbsp;</p>
 <h3>&nbsp;</h3>
 </body>
-</html>
+</html:html>

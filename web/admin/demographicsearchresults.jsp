@@ -61,7 +61,7 @@ function setfocus() {
   <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">SEARCH FOR PATIENT RECORDS</font></th></tr>
 </table>
 
-<%@ include file="zdemographicfulltitlesearch.htm" %>
+<%@ include file="zdemographicfulltitlesearch.jsp" %>
 <table width="95%" border="0">
 <tr>
 <td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>

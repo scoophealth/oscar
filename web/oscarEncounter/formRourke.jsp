@@ -24,12 +24,15 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page language="java"%>
 <%@ page import="oscar.oscarEncounter.data.EctRourkeRecord" %>
-<html>
+<html:html locale="true">
 <head>
 <title>
-formRourke
+<bean:message key="oscarEncounter.formRourke.title"/>
 </title>
 </head>
 
@@ -58,4 +61,4 @@ function redirect(formId)
 <body onLoad="javascript:redirect('<%=formId%>');">
     <!--input type="button" value="Push Me" onClick="javascript:redirect('<%=formId%>');" /-->
 </body>
-</html>
+</html:html>

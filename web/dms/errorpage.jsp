@@ -24,20 +24,23 @@
  */
 -->
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
-<title>DOCUMENT MANAGEMENT SYSTEM</title>
+<title><bean:message key="dms.errorpage.titlex"/></title>
 </head>
 
 <body  background="../images/gray_bg.jpg" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">DOCUMENT ERROR PAGE</font></th>
+    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="dms.errorpage.msgErrorPage"/></font></th>
   </tr>
 </table>
 <p><%=request.getParameter("msg")%></p>
 <form>
-<input type="button" name="Back" value="Back" onClick="javascript:history.go(-1)">
+<input type="button" name="Back" value="<bean:message key="global.btnBack"/>" onClick="javascript:history.go(-1)">
 </form>
 </body>
-</html>
+</html:html>

@@ -25,16 +25,16 @@ public String encode64(String plainText)
 
 
 
-<html>
+<html:html locale="true">
 <head>
 <title>
-oscarComm
+<bean:message key="oscarEncounter.RemoteAttachments.title"/>
 </title>
 <script type="text/javascript" language=javascript>
 function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarVA", windowprops);
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.RemoteAttachments.msgViewAtt"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -45,7 +45,7 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
 function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarSA", windowprops);
+  var popup=window.open(varpage, "<bean:message key="oscarEncounter.RemoteAttachments.msgSendAtt"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -58,10 +58,10 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
 
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.RemoteAttachments.msgEncounterTable"/>">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                oscarComm
+                <bean:message key="oscarEncounter.RemoteAttachments.title"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -73,7 +73,7 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/>p</a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.licence"/></a>
                         </td>
                     </tr>
                 </table>
@@ -84,16 +84,16 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
             <%String prov = bean.getDemographicNo();
               String demog = bean.providerNo;
             %>
-            <a href="javascript:popupSendAttach(700,960,'../oscarMessenger/Transfer/SelectItems.jsp?val1=<%=demog%>&val2=<%=prov%>')">Send eDocs <br>for this Patient</a>
+            <a href="javascript:popupSendAttach(700,960,'../oscarMessenger/Transfer/SelectItems.jsp?val1=<%=demog%>&val2=<%=prov%>')"><bean:message key="oscarEncounter.RemoteAttachments.msgSendEDoc"/></a>
             </td>
             <td class="MainTableRightColumn">
-                <h2>Demographic Attachments</h2>
+                <h2><bean:message key="oscarEncounter.RemoteAttachments.msgDemogAtt"/></h2>
                 <table border="0" width="80%" cellspacing="1">
                     <tr>
-                        <th bgcolor="#DDDDFF">Subject</th>
-                        <th bgcolor="#DDDDFF">Sent From</th>
-                        <th bgcolor="#DDDDFF">Saved By</th>
-                        <th bgcolor="#DDDDFF">Date</th>
+                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgSubject"/></th>
+                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgSentFrom"/></th>
+                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgSavedBy"/></th>
+                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgDate"/></th>
 
                     </tr>
                 <%
@@ -131,4 +131,4 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
         </tr>
     </table>
 </body>
-</html>
+</html:html>

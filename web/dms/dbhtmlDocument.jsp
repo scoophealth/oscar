@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -49,13 +52,13 @@ docfilename =request.getParameter("docfilename");
  docxml =request.getParameter("docxml");
 %>
 
+<html:html locale="true">
 <%
 if (docdesc.compareTo("") == 0 || docfilename.compareTo("") == 0 || doctype.compareTo("") == 0  || docxml.compareTo("")==0) {
- String errormsg = "Error: Description, Filename, HTML content and Document Type  must be entered.";
 
 %>
 <jsp:forward page='errorpage.jsp' >
-<jsp:param name="msg" value='<%=errormsg%>' />
+<jsp:param name="msg" value='<bean:message key="dms.documentDelete.msgError"/>' />
 <jsp:param name="doctype" value='<%=doctype%>' />
 <jsp:param name="docfilename" value='<%=docfilename%>' />
 <jsp:param name="docdesc" value='<%=docdesc%>' />
@@ -158,3 +161,4 @@ else {
 }
 
 %> 
+</html:html>

@@ -64,14 +64,11 @@ public class CookieSecurity extends HttpServlet
 
     public void setCookieNameValue()
     {
-        String userHomePath = System.getProperty("user.home", "user.dir");
-        FileInputStream pStream = null;
+        InputStream configFile = CookieSecurity.class.getResourceAsStream("oscar_security.properties");
         Properties ap = new Properties();
         try
         {
-            File pFile = new File(userHomePath, "oscar_security.properties");
-            pStream = new FileInputStream(pFile.getPath());
-            ap.load(pStream);
+            ap.load(configFile);
             setCookieName(ap.getProperty("cookieName"));
             setCookieValue(ap.getProperty("cookieValue"));
         }
@@ -81,10 +78,10 @@ public class CookieSecurity extends HttpServlet
         }
         finally
         {
-            if (pStream != null)
+            if (configFile != null)
             {
                 try {
-                     pStream.close();
+                     configFile.close();
                 }
                 catch (IOException ioe) {
                 }

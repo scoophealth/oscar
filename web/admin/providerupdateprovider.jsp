@@ -1,10 +1,12 @@
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>OSCAR Project</title>
+<title><bean:message key="admin.providerupdateprovider.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
 <!--
@@ -19,7 +21,7 @@ function setfocus() {
 <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th><font face="Helvetica" color="#FFFFFF">UPDATE A PROVIDER RECORD</font></th>
+  <tr bgcolor="#486ebd"><th><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.providerupdateprovider.description"/></font></th>
   </tr>
 </table>
 
@@ -40,108 +42,107 @@ function setfocus() {
 <table cellspacing="0" cellpadding="2" width="100%" border="0" datasrc='#xml_list'>
 
   <tr> 
-    <td width="50%" align="right">Provider No.: </td>
+    <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/>: </td>
     <td><% String provider_no = rs.getString("provider_no"); %><%= provider_no %>
           <input type="hidden"  name="provider_no" value="<%= provider_no %>">
           <input type="hidden"  name="dboperation" value="provider_update_record"></td>
   </tr>
   <tr> 
-    <td><div align="right">Last Name: </div></td>
+    <td><div align="right"><bean:message key="admin.provider.formLastName"/>: </div></td>
     <td><input type="text"  index="3" name="last_name" value="<%= rs.getString("last_name") %>"></td>
   </tr>
   <tr>
-    <td><div align="right">First Name: </div></td>
+    <td><div align="right"><bean:message key="admin.provider.formFirstName"/>: </div></td>
     <td><input type="text"  index="4" name="first_name" value="<%= rs.getString("first_name") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Type (receptionist/doctor/admin): </td>
+    <td align="right"><bean:message key="admin.provider.formType"/>: </td>
     <td><input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Specialty: </td>
+    <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
     <td><input type="text" name="specialty" value="<%= rs.getString("specialty") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Team: </td>
+    <td align="right"><bean:message key="admin.provider.formTeam"/>: </td>
     <td><input type="text" name="team" value="<%= rs.getString("team") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Sex(F/M): </td>
+    <td align="right"><bean:message key="admin.provider.formSex"/>: </td>
     <td><input type="text" name="sex" value="<%= rs.getString("sex") %>"></td>
   </tr>
   <tr> 
-    <td align="right">DOB: </td>
+    <td align="right"><bean:message key="admin.provider.formDOB"/>: </td>
     <td><input type="text" name="dob" value="<%= rs.getString("dob") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Address: </td>
+    <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>
     <td><input type="text" name="address" value="<%= rs.getString("address") %>" size="40"></td>
   </tr>
   <tr> 
-    <td align="right">Phone (home): </td>
-    <td><input type="text" name="phone" value="<%= rs.getString("phone") %>">
-    Phone (work): 
+    <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
+    <td><input type="text" name="phone" value="<%= rs.getString("phone") %>"><bean:message key="admin.provider.formWorkPhone"/>: 
     <input type="text" name="workphone" value="<%= rs.getString("work_phone") == null?"":(rs.getString("work_phone")) %>"></td></tr>
   <tr> 
-    <td align="right">Pager: </td>
+    <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>
           <input type="text" name="xml_p_pager" value="" datafld='xml_p_pager'>
         </td>
   </tr>
   <tr> 
-    <td align="right">Cell: </td>
+    <td align="right"><bean:message key="admin.provider.formCell"/>: </td>
     <td>
           <input type="text" name="xml_p_cell" value="" datafld='xml_p_cell'>
         </td>
   </tr>
   <tr> 
-    <td align="right">Other Phone: </td> 
+    <td align="right"><bean:message key="admin.provider.formOtherPhone"/>: </td> 
     <td>
           <input type="text" name="xml_p_phone2" value="" datafld='xml_p_phone2'>
         </td> 
   </tr>
   <tr> 
-    <td align="right">Fax: </td>
+    <td align="right"><bean:message key="admin.provider.formFax"/>: </td>
     <td>
           <input type="text" name="xml_p_fax" value="" datafld='xml_p_fax'>
         </td>
   </tr>
   <tr> 
-    <td align="right">OHIP NO: </td>
+    <td align="right"><bean:message key="admin.provider.formOhipNo"/>: </td>
     <td><input type="text" name="ohip_no" value="<%= rs.getString("ohip_no") %>"></td>
   </tr>
   <tr> 
-    <td align="right">RMA NO: </td>
+    <td align="right"><bean:message key="admin.provider.RmaNo"/>: </td>
     <td><input type="text" name="rma_no" value="<%= rs.getString("rma_no") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Billing No.: </td>
+    <td align="right"><bean:message key="admin.provider.formBillingNo"/>: </td>
     <td><input type="text" name="billing_no" value="<%= rs.getString("billing_no") %>"></td>
   </tr>
   <tr> 
-    <td align="right">HSO NO: </td>
+    <td align="right"><bean:message key="admin.provider.formHsoNo"/>: </td>
     <td><input type="text" name="hso_no" value="<%= rs.getString("hso_no") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Status: </td>
+    <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
     <td><input type="text" name="status" value="<%= rs.getString("status") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Specialty Code: </td>
+    <td align="right"><bean:message key="admin.provider.formSpecialtyCode"/>: </td>
     <td><input type="text" name="xml_p_specialty_code" value="" datafld='xml_p_specialty_code'></td>
   </tr>
   <tr> 
-    <td align="right">Billing Group No.: </td>
+    <td align="right"><bean:message key="admin.provider.formBillingGroupNo"/>: </td>
     <td><input type="text" name="xml_p_billinggroup_no" value="" datafld='xml_p_billinggroup_no'></td>
   </tr>
   <tr> 
-    <td align="right">SLP USERNAME: </td>
+    <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
     <td>
           <input type="text" name="xml_p_slpusername" value="" datafld='xml_p_slpusername'>
         </td>
   </tr>
   <tr> 
-    <td align="right">SLP PASSWORD: </td>
+    <td align="right"><bean:message key="admin.provider.formSlpPassword"/>: </td>
     <td>
           <input type="text" name="xml_p_slppassword" value="" datafld='xml_p_slppassword'>
         </td>
@@ -150,10 +151,10 @@ function setfocus() {
       <td colspan="2">
           <div align="center"> 
 			<input type="hidden" name="displaymode" value="Provider_Update_Record">
-			<input type="submit" name="subbutton" value="Update Record">
+			<input type="submit" name="subbutton" value=<bean:message key="admin.providerupdateprovider.btnSubmit"/>>
             <a href='admincontrol.jsp?keyword=<%=rs.getString("provider_no")%>&displaymode=Provider_Delete&dboperation=provider_delete'> 
-            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="Delete the Record"></a> 
-            <!--input type="button" name="Button" value="Cancel" onClick="onCancel()"-->
+            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="<bean:message key="admin.providerupdateprovider.msgDeleteRecord"/>"></a> 
+            <!--input type="button" name="Button" value="<bean:message key="admin.providerupdateprovider.btnCancel"/>" onClick="onCancel()"-->
           </div>
       </td>
   </tr>
@@ -165,7 +166,7 @@ function setfocus() {
   </form>
   
   <p></p>
-<%@ include file="footer.htm" %>
+<%@ include file="footerhtm.jsp" %>
 </center>
 </body>
-</html>
+</html:html>

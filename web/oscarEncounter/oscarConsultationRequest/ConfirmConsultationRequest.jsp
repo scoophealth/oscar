@@ -29,22 +29,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
-<%
-String type = (String) request.getAttribute("transType");
-String mess = "";
-if (type.equals("1")){
-    mess = "Updated";
-}else if (type.equals("2")){
-    mess = "Created";
-}
-
-%>
 
 <html:html locale="true">
 
 <head>
 <title>
-GotoSearch
+<bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.title"/>
 </title>
 <html:base/>
 
@@ -66,15 +56,23 @@ function finishPage(secs){
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
         <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
+        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
+        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
+        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
         </td>
     </tr>
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Consultation Request Form has been <%=mess%></p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgConsReq"/>
+	<%
+	String type = (String) request.getAttribute("transType");
+	if (type.equals("1")){ %>
+	<bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgUpdated"/>
+	<% }else if (type.equals("2")){ %>
+	<bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreated"/>
+	<% } %>
+</p>
         </td>
     </tr>
     <tr>
@@ -85,13 +83,13 @@ function finishPage(secs){
             <!----Start new rows here-->
                 <tr>
                     <td>
- 		                <div class="DivContentTitle">This window will close in 5 seconds, or press Close to close it now</div>
+ 		                <div class="DivContentTitle"><bean:message key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgClose5Sec"/></div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <a href="javascript: BackToOscar();" >
-                        Close
+                        <bean:message key="global.btnClose"/>
                         </a>
                     </td>
                 </tr>

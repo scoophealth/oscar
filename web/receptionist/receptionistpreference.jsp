@@ -24,13 +24,16 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../login.jsp");
 %>
 <%@ page import="java.util.*" errorPage="errorpage.jsp" %>
 
-<html>
-<head><title> UPDATE PREFERENCES</title></head>
+<html:html locale="true">
+<head><title><bean:message key="receptionist.receptionistpreference.title"/></title></head>
 <meta http-equiv="Cache-Control" content="no-cache" >
 
 <script language="javascript">
@@ -43,7 +46,7 @@ function setfocus() {
 function popupPage(vheight,vwidth,varpage) { 
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";//360,680
-  var popup=window.open(page, "Receptmygroup", windowprops);
+  var popup=window.open(page, '<bean:message key="receptionist.receptionistpreference.titlePopupPage"/>', windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self; 
@@ -74,7 +77,7 @@ function checkTypeNum(typeIn) {
 }
 function checkTypeIn(obj) {
     if(!checkTypeNum(obj.value) ) {
-	  alert ("You must type in a number in the field.");
+	  alert ('<bean:message key="receptionist.receptionistpreference.msgTypeNumberField"/>');
 	}
 }
 function checkTypeInAll() {
@@ -87,10 +90,10 @@ function checkTypeInAll() {
     if(e < 24 && s <e ) {
 	    checkin = true;
 	  } else {
-	    alert ("Something is wrong with your data!!!");
+	    alert ('<bean:message key="receptionist.receptionistpreference.msgSomethingWrongData"/>');
 	  }
 	} else {
-      alert ("You must type in numbers in some fields."); 
+      alert ('<bean:message key="receptionist.receptionistpreference.msgTypeNumberSomeFields"/>'); 
 	}
 	return checkin;
 }
@@ -102,7 +105,7 @@ function checkTypeInAll() {
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="receptionistcontrol.jsp" onSubmit="return(checkTypeInAll())">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PREFERENCE</font></th>
+      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="receptionist.receptionistpreference.description"/></font></th>
   </tr>
 </table>
 
@@ -113,13 +116,13 @@ function checkTypeInAll() {
         <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
           <tr valign="middle"> 
             <td width="25%" BGCOLOR="#C4D9E7" ALIGN="right"> 
-              <font face="arial"> Start Hour :</font>
+              <font face="arial"><bean:message key="receptionist.preference.formStartHour"/>:</font>
             </td>
             <td width="25%" BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
               <INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="2" onBlur="checkTypeIn(this)">
             </td>
             <td width="28%" BGCOLOR="#C4D9E7" ALIGN="right"> 
-              <font face="arial"> End Hour<font size='-2'>(<24)</font> :</font>
+              <font face="arial"><bean:message key="receptionist.preference.formEndHour"/>:<font size='-2'>(<24)</font> :</font>
             </td>
             <td width="22%" BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
               <INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>'  onBlur="checkTypeIn(this)" WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="3">
@@ -127,15 +130,13 @@ function checkTypeInAll() {
           </tr>
           <tr valign="middle"> 
             <td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <div align="right"><font face="arial"><font face="arial"> Period 
-                :</font></font></div>
+              <div align="right"><font face="arial"><font face="arial"><bean:message key="receptionist.preference.formPeriod"/>:</font></font></div>
             </td>
             <td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
               <INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="3" onBlur="checkTypeIn(this)">
             </td>
 			<td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <div align="right"><font face="arial"> <a href=# onClick ="popupPage(360,600,'receptionistcontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' )"><font size="-3">(View/Edit)</font>Group 
-                No.</a>:</font></div>
+              <div align="right"><font face="arial"> <a href=# onClick ="popupPage(360,600,'receptionistcontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' )"><font size="-3"><bean:message key="receptionist.receptionistpreference.viewEdit"/></font><bean:message key="receptionist.receptionistpreference.btnGroupNo"/></a>:</font></div>
             </td>
             <td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
               <INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="10">
@@ -154,10 +155,10 @@ function checkTypeInAll() {
 <table width="100%" BGCOLOR="#486ebd">
   <tr>
     <TD align="RIGHT" width="50%">
-        <INPUT TYPE="submit" VALUE="Update" SIZE="7">
+        <INPUT TYPE="submit" VALUE='<bean:message key="receptionist.receptionistpreference.btnSubmit"/>' SIZE="7">
       </TD>
     <TD></TD>
-    <TD align="LEFT"><INPUT TYPE = "RESET" VALUE = " Cancel " onClick="window.close();"></TD>
+    <TD align="LEFT"><INPUT TYPE = "RESET" VALUE ='<bean:message key="receptionist.receptionistpreference.btnReset"/>' onClick="window.close();"></TD>
   </tr>
 </TABLE>
 
@@ -165,10 +166,10 @@ function checkTypeInAll() {
 
 <table width="100%" BGCOLOR="eeeeee">
    <tr> 
-    <TD align="center"><a href=# onClick ="popupPage(230,600,'../provider/providerchangepassword.jsp');return false;">Change Your Password </a>
+    <TD align="center"><a href=# onClick ="popupPage(230,600,'../provider/providerchangepassword.jsp');return false;"><bean:message key="receptionist.receptionistpreference.btnChangePassword"/></a>
     </td>
   </tr>
 </table>
 
 </body>
-</html>
+</html:html>

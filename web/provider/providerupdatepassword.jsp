@@ -28,6 +28,8 @@
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
 %>
+
+
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*,java.security.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="pwdMainBean" class="oscar.AppointmentMainBean" scope="page" />
 <%

@@ -40,15 +40,16 @@
     {"searchappointmentday", "select appointment_no, provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time, status desc "}, 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "}, 
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? order by first_name"}, 
-    {"searchmygroupall", "select * from mygroup order by ?"}, 
-    {"searchmygroupno", "select * from mygroup group by mygroup_no order by ?"}, 
+    {"searchmygroupall", "select * from mygroup order by mygroup_no"}, 
+    {"searchmygroupno", "select * from mygroup group by mygroup_no order by mygroup_no"}, 
     {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"}, 
     {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
-    {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by ?"}, 
-    {"searchallprovider", "select * from provider order by ?"}, 
+    {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by last_name"}, 
+    //{"searchallprovider", "select * from provider order by last_name"}, 
+    {"searchallprovider", "select * from provider order by last_name"}, 
     {"updateapptstatus", "update appointment set status=? where appointment_no=? "},
     {"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, color_template=? where provider_no=? "},
-    {"add_preference", "insert into preference values ('\\N',?, ?, ?, ?, ?, ?)"},
+    {"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, color_template) values (?, ?, ?, ?, ?, ?)"},
 
     {"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" }, 
     {"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? order by sdate, reason" }, 
@@ -56,7 +57,7 @@
     {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" }, 
 
     {"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"}, 
-    {"search_timecode", "select * from scheduletemplatecode order by ?"}, 
+    {"search_timecode", "select * from scheduletemplatecode order by code"}, 
     {"search_resource_baseurl", "select * from property where name = ?"}, 
   };
    

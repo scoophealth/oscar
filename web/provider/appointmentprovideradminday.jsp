@@ -7,6 +7,9 @@
 <jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
 <jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
 
+<!-- Struts for i18n -->
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%
     if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("doctor"))
         response.sendRedirect("../logout.jsp");
@@ -24,9 +27,9 @@
 	String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName; 
 
     //String userprofession = (String) session.getAttribute("userprofession");
-    int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
-    int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
-    int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
+    int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
+    int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
+    int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
 
     int lenLimitedL=11, lenLimitedS=3; //L - long, S - short
     int len = lenLimitedL;
@@ -69,9 +72,9 @@
     String strDay=day>9?(""+day):("0"+day);
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>Doctor Appointment Access - appointmentprovideradminday</title>
+<title><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
 <% response.setHeader("Cache-Control","no-cache");%>
 <meta http-equiv="refresh" content="180;">
@@ -84,7 +87,7 @@ function setfocus() {
 function popupPage(vheight,vwidth,varpage) { 
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-  var popup=window.open(page, "apptProvider", windowprops);
+  var popup=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self; 
@@ -102,7 +105,7 @@ window.open(page, "apptProviderSearch", windowprops);
 function popupOscarRx(vheight,vwidth,varpage) { 
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarRx", windowprops);
+  var popup=window.open(varpage, "<bean:message key="global.oscarRx"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -132,7 +135,7 @@ function refresh1() {
   }
 }
 function onUnbilled(url) {
-  if(confirm("You are about to delete the previous billing, are you sure?")) {
+  if(confirm("<bean:message key="provider.appointmentProviderAdminDay.onUnbilled"/>")) {
     popupPage(700,720, url);
   }
 }
@@ -163,7 +166,7 @@ function goZoomView(s, n) {
    ResultSet rsgroup = null;
    //initial provider bean for all the application
    if(providerBean.isEmpty()) {
-     rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
+     rsgroup = apptMainBean.queryResults("searchallprovider");
  	   while (rsgroup.next()) { 
  	    providerBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
  	   }
@@ -172,7 +175,7 @@ function goZoomView(s, n) {
    if(view==0) { //multiple views
 	   rsgroup = apptMainBean.queryResults(mygroupno, "searchmygroupcount");
  	   while (rsgroup.next()) { 
-       numProvider=rsgroup.getInt("count(provider_no)");
+       numProvider=rsgroup.getInt(1);
      }
 
        String [] param3 = new String [2];
@@ -180,7 +183,7 @@ function goZoomView(s, n) {
        param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
   	   rsgroup = apptMainBean.queryResults(param3, "search_numgrpscheduledate");
  	     while (rsgroup.next()) { 
-         numAvailProvider = rsgroup.getInt("count(scheduledate.provider_no)");
+         numAvailProvider = rsgroup.getInt(1);
        }
 
      if(numProvider==0) {
@@ -225,7 +228,7 @@ function goZoomView(s, n) {
        dateTimeCodeBean.put(rsgroup.getString("provider_no"), rsgroup.getString("timecode"));
      } 
    }
-	 rsgroup = apptMainBean.queryResults("code", "search_timecode");
+	 rsgroup = apptMainBean.queryResults("search_timecode");
    while (rsgroup.next()) { 
      dateTimeCodeBean.put("description"+rsgroup.getString("code"), rsgroup.getString("description"));
      dateTimeCodeBean.put("duration"+rsgroup.getString("code"), rsgroup.getString("duration"));
@@ -240,40 +243,40 @@ function goZoomView(s, n) {
     <table BORDER="0" CELLPADDING="0" CELLSPACING="0" height="20">
       <tr>
         <td></td><td rowspan="2" BGCOLOR="ivory" ALIGN="MIDDLE" nowrap height="20"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='View your daily schedule' OnMouseOver="window.status='View your daily schedule' ; return true"> 
-         &nbsp;&nbsp;Day&nbsp;&nbsp; </a></font></td>
+         <a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"> 
+         &nbsp;&nbsp;<bean:message key="global.day"/>&nbsp;&nbsp; </a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='View your monthly template' OnMouseOver="window.status='View your monthly template' ; return true">Month</a></font></td>
+         <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="Resources" onmouseover="window.status='View Resources';return true">Resource</a></font></td>
+         <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="global.resources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="global.resources"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.htm');return false;"  TITLE='Search for patient records' OnMouseOver="window.status='Search for patient records' ; return true">Search</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='Generate a report' OnMouseOver="window.status='Generate a report' ; return true">Report</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='Generate a billing report' onmouseover="window.status='Generate a billing report';return true">Billing</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../billing/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../lab/lablinks.htm');return false;" TITLE='View lab reports'>Lab</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../lab/lablinks.htm');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a></font></td>
 
 <!-- oscarMessenger code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="Messenger">
+         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
          <oscarmessage:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
 <!--/oscarMessenger code block -->
 <!-- oscarEcounter/consultationRequest.jsp code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="View Consultation Requests">
-         con</a></font>
+         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
+         <bean:message key="global.con"/></a></font>
          </td>
 <!--/oscarEcounter code block -->
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href=# onClick ="popupPage(200,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='Edit your personal setting' OnMouseOver="window.status='Edit your personal setting' ; return true">Pref</a></font></td>
+         <a href=# onClick ="popupPage(200,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a></font></td>
        
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>');return false;" TITLE='View e-Document'>eDoc</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a></font></td>
    <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp');return false;" TITLE='View Tickler'>Tickler</a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp');return false;" TITLE='<bean:message key="global.tickler"/>'><bean:message key="global.tickler"/></a></font></td>
 
 <td></td>
       </tr><tr> 
@@ -300,7 +303,7 @@ function goZoomView(s, n) {
 
   </td>
   <td align="right" valign="bottom">
-  <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')">Help</a>  
+  <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>  
   &nbsp;&nbsp;
   </td>
 </tr>
@@ -312,18 +315,25 @@ function goZoomView(s, n) {
       <tr>
         <td BGCOLOR="ivory" width="33%">
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day-1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
-         &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Previous DAY" vspace="2"></a> 
+         &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewPrevDay"/>" vspace="2"></a> 
          <b><span CLASS=title><%=formatDate%></span></b>
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day+1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
-         <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next DAY" vspace="2">&nbsp;&nbsp;</a>
-         <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday")%>')">Calendar</a></td>
-        <td ALIGN="center"  BGCOLOR="ivory" width="33%"><% if(view==1) out.println("<a href='providercontrol.jsp?year="+strYear+"&month="+strMonth+"&day="+strDay+"&view=0&displaymode=day&dboperation=searchappointmentday'>Group View</a>"); else out.println("<B>Hello "+ userfirstname+" "+userlastname +"</b>"); %> </TD>
+         <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewNextDay"/>" vspace="2">&nbsp;&nbsp;</a>
+        <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday")%>')"><bean:message key="global.calendar"/></a></td>
+        <td ALIGN="center"  BGCOLOR="ivory" width="33%">
+	<% if(view==1) {%>
+	<a href='providercontrol.jsp?year="+strYear+"&month="+strMonth+"&day="+strDay+"&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="provider.appointmentProviderAdminDay.grpView"/></a>
+	<% } else { %>
+	<B><bean:message key="global.hello"/>
+	<% out.println( userfirstname+" "+userlastname); %>
+	</b></TD> 
+	<% } %>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
-  <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="Change your Group No.">Group:</a>
+  <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
   <select name="mygroup_no" onChange="changeGroup(this)">
-  <option value=".default">.default</option>
+  <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 <%
-   rsgroup = apptMainBean.queryResults("mygroup_no", "searchmygroupno");
+   rsgroup = apptMainBean.queryResults( "searchmygroupno");
  	 while (rsgroup.next()) { 
 %>
   <option value="<%=rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%=rsgroup.getString("mygroup_no")%></option>
@@ -331,14 +341,12 @@ function goZoomView(s, n) {
  	 }
 %>
 </select>
-<%
-  if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) {
-%>        
-         <a href=# onClick = "review('0')" title="View providers available">Schedule View</a> &nbsp;|&nbsp; 
-<% } else { %>         
-         <a href=# onClick = "review('1')" title="View all providers in the group">View All</a> &nbsp;|&nbsp; 
-<% } %>         
-         <a href="../logout.jsp">Log Out <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
+<% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>        
+         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a> &nbsp;|&nbsp; 
+<% } else {  %>         
+         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp; 
+<% } %>
+         <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
       </tr>
 
       <tr><td colspan="3">
@@ -374,7 +382,7 @@ function goZoomView(s, n) {
      userAvail = true; 
      param1[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
      param1[1] = curProvider_no[nProvider];
-     rsgroup = apptMainBean.queryResults(param1, "search_scheduledate_single");
+     rsgroup = apptMainBean.queryResults(param1,"search_scheduledate_single");
      
      //viewall function 
      if(request.getParameter("viewall")==null || request.getParameter("viewall").equals("0") ) {
@@ -390,8 +398,8 @@ function goZoomView(s, n) {
         <table border="0" cellpadding="0" bgcolor="#486ebd" cellspacing="0" width="100%"><!-- for the first provider's name -->
           <tr><td ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="Flip view"  >
-          <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="zoom view" >
-          <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="zoom view"-->
+          <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
+          <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b> <%=userAvail?"":"[not on Schedule]"%></td></tr>
           <tr><td valign="top">
         
@@ -466,7 +474,7 @@ function goZoomView(s, n) {
                   rsStudy = null;
                   rsStudy = apptMainBean.queryResults(demographic_no, "search_studycount");
 				  int numStudy = 0;
-				  if (rsStudy.next()) numStudy =  rsStudy.getInt("count(study_no)");
+				  if (rsStudy.next()) numStudy =  rsStudy.getInt(1);
 				  if (numStudy == 1) {
                       rsStudy = null;
                       rsStudy = apptMainBean.queryResults(demographic_no, "search_study");
@@ -483,7 +491,7 @@ function goZoomView(s, n) {
             
           	  String reason = rs.getString("reason");
           	  String notes = rs.getString("notes");
-          	  String status = rs.getString("status");
+          	  String status = (rs.getString("status")).trim();
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
         %>	    
@@ -507,29 +515,29 @@ function goZoomView(s, n) {
         <%
         			if(demographic_no==0) {
         %>
-        		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="Tickler Msg: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+        		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
 <a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
-reason: <%=UtilMisc.htmlEscape(reason)%>
-notes: <%=UtilMisc.htmlEscape(notes)%>" >
+<bean:message key="provider.appointmentProviderAdminDay.reason"/>: <%=UtilMisc.htmlEscape(reason)%>
+<bean:message key="provider.appointmentProviderAdminDay.notes"/>: <%=UtilMisc.htmlEscape(notes)%>" >
             .<%=(view==0&&numAvailProvider!=1)?(name.length()>len?name.substring(0,len).toUpperCase():name.toUpperCase()):name.toUpperCase()%></font></a></td>
         <%
         			} else {
         			  //System.out.println(name+" / " +demographic_no);
-				%>	<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title="Tickler Msg: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
-<% if (study_no.toString().compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../form/study/forwardstudyname.jsp?study_link=<%=study_link.toString()%>&demographic_no=<%=demographic_no%>&study_no=<%=study_no%>');return false;" title="Study: <%=UtilMisc.htmlEscape(studyDescription.toString())%>"><%="<font color='"+studyColor+"'>"+studySymbol+"</font>"%></a><%} %>
+				%>	<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+<% if (study_no.toString().compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../form/study/forwardstudyname.jsp?study_link=<%=study_link.toString()%>&demographic_no=<%=demographic_no%>&study_no=<%=study_no%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.study"/>: <%=UtilMisc.htmlEscape(studyDescription.toString())%>"><%="<font color='"+studyColor+"'>"+studySymbol+"</font>"%></a><%} %>
 
 <a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;" title="<%=name%>
 reason: <%=UtilMisc.htmlEscape(reason)%>
 notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
-<a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="Encounter">
-            |E</a><%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%><% if(status.indexOf('B')==-1) { %><a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="Billing">|B|</a>
+<a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="<bean:message key="global.encounter"/>">
+            |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a><%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%><% if(status.indexOf('B')==-1) { %><a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>
 <% } else {%>  
-    <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="Billing">|-B|</a>
+    <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="<bean:message key="global.billing"/>">|-<bean:message key="provider.appointmentProviderAdminDay.b"/>|</a>
 <% } %>          
     <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;" 
-    title="Master file">M</a><!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|Rx</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx')">|Rx</a>
+    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="provider.appointmentProviderAdminDay.btnM"/></a><!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|Rx</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=<bean:message key="global.oscarRx"/>')">|<bean:message key="global.rx"/></a>
 <% } %>
         		</font></td>
         <% 
@@ -546,8 +554,8 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
 
          </td></tr>
           <tr><td ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
-          <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="Flip view"  >
-          <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="zoom view" >
+          <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.flipView"/>"  >
+          <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="zoom view"-->
           <%=curProviderName[nProvider]%></a></b> <%=userAvail?"":"[not on Schedule]"%></td></tr>
          
@@ -574,12 +582,12 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
   			<tr>
         	<td BGCOLOR="ivory" width="50%">
          	 <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day-1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
-         	 &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Previous DAY" vspace="2"></a> 
+         	 &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewPrevDay"/>" vspace="2"></a> 
            <b><span CLASS=title><%=formatDate%></span></b>
            <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day+1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
-           <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next DAY" vspace="2">&nbsp;&nbsp;</a></td>
+           <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="provider.appointmentProviderAdminDay.viewNextDay"/>" vspace="2">&nbsp;&nbsp;</a></td>
         	<td ALIGN="RIGHT" BGCOLOR="Ivory">
-           <a href="../logout.jsp">Log Out <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
+           <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a> </td>
   			</TR>
 			</table>
 		</td></tr>
@@ -588,4 +596,4 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
 	</td></tr>
 </table>
 </body>
-</html>
+</html:html>

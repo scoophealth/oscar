@@ -6,6 +6,8 @@
 
 %>
 <%@ page import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
 <%  if(!scheduleMainBean.getBDoConfigure()) { %>
@@ -47,9 +49,9 @@
 
 <% scheduleRscheduleBean.clear(); %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>SCHEDULE SETTING</title>
+<title><bean:message key="schedule.scheduletemplateapplying.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -65,7 +67,7 @@ function selectrschedule(s) {
 	self.location.href = a + "&sdate=" +s.options[s.selectedIndex].value ;
 }
 function onBtnDelete() {
-  if( confirm("Are you sure you want to delete this template setting ?") ) {
+  if( confirm('<bean:message key="schedule.scheduletemplateapplying.msgDeleteConfirmation"/>') ) {
     self.location.href += "&delete=1&deldate=all" ;
   } else {;}
 }
@@ -81,10 +83,10 @@ function checkDate(year,month,day) {
 	else { return true; }
 }
 function onChangeDates() {
-	if(!checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) ) { alert("The date you input is incorrect!!!"); }
+	if(!checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) ) { alert('<bean:message key="schedule.scheduletemplateapplying.msgIncorrectOutput"/>'); }
 }
 function onChangeDatee() {
-	if(!checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) ) { alert("The date you input is incorrect!!!"); }
+	if(!checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) ) { alert('<bean:message key="schedule.scheduletemplateapplying.msgIncorrectOutput"/>'); }
 }
 function onAlternate() {
   if(document.schedule.alternate.checked) {
@@ -210,10 +212,10 @@ function addDataStringB() {
 function addDataString1() {
   var str="";
 	if(document.schedule.syear.value=="" || document.schedule.smonth.value=="" || document.schedule.sday.value=="" || document.schedule.eyear.value=="" || document.schedule.emonth.value=="" || document.schedule.eday.value=="") {
-	  alert("Please input a date!!!");
+	  alert('<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>');
 	  return false;
 	} else if( !checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) || !checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) || (document.schedule.eyear.value-1)<(document.schedule.syear.value-1) ) {
-	  alert("Please input a correct date!!!");
+	  alert('<bean:message key="schedule.scheduletemplateapplying.msgInputCorrectDate"/>');
 	  return false;
 	} else {
 	  return true;
@@ -255,19 +257,18 @@ function addDataString1() {
     <tr bgcolor="#486ebd"> 
             <th align="CENTER" bgcolor="#009966">
               <br>
-              <p><font face="Helvetica" color="#FFFFFF">SCHEDULE TEMPLATE SETTING</font></p>
+              <p><font face="Helvetica" color="#FFFFFF"><bean:message key="schedule.scheduletemplateapplying.msgMainLabel"/></font></p>
             </th>
     </tr>
   </table>
         <table width="98%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td>
-              <p><font size="-1">1. Use the current R Schedule or select a different one from the select field.</font></p>
-              <p><font size="-1">2. Type in the start date and end date for this 
-                R Schedule.</font></p>
-              <p><font size="-1">3. Check the day of week which is AVAILABLE.</font></p>
-              <p><font size="-1">4. Click the 'Next' button.</font></p>
-              <p><font size="-1">* Select R Schedule from the drop down list. Don't change the start date to update the R Sch.</font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduletemplateapplying.msgStepOne"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduletemplateapplying.msgStepTwo"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduletemplateapplying.msgStepThree"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduletemplateapplying.msgStepFour"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduletemplateapplying.msgObs"/></font></p>
               <p>&nbsp;</p>
             </td>
           </tr>
@@ -334,7 +335,7 @@ function addDataString1() {
  	}
 %>
                   </select>
-                <input type="button" name="command" value="Delete" onClick="onBtnDelete()">
+                <input type="button" name="command" value='<bean:message key="schedule.scheduletemplateapplying.btnDelete"/>' onClick="onBtnDelete()">
               </td>
             </tr>
             <tr> 
@@ -359,8 +360,8 @@ function addDataString1() {
               <td colspan="2">&nbsp;</td>
             </tr>
             <tr> 
-              <td colspan="2">is available EVERY<font size="-2"> (Day of Week): </font>
-              <input type="checkbox" name="alternate" value="checked" onClick = "onAlternate()" <%=bOrigAlt||bAlternate?"checked":""%> >Alternating Week Setting</td>
+              <td colspan="2"><bean:message key="schedule.scheduletemplateapplying.msgAvaiableEvery"/><font size="-2"> (<bean:message key="schedule.scheduletemplateapplying.msgDayOfWeek"/>): </font>
+              <input type="checkbox" name="alternate" value="checked" onClick = "onAlternate()" <%=bOrigAlt||bAlternate?"checked":""%> ><bean:message key="schedule.scheduletemplateapplying.msgAlternateWeekSetting"/></td>
             </tr>
             <tr> 
               <td nowrap align="center" colspan="2"> 
@@ -403,7 +404,7 @@ function tranbutton7_click() {
                     <td> 
                       <p><font size="-1"> 
                         <input type="checkbox" name="checksun" value="1" onClick = "addDataString()" <%=param2[0]%>>
-                        Sun</font> 
+                        <bean:message key="schedule.scheduletemplateapplying.msgSunday"/></font> 
                     </td>
                     <td><font size="-1">
                       <input type="text" name="sunfrom1" size="20" value="<%=param3[0][0]%>" readonly >
@@ -413,7 +414,7 @@ function tranbutton7_click() {
                   <tr> 
                     <td> <font size="-1"> 
                       <input type="checkbox" name="checkmon" value="2" onClick = "addDataString()" <%=param2[1]%>>
-                      Mon</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgMonday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="monfrom1" size="20" value="<%=param3[1][0]%>" readonly>
                       <input type="button" name="monto1" value="<<" onclick="javascript:tranbutton2_click();" >
@@ -422,7 +423,7 @@ function tranbutton7_click() {
                   <tr bgcolor="#CCFFCC"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checktue" value="3" onClick = "addDataString()" <%=param2[2]%>>
-                      Tue</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgTuesday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="tuefrom1" size="20" value="<%=param3[2][0]%>" readonly>
                       <input type="button" name="tueto1" value="<<" onclick="javascript:tranbutton3_click();"  >
@@ -431,7 +432,7 @@ function tranbutton7_click() {
                   <tr> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checkwed" value="4" onClick = "addDataString()" <%=param2[3]%>>
-                      Wed</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgWednesday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="wedfrom1" size="20" value="<%=param3[3][0]%>" readonly>
                       <input type="button" name="wedto1" value="<<" onclick="javascript:tranbutton4_click();" >
@@ -440,7 +441,7 @@ function tranbutton7_click() {
                   <tr bgcolor="#CCFFCC"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checkthu" value="5" onClick = "addDataString()" <%=param2[4]%>>
-                      Thu</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgThursday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="thufrom1" size="20" value="<%=param3[4][0]%>" readonly>
                       <input type="button" name="thuto1" value="<<" onclick="javascript:tranbutton5_click();" >
@@ -449,7 +450,7 @@ function tranbutton7_click() {
                   <tr> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checkfri" value="6" onClick = "addDataString()" <%=param2[5]%>>
-                      Fri</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgFriday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="frifrom1" size="20" value="<%=param3[5][0]%>" readonly>
                       <input type="button" name="frito1" value="<<" onclick="javascript:tranbutton6_click();" >
@@ -458,7 +459,7 @@ function tranbutton7_click() {
                   <tr bgcolor="#CCFFCC"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checksat" value="7" onClick = "addDataString()" <%=param2[6]%>>
-                      Sat</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgSaturday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="satfrom1" size="20" value="<%=param3[6][0]%>" readonly>
                       <input type="button" name="satto1" value="<<" onclick="javascript:tranbutton7_click();" >
@@ -523,7 +524,7 @@ function tranbuttonb7_click() {
                     <td> 
                       <p><font size="-1"> 
                         <input type="checkbox" name="checksun2" value="1" onClick = "addDataString()" <%=param2[0]%>>
-                        Sun</font> 
+                        <bean:message key="schedule.scheduletemplateapplying.msgSunday"/></font> 
                     </td>
                     <td><font size="-1">
                       <input type="text" name="sunfrom2" size="20" value="<%=param3[0][0]%>">
@@ -533,7 +534,7 @@ function tranbuttonb7_click() {
                   <tr bgcolor="#E0FFFF"> 
                     <td> <font size="-1"> 
                       <input type="checkbox" name="checkmon2" value="2" onClick = "addDataString()" <%=param2[1]%>>
-                      Mon</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgMonday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="monfrom2" size="20" value="<%=param3[1][0]%>">
                       <input type="button" name="monto2" value="<<" onclick="javascript:tranbuttonb2_click();" >
@@ -542,7 +543,7 @@ function tranbuttonb7_click() {
                   <tr bgcolor="#00C5CD"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checktue2" value="3" onClick = "addDataString()" <%=param2[2]%>>
-                      Tue</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgTuesday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="tuefrom2" size="20" value="<%=param3[2][0]%>">
                       <input type="button" name="tueto2" value="<<" onclick="javascript:tranbuttonb3_click();"  >
@@ -551,7 +552,7 @@ function tranbuttonb7_click() {
                   <tr bgcolor="#E0FFFF"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checkwed2" value="4" onClick = "addDataString()" <%=param2[3]%>>
-                      Wed</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgWednesday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="wedfrom2" size="20" value="<%=param3[3][0]%>">
                       <input type="button" name="wedto2" value="<<" onclick="javascript:tranbuttonb4_click();" >
@@ -560,7 +561,7 @@ function tranbuttonb7_click() {
                   <tr bgcolor="#00C5CD"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checkthu2" value="5" onClick = "addDataString()" <%=param2[4]%>>
-                      Thu</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgThursday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="thufrom2" size="20" value="<%=param3[4][0]%>">
                       <input type="button" name="thuto2" value="<<" onclick="javascript:tranbuttonb5_click();" >
@@ -569,7 +570,7 @@ function tranbuttonb7_click() {
                   <tr bgcolor="#E0FFFF"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checkfri2" value="6" onClick = "addDataString()" <%=param2[5]%>>
-                      Fri</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgFriday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="frifrom2" size="20" value="<%=param3[5][0]%>">
                       <input type="button" name="frito2" value="<<" onclick="javascript:tranbuttonb6_click();" >
@@ -578,7 +579,7 @@ function tranbuttonb7_click() {
                   <tr bgcolor="#00C5CD"> 
                     <td><font size="-1"> 
                       <input type="checkbox" name="checksat2" value="7" onClick = "addDataString()" <%=param2[6]%>>
-                      Sat</font></td>
+                      <bean:message key="schedule.scheduletemplateapplying.msgSaturday"/></font></td>
                     <td><font size="-1">
                       <input type="text" name="satfrom2" size="20" value="<%=param3[6][0]%>">
                       <input type="button" name="satto2" value="<<" onclick="javascript:tranbuttonb7_click();" >
@@ -593,17 +594,19 @@ function tranbuttonb7_click() {
    <select size=<%=bOrigAlt||bAlternate?22:11%> name="mytemplate" >
 	<%
    ResultSet rsdemo = null;
-   String[] param =new String[2];
-   param[0]="Public";
-   param[1]=request.getParameter("name");
+   //String[] param =new String[2];
+   //param[0]="Public";
+   //param[1]=request.getParameter("name");
+   String param = "Public";
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
    while (rsdemo.next()) { 
 	%>
         <option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
   <%
    }
-   param[0]=request.getParameter("provider_no");
-   param[1]=request.getParameter("name");
+   //param[0]=request.getParameter("provider_no");
+   //param[1]=request.getParameter("name");
+   param=request.getParameter("provider_no");
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
    while (rsdemo.next()) { 
 	%>
@@ -631,8 +634,9 @@ function tranbuttonb7_click() {
                 <div align="right"> 
                   <input type="hidden" name="provider_no" value="<%=request.getParameter("provider_no")%>">
                   <input type="hidden" name="available" value="<%=bAlternate||bOrigAlt?"A":"1"%>">
-                  <input type="submit" name="Submit" value=" Next ">
-                  <input type="button" name="Cancel" value="Cancel" onClick="window.close()">
+                  <input type="hidden" name="Submit" value=" Next ">
+                  <input type="submit" value='<bean:message key="schedule.scheduletemplateapplying.btnNext"/>'>
+                  <input type="button" name='<bean:message key="schedule.scheduletemplateapplying.btnCancel"/>' value="Cancel" onclick="window.close()">
                 </div>
               </td>
             </tr>
@@ -651,4 +655,4 @@ function tranbuttonb7_click() {
    //scheduleMainBean.closePstmtConn();
 %>
 </body>
-</html>
+</html:html>

@@ -2,12 +2,12 @@
 <%
   //operation available to the client -- dboperation
   String [][] dbQueries=new String[][] {
-    {"search_provider", "select provider_no, first_name, last_name from provider where status='1' and provider_type=? order by ?" }, 
+    {"search_provider", "select provider_no, first_name, last_name from provider where status='1' and provider_type=? order by last_name" }, 
 //    {"search_provider", "select provider_no, first_name, last_name from provider where  provider_type='doctor' order by ?" }, 
 
-    {"search_rschedule_current", "select * from rschedule where provider_no=? and available=? and sdate <=? order by sdate desc limit 0, 1 " }, 
-    {"search_rschedule_current1", "select * from rschedule where provider_no=? and sdate <=? order by sdate desc limit 0, 1 " }, 
-    {"search_rschedule_current2", "select * from rschedule where provider_no=? and sdate >=? order by sdate limit 0, 1 " }, 
+    {"search_rschedule_current", "select * from rschedule where provider_no=? and available=? and sdate <=? order by sdate desc limit 1 " }, 
+    {"search_rschedule_current1", "select * from rschedule where provider_no=? and sdate <=? order by sdate desc limit 1 " }, 
+    {"search_rschedule_current2", "select * from rschedule where provider_no=? and sdate >=? order by sdate limit 1 " }, 
     {"search_rschedule_future", "select * from rschedule where provider_no=? and available=? and sdate >? order by sdate" }, 
     {"search_rschedule_future1", "select * from rschedule where provider_no=?  and sdate >? order by sdate" }, 
     {"add_rschedule", "insert into rschedule values(?,?,?,?,?, ?,?,?)" },
@@ -27,12 +27,13 @@
     {"update_scheduleholiday", "update scheduleholiday set holiday_name=? where sdate=?" }, 
     
     {"add_scheduletemplatecode", "insert into scheduletemplatecode values(?,?,?,?)" }, 
-    {"search_scheduletemplatecode", "select * from scheduletemplatecode order by ?" }, 
-    {"search_scheduletemplatecodesingle", "select * from scheduletemplatecode where code like binary ?" }, 
-    {"delete_scheduletemplatecode", "delete from scheduletemplatecode where code like binary ?" }, 
+    {"search_scheduletemplatecode", "select * from scheduletemplatecode order by code" }, 
+    {"search_scheduletemplatecodesingle", "select * from scheduletemplatecode where code = ?" }, 
+    {"delete_scheduletemplatecode", "delete from scheduletemplatecode where code = ?" }, 
     
     {"add_scheduletemplate", "insert into scheduletemplate values(?,?,?,?)" }, 
-    {"search_scheduletemplate", "select * from scheduletemplate where provider_no=? order by ?" }, 
+    //{"search_scheduletemplate", "select * from scheduletemplate where provider_no=? order by ?" }, 
+    {"search_scheduletemplate", "select * from scheduletemplate where provider_no=?" }, 
     {"search_scheduletemplatesingle", "select * from scheduletemplate where provider_no=? and name= ?" }, 
     {"delete_scheduletemplate", "delete from scheduletemplate where provider_no=? and name=?" }, 
   };

@@ -18,7 +18,7 @@
 <% 
 	String [][] dbQueries=new String[][] { 
 		{"search_study", "select study_no, study_name, description from study where current = ?"}, 
-		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name, d.first_name, d.provider_no from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by ?"}, 
+		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name, d.first_name, d.provider_no from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by d.last_name"}, 
 	};
 	reportMainBean.doConfigure(dbParams,dbQueries);
 %>
@@ -61,13 +61,10 @@ function setfocus() {
 		studyBean.setProperty(rs.getString("study_no") + rs.getString("study_name"), rs.getString("description") );
 	}
     
-	String[] param =new String[1];
-	param[0]="d.last_name"; 
-
 	//int[] itemp1 = new int[2];  //itemp1[0] = Integer.parseInt(strLimit1);
 
 	int nItems=0;
-	rs = reportMainBean.queryResults(param, "search_demostudy");
+	rs = reportMainBean.queryResults("search_demostudy");
 	while (rs.next()) {
 		nItems++; 
 %>

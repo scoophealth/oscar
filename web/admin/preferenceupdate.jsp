@@ -24,18 +24,20 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
-<head><title>Preference: the following records</title></head>
+<html:html locale="true">
+<head><title><bean:message key="admin.preferenceupdate.title"/></title></head>
 <link rel="stylesheet" href="../web.css" />
 <body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
   <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            PREFERENCE</font></th>
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferenceupdate.description"/></font></th>
       </tr>
     </table>
 <%
@@ -52,20 +54,19 @@
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,nparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h2> Update a Preference Record Successfully ! 
-  <%=request.getParameter("provider_no")%>
+  <p><h2><bean:message key="admin.preferenceupdate.msgUpdateSuccess"/><%=request.getParameter("provider_no")%>
   </h2>
 <%  
   } else {
 %>
-  <h1>Sorry, fail to update !!! <%= request.getParameter("provider_no") %>.
+  <h1><bean:message key="admin.preferenceupdate.msgUpdateFailure"/<%= request.getParameter("provider_no") %>.
 <%  
   }
   apptMainBean.closePstmtConn(); 
 %>
   <p></p>
-<%@ include file="footer2.htm" %>
+<%@ include file="footer2htm.jsp" %>
 
   </center>
 </body>
-</html>
+</html:html>

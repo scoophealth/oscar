@@ -28,6 +28,9 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="dataBean" class="java.util.Properties" scope="page" />
 <% //save or delete the settings
@@ -46,9 +49,9 @@
   }
 %>
 
-<html>
+<html:html locale="true">
 <head>
-<title>TEMPLATE CODE SETTING</title>
+<title><bean:message key="schedule.scheduletemplatecodesetting.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -65,7 +68,7 @@ function upCaseCtrl(ctrl) {
 }
 function checkInput() {
 	if(document.schedule.holiday_name.value == "") {
-	  alert("Please check your input!!!");
+	  alert(<bean:message key="schedule.scheduletemplatecodesetting.msgCheckInput"/>);
 	  return false;
 	} else {
 	  return true;
@@ -85,13 +88,13 @@ function checkInput() {
 <form name="deletetemplatecode" method="post" action="scheduletemplatecodesetting.jsp">
           <tr bgcolor="#CCFFCC"> 
             <td> 
-              <p align="right">Template Code: </p>
+              <p align="right"><bean:message key="schedule.scheduletemplatecodesetting.formTemplateCode"/>: </p>
             </td>
             <td>
       <select name="code" >
 	<%
    ResultSet rsdemo = null;
-   rsdemo = scheduleMainBean.queryResults("code", "search_scheduletemplatecode");
+   rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
    while (rsdemo.next()) { 
 	%>
         <option value="<%=rsdemo.getString("code")%>"><%=rsdemo.getString("code")+" |"+rsdemo.getString("description")%></option>
@@ -99,7 +102,8 @@ function checkInput() {
      }
 	%>
       </select>
-            <td><input type="submit" name="dboperation" value=" Edit "></td>
+      <input type="hidden" name="dboperation" value=" Edit ">
+            <td><input type="submit" value='<bean:message key="schedule.scheduletemplatecodesetting.btnEdit"/>'></td>
           </tr>
 </form>
         </table>
@@ -128,41 +132,42 @@ function checkInput() {
 %>              
 
           <tr bgcolor="#FOFOFO" align="center"> 
-              <td colspan=2><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Appt Template Code</font></td>
+              <td colspan=2><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="schedule.scheduletemplatecodesetting.msgApptTemplateCode"/></font></td>
             </tr>
             <tr bgcolor='ivory'>
-             <td><font color="red">Code:</font></td>
+             <td><font color="red"><bean:message key="schedule.scheduletemplatecodesetting.formCode"/>:</font></td>
              <td><input type="text" name="code" size="1" maxlength="1" <%=bEdit?("value='"+dataBean.getProperty("code")+"'"):"value=''"%> ></td>
             </tr>
             <tr bgcolor='ivory'>
-             <td><font color="red">Description:</font></td>
+             <td><font color="red"><bean:message key="schedule.scheduletemplatecodesetting.formDescription"/>:</font></td>
              <td><input type="text" name="description"  size="25" <%=bEdit?("value='"+dataBean.getProperty("description")+"'"):"value=''"%> ></td>
             </tr>
             <tr bgcolor='ivory'>
-             <td><font color="red">Duration:</font></td>
+             <td><font color="red"><bean:message key="schedule.scheduletemplatecodesetting.formDuration"/>:</font></td>
              <td><input type="text" name="duration"  size="3" maxlength="3" <%=bEdit?("value='"+dataBean.getProperty("duration")+"'"):"value=''"%> > mins.</td>
             </tr>
             <tr bgcolor='ivory'>
-             <td><font color="red">Color:</font></td>
-             <td><input type="text" name="color"  size="10" maxlength="10" <%=bEdit?("value='"+dataBean.getProperty("color")+"'"):"value=''"%> > e.g. #1b2c3d, ivory.</td>
+             <td><font color="red"><bean:message key="schedule.scheduletemplatecodesetting.formColor"/>:</font></td>
+             <td><input type="text" name="color"  size="10" maxlength="10" <%=bEdit?("value='"+dataBean.getProperty("color")+"'"):"value=''"%> > <bean:message key="schedule.scheduletemplatecodesetting.msgColorExample"/></td>
             </tr>
           </table>
             
           <table width="95%" border="0" cellspacing="0" cellpadding="2"  bgcolor="silver" >
           <tr bgcolor="#FOFOFO">
-            <td><input type="submit" name="dboperation" value="Delete"></td>
+                <input type="hidden" name="dboperation" value=""/>
+            <td><input type="button" onclick="document.forms['addtemplatecode'].dboperation.value='Delete'; document.forms['addtemplatecode'].submit();" value='<bean:message key="schedule.scheduletemplatecodesetting.btnDelete"/>'></td>
 			<td align="right"> 
-                <input type="submit" name="dboperation" value=" Save ">
-                <input type="button" name="Button" value=" Exit " onClick="window.close()">
+                <input type="button" onclick="document.forms['addtemplatecode'].dboperation.value=' Save '; document.forms['addtemplatecode'].submit();" value='<bean:message key="schedule.scheduletemplatecodesetting.btnSave"/>'>
+                <input type="button" name="Button" value='<bean:message key="global.btnExit"/>' onClick="window.close()">
             </td>
           </tr>
 </form>
         </table>
         <p align='left'>
-      &nbsp;  Code: only one char.<br>
-      &nbsp;  Description: less than 40 chars.<br>
-      &nbsp;  Duration: unit is minute.<br>
-      &nbsp;  Color: html code for background color.</p>
+      &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgCode"/><br>
+      &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgDescription"/><br>
+      &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgDuration"/><br>
+      &nbsp;  <bean:message key="schedule.scheduletemplatecodesetting.msgColor"/></p>
         
       </td>
     </tr>
@@ -170,4 +175,4 @@ function checkInput() {
 
 </form>
 </body>
-</html>
+</html:html>

@@ -77,12 +77,10 @@ function setfocus() {
 <%
   int age=0;
   ResultSet rs=null ;
-  String[] param = new String[1];
-  param[0]="last_name";
   int[] itemp1 = new int[2];
-  itemp1[0] = Integer.parseInt(strLimit1);
-  itemp1[1] = Integer.parseInt(strLimit2);
-  rs = reportMainBean.queryResults(param, itemp1, "search_demo_active");
+  itemp1[1] = Integer.parseInt(strLimit1);
+  itemp1[0] = Integer.parseInt(strLimit2);
+  rs = reportMainBean.queryResults(itemp1, "search_demo_active");
 
   boolean bodd=false;
   int nItems=0;

@@ -24,18 +24,19 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<html>
-<head><title>add a preference for a user</title>
+<html:html locale="true">
+<head><title><bean:message key="admin.preferenceaddpreference.title"/></title>
 <link rel="stylesheet" href="../web.css">
 </head>
 <body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
 <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A PREFERENCE FOR A USER</font></th>
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferenceaddpreference.description"/></font></th>
       </tr>
     </table>
 <%
@@ -72,19 +73,18 @@
     session.setAttribute("everymin", param[3]);
     session.setAttribute("groupno", param[4]);  
 %>
-  <h1>Successful Addition of a Preference Record.
-  </h1>
+  <h1><bean:message key="admin.preferenceaddpreference.msgAdditionSuccess"/></h1>
 <%  
     } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+  <p><h1><bean:message key="admin.preferenceaddpreference.msgAdditionFailure"/></h1></p>
 <%  
     }
   }
   apptMainBean.closePstmtConn();
 %>
 
-<%@ include file="footer2.htm" %>
+<%@ include file="footer2htm.jsp" %>
 </center>
 </body>
-</html>
+</html:html>

@@ -26,9 +26,9 @@
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  int nStartTime=Integer.parseInt((String) session.getAttribute("starthour"));
-  int nEndTime=Integer.parseInt((String) session.getAttribute("endhour"));
-  int nStep=Integer.parseInt((String) session.getAttribute("everymin"));
+  int nStartTime=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
+  int nEndTime=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
+  int nStep=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
   String mygroupno = (String) session.getAttribute("groupno");  
 
   String curProvider_no=request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"174";
@@ -43,7 +43,7 @@
     {"search_timecode", "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.provider_no=? and scheduledate.sdate>=? and scheduledate.sdate<=? and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"}, 
     {"search_appt", "select * from appointment where provider_no=? and appointment_date>=? and appointment_date<=? order by appointment_date, start_time, end_time"}, 
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? order by first_name"}, 
-    {"search_timecodesingle", "select * from scheduletemplatecode order by ?"}, 
+    {"search_timecodesingle", "select * from scheduletemplatecode order by code"}, 
   };
   String[][] responseTargets=new String[][] {  };
   flipviewMainBean.doConfigure(dbParams,dbQueries,responseTargets);
@@ -180,7 +180,7 @@ function t(s1,s2,s3,s4,s5) {
   }
   
   //color for template code
-  rsdemo = flipviewMainBean.queryResults("code", "search_timecodesingle");
+  rsdemo = flipviewMainBean.queryResults("search_timecodesingle");
   while (rsdemo.next()) { 
     //DateTimeCodeBean.put("description"+rsdemo.getString("code"), rsdemo.getString("description"));
     DateTimeCodeBean.put("duration"+rsdemo.getString("code"), rsdemo.getString("duration"));

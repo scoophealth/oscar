@@ -91,7 +91,7 @@ function setfocus() {
   }
     
   int rowsAffected = reportMainBean.queryExecuteUpdate("%", "delete_reporttemp");
-	rs = reportMainBean.queryResults("demographic_no", "search_form_demo");
+	rs = reportMainBean.queryResults("search_form_demo");
 
   while (rs.next()) {
 	  String[] param1 =new String[2];

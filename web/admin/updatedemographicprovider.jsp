@@ -39,7 +39,7 @@
 {"update_nursemultiple", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in " }, 
 {"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
 {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-{"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by ?"}, 
+{"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by last_name"}, 
 
 {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
 
@@ -72,7 +72,7 @@ function setregexp1() {
 
 <%
   ResultSet rsgroup =null;
-  rsgroup = updatedpBean.queryResults("last_name", "search_provider");
+  rsgroup = updatedpBean.queryResults("search_provider");
  	while (rsgroup.next()) { 
  	  namevector.add(rsgroup.getString("provider_no"));
  	  namevector.add(rsgroup.getString("last_name")+", "+rsgroup.getString("first_name"));

@@ -20,8 +20,8 @@ public class LoginViewTypeHlp {
 
         if(viewtype.isEmpty()) {
             try {
-			          File file = new File("./" + filename + "/loginView.txt");
-			          //System.out.println(file.getAbsolutePath() );
+			          File file = new File("/" + filename + "/loginView.txt");
+
           			if(!file.isFile() || !file.canRead()) {
             				throw new IOException();
           			}
@@ -29,7 +29,10 @@ public class LoginViewTypeHlp {
                 FileInputStream fis = new FileInputStream(file ) ;
                 viewtype.load(fis); 
                 fis.close();
-            } catch(Exception e) {System.out.println("*** No ViewType File ***"); }
+            } catch(Exception e) {
+                System.out.println("*** No ViewType File ***");
+                e.printStackTrace();
+            }
         }
     }
 

@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
   <%
   if(session.getValue("user") == null) 
     response.sendRedirect("../logout.htm");
@@ -38,7 +41,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
-<html>
+<html:html locale="true">
 <head>
 <script LANGUAGE="JavaScript">
     <!--
@@ -58,7 +61,7 @@
     <table border="0" cellspacing="0" cellpadding="0" width="90%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            DELETE A DOCUMENT</font></th>
+            <bean:message key="dms.documentDelete.msgDeleteDoc"/></font></th>
       </tr>
     </table>
 <%
@@ -83,7 +86,7 @@
 
   if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Delete a Record.</h1></p>
+  <p><h1><bean:message key="dms.documentDelete.msgSuccess"/></h1></p>
 <script LANGUAGE="JavaScript">
       close();
       opener.refresh();
@@ -91,7 +94,7 @@
 <%  
   } else {
 %>
-  <p><h1>Sorry, update has failed.</h1></p>
+  <p><h1><bean:message key="dms.documentDelete.msgFailed"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();
@@ -99,8 +102,8 @@
   <p></p>
   <hr width="90%"></hr>
   <form>
-    <input type="button" value="Close this window" onClick="closeit()">
+    <input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
   </form>
 </center>
 </body>
-</html>
+</html:html>

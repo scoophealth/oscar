@@ -69,7 +69,7 @@ public class EctRemoteAttachments
         {
             System.out.println("CrAsH");
             e.printStackTrace();
-        }
+        }
         return retval;
     }
 

@@ -29,7 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
-<html:html>
+<html:html locale="true">
 <head>
   <html:base/>
   <title><bean:message key="loginApplication.title"/></title>

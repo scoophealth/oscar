@@ -38,7 +38,7 @@
     }
 %>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<html>
+<html:html locale="true">
 <script type="text/javascript" language=javascript>
     function loadUp(){
         window.resizeTo(900,50);
@@ -52,13 +52,13 @@
 </script>
 <head>
 <title>
-TimeOut
+<bean:message key="oscarEncounter.timeOut.title"/>
 </title>
 </head>
 <body onload="javascript:loadUp()">
 
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.timeOut.msgEncounter"/>">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
 
@@ -67,7 +67,7 @@ TimeOut
                 <table class="TopStatusBar">
                     <tr>
                         <td style="color:white">
-                            Saving and Exiting Encounter
+                            <bean:message key="oscarEncounter.timeOut.msgSaveExit"/>
                         </td>
                         <td  >
 

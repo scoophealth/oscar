@@ -53,7 +53,7 @@
 	ResultSet RS = myFormBean.queryResults(demographic_no, query);
 %>
 
-<html>
+<html:html locale="true">
 <SCRIPT LANGUAGE="JavaScript">
 <!--
 if (document.all || document.layers)  window.resizeTo(790,580);
@@ -65,37 +65,37 @@ function newWindow(file,window) {
 </SCRIPT>
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>ShowMyForm</title>
+<title><bean:message key="e_form.ShowMyForm.title"/></title>
 <link rel="stylesheet" href="web.css">
 </head>
 
 <body topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica">My FORM</font></th></tr>
+  <tr bgcolor=<%=deepColor%> ><th><font face="Helvetica"><bean:message key="e_form.ShowMyForm.msgMyForm"/></font></th></tr>
 </table>
 
 <table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="<%=weakColor%>">
-  <tr><td align='right'><a href="MyForm.jsp?demographic_no=<%=demographic_no%>" > Add E-Form </a>
-  | <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail">Back &nbsp;</a></td>
+  <tr><td align='right'><a href="MyForm.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="e_form.ShowMyForm.btnAddEForm"/> </a>
+  | <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="e_form.ShowMyForm.btnBack"/> &nbsp;</a></td>
   </tr>
 </table> 
 
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr><td>Form Library </td>
+  <tr><td><bean:message key="e_form.ShowMyForm.msgFormLib"/> </td>
   <td align='right'><a href="CallDeletedFormData.jsp?demographic_no=<%=demographic_no%>"> 
-    List Deleted Forms </a></td></tr>
+    <bean:message key="e_form.ShowMyForm.btnListDelForms"/> </a></td></tr>
 </table>
   
 <table border="0" cellspacing="0" cellpadding="0" width="90%" >
   <tr>
     <td>
     <table border="1" cellspacing="0" cellpadding="0" width="100%">
-      <tr bgcolor=<%=deepColor%> ><th><a href="ShowMyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=a">Form Name</a></th>
-      <th><a href="ShowMyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=b">Subject</a></th>
-      <th><a href="ShowMyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=c">Form Date</a></th>
-      <th>Form Time</th> 
-      <th>Action</th> 
+      <tr bgcolor=<%=deepColor%> ><th><a href="ShowMyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=a"><bean:message key="e_form.ShowMyForm.btnFormName"/></a></th>
+      <th><a href="ShowMyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=b"><bean:message key="e_form.ShowMyForm.btnSubj"/></a></th>
+      <th><a href="ShowMyForm.jsp?demographic_no=<%=demographic_no%>&query_eforms=c"><bean:message key="e_form.ShowMyForm.btnDate"/></a></th>
+      <th><bean:message key="e_form.ShowMyForm.msgTime"/></th> 
+      <th><bean:message key="e_form.ShowMyForm.msgAction"/></th> 
       </tr> 
 <%
   boolean bodd = true ;
@@ -116,15 +116,15 @@ function newWindow(file,window) {
       out.print(RS.getString("form_date"));
       out.print("</a></td><td width=130 align='center'>");
       out.print(RS.getString("form_time"));
-      out.print("</td><td width=60 align='center'><a href=DeleteFormData.jsp?fdid="+RS.getInt("fdid")+"&demographic_no="+demographic_no+">");
-      out.print("Delete");
-      out.print("</a></td></tr>");
+      out.print("</td><td width=60 align='center'><a href=DeleteFormData.jsp?fdid="+RS.getInt("fdid")+"&demographic_no="+demographic_no+">"); %>
+      <bean:message key="e_form.ShowMyForm.btnDel"/>
+      <% out.print("</a></td></tr>");
     }  
     myFormBean.closePstmtConn();
 //    RS.close();
-  }else {
-    out.print("<tr><td align='center' colspan='5'>No data!</td></tr>");
-  }
+  }else { %>
+    <tr><td align="center" colspan='5'><bean:message key="e_form.ShowMyForm.msgNoData"/>!</td></tr>
+<%  }
 %>               
  
       </table>
@@ -135,6 +135,6 @@ function newWindow(file,window) {
 </center>
 
 </body>
-</html>
+</html:html>
 
   

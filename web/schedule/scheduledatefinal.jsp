@@ -53,6 +53,8 @@
   String creator = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" />
 <%
@@ -93,9 +95,9 @@
   }
 */
 %>
-<html>
+<html:html locale="true">
 <head>
-<title>SCHEDULE SETTING</title>
+<title><bean:message key="schedule.scheduledatefinal.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -135,7 +137,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <tr bgcolor="#486ebd"> 
             <th align="CENTER" bgcolor="#009966">
               <p>&nbsp;</p>
-              <p><font face="Helvetica" color="#FFFFFF">SCHEDULE SETTING</font></p>
+              <p><font face="Helvetica" color="#FFFFFF"><bean:message key="schedule.scheduledatefinal.msgMainLabel"/></font></p>
             </th>
     </tr>
   </table>
@@ -143,9 +145,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           <tr>
             <td>
               <p>&nbsp;</p>
-              <p><font size="-1">1. Click the 'Do it again' button to go back 
-                to the first schedule page.</font></p>
-              <p><font size="-1">2. Click the 'Finish' button to exit the window..</font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduledatefinal.msgStepOne"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.scheduledatefinal.msgStepTwo"/></font></p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
@@ -162,7 +163,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <p>
           <table width="95%" border="0" cellspacing="0" cellpadding="0">
             <tr> 
-              <td>You have finished one Schedule Setting successfully.</td>
+              <td><bean:message key="schedule.scheduledatefinal.msgSettingFinished"/></td>
             </tr>
             <tr> 
               <td>&nbsp;</td>
@@ -176,8 +177,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
             <tr> 
               <td bgcolor="#CCFFCC"> 
                 <div align="right"> 
-                  <input type="button" name="Button" value="Do it again" onClick="self.location.href='scheduletemplatesetting.jsp'">
-                  <input type="button" name="Cancel" value="Finish" onClick="window.close()">
+                  <input type="button" name="Button" value='<bean:message key="schedule.scheduledatefinal.btnDoAgain"/>' onclick="self.location.href='scheduletemplatesetting.jsp'">
+                  <input type="button" name="Cancel" value='<bean:message key="schedule.scheduledatefinal.btnFinish"/>' onclick="window.close()">
                 </div>
               </td>
             </tr>
@@ -197,4 +198,4 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 
 
 </body>
-</html>
+</html:html>

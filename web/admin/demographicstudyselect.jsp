@@ -15,7 +15,7 @@
     String [][] dbQueries=new String[][] { 
         {"delete_demostudy", "delete from demographicstudy where demographic_no = ?" }, 
         {"save_demostudy", "insert into demographicstudy values (?,?,?,?)" }, 
-        {"search_study", "select s.* from study s order by ? " }, 
+        {"search_study", "select s.* from study s order by s.study_no" }, 
         {"search_demostudy", "select demographic_no from demographicstudy where demographic_no=? and study_no=? " }, 
 	};
     studyBean.doConfigure(dbParams,dbQueries);
@@ -79,7 +79,7 @@ function setfocus() {
     String datetime =null;
     String bgcolor = null;
   
-    rsdemo = studyBean.queryResults(new String[]{"s.study_no"}, "search_study");
+    rsdemo = studyBean.queryResults("search_study");
     while (rsdemo.next()) { 
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";

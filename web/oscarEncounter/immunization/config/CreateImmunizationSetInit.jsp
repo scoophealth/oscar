@@ -33,7 +33,7 @@
 
 <head>
 <title>
-GotoSearch
+<bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.title"/>
 </title>
 <html:base/>
 <style type="text/css">
@@ -63,15 +63,15 @@ function BackToOscar()
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
         <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
+        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
+        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
+        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
         </td>
     </tr>
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Create a new set of Immunizations</p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.msgCreateNewSet"/></p>
         </td>
     </tr>
     <tr>
@@ -83,18 +83,16 @@ function BackToOscar()
                 <tr>
                     <td>
                         <div>
-                            Please follow these steps to create an Immunization Set
+                            <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.msgFollowSteps"/>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
  		                <div class="DivContentTitle"><br>
-                                                     Step 1: Please enter what you would like the Set to be called.<br>
-                                                     Step 2: Please enter how many rows you would like this set to have <br>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ie: How many Immunizations would you like this set to have<br>
-                                                     Step 3: Please enter how many columns you would like this set to have<br>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ie: How many dates you would like this set to have<br><br>
+                                                     <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.msgStep1"/><br>
+                                                     <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.msgStep2"/><br>
+                                                     <br><br>
 
 
                         </div>
@@ -106,7 +104,7 @@ function BackToOscar()
                         <table cellspacing="1">
                             <tr>
                                 <td class="cells">
-                                Set Name:
+                                <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.formSetName"/>:
                                 </td>
                                 <td class="cells">
                                 <html:text property="setName"/>
@@ -114,7 +112,7 @@ function BackToOscar()
                             </tr>
                              <tr>
                                 <td class="cells">
-                                Number of Rows:
+                                <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.formNRows"/>:
                                 </td>
                                 <td class="cells">
                                 <html:text property="numRows"/>
@@ -122,7 +120,7 @@ function BackToOscar()
                             </tr>
                             <tr>
                                 <td class="cells">
-                                Number of Columns:
+                                <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.formNCol"/>:
                                 </td>
                                 <td class="cells">
                                 <html:text property="numCols"/>
@@ -131,7 +129,7 @@ function BackToOscar()
 
                             <tr>
                                 <td>
-                                <input type="submit" value="Next Step"/>
+                                <input type="submit" value="<bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.btnNext"/>"/>
                                 </td>
                             </tr>
                         </table>

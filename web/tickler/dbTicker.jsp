@@ -3,23 +3,23 @@
   String orderby="", whereClause="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
     if(request.getParameter("whereClause")!=null) whereClause=request.getParameter("whereclause");
-  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1")+", ";
+  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1")+;
   if(request.getParameter("limit2")!=null) {
     limit2=request.getParameter("limit2");
-    limit="limit "+limit1+limit2;
+    limit="limit "+limit2+" offset "+limit1;
   }
   
   
   String [][] dbQueries=new String[][] {
     {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
-	{"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no || null and provider_no like ? order by last_name"},
+	{"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
      {"search_provider_details", "select * from provider where provider_no=?"},
      {"search_document_content", "select * from document where status<>'D' and document_no=?"},
     {"search_provider_name", "select * from provider where provider_no like ?"},
     {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
-    {"save_document","insert into document values('\\N',?,?,?,?,?,?,?)"},
-     {"save_tickler","insert into tickler values('\\N',?,?,?,?,?,?)"},
+    {"save_document","insert into document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status) values(?,?,?,?,?,?,?)"},
+     {"save_tickler","insert into tickler (demographic_no, message, status, update_date, service_date, creator) values(?,?,?,?,?,?)"},
          {"update_tickler","update tickler set status=? where tickler_no=?"},
      {"search_tickler","select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and d.provider_no like ? order by t.service_date desc"},
      {"search_tickler_bydemo","select t.tickler_no, d.demographic_no,d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and t.demographic_no like ? order by t.service_date desc"},

@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../login.htm");
@@ -31,8 +34,8 @@
 <%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-<html>
-<head><title> My Group</title></head>
+<html:html locale="true">
+<head><title><bean:message key="admin.admindisplaymygroup.title"/></title></head>
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
 
@@ -52,7 +55,7 @@ function setfocus() {
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">MY GROUP</font></th>
+      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.admindisplaymygroup.description"/></font></th>
   </tr>
 </table>
 
@@ -62,14 +65,14 @@ function setfocus() {
   
           <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
             <tr BGCOLOR="#CCFFFF" > 
-              <td ALIGN="center" colspan="2"> <font face="arial"> Group No.</font></td>
-              <td ALIGN="center"> <font face="arial"> Provider's Name</font> </td>
+              <td ALIGN="center" colspan="2"> <font face="arial"><bean:message key="admin.adminmygroup.formGroupNo"/></font></td>
+              <td ALIGN="center"> <font face="arial"><bean:message key="admin.admindisplaymygroup.formProviderName"/></font> </td>
           </tr>
 <%
    ResultSet rsgroup = null;
    boolean bNewNo=false;
    String oldNo="";
-   rsgroup = apptMainBean.queryResults("mygroup_no", "searchmygroupall");
+   rsgroup = apptMainBean.queryResults("searchmygroupall");
    while (rsgroup.next()) { 
      if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
        bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");
@@ -97,13 +100,13 @@ function setfocus() {
 <table width="100%" BGCOLOR="#486ebd">
   <tr>
     <TD align="center" >
-      <INPUT TYPE="submit" name="submit" VALUE="Delete" SIZE="7">
-      <INPUT TYPE="submit" name="submit" VALUE="New Group/Add a Member" SIZE="7">
-      <INPUT TYPE = "RESET" VALUE = " Exit " onClick="window.close();"></TD>
+      <INPUT TYPE="submit" name="submit" VALUE="<bean:message key="admin.admindisplaymygroup.btnSubmit1"/>" SIZE="7">
+      <INPUT TYPE="submit" name="submit" VALUE="<bean:message key="admin.admindisplaymygroup.btnSubmit2"/>" SIZE="7">
+      <INPUT TYPE = "RESET" VALUE ='<bean:message key="global.btnClose"/>' onClick="window.close();"></TD>
   </tr>
 </TABLE>
 
 </FORM>
 
 </body>
-</html>
+</html:html>

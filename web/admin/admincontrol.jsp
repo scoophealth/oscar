@@ -43,7 +43,7 @@
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},  
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},
-    {"demographic_add_record", "insert into demographic values('\\N',?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?)" }, //26-1 demographic_no auto_increment
+    {"demographic_add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values (?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?)" }, //26-1 demographic_no auto_increment
     {"demographic_delete", "delete from demographic where demographic_no=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
     {"security_add_record", "insert into security (user_name,password,provider_no,pin) values(?,?,?,?)" },
@@ -60,11 +60,11 @@
 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "}, 
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "}, 
-    {"searchmygroupall", "select * from mygroup order by ?"}, 
+    {"searchmygroupall", "select * from mygroup order by mygroup_no"}, 
     {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"}, 
     {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
-    {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by ?"}, 
-    {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by ?"}, 
+    {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"}, 
+    {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by last_name"}, 
 
   };
    

@@ -25,6 +25,7 @@
 -->
 
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%
@@ -55,7 +56,7 @@
     }
   } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+  <p><h1><bean:message key="AddProviderStatus.msgAddFailure"/></h1></p>
 <%  
   }
   apptMainBean.closePstmtConn();

@@ -24,6 +24,9 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
 <%@ page import = "java.sql.ResultSet" %> 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
  
@@ -36,10 +39,10 @@
   ResultSet RS =  beanDBConnect.executeQuery(query);
 
 %>
-<html>
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>CallDeletedFormData</title>
+<title><bean:message key="e_form.CallDeletedFormData.title"/></title>
 <link rel="stylesheet" href="web.css">
 </head>
 <script language="javascript">
@@ -55,7 +58,7 @@ function newWindow(file,window) {
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            My FORMS </font></th>
+            <bean:message key="e_form.CallDeletedFormData.msgMyForms"/> </font></th>
       </tr>
     </table>
 <table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="#C4D9E7">
@@ -65,7 +68,7 @@ function newWindow(file,window) {
      </tr>
      <tr valign="top">
       <td align="center" valign="middle" colspan="3"> <font face="Verdana" color="#0000FF"><b><i> 
-          Select a form to show  </i></b></font></td>
+          <bean:message key="e_form.CallDeletedFormData.msgSelectForm"/>  </i></b></font></td>
            <td nowrap> 
            </td>
            <td nowrap>
@@ -81,12 +84,12 @@ function newWindow(file,window) {
 </table> 
   <table border="0" cellspacing="0" cellpadding="0" width="90%">
     <tr>
-      <td> The forms you have deleted: </td>
+      <td> <bean:message key="e_form.CallDeletedFormData.msgFormsDeleted"/>: </td>
       <td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
            <a href="ShowMyForm.jsp?demographic_no=<%=demographic_no%>"> 
-         Go to Current Form Library</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         <bean:message key="e_form.CallDeletedFormData.btnCurrentFormLibrary"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-      <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"> Return</b></a>
+      <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"> <bean:message key="e_form.CallDeletedFormData.btnReturn"/></b></a>
       </td> 
      <tr>
 </table>
@@ -124,14 +127,14 @@ if (RS.next()){
 */
         out.print("</a></td><td width=100>");
         out.print(RS.getString("form_time"));
-        out.print("</td><td width=100><a href=UnDeleteFormData.jsp?fdid="+RS.getInt("fdid")+"&demographic_no="+demographic_no+">");
-        out.print("UnDelete");
-        out.print("</a></td></tr>");
+        out.print("</td><td width=100><a href=UnDeleteFormData.jsp?fdid="+RS.getInt("fdid")+"&demographic_no="+demographic_no+">"); %>
+        <bean:message key="e_form.CallDeletedFormData.btnUndelete"/>
+        <% out.print("</a></td></tr>");
    }  
    RS.close();
 
-}else {
-       out.print("<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; no data in it</td></tr>");
+}else { %>
+       <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <bean:message key="e_form.CallDeletedFormData.msgNoData"/></td></tr>
 
 }
 
@@ -144,6 +147,6 @@ if (RS.next()){
 </center>
 
 </body>
-</html>
+</html:html>
 
   

@@ -24,10 +24,13 @@
  */
 -->
 
-<html>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title>Add a Preference for a User</title>
+<title><bean:message key="admin.preferenceaddarecord.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
     <!--
@@ -44,7 +47,7 @@
 		 document.searchprovider.every_min.value=="" || 
 		 document.searchprovider.mygroup_no.value==""  
 		) {
-        alert("You forgot to input a keyword!");
+        alert("<bean:message key="global.msgInputKeyword"/>");
         return false;
       } else return true;
       // do nothing at the moment
@@ -63,14 +66,13 @@
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             
-      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> ADD A PREFERENCE 
-        FOR A USER</font></th>
+      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferenceaddarecord.description"/></font></th>
       </tr>
     </table>
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
       <tr> 
-        <td width="50%" align="right">Provider No.<font color="red"> :</font> 
+        <td width="50%" align="right"><bean:message key="admin.preference.formProviderNo"/><font color="red"> :</font> 
         </td>
         <td> 
           <input type="text" name="provider_no" >
@@ -78,7 +80,7 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">Start Hour <font color="red">:</font> </div>
+          <div align="right"><bean:message key="admin.preference.formStartHour"/><font color="red">:</font> </div>
         </td>
         <td> 
           <input type="text" name="start_hour" value="8">
@@ -86,7 +88,7 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">End Hour <font color="red">:</font> </div>
+          <div align="right"><bean:message key="admin.preference.formEndHour"/><font color="red">:</font> </div>
         </td>
         <td> 
           <input type="text" name="end_hour" value="18">
@@ -94,7 +96,7 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">Period (<font size="-2">in min.</font>) <font color="red">:</font> 
+          <div align="right"><bean:message key="admin.preference.formPeriod"/>(<font size="-2"><bean:message key="admin.preference.inMin"/></font>) <font color="red">:</font> 
           </div>
         </td>
         <td> 
@@ -103,7 +105,7 @@
       </tr>
       <tr> 
         <td> 
-          <div align="right">Group No <font color="red">:</font> </div>
+          <div align="right"><bean:message key="admin.preference.formGroupNo"/><font color="red">:</font> </div>
         </td>
         <td> 
           <input type="text" name="mygroup_no" value="">
@@ -115,7 +117,7 @@
             <input type="hidden" name="color_template" value="deepblue">
             <input type="hidden" name="dboperation" value="preference_add_record">
             <input type="hidden" name="displaymode" value="Preference_Add_Record">
-            <input type="submit" name="subbutton" value="Add Record">
+            <input type="submit" name="subbutton" value="<bean:message key="admin.preferenceaddarecord.btnSubmit"/>">
           </div>
         </td>
       </tr>
@@ -126,12 +128,11 @@
   <hr width="100%" color="orange">
   <table border="0" cellspacing="0" cellpadding="0" width="100%">
     <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
+      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"><bean:message key="global.btnBack"/></a></td>
       <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
     </tr>
   </table>
 
 </center>
 </body>
-</html>
+</html:html>

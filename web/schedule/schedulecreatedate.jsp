@@ -6,6 +6,8 @@
   int yearLimit = Integer.parseInt(session.getAttribute("schedule_yearlimit") != null ? ((String)session.getAttribute("schedule_yearlimit")) : "2");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
 <jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" />
@@ -119,9 +121,9 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
 /////////////////////////////////////
 
 %>
-<html>
+<html:html locale="true">
 <head>
-<title>SCHEDULE SETTING</title>
+<title><bean:message key="schedule.schedulecreatedate.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -162,7 +164,7 @@ function refresh() {
     <tr bgcolor="#486ebd"> 
             <th align="CENTER" bgcolor="#009966">
               <p>&nbsp;</p>
-              <p><font face="Helvetica" color="#FFFFFF">SCHEDULE SETTING</font></p>
+              <p><font face="Helvetica" color="#FFFFFF"><bean:message key="schedule.schedulecreatedate.msgMainLabel"/></font></p>
             </th>
     </tr>
   </table>
@@ -170,11 +172,11 @@ function refresh() {
           <tr>
             <td>
               <p>&nbsp;</p>
-              <p><font size="-1">1. Select the right month.</font></p>
-              <p><font size="-1">2. Click the date you want to specify.</font></p>
-              <p><font size="-1">3. Type in the schedule of that day in the pop-up window.</font></p>
-              <p><font size="-1">4. Repeat 1-4 until ...</font></p>
-              <p><font size="-1">5. Click the 'Next' button.</font></p>
+              <p><font size="-1"><bean:message key="schedule.schedulecreatedate.msgStepOne"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.schedulecreatedate.msgStepTwo"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.schedulecreatedate.msgStepThree"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.schedulecreatedate.msgStepFour"/></font></p>
+              <p><font size="-1"><bean:message key="schedule.schedulecreatedate.msgStepFive"/></font></p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
             </td>
@@ -184,7 +186,7 @@ function refresh() {
       </td><td>
 
           <br>
-          <b><%=provider_name%></b> &nbsp; &nbsp; <font size="-1">effective <b>(<%=scheduleRscheduleBean.sdate +" - "+scheduleRscheduleBean.edate%>)</b></font>
+          <b><%=provider_name%></b> &nbsp; &nbsp; <font size="-1"><bean:message key="schedule.schedulecreatedate.msgEffective"/>&nbsp;<b>(<%=scheduleRscheduleBean.sdate +" - "+scheduleRscheduleBean.edate%>)</b></font>
 <center>
 <%
 	//now = new GregorianCalendar(year, month+1, 1);
@@ -195,21 +197,21 @@ function refresh() {
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   			<tr>
         	  <td BGCOLOR="#CCFFCC" width="50%" align="center" >
-			  <a href="schedulecreatedate.jsp?provider_no=<%=provider_no%>&provider_name=<%=URLEncoder.encode(provider_name)%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=-1&bFirstDisp=0"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
+			  <a href="schedulecreatedate.jsp?provider_no=<%=provider_no%>&provider_name=<%=URLEncoder.encode(provider_name)%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=-1&bFirstDisp=0"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT='<bean:message key="schedule.schedulecreatedate.btnLastMonthTip"/>' vspace="2"> <bean:message key="schedule.schedulecreatedate.btnLastMonth"/>&nbsp;&nbsp; 
               </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="schedulecreatedate.jsp?provider_no=<%=provider_no%>&provider_name=<%=URLEncoder.encode(provider_name)%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=1&bFirstDisp=0"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+        <a href="schedulecreatedate.jsp?provider_no=<%=provider_no%>&provider_name=<%=URLEncoder.encode(provider_name)%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=1&bFirstDisp=0"> &nbsp;&nbsp;<bean:message key="schedule.schedulecreatedate.btnNextMonth"/><img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT='<bean:message key="schedule.schedulecreatedate.btnNextMonthTip"/>' vspace="2">&nbsp;&nbsp;</a></td>
   			</TR>
 		</table>
 <p>
           <table width="100%" border="1" cellspacing="0" cellpadding="1"  bgcolor="silver" >
             <tr bgcolor="#FOFOFO" align="center"> 
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Sun</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Mon</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Tue</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Wed</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Thu</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Fri</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green">Sat</font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="schedule.schedulecreatedate.msgSunday"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.schedulecreatedate.msgMonday"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.schedulecreatedate.msgTuesday"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.schedulecreatedate.msgWednesday"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.schedulecreatedate.msgThursday"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.schedulecreatedate.msgFriday"/></font></td>
+              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="schedule.schedulecreatedate.msgSaturday"/></font></td>
             </tr>
             
             <%
@@ -249,7 +251,7 @@ function refresh() {
                     }
                      
             %>
-                      <td bgcolor='<%=bgcolor.toString()%>'><a href="#" onClick="popupPage(260,500,'scheduledatepopup.jsp?provider_no=<%=provider_no%>&year=<%=year%>&month=<%=month%>&day=<%=dateGrid[i][j]%>&bFistDisp=1')">
+                      <td bgcolor='<%=bgcolor.toString()%>'><a href="#" onclick="popupPage(260,500,'scheduledatepopup.jsp?provider_no=<%=provider_no%>&year=<%=year%>&month=<%=month%>&day=<%=dateGrid[i][j]%>&bFistDisp=1')">
                       <font color="red"><%= dateGrid[i][j] %></font>
                       <font size="-3" color="blue"><%=strHolidayName.toString()%></font>
                       
@@ -272,8 +274,9 @@ function refresh() {
                 <div align="right"> 
                   <!--input type="hidden" name="available" value="0"-->
                   <input type="hidden" name="provider_no" value="<%=provider_no%>">
-                  <input type="submit" name="Submit" value=" Next " >
-                  <input type="button" name="Cancel" value="Cancel" onClick="window.close()">
+                  <input type="hidden" name="Submit" value=" Next " >
+                  <input type="submit" value='<bean:message key="schedule.schedulecreatedate.btnNext"/>'>
+                  <input type="button" value='<bean:message key="schedule.schedulecreatedate.btnCancel"/>' onclick="window.close()">
                 </div>
               </td>
             </tr>
@@ -292,4 +295,4 @@ function refresh() {
 
 
 </body>
-</html>
+</html:html>

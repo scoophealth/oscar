@@ -52,7 +52,7 @@
 
 <head>
 <title>
-GotoSearch
+<bean:message key="oscarEncounter.immunization.config.createImmunizationSetConfig.title"/>
 </title>
 <html:base/>
 
@@ -90,15 +90,15 @@ TD.grey
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
         <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
+        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm"><bean:message key="global.help"/></a></span> |
+        <span class="FakeLink"><a href="About.htm"><bean:message key="global.about"/></a></span> | <span class="FakeLink">
+        <a href="Disclaimer.htm"><bean:message key="global.disclaimer"/></a></span></p>
         </td>
     </tr>
     <tr>
         <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
         <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle">Create a new set of Immunizations</p>
+        <p class="ScreenTitle"><bean:message key="oscarEncounter.immunization.config.createImmunizationSetConfig.msgCreateNew"/></p>
         </td>
     </tr>
     <tr>
@@ -110,15 +110,15 @@ TD.grey
                 <tr>
                     <td>
  		                <div class="DivContentTitle">
-                        <br>Step 4: Please label each column heading with dates of the set ie 2mon,4mon,6mon,1year,4year,etc
-                        <br>Step 5: Please label each row heading to the left with the immunizations this set will have
-                        <br>Step 6: Please check off each box where an immunization needs to be given
+                        <br><bean:message key="oscarEncounter.immunization.config.createImmunizationSetConfig.msgStep4"/>
+                        <br><bean:message key="oscarEncounter.immunization.config.createImmunizationSetConfig.msgStep5"/>
+                        <br><bean:message key="oscarEncounter.immunization.config.createImmunizationSetConfig.msgStep6"/>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    Set Name: <%=setName%>
+                    <bean:message key="oscarEncounter.immunization.config.createImmunizationSetConfig.msgSetName"/>: <%=setName%>
                     </td>
                 </tr>
                 <tr>
@@ -164,7 +164,7 @@ TD.grey
                             <%}%>
                             <tr>
                                 <td colspan=<%=cols%>>
-                                <input type="submit" value="Render Immunization Set"/>
+                                <input type="submit" value="<bean:message key="oscarEncounter.immunization.config.createImmunizationSetConfig.btnRender"/>"/>
                                 </td>
                             </tr>
                         </table>
