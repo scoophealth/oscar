@@ -104,7 +104,7 @@
     //}
     //get another encounter from the select list
     function onSplit() {
-        //document.forms[0].submit.value="save";
+        document.forms['encForm'].btnPressed.value = 'Split Chart';
         var ret = confirm("<bean:message key="oscarEncounter.Index.confirmSplit"/>");
         return ret;
     }
