@@ -1,0 +1,116 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// *
+// *
+// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+// * This software is published under the GPL GNU General Public License. 
+// * This program is free software; you can redistribute it and/or 
+// * modify it under the terms of the GNU General Public License 
+// * as published by the Free Software Foundation; either version 2 
+// * of the License, or (at your option) any later version. * 
+// * This program is distributed in the hope that it will be useful, 
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+// * along with this program; if not, write to the Free Software 
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+// * 
+// * <OSCAR TEAM>
+// * This software was written for the 
+// * Department of Family Medicine 
+// * McMaster Unviersity 
+// * Hamilton 
+// * Ontario, Canada 
+// *
+// -----------------------------------------------------------------------------------------------------------------------
+package oscar.oscarResearch.oscarDxResearch.pageUtil;
+import java.io.*;
+import java.util.*;
+import java.lang.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+import org.apache.struts.validator.*;
+import org.apache.commons.validator.*;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.OscarProperties;
+import oscar.util.*;
+
+
+public class dxResearchAction extends Action {
+
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        dxResearchForm frm = (dxResearchForm) form;                
+        request.getSession().setAttribute("dxResearchForm", frm);
+        String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+        String demographicNo = frm.getDemographicNo();
+        String[] xml_research = new String[5];
+        xml_research[0] = frm.getXml_research1();
+        xml_research[1] = frm.getXml_research2();
+        xml_research[2] = frm.getXml_research3();
+        xml_research[3] = frm.getXml_research4();
+        xml_research[4] = frm.getXml_research5();
+        boolean valid = true;
+        ActionErrors errors = new ActionErrors();  
+        
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql;
+            for(int i=0; i<xml_research.length; i++){
+                int Count = 0;
+                if (xml_research[i].compareTo("")!=0){
+                        ResultSet rsdemo2 = null;
+
+                        sql = "select dxresearch_no from dxresearch where demographic_no=" + demographicNo +
+                              " and dxresearch_code=" + xml_research[i] + " and (status='A' or status='C')";
+                        System.out.println(sql);
+                        rsdemo2 = db.GetSQL(sql);
+                        if(rsdemo2!=null){
+                            while(rsdemo2.next()){
+                                    Count = Count +1;
+                                    sql = "update dxresearch set update_date='"+nowDate+"', status='A' where dxresearch_no='"+rsdemo2.getString("dxresearch_no")+"'";
+                                    db.RunSQL(sql);                                        
+                                     System.out.println(sql);
+                            } 
+                        }
+
+                        if (Count == 0){
+                                //need to validate the dxresearch code before write to the database
+                                sql = "select * from ichppccode where ichppccode = '" + xml_research[i] +"'";
+                                ResultSet rsCode = db.GetSQL(sql);
+                                if(rsCode.next()){
+                                    sql = "insert into dxresearch (demographic_no, start_date, update_date, status, dxresearch_code) values('"
+                                            + demographicNo +"','" + nowDate + "','" + nowDate + "', 'A','" + xml_research[i]+ "')";
+                                    System.out.println(sql);
+                                    db.RunSQL(sql);
+                                }
+                                else{
+                                    valid = false;
+                                    errors.add(errors.GLOBAL_ERROR,
+                                    new ActionError("errors.codeNotFound", xml_research[i], "ICHPPC"));
+                                    saveErrors(request, errors);                                    
+                                }
+                        }	    
+                }
+            }
+
+            db.CloseConn();
+        }
+
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }                                    
+        
+        if(!valid)
+            return (new ActionForward(mapping.getInput()));
+        
+        return mapping.findForward("success");
+    }
+     
+}
