@@ -24,26 +24,26 @@
  */
 -->
 
- <%    
-  if(session.getValue("user") == null)
+<%    
+if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
-  int  nItems=0;
-     String strLimit1="0";
-    String strLimit2="5";
-    if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
-  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-  String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
- boolean bFirstDisp=true; //this is the first time to display the window
-  if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
- String ChartNo;
+String user_no;
+user_no = (String) session.getAttribute("user");
+int  nItems=0;
+String strLimit1="0";
+String strLimit2="5";
+if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
+boolean bFirstDisp=true; //this is the first time to display the window
+if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
+String ChartNo;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-
+<%@ include file="dbTicker.jsp" %>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -265,6 +265,40 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
         <a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="tickler.ticklerAdd.btnCalendarLookup"/></a> &nbsp; &nbsp; 
         <a href="#" onClick="addMonth(6)"><bean:message key="tickler.ticklerAdd.btn6Month"/></a>&nbsp; &nbsp;
         <a href="#" onClick="addMonth(12)"><bean:message key="tickler.ticklerAdd.btn1Year"/></a></font> </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr> 
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.Priority"/></strong></font></td>
+      <td valign="top"> 
+	<select name="priority" style="font-face:Verdana, Arial, Helvetica, sans-serif">
+ 	<option value="<bean:message key="tickler.ticklerMain.priority.high"/>"><bean:message key="tickler.ticklerMain.priority.high"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.normal"/>" SELECTED><bean:message key="tickler.ticklerMain.priority.normal"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.low"/>"><bean:message key="tickler.ticklerMain.priority.low"/>	
+     	</select>
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+
+    <tr> 
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.taskAssginedTo"/></strong></font></td>
+      <td valign="top"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><select name="task_assigned_to">           
+            <%  String proFirst="";
+                String proLast="";
+                String proOHIP="";
+
+                ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
+                while(rslocal.next()){
+                    proFirst = rslocal.getString("first_name");
+                    proLast = rslocal.getString("last_name");
+                    proOHIP = rslocal.getString("provider_no"); 
+
+            %> 
+            <option value="<%=proOHIP%>"><%=proLast%>, <%=proFirst%></option>
+            <%
+                }      
+                apptMainBean.closePstmtConn();
+            %>
+          </select></td>
       <td>&nbsp;</td>
     </tr>
     <tr> 

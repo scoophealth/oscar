@@ -313,38 +313,38 @@ var beginD = "0001-01-01"
     </tr>
     <tr> 
     
-      <td colspan="2"> 
+        <td colspan="2"> 
         <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formMoveTo"/> </b> 
         <select name="ticklerview">
-         <option value="A" <%=ticklerview.equals("A")?"selected":""%>><bean:message key="tickler.ticklerMain.formActive"/></option>
-         <option value="C" <%=ticklerview.equals("C")?"selected":""%>><bean:message key="tickler.ticklerMain.formCompleted"/></option>
-         <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>
+        <option value="A" <%=ticklerview.equals("A")?"selected":""%>><bean:message key="tickler.ticklerMain.formActive"/></option>
+        <option value="C" <%=ticklerview.equals("C")?"selected":""%>><bean:message key="tickler.ticklerMain.formCompleted"/></option>
+        <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>
         </select>
-      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formSelectProvider"/> </b></font> <select name="providerview">
-           <option value="%" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
-			<% String proFirst="";
-           String proLast="";
-           String proOHIP="";
-           String specialty_code; 
-String billinggroup_no; 
-           int Count = 0; 
-        ResultSet rslocal;
-        rslocal = null;
- rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
- while(rslocal.next()){
- proFirst = rslocal.getString("first_name");
- proLast = rslocal.getString("last_name");
- proOHIP = rslocal.getString("provider_no"); 
- billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
- specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formSelectProvider"/> </b></font> <select name="providerview">
+        <option value="%" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
+        <%  String proFirst="";
+            String proLast="";
+            String proOHIP="";
+            String specialty_code; 
+            String billinggroup_no; 
+            int Count = 0; 
+            ResultSet rslocal;
+            rslocal = null;
+            rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
+            while(rslocal.next()){
+                proFirst = rslocal.getString("first_name");
+                proLast = rslocal.getString("last_name");
+                proOHIP = rslocal.getString("provider_no"); 
+                billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+                specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
-%> 
-            <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, 
-            <%=proFirst%></option>
-            <%
-      }      
+        %> 
+        <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, 
+        <%=proFirst%></option>
+        <%
+            }      
    
-  %>
+        %>
           </select>   
    
       </td>
@@ -366,38 +366,48 @@ String billinggroup_no;
 <TD width="15%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDemographicName"/></B></FONT></TD>
 <TD width="20%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDoctorName"/></B></FONT></TD>
 <TD width="20%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDate"/></B></FONT></TD>
+<TD width="5%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Priority</B></FONT></TD>
+<TD width="15%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B>Task Assigned To</B></FONT></TD>
 
 <TD width="10%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B></B><bean:message key="tickler.ticklerMain.msgStatus"/></FONT></TD>
 <TD width="30%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgMessage"/></B></FONT></TD>
 </TR>
 <%
- String dateBegin = xml_vdate;
-   String dateEnd = xml_appointment_date;
-String redColor = "", lilacColor = "" , whiteColor = "";
-String vGrantdate = "1980-01-07 00:00:00.0";
-DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
-String provider;
+    String dateBegin = xml_vdate;
+    String dateEnd = xml_appointment_date;
+    String redColor = "", lilacColor = "" , whiteColor = "";
+    String vGrantdate = "1980-01-07 00:00:00.0";
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale()); 
+    String provider;
+    String taskAssigedTo = "";
 
-  if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+    if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+    if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
 
-   ResultSet rs=null ;
-  String[] param =new String[4];
-   boolean bodd=false;
-   param[0] = ticklerview;
- 
- param[1] = dateBegin;
-  param[2] = dateEnd;
-   param[3] = request.getParameter("providerview")==null?"%": request.getParameter("providerview");
-  rs = apptMainBean.queryResults(param, "search_tickler");
-   while (rs.next()) {
+    ResultSet rs=null ;    
+    String[] param =new String[4];
+    boolean bodd=false;
+    param[0] = ticklerview;
+
+    param[1] = dateBegin;
+    param[2] = dateEnd;
+    param[3] = request.getParameter("providerview")==null?"%": request.getParameter("providerview");
+    rs = apptMainBean.queryResults(param, "search_tickler");
+    while (rs.next()) {
        nItems = nItems +1;
 
         if (rs.getString("provider_last")==null || rs.getString("provider_first")==null){
             provider = "";
         }
         else{
-            provider = rs.getString("provider_last") + "," + rs.getString("provider_first");
+            provider = rs.getString("provider_last") + ", " + rs.getString("provider_first");
+        }
+         
+        if (rs.getString("assignedLast")==null || rs.getString("assignedFirst")==null){
+            taskAssigedTo = "";
+        }
+        else{
+            taskAssigedTo = rs.getString("assignedLast") + ", " + rs.getString("assignedFirst");
         }
         bodd=bodd?false:true;
         vGrantdate = rs.getString("service_date")+ " 00:00:00.0";
@@ -414,6 +424,8 @@ if (daysDifference > 0){
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=provider%></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("service_date")%> </TD>
+<TD width="5%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("priority")%></TD>
+<TD width="15%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssigedTo%></TD>
 <TD width="10%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
 <TD width="30%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("message")%></TD>
  </tr>
@@ -425,6 +437,8 @@ if (daysDifference > 0){
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
 <TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("service_date")%> </TD>
+<TD width="5%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("priority")%></TD>
+<TD width="15%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssigedTo%></TD>
 <TD width="10%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
 <TD width="30%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("message")%></TD>
  </tr>

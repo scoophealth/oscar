@@ -37,24 +37,27 @@ GregorianCalendar now=new GregorianCalendar();
   
   String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
 
-String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="";
+String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="", docpriority="", docassigned="";
 module_id = request.getParameter("demographic_no");
 doccreator = request.getParameter("user_no");
 docdate = request.getParameter("xml_appointment_date");
 docfilename =request.getParameter("textarea");
-
+docpriority =request.getParameter("priority");
+docassigned =request.getParameter("task_assigned_to");
              
              
 
 
-    String[] param =new String[6];
+    String[] param =new String[8];
 	  param[0]=module_id;
 	  param[1]=docfilename;
 	  param[2]="A";
 	  param[3]=nowDate;
 	  param[4]=docdate;
 	  param[5]=doccreator;
-	  
+	  param[6]=docpriority;
+	  param[7]=docassigned;
+
  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_tickler");
 	           
 	    
