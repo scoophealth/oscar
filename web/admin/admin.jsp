@@ -139,7 +139,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 	  <a href=# onClick ="popupPage(700,720,'../billing/CA/ON/billingOHIPreport.jsp');return false;"><bean:message key="admin.admin.btnGenerateOHIPDiskette"/></a><br>
           <a href=# onClick ="popupPage(700,640,'../billing/CA/ON/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a><br>
           <a href=# onClick ="popupPage(700,640,'../billing/CA/ON/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
-          <a href=# onClick ="popupPage(600,800,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
+          <a href=# onClick ="popupPage(600,900,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
           <a href=# onClick ="popupPage(600,1000,'../billing/CA/ON/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>         	         
        <%}%>
                    	         
