@@ -877,7 +877,7 @@
         <td colspan="2">
         <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >
                <tr>                    
-                    <th width="3%" valign="top" >9. </th>
+                    <th width="2%" valign="top" >9. </th>
                     <th valign="top" class="question">
                         These questions are about how you feel and how things have been with you
                         <font style="text-decoration:underline">during the past month</font>.
@@ -888,14 +888,14 @@
                     <td valign="top" colspan="2">
                         <table>
                             <tr class="question">
-                                <th width="3%"></th>
+                                <th width="2%"></th>
                                 <th width="26%"></th>
                                 <th width="7%"  valign="top" align="center">All of the Time</th>
                                 <th width="8%"  valign="top" align="center">Most of the Time</th>
                                 <th width="12%"  valign="top" align="center">A Good bit of the Time</th>
                                 <th width="8%"  valign="top" align="center">Some of the Time</th>
                                 <th width="10%"  valign="top" align="center">A Little of the Time</th>
-                                <th width="7%"  valign="top" align="center">None of the Time</th>
+                                <th width="8%"  valign="top" align="center">None of the Time</th>
                                 <th width="19%" valign="top" align="center">Comments</th>
                             </tr>
                             <tr>
