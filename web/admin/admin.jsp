@@ -2,38 +2,36 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%
-  if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
-    response.sendRedirect("../logout.jsp");
-  String curProvider_no,userfirstname,userlastname;
-  curProvider_no = (String) session.getAttribute("user");
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
-  //display the main provider page
-  //includeing the provider name and a month calendar
+if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
+	response.sendRedirect("../logout.jsp");
+String curProvider_no = (String) session.getAttribute("user");
+String userfirstname = (String) session.getAttribute("userfirstname");
+String userlastname = (String) session.getAttribute("userlastname");
 %>
+
 <%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <% String country = request.getLocale().getCountry(); %>
+
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.admin.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
-    <!--
-		function setfocus() {
-		}
+<!--
+function setfocus() {
+}
 
-    function onsub() {
-      if(document.searchprovider.keyword.value=="") {
-        alert("<bean:message key="global.msgInputKeyword"/>");
-        return false;
-      } else return true;
-      // do nothing at the moment
-      // check input data in the future 
-    }
+function onsub() {
+	if(document.searchprovider.keyword.value=="") {
+		alert("<bean:message key="global.msgInputKeyword"/>");
+		return false;
+	} else return true;
+	// do nothing at the moment
+	// check input data in the future 
+}
 
-//<!--oscarMessenger code block-->
 function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
@@ -44,13 +42,10 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
-//<!--/oscarMessenger code block -->
-
-
 
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";//360,680
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
   var popup=window.open(page, "groupno", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
@@ -59,8 +54,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 
-    //-->
-    </script>
+//-->
+</script>
 </head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -136,16 +131,16 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan Diskette</a><br>
           <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanCorrection.jsp?billing_no=');return false;">Billing Correction</a><br>
           <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Billing Reconcilliation</a><br>          
-       <% }else{ %>
-          <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
-          <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
-          <a href=# onClick ="popupPage(800,700,'../billing/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a><br>
+       <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
+          <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
+          <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
+          <a href=# onClick ="popupPage(800,700,'../billing/CA/ON/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a><br>
         	
-	  <a href=# onClick ="popupPage(800,720,'../billing/billingOHIPreport.jsp');return false;"><bean:message key="admin.admin.btnGenerateOHIPDiskette"/></a><br>
-          <a href=# onClick ="popupPage(800,640,'../billing/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a><br>
-          <a href=# onClick ="popupPage(800,640,'../billing/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
-          <a href=# onClick ="popupPage(600,800,'../billing/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
-          <a href=# onClick ="popupPage(600,1000,'../billing/billingEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>         	         
+	  <a href=# onClick ="popupPage(800,720,'../billing/CA/ON/billingOHIPreport.jsp');return false;"><bean:message key="admin.admin.btnGenerateOHIPDiskette"/></a><br>
+          <a href=# onClick ="popupPage(800,640,'../billing/CA/ON/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a><br>
+          <a href=# onClick ="popupPage(800,640,'../billing/CA/ON/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
+          <a href=# onClick ="popupPage(600,800,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
+          <a href=# onClick ="popupPage(600,1000,'../billing/CA/ON/billingEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>         	         
        <%}%>
                    	         
         </td>
