@@ -24,763 +24,1078 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-
-<html:html locale="true">
 
 
-<head>
-<title>
-<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.title"/>
-</title>
-<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<script type="text/javascript">
 
-var ageM = new Array();
-var ageF = new Array();
-var HDL  = new Array();
-var TCh  = new Array();
-var BP   = new Array();
-var prob5 = new Array();
-var prob10 = new Array();
-var average10YearM = new Array();
-var average10YearF = new Array();
-
-var cigs      = 4;
-var diabeticM = 3;
-var diabeticF = 6;
-var ECG       = 9;
-var Total     = 0;
-
-//FEMALE AGE
-ageF[1]  = -12; //30
-ageF[2]  = -11; //31
-ageF[3]  = -9; //32
-ageF[4]  = -8;  //33
-ageF[5]  = -6;  //34
-ageF[6]  = -5;  //35
-ageF[7]  = -4;  //36
-ageF[8]  = -3;  //37
-ageF[9]  = -2;  //38
-ageF[10] = -1;  //39
-ageF[11] = 0;  //40
-ageF[12] = 1;  //41
-ageF[13] = 2;   //42-43
-ageF[14] = 3;   //44
-ageF[15] = 4;   //45-46
-ageF[16] = 5;   //47-48
-ageF[17] = 6;   //49-50
-ageF[18] = 7;   //51-52
-ageF[19] = 8;   //53-55
-ageF[20] = 9;   //56-60
-ageF[21] = 10;   //61-67
-ageF[22] = 11;   //68-74
-
-//MALE AGE
-
-ageM[1]  = -2; //30
-ageM[2]  = -1; //31
-ageM[3]  = 0; //32-33
-ageM[4]  = 1;  //34
-ageM[5]  = 2;  //35-36
-ageM[6]  = 3;  //37-38
-ageM[7]  = 4;  //39
-ageM[8]  = 5;  //40-41
-ageM[9]  = 6;  //42-43
-ageM[10] = 7;  //44-45
-ageM[11] = 8;  //46-47
-ageM[12] = 9;  //48-49
-ageM[13] = 10;   //50-51
-ageM[14] = 11;   //52-54
-ageM[15] = 12;   //55-56
-ageM[16] = 13;   //57-59
-ageM[17] = 14;   //60-61
-ageM[18] = 15;   //62-64
-ageM[19] = 16;   //65-67
-ageM[20] = 17;   //68-70
-ageM[21] = 18;   //71-73
-ageM[22] = 19;   //74
-
-//HDC
-HDL[1]  = 7;    //.65-.69
-HDL[2]  = 6;    //.70-.77
-HDL[3]  = 5;    //.78-.84
-HDL[4]  = 4;    //.85-.92
-HDL[5]  = 3;    //.93-1.00
-HDL[6]  = 2;    //1.01-1.10
-HDL[7]  = 1;    //1.11-1.21
-HDL[8]  = 0;    //1.22-1.31
-HDL[9]  = -1;   //1.32-1.44
-HDL[10] = -2;   //1.45-1.57
-HDL[11] = -3;   //1.58-1.72
-HDL[12] = -4;   //1.73-1.90
-HDL[13] = -5;   //1.91-2.08
-HDL[14] = -6;   //2.09-2.27
-HDL[15] = -7;   //2.28-2.48
-
-//TCh
-
-TCh[1]  = -3; //3.59-3.92
-TCh[2]  = -2; //3.93-4.31
-TCh[3]  = -1; //4.32-4.72
-TCh[4]  = 0;  //4.73-5.16
-TCh[5]  = 1;  //5.17-5.68
-TCh[6]  = 2;  //5.69-6.20
-TCh[7]  = 3;  //6.21-6.79
-TCh[8]  = 4;  //6.80-7.46
-TCh[9]  = 5;  //7.47-8.16
-TCh[10] = 6;  //8.17-8.53
-
-//BP
-BP[1]  = -2; //98-104
-BP[2]  = -1; //105-112
-BP[3]  = 0; //113-120
-BP[4]  = 1;  //121-129
-BP[5]  = 2;  //130-139
-BP[6]  = 3;  //140-149
-BP[7]  = 4;  //150-160
-BP[8]  = 5;  //161-172
-BP[9]  = 6;  //173-185
+<html lang="en">
 
 
-prob5[1]  = 1; 
-prob5[2]  = 1; 
-prob5[3]  = 1; 
-prob5[4]  = 1;  
-prob5[5]  = 1;  
-prob5[6]  = 1;  
-prob5[7]  = 1;  
-prob5[8]  = 2;  
-prob5[9]  = 2;  
-prob5[10] = 2;  
+    <head>
+        <title>
+            Coronary Artery Disease Risk Prediction
+        </title>
+        <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
+        <script type="text/javascript">
 
-prob5[11]  = 3; 
-prob5[12]  = 3; 
-prob5[13]  = 3; 
-prob5[14]  = 4;  
-prob5[15]  = 5;  
-prob5[16]  = 5;  
-prob5[17]  = 6;  
-prob5[18]  = 7;  
-prob5[19]  = 8;  
-prob5[20]  = 8;  
+        var ageM = new Array();
+        var ageF = new Array();
+        var HDL  = new Array();
+        var TChM  = new Array(5);
+        var TChF  = new Array(5);
+        var BPuM   = new Array();
+        var BPtM   = new Array();
+        var BPuF   = new Array();
+        var BPtF   = new Array();
+        var smokerM = new Array();
+        var smokerF = new Array();
 
-prob5[21]  = 9; 
-prob5[22]  = 11; 
-prob5[23]  = 12; 
-prob5[24]  = 13;  
-prob5[25]  = 14;  
-prob5[26]  = 16;  
-prob5[27]  = 17;  
-prob5[28]  = 29;  
-prob5[29]  = 20;  
-prob5[30]  = 22;  
-prob5[31]  = 24;  
-prob5[32]  = 25;  
+        var ageGroup = 0;
+        var Total     = 0;
+        var i = 0;
+        var riskLvl;
+        var percent;
+        var cellID = 0;
+        var lipidLvl;
+        
+        for (i=0; i < 5; i++) {
+        TChM[i] = new Array(5)
+        }
 
-var prob10 = new Array();
+        for (i=0; i < 5; i++) {
+        TChF[i] = new Array(5)
+        }
 
-prob10[1]  = 2; 
-prob10[2]  = 2; 
-prob10[3]  = 2; 
-prob10[4]  = 2;  
-prob10[5]  = 3;  
-prob10[6]  = 3;  
-prob10[7]  = 4;  
-prob10[8]  = 4;  
-prob10[9]  = 5;  
-prob10[10] = 6;  
 
-prob10[11]  = 6; 
-prob10[12]  = 7; 
-prob10[13]  = 8; 
-prob10[14]  = 9;  
-prob10[15]  = 10;  
-prob10[16]  = 12;  
-prob10[17]  = 13;  
-prob10[18]  = 14;  
-prob10[19]  = 16;  
-prob10[20]  = 18;  
 
-prob10[21]  = 19; 
-prob10[22]  = 21; 
-prob10[23]  = 23; 
-prob10[24]  = 25;  
-prob10[25]  = 27;  
-prob10[26]  = 29;  
-prob10[27]  = 31;  
-prob10[28]  = 33;  
-prob10[29]  = 36;  
-prob10[30]  = 38;  
-prob10[31]  = 40;  
-prob10[32]  = 42; 
+        //smokerM
+        smokerM[0] = 8; //20-39
+        smokerM[1] = 5; //40-49
+        smokerM[2] = 3; //50-59
+        smokerM[3] = 1; //60-69
+        smokerM[4] = 1; //>69
 
-average10YearM[1] = "3"; //30-34
-average10YearM[2] = "5"; //35-39
-average10YearM[3] = "6"; //40-44
-average10YearM[4] = "10"; //45-49
-average10YearM[5] = "14"; //50-54
-average10YearM[6] = "16"; //55-59
-average10YearM[7] = "21"; //60-64
-average10YearM[8] = "30"; //65-69
-average10YearM[9] = "24"; //70-74
+        //smokerF
+        smokerF[0] = 9; //20-39
+        smokerF[1] = 7; //40-49
+        smokerF[2] = 4; //50-59
+        smokerF[3] = 2; //60-69
+        smokerF[4] = 1; //>69
 
-average10YearF[1] = "< 1"; //30-34
-average10YearF[2] = "< 1"; //35-39
-average10YearF[3] = "2"; //40-44
-average10YearF[4] = "5"; //45-49
-average10YearF[5] = "8"; //50-54
-average10YearF[6] = "12"; //55-59
-average10YearF[7] = "13"; //60-64
-average10YearF[8] = "9"; //65-69
-average10YearF[9] = "12"; //70-74
+        //FEMALE AGE
+        ageF[1]  = -7; //<=34
+        ageF[2]  = -3; //35-39
+        ageF[3]  = 0; //40-44
+        ageF[4]  = 3;  //45-49
+        ageF[5]  = 6;  //50-54
+        ageF[6]  = 8;  //55-59
+        ageF[7]  = 10;  //60-64
+        ageF[8]  = 12;  //65-69
+        ageF[9]  = 14;  //70-74
+        ageF[10] = 16;  //>=75
 
+        //MALE AGE
+
+        ageM[1]  = -9; //<=34
+        ageM[2]  = -4; //35-39
+        ageM[3]  = 0; //40-44
+        ageM[4]  = 3;  //45-49
+        ageM[5]  = 6;  //50-54
+        ageM[6]  = 8;  //55-59
+        ageM[7]  = 10;  //60-64
+        ageM[8]  = 11;  //65-69
+        ageM[9]  = 12;  //70-74
+        ageM[10] = 13;  //>=75
+
+        //HDC
+        HDL[1]  = 2;    //<1.04
+        HDL[2]  = 1;    //1.04-1.29
+        HDL[3]  = 0;    //1.30-1.54
+        HDL[4]  = -1;    //>1.54
+
+        //TChM - 20-39
+
+        TChM[0][0]  = 0; //<4.15
+        TChM[0][1]  = 4; //4.15-5.19
+        TChM[0][2]  = 7; //5.20-6.19
+        TChM[0][3]  = 9;  //6.20-7.20
+        TChM[0][4]  = 11;  //>7.20
+
+        //TChM - 40-49
+
+        TChM[1][0]  = 0; //<4.15
+        TChM[1][1]  = 3; //4.15-5.19
+        TChM[1][2]  = 5; //5.20-6.19
+        TChM[1][3]  = 6;  //6.20-7.20
+        TChM[1][4]  = 8;  //>7.20
+
+        //TChM - 50-59
+
+        TChM[2][0]  = 0; //<4.15
+        TChM[2][1]  = 2; //4.15-5.19
+        TChM[2][2]  = 3; //5.20-6.19
+        TChM[2][3]  = 4;  //6.20-7.20
+        TChM[2][4]  = 5;  //>7.20
+
+        //TChM - 60-69
+
+        TChM[3][0]  = 0; //<4.15
+        TChM[3][1]  = 1; //4.15-5.19
+        TChM[3][2]  = 1; //5.20-6.19
+        TChM[3][3]  = 2;  //6.20-7.20
+        TChM[3][4]  = 3;  //>7.20
+
+        //TChM - 70-79
+
+        TChM[4][0]  = 0; //<4.15
+        TChM[4][1]  = 0; //4.15-5.19
+        TChM[4][2]  = 0; //5.20-6.19
+        TChM[4][3]  = 1;  //6.20-7.20
+        TChM[4][4]  = 1;  //>7.20
+
+
+        //TChF - 20-29
+
+        TChF[0][0]  = 0; //<4.15
+        TChF[0][1]  = 4; //4.15-5.19
+        TChF[0][2]  = 8; //5.20-6.19
+        TChF[0][3]  = 11;  //6.20-7.20
+        TChF[0][4]  = 13;  //>7.20
+
+        //TChF - 40-49
+
+        TChF[1][0]  = 0; //<4.15
+        TChF[1][1]  = 3; //4.15-5.19
+        TChF[1][2]  = 6; //5.20-6.19
+        TChF[1][3]  = 8;  //6.20-7.20
+        TChF[1][4]  = 10;  //>7.20
+
+        //TChF - 50-59
+
+        TChF[2][0]  = 0; //<4.15
+        TChF[2][1]  = 2; //4.15-5.19
+        TChF[2][2]  = 4; //5.20-6.19
+        TChF[2][3]  = 5;  //6.20-7.20
+        TChF[2][4]  = 7;  //>7.20
+
+        //TChF - 60-69
+
+        TChF[3][0]  = 0; //<4.15
+        TChF[3][1]  = 1; //4.15-5.19
+        TChF[3][2]  = 2; //5.20-6.19
+        TChF[3][3]  = 3;  //6.20-7.20
+        TChF[3][4]  = 4;  //>7.20
+
+        //TChF - 70-79
+
+        TChF[4][0]  = 0; //<4.15
+        TChF[4][1]  = 1; //4.15-5.19
+        TChF[4][2]  = 1; //5.20-6.19
+        TChF[4][3]  = 2;  //6.20-7.20
+        TChF[4][4]  = 2;  //>7.20
+
+
+
+        //BPuM
+        BPuM[1]  = 0; //<120
+        BPuM[2]  = 0; //120-129
+        BPuM[3]  = 1; //130-139
+        BPuM[4]  = 1;  //140-159
+        BPuM[5]  = 2;  //>159
+
+        //BPtM
+        BPtM[1]  = 0; //<120
+        BPtM[2]  = 1; //120-129
+        BPtM[3]  = 2; //130-139
+        BPtM[4]  = 2;  //140-159
+        BPtM[5]  = 3;  //>159
+
+        //BPuF
+        BPuF[1]  = 0; //<120
+        BPuF[2]  = 1; //120-129
+        BPuF[3]  = 2; //130-139
+        BPuF[4]  = 3;  //140-159
+        BPuF[5]  = 4;  //>159
+
+        //BPtF
+        BPtF[1]  = 0; //<120
+        BPtF[2]  = 3; //120-129
+        BPtF[3]  = 4; //130-139
+        BPtF[4]  = 5;  //140-159
+        BPtF[5]  = 6;  //>159
 
 
 function calculate(){
- //	var a = document.calCorArDi;
- 	Total = new Number(0);
- 	var ageFactor = 0
-	var age = new Number(document.calCorArDi.age.value);
-	if (document.calCorArDi.sex[0].checked){
-		//alert("AGe : "+document.calCorArDi.age.value);
 
-				if (age <=  30 ){   ageFactor = ageF[1]; }
-				else if (age == 31   ){	ageFactor = ageF[2]; }	
-				else if (age == 32   ){	ageFactor = ageF[3]; }
-				else if (age == 33   ){	ageFactor = ageF[4]; }
-				else if (age == 34   ){ ageFactor = ageF[5]; }
-				else if (age == 35   ){ ageFactor = ageF[6]; }				
-				else if (age == 36   ){ ageFactor = ageF[7]; }
-				else if (age == 37   ){ ageFactor = ageF[8]; }
-				else if (age == 38   ){	ageFactor = ageF[9]; }
-				else if (age == 39   ){	ageFactor = ageF[10]; }
-				else if (age == 40   ){	ageFactor = ageF[11]; }
-				else if (age == 41   ){	ageFactor = ageF[12]; }
-				else if (age == 42   ){	ageFactor = ageF[13]; }
-				else if (age == 43   ){ ageFactor = ageF[13]; }
-				else if (age == 44   ){	ageFactor = ageF[14]; }
-				else if (age == 45   ){	ageFactor = ageF[15]; }
-                else if (age == 46   ){	ageFactor = ageF[15]; }		
-                else if (age == 47   ){	ageFactor = ageF[16]; }			
-                else if (age == 48   ){	ageFactor = ageF[16];}			
-                else if (age == 49   ){	ageFactor = ageF[17];}			
-                else if (age == 50   ){	ageFactor = ageF[17];}			
-                else if (age == 51   ){	ageFactor = ageF[18];}			
-                else if (age == 52   ){	ageFactor = ageF[18];}
-                else if (age == 53   ){	ageFactor = ageF[19];}			
-                else if (age == 54   ){	ageFactor = ageF[19];}
-                else if (age == 55   ){	ageFactor = ageF[19];}
-                else if (age == 56   ){	ageFactor = ageF[20];}
-                else if (age == 57   ){	ageFactor = ageF[20];}
-                else if (age == 58   ){	ageFactor = ageF[20];}
-                else if (age == 59   ){	ageFactor = ageF[20];}							
-				else if (age == 60   ){	ageFactor = ageF[20];}
-				else if (age == 61   ){	ageFactor = ageF[21];}			
-				else if (age == 62   ){	ageFactor = ageF[21];}
-				else if (age == 63   ){	ageFactor = ageF[21];}
-				else if (age == 64   ){	ageFactor = ageF[21];}
-				else if (age == 65   ){	ageFactor = ageF[21];}
-				else if (age == 66   ){	ageFactor = ageF[21];}															
-				else if (age == 67   ){	ageFactor = ageF[21];}			
-				else if (age == 68   ){	ageFactor = ageF[22];}
-				else if (age == 69   ){	ageFactor = ageF[22];}
-				else if (age == 70   ){	ageFactor = ageF[22];}
-				else if (age == 71   ){	ageFactor = ageF[22];}
-				else if (age == 72   ){	ageFactor = ageF[22];}
-				else if (age == 73   ){	ageFactor = ageF[22];}
-				else if (age >= 74   ){	ageFactor = ageF[22];}																															
-	}else{		
-				if 		(age <= 30 ){   ageFactor = ageM[1];}
-				else if (age == 31 ){	ageFactor = ageM[2];}	
-				else if (age == 32 ){	ageFactor = ageM[3];}
-				else if (age == 33 ){	ageFactor = ageM[3];}
-				else if (age == 34 ){   ageFactor = ageM[4];}
-				else if (age == 35 ){   ageFactor = ageM[5];}				
-				else if (age == 36 ){   ageFactor = ageM[5];}
-				else if (age == 37 ){   ageFactor = ageM[6];}
-				else if (age == 38 ){	ageFactor = ageM[6];}
-				else if (age == 39 ){	ageFactor = ageM[7];}
-				else if (age == 40 ){	ageFactor = ageM[8];}
-				else if (age == 41 ){	ageFactor = ageM[8];}
-				else if (age == 42 ){	ageFactor = ageM[9];}
-				else if (age == 43 ){ 	ageFactor = ageM[9];}
-				else if (age == 44 ){	ageFactor = ageM[10];}
-				else if (age == 45 ){	ageFactor = ageM[10];}
-                else if (age == 46 ){	ageFactor = ageM[11];}		
-                else if (age == 47 ){	ageFactor = ageM[11];}			
-                else if (age == 48 ){	ageFactor = ageM[12];}			
-                else if (age == 49 ){	ageFactor = ageM[12];}			
-                else if (age == 50 ){	ageFactor = ageM[13];}			
-                else if (age == 51 ){	ageFactor = ageM[13];}			
-                else if (age == 52 ){	ageFactor = ageM[14];}
-                else if (age == 53 ){	ageFactor = ageM[14];}			
-                else if (age == 54 ){	ageFactor = ageM[14];}
-                else if (age == 55 ){	ageFactor = ageM[15];}
-                else if (age == 56 ){	ageFactor = ageM[15];}
-                else if (age == 57 ){	ageFactor = ageM[16];}
-                else if (age == 58 ){	ageFactor = ageM[16];}
-                else if (age == 59 ){	ageFactor = ageM[16];}							
-				else if (age == 60 ){	ageFactor = ageM[17];}
-				else if (age == 61 ){	ageFactor = ageM[17];}			
-				else if (age == 62 ){	ageFactor = ageM[18];}
-				else if (age == 63 ){	ageFactor = ageM[18];}
-				else if (age == 64 ){	ageFactor = ageM[18];}
-				else if (age == 65 ){	ageFactor = ageM[19];}
-				else if (age == 66 ){	ageFactor = ageM[19];}															
-				else if (age == 67 ){	ageFactor = ageM[19];}			
-				else if (age == 68 ){	ageFactor = ageM[20];}
-				else if (age == 69 ){	ageFactor = ageM[20];}
-				else if (age == 70 ){	ageFactor = ageM[20];}
-				else if (age == 71 ){	ageFactor = ageM[21];}
-				else if (age == 72 ){	ageFactor = ageM[21];}
-				else if (age == 73 ){	ageFactor = ageM[21];}
-				else if (age >= 74 ){	ageFactor = ageM[22];}																												
-	}
+        Total = new Number(0);
+        var ageFactor = 0
+        var age = new Number(document.calCorArDi.age.value);
 	
-	//HDL
+        if (age <= 39){ageGroup = 0; }
+        else if (age <= 49){ageGroup = 1; }	
+        else if (age <= 59){ageGroup = 2; }
+        else if (age <= 69){ageGroup = 3; }
+        else if (age > 69){ageGroup = 4; }
+            
+        if (document.calCorArDi.sex[0].checked){
+        
+        if (age <= 34){   ageFactor = ageF[1]; }
+        else if (age <= 39){ageFactor = ageF[2]; }	
+        else if (age <= 44){ageFactor = ageF[3]; }
+        else if (age <= 49){ageFactor = ageF[4]; }
+        else if (age <= 54){ageFactor = ageF[5]; }
+        else if (age <= 59){ageFactor = ageF[6]; }				
+        else if (age <= 64){ageFactor = ageF[7]; }
+        else if (age <= 69){ageFactor = ageF[8]; }
+        else if (age <= 74){ageFactor = ageF[9]; }
+        else if (age > 74){ageFactor = ageF[10]; }
+										
+								
+        }else{		
+        if (age <= 34){   ageFactor = ageM[1]; }
+        else if (age <= 39){ageFactor = ageM[2]; }	
+        else if (age <= 44){ageFactor = ageM[3]; }
+        else if (age <= 49){ageFactor = ageM[4]; }
+        else if (age <= 54){ageFactor = ageM[5]; }
+        else if (age <= 59){ageFactor = ageM[6]; }				
+        else if (age <= 64){ageFactor = ageM[7]; }
+        else if (age <= 69){ageFactor = ageM[8]; }
+        else if (age <= 74){ageFactor = ageM[9]; }
+        else if (age > 74){ageFactor = ageM[10];}							
+																
+					
+        }
 	
 	
-	
-	
+        //Age Factor
 	Total = Total + ageFactor;
-	//alert(Total);
-	Total = Total +  HDL[new Number(document.calCorArDi.HDL.value)];
-	//alert(Total);
-	Total = Total +  TCh[new Number(document.calCorArDi.TCh.value)];
-	///alert(Total);
-	Total = Total +  BP[new Number(document.calCorArDi.BP.value)];
-	//alert(Total);
-	if (document.calCorArDi.cigs.checked){
-		Total = Total + cigs;
-	}
-	//alert(Total);
-	if (document.calCorArDi.diabetic.checked){
-		if (document.calCorArDi.sex[0].checked){
-			Total = Total + diabeticF;
-		}else{
-			Total = Total + diabeticM;
-		}
-	}
-	//alert(Total);
-	if (document.calCorArDi.ECG.checked){
-			Total = Total + ECG;
-	}
-	//document.calCorArDi.totalVal.value = Total;
-	var pro5;
-	var pro10;
-	if (Total <= 0 ){
-		pro5 = 0;
-		pro10 = 0;
-	}else if(Total > 32){
-		pro5 =  "> 25";
-		pro10 =  "> 42";
+	
+        //HDL
+        Total = Total +  HDL[new Number(document.calCorArDi.HDL.value)];
+                
+        //TCh
+        if (document.calCorArDi.sex[0].checked){
+            Total = Total +  TChF[ageGroup][new Number(document.calCorArDi.TCh.value)];
+        }else{
+            Total = Total +  TChM[ageGroup][new Number(document.calCorArDi.TCh.value)];
+        }
+	
+        if (document.calCorArDi.treated[0].checked){
+            if (document.calCorArDi.sex[0].checked){
+                Total = Total +  BPuF[new Number(document.calCorArDi.BP.value)];
+            }else{
+                Total = Total +  BPuM[new Number(document.calCorArDi.BP.value)];
+            }
+        }else{
+            if (document.calCorArDi.sex[0].checked){
+                Total = Total +  BPtF[new Number(document.calCorArDi.BP.value)];
+            }else{
+                Total = Total +  BPtM[new Number(document.calCorArDi.BP.value)];
+            }
+        }
+
+
+        
+        //alert(Total);
+        if (document.calCorArDi.cigs.checked){
+            if (document.calCorArDi.sex[0].checked){
+                Total = Total +  smokerF[ageGroup];
+            }else{
+                Total = Total +  smokerM[ageGroup];
+            }
+        }
+	
+        
+        
+	 
+    if (document.calCorArDi.sex[0].checked){
+        if (Total > 22){
+            riskLvl = "HIGH";
+            lipidLvl = "LDL-C Level(mmol/L) - < 2.5           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
+        }
+        else if (Total < 20){
+            riskLvl = "LOW";
+            lipidLvl = "LDL-C Level(mmol/L) - < 4.5           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
+        }
+        else{
+            riskLvl = "MODERATE";
+            lipidLvl = "LDL-C Level(mmol/L) - < 3.5           *\n* TC/HDL-C Ratio - < 5.0\t\t*\n";
+        }   
+    }else{
+        if (Total > 14){
+            riskLvl = "HIGH";
+            lipidLvl = "LDL-C Level(mmol/L) - < 2.5           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
+        }
+        else if (Total < 13){
+            riskLvl = "LOW";
+            lipidLvl = "LDL-C Level(mmol/L) - < 4.5           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
+        }
+        else{
+            riskLvl = "MODERATE";
+            lipidLvl = "LDL-C Level(mmol/L) - < 3.5           *\n* TC/HDL-C Ratio - < 5.0\t\t*\n";
+        } 
+    }
+                
+    setChart(Total);
+    
+    if (cellID == 1){
+        percent = "< 1%";
+    }
+    else if (cellID == 14){
+        percent = ">=30%";
+    }
+    else{
+
+        if (document.calCorArDi.sex[0].checked){
+            percent = document.getElementById('2cellR'+cellID).innerHTML;
+        }
+        else{
+            percent = document.getElementById('cellR'+cellID).innerHTML;
+        }
+    }
+        
+        
+        if (document.calCorArDi.diabetic.checked){
+            resetAverageChart();
+            document.second.prediction.value="*****************************************\n"
+                                        +"*Coronary Artery Disease Risk Prediction*\n"
+                                        +"*****************************************\n"
+                                        +"* Total Point Count: "+Total+"           \t*\n"
+                                        +"* 10-year Risk: HIGH >= 20%             *\n"
+					+"*****************************************\n"
+					+"*Patients with established CVD, diabetes*\n"
+                                        +"*or any atherosclerotic disease are     *\n"
+                                        +"*automatically considered high risk     *\n"
+                                        +"*with a >=20% 10-year risk.             *\n"
+                                        +"*****************************************\n"
+                                        +"* Based on risk, your target lipid      *\n"
+                                        +"* levels should be:                     *\n"
+                                        +"* LDL-C Level(mmol/L) - < 2.5           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n"
+                                        +"*****************************************\n";
 	}else{
-	pro5 = prob5[Total];
-	pro10 = prob10[Total];
-	}                                   
-	document.second.prediction.value="*****************************************\n"
-									 +"*<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgCoronaryRiskPrediction"/>*\n"
-									 +"*****************************************\n"
-	                                 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgTotalPointCount"/>:           "+Total+             "    \t*\n"
-									 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msg5YearProbability"/>:          "+pro5+              " %  \t*\n"
-									 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msg10YearProbability"/>:         "+pro10+             " %  \t*\n"
-									 +"* <bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgAvg10YearProbability"/>: "+getTenAverage(age)+" %  \t*\n"
-									 +"*****************************************\n";
+            document.second.prediction.value="*****************************************\n"
+                                        +"*Coronary Artery Disease Risk Prediction*\n"
+                                        +"*****************************************\n"
+                                        +"* Total Point Count:  "+Total+  "            \t*\n"
+                                        +"* 10-year Risk: "+riskLvl+" - "+percent+"\t\t*\n"
+					+"*****************************************\n"
+					+"* Based on risk, your target lipid      *\n"
+                                        +"* levels should be:                     *\n"
+					+"* "+lipidLvl
+					+"*****************************************\n";
+                                        
+	}
+	
 }
 
-	function getTenAverage(age){
-	resetAverageChart();
-				var aveprob = 0;
-				var retval = "";
-				if (age <=  34 )    { aveprob = 1 }
-				else if ( age <= 39){ aveprob = 2 }
-				else if ( age <= 44){ aveprob = 3 }
-				else if ( age <= 49){ aveprob = 4 }
-				else if ( age <= 54){ aveprob = 5 }
-				else if ( age <= 59){ aveprob = 6 }
-				else if ( age <= 64){ aveprob = 7 }
-				else if ( age <= 69){ aveprob = 8 }
-				else 				{ aveprob = 9 }
-				
-				if (document.calCorArDi.sex[0].checked){
-					retval = average10YearF[aveprob];
-				}else{
-					retval = average10YearM[aveprob];
-				}
-				var CellStyle = document.getElementById('cellL'+aveprob).style;
-				CellStyle.background = "#ccccff"; // otherwise, color it blue
-				CellStyle.color = "#ff0000";
-				var CellStyle = document.getElementById('cellC'+aveprob).style;
-				CellStyle.background = "#ccccff"; // otherwise, color it blue
-				CellStyle.color = "#ff0000";
-				var CellStyle = document.getElementById('cellR'+aveprob).style;
-				CellStyle.background = "#ccccff"; // otherwise, color it blue
-				CellStyle.color = "#ff0000";
+function write2Parent(){
+    var text = document.second.prediction.value;
 
-		return retval;
-	}
-	function resetAverageChart(){
-		document.getElementById('cellL1').style.background = "#ffffff";
-		document.getElementById('cellC1').style.background = "#ffffff";
-		document.getElementById('cellR1').style.background = "#ffffff";
-		document.getElementById('cellL1').style.color = "#000000";
-		document.getElementById('cellC1').style.color = "#000000";
-		document.getElementById('cellR1').style.color = "#000000";
+    pastewin.document.encForm.enTextarea.value = pastewin.document.encForm.enTextarea.value + "\n\n" + text;
+    pastewin.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+    pastewin.document.encForm.enTextarea.focus();
+    
+    
+    window.close();
+ }
+
+function setChart(Total){
+        resetAverageChart();
+        
+    
+        if (document.calCorArDi.sex[0].checked){
+            if (Total <  9){ cellID = 1 }
+            else if ( Total <= 12){ cellID = 2 }
+            else if ( Total <= 14){ cellID = 3 }
+            else if ( Total <= 15){ cellID = 4 }
+            else if ( Total <= 16){ cellID = 5 }
+            else if ( Total <= 17){ cellID = 6 }
+            else if ( Total <= 18){ cellID = 7 }
+            else if ( Total <= 19){ cellID = 8 }
+            else if ( Total <= 20){ cellID = 9 }
+            else if ( Total <= 21){ cellID = 10 }
+            else if ( Total <= 22){ cellID = 11 }
+            else if ( Total <= 23){ cellID = 12 }
+            else if ( Total <= 24){ cellID = 13 }
+            else if ( Total >= 25){ cellID = 14 }
+        
+        }else{ 				  
+            if (Total <  0){ cellID = 1 }
+            else if ( Total <= 4){ cellID = 2 }
+            else if ( Total <= 6){ cellID = 3 }
+            else if ( Total <= 7){ cellID = 4 }
+            else if ( Total <= 8){ cellID = 5 }
+            else if ( Total <= 9){ cellID = 6 }
+            else if ( Total <= 10){ cellID = 7 }
+            else if ( Total <= 11){ cellID = 8 }
+            else if ( Total <= 12){ cellID = 9 }
+            else if ( Total <= 13){ cellID = 10 }
+            else if ( Total <= 14){ cellID = 11 }
+            else if ( Total <= 15){ cellID = 12 }
+            else if ( Total <= 16){ cellID = 13 }
+            else if ( Total >= 17){ cellID = 14 }
+        }
+        
+        
+if (document.calCorArDi.sex[0].checked){
+    if (Total > 22){
+        var CellStyle = document.getElementById('2cellL'+cellID).style;
+        CellStyle.background = "#ff0000"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('2cellC'+cellID).style;
+        CellStyle.background = "#ff0000"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('2cellR'+cellID).style;
+        CellStyle.background = "#ff0000"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+    }
+    else if (Total < 20){
+        var CellStyle = document.getElementById('2cellL'+cellID).style;
+        CellStyle.background = "#99FF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('2cellC'+cellID).style;
+        CellStyle.background = "#99FF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('2cellR'+cellID).style;
+        CellStyle.background = "#99FF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+    }
+    else{
+        var CellStyle = document.getElementById('2cellL'+cellID).style;
+        CellStyle.background = "#FFFF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('2cellC'+cellID).style;
+        CellStyle.background = "#FFFF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('2cellR'+cellID).style;
+        CellStyle.background = "#FFFF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+    }   
+}
+else{
+    if (Total > 14){
+        var CellStyle = document.getElementById('cellL'+cellID).style;
+        CellStyle.background = "#ff0000"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('cellC'+cellID).style;
+        CellStyle.background = "#ff0000"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('cellR'+cellID).style;
+        CellStyle.background = "#ff0000"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+    }
+    else if (Total < 13){
+        var CellStyle = document.getElementById('cellL'+cellID).style;
+        CellStyle.background = "#99FF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('cellC'+cellID).style;
+        CellStyle.background = "#99FF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('cellR'+cellID).style;
+        CellStyle.background = "#99FF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+    }
+    else{
+        var CellStyle = document.getElementById('cellL'+cellID).style;
+        CellStyle.background = "#FFFF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('cellC'+cellID).style;
+        CellStyle.background = "#FFFF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+        var CellStyle = document.getElementById('cellR'+cellID).style;
+        CellStyle.background = "#FFFF00"; // otherwise, color it blue
+        CellStyle.color = "#000000";
+    } 
+}
+
+        
+}
+    
+function resetAverageChart(){
+        document.getElementById('cellL1').style.background = "#ffffff";
+        document.getElementById('cellC1').style.background = "#ffffff";
+        document.getElementById('cellR1').style.background = "#ffffff";
+        document.getElementById('cellL1').style.color = "#000000";
+        document.getElementById('cellC1').style.color = "#000000";
+        document.getElementById('cellR1').style.color = "#000000";
 		
-		document.getElementById('cellL2').style.background = "#ffffff";
-		document.getElementById('cellC2').style.background = "#ffffff";
-		document.getElementById('cellR2').style.background = "#ffffff";
-	 	document.getElementById('cellL2').style.color = "#000000";
-		document.getElementById('cellC2').style.color = "#000000";
-		document.getElementById('cellR2').style.color = "#000000";
+        document.getElementById('cellL2').style.background = "#ffffff";
+        document.getElementById('cellC2').style.background = "#ffffff";
+        document.getElementById('cellR2').style.background = "#ffffff";
+        document.getElementById('cellL2').style.color = "#000000";
+        document.getElementById('cellC2').style.color = "#000000";
+        document.getElementById('cellR2').style.color = "#000000";
 	 
-	    document.getElementById('cellL3').style.background = "#ffffff";
-		document.getElementById('cellC3').style.background = "#ffffff";
-		document.getElementById('cellR3').style.background = "#ffffff";
-		document.getElementById('cellL3').style.color = "#000000";
-		document.getElementById('cellC3').style.color = "#000000";
-		document.getElementById('cellR3').style.color = "#000000";
+        document.getElementById('cellL3').style.background = "#ffffff";
+        document.getElementById('cellC3').style.background = "#ffffff";
+        document.getElementById('cellR3').style.background = "#ffffff";
+        document.getElementById('cellL3').style.color = "#000000";
+        document.getElementById('cellC3').style.color = "#000000";
+        document.getElementById('cellR3').style.color = "#000000";
     												 
-	    document.getElementById('cellL4').style.background = "#ffffff";
-		document.getElementById('cellC4').style.background = "#ffffff";
-		document.getElementById('cellR4').style.background = "#ffffff";											 
-		document.getElementById('cellL4').style.color = "#000000";
-		document.getElementById('cellC4').style.color = "#000000";
-		document.getElementById('cellR4').style.color = "#000000";
+        document.getElementById('cellL4').style.background = "#ffffff";
+        document.getElementById('cellC4').style.background = "#ffffff";
+        document.getElementById('cellR4').style.background = "#ffffff";	
+        document.getElementById('cellL4').style.color = "#000000";
+        document.getElementById('cellC4').style.color = "#000000";
+        document.getElementById('cellR4').style.color = "#000000";
 												 
-		document.getElementById('cellL5').style.background = "#ffffff";
-		document.getElementById('cellC5').style.background = "#ffffff";
-		document.getElementById('cellR5').style.background = "#ffffff";
-		document.getElementById('cellL5').style.color = "#000000";
-		document.getElementById('cellC5').style.color = "#000000";
-		document.getElementById('cellR5').style.color = "#000000";
+        document.getElementById('cellL5').style.background = "#ffffff";
+        document.getElementById('cellC5').style.background = "#ffffff";
+        document.getElementById('cellR5').style.background = "#ffffff";
+        document.getElementById('cellL5').style.color = "#000000";
+        document.getElementById('cellC5').style.color = "#000000";
+        document.getElementById('cellR5').style.color = "#000000";
 		
-		document.getElementById('cellL6').style.background = "#ffffff";
-		document.getElementById('cellC6').style.background = "#ffffff";
-		document.getElementById('cellR6').style.background = "#ffffff";																			
-		document.getElementById('cellL6').style.color = "#000000";
-		document.getElementById('cellC6').style.color = "#000000";
-		document.getElementById('cellR6').style.color = "#000000";
+        document.getElementById('cellL6').style.background = "#ffffff";
+        document.getElementById('cellC6').style.background = "#ffffff";
+        document.getElementById('cellR6').style.background = "#ffffff";				
+        document.getElementById('cellL6').style.color = "#000000";
+        document.getElementById('cellC6').style.color = "#000000";
+        document.getElementById('cellR6').style.color = "#000000";
 											
         document.getElementById('cellL7').style.background = "#ffffff";
-		document.getElementById('cellC7').style.background = "#ffffff";
-		document.getElementById('cellR7').style.background = "#ffffff";											
-		document.getElementById('cellL7').style.color = "#000000";
-		document.getElementById('cellC7').style.color = "#000000";
-		document.getElementById('cellR7').style.color = "#000000";
+        document.getElementById('cellC7').style.background = "#ffffff";
+        document.getElementById('cellR7').style.background = "#ffffff";	
+        document.getElementById('cellL7').style.color = "#000000";
+        document.getElementById('cellC7').style.color = "#000000";
+        document.getElementById('cellR7').style.color = "#000000";
 												 
-		document.getElementById('cellL8').style.background = "#ffffff";
-		document.getElementById('cellC8').style.background = "#ffffff";
-		document.getElementById('cellR8').style.background = "#ffffff";																			
-		document.getElementById('cellL8').style.color = "#000000";
-		document.getElementById('cellC8').style.color = "#000000";
-		document.getElementById('cellR8').style.color = "#000000";
+        document.getElementById('cellL8').style.background = "#ffffff";
+        document.getElementById('cellC8').style.background = "#ffffff";
+        document.getElementById('cellR8').style.background = "#ffffff";				
+        document.getElementById('cellL8').style.color = "#000000";
+        document.getElementById('cellC8').style.color = "#000000";
+        document.getElementById('cellR8').style.color = "#000000";
 											
         document.getElementById('cellL9').style.background = "#ffffff";
-		document.getElementById('cellC9').style.background = "#ffffff";
-		document.getElementById('cellR9').style.background = "#ffffff";										 									
-		document.getElementById('cellL9').style.color = "#000000";
-		document.getElementById('cellC9').style.color = "#000000";
-		document.getElementById('cellR9').style.color = "#000000";
-	}
-</script>
-<script Language="JavaScript">
-//
-// QueryString
-//
-
-function QueryString(key)
-{
-	var value = null;
-	for (var i=0;i<QueryString.keys.length;i++)
-	{
-		if (QueryString.keys[i]==key)
-		{
-			value = QueryString.values[i];
-			break;
-		}
-	}
-	return value;
-}
-QueryString.keys = new Array();
-QueryString.values = new Array();
-
-function QueryString_Parse()
-{
-	var query = window.location.search.substring(1);
-	var pairs = query.split("&");
-	
-	for (var i=0;i<pairs.length;i++)
-	{
+        document.getElementById('cellC9').style.background = "#ffffff";
+        document.getElementById('cellR9').style.background = "#ffffff";				
+        document.getElementById('cellL9').style.color = "#000000";
+        document.getElementById('cellC9').style.color = "#000000";
+        document.getElementById('cellR9').style.color = "#000000";
+        
+        document.getElementById('cellL10').style.background = "#ffffff";
+        document.getElementById('cellC10').style.background = "#ffffff";
+        document.getElementById('cellR10').style.background = "#ffffff";			
+        document.getElementById('cellL10').style.color = "#000000";
+        document.getElementById('cellC10').style.color = "#000000";
+        document.getElementById('cellR10').style.color = "#000000";
+        
+        document.getElementById('cellL11').style.background = "#ffffff";
+        document.getElementById('cellC11').style.background = "#ffffff";
+        document.getElementById('cellR11').style.background = "#ffffff";			
+        document.getElementById('cellL11').style.color = "#000000";
+        document.getElementById('cellC11').style.color = "#000000";
+        document.getElementById('cellR11').style.color = "#000000";
+        
+        document.getElementById('cellL12').style.background = "#ffffff";
+        document.getElementById('cellC12').style.background = "#ffffff";
+        document.getElementById('cellR12').style.background = "#ffffff";			
+        document.getElementById('cellL12').style.color = "#000000";
+        document.getElementById('cellC12').style.color = "#000000";
+        document.getElementById('cellR12').style.color = "#000000";
+        
+        document.getElementById('cellL13').style.background = "#ffffff";
+        document.getElementById('cellC13').style.background = "#ffffff";
+        document.getElementById('cellR13').style.background = "#ffffff";		
+        document.getElementById('cellL13').style.color = "#000000";
+        document.getElementById('cellC13').style.color = "#000000";
+        document.getElementById('cellR13').style.color = "#000000";
+        
+        document.getElementById('cellL14').style.background = "#ffffff";
+        document.getElementById('cellC14').style.background = "#ffffff";
+        document.getElementById('cellR14').style.background = "#ffffff";			
+        document.getElementById('cellL14').style.color = "#000000";
+        document.getElementById('cellC14').style.color = "#000000";
+        document.getElementById('cellR14').style.color = "#000000";
+        
+        
+        
+        
+        document.getElementById('2cellL1').style.background = "#ffffff";
+        document.getElementById('2cellC1').style.background = "#ffffff";
+        document.getElementById('2cellR1').style.background = "#ffffff";
+        document.getElementById('2cellL1').style.color = "#000000";
+        document.getElementById('2cellC1').style.color = "#000000";
+        document.getElementById('2cellR1').style.color = "#000000";
 		
-		var pos = pairs[i].indexOf('=');
-		if (pos >= 0)
-		{
-			var argname = pairs[i].substring(0,pos);
-			var value = pairs[i].substring(pos+1);
-			QueryString.keys[QueryString.keys.length] = argname;
-			QueryString.values[QueryString.values.length] = value;		
-		}
-	}
-
+        document.getElementById('2cellL2').style.background = "#ffffff";
+        document.getElementById('2cellC2').style.background = "#ffffff";
+        document.getElementById('2cellR2').style.background = "#ffffff";
+        document.getElementById('2cellL2').style.color = "#000000";
+        document.getElementById('2cellC2').style.color = "#000000";
+        document.getElementById('2cellR2').style.color = "#000000";
+	 
+        document.getElementById('2cellL3').style.background = "#ffffff";
+        document.getElementById('2cellC3').style.background = "#ffffff";
+        document.getElementById('2cellR3').style.background = "#ffffff";
+        document.getElementById('2cellL3').style.color = "#000000";
+        document.getElementById('2cellC3').style.color = "#000000";
+        document.getElementById('2cellR3').style.color = "#000000";
+    												 
+        document.getElementById('2cellL4').style.background = "#ffffff";
+        document.getElementById('2cellC4').style.background = "#ffffff";
+        document.getElementById('2cellR4').style.background = "#ffffff";
+        document.getElementById('cellL4').style.color = "#000000";
+        document.getElementById('cellC4').style.color = "#000000";
+        document.getElementById('cellR4').style.color = "#000000";
+												 
+        document.getElementById('2cellL5').style.background = "#ffffff";
+        document.getElementById('2cellC5').style.background = "#ffffff";
+        document.getElementById('2cellR5').style.background = "#ffffff";
+        document.getElementById('2cellL5').style.color = "#000000";
+        document.getElementById('2cellC5').style.color = "#000000";
+        document.getElementById('2cellR5').style.color = "#000000";
+		
+        document.getElementById('2cellL6').style.background = "#ffffff";
+        document.getElementById('2cellC6').style.background = "#ffffff";
+        document.getElementById('2cellR6').style.background = "#ffffff";			
+        document.getElementById('2cellL6').style.color = "#000000";
+        document.getElementById('2cellC6').style.color = "#000000";
+        document.getElementById('2cellR6').style.color = "#000000";
+											
+        document.getElementById('2cellL7').style.background = "#ffffff";
+        document.getElementById('2cellC7').style.background = "#ffffff";
+        document.getElementById('2cellR7').style.background = "#ffffff";
+        document.getElementById('2cellL7').style.color = "#000000";
+        document.getElementById('2cellC7').style.color = "#000000";
+        document.getElementById('2cellR7').style.color = "#000000";
+												 
+        document.getElementById('2cellL8').style.background = "#ffffff";
+        document.getElementById('2cellC8').style.background = "#ffffff";
+        document.getElementById('2cellR8').style.background = "#ffffff";		
+        document.getElementById('2cellL8').style.color = "#000000";
+        document.getElementById('2cellC8').style.color = "#000000";
+        document.getElementById('2cellR8').style.color = "#000000";
+											
+        document.getElementById('2cellL9').style.background = "#ffffff";
+        document.getElementById('2cellC9').style.background = "#ffffff";
+        document.getElementById('2cellR9').style.background = "#ffffff";			
+        document.getElementById('2cellL9').style.color = "#000000";
+        document.getElementById('2cellC9').style.color = "#000000";
+        document.getElementById('2cellR9').style.color = "#000000";
+        
+        document.getElementById('2cellL10').style.background = "#ffffff";
+        document.getElementById('2cellC10').style.background = "#ffffff";
+        document.getElementById('2cellR10').style.background = "#ffffff";			
+        document.getElementById('2cellL10').style.color = "#000000";
+        document.getElementById('2cellC10').style.color = "#000000";
+        document.getElementById('2cellR10').style.color = "#000000";
+        
+        document.getElementById('cellL11').style.background = "#ffffff";
+        document.getElementById('cellC11').style.background = "#ffffff";
+        document.getElementById('cellR11').style.background = "#ffffff";			
+        document.getElementById('2cellL11').style.color = "#000000";
+        document.getElementById('2cellC11').style.color = "#000000";
+        document.getElementById('2cellR11').style.color = "#000000";
+        
+        document.getElementById('2cellL12').style.background = "#ffffff";
+        document.getElementById('2cellC12').style.background = "#ffffff";
+        document.getElementById('2cellR12').style.background = "#ffffff";			
+        document.getElementById('2cellL12').style.color = "#000000";
+        document.getElementById('2cellC12').style.color = "#000000";
+        document.getElementById('2cellR12').style.color = "#000000";
+        
+        document.getElementById('2cellL13').style.background = "#ffffff";
+        document.getElementById('2cellC13').style.background = "#ffffff";
+        document.getElementById('2cellR13').style.background = "#ffffff";		
+        document.getElementById('2cellL13').style.color = "#000000";
+        document.getElementById('2cellC13').style.color = "#000000";
+        document.getElementById('2cellR13').style.color = "#000000";
+        
+        document.getElementById('2cellL14').style.background = "#ffffff";
+        document.getElementById('2cellC14').style.background = "#ffffff";
+        document.getElementById('2cellR14').style.background = "#ffffff";			
+        document.getElementById('2cellL14').style.color = "#000000";
+        document.getElementById('2cellC14').style.color = "#000000";
+        document.getElementById('2cellR14').style.color = "#000000";
+        
 }
-
-QueryString_Parse();
-function setValues(){
-	var theSex = QueryString('sex');
-	var theAge = QueryString('age');
-	if ( theSex != null){
-		if ( theSex == 'M'){
-			document.calCorArDi.sex[1].checked = true;
-		}else if ( theSex == 'F'){
-			document.calCorArDi.sex[0].checked = true;
-		}
-	}
-	if ( theAge != null){		
-			document.calCorArDi.age.value = theAge;		
-	}
-//	alert(QueryString('sex'));
-	
-//	alert(QueryString('age'));
-	//}
-	window.focus();
-}
-</script>
-
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-	}
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-	}	
-</style>
-</head>
-
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
-<!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgCalculators"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.title"/>
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">&nbsp;
+        </script>
+        <script Language="JavaScript">
             
-            </td>
-            <td class="MainTableRightColumn">
-				<table>
-					<tr>
-						<td>
-							<form name="calCorArDi">
-							<table>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgFemale"/>:</td>
-									<td><input type="radio" name="sex" value="F" checked /></td>
-								</tr>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgMale"/>:</td>
-									<td><input type="radio" name="sex" value="M"/></td>
-								</tr>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgAge"/>:</td>
-									<td><input type="text" name="age" size="4"/></td>
-								</tr>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgHDLCholesterol"/>:</td>										
-	                                <td> <select name="HDL">
-										  <option value="1">.65-.69</option>
-										  <option value="2">.70-.77</option>
-										  <option value="3">.78-.84</option>
-										  <option value="4">.85-.92</option>
-										  <option value="5">.93-1.00</option>
-										  <option value="6">1.01-1.10</option>
-										  <option value="7">1.11-1.21</option>
-										  <option value="8">1.22-1.31</option>
-										  <option value="9">1.32-1.44</option>
-										  <option value="10">1.45-1.57</option>
-										  <option value="11">1.58-1.72</option>
-										  <option value="12">1.73-1.90</option>
-										  <option value="13">1.91-2.08</option>
-										  <option value="14">2.09-2.27</option>
-										  <option value="15">2.28-2.48</option>
-										 </select>
-									</td>
-								</tr>
-								<tr>
-										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgTotalCholesterol"/>:</td>
-										<td>
-											<select name="TCh">
-												<option value="1">3.59-3.92</option>
-												<option value="2">3.93-4.31</option>
-												<option value="3">4.32-4.72</option>
-												<option value="4">4.73-5.16</option>															
-												<option value="5">5.17-5.68</option>
-												<option value="6">5.69-6.20</option>										
-												<option value="7">6.21-6.79</option>
-												<option value="8">6.80-7.46</option>
-												<option value="9">7.47-8.16</option>
-												<option value="10">8.17-8.53</option>
-											</select>
-										</td>
-								</tr>
-								<tr>
-										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgSystolic"/>:</td>
-										<td>
-											<select name="BP">
-												<option value="1">98-104</option>
-												<option value="2">105-112</option>
-												<option value="3">113-120</option>
-												<option value="4">121-129</option>															
-												<option value="5">130-139</option>
-												<option value="6">140-149</option>										
-												<option value="7">150-160</option>
-												<option value="8">161-172</option>
-												<option value="9">173-185</option>
-											</select>
-										</td>
-								</tr>
-								<tr>
-										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgSmoker"/>:</td>
-										<td><input type="checkbox" name="cigs"/></td>
-								</tr>
-								<tr>
-										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgDiabetic"/>:</td>
-										<td><input type="checkbox" name="diabetic"/></td>
-								</tr>
-								<tr>
-										<td><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgECG-LVH"/>:</td>
-										<td><input type="checkbox" name="ECG"/></td>
-								</tr>
-								<tr >
-										<td colspan="2"><input type="button" value="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnCalculate"/>" onClick="calculate();"/> </td>
-								</tr>
-									<!--<tr>
-										<td><input type="text" name="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnTotalVal"/>" visible="false"/></td>
-									</tr>-->
-							</table>
-							</form>
+            // QueryString
+            
+    function QueryString(key){
+            var value = null;
+            for (var i=0;i<QueryString.keys.length;i++){
+                if (QueryString.keys[i]==key){
+                    value = QueryString.values[i];
+                    break;
+                }
+            }
+            return value;
+    }
+            QueryString.keys = new Array();
+            QueryString.values = new Array();
+
+    function QueryString_Parse(){
+            var query = window.location.search.substring(1);
+            var pairs = query.split("&");
+	
+            for (var i=0;i<pairs.length;i++){
+		
+                var pos = pairs[i].indexOf('=');
+                if (pos >= 0){
+                    var argname = pairs[i].substring(0,pos);
+                    var value = pairs[i].substring(pos+1);
+                    QueryString.keys[QueryString.keys.length] = argname;
+                    QueryString.values[QueryString.values.length] = value;		
+                }
+            }
+
+    }
+
+            QueryString_Parse();
+            
+function setValues(){
+            var theSex = QueryString('sex');
+            var theAge = QueryString('age');
+            if ( theSex != null){
+                if ( theSex == 'M'){
+                    document.calCorArDi.sex[1].checked = true;
+                }else if ( theSex == 'F'){
+                    document.calCorArDi.sex[0].checked = true;
+                }
+            }
+
+            if ( theAge != null){		
+                document.calCorArDi.age.value = theAge;		
+            }
+            
+            window.focus();
+}
+        </script>
+
+        <style type="text/css">
+            table.outline{
+                margin-top:50px;
+                border-bottom: 1pt solid #888888;
+                border-left: 1pt solid #888888;
+                border-top: 1pt solid #888888;
+                border-right: 1pt solid #888888;
+            }
+            table.grid{
+                border-bottom: 1pt solid #888888;
+                border-left: 1pt solid #888888;
+                border-top: 1pt solid #888888;
+                border-right: 1pt solid #888888;
+            }
+            td.gridTitles{
+                border-bottom: 2pt solid #888888;
+                font-weight: bold;
+            }
+            td.middleGrid{
+                border-left: 1pt solid #888888;	   
+                border-right: 1pt solid #888888;
+            }	
+        </style>
+    </head>
+
+    <body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
+        <!--  -->
+        <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+            <tr class="MainTableTopRow">
+                <td class="MainTableTopRowLeftColumn">
+                    Calculators: Coronary Artery Disease Risk Prediction                            
+                </td>
+                <td style="text-align:right">
+                
+                    <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:
+                    popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>                
+                </td>
+            </tr>
+            <tr>
+                
+                <td class="MainTableRightColumn" colspan="2">
+                <table>
+                <tr>
+                <td>
+                <form name="calCorArDi">
+                <table>
+                <tr>
+                    <td>Female:</td>
+                    <td><input type="radio" name="sex" value="F" checked/></td>
+                </tr>
+                <tr>
+                    <td>Male:</td>
+                    <td><input type="radio" name="sex" value="M"/></td>
+                </tr>
+                <tr>
+                    <td>Age:</td>
+                    <td><input type="text" name="age" size="4"/></td>
+                </tr>
+                <tr>
+                    <td>HDL-Cholesterol:</td>				
+						
+                    <td> <select name="HDL">
+                        <option value="1"><1.04</option>
+                        <option value="2">1.04-1.29</option>
+                        <option value="3">1.30-1.54</option>
+                        <option value="4">>1.54</option>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Total-Cholesterol:</td>
+                    <td>
+                        <select name="TCh">
+                            <option value="0"><4.15</option>
+                            <option value="1">4.15-5.19</option>
+                            <option value="2">5.20-6.19</option>
+                            <option value="3">6.20-7.20</option>															
+                            <option value="4">>7.20</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                <td>Systolic BP:</td>
+                <td>
+                    <select name="BP">
+                        <option value="1"><120</option>
+                        <option value="2">120-129</option>
+                        <option value="3">130-139</option>
+                        <option value="4">140-159</option>															
+                        <option value="5">>159</option>
+                    </select>
+                </td>
+                <td>Treated:</td>
+                <td>No</td><td><input type="radio" name="treated" value="no" checked/></td>
+                <td>Yes</td><td><input type="radio" name="treated" value="yes"/></td>
+                                                                                    
+            </tr>
+                        <tr>
+                            <td>Smoker:</td>
+                            <td><input type="checkbox" name="cigs"/></td>
+                        </tr>
+                        <tr>
+                            <td>Diabetic:</td>
+                            <td><input type="checkbox" name="diabetic"/></td>
+                        </tr>
+                        <tr>
+										
+                        </tr>
+                        <tr >
+                            <td colspan="2"><input type="button" value="Calculate" onClick="calculate();"/> </td>
+                        </tr>
+                        <!--<tr>
+                        <td><input type="text" name="totalVal" 
+                        visible="false"/></td>
+                        </tr>-->
+                    </table>
+                </form>
 			
-							<form name="second">
-								<textarea name="prediction" rows="10" cols="42" style="overflow:hidden"></textarea>
-							</form>				
-            			</td>
-						<td>&nbsp;</td>
-						<td align="center" valign="top">
-							<table class="outline">
-								<tr>
-									<td>
-										<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgCompare10Year"/>
-									</td>
-								</tr>
-								<tr>
-									<td align="center">
-										<bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgProbability"/>
-									</td>
-								</tr>
-								<tr>
-									<td  >
-										<table class="grid" width="100%"  align="center" cellspacing="0">
-											<tr>
-												<td  align="center" class="gridTitles"><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgAge"/></td>
-												<td  align="center" class="gridTitles"><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgFemale"/></td>
-												<td  align="center" class="gridTitles"><bean:message key="oscarEncounter.calculators.CoronaryArteryDiseaseRiskPrediction.msgMale"/></td>
-											</tr>
-											<tr>
-												<td id="cellL1" align="center">30-34</td>
-												<td id="cellC1" align="center" class="middleGrid">&lt; 1</td>
-												<td id="cellR1" align="center">3</td>
-											</tr>
-											<tr>
-												<td id="cellL2" align="center">35-39</td>
-												<td id="cellC2" align="center" class="middleGrid">&lt; 1</td>
-												<td id="cellR2" align="center">5</td>
-											</tr>
-											<tr>
-												<td id="cellL3" align="center">40-44</td>
-												<td id="cellC3" align="center" class="middleGrid">2</td>
-												<td id="cellR3" align="center">6</td>
-											</tr>
-											<tr>
-												<td id="cellL4" align="center">45-49</td>
-												<td id="cellC4" align="center" class="middleGrid">5</td>
-												<td id="cellR4" align="center">10</td>
-											</tr>
-											<tr>
-												<td id="cellL5" align="center">50-54</td>
-												<td id="cellC5" align="center" class="middleGrid">8</td>
-												<td id="cellR5" align="center">14</td>
-											</tr>
-											<tr>
-												<td id="cellL6" align="center">55-59</td>
-												<td id="cellC6" align="center" class="middleGrid">12</td>
-												<td id="cellR6" align="center">16</td>
-											</tr>
-											<tr>
-												<td id="cellL7" align="center">60-64</td>
-												<td id="cellC7" align="center" class="middleGrid">13</td>
-												<td id="cellR7" align="center">21</td>
-											</tr>
-											<tr>
-												<td id="cellL8" align="center">65-69</td>
-												<td id="cellC8" align="center" class="middleGrid">9</td>
-												<td id="cellR8" align="center">30</td>
-											</tr>
-											<tr >
-												<td id="cellL9" align="center">70-74</td>
-												<td id="cellC9" align="center" class="middleGrid">12</td>
-												<td id="cellR9" align="center">24</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-			</td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
+                <form name="second">
+                    <textarea name="prediction" rows="10" cols="42" style="overflow:hidden"></textarea>
+                </form>	
+                
+                <input type="button" value="Paste" onClick="write2Parent();"/>               
             </td>
-            <td class="MainTableBottomRowRightColumn">
+                <td>&nbsp;</td>
+                <td align="center" valign="top">
+                    <table class="outline">
+                        <tr>
+                            <td align="center">
+                                10-year Risk (%)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                Male
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  >
+                                <table class="grid" width="100%"  align="center" cellspacing="0">
+                                    <tr>
+                                        <td  align="center" class="gridTitles">Total Risk Points</td>
+                                        <td  align="center" class="gridTitles">-</td>
+                                        <td  align="center" class="gridTitles">10-year Risk</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL1" align="center">< 0</td>
+                                        <td id="cellC1" align="center" class="middleGrid">-</td>
+                                        <td id="cellR1" align="center">< 1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL2" align="center">0 - 4</td>
+                                        <td id="cellC2" align="center" class="middleGrid">-</td>
+                                        <td id="cellR2" align="center">1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL3" align="center">5 - 6</td>
+                                        <td id="cellC3" align="center" class="middleGrid">-</td>
+                                        <td id="cellR3" align="center">2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL4" align="center">7</td>
+                                        <td id="cellC4" align="center" class="middleGrid">-</td>
+                                        <td id="cellR4" align="center">3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL5" align="center">8</td>
+                                        <td id="cellC5" align="center" class="middleGrid">-</td>
+                                        <td id="cellR5" align="center">4%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL6" align="center">9</td>
+                                        <td id="cellC6" align="center" class="middleGrid">-</td>
+                                        <td id="cellR6" align="center">5%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL7" align="center">10</td>
+                                        <td id="cellC7" align="center" class="middleGrid">-</td>
+                                        <td id="cellR7" align="center">6%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL8" align="center">11</td>
+                                        <td id="cellC8" align="center" class="middleGrid">-</td>
+                                        <td id="cellR8" align="center">8%</td>
+                                    </tr>
+                                    <tr >
+                                        <td id="cellL9" align="center">12</td>
+                                        <td id="cellC9" align="center" class="middleGrid">-</td>
+                                        <td id="cellR9" align="center">10%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL10" align="center">13</td>
+                                        <td id="cellC10" align="center" class="middleGrid">-</td>
+                                        <td id="cellR10" align="center">12%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL11" align="center">14</td>
+                                        <td id="cellC11" align="center" class="middleGrid">-</td>
+                                        <td id="cellR11" align="center">16%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL12" align="center">15</td>
+                                        <td id="cellC12" align="center" class="middleGrid">-</td>
+                                        <td id="cellR12" align="center">20%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL13" align="center">16</td>
+                                        <td id="cellC13" align="center" class="middleGrid">-</td>
+                                        <td id="cellR13" align="center">25%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="cellL14" align="center">>=17</td>
+                                        <td id="cellC14" align="center" class="middleGrid">-</td>
+                                        <td id="cellR14" align="center">>=30%</td>
+                                    </tr>
 
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td valign="top">
+                    <table class="outline">
+                        <tr>
+                            <td align="center">
+                                10-year Risk (%)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                Female
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  >
+                                <table class="grid" width="100%"  align="center" cellspacing="0">
+                                    <tr>
+                                        <td  align="center" class="gridTitles">Total Risk Points</td>
+                                        <td  align="center" class="gridTitles">-</td>
+                                        <td  align="center" class="gridTitles">10-year Risk</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL1" align="center">< 9</td>
+                                        <td id="2cellC1" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR1" align="center">< 1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL2" align="center">9 - 12</td>
+                                        <td id="2cellC2" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR2" align="center">1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL3" align="center">13 - 14</td>
+                                        <td id="2cellC3" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR3" align="center">2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL4" align="center">15</td>
+                                        <td id="2cellC4" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR4" align="center">3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL5" align="center">16</td>
+                                        <td id="2cellC5" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR5" align="center">4%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL6" align="center">17</td>
+                                        <td id="2cellC6" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR6" align="center">5%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL7" align="center">18</td>
+                                        <td id="2cellC7" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR7" align="center">6%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL8" align="center">19</td>
+                                        <td id="2cellC8" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR8" align="center">8%</td>
+                                    </tr>
+                                    <tr >
+                                        <td id="2cellL9" align="center">20</td>
+                                        <td id="2cellC9" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR9" align="center">11%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL10" align="center">21</td>
+                                        <td id="2cellC10" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR10" align="center">14%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL11" align="center">22</td>
+                                        <td id="2cellC11" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR11" align="center">17%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL12" align="center">23</td>
+                                        <td id="2cellC12" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR12" align="center">22%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL13" align="center">24</td>
+                                        <td id="2cellC13" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR13" align="center">27%</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="2cellL14" align="center">>=25</td>
+                                        <td id="2cellC14" align="center" class="middleGrid">-</td>
+                                        <td id="2cellR14" align="center">>=30%</td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>    
+                </td>                
+                </tr>
+            </table>
             </td>
-        </tr>
-    </table>
-</body>
-</html:html>
+            </tr>
+            <tr>
+                <td class="MainTableBottomRowLeftColumn">
+
+                </td>
+                <td class="MainTableBottomRowRightColumn">
+
+                </td>
+            </tr>
+        </table>        
+    </body>
+</html>
