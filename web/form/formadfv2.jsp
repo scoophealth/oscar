@@ -342,7 +342,7 @@ var maxYear=9900;
   if (!bView) {
 %>
         <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
+            <a href="javascript: popupFixedPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
         </td>
 <%
   }
@@ -725,7 +725,7 @@ var maxYear=9900;
   if (!bView) {
 %>
         <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
+            <a href="javascript: popupFixedPage(700,950,'../decision/annualreview/annualreviewplanner?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
         </td>
 <%
   }
