@@ -110,7 +110,7 @@ function checkTypeIn() {
 		System.out.println(param[1] + " "+ param[2] );
 		rs = apptMainBean.queryResults(param, dboperation);
 	} else {
-		keyword=request.getParameter("keyword")+"%";
+		keyword=request.getParameter("keyword");//+"%";
 		rs = apptMainBean.queryResults(keyword, dboperation);
 	}
  
