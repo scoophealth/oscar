@@ -181,8 +181,7 @@ function ScriptAttach() {
                 </font></td>
             </tr>
             <tr> 
-              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">File 
-                Name </font></td>
+              <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key=dms.addDocument.msgFileName" /> </font></td>
               <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
                 <input type="text" name="docfilename" value=""  size="20" >
                 <a href=javascript:ScriptAttach()><bean:message key="dms.addDocument.btnUpload"/></a></font></td>
