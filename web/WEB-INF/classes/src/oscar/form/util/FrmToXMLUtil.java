@@ -74,7 +74,33 @@ public class FrmToXMLUtil{
             visitType.setSignedWho(who);
 
             visit.setPatientCod(dataProps.getProperty("demographic_no"));
-            visit.setVisitCod(dataProps.getProperty("visitCod"));            
+            visit.setVisitCod(dataProps.getProperty("visitCod"));  
+            
+            Class cls = visit.getClass();
+            // Add dob
+            Method addNewMethod  = cls.getMethod("addNewDatBirthDate", new Class[] {});
+            Object obj = addNewMethod.invoke(visit,new Object[]{});
+            String value = dataProps.getProperty("dob");
+            value = translate(value, "DatBirthDate");           
+            setWhoWhatWhereWhen(obj,how,who,when,value);
+            //Add Surname                        
+            addNewMethod  = cls.getMethod("addNewTxtSurname", new Class[] {});
+            obj = addNewMethod.invoke(visit,new Object[]{});
+            value = dataProps.getProperty("surname");
+            value = translate(value, "TxtSurname");           
+            setWhoWhatWhereWhen(obj,how,who,when,value);
+            //Add givien Name                        
+            addNewMethod  = cls.getMethod("addNewTxtGivenNames", new Class[] {});
+            obj = addNewMethod.invoke(visit,new Object[]{});
+            value = dataProps.getProperty("givenName");
+            value = translate(value, "TxtGivenNames");           
+            setWhoWhatWhereWhen(obj,how,who,when,value);
+            //Add Gender                        
+            addNewMethod  = cls.getMethod("addNewSelGender", new Class[] {});
+            obj = addNewMethod.invoke(visit,new Object[]{});
+            value = dataProps.getProperty("gender");
+            value = translate(value, "SelGender");           
+            setWhoWhatWhereWhen(obj,how,who,when,value);
                                     
             EctMeasurementTypesBean mt;
             for (int i = 0; i < measurementTypes.size(); i++){        
@@ -87,25 +113,25 @@ public class FrmToXMLUtil{
                 if(mt.getType().equalsIgnoreCase("BP") && !gValidator.isBlankOrNull(dataProps.getProperty("SBPValue"))){
                     methodCall = (String) nameProps.get("SBPValue");
                     if (methodCall != null){
-                       Class cls = visit.getClass();
+                       cls = visit.getClass();
                        //System.out.println("calling addNew"+methodCall);
-                       Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+                       addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
-                       Object obj = addNewMethod.invoke(visit,new Object[]{});
+                       obj = addNewMethod.invoke(visit,new Object[]{});
 
-                       String value = dataProps.getProperty("SBPValue");
+                       value = dataProps.getProperty("SBPValue");
                        //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
                     }
                     methodCall = (String) nameProps.get("DBPValue");
                     if (methodCall != null){
-                       Class cls = visit.getClass();
+                       cls = visit.getClass();
                        //System.out.println("calling addNew"+methodCall);
-                       Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+                       addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
-                       Object obj = addNewMethod.invoke(visit,new Object[]{});
+                       obj = addNewMethod.invoke(visit,new Object[]{});
 
-                       String value = dataProps.getProperty("DBPValue");
+                       value = dataProps.getProperty("DBPValue");
                        //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
                     }
@@ -113,13 +139,13 @@ public class FrmToXMLUtil{
                     //System.out.println("method "+methodCall);
                     if (methodCall != null){                                       
 
-                       Class cls = visit.getClass();
+                       cls = visit.getClass();
                        //System.out.println("calling addNew"+methodCall);
-                       Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+                       addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
-                       Object obj = addNewMethod.invoke(visit,new Object[]{});
+                       obj = addNewMethod.invoke(visit,new Object[]{});
 
-                       String value = dataProps.getProperty(itemName+"Date");
+                       value = dataProps.getProperty(itemName+"Date");
                        //System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
                     } 
@@ -128,13 +154,13 @@ public class FrmToXMLUtil{
 
                 else if (methodCall != null && !gValidator.isBlankOrNull(dataProps.getProperty(itemName+"Value"))){                                                                               
 
-                   Class cls = visit.getClass();
+                   cls = visit.getClass();
                    //System.out.println("calling addNew"+methodCall);
-                   Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+                   addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
-                   Object obj = addNewMethod.invoke(visit,new Object[]{});
+                   obj = addNewMethod.invoke(visit,new Object[]{});
 
-                   String value = dataProps.getProperty(itemName+"Value");
+                   value = dataProps.getProperty(itemName+"Value");
                    value = translate(value, methodCall);
                    System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
                    setWhoWhatWhereWhen(obj,how,who,when,value);

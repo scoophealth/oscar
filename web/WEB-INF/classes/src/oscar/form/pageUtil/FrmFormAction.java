@@ -41,6 +41,7 @@ import oscar.form.*;
 import oscar.form.data.*;
 import oscar.form.util.*;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.data.EctFormData;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
@@ -141,11 +142,18 @@ public class FrmFormAction extends Action {
         System.out.println("Time spent on validation: " + Long.toString(delTime));
 
         if(valid){
+            DemographicData demoData = new DemographicData();
+            DemographicData.Demographic demo = demoData.getDemographic(demographicNo);
             System.out.println("is valid, procede write to table");
             //Store form information as properties for saving to form table
             props.setProperty("demographic_no", demographicNo);
             props.setProperty("provider_no", providerNo);
             props.setProperty("visitCod", (String) frm.getValue("visitCod"));
+            props.setProperty("dob", demo.getDob("-"));
+            props.setProperty("gender", demo.getSex());
+            props.setProperty("surname", demo.getLastName());
+            props.setProperty("givenName", demo.getFirstName());
+            
             String diagnosisVT = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT"));
             //System.out.println("diagnosisVT >"+diagnosisVT+"< form val >"+frm.getValue("diagnosisVT"));
             String subjective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("subjective"));
