@@ -108,7 +108,12 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
 
 <html>
 <head>
-<title>oscarBillingBC Correction</title>
+   <title>oscarBillingBC Correction</title>
+   <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" /> 
+   <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
+   <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
+   <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
         <script language="JavaScript">
@@ -173,6 +178,23 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
                 }
 
 
+//
+function HideElementById(ele){
+	document.getElementById(ele).style.display='none';
+}
+
+function ShowElementById(ele){
+	document.getElementById(ele).style.display='';
+}
+
+
+function checkDebitRequest(){        
+	if (document.ReProcessBilling.submissionCode.value == "E" ){
+	  ShowElementById('DEBITREQUEST');
+	}else{	     
+     HideElementById('DEBITREQUEST');     
+	}	
+}
 
 
     </script>
@@ -186,7 +208,7 @@ BillingFormData.BillingForm[] billformlist = billform.getFormList();
 
          
 
-<body bgcolor="#FFFFFF" text="#000000" topmargin="5"  leftmargin="0" rightmargin="0" onLoad="setfocus()">
+<body bgcolor="#FFFFFF" text="#000000" topmargin="5"  leftmargin="0" rightmargin="0" onLoad="setfocus();checkDebitRequest();">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
     <td height="40" width="10%"> </td>
@@ -390,7 +412,9 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
         <table>
             <tr>
                 <td>
-              <a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=ReProcessBilling&returnItem=serviceDate","380","300","0")'>
+              <!--<a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=ReProcessBilling&returnItem=serviceDate","380","300","0")'>-->
+              <a href="javascript: function myFunction() {return false; }" id="hlSDate">                    
+                    
               Billing Date:  
               </a>
                 </td>
@@ -400,7 +424,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             </tr>
             <tr>
                 <td>
-                <input type="text" style="font-size:80%;"  name="serviceDate" value="<%=allFields.getProperty("service_date")%>"><!--<%=allFields.getProperty("service_date")%>"/><%=BillDate%>-->
+                <input type="text" style="font-size:80%;" id="serviceDate" name="serviceDate" value="<%=allFields.getProperty("service_date")%>"><!--<%=allFields.getProperty("service_date")%>"/><%=BillDate%>-->
                 </td>
                 <td>
                 <input type="text" name="serviceToDay" value="<%=allFields.getProperty("service_to_day")%>" size="2" maxlength="2"/>
@@ -411,17 +435,9 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
   </tr>
   <tr bgcolor="#EEEEFF"> 
     <td width="54%"  class="bCellData">
-        Visit:          
-        <select style="font-size:80%;" name="locationVisit">
-           <option value="">--- Select Visit Location ---</option>
-           <% for (int i=0; i< billlocation.length; i++){
-              String locationDescription = billlocation[i].getBillingLocation()+"|"+billlocation[i].getDescription();
-              String selection = "";
-              if (allFields.getProperty("clarification_code").equals(billlocation[i].getBillingLocation())){ selection = "selected" ; }
-           %>
-           <option value="<%=locationDescription%>" <%=selection%> ><%=billlocation[i].getDescription()%></option>
-           <% }%>
-        </select>   
+        Clarification Code:
+          <input type="text" name="locationVisit" value="<%=allFields.getProperty("clarification_code")%>" maxlength="2" size="2"/>
+       
     </td>
     <td width="46%"  class="bCellData">
         Billing Physician#: 
@@ -639,7 +655,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             </td>
             <td class="bCellData">Submission Code</td><!--SUBMISSION-CODE-->
             <td class="bCellData">
-                <select name="submissionCode" >
+                <select name="submissionCode" onChange="checkDebitRequest();" >
                     <option value="0" <%=allFields.getProperty("submission_code").equals("0")?"selected":""%>>Normal Submission</option> 
                     <option value="D" <%=allFields.getProperty("submission_code").equals("D")?"selected":""%>>Duplicate</option>            
                     <option value="E" <%=allFields.getProperty("submission_code").equals("E")?"selected":""%>>Debit Request</option>            
@@ -673,8 +689,21 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
         
        </tr>
        -->
+       
        <tr>
-
+            <td class="bCellData" colspan="4">
+            <div id="DEBITREQUEST">    
+                Select sequence number you would like to debit <input name="debitRequestSeqNum" type="text" maxlength="7" size="7" value="<%=getDebitRequestSeqNum(allFields.getProperty("original_claim"))%>"/>                
+                
+                </br>Select date MSP received claim (if not known, fill with zeros) (YYYYMMDD): <input id="debitRequestDate" name="debitRequestDate" type="text" maxlength="8" size="8" value="<%=getDebitRequestDate(allFields.getProperty("original_claim"))%>"/>
+                <a id="hlADate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
+                <!--Date Received MSP <input type="text" />-->
+            </div>
+            </td>
+            
+       </tr>
+       
+       
        <tr>
 
             <td class="bCellData">Correspondence Code</td><!--CORRESPONDENCE-CODE-->                
@@ -1122,8 +1151,23 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             <td>6</td>
             <td>Y</td>
         </tr>
-
+xml_vdate
     </table>
     </div>
+    <script language='javascript'>
+           Calendar.setup({inputField:"serviceDate",ifFormat:"%Y%m%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});     
+           Calendar.setup({inputField:"debitRequestDate",ifFormat:"%Y%m%d",showsTime:false,button:"hlADate",singleClick:true,step:1});     
+     </script>
 </body>
 </html>
+<%!
+public String getDebitRequestSeqNum(String str){
+    String retval = str.substring(5,12);
+    return retval;
+}
+ 
+public String getDebitRequestDate (String str){
+    String retval = str.substring(13);
+    return retval;
+}
+%>
