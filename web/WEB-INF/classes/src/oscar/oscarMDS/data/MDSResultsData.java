@@ -57,7 +57,9 @@ public class MDSResultsData
                              "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
                              "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
                              "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
-                             "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by segmentID";
+                             "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
+                             "mdsPID.sex, mdsZFR.abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+                             "mdsZFR.reportFormStatus, mdsZRG.reportGroupDesc ";
             } else {
                    sql = "SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
                              "mdsPID.sex, mdsZFR.abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
@@ -66,7 +68,9 @@ public class MDSResultsData
                              "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=patientLabRouting.lab_no " +
                              "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
                              "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
-                             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by segmentID";
+                             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
+                             "mdsPID.sex, mdsZFR.abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+                             "mdsZFR.reportFormStatus, mdsZRG.reportGroupDesc ";
             }
             
             ResultSet rs = db.GetSQL(sql);

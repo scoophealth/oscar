@@ -125,8 +125,7 @@ public class EctSessionBean {
             db.CloseConn();
             UtilDateUtilities dateUtil = new UtilDateUtilities();
             patientAge = dateUtil.calcAge(dateUtil.calcDate(yearOfBirth,monthOfBirth,dateOfBirth));
-        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
-        try{
+
             sql = "select * from appointment where provider_no='"+curProviderNo+"' and appointment_date='"+appointmentDate+"'";
             rs = db.GetSQL(sql);
             while(rs.next()){
@@ -152,8 +151,7 @@ public class EctSessionBean {
             rs.close();
             
             db.CloseConn();
-        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
-        try{
+
             sql = "select * from eChart where demographicNo="+demographicNo+" ORDER BY eChartId DESC limit 1";
             rs = db.GetSQL(sql);
             if(rs.next()){
