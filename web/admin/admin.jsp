@@ -69,6 +69,7 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     if (popup.opener == null) {
       popup.opener = self;
     }
+    popup.focus();
   }
 }
 
@@ -80,6 +81,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     if (popup.opener == null) {
       popup.opener = self; 
     }
+    popup.focus();
   }
 }
 
