@@ -10263,9 +10263,6 @@ INSERT INTO encounterForm VALUES ('Lab Req','../form/formlabreq.jsp?demographic_
 INSERT INTO encounterForm VALUES ('MMSE','../form/formmmse.jsp?demographic_no=','formMMSE', '1');
 INSERT INTO encounterForm VALUES ('Pall. Care','../form/formpalliativecare.jsp?demographic_no=','formPalliativeCare', '1');
 INSERT INTO encounterForm VALUES ('AR','../form/formar.jsp?demographic_no=','formAR', '1');
-INSERT INTO encounterForm VALUES ('BC-AR','../form/formbcar.jsp?demographic_no=','formBCAR', '1');
-INSERT INTO encounterForm VALUES ('BC-LabourBirth','../form/formbcbirthsummo.jsp?demographic_no=','formBCBirthSumMo', '1');
-INSERT INTO encounterForm VALUES ('BC-NewBorn','../form/formbcnewborn.jsp?demographic_no=','formBCNewBorn', '1');
 INSERT INTO encounterForm VALUES ('ADF','../form/formadf.jsp?demographic_no=','formAdf', '1');
 
 --
