@@ -337,6 +337,7 @@ function calByLMP() {
      <tr><td><a href=# onclick="insertBox('Mandarin','pg1_langPref', 'Langdiv'); return false;">Mandarin</a></td></tr>
      <tr><td><a href=# onclick="insertBox('Cantonese','pg1_langPref', 'Langdiv'); return false;">Cantonese</a></td></tr>
      <tr><td><a href=# onclick="insertBox('Hindu','pg1_langPref', 'Langdiv'); return false;">Hindu</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Punjabi','pg1_langPref', 'Langdiv'); return false;">Punjabi</a></td></tr>
      <tr><td><a href=# onclick="insertBox('Pushtu','pg1_langPref', 'Langdiv'); return false;">Pushtu</a></td></tr>
      <tr><td><a href=# onclick="insertBox('Spanish','pg1_langPref', 'Langdiv'); return false;">Spanish</a></td></tr>
      <tr><td><a href=# onclick="insertBox('Tagalog','pg1_langPref', 'Langdiv'); return false;">Tagalog</a></td></tr>
