@@ -26,7 +26,7 @@
 
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String curUser_no = (String) session.getAttribute("user");
 String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 
@@ -39,14 +39,14 @@ String startDate =null, endDate=null;
 if(request.getParameter("startDate")!=null) startDate = request.getParameter("startDate");  
 if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDate");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*" errorPage="../errorpage.jsp" %>
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="providerNameBean" class="java.util.Properties" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
 String [][] dbQueries=new String[][] { 
 //{"select_bcformar", "select distinct(demographic_no) from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, 
-{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_gravida, pg1_term, c_phone, c_phyMid, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
+{"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_dateOfBirth, pg1_langPref, c_phn, pg1_gravida, pg1_term, c_phone, c_phyMid, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
 };
 reportMainBean.doConfigure(dbParams,dbQueries);
@@ -82,11 +82,12 @@ function setfocus() {
 <TH align="center" width="10%" nowrap><b><bean:message key="report.reportnewdblist.msgEDD"/></b></TH>
 <TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
 <!--TH align="center" width="20%"><b>Demog' No </b></TH-->
-<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgAge"/></b></TH>
+<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgDOB"/></b></TH>
 <TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgGravida"/></b></TH>
 <TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgTerm"/></b></TH>
 <TH align="center" width="15%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
-<TH align="center"><b><bean:message key="report.reportnewdblist.msProvider"/></b></TH>
+<TH align="center"><b><bean:message key="report.reportnewdblist.msLanguage"/></b></TH>
+<TH align="center"><b><bean:message key="report.reportnewdblist.msPHN"/></b></TH>
 </tr>
 <%
   ResultSet rs=null ;
@@ -121,11 +122,13 @@ function setfocus() {
       <td align="center" nowrap><%=rs.getString("c_EDD")!=null?rs.getString("c_EDD").replace('-','/'):"0001/01/01"%></td>
       <td><%=rs.getString("c_surname") + ", " + rs.getString("c_givenName")%></td>
       <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
-      <td><%=rs.getString("pg1_ageAtEDD")!=null?rs.getString("pg1_ageAtEDD"):""%></td>
+      <td><%=rs.getString("pg1_dateOfBirth")!=null?rs.getString("pg1_dateOfBirth"):""%></td>
       <td><%=rs.getString("pg1_gravida")!=null?rs.getString("pg1_gravida"):""%></td>
       <td><%=rs.getString("pg1_term")!=null?rs.getString("pg1_term"):""%></td>
       <td nowrap><%=rs.getString("c_phone")%></td>
-      <td><%=rs.getString("c_phyMid")%><%--=providerNameBean.getProperty(rs.getString("provider_no"), "")--%></td>
+      <!--td><%--=rs.getString("c_phyMid")--%><%--=providerNameBean.getProperty(rs.getString("provider_no"), "")--%></td-->
+      <td><%=rs.getString("pg1_langPref")%></td>
+      <td><%=rs.getString("c_phn")%></td> 
 </tr>
 <%
   }
