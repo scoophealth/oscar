@@ -47,11 +47,14 @@ public class WLPatientWaitingListBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            
-            updateWaitingList(demographicNo);
-            
-            String sql = "SELECT wn.name, w.position, w.note, w.onListSince FROM waitingListName wn, waitingList w WHERE wn.ID = w.ListID AND demographic_no ='"+ demographicNo + "'";
-            ResultSet rs;        
+            ResultSet rs; 
+            String sql = "SELECT * FROM waitingListName";
+            for (rs = db.GetSQL(sql); rs.next();){
+                WLWaitingListBeanHandler.updateWaitingList(rs.getString("ID"));
+            }
+            rs.close();
+              
+            sql = "SELECT wn.name, w.position, w.note, w.onListSince FROM waitingListName wn, waitingList w WHERE wn.ID = w.ListID AND demographic_no ='"+ demographicNo + "'";            
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
                 WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( demographicNo,
@@ -72,6 +75,7 @@ public class WLPatientWaitingListBeanHandler {
         return verdict;
     }
         
+        /*
         static public void updateWaitingList(String demographicNo) {
                 
         try {
@@ -82,15 +86,29 @@ public class WLPatientWaitingListBeanHandler {
             ResultSet rs = db.GetSQL(sql);        
             if(rs.next())
             {                
+                System.out.println("This patient " + demographicNo + " has an appointment already");
                 sql = "SELECT DISTINCT listID FROM waitingList WHERE demographic_no='" + demographicNo + "'";
                 ResultSet rsWL;
                 for(rsWL = db.GetSQL(sql); rsWL.next(); ){
+                    System.out.println("patient to be deleted: " + demographicNo);
                     sql = "DELETE FROM waitingList WHERE demographic_no='"+demographicNo +"' AND listID='" + rsWL.getString("listID") +"'";
                     db.RunSQL(sql);
-                    sql = "update waitingList set position = position -1 where listID='" + rsWL.getString("listID") +"'";
-                    db.RunSQL(sql);
+                                                           
+                    sql = "SELECT * FROM waitingList WHERE listID='" + rsWL.getString("listID") + "' ORDER BY onListSince";
+                    int i=1;
+                    ResultSet rsUpdate;
+                    for(rsUpdate = db.GetSQL(sql); rsUpdate.next();){
+                        sql = "update waitingList set position ='"+ Integer.toString(i) + "' where listID='" + rsWL.getString("listID") 
+                                +"' AND demographic_no='" + rsUpdate.getString("demographic_no") + "'";
+                        System.out.println("update query from patient view: " + sql);
+                        db.RunSQL(sql);
+                        i++;
+                    }
+                    rsUpdate.close();
                 }
                 rsWL.close();
+                
+                
             }
                             
             rs.close();            
@@ -100,7 +118,7 @@ public class WLPatientWaitingListBeanHandler {
             System.out.println(e.getMessage());         
         }        
     }       
-    
+    */
     public Vector getPatientWaitingListVector(){
         return patientWaitingListVector;
     }    
