@@ -493,7 +493,7 @@ CREATE TABLE demographic (
   address varchar(60) DEFAULT NULL,
   city varchar(20) DEFAULT NULL,
   province varchar(20) DEFAULT NULL,
-  postal varchar(7) DEFAULT NULL,
+  postal varchar(9) DEFAULT NULL,
   phone varchar(20) DEFAULT NULL,
   phone2 varchar(20) DEFAULT NULL,
   email varchar(100) DEFAULT NULL,
