@@ -162,7 +162,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     </tr>
     <tr bgcolor="#EEEEFF"> 
       <td> 
-        <p><a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')"><bean:message key="admin.admin.btnAddGroupNoRecord"/></a><br>
+        <p><a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=newgroup&submit=blank')"><bean:message key="admin.admin.btnAddGroupNoRecord"/></a><br>
           <a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')"><bean:message key="admin.admin.btnSearchGroupNoRecords"/></a></p>
       </td>
     </tr>
