@@ -24,97 +24,18 @@
  */
 -->
 
+<%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
- <% 
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
+<% 
+    if(session.getValue("user") == null)
+        response.sendRedirect("../../logout.jsp");
+    String user_no;
+    user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
-<%@ include file="../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbDxResearch.jsp" %>
-<% String search = "",search2 = "";
- search = request.getParameter("search"); 
- if (search.compareTo("") == 0){
- search = "search_research_code"; 
- }
- 
-    String codeName= "",codeName1 = "", codeName2 = "",codeName3 = "", codeName4 = "";
-   String xcodeName= "",xcodeName1 = "", xcodeName2 = "",xcodeName3 = "", xcodeName4 = "";
- 
-  codeName = request.getParameter("name");
-   codeName1= request.getParameter("name1");
-   codeName2 = request.getParameter("name2");
-   codeName3= request.getParameter("name3");
-      codeName4 = request.getParameter("name4");
-      xcodeName = request.getParameter("name");
-      xcodeName1= request.getParameter("name1");
-      xcodeName2 = request.getParameter("name2");
-      xcodeName3= request.getParameter("name3");
-      xcodeName4 = request.getParameter("name4");
-   String desc = "", desc1 = "", desc2 = "", desc3 = "", desc4 = "";
-   
- if (codeName.compareTo("") == 0 || codeName == null){
- codeName = " ";
- desc = " ";
- }
- else{
-codeName = codeName + "%";
-desc = "%" + codeName + "%";
-}
-  if (codeName1.compareTo("") == 0 || codeName1 == null){
-  codeName1 = " ";
-  desc1 = " "; 
-  }
-  else{
- codeName1 = codeName1 + "%"; 
- desc1 = "%" + codeName1 + "%";
-}
- if (codeName2.compareTo("") == 0 || codeName2 == null){
- codeName2 = " ";
- desc2 = " ";
- }
- else{
-codeName2 = codeName2 + "%";
-desc2 = "%" +codeName2 + "%";
-}
 
-
- if (codeName3.compareTo("") == 0 || codeName2 == null){
- codeName3 = " ";
- desc3 = " ";
- }
- else{
-codeName3 = codeName3 + "%";
-desc3 = "%"+codeName3 + "%";
-}
-
-
- if (codeName4.compareTo("") == 0 || codeName4 == null){
- codeName4 = " ";
- desc4 = " ";
- }
- else{
-codeName4 = codeName4 + "%";
-desc4 = "%"+codeName4 + "%";
-}
-
- String[] param =new String[10];
- param[0] = codeName;
- param[1] = codeName1;
- param[2] = codeName2;
- param[3] = codeName3;
- param[4] = codeName4;
- param[5] = desc;
- param[6] = desc1;
- param[7] = desc2;
- param[8] = desc3;
- param[9] = desc4;
-%>
 <html:html locale="true">
 <head>
 <title><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.title"/></title>
@@ -123,90 +44,111 @@ desc4 = "%"+codeName4 + "%";
 <!--
 function CodeAttach(File0) {
       
-      self.close();
-  self.opener.document.serviceform.xml_research1.value = File0;
-      self.opener.document.serviceform.xml_research2.value = '';
-      self.opener.document.serviceform.xml_research3.value = '';
-     self.opener.document.serviceform.xml_research4.value = '';
-      self.opener.document.serviceform.xml_research5.value = '';
+    self.close();
+    self.opener.document.forms[0].xml_research1.value = File0;
+    self.opener.document.forms[0].xml_research2.value = '';
+    self.opener.document.forms[0].xml_research3.value = '';
+    self.opener.document.forms[0].xml_research4.value = '';
+    self.opener.document.forms[0].xml_research5.value = '';
 
 }
 
+function CodesAttach() {
+      
+    self.close();
+    self.opener.document.forms[0].xml_research1.value = document.codeSearchForm.searchCodes[0].value;
+    self.opener.document.forms[0].xml_research2.value = document.codeSearchForm.searchCodes[1].value;
+    self.opener.document.forms[0].xml_research3.value = document.codeSearchForm.searchCodes[2].value;
+    self.opener.document.forms[0].xml_research4.value = document.codeSearchForm.searchCodes[3].value;
+    self.opener.document.forms[0].xml_research5.value = document.codeSearchForm.searchCodes[4].value;
+    
+    
+}
 -->
 </script>
-
+<style type="text/css">
+        BODY{
+            font-size: 10pt ; 
+            font-family: verdana,arial,helvetica; 
+            color: #000000; 
+            background-color: #FFFFFF;
+        }
+        TD{
+            font-size: 10pt ; 
+            font-family: verdana,arial,helvetica;             
+        }
+	.heading{
+            font-weight: bold  ; 
+            font-size: 11pt ; 
+            font-family: verdana,arial,helvetica; 
+            color: #000000; 
+            background-color: #6699cc;
+            height: 20pt;
+        }	
+        .subject{
+            font-size: 18pt;
+            font-weight: bold;            
+            color: #FFFFFF;
+            background-color: #000000;
+            height:40pt;
+        }
+</style>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" >
+<body bgcolor="#FFFFFF">
+<form name="codeSearchForm" method="post">
 
-
-
-<h3><font face="Arial, Helvetica, sans-serif"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCodeSearch"/> </font></h3>
-<form name="servicecode" id="servicecode" method="post" action="dxResearchCodeUpdate.jsp">
-<table width="600" border="1">
- 
-  <tr bgcolor="#FFBC9B"> 
-    <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCode"/></font></b></td>
-    <td width="88%"><b><font face="Arial, Helvetica, sans-serif" size="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgDescription"/></font></b></td>
+<table width="600" cellspacing="1">
+  <tr>
+    <td class="subject" colspan="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCodeSearch"/></td>
+  </tr>
+  <tr class="heading"> 
+    <td width="12%"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCode"/></td>
+    <td width="88%"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgDescription"/></td>
   </tr>
  
-  
-  <%  ResultSet rslocal = null;  
-      ResultSet rslocal2 = null;
-     
-     
-    String color="";
- int Count = 0;
- int intCount = 0;
- String numCode="";
-   String textCode="";
-   String searchType="";
-// Retrieving Provider
-
-String Dcode="", DcodeDesc="";
- rslocal = null;
-  rslocal = apptMainBean.queryResults(param, search);
- while(rslocal.next()){
- intCount = intCount + 1;
- Dcode = rslocal.getString("ichppccode");
-  DcodeDesc = rslocal.getString("description");
- if (Count == 0){
- Count = 1;
- color = "#FFFFFF";
- } else {
- Count = 0;
- color="#F9E6F0";
- }
- %>
-  
-  <tr bgcolor="<%=color%>"> 
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="checkbox" name="code_<%=Dcode%>" <%=Dcode.equals(xcodeName)?"checked":Dcode.equals(xcodeName1)?"checked":Dcode.equals(xcodeName2)?"checked":Dcode.equals(xcodeName3)?"checked":Dcode.equals(xcodeName4)?"checked":""%>><%=Dcode%></font></td>
-    <td width="88%"><font face="Arial, Helvetica, sans-serif" size="2"><%=DcodeDesc%></font></td>
-  </tr>
   <% 
-  }
+    int intCount=0;
+    String color="#EEEEFF";
+    int Count=0;    
   %>
-  
+  <logic:iterate id="code" name="allMatchedCodes" property="dxCodeSearchBeanVector">
+     <%  
+        if (Count == 0){
+            Count = 1;
+            color = "#FFFFFF";
+        } 
+        else {
+            Count = 0;
+            color="#EEEEFF";
+        }       
+     %>  
+  <tr bgcolor="<%=color%>"> 
+    <td width="12%"><input type="checkbox" name="searchCodes" value="<bean:write name='code' property='dxSearchCode'/>" <bean:write name='code' property='exactMatch'/> /><bean:write name='code' property='dxSearchCode'/></td>
+    <td width="88%"><bean:write name='code' property='description'/></td>
+  </tr>
+  <% intCount++; %>
+  </logic:iterate>
   <%  if (intCount == 0 ) { %>
   <tr bgcolor="<%=color%>"> 
-    <td colspan="2"><font face="Arial, Helvetica, sans-serif" size="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgNoMatch"/>. <%// =i%></font></td>
+    <td colspan="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgNoMatch"/>. <%// =i%></td>
     
   </tr>
   <%  }%>
   
   <% if (intCount == 1) { %>
-  <script LANGUAGE="JavaScript">
-<!--
- CodeAttach('<%=Dcode%>'); 
--->
-
-</script>
+  <logic:iterate id="code" name="allMatchedCodes" property="dxCodeSearchBeanVector">  
+      <script LANGUAGE="JavaScript">
+        CodeAttach('<bean:write name='code' property='dxSearchCode'/>'); 
+      </script>
+  </logic:iterate>
 <% } %>
 </table>
-<input type="submit" name="submit" value="Confirm"><input type="button" name="<bean:message key="global.btnCancel"/>" value="Cancel" onclick="javascript:window.close()">
-<form>
+<input type="button" name="confirm" value="Confirm" onclick="javascript:CodesAttach();"><input type="button" name="<bean:message key="global.btnCancel"/>" value="Cancel" onclick="javascript:window.close()">
+
 <p></p>
 <p>&nbsp;</p>
 <h3>&nbsp;</h3>
 </body>
+</form>
 </html:html>
