@@ -132,7 +132,24 @@ bean.setProviderNo(prov);
 </style>
 
 <script language="javascript">
-    function showTbl(tblName)
+    var browserName=navigator.appName; 
+    if (browserName=="Netscape"){ 
+
+        if( document.implementation ){
+            //this detects W3C DOM browsers (IE is not a W3C DOM Browser)
+            if( Event.prototype && Event.prototype.__defineGetter__ ){
+                //this detects Mozilla Based Browsers
+                Event.prototype.__defineGetter__( "srcElement", function(){
+                    var src = this.target;
+                    if( src && src.nodeType == Node.TEXT_NODE )
+                        src = src.parentNode;
+                        return src;
+                    }
+                );
+            }
+        }
+    }
+    function showTbl(tblName,event)
     {
         var i;
 
@@ -240,23 +257,19 @@ bean.setProviderNo(prov);
 <%
     Document xmlDoc = null;
 
-    try
-    {
+    try{
         int demographicNo = Integer.parseInt(demoNo);
 
         MsgGenerate gen = new MsgGenerate();
 
         xmlDoc = gen.getDocument(demographicNo);
         // System.out.println("xmlDoc = "+xmlDoc.toString());
-    }
-    catch (Exception ex)
-    {
+    }catch (Exception ex){
         ex.printStackTrace();
         response.sendRedirect("error.html");
     }
 
-    if(xmlDoc == null)
-    {
+    if(xmlDoc == null){
         response.sendRedirect("error.html");
     }
 
@@ -265,10 +278,10 @@ bean.setProviderNo(prov);
 
 %>
 <%!
-    String spanStartRoot = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblRoot');\">"
+    String spanStartRoot = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblRoot',event);\">"
         + "<img class=\"treeNode\" src=\"img/minus.gif\" border=\"0\" />";
 
-    String spanStart = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblNode');\">"
+    String spanStart = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblNode',event);\">"
         + "<img class=\"treeNode\" src=\"img/plus.gif\" border=\"0\" />";
     String spanEnd = "</span>";
 
@@ -282,15 +295,13 @@ bean.setProviderNo(prov);
     String tblEnd = "</table>";
 
     void DrawDoc(Element root, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
+            throws javax.servlet.jsp.JspException, java.io.IOException{
 
         out.print(spanStartRoot + "Document Transfer" + spanEnd);
         out.print(tblStartRoot);
 
         NodeList lst = root.getChildNodes();
-        for(int i=0; i<lst.getLength(); i++)
-        {
+        for(int i=0; i<lst.getLength(); i++){
             out.print(tblRowStart);
             DrawTable((Element)lst.item(i), out);
             out.print(tblRowEnd);
@@ -300,8 +311,7 @@ bean.setProviderNo(prov);
     }
 
     void DrawTable(Element tbl, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
+            throws javax.servlet.jsp.JspException, java.io.IOException{
         NodeList lst = tbl.getChildNodes();
         //if (lst.getLength() > 0){
 
@@ -310,8 +320,7 @@ bean.setProviderNo(prov);
 
 
             // System.out.println("/n there are "+lst.getLength()+" nodes \n");
-            for(int i=0; i<lst.getLength(); i++)
-            {
+            for(int i=0; i<lst.getLength(); i++){
                 out.print(tblRowStart);
                 DrawItem((Element)lst.item(i), out);
                 out.print(tblRowEnd);
@@ -321,11 +330,9 @@ bean.setProviderNo(prov);
     }
 
     void DrawItem(Element item, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
+            throws javax.servlet.jsp.JspException, java.io.IOException{
         out.print(spanStart);
-        if(! item.getAttribute("removable").equalsIgnoreCase("false"))
-        {
+        if(! item.getAttribute("removable").equalsIgnoreCase("false")){
             String sName = "item" + item.getAttribute("itemId");
             out.print("<input type=checkbox name='" + sName + "' onclick='javascript:chkClick();'/>");
         }
@@ -333,12 +340,9 @@ bean.setProviderNo(prov);
         out.print(tblStartContent);
 
         NodeList lst = item.getChildNodes();
-        for(int i=0; i<lst.getLength(); i++)
-        {
-            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE)
-            {
-                if(((Element)lst.item(i)).getTagName().equals("content"))
-                {
+        for(int i=0; i<lst.getLength(); i++){
+            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE){
+                if(((Element)lst.item(i)).getTagName().equals("content")){
                     DrawContent((Element)lst.item(i), out);
                 }
             }
@@ -347,16 +351,12 @@ bean.setProviderNo(prov);
     }
 
     void DrawContent(Element content, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
+            throws javax.servlet.jsp.JspException, java.io.IOException{
         NodeList lst = content.getChildNodes();
-        for(int i=0; i<lst.getLength(); i++)
-        {
-            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE)
-            {
+        for(int i=0; i<lst.getLength(); i++){
+            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE){
                 Element fld = (Element)lst.item(i);
-                if(fld.getTagName().equals("fld"))
-                {
+                if(fld.getTagName().equals("fld")){
                     out.print("<tr><td style='font-weight:bold'>");
                     out.print(fld.getAttribute("name") + ": ");
                     out.print("</td><td>");
