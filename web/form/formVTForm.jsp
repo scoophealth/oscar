@@ -66,7 +66,7 @@ Vascular Tracker
             padding-top:3px;
             padding-bottom:3px;           
             height: 30px;
-            font-size:9pt;
+            font-size:7pt;
         }
 
         .Head INPUT {
@@ -74,7 +74,7 @@ Vascular Tracker
         }
 
         .Head A {
-            font-size:9pt;
+            font-size:7pt;
         }
 
         BODY {
@@ -87,12 +87,12 @@ Vascular Tracker
         }
         
         TD{
-            font-size:9pt;
+            font-size:7pt;
             empty-cells:show;
         }
 
         TH{
-            font-size:9pt;
+            font-size:7pt;
             font-weight: normal;
             text-align:left;
         }
@@ -101,7 +101,7 @@ Vascular Tracker
         .subject {
             background-color: #000000;
             color: #FFFFFF;  
-            font-size: 15pt;
+            font-size: 12pt;
             font-weight: bold;
             text-align: left;
         }
@@ -111,10 +111,11 @@ Vascular Tracker
             vertical-align: bottom;
             font-weight: bold;
             border-bottom: 3px groove #000000;
+            font-size: 9pt;
         }
         .soap{
             text-align: left;
-            vertical-align: bottom;
+            vertical-align: top;
             font-weight: bold;
         }
         .subTitle {            
@@ -136,12 +137,16 @@ Vascular Tracker
         .ninetyPercent{
             font-size:90%;
         }
+        .sixtyPercent{
+            font-size:60%;
+        }
         .dataEntryTable{
             border-style: solid;
             border-width: 1px;
             border-color: #BBBBBB;
-            border-collapse: collapse
-            empty-cells: show;            
+            border-collapse: collapse;
+            empty-cells: show; 
+            font-size:7pt;
         }
         
 
@@ -152,6 +157,21 @@ Vascular Tracker
 </head>
 
 <script type="text/javascript">
+    
+    var waist, hip, ratio;    
+    var smkSDate, smkHDate, smkCDate;
+    var smkSCmt, smkHCmt, smkCCmt;
+    var ftNoId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
+    var ftNoDate, ftNeDate, ftIsDate, ftInDate, ftUlDate, ftOtDate, ftReDate;
+    var ftNoCmt, ftNeCmt, ftIsCmt, ftInCmt, ftUlCmt, ftOtCmt, ftReCmt;
+    var eyeNoId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
+    var eyeNoCmt, eyeHypCmt, eyeDiaCmt, eyeOthCmt, eyeRefCmt;    
+    var eyeNoDate, eyeHypDate, eyeDiaDate, eyeOthDate, eyeRefDate;
+    var MIValue, AngValue, ACSValue, RVTNValue, CADValue, DMValue, PVDValue;
+    var HbA1Value, HbA1Date, HbA1Cmt;
+    var DMCValue, DMCDate, DMCCmt;
+    
+    
 
     function onPrint() {
 //        document.forms[0].submit.value="print";
@@ -212,15 +232,7 @@ function showHideItem(id){
 }
 
 function updateWaistHipRatio(){
-    var e = document.forms[0].elements;
-    var waist, hip, ratio;    
-    for(i=50; i<70; i++){
-        switch(e[i].name){
-            case 'value(WHRValue)': ratio = i; break;
-            case 'value(WCValue)': waist = i; break;
-            case 'value(HCValue)': hip = i; break;
-        }
-    }
+    
     if (document.forms[0].elements[waist].value=="" || document.forms[0].elements[hip].value==""){
         document.forms[0].elements[ratio].readOnly = false;
     }
@@ -235,21 +247,7 @@ function updateWaistHipRatio(){
 
 function storeSMKSupportData(){
     //getElementbyId function doesn't work on these elements
-    //here is the work around
-    var e = document.forms[0].elements;
-    var smkSDate, smkHDate, smkCDate;
-    var smkSCmt, smkHCmt, smkCCmt;
-    for(i=0; i< 20; i++){
-        switch(e[i].name){
-            case 'value(SmkSDate)': smkSDate = i;  break;
-            case 'value(SmkHDate)': smkHDate = i;  break;
-            case 'value(SmkCDate)': smkCDate = i;  break;
-            
-            case 'value(SmkSComments)': smkSCmt = i;  break;
-            case 'value(SmkHComments)': smkHCmt = i;  break;
-            case 'value(SmkCComments)': smkCCmt = i;  break;
-        }
-    }
+    //here is the work around    
     
     document.forms[0].elements[smkSDate].value = document.getElementById('SmkDate').value;
     document.forms[0].elements[smkHDate].value = document.getElementById('SmkDate').value;
@@ -261,31 +259,7 @@ function storeSMKSupportData(){
 }
 
 
-function storeFTExamSupportData(){
-    //getElementbyId function doesn't work on these elements
-    //here is the work around
-    var e = document.forms[0].elements;
-    var ftNoId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
-    var ftNoCmt, ftNeCmt, ftIsCmt, ftInCmt, ftUlCmt, ftOtCmt, ftReCmt;
-    for(i=50; i< e.length; i++){
-        switch(e[i].name){
-            case 'value(FTNoDate)': ftNoId = i;  break;
-            case 'value(FTNeDate)': ftNeId = i;  break;
-            case 'value(FTIsDate)': ftIsId = i;  break;
-            case 'value(FTUlDate)': ftUlId = i;  break;
-            case 'value(FTInDate)': ftInId = i;  break;
-            case 'value(FTOtDate)': ftOtId = i;  break;
-            case 'value(FTReDate)': ftReId = i;  break;
-            
-            case 'value(FTNoComments)': ftNoCmt = i;  break;
-            case 'value(FTNeComments)': ftNeCmt = i;  break;
-            case 'value(FTIsComments)': ftIsCmt = i;  break;
-            case 'value(FTUlComments)': ftUlCmt = i;  break;
-            case 'value(FTInComments)': ftInCmt = i;  break;
-            case 'value(FTOtComments)': ftOtCmt = i;  break;
-            case 'value(FTReComments)': ftReCmt = i;  break;
-        }
-    }
+function storeFTExamSupportData(){    
 
     document.forms[0].elements[ftNoId].value = document.getElementById('FTDate').value;
     document.forms[0].elements[ftNeId].value = document.getElementById('FTDate').value;
@@ -305,23 +279,7 @@ function storeFTExamSupportData(){
 }
 
 function controlFTExam(){
-    
-    //getElementbyId function doesn't work on these elements
-    //here is the work around
-    var e = document.forms[0].elements;
-    var ftNoId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
-    for(i=50; i< e.length; i++){
-        switch(e[i].name){
-            case 'value(FTNoValue)': ftNoId = i;  break;
-            case 'value(FTNeValue)': ftNeId = i;  break;
-            case 'value(FTIsValue)': ftIsId = i;  break;
-            case 'value(FTUlValue)': ftUlId = i;  break;
-            case 'value(FTInValue)': ftInId = i;  break;
-            case 'value(FTOtValue)': ftOtId = i;  break;
-            case 'value(FTReValue)': ftReId = i;  break;
-        }
-    }
-    
+            
     if(document.forms[0].elements[ftNoId-1].checked == false){
         //enable all foot exam checkbox        
         //alert("enable all foot exam checkboxes");
@@ -360,27 +318,7 @@ function controlFTExam(){
 }
 
 function storeEyeExamSupportData(){
-    //getElementbyId function doesn't work on these elements
-    //here is the work around
-    var e = document.forms[0].elements;
-    var eyeNoId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
-    var eyeNoCmt, eyeHypCmt, eyeDiaCmt, eyeOthCmt, eyeRefCmt;
-    for(i=50; i< e.length; i++){
-        switch(e[i].name){
-            case 'value(iNoDate)': eyeNoId = i;  break;
-            case 'value(iHypDate)': eyeHypId = i;  break;
-            case 'value(iDiaDate)': eyeDiaId = i;  break;
-            case 'value(iOthDate)': eyeOthId = i;  break;
-            case 'value(iRefDate)': eyeRefId = i;  break;
-            
-            case 'value(iNoComments)': eyeNoCmt = i;  break;
-            case 'value(iHypComments)': eyeHypCmt = i;  break;
-            case 'value(iDiaComments)': eyeDiaCmt = i;  break;
-            case 'value(iOthComments)': eyeOthCmt = i;  break;
-            case 'value(iRefComments)': eyeRefCmt = i;  break;
-        }
-    }
-
+    
     document.forms[0].elements[eyeNoId].value = document.forms[0].iDate.value;
     document.forms[0].elements[eyeHypId].value = document.forms[0].iDate.value;
     document.forms[0].elements[eyeDiaId].value = document.forms[0].iDate.value;
@@ -396,21 +334,6 @@ function storeEyeExamSupportData(){
 
 
 function controlEyeExam(){
-    
-    //getElementbyId function doesn't work on these elements
-    //here is the work around
-    var e = document.forms[0].elements;
-    var eyeNoId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
-    
-    for(i=50; i< e.length; i++){       
-        switch(e[i].name){
-            case 'value(iNoValue)': eyeNoId = i ; break;
-            case 'value(iHypValue)': eyeHypId = i;  break;
-            case 'value(iDiaValue)': eyeDiaId = i;  break;
-            case 'value(iOthValue)': eyeOthId = i;  break;
-            case 'value(iRefValue)': eyeRefId = i;  break;
-        }
-    }
     
     if(document.forms[0].elements[eyeNoId-1].checked == false){
         //enable all foot exam checkbox        
@@ -443,8 +366,142 @@ function controlEyeExam(){
         document.forms[0].elements[eyeRefId-1].disabled= true;
     }
 }
+
+function initialize(){
+    var e = document.forms[0].elements;
+    
+    for(i=0; i< e.length; i++){
+        switch(e[i].name){
+            case 'value(WHRValue)': ratio = i; break;
+            case 'value(WCValue)': waist = i; break;
+            case 'value(HCValue)': hip = i; break;
+            case 'value(SmkSDate)': smkSDate = i;  break;
+            case 'value(SmkHDate)': smkHDate = i;  break;
+            case 'value(SmkCDate)': smkCDate = i;  break;
+            
+            case 'value(SmkSComments)': smkSCmt = i;  break;
+            case 'value(SmkHComments)': smkHCmt = i;  break;
+            case 'value(SmkCComments)': smkCCmt = i;  break;
+            
+            case 'value(FTNoValue)': ftNoId = i;  break;
+            case 'value(FTNeValue)': ftNeId = i;  break;
+            case 'value(FTIsValue)': ftIsId = i;  break;
+            case 'value(FTUlValue)': ftUlId = i;  break;
+            case 'value(FTInValue)': ftInId = i;  break;
+            case 'value(FTOtValue)': ftOtId = i;  break;
+            case 'value(FTReValue)': ftReId = i;  break;
+            
+            case 'value(FTNoDate)': ftNoDate = i;  break;
+            case 'value(FTNeDate)': ftNeDate = i;  break;
+            case 'value(FTIsDate)': ftIsDate = i;  break;
+            case 'value(FTUlDate)': ftUlDate = i;  break;
+            case 'value(FTInDate)': ftInDate = i;  break;
+            case 'value(FTOtDate)': ftOtDate = i;  break;
+            case 'value(FTReDate)': ftReDate = i;  break;
+            
+            case 'value(FTNoComments)': ftNoCmt = i;  break;
+            case 'value(FTNeComments)': ftNeCmt = i;  break;
+            case 'value(FTIsComments)': ftIsCmt = i;  break;
+            case 'value(FTUlComments)': ftUlCmt = i;  break;
+            case 'value(FTInComments)': ftInCmt = i;  break;
+            case 'value(FTOtComments)': ftOtCmt = i;  break;
+            case 'value(FTReComments)': ftReCmt = i;  break;
+            
+            case 'value(iNoDate)': eyeNoDate = i;  break;
+            case 'value(iHypDate)': eyeHypDate = i;  break;
+            case 'value(iDiaDate)': eyeDiaDate = i;  break;
+            case 'value(iOthDate)': eyeOthDate = i;  break;
+            case 'value(iRefDate)': eyeRefDate = i;  break;
+            
+            case 'value(iNoComments)': eyeNoCmt = i;  break;
+            case 'value(iHypComments)': eyeHypCmt = i;  break;
+            case 'value(iDiaComments)': eyeDiaCmt = i;  break;
+            case 'value(iOthComments)': eyeOthCmt = i;  break;
+            case 'value(iRefComments)': eyeRefCmt = i;  break;
+            
+            case 'value(iNoValue)': eyeNoId = i ; break;
+            case 'value(iHypValue)': eyeHypId = i;  break;
+            case 'value(iDiaValue)': eyeDiaId = i;  break;
+            case 'value(iOthValue)': eyeOthId = i;  break;
+            case 'value(iRefValue)': eyeRefId = i;  break;
+            
+            case 'value(MIValue)': MIValue = i;  break;
+            case 'value(AngValue)': AngValue = i;  break;
+            case 'value(ACSValue)': ACSValue = i;  break;            
+            case 'value(RVTNValue)': RVTNValue = i;  break;
+            case 'value(CADValue)': CADValue = i;  break;
+            
+            case 'value(DMValue)': DMValue = i;  break;
+            case 'value(PVDValue)': PVDValue = i;  break;
+            
+            case 'value(HbA1Value)': HbA1Value = i;  break;
+            case 'value(HbA1Date)': HbA1Date = i;  break;
+            case 'value(HbA1Comments)': HbA1Cmt = i;  break;
+            
+            case 'value(DiaCValue)': DMCValue = i;  break;
+            case 'value(DiaCDate)': DMCDate = i;  break;
+            case 'value(DiaCComments)': DMCCmt = i;  break;
+            
+        }
+    }
+
+    if(document.forms[0].elements[MIValue].value=="yes"||document.forms[0].elements[AngValue].value=="yes"||document.forms[0].elements[ACSValue].value=="yes"){
+        document.forms[0].elements[CADValue].value="yes";
+    }
+    
+    DMCheck();
+    PVDCheck();
+}
+
+function disableFTExam(control){
+    document.forms[0].elements[ftNoId-1].disabled= control;
+    document.forms[0].elements[ftNeId-1].disabled= control;
+    document.forms[0].elements[ftIsId-1].disabled= control;
+    document.forms[0].elements[ftUlId-1].disabled= control;
+    document.forms[0].elements[ftInId-1].disabled= control;
+    document.forms[0].elements[ftOtId-1].disabled= control;
+    document.forms[0].elements[ftReId-1].disabled= control;
+    
+    document.forms[0].elements[ftNoId].disabled= control;
+    document.forms[0].elements[ftNeId].disabled= control;
+    document.forms[0].elements[ftIsId].disabled= control;
+    document.forms[0].elements[ftUlId].disabled= control;
+    document.forms[0].elements[ftInId].disabled= control;
+    document.forms[0].elements[ftOtId].disabled= control;
+    document.forms[0].elements[ftReId].disabled= control;
+}
+
+function DMCheck(){
+    if(document.forms[0].elements[DMValue].checked==false){
+        disableFTExam(true);
+        document.forms[0].elements[HbA1Value].disabled= true;
+        document.forms[0].elements[HbA1Date].disabled= true;
+        document.forms[0].elements[HbA1Cmt].disabled= true;
+        document.forms[0].elements[DMCValue].disabled= true;
+        document.forms[0].elements[DMCDate].disabled= true;
+        document.forms[0].elements[DMCCmt].disabled= true;
+    }
+    else{
+        disableFTExam(false);
+        document.forms[0].elements[HbA1Value].disabled= false;
+        document.forms[0].elements[HbA1Date].disabled= false;
+        document.forms[0].elements[HbA1Cmt].disabled= false;
+        document.forms[0].elements[DMCValue].disabled= false;
+        document.forms[0].elements[DMCDate].disabled= false;
+        document.forms[0].elements[DMCCmt].disabled= false;
+    }
+}
+
+function PVDCheck(){
+    if(document.forms[0].elements[PVDValue].checked==false){
+        disableFTExam(true);
+    }
+    else{
+        disableFTExam(false);
+    }
+}
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport();">
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport(); initialize();">
 <!--  -->
     
     <html:form action="/form/SubmitForm" >    
@@ -477,14 +534,43 @@ function controlEyeExam(){
                             <tr>
                                 <td>
                                     <table width="100%">
-                                    <html:errors/>                                                      
+                                    <html:errors/>  
                                         <tr>
                                             <td colspan="2">
-                                                <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
+                                                        </td>
+                                                        <html:hidden property="value(MIValue)"/>
+                                                        <html:hidden property="value(AngValue)"/>
+                                                        <html:hidden property="value(ACSValue)"/>                                                        
+                                                        <html:hidden property="value(RVTNValue)"/>
+                                                        <html:hidden property="value(MIDate)"/>
+                                                        <html:hidden property="value(AngDate)"/>
+                                                        <html:hidden property="value(ACSDate)"/>                                                        
+                                                        <html:hidden property="value(RVTNDate)"/>                                                        
+                                                        <td class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/> DM</td>
+                                                        <td class="sixtyPercent"><html:checkbox property="value(HTNValue)"/> HTN</td>
+                                                        <td class="sixtyPercent"><html:checkbox property="value(HchlValue)"/> Hyperlipidemia</td>
+                                                        <td class="sixtyPercent"><html:checkbox property="value(CADValue)"/> CAD</td>
+                                                        <td class="sixtyPercent"><html:checkbox property="value(CVDValue)"/> CVD</td>
+                                                        <td class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/> PVD</td>
+                                                        <html:hidden property="value(DMDate)"/>
+                                                        <html:hidden property="value(HTNDate)"/>
+                                                        <html:hidden property="value(HchlDate)"/>
+                                                        <html:hidden property="value(CADDate)"/>
+                                                        <html:hidden property="value(CVDDate)"/>
+                                                        <html:hidden property="value(PVDDate)"/>
+                                                    </tr>
+                                                </table>                                                
                                             </td>
-                                        </tr>
+                                        </tr>                                                                                                                   
                                         <tr>
-                                            <th class="soap" width="2%" colspan="2">S</th>
+                                            <th class="soap" width="2%">S</th>
+                                            <th>
+                                                <html:textarea property="value(subjective)" cols="78" style="height:40"></html:textarea>
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th></th>
@@ -494,7 +580,7 @@ function controlEyeExam(){
                                         </tr>                                        
                                          <tr>
                                             <td></td>
-                                            <td ><table cellpadding='1' cellspacing='0' id="history">
+                                            <td ><table style="display:none" cellpadding='1' cellspacing='0' id="history">
                                             <tr><td>
                                             <table cellpadding='1' cellspacing='0'width="100%">   
                                                 <tr>
@@ -638,7 +724,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>                                                
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("DpScDisplay")%>/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("DpScDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DpScLDDate")%></td></tr>
@@ -654,7 +740,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(DpScComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("StScDisplay")%>/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("StScDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("StScLDDate")%></td></tr>
@@ -670,7 +756,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(StScComments)" size="30%"tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("LcCtDisplay")%>/></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("LcCtDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("LcCtLDDate")%></td></tr>
@@ -707,7 +793,7 @@ function controlEyeExam(){
                                                     </td>                                                    
                                                 </tr>                                                
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("MedGDisplay")%></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedGDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedGLDDate")%></td></tr>
@@ -723,7 +809,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedGComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("MedNDisplay")%></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedNDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedNLDDate")%></td></tr>
@@ -739,7 +825,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedNComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("MedRDisplay")%></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedRDesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedRLDDate")%></td></tr>
@@ -755,7 +841,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(MedRComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("MedADisplay")%></td>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("MedADesc")%></td>
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("MedALDDate")%></td></tr>
@@ -775,7 +861,7 @@ function controlEyeExam(){
                                         </tr>
                                         <tr>
                                             <th class="soap" width="2%">O</th>
-                                            <th></th>
+                                            <th><html:textarea property="value(objective)" cols="78" style="height:40"></html:textarea></th>
                                         </tr>
                                         <tr>
                                             <th></th>
@@ -807,8 +893,7 @@ function controlEyeExam(){
                                                     <td class="dataEntryTable" align="center">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("BPLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("BPLastData")%></td></tr>
-                                                            
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("BPLastData")%></td></tr>                                                            
                                                         </table>
                                                     </td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(BPValue)" size="5%" /></td>
@@ -1275,7 +1360,9 @@ function controlEyeExam(){
                                         </tr>
                                         <tr>
                                             <th class="soap" width="2%">A</th>
-                                            <th></th>
+                                            <th>
+                                                <html:textarea property="value(assessment)" cols="78" style="height:40"></html:textarea>
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th></th>
@@ -1289,7 +1376,7 @@ function controlEyeExam(){
                                                 <table style="display:none" cellpadding='1' cellspacing='0' id="diagnosis">
                                                 <tr>
                                                     <td>
-                                                        <html:textarea property="value(diagnosisVT)" cols="78" style="height:80"></html:textarea>
+                                                        <html:textarea property="value(diagnosisVT)" cols="78" style="height:40"></html:textarea>
                                                     </td>
                                                 </tr>
                                                 </table>
@@ -1297,7 +1384,9 @@ function controlEyeExam(){
                                         </tr>
                                         <tr>
                                             <th class="soap" width="2%">P</th>
-                                            <th></th>
+                                            <th>
+                                                <html:textarea property="value(plan)" cols="78" style="height:40"></html:textarea>
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th></th>
