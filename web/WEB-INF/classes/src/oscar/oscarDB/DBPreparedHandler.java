@@ -37,32 +37,20 @@ public class DBPreparedHandler  {
   ResultSet rs = null;
   Statement stmt = null; 
   PreparedStatement preparedStmt = null;
-
-	public DBPreparedHandler(String dbDriver,String dbName, String dbUser,String dbPwd ) throws SQLException{
-    init(dbDriver,dbName,dbUser,dbPwd);
+  
+  public DBPreparedHandler(String dbDriver,String dbName, String dbUser,String dbPwd ) throws Exception, SQLException {      
+    init(dbDriver,dbName,dbUser,dbPwd);      
   }
-  public void init(String dbDriver,String dbUrl, String dbUser,String dbPwd ) throws SQLException{
+  public void init(String dbDriver,String dbUrl, String dbUser,String dbPwd ) throws Exception, SQLException {
     connDriver=dbDriver;
     connURL=dbUrl;
     connUser=dbUser;
     connPwd=dbPwd;
-    try{
-      OpenConn(connDriver, connURL, connUser, connPwd);
-    }catch(Exception e){
-      e.printStackTrace(); 
-    }
+    OpenConn(connDriver, connURL, connUser, connPwd);    
   }
-  private void OpenConn(String dbDriver, String dbUrl,String dbUser,String dbPwd) throws Exception {
-    try {
-      Class.forName(dbDriver);
-    }catch(java.lang.ClassNotFoundException e) {
-      System.err.println(e.getMessage());
-    }
-    try {
-      conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  private void OpenConn(String dbDriver, String dbUrl,String dbUser,String dbPwd) throws Exception, SQLException {      
+    Class.forName(dbDriver);
+    conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);    
   }
   
 
