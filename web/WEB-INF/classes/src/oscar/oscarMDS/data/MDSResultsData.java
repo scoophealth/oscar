@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarMDS.data;
 
@@ -29,220 +29,219 @@ import java.util.*;
 import java.sql.*;
 
 
-public class MDSResultsData
-{
-    public ArrayList segmentID;
-    public ArrayList acknowledgedStatus;
-    
-    public ArrayList healthNumber;
-    public ArrayList patientName;
-    public ArrayList sex;
-    public ArrayList resultStatus;
-    public ArrayList dateTime;
-    public ArrayList priority;
-    public ArrayList requestingClient;
-    public ArrayList discipline;
-    public ArrayList reportStatus;
-    
-    public void populateMDSResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {        
-        
-        if ( providerNo == null) { providerNo = ""; }
-        if ( patientFirstName == null) { patientFirstName = ""; }
-        if ( patientLastName == null) { patientLastName = ""; }
-        if ( patientHealthNumber == null) { patientHealthNumber = ""; }
-        if ( status == null ) { status = ""; }
-        
-        segmentID = new ArrayList();
-        acknowledgedStatus = new ArrayList();
-        
-        healthNumber = new ArrayList();        
-        patientName = new ArrayList();
-        sex = new ArrayList();
-        resultStatus = new ArrayList();
-        dateTime  = new ArrayList();
-        priority = new ArrayList();
-        requestingClient = new ArrayList();
-        discipline = new ArrayList();
-        reportStatus = new ArrayList();
-        
-        String sql = "";
-
-        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            if ( demographicNo == null) {
+public class MDSResultsData {
+   public ArrayList segmentID;
+   public ArrayList acknowledgedStatus;
+   
+   public ArrayList healthNumber;
+   public ArrayList patientName;
+   public ArrayList sex;
+   public ArrayList resultStatus;
+   public ArrayList dateTime;
+   public ArrayList priority;
+   public ArrayList requestingClient;
+   public ArrayList discipline;
+   public ArrayList reportStatus;
+   
+   public void populateMDSResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+      
+      if ( providerNo == null) { providerNo = ""; }
+      if ( patientFirstName == null) { patientFirstName = ""; }
+      if ( patientLastName == null) { patientLastName = ""; }
+      if ( patientHealthNumber == null) { patientHealthNumber = ""; }
+      if ( status == null ) { status = ""; }
+      
+      segmentID = new ArrayList();
+      acknowledgedStatus = new ArrayList();
+      
+      healthNumber = new ArrayList();
+      patientName = new ArrayList();
+      sex = new ArrayList();
+      resultStatus = new ArrayList();
+      dateTime  = new ArrayList();
+      priority = new ArrayList();
+      requestingClient = new ArrayList();
+      discipline = new ArrayList();
+      reportStatus = new ArrayList();
+      
+      String sql = "";
+      
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         if ( demographicNo == null) {
             // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
             // for the provider number if unable to find correct provider
-                sql = "SELECT mdsMSH.segmentID, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
-                             "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
-                             "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " + 
-                             "FROM mdsMSH,mdsPID,providerLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
-                             "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=providerLabRouting.lab_no " +
-                             "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
-                             "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
-                             "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
-                             "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
+            sql = "SELECT mdsMSH.segmentID, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
+            "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+            "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+            "FROM mdsMSH,mdsPID,providerLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
+            "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=providerLabRouting.lab_no " +
+            "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
+            "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
+            "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
+            "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
+         } else {
+            sql = "SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
+            "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+            "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+            "FROM mdsMSH,mdsPID,patientLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
+            "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=patientLabRouting.lab_no " +
+            "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
+            "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
+            "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
+         }
+         
+         ResultSet rs = db.GetSQL(sql);
+         while(rs.next()){
+            segmentID.add(Integer.toString(rs.getInt("segmentID")));
+            if (demographicNo == null && !providerNo.equals("0")) {
+               acknowledgedStatus.add(rs.getString("status"));
             } else {
-                   sql = "SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
-                             "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
-                             "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " + 
-                             "FROM mdsMSH,mdsPID,patientLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
-                             "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=patientLabRouting.lab_no " +
-                             "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
-                             "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
-                             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";                   
+               acknowledgedStatus.add("U");
             }
             
-            ResultSet rs = db.GetSQL(sql);
-            while(rs.next()){
-                segmentID.add(Integer.toString(rs.getInt("segmentID")));
-                if (demographicNo == null && !providerNo.equals("0")) {
-                    acknowledgedStatus.add(rs.getString("status"));
-                } else {
-                    acknowledgedStatus.add("U");
-                }
-                
-                healthNumber.add(rs.getString("healthNumber"));
-                patientName.add(beautifyName(rs.getString("patientName")));                
-                sex.add(rs.getString("sex"));
-                resultStatus.add(rs.getString("abnormalFlag"));                
-                dateTime.add(rs.getString("dateTime"));                                
-                
-                switch ( rs.getString("quantityTiming").charAt(0) ) {
-                        case 'C' : priority.add("Critical"); break;
-                        case 'S' : priority.add("Stat\\Urgent"); break;
-                        case 'U' : priority.add("Unclaimed"); break;
-                        case 'A' : if ( rs.getString("quantityTiming").startsWith("AL") ) {
-                                  priority.add("Alert");
-                              } else {
-                                  priority.add("ASAP");
-                              }
-                              break;
-                        default: priority.add("Routine"); break;
-                }
-                
-                requestingClient.add(ProviderData.beautifyProviderName(rs.getString("refDoctor")));                
-                reportStatus.add(rs.getString("reportFormStatus"));                
-                
-                if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
-                    discipline.add("Microbiology");
-                } else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
-                    discipline.add("Diagnostic Imaging");
-                } else {
-                    discipline.add("Hem/Chem/Other");
-                }                
+            healthNumber.add(rs.getString("healthNumber"));
+            patientName.add(beautifyName(rs.getString("patientName")));
+            sex.add(rs.getString("sex"));
+            resultStatus.add(rs.getString("abnormalFlag"));
+            dateTime.add(rs.getString("dateTime"));
+            
+            switch ( rs.getString("quantityTiming").charAt(0) ) {
+               case 'C' : priority.add("Critical"); break;
+               case 'S' : priority.add("Stat\\Urgent"); break;
+               case 'U' : priority.add("Unclaimed"); break;
+               case 'A' : if ( rs.getString("quantityTiming").startsWith("AL") ) {
+                  priority.add("Alert");
+               } else {
+                  priority.add("ASAP");
+               }
+               break;
+               default: priority.add("Routine"); break;
             }
-            rs.close();
-            db.CloseConn();
-        }catch(Exception e){
-            System.out.println("exception in MDSResultsData:"+e);
-        }
-    }
-    
-    private String beautifyName(String name) {
-        try {
-                return name.substring(0, name.indexOf("^")) + ", "
-                + name.substring(name.indexOf("^") + 1).replace('^', ' ');
-            } catch (IndexOutOfBoundsException e) {
-                return name.replace('^', ' ');
-            }
-    }
-    
-    
-    public static boolean updateReportStatus (Properties props, int labNo, int providerNo, char status, String comment) {                        
-        
-        try {
-            DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
-            // handles the case where this provider/lab combination is not already in providerLabRouting table
-            String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?)";
-            if ( db.queryExecuteUpdate(sql, new String[] { comment }) == 0 ) {
-                // handles the case where it is
-                sql = "update providerLabRouting set status='"+status+"', comment=? where provider_no='"+providerNo+"' and lab_no='"+labNo+"'";            
-                db.queryExecute(sql, new String[] { comment });            
+            
+            requestingClient.add(ProviderData.beautifyProviderName(rs.getString("refDoctor")));
+            reportStatus.add(rs.getString("reportFormStatus"));
+            
+            if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
+               discipline.add("Microbiology");
+            } else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
+               discipline.add("Diagnostic Imaging");
             } else {
-                sql = "delete from providerLabRouting where provider_no='0' and lab_no=?";
-                db.queryExecute(sql, new String[] { Integer.toString(labNo) });
+               discipline.add("Hem/Chem/Other");
             }
-            db.closeConn();
-            return true;
-        }catch(Exception e){
-            System.out.println("exception in MDSResultsData.updateReportStatus():"+e);
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
-    public static boolean updateLabRouting (String[] flaggedLabs, String selectedProviders) {
-        boolean result;
-        
-        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            
-            String[] providersArray = selectedProviders.split(",");            
-            String insertString = "";
-            String deleteString = "";
-            for (int i=0; i < flaggedLabs.length; i++) {
-                if (i != 0) {            
-                    insertString = insertString + ", ";
-                    deleteString = deleteString + ", ";
-                }                
-                for (int j=0; j < providersArray.length; j++) {
-                    if (j != 0) {
-                        insertString = insertString + ", ";
-                    }
-                    insertString = insertString + "('" + providersArray[j] + "','" + flaggedLabs[i] + "','N')";
-                }
-                deleteString = deleteString+"'"+flaggedLabs[i]+"'";
-            }                                                        
-                                  
-            // delete old entries
-            String sql = "delete from providerLabRouting where provider_no='0' and lab_no in ("+deleteString+")";
-            result = db.RunSQL(sql);
-            
-            // add new entries
-            sql = "insert ignore into providerLabRouting (provider_no, lab_no, status) values "+insertString;
-            result = db.RunSQL(sql);            
-            db.CloseConn();
-            return result;
-        }catch(Exception e){
-            System.out.println("exception in MDSResultsData.updateLabRouting():"+e);
-            return false;
-        }
-    }
-    
-    public static String searchPatient (String labNo) {
-        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                        
-            String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"'";
-            ResultSet rs = db.GetSQL(sql);            
-            db.CloseConn();
-            rs.next();
-            return rs.getString("demographic_no");
-        }catch(Exception e){
-            System.out.println("exception in MDSResultsData.searchPatient():"+e);
-            return "0";
-        }
-    }
-    
-    public static boolean updatePatientLabRouting (String labNo, String demographicNo) {
-        boolean result;
-        
-        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            
-            // delete old entries
-            String sql = "delete from patientLabRouting where lab_no='"+labNo+"'";
-            result = db.RunSQL(sql);            
-            
-            // add new entries
-            sql = "insert into patientLabRouting (lab_no, demographic_no) values ('"+labNo+"', '"+demographicNo+"')";
-            result = db.RunSQL(sql);            
-            db.CloseConn();
-            return result;
-        }catch(Exception e){
-            System.out.println("exception in MDSResultsData.updateLabRouting():"+e);
-            return false;
-        }
-    }
-
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData:"+e);
+      }
+   }
+   
+   private String beautifyName(String name) {
+      try {
+         return name.substring(0, name.indexOf("^")) + ", "
+         + name.substring(name.indexOf("^") + 1).replace('^', ' ');
+      } catch (IndexOutOfBoundsException e) {
+         return name.replace('^', ' ');
+      }
+   }
+   
+   
+   public static boolean updateReportStatus(Properties props, int labNo, int providerNo, char status, String comment) {
+      
+      try {
+         DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
+         // handles the case where this provider/lab combination is not already in providerLabRouting table
+         String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?)";
+         if ( db.queryExecuteUpdate(sql, new String[] { comment }) == 0 ) {
+            // handles the case where it is
+            sql = "update providerLabRouting set status='"+status+"', comment=? where provider_no='"+providerNo+"' and lab_no='"+labNo+"'";
+            db.queryExecute(sql, new String[] { comment });
+         } else {
+            sql = "delete from providerLabRouting where provider_no='0' and lab_no=?";
+            db.queryExecute(sql, new String[] { Integer.toString(labNo) });
+         }
+         db.closeConn();
+         return true;
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData.updateReportStatus():"+e);
+         e.printStackTrace();
+         return false;
+      }
+   }
+   
+   public static boolean updateLabRouting(String[] flaggedLabs, String selectedProviders) {
+      boolean result;
+      
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         
+         String[] providersArray = selectedProviders.split(",");
+         String insertString = "";
+         String deleteString = "";
+         for (int i=0; i < flaggedLabs.length; i++) {
+            if (i != 0) {
+               insertString = insertString + ", ";
+               deleteString = deleteString + ", ";
+            }
+            for (int j=0; j < providersArray.length; j++) {
+               if (j != 0) {
+                  insertString = insertString + ", ";
+               }
+               insertString = insertString + "('" + providersArray[j] + "','" + flaggedLabs[i] + "','N')";
+            }
+            deleteString = deleteString+"'"+flaggedLabs[i]+"'";
+         }
+         
+         // delete old entries
+         String sql = "delete from providerLabRouting where provider_no='0' and lab_no in ("+deleteString+")";
+         result = db.RunSQL(sql);
+         
+         // add new entries
+         sql = "insert ignore into providerLabRouting (provider_no, lab_no, status) values "+insertString;
+         result = db.RunSQL(sql);
+         db.CloseConn();
+         return result;
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData.updateLabRouting():"+e);
+         return false;
+      }
+   }
+   
+   public static String searchPatient(String labNo) {
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         
+         String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"'";
+         ResultSet rs = db.GetSQL(sql);
+         db.CloseConn();
+         rs.next();
+         return rs.getString("demographic_no");
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData.searchPatient():"+e);
+         return "0";
+      }
+   }
+   
+   public static boolean updatePatientLabRouting(String labNo, String demographicNo) {
+      boolean result;
+      
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         
+         // delete old entries
+         String sql = "delete from patientLabRouting where lab_no='"+labNo+"'";
+         result = db.RunSQL(sql);
+         
+         // add new entries
+         sql = "insert into patientLabRouting (lab_no, demographic_no) values ('"+labNo+"', '"+demographicNo+"')";
+         result = db.RunSQL(sql);
+         db.CloseConn();
+         return result;
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData.updateLabRouting():"+e);
+         return false;
+      }
+   }
+   
 }
