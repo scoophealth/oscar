@@ -35,15 +35,16 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
+import oscar.util.ParameterActionForward;
 
 public class EctConsultationFormRequestAction extends Action {
 
     public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        if(bean == null)
-            return mapping.findForward("eject");
+        //EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+        //if(bean == null)
+        //    return mapping.findForward("eject");
         EctConsultationFormRequestForm frm = (EctConsultationFormRequestForm)form;
         String referalDate = frm.getReferalDate();
         String serviceId = frm.getService();
@@ -64,8 +65,8 @@ public class EctConsultationFormRequestAction extends Action {
         String concurrentProblems = frm.getConcurrentProblems();
         String sendTo = frm.getSendTo();
         String submission = frm.getSubmission();
-        String providerNo = bean.providerNo;
-        String demographicNo = bean.demographicNo;
+        String providerNo = frm.getProviderNo();
+        String demographicNo = frm.getDemographicNo();
         String status = frm.getStatus();
         String statusText = frm.getAppointmentNotes();
         String urg = frm.getUrgency();
@@ -108,8 +109,8 @@ public class EctConsultationFormRequestAction extends Action {
         } else
         if(submission.equals("Update Consultation Request") || submission.equals("Update Consultation Request And Print Preview") || submission.equals("Update And Fax"))
         {
-            requestId = bean.getConsultationRequestId();
-            System.out.println("request id = ".concat(String.valueOf(String.valueOf(bean.getConsultationRequestId()))));
+            requestId = frm.getRequestId();
+            System.out.println("request id = ".concat(String.valueOf(String.valueOf(frm.getRequestId()))));
             try
             {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -123,15 +124,18 @@ public class EctConsultationFormRequestAction extends Action {
             }
             request.setAttribute("transType", "1");
         }
-        bean.setConsultationRequestId("");
+        frm.setRequestId("");
+        request.setAttribute("teamVar",sendTo);
         if(submission.equals("Update Consultation Request And Print Preview") || submission.equals("Submit Consultation Request And Print Preview")){
             request.setAttribute("reqId", requestId);
             return mapping.findForward("print");
         } else if (submission.equals("Update And Fax") || submission.equals("Submit And Fax")) {
             request.setAttribute("reqId", requestId);
             return mapping.findForward("fax");
-        } else {
-            return mapping.findForward("success");
+        } else {            
+            ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
+            forward.addParameter("de", demographicNo);                     
+            return forward;  
         }
     }
 }

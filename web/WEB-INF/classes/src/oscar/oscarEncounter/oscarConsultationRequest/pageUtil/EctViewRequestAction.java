@@ -38,13 +38,13 @@ public class EctViewRequestAction extends Action {
         throws ServletException, IOException    {
 
         EctViewRequestForm frm = (EctViewRequestForm)form;
-        EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        if(bean == null) {
+        //EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+        /*if(bean == null) {
             return mapping.findForward("eject");
         } else {
-            bean.setConsultationRequestId(frm.getRequestId());
+            bean.setConsultationRequestId(frm.getRequestId());*/            
             request.setAttribute("id",frm.getRequestId());
 	    return mapping.findForward("success");
-        }
+        //}
     }
 }

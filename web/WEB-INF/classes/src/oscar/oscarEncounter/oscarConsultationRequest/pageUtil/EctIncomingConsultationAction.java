@@ -38,13 +38,13 @@ public class EctIncomingConsultationAction extends Action {
         EctIncomingConsultationForm frm = (EctIncomingConsultationForm)form;
         String providerNo = frm.getProviderNo();
         String demographicNo = frm.getDemographicNo();
-        EctSessionBean bean = new EctSessionBean();
+        /*EctSessionBean bean = new EctSessionBean();
         bean.providerNo = providerNo;
         EctSessionBean abean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         if(abean == null) {
             bean.unsetConsultationRequestId();
             request.getSession().setAttribute("EctSessionBean", bean);
-        }
+        }*/
         return mapping.findForward("success");
     }
 }

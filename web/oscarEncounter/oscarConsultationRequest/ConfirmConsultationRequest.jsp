@@ -45,12 +45,8 @@ function BackToOscar() {
 }
 
 function finishPage(secs){
-    setTimeout("window.close()",secs*1000);
-    window.opener.location.href = window.opener.location.href;
-    //if (window.opener.progressWindow)
-    //{
-    //    window.opener.progressWindow.close()
-    //} 
+    setTimeout("window.close()",secs*500);    
+    window.opener.location.reload();    
 }
 
 </script>

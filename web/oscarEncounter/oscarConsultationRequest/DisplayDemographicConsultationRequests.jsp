@@ -31,30 +31,19 @@
 <%@page import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*"%>
 
 <%
-
+if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
 String demo = request.getParameter("de");
-String proNo = request.getParameter("proNo");
-String patientFirstName;
-String patientLastName;
-String patientAge;
-String patientSex;
+String proNo = (String) session.getAttribute("user");
+oscar.oscarDemographic.data.DemographicData demoData=null;
+oscar.oscarDemographic.data.DemographicData.Demographic demographic=null;
 
-if (demo != null ){ // this is needed to set up the encounter session bean when we are called from the master demographics page
-    EctPatientData.Patient patient = new EctPatientData().getPatient(demo);
-    patientFirstName = patient.getFirstName();
-    patientLastName = patient.getSurname();
-    patientSex = patient.getSex();
-    patientAge = patient.getAge();
-        
-    
-} else { // otherwise we are being called from the e-chart page and the encounter session bean already exists (we hope)
-    EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");   
-    patientFirstName = bean.getPatientFirstName();
-    patientLastName = bean.getPatientLastName();
-    patientSex = bean.getPatientSex();
-    patientAge = bean.getPatientAge();    
-    demo = bean.getDemographicNo();
+if (demo != null ){ 
+    demoData = new oscar.oscarDemographic.data.DemographicData();
+    demographic = demoData.getDemographic(demo);    
 }
+else
+    response.sendRedirect("../error.jsp");
+
 oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
 consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
 consultUtil.estPatient(demo);
@@ -126,11 +115,11 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(varpage, "<bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgConsReq"/>", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-  }
+  //if (popup != null) {
+  //  if (popup.opener == null) {
+  //    popup.opener = self;
+  //  }
+  //}
 }
 function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
@@ -152,7 +141,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                 <table class="TopStatusBar">
                     <tr>
                         <td class="Header"NOWRAP >
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgConsReqFor"/> <%=patientLastName %>, <%=patientFirstName%> <%=patientSex%> <%=patientAge%>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgConsReqFor"/> <%=demographic.getLastName() %>, <%=demographic.getFirstName()%> <%=demographic.getSex()%> <%=demographic.getAge()%>
                         </td>
                         <td>
                         </td>                        
@@ -165,7 +154,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                 <table>
                     <tr>
                         <td NOWRAP>
-                        <a href=# onClick="popupOscarRx(700,960,'ConsultationFormRequest.jsp')">
+                        <a href="javascript:popupOscarRx(700,960,'ConsultationFormRequest.jsp?de=<%=demo%>')">
                         <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.btnNewCon"/></a>
                         </td>
                     </tr>
@@ -199,15 +188,16 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                                     <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgRefDate"/>
                                     </th>
                                 </tr>
-                            <%  
-                                for (int i = 0; i < theRequests.ids.size(); i++){
-                                String id      = (String) theRequests.ids.elementAt(i);
-                                String status  = (String) theRequests.status.elementAt(i);
-                                String patient = (String) theRequests.patient.elementAt(i);
-                                String provide = (String) theRequests.provider.elementAt(i);
-                                String service = (String) theRequests.service.elementAt(i);
-                                String date    = (String) theRequests.date.elementAt(i);
-                            %>
+                                <%  
+                                    for (int i = 0; i < theRequests.ids.size(); i++){
+                                        System.out.println("requestID: " + theRequests.ids);
+                                    String id      = (String) theRequests.ids.elementAt(i);
+                                    String status  = (String) theRequests.status.elementAt(i);
+                                    String patient = (String) theRequests.patient.elementAt(i);
+                                    String provide = (String) theRequests.provider.elementAt(i);
+                                    String service = (String) theRequests.service.elementAt(i);
+                                    String date    = (String) theRequests.date.elementAt(i);
+                                %>
                                 <tr>
                                     <td class="stat<%=status%>" width="75">
                                     <% if (status.equals("1")){ %>

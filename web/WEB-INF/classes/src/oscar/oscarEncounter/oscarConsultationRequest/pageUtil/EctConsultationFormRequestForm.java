@@ -31,6 +31,45 @@ import org.apache.struts.action.*;
 
 public final class EctConsultationFormRequestForm extends ActionForm {
 
+    public String getProviderNo()
+    {
+        if(providerNo == null)
+            providerNo = new String();
+        return providerNo;
+    }
+
+    public void setProviderNo(String str)
+    {
+        System.out.println("providerNo date has been set");
+        providerNo = str;
+    }
+    
+    public String getDemographicNo()
+    {
+        if(demographicNo == null)
+            demographicNo = new String();
+        return demographicNo;
+    }
+
+    public void setDemographicNo(String str)
+    {
+        System.out.println("demographicNo date has been set");
+        demographicNo = str;
+    }
+    
+    public String getRequestId()
+    {
+        if(requestId == null)
+            requestId = new String();
+        return requestId;
+    }
+
+    public void setRequestId(String str)
+    {
+        System.out.println("requestId date has been set");
+        requestId = str;
+    }
+    
     public String getReferalDate()
     {
         if(referalDate == null)
@@ -309,6 +348,9 @@ public final class EctConsultationFormRequestForm extends ActionForm {
         return errors;
     }
 
+    String providerNo;
+    String demographicNo;
+    String requestId;
     String referalDate;
     String service;
     String specialist;

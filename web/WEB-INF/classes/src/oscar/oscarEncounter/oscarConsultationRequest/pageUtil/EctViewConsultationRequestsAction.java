@@ -38,17 +38,17 @@ public class EctViewConsultationRequestsAction extends Action {
         throws ServletException, IOException {
         String sendTo = null;
         EctViewConsultationRequestsForm frm = (EctViewConsultationRequestsForm) form;
-        EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        if(bean == null)
-            return mapping.findForward("eject");
-        if(bean.isCurrentTeam() && frm.getSendTo() == null) {
+        //EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+        //if(bean == null)
+        //    return mapping.findForward("eject");
+        //if(bean.isCurrentTeam() && frm.getSendTo() == null) {        
             sendTo = frm.getSendTo();
-        } else {
+        /*} else {
             sendTo = frm.getSendTo();
             frm.setCurrentTeam(sendTo);
             if(!sendTo.equals("-1"))
                 bean.setCurrentTeam(sendTo);
-        }
+        }*/
         request.setAttribute("teamVar", sendTo);
         return mapping.findForward("success");
     }

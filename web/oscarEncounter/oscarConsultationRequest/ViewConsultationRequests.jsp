@@ -31,12 +31,14 @@
 <%@page import="oscar.oscarEncounter.pageUtil.*"%>
 
 <%
-  EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
+    if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
+    //EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
 %>
 
 <html:html locale="true">
 
 <%
+
   String team = (String) request.getAttribute("teamVar");
   if (team == null){
     team = new String();
@@ -45,7 +47,7 @@
   oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
   consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
   consultUtil.estTeams();
-  if (!team.equals("-1")){
+  /*if (!team.equals("-1")){
     if( bean.isCurrentTeam() ){
       team = bean.getCurrentTeam();
       //System.out.println("team was set");
@@ -53,7 +55,7 @@
       team = (String) bean.getTeam();
       //System.out.println("team wasn't set");
     }
-  }
+  }*/
 
 String protocol = "http";
 if (request.isSecure()){
@@ -144,7 +146,6 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
 }
 
 
-
 //
 </script>
 
@@ -205,7 +206,7 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                                 <%}else{%>
                                     <option value="<%=te%>"><%=te%></option>
                                 <%}}%>
-                            </select>
+                            </select>                            
                             <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.btnConsReq"/>"/>
                             <html:hidden property="currentTeam"/>
                         </html:form>

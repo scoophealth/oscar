@@ -28,8 +28,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@page import="oscar.oscarEncounter.pageUtil.*, oscar.OscarProperties"%>
+<%@page import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties"%>
 <%
+    if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
@@ -38,20 +39,24 @@
 <html:html locale="true">
 
 <%
-String team = null;
-EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-if ( bean != null){
-    team = bean.getTeam();
+String demo = request.getParameter("de");
+String requestId = request.getParameter("requestId");
+String team = (String) request.getAttribute("teamVar");
+String providerNo = (String) session.getAttribute("user");
+oscar.oscarDemographic.data.DemographicData demoData = null;
+oscar.oscarDemographic.data.DemographicData.Demographic demographic = null;
+
+if (demo != null ){
+    demoData = new oscar.oscarDemographic.data.DemographicData();
+    demographic = demoData.getDemographic(demo);    
 }
 
-String requestId = (String) bean.getConsultationRequestId();
+else if(requestId==null)
+    response.sendRedirect("../error.jsp");
 
 oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
 consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
-
-String demoNo = bean.getDemographicNo();
-if (demoNo != null) consultUtil.estPatient(demoNo);
-
+if (demo != null) consultUtil.estPatient(demo);
 consultUtil.estTeams();
 
 java.util.Calendar calender = java.util.Calendar.getInstance();
@@ -364,6 +369,9 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 <html:errors/>
 
 <html:form action="/oscarEncounter/RequestConsultation">
+        <input type="hidden" name="providerNo" value="<%=providerNo%>">
+        <input type="hidden" name="demographicNo" value="<%=demo%>">
+        <input type="hidden" name="requestId" value="<%=requestId%>">
         <%
         oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm thisForm;
         thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
@@ -393,31 +401,12 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 
 
         }else if(request.getAttribute("validateError") == null){
-            //
-                oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
-                oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
-                arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
-                StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < arr.length; i++){
-  		   if (arr[i].isCurrent()  ){
-                      stringBuffer.append(arr[i].getRxDisplay()+"\n");
-                   }
-		}
-
-                oscar.oscarRx.data.RxPatientData pData = new oscar.oscarRx.data.RxPatientData();
-                oscar.oscarRx.data.RxPatientData.Patient patient = pData.getPatient(Integer.parseInt(bean.demographicNo));
-                oscar.oscarRx.data.RxPatientData.Patient.Allergy [] allergies = {};
-                allergies = patient.getAllergies();                 
-                StringBuffer stringBuffer2 = new StringBuffer();
-                for (int i=0; i < allergies.length; i++){
-                   oscar.oscarRx.data.RxAllergyData.Allergy allerg = allergies[i].getAllergy();
-                   stringBuffer2.append(allerg.getDESCRIPTION()+"  "+allerg.getTypeDesc()+" \n");
-	        }
-                thisForm.setAllergies(stringBuffer2.toString());
-  		thisForm.setCurrentMedications(stringBuffer.toString());
+            //  new request              
+                thisForm.setAllergies(demographic.RxInfo.getAllergies());
+  		thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
-                thisForm.setConcurrentProblems(bean.ongoingConcerns);
+                thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
         	thisForm.setAppointmentYear(year);
                                    
 	}
@@ -433,7 +422,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                 <table class="TopStatusBar">
                     <tr>
                         <td class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
+                            <%=consultUtil.patientName%> <%=consultUtil.patientSex%> <%=consultUtil.patientAge%>
                         </td>                                               
                     </tr>
                 </table>
