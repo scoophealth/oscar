@@ -1284,9 +1284,19 @@ var maxYear=9900;
   <td width="20%">
   <input type="checkbox" name="conFamPhy" <%= props.getProperty("conFamPhy", "") %>  @oscar.formDB dbType="tinyint(1)"/>
   FAMILY PHYSICIAN
-  </td><td>
-  <input type="checkbox" name="conOther" <%= props.getProperty("conOther", "") %>  @oscar.formDB dbType="tinyint(1)"/>
-  OTHER:
+  </td><td nowrap>
+	<table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
+	<tr><td nowrap>
+	<input type="checkbox" name="conOther" <%= props.getProperty("conOther", "") %>  @oscar.formDB dbType="tinyint(1)"/>
+	OTHER:
+	<input type="text" name="conOtherTxt" size="20" maxlength="30" value="<%= props.getProperty("conOtherTxt", "") %>" @oscar.formDB />
+	</td><td align="right" nowrap>
+	L.O.S. 
+	<input type="text" name="conLos" size="3" maxlength="3" value="<%= props.getProperty("conLos", "") %>" @oscar.formDB />
+	hr
+	</td></tr>
+	</table>
+  
   </td><td align="right"> 
   RM/RN
   </td><td align="right"> 
