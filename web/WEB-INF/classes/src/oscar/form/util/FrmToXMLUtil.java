@@ -77,56 +77,40 @@ public class FrmToXMLUtil{
                 String itemName = mt.getType();
                 String methodCall = (String) nameProps.get(itemName+"Value");
                 //System.out.println("method "+methodCall);
-                if(!dataProps.getProperty(itemName+"Value").equalsIgnoreCase("")||dataProps.getProperty(itemName+"Value")!=null){
-                    if(mt.getType().equalsIgnoreCase("BP")){
-                        methodCall = (String) nameProps.get("SBPValue");
-                        if (methodCall != null){
-                           Class cls = visit.getClass();
-                           //System.out.println("calling addNew"+methodCall);
-                           Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
-
-                           Object obj = addNewMethod.invoke(visit,new Object[]{});
-
-                           String value = dataProps.getProperty("SBPValue");
-                           System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
-                           setWhoWhatWhereWhen(obj,how,who,when,value);
-
-                           //String date = dataProps.getProperty(itemName+"Date");
-                           //setWhoWhatWhereWhen(obj,how,who,when,date);
-                        }
-                        methodCall = (String) nameProps.get("DBPValue");
-                        if (methodCall != null){
-                           Class cls = visit.getClass();
-                           //System.out.println("calling addNew"+methodCall);
-                           Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
-
-                           Object obj = addNewMethod.invoke(visit,new Object[]{});
-
-                           String value = dataProps.getProperty("DBPValue");
-                           System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
-                           setWhoWhatWhereWhen(obj,how,who,when,value);
-
-                           //String date = dataProps.getProperty(itemName+"Date");
-                           //setWhoWhatWhereWhen(obj,how,who,when,date);
-                        }
-                    }                
+                org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
                 
-                    else if (methodCall != null){                                                                               
-
+                if(mt.getType().equalsIgnoreCase("BP") && !gValidator.isBlankOrNull(dataProps.getProperty("SBPValue"))){
+                    methodCall = (String) nameProps.get("SBPValue");
+                    if (methodCall != null){
                        Class cls = visit.getClass();
                        //System.out.println("calling addNew"+methodCall);
                        Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
                        Object obj = addNewMethod.invoke(visit,new Object[]{});
 
-                       String value = dataProps.getProperty(itemName+"Value");
-                       System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+                       String value = dataProps.getProperty("SBPValue");
+                       //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
 
                        //String date = dataProps.getProperty(itemName+"Date");
                        //setWhoWhatWhereWhen(obj,how,who,when,date);
                     }
-                    methodCall = (String) nameProps.get(itemName+"Date");
+                    methodCall = (String) nameProps.get("DBPValue");
+                    if (methodCall != null){
+                       Class cls = visit.getClass();
+                       //System.out.println("calling addNew"+methodCall);
+                       Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+
+                       Object obj = addNewMethod.invoke(visit,new Object[]{});
+
+                       String value = dataProps.getProperty("DBPValue");
+                       //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+                       setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                       //String date = dataProps.getProperty(itemName+"Date");
+                       //setWhoWhatWhereWhen(obj,how,who,when,date);
+                    }
+                    methodCall = (String) nameProps.get("BPDate");
                     //System.out.println("method "+methodCall);
                     if (methodCall != null){                                       
 
@@ -137,13 +121,49 @@ public class FrmToXMLUtil{
                        Object obj = addNewMethod.invoke(visit,new Object[]{});
 
                        String value = dataProps.getProperty(itemName+"Date");
-                       System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
+                       //System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
+                       setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                       //String date = dataProps.getProperty(itemName+"Date");
+                       //setWhoWhatWhereWhen(obj,how,who,when,date);
+                    } 
+                    
+                }                
+
+                else if (methodCall != null && !gValidator.isBlankOrNull(dataProps.getProperty(itemName+"Value"))){                                                                               
+
+                   Class cls = visit.getClass();
+                   //System.out.println("calling addNew"+methodCall);
+                   Method addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+
+                   Object obj = addNewMethod.invoke(visit,new Object[]{});
+
+                   String value = dataProps.getProperty(itemName+"Value");
+                   //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+                   setWhoWhatWhereWhen(obj,how,who,when,value);
+
+                   //String date = dataProps.getProperty(itemName+"Date");
+                   //setWhoWhatWhereWhen(obj,how,who,when,date);
+
+                    methodCall = (String) nameProps.get(itemName+"Date");
+                    //System.out.println("method "+methodCall);
+                    if (methodCall != null){                                       
+
+                       cls = visit.getClass();
+                       //System.out.println("calling addNew"+methodCall);
+                       addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
+
+                       obj = addNewMethod.invoke(visit,new Object[]{});
+
+                       value = dataProps.getProperty(itemName+"Date");
+                       //System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
                        setWhoWhatWhereWhen(obj,how,who,when,value);
 
                        //String date = dataProps.getProperty(itemName+"Date");
                        //setWhoWhatWhereWhen(obj,how,who,when,date);
                     } 
                 }
+               
             }
                         
             //get drug list             
@@ -175,7 +195,10 @@ public class FrmToXMLUtil{
       XmlOptions xmlOptions = new XmlOptions();
       xmlOptions.setSavePrettyPrint();      
       xmlOptions.setSavePrettyPrintIndent(3);
-      String xmlStr = visitDocument.xmlText(xmlOptions);      
+      String xmlStr = visitDocument.xmlText(xmlOptions);
+      System.out.println("*********************************************************************************");
+      System.out.println("************************** XML GENERATED BY OSCAR *******************************");
+      System.out.println("*********************************************************************************");
       System.out.println(xmlStr);
       return xmlStr;
    }
