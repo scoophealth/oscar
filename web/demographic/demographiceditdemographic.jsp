@@ -479,6 +479,8 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
           <option value="QC"<%=hctype.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=hctype.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=hctype.equals("YT")?" selected":""%>>YT-Yukon</option>                                       
+          <option value="US"<%=hctype.equals("US")?" selected":""%>>US resident</option> 
+          <option value="OT"<%=(hctype.equals("OT") || hctype.equals("") || hctype.length() > 2)?" selected":""%>>Other</option>
         </select>
         <% }%>
       </td>

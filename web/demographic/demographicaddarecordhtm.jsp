@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
   String str = null;
 %> 
@@ -7,7 +7,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="addDemoBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -383,6 +383,8 @@ function newStatus() {
           <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
           <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
           <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>                             
+          <option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option> 
+          <option value="OT"<%=billregion.equals("")?" selected":""%>>Other</option>
         </select>
         <% }%>
       </td>
