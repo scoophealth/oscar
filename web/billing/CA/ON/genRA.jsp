@@ -32,19 +32,11 @@
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
-<%@ include file="../billing/dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp" %>
 
 <%  
-GregorianCalendar now=new GregorianCalendar();
-int curYear = now.get(Calendar.YEAR);
-int curMonth = (now.get(Calendar.MONTH)+1);
-int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
-String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); // String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
-%>
-  
+String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
 
-<% 
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
 String transactiontype="", providerno="", specialty="", account="", patient_last="", patient_first="", provincecode="", newhin="", hin="", ver="", billtype="", location="";
 String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
@@ -161,6 +153,8 @@ while ((nextline=input.readLine())!=null){
 				}
 			}
 
+			if (account.trim().length() == 0) account = "0";
+
 			if (valid){
 				accountno= Integer.parseInt(account.trim());
 				account = String.valueOf(accountno);
@@ -269,7 +263,7 @@ int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
 
 <html>
 <head>
-<link rel="stylesheet" href="../billing/billing.css" >
+<link rel="stylesheet" href="billing.css" >
 <title>Billing Reconcilliation</title>
        
 <script language="JavaScript">
@@ -350,10 +344,17 @@ while (rsdemo.next()) {
     <td width="20%" height="16"><%=payable%></td>
     <td width="10%" height="16"><%=strcount%>/<%=strtCount%></td>
     <td width="10%" height="16"><%=total%></td>
-    <td width="30%" height="16"><a href="../billing/genRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | <a href="../billing/genRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| <a href="../billing/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
-    <td width="10%" height="16"><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
+    <td width="30%" height="16"><a href="genRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | <a href="genRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| <a href="genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
+    <td width="10%" height="16"><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
 </tr>
-<%}%>
+<%
+}
+apptMainBean.closePstmtConn();
+
+file.close();
+reader.close();
+input.close();
+%>
 </table>
 
 </body>

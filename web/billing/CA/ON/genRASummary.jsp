@@ -101,6 +101,8 @@ while ((nextline=input.readLine())!=null){
 				}
 			}
 
+			if (account.trim().length() == 0) account = "0";
+
 			if (valid){
 				accountno= Integer.parseInt(account.trim());
 				account = String.valueOf(accountno);
@@ -607,6 +609,13 @@ param2[0] = content;
 param2[1] = raNo; 
 
 recordAffected = apptMainBean.queryExecuteUpdate(param2,"update_rahd_content");
+
+if (recordAffected != 1) System.out.println("genRASummary.jsp: update_rahd_content - wrong!");
+apptMainBean.closePstmtConn();
+
+file.close();
+reader.close();
+input.close();
 %>
 
 </body>
