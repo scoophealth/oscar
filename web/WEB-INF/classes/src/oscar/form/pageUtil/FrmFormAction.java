@@ -86,6 +86,7 @@ public class FrmFormAction extends Action {
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         String timeStamp = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd hh:mm:ss");
         String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
+        String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd");
                         
         System.out.println("current mem 2 "+currentMem());
         
@@ -119,7 +120,10 @@ public class FrmFormAction extends Action {
             validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
             String inputValue = (String) frm.getValue(mt.getType()+"Value");
             String observationDate = (String) frm.getValue(mt.getType()+"Date");
-            
+            if(mt.getType().equalsIgnoreCase("DM") || mt.getType().equalsIgnoreCase("HTN") || mt.getType().equalsIgnoreCase("Hchl") || mt.getType().equalsIgnoreCase("CAD") || mt.getType().equalsIgnoreCase("CVD") || mt.getType().equalsIgnoreCase("PVD") || mt.getType().equalsIgnoreCase("MI") || mt.getType().equalsIgnoreCase("Ang") || mt.getType().equalsIgnoreCase("ACS") || mt.getType().equalsIgnoreCase("RVTN")){
+                observationDate = today;
+            }
+                        
             //parse the checkbox value
             inputValue = parseCheckBoxValue(inputValue, validation.getName());
             
