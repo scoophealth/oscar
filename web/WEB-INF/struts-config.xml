@@ -227,7 +227,9 @@
     <form-bean      name="RptFluBillingForm"
                     type="oscar.oscarReport.pageUtil.RptFluBillingForm" />
     <form-bean      name="RptDemographicReportForm"
-                    type="oscar.oscarReport.pageUtil.RptDemographicReportForm"/>
+                    type="oscar.oscarReport.pageUtil.RptDemographicReportForm"/>                    
+    <form-bean      name="RptByExampleForm"
+                    type="oscar.oscarReport.pageUtil.RptByExampleForm"/>                
     <form-bean      name="ObecForm"
                     type="oscar.oscarReport.pageUtil.ObecForm"/>
     <form-bean      name="RptSelectCDMReportForm"
