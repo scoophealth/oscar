@@ -58,7 +58,7 @@ public class EctIncomingEncounterAction extends Action {
             if(request.getParameter("appointmentList")!=null){
                     bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean") ;
                     bean.setUpEncounterPage(request.getParameter("appointmentNo"));
-                    bean.template = "";
+                    bean.template = "";                    
             } else if(request.getParameter("demographicSearch")!=null){
             //Coming in from the demographicSearch page
                     bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean") ;
@@ -78,10 +78,9 @@ public class EctIncomingEncounterAction extends Action {
                     bean.status="";
                     //no date from search screen-keep old date
                     //bean.date="";
-                    bean.check= "myCheck";
-                    bean.setUpEncounterPage();
-                    bean.template="";
-                    request.getSession().setAttribute("EctSessionBean",bean);
+                    bean.check= "myCheck";                    
+                    bean.setUpEncounterPage();                    
+                    request.getSession().setAttribute("EctSessionBean",bean);                    
             } else {
                 bean = new EctSessionBean();
                 bean.currentDate = UtilDateUtilities.StringToDate(request.getParameter("curDate"));
@@ -96,9 +95,9 @@ public class EctIncomingEncounterAction extends Action {
                 bean.status=request.getParameter("status");
                 bean.date=request.getParameter("date");
                 bean.check= "myCheck";
-                bean.setUpEncounterPage();
-                bean.template="";
-                request.getSession().setAttribute("EctSessionBean",bean);
+                bean.oscarMsgID = request.getParameter("msgId");
+                bean.setUpEncounterPage();               
+                request.getSession().setAttribute("EctSessionBean",bean);                
             }
         }
         else{
