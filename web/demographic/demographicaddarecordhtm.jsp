@@ -64,12 +64,44 @@
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
+<style type="text/css">
+    BODY{
+        FONT-SIZE: Normal;
+        FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+    }
+    TABLE{
+        font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+    }
+    TD{
+        font-size:11pt;
+    }
+
+    TH{
+        font-size:11pt;            
+    }    
+    .subject {
+        background-color: #003399;
+        color: #FFFFFF;  
+        font-size: 14pt;
+        font-weight: bold;
+        text-align: centre;        
+    }
+    .title {
+        background-color: #6699CC;
+        color: #000000;            
+        font-weight: bold;
+        text-align: center;
+        height="20px"
+    }
+    
+</style>
 <script language="JavaScript">
 
 function setfocus() {
   this.focus();
   document.adddemographic.last_name.focus();
   document.adddemographic.last_name.select();
+  window.resizeTo(1000,700);
 }
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
@@ -164,16 +196,23 @@ function formatPhoneNum() {
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
 <!--<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus();showDate();"  topmargin="0" leftmargin="0" rightmargin="0">-->
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus();"  topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus();"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#CCCCFF"> 
-    <th><font face="Helvetica"><bean:message key="demographic.demographicaddrecordhtm.msgMainLabel"/></font></th>
+    <th class="subject"><bean:message key="demographic.demographicaddrecordhtm.msgMainLabel"/></th>
   </tr>
 </table>
 	
 <%@ include file="zdemographicfulltitlesearch.jsp" %>	
-
-<table border="0" cellpadding="1" cellspacing="0" width="100%">
+<table>
+    <tr><td>&nbsp;</td></tr>
+</table>
+<table width="100%" bgcolor="#CCCCFF">
+<tr><td class="RowTop">
+    <b><bean:message key="demographic.record"/></b>
+</td></tr>
+<tr><td>
+<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
   <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkTypeInAdd()">
     <tr> 
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
@@ -629,6 +668,7 @@ function formatPhoneNum() {
     </tr>
   </form>
 </table>
+</td></tr></table>
  * <font face="Courier New, Courier, mono" size="-1"><bean:message key="demographic.demographicaddrecordhtm.formDateFormat"/> </font> 
 <% addDemoBean.closePstmtConn(); %>
 </body>
