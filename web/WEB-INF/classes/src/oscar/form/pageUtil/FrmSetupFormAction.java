@@ -187,8 +187,9 @@ public final class FrmSetupFormAction extends Action {
                             String dMeas = mt.getLastDateEntered();
 
                             if(value!=null){
+                                value = translate(value, valueMethodCall);
                                 frm.setValue(mt.getType()+"Value", value);  
-                                System.out.println("prefill " + mt.getType() + ": " + value);
+                                //System.out.println("prefill " + mt.getType() + ": " + value);
                             
                                 if(dMiles!=null&&dMeas!=null){
                                     if(dMiles.compareTo(dMeas)>0){                                                             
@@ -370,5 +371,25 @@ public final class FrmSetupFormAction extends Action {
             e.printStackTrace();
         }
         
+    }
+    
+    private String translate(String input, String xmlName){
+        if(xmlName.startsWith("B_")){
+            if(input.equalsIgnoreCase("true")){
+                return "yes";
+            }
+            else
+                return "no";
+        }
+        else if (xmlName.startsWith("Sel_")){
+            if(input.equalsIgnoreCase("present")){
+                return "yes";
+            }
+            else{
+                return "no";
+            }            
+        }
+        return input;
+            
     }
 }
