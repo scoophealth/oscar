@@ -347,9 +347,9 @@
         <typeDisplayName>Exercise</typeDisplayName>
         <measuringInstrc>[min/week 0-1200]</measuringInstrc>
         <validationRule>
-           <name>Numeric Value: 0 to 6720</name>
+           <name>Numeric Value: 0 to 1200</name>
            <minValue>0</minValue>
-           <maxValue>6720</maxValue>
+           <maxValue>1200</maxValue>
            <isNumeric>1</isNumeric>
         </validationRule>
      </measurement>
