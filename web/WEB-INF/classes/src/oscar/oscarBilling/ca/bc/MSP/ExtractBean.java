@@ -39,6 +39,7 @@ import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.Misc;
 import oscar.oscarBilling.ca.bc.MSP.*;
+import oscar.util.*;
 
 
 
@@ -356,7 +357,7 @@ public class ExtractBean extends Object implements Serializable {
     
     public void setLog(String x, String logValue){        
       if (eFlag.equals("1")){
-         String nsql = "update log_teleplantx set claim='" + logValue + "' where log_no='"+ x +"'";        
+         String nsql = "update log_teleplantx set claim='" + UtilMisc.mysqlEscape(logValue) + "' where log_no='"+ x +"'";        
          try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(nsql);
