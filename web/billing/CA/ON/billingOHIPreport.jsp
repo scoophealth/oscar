@@ -26,7 +26,7 @@
 
 <%  
   if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
+    response.sendRedirect("../../../logout.jsp");
   String user_no="";
 user_no = (String) session.getAttribute("user");
 %> 
@@ -254,8 +254,8 @@ paramYear[1] = thisyear+"/12/31";
     <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=cr%></font><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">&nbsp;</font></td>
     <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=total.substring(0,total.indexOf(".")) + total.substring(total.indexOf("."), total.indexOf(".") + 3)%></font><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">&nbsp;</font></td>
     
-    <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
-    <td width="20%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
+    <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
+    <td width="20%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
   </tr>            
   <%  }
   
