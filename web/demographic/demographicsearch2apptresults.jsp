@@ -112,8 +112,8 @@ function searchAll() {
         <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
         <input type="SUBMIT" name="displaymode" value='<bean:message key="global.search"/>' size="17" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>
         &nbsp;&nbsp;
-        <a href="javascript:searchInactive();" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>'><bean:message key="demographic.search.Inactive"/></a> |
-        <a href="javascript:searchAll();" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>'><bean:message key="demographic.search.All"/></a>
+        <INPUT TYPE="button" onclick="searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>" VALUE="<bean:message key="demographic.search.Inactive"/>">
+        <INPUT TYPE="button" onclick="searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>" VALUE="<bean:message key="demographic.search.All"/>">        
       </td></tr><tr>
 			
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 

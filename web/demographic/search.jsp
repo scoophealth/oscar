@@ -105,8 +105,8 @@
                     <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
                     <INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="<bean:message key="demographic.search.btnSearch"/>" SIZE="17" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">
                     &nbsp;&nbsp;&nbsp;
-                    <a href="javascript:searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"><bean:message key="demographic.search.Inactive"/></a> |
-                    <a href="javascript:searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"><bean:message key="demographic.search.All"/></a>
+                    <INPUT TYPE="button" onclick="searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>" VALUE="<bean:message key="demographic.search.Inactive"/>">
+                    <INPUT TYPE="button" onclick="searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>" VALUE="<bean:message key="demographic.search.All"/>">                    
                 </td>
             </tr>
             <tr>			
