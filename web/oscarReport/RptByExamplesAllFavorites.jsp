@@ -54,6 +54,10 @@
             document.forms[0].submit();
         }
     };
+    function closeAndRefresh(){
+        self.opener.document.location.reload();
+        self.close();
+    }
 </script>
 <body vlink="#0000FF" class="BodyStyle" >
 
@@ -97,7 +101,7 @@
                 </tr>
                 </logic:iterate>
                 <tr>
-                    <td><input type="button" value="<bean:message key='global.btnClose'/>" onClick="javascript:window.close();"/>
+                    <td><input type="button" value="<bean:message key='global.btnClose'/>" onClick="javascript:closeAndRefresh();"/>
                 </tr>
             </table>   
         </td>
