@@ -5577,3 +5577,35 @@ CREATE TABLE waitingList(
   onListSince datetime NOT NULL,  
   INDEX (listID)  
 );
+
+
+--
+-- Table structure for table `pharmacyInfo`
+--
+create table pharmacyInfo (
+   recordID int(10) auto_increment primary key,
+   ID int(5),
+   name varchar(255),
+   address text,
+   city varchar(255),
+   province varchar(255),
+   postalCode varchar(20),
+   phone1 varchar(20),
+   phone2 varchar(20),
+   fax varchar(20),
+   email varchar(100),
+   notes text,
+   addDate timestamp,
+   status char (1) default '1'
+);
+ 
+--
+-- Table structure for table `demographicPharmacy`
+--
+
+create table demographicPharmacy (
+   pharmacyID int(10),
+   demographic_no int(10),
+   status char(1) default '1',
+   addDate timestamp
+) ;
