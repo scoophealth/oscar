@@ -77,6 +77,9 @@ public final class BillingReProcessBillForm extends ActionForm {
     String icbcClaim =null;
     String facilityNum =null;
     String facilitySubNum=null;
+    
+    String notes=null;
+    String dependent=null;
     /*
         
      //
@@ -815,6 +818,38 @@ clinic_ref_code
    */
   public void setBillingAmount(java.lang.String billingAmount) {
       this.billingAmount = billingAmount;
+  }
+  
+  /**
+   * Getter for property notes.
+   * @return Value of property notes.
+   */
+  public java.lang.String getNotes() {
+     return notes;
+  }
+  
+  /**
+   * Setter for property notes.
+   * @param notes New value of property notes.
+   */
+  public void setNotes(java.lang.String notes) {
+     this.notes = notes;
+  }
+  
+  /**
+   * Getter for property dependent.
+   * @return Value of property dependent.
+   */
+  public java.lang.String getDependent() {
+     return dependent;
+  }
+  
+  /**
+   * Setter for property dependent.
+   * @param dependent New value of property dependent.
+   */
+  public void setDependent(java.lang.String dependent) {
+     this.dependent = dependent;
   }
   
   /**
