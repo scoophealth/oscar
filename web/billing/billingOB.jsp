@@ -376,7 +376,7 @@ billingdatetime = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now
 String proFirst="", proLast="", proOHIP="";
  // int Count = 0;
   rslocal = null;
- rslocal = apptMainBean.queryResults("%", "search_provider_dt");
+ rslocal = apptMainBean.queryResults("%", "search_provider_dt_checkstatus");
  while(rslocal.next()){
  proFirst = rslocal.getString("first_name");
  proLast = rslocal.getString("last_name");
