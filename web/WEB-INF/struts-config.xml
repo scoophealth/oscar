@@ -1542,6 +1542,7 @@
               scope="request"
               input="/billing/billingCreated.jsp">
               <forward name="success" path="/billing/CA/BC/billingSaved.jsp"/>
+              <forward name="anotherBill" path="/billing/CA/BC/billingBC.jsp"/>
     </action>
     
     <action   path="/billing/CA/BC/billingView"
