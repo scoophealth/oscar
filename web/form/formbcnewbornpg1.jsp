@@ -515,13 +515,13 @@ function onCheckSlave(a, masterName) {
 	<td>BELOW 100</td>
 	<td>ABOVE 100</td>
 	<td>
-	<input type="text" name="pg1_apgarHeart1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarHeart1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarHeart1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarHeart1", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarHeart5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarHeart5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarHeart5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarHeart5", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarHeart10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarHeart10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarHeart10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarHeart10", "") %>" @oscar.formDB />
 	</td>
   </tr><tr align="center">
 	<td><B>RESP. EFFORT</B></td>
@@ -529,13 +529,13 @@ function onCheckSlave(a, masterName) {
 	<td>SLOW IRREG.</td>
 	<td>GOOD CRYING</td>
 	<td>
-	<input type="text" name="pg1_apgarResp1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarResp1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarResp1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarResp1", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarResp5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarResp5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarResp5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarResp5", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarResp10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarResp10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarResp10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarResp10", "") %>" @oscar.formDB />
 	</td>
   </tr><tr align="center">
 	<td><B>MUSCLE TONE</B></td>
@@ -543,13 +543,13 @@ function onCheckSlave(a, masterName) {
 	<td>SOME FLEXION</td>
 	<td>ACTIVE MOTION</td>
 	<td>
-	<input type="text" name="pg1_apgarMuscle1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarMuscle1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarMuscle1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarMuscle1", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarMuscle5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarMuscle5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarMuscle5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarMuscle5", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarMuscle10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarMuscle10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarMuscle10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarMuscle10", "") %>" @oscar.formDB />
 	</td>
   </tr><tr align="center">
 	<td><B>RESPONSE TO STIM.</B></td>
@@ -557,13 +557,13 @@ function onCheckSlave(a, masterName) {
 	<td>GRIMACE</td>
 	<td>COUGH OR SNEEZE</td>
 	<td>
-	<input type="text" name="pg1_apgarStim1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarStim1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarStim1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarStim1", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarStim5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarStim5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarStim5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarStim5", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarStim10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarStim10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarStim10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarStim10", "") %>" @oscar.formDB />
 	</td>
   </tr><tr align="center">
 	<td><B>COLOUR</B></td>
@@ -571,24 +571,24 @@ function onCheckSlave(a, masterName) {
 	<td>BODY PINK BLUE EXTREM.</td>
 	<td>ALL PINK</td>
 	<td>
-	<input type="text" name="pg1_apgarColor1" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarColor1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarColor1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarColor1", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarColor5" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarColor5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarColor5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarColor5", "") %>" @oscar.formDB />
 	</td>
 	<td>
-	<input type="text" name="pg1_apgarColor10" style="width:100%" size="1" maxlength="2" value="<%= props.getProperty("pg1_apgarColor10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarColor10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarColor10", "") %>" @oscar.formDB />
 	</td>
   </tr><tr align="center">
     <td align="right" colspan="4"><b>APGAR TOTAL SCORE</b></td>
     <td>
-	<input type="text" name="pg1_apgarTotal1" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_apgarTotal1", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarTotal1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarTotal1", "") %>" @oscar.formDB />
 	</td>
     <td>
-	<input type="text" name="pg1_apgarTotal5" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_apgarTotal5", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarTotal5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarTotal5", "") %>" @oscar.formDB />
 	</td>
     <td>
-	<input type="text" name="pg1_apgarTotal10" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_apgarTotal10", "") %>" @oscar.formDB  dbType="tinyint(2)"/>
+	<input type="text" name="pg1_apgarTotal10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg1_apgarTotal10", "") %>" @oscar.formDB />
 	</td>
   </tr>
   </table>
