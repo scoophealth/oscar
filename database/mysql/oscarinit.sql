@@ -3151,3 +3151,236 @@ CREATE TABLE tmpdiagnosticcode (
   PRIMARY KEY  (diagnosticcode_no)
 ) TYPE=MyISAM;
 
+--
+-- Table structure for table `providerLabRouting`
+--
+
+CREATE TABLE providerLabRouting (
+  provider_no varchar(6) NOT NULL default '',
+  lab_no int(10) NOT NULL default '0',
+  status char(1) default '',
+  comment varchar(255) default '',
+  timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (provider_no,lab_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsMSH`
+--
+
+CREATE TABLE mdsMSH (
+  segmentID int(10) NOT NULL auto_increment,
+  sendingApp char(180) default NULL,
+  dateTime datetime NOT NULL default '0000-00-00 00:00:00',
+  type char(7) default NULL,
+  messageConID char(20) default NULL,
+  processingID char(3) default NULL,
+  versionID char(8) default NULL,
+  acceptAckType char(2) default NULL,
+  appAckType char(2) default NULL,
+  demographic_no int(10) default '0',
+  PRIMARY KEY  (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsNTE`
+--
+
+CREATE TABLE mdsNTE (
+  segmentID int(10) default NULL,
+  sourceOfComment varchar(8) default NULL,
+  comment varchar(255) default NULL,
+  associatedOBX int(10) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsOBR`
+--
+
+CREATE TABLE mdsOBR (
+  segmentID int(10) default NULL,
+  obrID int(10) default NULL,
+  placerOrderNo char(75) default NULL,
+  universalServiceID char(200) default NULL,
+  observationDateTime char(26) default NULL,
+  specimenRecDateTime char(26) default NULL,
+  fillerFieldOne char(60) default NULL,
+  quantityTiming char(200) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsOBX`
+--
+
+CREATE TABLE mdsOBX (
+  segmentID int(10) default NULL,
+  obxID int(10) default '0',
+  valueType char(2) default NULL,
+  observationIden varchar(80) default NULL,
+  observationSubID varchar(255) default NULL,
+  observationValue varchar(255) default NULL,
+  abnormalFlags varchar(5) default NULL,
+  observationResultStatus char(2) default NULL,
+  producersID varchar(60) default NULL,
+  associatedOBR int(10) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsPID`
+--
+
+CREATE TABLE mdsPID (
+  segmentID int(10) default NULL,
+  intPatientID char(16) default NULL,
+  altPatientID char(15) default NULL,
+  patientName char(48) default NULL,
+  dOB char(26) default NULL,
+  sex char(1) default NULL,
+  homePhone char(40) default NULL,
+  healthNumber char(16) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsPV1`
+--
+
+CREATE TABLE mdsPV1 (
+  segmentID int(10) default NULL,
+  patientClass char(1) default NULL,
+  patientLocation char(80) default NULL,
+  refDoctor char(60) default NULL,
+  conDoctor char(60) default NULL,
+  admDoctor char(60) default NULL,
+  vNumber char(20) default NULL,
+  accStatus char(2) default NULL,
+  admDateTime char(26) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `patientLabRouting`
+--
+
+CREATE TABLE patientLabRouting (
+  demographic_no int(10) NOT NULL default '0',
+  lab_no int(10) NOT NULL default '0',
+  PRIMARY KEY  (lab_no),
+  KEY demographic (demographic_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsZCL`
+--
+
+CREATE TABLE mdsZCL (
+  segmentID int(10) default NULL,
+  setID char(4) default NULL,
+  consultDoc char(60) default NULL,
+  clientAddress char(106) default NULL,
+  route char(6) default NULL,
+  stop char(6) default NULL,
+  area char(2) default NULL,
+  reportSet char(1) default NULL,
+  clientType char(5) default NULL,
+  clientModemPool char(2) default NULL,
+  clientFaxNumber char(40) default NULL,
+  clientBakFax char(40) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsZCT`
+--
+
+CREATE TABLE mdsZCT (
+  segmentID int(10) default NULL,
+  barCodeIdentifier char(14) default NULL,
+  placerGroupNo char(14) default NULL,
+  observationDateTime char(26) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsZFR`
+--
+
+CREATE TABLE mdsZFR (
+  segmentID int(10) default NULL,
+  reportForm char(1) default NULL,
+  reportFormStatus char(1) default NULL,
+  testingLab varchar(5) default NULL,
+  medicalDirector varchar(255) default NULL,
+  editFlag varchar(255) default NULL,
+  abnormalFlag varchar(255) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsZLB`
+--
+
+CREATE TABLE mdsZLB (
+  segmentID int(10) default NULL,
+  labID varchar(5) default NULL,
+  labIDVersion varchar(255) default NULL,
+  labAddress varchar(100) default NULL,
+  primaryLab varchar(5) default NULL,
+  primaryLabVersion varchar(5) default NULL,
+  MDSLU varchar(5) default NULL,
+  MDSLV varchar(5) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsZMC`
+--
+
+CREATE TABLE mdsZMC (
+  segmentID int(10) default NULL,
+  setID varchar(10) default NULL,
+  messageCodeIdentifier varchar(10) default NULL,
+  messageCodeVersion varchar(255) default NULL,
+  noMessageCodeDescLines varchar(30) default NULL,
+  sigFlag varchar(5) default NULL,
+  messageCodeDesc varchar(255) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsZMN`
+--
+
+CREATE TABLE mdsZMN (
+  segmentID int(10) default NULL,
+  resultMnemonic varchar(20) default NULL,
+  resultMnemonicVersion varchar(255) default NULL,
+  reportName varchar(255) default NULL,
+  units varchar(60) default NULL,
+  cumulativeSequence varchar(255) default NULL,
+  referenceRange varchar(255) default NULL,
+  resultCode varchar(20) default NULL,
+  reportForm varchar(255) default NULL,
+  reportGroup varchar(10) default NULL,
+  reportGroupVersion varchar(255) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `mdsZRG`
+--
+
+CREATE TABLE mdsZRG (
+  segmentID int(10) default NULL,
+  reportSequence varchar(255) default NULL,
+  reportGroupID varchar(10) default NULL,
+  reportGroupVersion varchar(10) default NULL,
+  reportFlags varchar(255) default NULL,
+  reportGroupDesc varchar(30) default NULL,
+  MDSIndex varchar(255) default NULL,
+  reportGroupHeading varchar(255) default NULL,
+  KEY segmentID (segmentID)
+) TYPE=MyISAM;
