@@ -15,6 +15,9 @@ import oscar.oscarFax.client.*;
 import  oscar.oscarClinic.*;
 import javax.xml.soap.*;
 import java.net.URL;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 
 import javax.mail.internet.*;
 
@@ -76,6 +79,11 @@ public class EctConsultationFaxAction extends Action {
         String SIMPLE_SAMPLE_URI = "https://67.69.12.117:14043/OSCARFaxWebService" ;
     
         System.setProperty("javax.net.ssl.trustStore", "/root/oscarFax/oscarFax.keystore");
+        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+			public boolean verify(String urlHostname, SSLSession a) {
+				return true;   
+			}
+		}); 
         
          oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm;
          reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil ();
