@@ -1,7 +1,6 @@
 <!--  
 /*
  * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
@@ -16,11 +15,6 @@
  * 
  * <OSCAR TEAM>
  * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
  */
 -->
  <%
@@ -37,6 +31,7 @@
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
+    System.out.println(session.getServletContext().getRealPath("../form/VTForm.xml"));
 %>
 
 <html:html locale="true">
@@ -48,31 +43,30 @@ Vascular Tracker
 <style type="text/css">
         a:link{
             text-decoration: none;
-            color:#FFFFFF;
+            color:#000000;
         }
 
         a:active{
             text-decoration: none;
-            color:#FFFFFF;
+            color:#000000;
         }
 
         a:visited{
             text-decoration: none;
-            color:#FFFFFF;
+            color:#000000;
         }
 
         a:hover{
             text-decoration: none;
-            color:#FFFFFF;
+            color:#000000;
         }
 
 	.Head {
             background-color:#BBBBBB;
             padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
+            padding-bottom:3px;           
             height: 30px;
-            font-size:12pt;
+            font-size:9pt;
         }
 
         .Head INPUT {
@@ -80,7 +74,7 @@ Vascular Tracker
         }
 
         .Head A {
-            font-size:12pt;
+            font-size:9pt;
         }
 
         BODY {
@@ -94,10 +88,11 @@ Vascular Tracker
         
         TD{
             font-size:9pt;
+            empty-cells:show;
         }
 
         TH{
-            font-size:10pt;
+            font-size:9pt;
             font-weight: normal;
             text-align:left;
         }
@@ -111,28 +106,38 @@ Vascular Tracker
             text-align: left;
         }
 
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
+        .title {            
             text-align: left;
-            vertical-align: top;
+            vertical-align: bottom;
+            font-weight: bold;
+            border-bottom: 3px groove #000000;
         }
-        .subTitle {
-            backgroud-color: #F2F2F2;
+        .subTitle {            
+            text-align: center;
             font-weight: bold;
-            text-align: left;
-            vertical-align: top;
+            vertical-align: bottom;
+            border-bottom: 2px groove #000000;
         }
         .note {
-            font-size:80%; 
-            color:#3366CC;
+            font-size:80%;             
         }
         .data {
             background-color:#F7F7F7;
             font-size:80%;
         }
-        
+        .eightyPercent{
+            font-size:80%;
+        }
+        .ninetyPercent{
+            font-size:90%;
+        }
+        .dataEntryTable{
+            border-style: solid;
+            border-width: 1px;
+            border-color: #BBBBBB;
+            border-collapse: collapse
+            empty-cells: show;            
+        }
         
 
     </style>
@@ -156,10 +161,11 @@ Vascular Tracker
     function onSave() {
         document.forms[0].submit.value="save";
         //var ret = checkAllDates();
-        if(ret==true)
-        {
-            ret = confirm("Are you sure you want to save this form?");
-        }
+        storeFTExamSupportData();
+        //if(ret==true)
+        //{
+            var ret = confirm("Are you sure you want to save this form?");
+        //}
         return ret;
     }
     function onExit() {
@@ -171,11 +177,12 @@ Vascular Tracker
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
-        var ret = checkAllDates();
-        if(ret == true)
-        {
-            ret = confirm("Are you sure you wish to save and close this window?");
-        }
+        storeFTExamSupportData();
+        //var ret = checkAllDates();
+        //if(ret == true)
+        //{
+            var ret = confirm("Are you sure you wish to save and close this window?");
+        //}
         return ret;
     }
 
@@ -185,24 +192,127 @@ function write2Parent(text){
     opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
  }
 
-function getDropboxValue(ctr){   
-    var selectedItem = document.forms[0].value(inputMInstrc-ctr).options[document.forms[0].value(inputMInstrc-ctr).selectedIndex].value;
-    alert("hello!");
+function showHideItem(id){ 
+    if(document.getElementById(id).style.display == 'none')
+        document.getElementById(id).style.display = 'block'; 
+    else
+        document.getElementById(id).style.display = 'none'; 
 }
 
-function popupPage(vheight,vwidth,page) { //open a new popup window
+function storeFTExamSupportData(){
+    document.getElementById('value(FTNoDate)').value = document.getElementById('FTDate').value;
+    document.getElementById('value(FTNeDate)').value = document.getElementById('FTDate').value;
+    document.getElementById('value(FTIsDate)').value = document.getElementById('FTDate').value;
+    document.getElementById('value(FTUlDate)').value = document.getElementById('FTDate').value;
+    document.getElementById('value(FTInDate)').value = document.getElementById('FTDate').value;
+    document.getElementById('value(FTOtDate)').value = document.getElementById('FTDate').value;
+    document.getElementById('value(FTReDate)').value = document.getElementById('FTDate').value;
     
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(page, "blah", windowprops);  
+    document.getElementById('value(FTNoComments)').value = document.getElementById('FTComments').value;
+    document.getElementById('value(FTNeComments)').value = document.getElementById('FTComments').value;
+    document.getElementById('value(FTIsComments)').value = document.getElementById('FTComments').value;
+    document.getElementById('value(FTUlComments)').value = document.getElementById('FTComments').value;
+    document.getElementById('value(FTInComments)').value = document.getElementById('FTComments').value;
+    document.getElementById('value(FTOtComments)').value = document.getElementById('FTComments').value;
+    document.getElementById('value(FTReComments)').value = document.getElementById('FTComments').value;
+}
+
+function controlFTExam(){
+    
+    //getElementbyId function doesn't work on these elements
+    //here is the work around
+    var e = document.forms[0].elements;
+    var ftNoId, ftNeId, ftIsId, ftInId, ftUlId, ftOtId, ftReId;
+    for(i=50; i< e.length; i++){
+        switch(e[i].name){
+            case 'value(FTNoValue)': ftNoId = i;  break;
+            case 'value(FTNeValue)': ftNeId = i;  break;
+            case 'value(FTIsValue)': ftIsId = i;  break;
+            case 'value(FTUlValue)': ftUlId = i;  break;
+            case 'value(FTInValue)': ftInId = i;  break;
+            case 'value(FTOtValue)': ftOtId = i;  break;
+            case 'value(FTReValue)': ftReId = i;  break;
+        }
+    }
+    
+    if(document.forms[0].elements[ftNoId].checked == false){
+        //enable all foot exam checkbox        
+        //alert("enable all foot exam checkboxes");
+        document.forms[0].elements[ftNeId].disabled= false;
+        document.forms[0].elements[ftIsId].disabled= false;
+        document.forms[0].elements[ftUlId].disabled= false;
+        document.forms[0].elements[ftInId].disabled= false;
+        document.forms[0].elements[ftOtId].disabled= false;
+        document.forms[0].elements[ftReId].disabled= false;
+    }
+    else{
+        //uncheck and disable all foot exam checkbox        
+        //alert("uncheck all foot exam checkboxes");
+        document.forms[0].elements[ftNeId].checked= false;
+        document.forms[0].elements[ftIsId].checked= false;
+        document.forms[0].elements[ftUlId].checked= false;
+        document.forms[0].elements[ftInId].checked= false;
+        document.forms[0].elements[ftOtId].checked= false;
+        document.forms[0].elements[ftReId].checked= false;
+        
+        //alert("disable all foot exam checkboxes");
+        document.forms[0].elements[ftNeId].disabled= true;
+        document.forms[0].elements[ftIsId].disabled= true;
+        document.forms[0].elements[ftUlId].disabled= true;
+        document.forms[0].elements[ftInId].disabled= true;
+        document.forms[0].elements[ftOtId].disabled= true;
+        document.forms[0].elements[ftReId].disabled= true;
+    }
+}
+
+function controlEyeExam(){
+    
+    //getElementbyId function doesn't work on these elements
+    //here is the work around
+    var e = document.forms[0].elements;
+    var eyeNoId, eyeHypId, eyeDiaId, eyeOthId, eyeRefId;
+    for(i=50; i< e.length; i++){
+        switch(e[i].name){
+            case 'value(iNoValue)': eyeNoId = i;  break;
+            case 'value(iHypValue)': eyeHypId = i;  break;
+            case 'value(iDiaValue)': eyeDiaId = i;  break;
+            case 'value(iOthValue)': eyeOthId = i;  break;
+            case 'value(iRefValue)': eyeRefId = i;  break;
+        }
+    }
+    
+    if(document.forms[0].elements[eyeNoId].checked == false){
+        //enable all foot exam checkbox        
+        //alert("enable all foot exam checkboxes");
+        document.forms[0].elements[eyeHypId].disabled= false;
+        document.forms[0].elements[eyeDiaId].disabled= false;
+        document.forms[0].elements[eyeOthId].disabled= false;
+        document.forms[0].elements[eyeRefId].disabled= false;
+    }
+    else{
+        //uncheck and disable all foot exam checkbox        
+        //alert("uncheck all foot exam checkboxes");
+        document.forms[0].elements[eyeHypId].checked= false;
+        document.forms[0].elements[eyeDiaId].checked= false;
+        document.forms[0].elements[eyeOthId].checked= false;
+        document.forms[0].elements[eyeRefId].checked= false;
+        
+        //alert("disable all foot exam checkboxes");
+        document.forms[0].elements[eyeHypId].disabled= true;
+        document.forms[0].elements[eyeDiaId].disabled= true;
+        document.forms[0].elements[eyeOthId].disabled= true;
+        document.forms[0].elements[eyeRefId].disabled= true;
+    }
 }
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(660,700)">
 <!--  -->
     
-    <html:form action="/oscarEncounter/oscarMeasurements/oscarForm/VTForm" enctype="multipart/form-data">    
+    <html:form action="/form/SubmitForm" enctype="multipart/form-data">    
     <link rel="stylesheet" type="text/css" href="../oscarEncounter/oscarMeasurements/styles/measurementStyle.css">    
     <link rel="stylesheet" type="text/css" media="print" href="print.css"/>
-    <table class="Head" class="hidePrint" width="100%">
+    <input type="hidden" name="value(formName)" value="VTForm"/>    
+    <table class="Head" class="hidePrint" width="640px" cellpadding="0" cellspacing="0">
         <tr>
             <td align="left">
                 <input type="hidden" name="submit" value="exit"/>
@@ -213,7 +323,7 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
             </td>
         </tr>
     </table>
-    <table>
+    <table width="640px">
         <tr>            
             <td class="subject">
                 VASCULAR TRACKER
@@ -224,67 +334,951 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                <table border=0 cellspacing=0 >
                 <tr>
                     <td>
-                        <table>
+                        <table width="640px">
                             <tr>
                                 <td>
-                                    <table>
-                                    <html:errors/>
+                                    <table width="100%">
+                                    <html:errors/>                                                      
                                         <tr>
-                                            <td>               
-                                                <tr>
-                                                    <td colspan="6">
-                                                        <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
-                                                    </td>
-                                                </tr>                                                
-                                                <tr class="title">
-                                                    <th align="left"  width="150">                                                        
-                                                    </th>                                                    
-                                                    <th align="left"  width="160">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
-                                                    </th>
-                                                    <th align="left"  width="50">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValue"/>
-                                                    </th>                                                    
-                                                    <th align="left"  width="150">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
-                                                    </th>
-                                                    <th align="left"  width="200">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
-                                                    </th>
-                                                    <th align="left"  width="10">                                                        
-                                                    </th>
-                                                 </tr>
-                                                <% int i = 0;%>
-                                                <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
-                                                <tr class="data">                          
-                                                    <th width="150" class="subTitle"><bean:write name="measurementType" property="typeDesc" /></th>
-                                                    <td><bean:write name="measurementType" property="measuringInstrc"/></td>
-                                                    <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>                                                         
-                                                    <td><html:text property='<%= "value(date-" + ctr + ")" %>' size="20"/></td>
-                                                    <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="45"/></td>
-                                                    <td width="10"></td>
-                                                    <input type="hidden" name='<%= "value(inputMInstrc-" + ctr + ")" %>' value="<bean:write name="measurementType" property="measuringInstrc"/>"/>
-                                                    <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>
-                                                    <input type="hidden" name='<%= "value(inputTypeDisplayName-" + ctr + ")" %>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>                            
-                                                    <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/>
-                                                    <% i++; %>
-                                                </tr>
-                                                <logic:present name='measurementType' property='lastMInstrc'>
-                                                <tr class="note">
-                                                    <td><bean:message key="oscarEncoutner.oscarMeasurements.msgTheLastValue"/>: </td>                                                    
-                                                    <td><bean:write name='measurementType' property='lastMInstrc'/></td>
-                                                    <td><bean:write name='measurementType' property='lastData'/></td>
-                                                    <td><bean:write name='measurementType' property='lastDateEntered'/></td>
-                                                    <td><bean:write name='measurementType' property='lastComments'/></td>                                                                                                        
-                                                    <td class="hidePrint"><img src="img/history.gif" title='<bean:message key="oscarEncounter.Index.oldMeasurements"/>' onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="measurementType" property="type" />'); return false;" /></td>
-                                                </tr>
-                                                </logic:present>
-                                                </logic:iterate>                        
-                                                <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>                                                
-                                                
+                                            <td colspan="6">
+                                                <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
                                             </td>
+                                        </tr>                                                                                
+                                        <tr>
+                                            <th class="title" colspan="5">
+                                            Vital <a href="javascript: showHideItem('vital');"> >> </a>
+                                            </th>
                                         </tr>
-                                    </table>                                    
+                                         <tr>
+                                            <td colspan="5"><table cellpadding='1' cellspacing='0' id="vital">
+                                                <tr>
+                                                    <td class="subTitle" width="35%">                                                        
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="15%">
+                                                        Last Data
+                                                    </td>
+                                                    <td class="subTitle" width="10%">
+                                                        New Data
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="15%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
+                                                    </td>
+                                                    <td class="subTitle" width="25%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td>                                                    
+                                                </tr>
+                                                <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="HTDesc"/><br><font class="eightyPercent"><bean:write name="HTMeasuringInstrc"/></font></td>   
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="HTLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HTLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HTLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>                                                        
+                                                        <logic:notPresent name="HTLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTValue)" size="8%" tabindex="1"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="WTDesc"/><br><font class="eightyPercent"><bean:write name="WTMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="WTLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="WTLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="WTLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="WTLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTValue)" size="8%" tabindex="2"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="WCDesc"/><br><font class="eightyPercent"><bean:write name="WCMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="WCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="WCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="WCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="WCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCValue)" size="8%" tabindex="3"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="HCDesc"/><br><font class="eightyPercent"><bean:write name="HCMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="HCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="HCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="8%" tabindex="4"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="BPDesc"/><br><font class="eightyPercent"><bean:write name="BPMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="BPLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="BPLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="BPLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="BPLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BPValue)" size="8%" tabindex="5"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BPDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BPComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="HRDesc"/><br><font class="eightyPercent"><bean:write name="HRMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="HRLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HRLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HRLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="HRLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HRValue)" size="8%" tabindex="6"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HRDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HRComments)" size="25%"/></td>
+                                                 </tr>
+                                            </table></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="title" colspan="5">
+                                            Lab <a href="javascript: showHideItem('lab');"> >> </a>
+                                            </th>
+                                        </tr>
+                                         <tr>
+                                            <td colspan="5"><table style="display:none" cellpadding='1' cellspacing='0' id="lab">
+                                                <tr>
+                                                    <td class="subTitle" width="35%">                                                        
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="15%">
+                                                        Last Data
+                                                    </td>
+                                                    <td class="subTitle" width="10%">
+                                                        New Data
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="15%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
+                                                    </td>
+                                                    <td class="subTitle" width="25%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td>                                                    
+                                                </tr>
+                                                <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="HbA1Desc"/><br><font class="eightyPercent"><bean:write name="HbA1MeasuringInstrc"/></font></td>   
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="HbA1LastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HbA1LastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HbA1LastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>                                                
+                                                        <logic:notPresent name="HBA1LastData">
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HbA1Value)" size="8%" tabindex="7"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HbA1Date)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HbA1Comments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="BGDesc"/><br><font class="eightyPercent"><bean:write name="BGMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="BGLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="BGLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="BGLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="BGLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGValue)" size="8%" tabindex="8"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="LDLDesc"/><br><font class="eightyPercent"><bean:write name="LDLMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="LDLLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="LDLLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="LDLLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="LDLLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(LDLValue)" size="8%" tabindex="9"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(LDLDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(LDLComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="HDLDesc"/><br><font class="eightyPercent"><bean:write name="HDLMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="HDLLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="HDLLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="HDLLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="HDLLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HDLValue)" size="8%" tabindex="10"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HDLDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HDLComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="TCHLDesc"/><br><font class="eightyPercent"><bean:write name="TCHLMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="TCHLLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="TCHLLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="TCHLLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="TCHLLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TCHLValue)" size="8%" tabindex="11"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TCHLDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TCHLComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="TRIGDesc"/><br><font class="eightyPercent"><bean:write name="TRIGMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="TRIGLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="TRIGLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="TRIGLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="TRIGLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGValue)" size="8%" tabindex="12"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="UALBDesc"/><br><font class="eightyPercent"><bean:write name="UALBMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="UALBLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="UALBLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="UALBLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="UALBLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(UALBValue)" size="8%" tabindex="13"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(UALBDate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(UALBComments)" size="25%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="24UADesc"/><br><font class="eightyPercent"><bean:write name="24UAMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="24UALastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="24UALastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="24UALastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="24UALastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(24UAValue)" size="8%" tabindex="14"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(24UADate)" size="15%"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(24UAComments)" size="25%"/></td>
+                                                 </tr>
+                                            </table></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="title" colspan="5">
+                                            Procedure <a href="javascript: showHideItem('procedure');"> >> </a>
+                                            </th>
+                                        </tr>
+                                         <tr>
+                                            <td colspan="5"><table style="display:none" cellpadding='1' cellspacing='0' id="procedure">
+                                                <tr>
+                                                    <td class="subTitle" width="30%">                                                        
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="10%">
+                                                        Last Data
+                                                    </td>
+                                                    <td class="subTitle" width="20%">
+                                                        New Data
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="15%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
+                                                    </td>
+                                                    <td class="subTitle" width="25%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td>                                                    
+                                                </tr>
+                                                <tr class="dataEntryTable">
+                                                    <th class="dataEntryTable" colspan="3">Foot Exam</th>                                                    
+                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" name="FTDate" value="<bean:write name="today"/>" size="15%"/></td>
+                                                    <td class="dataEntryTable" rowspan="8" valign="top" align="center"><textarea name="FTComments" wrap="hard" cols="20" style="height:180"></textarea></td>
+                                                </tr>
+                                                <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="FTNoDesc"/></td>   
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="FTNoLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTNoLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTNoLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>                                                
+                                                        <logic:notPresent name="FTNoLastData">
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(FTNoValue)" value="yes" onclick="javascript: controlFTExam()" tabindex="15"/>Yes
+                                                        <html:radio property="value(FTNoValue)" value="no" tabindex="15"/>No
+                                                    </td>
+                                                    <td class="dataEntryTable" rowspan="7" valign="top" align="center">&nbsp;</td>
+                                                    <html:hidden property="value(FTNoDate)"/>
+                                                    <html:hidden property="value(FTNoComments)"/>
+                                                 </tr>
+                                                 <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="FTNeDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="FTNeLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTNeLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTNeLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="FTNeLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(FTNeValue)" value="yes" tabindex="16"/>Yes
+                                                        <html:radio property="value(FTNeValue)" value="no" tabindex="16"/>No
+                                                    </td>
+                                                    <html:hidden property="value(FTNeDate)"/>
+                                                    <html:hidden property="value(FTNeComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="FTIsDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="FTIsLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTIsLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTIsLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="FTIsLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(FTIsValue)" value="yes" tabindex="17"/>Yes
+                                                        <html:radio property="value(FTIsValue)" value="no" tabindex="17"/>No
+                                                    </td>
+                                                    <html:hidden property="value(FTIsDate)"/>
+                                                    <html:hidden property="value(FTIsComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="FTUlDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="FTUlLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTUlLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTUlLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="FTUlLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(FTUlValue)" value="yes" tabindex="18"/>Yes
+                                                        <html:radio property="value(FTUlValue)" value="no" tabindex="18"/>No
+                                                    </td>
+                                                    <html:hidden property="value(FTUlDate)"/>
+                                                    <html:hidden property="value(FTUlComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="FTInDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="FTInLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTInLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTInLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="FTInLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(FTInValue)" value="yes" tabindex="19"/>Yes
+                                                        <html:radio property="value(FTInValue)" value="no" tabindex="19"/>No
+                                                    </td>
+                                                    <html:hidden property="value(FTInDate)"/>
+                                                    <html:hidden property="value(FTInComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="FTOtDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="FTOtLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTOtLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTOtLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="FTOtLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(FTOtValue)" value="yes" tabindex="20"/>Yes
+                                                        <html:radio property="value(FTOtValue)" value="no" tabindex="20"/>No
+                                                    </td>
+                                                    <html:hidden property="value(FTOtDate)" />
+                                                    <html:hidden property="value(FTOtComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="FTReDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="FTReLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="FTReLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="FTReLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="FTReLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>                                                  
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(FTReValue)" value="yes" tabindex="21"/>Yes
+                                                        <html:radio property="value(FTReValue)" value="no" tabindex="21"/>No
+                                                    </td>
+                                                    <html:hidden property="value(FTReDate)"/>
+                                                    <html:hidden property="value(FTReComments)"/>
+                                                 </tr>
+                                                 <tr class="dataEntryTable">
+                                                    <th class="dataEntryTable" colspan="3">Eye Exam</th>                                                    
+                                                    <td class="dataEntryTable" valign="top" align="center"><input type="text" name="iDate" value="<bean:write name="today"/>" size="15%"/></td>
+                                                    <td class="dataEntryTable" rowspan="8" valign="top" align="center"><textarea name="iComments" wrap="hard" cols="20" style="height:180"></textarea></td>
+                                                </tr>
+                                                <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="iNoDesc"/></td>   
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="iNoLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iNoLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iNoLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>                                                
+                                                        <logic:notPresent name="iNoLastData">
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(iNoValue)" value="yes" onclick="javascript: controlEyeExam()" tabindex="22"/>Yes
+                                                        <html:radio property="value(iNoValue)" value="no" tabindex="22"/>No
+                                                    </td>
+                                                    <td class="dataEntryTable" rowspan="7" valign="top" align="center">&nbsp;</td>
+                                                    <html:hidden property="value(iNoDate)"/>
+                                                    <html:hidden property="value(iNoComments)"/>
+                                                 </tr>
+                                                 <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="iHypDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="iHypLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iHypLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iHypLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="iHypLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(iHypValue)" value="yes" tabindex="23"/>Yes
+                                                        <html:radio property="value(iHypValue)" value="no" tabindex="23"/>No
+                                                    </td>
+                                                    <html:hidden property="value(iHypDate)"/>
+                                                    <html:hidden property="value(iHypComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="iDiaDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="iDiaLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iDiaLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iDiaLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="FTIsLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(iDiaValue)" value="yes" tabindex="24"/>Yes
+                                                        <html:radio property="value(iDiaValue)" value="no" tabindex="24"/>No
+                                                    </td>
+                                                    <html:hidden property="value(iDiaDate)"/>
+                                                    <html:hidden property="value(iDiaComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="iOthDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="iOthLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iOthLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iOthLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="iOthLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(iOthValue)" value="yes" tabindex="25"/>Yes
+                                                        <html:radio property="value(iOthValue)" value="no" tabindex="25"/>No
+                                                    </td>
+                                                    <html:hidden property="value(iOthDate)"/>
+                                                    <html:hidden property="value(iOthComments)"/>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="iRefDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="iRefLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="iRefLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="iRefLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="iRefLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(iRefValue)" value="yes" tabindex="26"/>Yes
+                                                        <html:radio property="value(iRefValue)" value="no" tabindex="26"/>No
+                                                    </td>
+                                                    <html:hidden property="value(iRefDate)"/>
+                                                    <html:hidden property="value(iRefComments)"/>
+                                                 </tr>                                                 
+                                            </table></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="title" colspan="5">
+                                            Risk Factor <a href="javascript: showHideItem('riskFactor');"> >> </a>
+                                            </th>
+                                        </tr>
+                                         <tr>
+                                            <td colspan="5"><table style="display:none" cellpadding='1' cellspacing='0' id="riskFactor">
+                                                <tr>
+                                                    <td class="subTitle" width="40%">                                                        
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="10%">
+                                                        Last Data
+                                                    </td>
+                                                    <td class="subTitle" width="15%">
+                                                        New Data
+                                                    </td>                                                                                                        
+                                                    <td class="subTitle" width="35%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td>                                                    
+                                                </tr>
+                                                <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="SmkSDesc"/><br><font class="eightyPercent"><bean:write name="SmkSMeasuringInstrc"/></font></td>   
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="SmkSLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="SmkSLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="SmkSLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>                                                
+                                                        <logic:notPresent name="SmkSLastData">
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmkSValue)" size="10%" tabindex="7"/></td>
+                                                    <html:hidden property="value(SmkSDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmkSComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="SmkHDesc"/><br><font class="eightyPercent"><bean:write name="SmkHMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="SmkHLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="SmkHLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="SmkHLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="SmkHLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmkHValue)" size="10%" tabindex="8"/></td>
+                                                    <html:hidden property="value(SmkHDate)" />
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmkHComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="SmkCDesc"/><br><font class="eightyPercent"><bean:write name="SmkCMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="SmkCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="SmkCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="SmkCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="SmkCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmkCValue)" size="10%" tabindex="9"/></td>
+                                                    <html:hidden property="value(SmkCDate)" />
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmkCComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="ExerDesc"/><br><font class="eightyPercent"><bean:write name="ExerMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="ExerLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="ExerLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="ExerLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="ExerLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(ExerValue)" size="10%" tabindex="10"/></td>
+                                                    <html:hidden property="value(ExerDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(ExerComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="DietDesc"/><br><font class="eightyPercent"><bean:write name="DietMeasuringInstrc"/></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="DietLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="DietLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="DietLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="DietLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(DietValue)" size="10%" tabindex="11"/></td>
+                                                    <html:hidden property="value(DietDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(DietComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="DpScDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="DpScLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="DpScLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="DpScLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="DpScLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(DpScValue)" value="yes" tabindex="12"/>Yes
+                                                        <html:radio property="value(DpScValue)" value="no" tabindex="12"/>No
+                                                    </td>
+                                                    <html:hidden property="value(DpScDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(DpScComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="StScDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="StScLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="StScLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="StScLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="StScLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(StScValue)" value="Yes" tabindex="13"/>Yes 
+                                                        <html:radio property="value(StScValue)" value="No" tabindex="13"/>No 
+                                                    </td>
+                                                    <html:hidden property="value(StScDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(StScComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="LcCtDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="LcCtLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="LcCtLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="LcCtLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="LcCtLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(LcCtValue)" value="yes" tabindex="14"/>Yes 
+                                                        <html:radio property="value(LcCtValue)" value="no" tabindex="14"/>No 
+                                                    </td>
+                                                    <html:hidden property="value(LcCtDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(LcCtComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="MedGDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="MedGLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedGLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedGLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="MedGLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(MedGValue)" value="yes" tabindex="14"/>Yes 
+                                                        <html:radio property="value(MedGValue)" value="no" tabindex="14"/>No 
+                                                    </td>
+                                                    <html:hidden property="value(MedGDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(MedGComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="MedNDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="MedNLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedNLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedNLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="MedNLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(MedNValue)" value="yes" tabindex="14"/>Yes 
+                                                        <html:radio property="value(MedNValue)" value="no" tabindex="14"/>No
+                                                    </td>
+                                                    <html:hidden property="value(MedNDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(MedNComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="MedRDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="MedRLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedRLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedRLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="MedRLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(MedRValue)" value="yes" tabindex="14"/>Yes 
+                                                        <html:radio property="value(MedRValue)" value="no" tabindex="14"/>No 
+                                                    </td>
+                                                    <html:hidden property="value(MedRDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(MedRComments)" size="30%"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="MedADesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="MedALastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="MedALastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="MedALastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="MedALastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <html:radio property="value(MedAValue)" value="yes" tabindex="14"/>Yes
+                                                        <html:radio property="value(MedAValue)" value="no" tabindex="14"/>No
+                                                    </td>
+                                                    <html:hidden property="value(MedADate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(MedAComments)" size="30%"/></td>
+                                                 </tr>
+                                            </table></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="title" colspan="5">
+                                            Counseling <a href="javascript: showHideItem('counseling');"> >> </a>
+                                            </th>
+                                        </tr>
+                                         <tr>
+                                            <td colspan="5"><table style="display:none" cellpadding='1' cellspacing='0' id="counseling">
+                                                <tr>
+                                                    <td class="subTitle" width="30%">                                                        
+                                                    </td>                                                    
+                                                    <td class="subTitle" width="10%">
+                                                        Last Data
+                                                    </td>
+                                                    <td class="subTitle" width="10%">                                                        
+                                                    </td>                                                                                                        
+                                                    <td class="subTitle" width="50%">
+                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                    </td>                                                    
+                                                </tr>
+                                                <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="NtrCDesc"/></td>   
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="NtrCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="NtrCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="NtrCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>                                                        
+                                                        <logic:notPresent name="NtrCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(NtrCValue)" tabindex="1"/></td>
+                                                    <html:hidden property="value(NtrCDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(NtrCComments)" size="45"/></td>
+                                                 </tr>
+                                                 <tr class="dataEntryTable">
+                                                    <td class="dataEntryTable"><bean:write name="ExeCDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="ExeCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="ExeCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="ExeCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="ExeCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(ExeCValue)" tabindex="2"/></td>
+                                                    <html:hidden property="value(ExeCDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(ExeCComments)" size="45"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="SmCCDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="SmCCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="SmCCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="SmCCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="SmCCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(SmCCValue)" tabindex="3"/></td>
+                                                    <html:hidden property="value(SmCCDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmCCComments)" size="45"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="DiaCDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="DiaCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="DiaCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="DiaCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="DiaCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(DiaCValue)" tabindex="4"/></td>
+                                                    <html:hidden property="value(DiaCDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(DiaCComments)" size="45"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="PsyCDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="PsyCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="PsyCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="PsyCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="PsyCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(PsyCValue)" tabindex="5"/></td>
+                                                    <html:hidden property="value(PsyCDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(PsyCComments)" size="45"/></td>
+                                                 </tr>
+                                                 <tr>
+                                                    <td class="dataEntryTable"><bean:write name="OthCDesc"/></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="OthCLastData">
+                                                        <table cellpadding='0' cellspacing='0'>
+                                                            <tr><td class="eightyPercent" align="left"><bean:write name="OthCLastDataEnteredDate"/></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><bean:write name="OthCLastData"/></td></tr>
+                                                        </table>
+                                                        </logic:present>
+                                                        <logic:notPresent name="OthCLastData">    
+                                                            &nbsp;
+                                                        </logic:notPresent>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(OthCValue)" tabindex="6"/></td>
+                                                    <html:hidden property="value(OthCDate)"/>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(OthCComments)" size="45"/></td>
+                                                 </tr>
+                                            </table></td>
+                                        </tr>
                                 </td>   
                             </tr>
                         </table>
