@@ -31,6 +31,7 @@ package oscar.eform;
 import java.io.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
+import java.util.ResourceBundle;
 
 /**
  * Class UploadServlet is a servlet to upload the text/html file to the database
@@ -55,12 +56,13 @@ public class UploadServlet extends HttpServlet{
     DataInputStream in=null;
     FileOutputStream fileOut=null;
 
+    ResourceBundle messages = ResourceBundle.getBundle("oscarResources", request.getLocale());
     try   {
       response.setContentType("text/html");
       out = response.getOutputStream();
     }  catch (IOException e)  {
-      System.out.println("Error getting output stream.");
-      System.out.println("Error description: " + e);
+      System.out.println(messages.getString("eform.uploadServlet.errIO"));
+      System.out.println(messages.getString("eform.uploadServlet.errDesc") + ": " + e);
       return;
     }
 
@@ -78,7 +80,7 @@ public class UploadServlet extends HttpServlet{
         while (totalBytesRead < formDataLength) {
           sizeCheck = totalBytesRead + in.available();
           if (sizeCheck > MAX_SIZE) {
-            out.println("Sorry, file is too large to upload.");
+            out.println(messages.getString("eform.uploadServlet.errBig"));
             return;
           }
           bytesRead = in.read(dataBytes, totalBytesRead, formDataLength);
@@ -143,17 +145,17 @@ public class UploadServlet extends HttpServlet{
 	      out.println("</script>");
         out.println("</head>");
         out.println("<body>");
-        out.println("File upload successfully.<br> Please wait for 1 seconds ."); 
+        out.println(messages.getString("eform.uploadServlet.msgOk")); 
         out.println("</body>");
  
       } //end if
     } catch(Exception e)    {
       try {
         //print error message to standard out
-        System.out.println("Error in doPost: " + e);
+        System.out.println(messages.getString("eform.uploadServlet.errdoPost") + e);
         //send error message to client
-        out.println("An unexpected error has occurred.");
-        out.println("Error description: " + e);
+        out.println(messages.getString("eform.uploadServlet.errUnexpec"));
+	out.println(messages.getString("eform.uploadServlet.errDesc") + ": " + e);
       } catch (Exception f) {}
     }
   }
