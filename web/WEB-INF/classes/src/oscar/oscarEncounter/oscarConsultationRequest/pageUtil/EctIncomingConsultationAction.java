@@ -41,9 +41,10 @@ public class EctIncomingConsultationAction extends Action {
         EctSessionBean bean = new EctSessionBean();
         bean.providerNo = providerNo;
         EctSessionBean abean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        if(abean == null)
+        if(abean == null) {
             bean.unsetConsultationRequestId();
-        request.getSession().setAttribute("EctSessionBean", bean);
+            request.getSession().setAttribute("EctSessionBean", bean);
+        }
         return mapping.findForward("success");
     }
 }
