@@ -40,32 +40,39 @@
         }
         return ret;
     }
+
+    function reloadEncounter(){
+        //formLocationHref = this.location.href;
+        formWindow = this;
+        //alert(formWindow.name);
+        var tmpEn = window.opener.document.forms['encForm'].enTextarea.value;
+        var tmpSh = window.opener.document.forms['encForm'].shTextarea.value;
+        var tmpFh = window.opener.document.forms['encForm'].fhTextarea.value;
+        var tmpMh = window.opener.document.forms['encForm'].mhTextarea.value;                
+        var ectWindow = window.opener;
+        window.opener.location.reload();
+        
+        //window.focus();
+        alert("The form saved successfully!");
+        window.opener.document.forms['encForm'].enTextarea.value = tmpEn;
+        window.opener.document.forms['encForm'].shTextarea.value = tmpSh;
+        window.opener.document.forms['encForm'].fhTextarea.value = tmpFh;
+        window.opener.document.forms['encForm'].mhTextarea.value = tmpMh;
+    }
+
+    
     function onSave() {
         document.forms[0].submit.value="save";                
         
         var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField) && areInRange(0, allMatch);                       
 
         if(ret==true) {                        
-            ret = confirm("Are you sure you want to save this form?");
-        }
-        if(ret == true){
-            window.opener.location.reload();
-            //window.opener.location.href = window.opener.location.href;
-            //if (window.opener.progressWindow)
-            //{
-            //    window.opener.progressWindow.close()
-            //} 
-        }  
+            ret = confirm("Are you sure you want to save this form?");            
+        }                
         return ret;
     }
     function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true) {        
-            window.opener.location.reload();
-            //window.opener.location.href = window.opener.location.href;
-            //if (window.opener.progressWindow)
-            //{
-            //    window.opener.progressWindow.close()
-            //}         
+        if(confirm("Are you sure you wish to exit without saving your changes?")==true) {            
             window.close();
         }
         return(false);
@@ -76,15 +83,7 @@
         var ret = is1CheckboxChecked(0, choiceFormat) && allAreNumeric(0, allNumericField) && areInRange(0, allMatch);                       
         if(ret == true) {            
             ret = confirm("Are you sure you wish to save and close this window?");
-        }
-        if(ret == true){
-            window.opener.location.reload();
-            //window.opener.location.href = window.opener.location.href;
-            //if (window.opener.progressWindow)
-            //{
-            //    window.opener.progressWindow.close()
-            //} 
-        }        
+        }     
         return ret;
     }
     function popupPage(varpage) {
