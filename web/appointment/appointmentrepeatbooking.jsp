@@ -221,13 +221,13 @@ function onSub() {
 //-->
 </SCRIPT>
   <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar-win2k-cold-1.css" title="win2k-cold-1" />
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
   <!-- main calendar program -->
   <script type="text/javascript" src="../share/calendar/calendar.js"></script>
 
   <!-- language for the calendar -->
-  <script type="text/javascript" src="../share/calendar/calendar-en.js"></script>
+  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
@@ -289,7 +289,7 @@ for (int i = 1; i < 12; i++) {
 	<font size="-1">(dd/mm/yyyy)</font>
 	</td>
 	<td nowrap valign="top">
-	<input type="text" name="endDate" size="10" value="<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy")%>" readonly>
+	<input type="text" id="endDate" name="endDate" size="10" value="<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy")%>" readonly>
 	</td>
 </tr>
 </table>
