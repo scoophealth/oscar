@@ -36,7 +36,7 @@ import oscar.util.*;
 import java.util.ResourceBundle;
 public class EctSaveEncounterAction extends Action {
 
-    public ActionForward perform(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest httpservletrequest, HttpServletResponse httpservletresponse)
+    public ActionForward execute(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest httpservletrequest, HttpServletResponse httpservletresponse)
     throws IOException, ServletException  {
         //UtilDateUtilities dateutilities = new UtilDateUtilities();
         EctSessionBean sessionbean = null;
@@ -49,6 +49,7 @@ public class EctSaveEncounterAction extends Action {
         sessionbean.encounter = httpservletrequest.getParameter("enTextarea");
         sessionbean.subject = httpservletrequest.getParameter("subject");
         java.util.Date date = UtilDateUtilities.Today();               
+        sessionbean.eChartTimeStamp = date;
         
         if(!httpservletrequest.getParameter("btnPressed").equals("Exit")) {            
             try {
