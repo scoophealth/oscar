@@ -277,7 +277,7 @@ INSERT INTO encounterForm VALUES ('CESD', '../form/formCESD.jsp?demographic_no='
 INSERT INTO encounterForm VALUES ('Caregiver', '../form/formcaregiver.jsp?demographic_no=','formCaregiver',25);
 INSERT INTO encounterForm VALUES ('Grip Strength', '../form/formgripstrength.jsp?demographic_no=','formGripStrength',26);
 INSERT INTO encounterForm VALUES ('Treatment Preference', '../form/formtreatmentpreference.jsp?demographic_no=','formTreatmentPreference',27);
-INSERT INTO encounterForm VALUES ('Caregiver - SF36', '../form/formcaregiver.jsp?demographic_no=','formCaregiver',28);
+INSERT INTO encounterForm VALUES ('Caregiver - SF36', '../form/formSF36caregiver.jsp?demographic_no=','formSF36Caregiver',28);
 
 --
 -- Dumping data for table 'encountertemplate'
