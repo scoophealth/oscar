@@ -401,6 +401,14 @@ public String space(int i) {
         String returnZeroValue = forwardZero(y.replaceAll("\\.",""),x);
         return cutFrontString(returnZeroValue,x);                
     }
+    
+    public static String moneyFormat(String str){       
+        String moneyStr = "0.00";
+        try{             
+            moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
+        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+    return moneyStr;
+    }
     ///
 
 
