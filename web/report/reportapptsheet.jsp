@@ -30,6 +30,7 @@
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.appointment_date, a.start_time") ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -45,7 +46,7 @@
 %>
 <html>
 <head>
-<title>BAD APPT SHEET </title>
+<title><bean:message key="report.reportapptsheet.title"/></title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" >
@@ -97,9 +98,9 @@ function refresh() {
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica">BAD APPT SHEET</font></th>
+  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportapptsheet.title"/></font></th>
     <th width="10%" nowrap><%=createtime%> 
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+      <input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="window.close()"></th></tr>
 </table>
 <%
   boolean bFistL = true; //first line in a table for TH
@@ -145,11 +146,11 @@ function refresh() {
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.appointment_date">Appt Date</a></b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time">Start Time</a> </b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.end_time">End Time</a> </b></TH>
-<TH width="10%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.name">Patient's Name</a></b></TH>
-<TH width="30%"><b>Comments</b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.appointment_date"><bean:message key="report.reportapptsheet.msgApptDate"/></a></b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time"><bean:message key="report.reportapptsheet.msgStartTime"/></a> </b></TH>
+<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.end_time"><bean:message key="report.reportapptsheet.msgEndTime"/></a> </b></TH>
+<TH width="10%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.name"><bean:message key="report.reportapptsheet.msgName"/></a></b></TH>
+<TH width="30%"><b><bean:message key="report.reportapptsheet.msgComments"/></b></TH>
 </tr>
 <%
     }
