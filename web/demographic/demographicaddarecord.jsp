@@ -154,8 +154,8 @@
     
     rs = apptMainBean.queryResults(param1, "search_demoaddno");
     if(rs.next()) { //
-      //add democust record for alert
-      String[] param2 =new String[6];
+        //add democust record for alert
+        String[] param2 =new String[6];
 	    param2[0]=rs.getString("demographic_no");
 	    param2[1]=request.getParameter("cust1");
 	    param2[2]=request.getParameter("cust2");
@@ -163,7 +163,30 @@
 	    param2[4]=request.getParameter("cust4");
 	    param2[5]=request.getParameter("content");
 	    System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
-      rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
+        rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
+      
+      
+	  	if (request.getParameter("dboperation2") != null) {
+	  	  	String[] parametros = new String[13];
+  	  	
+	  	  	parametros[0]=rs.getString("demographic_no");
+	  	  	parametros[1]=request.getParameter("cpf");
+	  	  	parametros[2]=request.getParameter("rg");
+	  	  	parametros[3]=request.getParameter("chart_address");
+	  	  	parametros[4]=request.getParameter("marriage_certificate");
+	  	  	parametros[5]=request.getParameter("birth_certificate");
+	  	  	parametros[6]=request.getParameter("marital_state");
+	  	  	parametros[7]=request.getParameter("partner_name");
+	  	  	parametros[8]=request.getParameter("father_name");
+	  	  	parametros[9]=request.getParameter("mother_name");
+	  	  	parametros[10]=request.getParameter("district");
+	  	  	parametros[11]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
+	  	  	parametros[12]=request.getParameter("complementary_address");
+  	
+  	
+	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros, request.getParameter("dboperation2")); //add_record
+	  	}
+      
     }
     
 %>

@@ -16,7 +16,7 @@
     </table>
 <%
   ResultSet rs = null;
-
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
 
   //if action is good, then give me the result
     String[] param =new String[27];
@@ -61,25 +61,71 @@
 	    param1[2]=request.getParameter("alert");
 	    param1[3]="<unotes>"+ request.getParameter("notes")+"</unotes>";
 	    param1[4]=request.getParameter("demographic_no");
-      rowsAffected = apptMainBean.queryExecuteUpdate(param1, "update_custrecord");
+        rowsAffected = apptMainBean.queryExecuteUpdate(param1, "update_custrecord");
+        
     } else { //add
-      String[] param2 =new String[6];
+	    String[] param2 =new String[6];
 	    param2[0]=request.getParameter("demographic_no");
 	    param2[1]=request.getParameter("resident");
 	    param2[2]=request.getParameter("nurse");
 	    param2[3]=request.getParameter("alert");
 	    param2[4]="";
 	    param2[5]="<unotes>"+ request.getParameter("notes")+"</unotes>";
-      rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord");
+        rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord");
     }
+    if (vLocale.getCountry().equals("BR")) {
+	    //find the demographic_ptbr record for update
+	    rs = apptMainBean.queryResults(request.getParameter("demographic_no"),"search_demographic_ptbr");
+	    if(rs.next() ) { //update
+	  	 	String[] parametros = new String[13];
+  	  	
+	  	  	parametros[0]=request.getParameter("cpf");
+	  	  	parametros[1]=request.getParameter("rg");
+	  	  	parametros[2]=request.getParameter("chart_address");
+	  	  	parametros[3]=request.getParameter("marriage_certificate");
+	  	  	parametros[4]=request.getParameter("birth_certificate");
+	  	  	parametros[5]=request.getParameter("marital_state");
+	  	  	parametros[6]=request.getParameter("partner_name");
+	  	  	parametros[7]=request.getParameter("father_name");
+	  	  	parametros[8]=request.getParameter("mother_name");
+	  	  	parametros[9]=request.getParameter("district");
+	  	  	parametros[10]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
+	  	  	parametros[11]=request.getParameter("complementary_address");
+	  	  	parametros[12]=request.getParameter("demographic_no");
+  	
+	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros,"update_record_ptbr");
+    
+	    }else{//add
+	 	 	String[] parametros = new String[13];
+	  	  	
+	  	  	parametros[0]=request.getParameter("demographic_no");
+	  	  	parametros[1]=request.getParameter("cpf");
+	  	  	parametros[2]=request.getParameter("rg");
+	  	  	parametros[3]=request.getParameter("chart_address");
+	  	  	parametros[4]=request.getParameter("marriage_certificate");
+	  	  	parametros[5]=request.getParameter("birth_certificate");
+	  	  	parametros[6]=request.getParameter("marital_state");
+	  	  	parametros[7]=request.getParameter("partner_name");
+	  	  	parametros[8]=request.getParameter("father_name");
+	  	  	parametros[9]=request.getParameter("mother_name");
+	  	  	parametros[10]=request.getParameter("district");
+	  	  	parametros[11]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
+	  	  	parametros[12]=request.getParameter("complementary_address");
+  	
+  	
+	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros,"add_record_ptbr");
+	    }
+	}
 %>
   <h2> Update a Provider Record Successfully ! 
   <p><a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%= request.getParameter("demographic_no") %></a>
   </h2>
+<%--
 <script LANGUAGE="JavaScript">
      	self.opener.refresh();
       //self.close();
 </script>
+--%>
 <%  
     response.sendRedirect("search.jsp");
   } else {

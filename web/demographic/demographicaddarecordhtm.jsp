@@ -17,6 +17,8 @@
   };
   String[][] responseTargets=new String[][] {  };
   addDemoBean.doConfigure(dbParams,dbQueries,responseTargets);
+  
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
 %>
 
 <html:html locale="true">
@@ -26,7 +28,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
 <script language="JavaScript">
-<!--
+
 function setfocus() {
   this.focus();
   document.adddemographic.last_name.focus();
@@ -73,7 +75,7 @@ function checkTypeIn() {
 	if(!typeInOK) alert ("<bean:message key="demographic.demographicaddrecordhtm.msgMissingFields"/>");
 	return typeInOK;
 }
-//-->
+
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -85,7 +87,7 @@ function checkTypeIn() {
 	  </tr>
 	</table>
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">
-	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="checkTypeIn()">
+	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="checkTypeIn()">
 		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.demographicaddrecordhtm.msgSearch"/>
         </i></b></font></td>
 			
@@ -122,7 +124,7 @@ function checkTypeIn() {
 </table>
 
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
-  <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onSubmit="return(checkTypeIn())">
+  <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkTypeIn()">
     <tr> 
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left"> 
@@ -133,16 +135,81 @@ function checkTypeIn() {
         <input type="text" name="first_name" onBlur="upCaseCtrl(this)">
       </td>
     </tr>
+    <% 
+    if (vLocale.getCountry().equals("BR")) { %>  
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formRG"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="rg" onBlur="upCaseCtrl(this)">
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formCPF"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="cpf" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formMaritalState"/>:</b></td>
+      <td align="left"> 
+        <select name="marital_state">
+            <option value="-">-</option>
+        	<option value="S"><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSingle"/></option>
+        	<option value="M"><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optMarried"/></option>
+        	<option value="R"><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSeparated"/></option>
+        	<option value="D"><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optDivorced"/></option>
+        	<option value="W"><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optWidower"/></option>
+        </select>
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formBirthCertificate"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="birth_certificate" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formMarriageCertificate"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="marriage_certificate" onBlur="upCaseCtrl(this)">
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPartnerName"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="partner_name" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formFatherName"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="father_name" onBlur="upCaseCtrl(this)">
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formMotherName"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="mother_name" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <%}%> 
     <tr valign="top"> 
       <td  align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formAddress"/>: </b></td>
       <td align="left" > 
-        <input type="text" name="address">
+        <input type="text" name="address"><% if (vLocale.getCountry().equals("BR")) { %>
+        <b><bean:message key="demographic.demographicaddrecordhtm.formAddressNo"/>:</b>
+        <input type="text" name="address_no" size="6">        
+        <%}%>
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formCity"/>: </b></td>
       <td align="left"> 
         <input type="text" name="city">
       </td>
     </tr>
+    <% if (vLocale.getCountry().equals("BR")) { %>
+    <tr valign="top"> 
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formComplementaryAddress"/>: </b> </td>
+      <td  align="left"> 
+        <input type="text" name="complementary_address" onBlur="upCaseCtrl(this)">
+      </td>
+      <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDistrict"/>: </b> </td>
+      <td  align="left"> 
+        <input type="text" name="district" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <%}%>
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formprovince"/>: </b> </td>
       <td  align="left"> 
@@ -153,6 +220,7 @@ function checkTypeIn() {
         <input type="text" name="postal" onBlur="upCaseCtrl(this)">
       </td>
     </tr>
+    
     <tr valign="top"> 
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPhoneHome"/>: </b> </td>
       <td align="left" > 
@@ -362,6 +430,18 @@ function checkTypeIn() {
         <input type="text" name="chart_no" value="">
       </td>
     </tr>
+    <% 
+    if (vLocale.getCountry().equals("BR")) { %>  
+    <tr valign="top"> 
+      <td align="right"><b></b></td>
+      <td align="left" > 
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartAddress"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="chart_address" value="">
+      </td>
+    </tr>
+    <%}%>
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDateJoined"/></b><b>: </b></td>
       <td align="left" > 
@@ -399,7 +479,15 @@ function checkTypeIn() {
       <td colspan="4"> 
         <div align="center"> 
           <input type="hidden" name="dboperation" value="add_record">
+          <% 
+          if (vLocale.getCountry().equals("BR")) { %>  
+          <input type="hidden" name="dboperation2" value="add_record_ptbr">          
+          <%}%> 
+<%--
           <input type="submit" name="displaymode" value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>" onclick="document.forms['adddemographic'].displaymode.value='Add Record'; document.forms['adddemographic'].submit();">
+--%>          
+          <input type="hidden" name="displaymode" value="Add Record">
+          <input type="submit" name="submit" value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>">
           <input type="button" name="Button" value="<bean:message key="demographic.demographicaddrecordhtm.btnSwipeCard"/>" onclick="window.open('zadddemographicswipe.htm','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>
           &nbsp; 
           <input type="button" name="Button" value="<bean:message key="demographic.demographicaddrecordhtm.btnCancel"/>" onclick=self.close();>

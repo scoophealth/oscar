@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="../web.css" />
 
 <script language="JavaScript">
-<!--
+
 function rs(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=360,left=30";
   remote=window.open(u,n,args);
@@ -144,7 +144,7 @@ function checkPhoneNum() {
   document.updatedelete.phone.value = typeIn ;
 }
 
-//-->
+
 </script>
 
 </head>
@@ -179,7 +179,7 @@ function checkPhoneNum() {
 	int age=0, dob_year=0, dob_month=0, dob_date=0;
   
 	int param = Integer.parseInt(demographic_no);
- 
+	
 	rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
 	if(rs==null) {
 		out.println("failed!!!");
@@ -236,16 +236,82 @@ function checkPhoneNum() {
         <input type="text" name="first_name" value="<%=rs.getString("first_name")%>" onBlur="upCaseCtrl(this)">
       </td>
     </tr>
+    
+    <% 
+    if (vLocale.getCountry().equals("BR")) { %>  
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formRG"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="rg" value="<%=rs.getString("rg")==null?"":rs.getString("rg")%>" onBlur="upCaseCtrl(this)">
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formCPF"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="cpf" value="<%=rs.getString("cpf")==null?"":rs.getString("cpf")%>" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formMaritalState"/>:</b></td>
+      <td align="left"> 
+        <select name="marital_state">
+            <option value="-">-</option>
+        	<option value="S" <%if (rs.getString("marital_state").trim().equals("S")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSingle"/></option>
+        	<option value="M" <%if (rs.getString("marital_state").trim().equals("M")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optMarried"/></option>
+        	<option value="R" <%if (rs.getString("marital_state").trim().equals("R")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optSeparated"/></option>
+        	<option value="D" <%if (rs.getString("marital_state").trim().equals("D")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optDivorced"/></option>
+        	<option value="W" <%if (rs.getString("marital_state").trim().equals("W")){%> selected <%}%>><bean:message key="demographic.demographicaddrecordhtm.formMaritalState.optWidower"/></option>
+        </select>
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formBirthCertificate"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="birth_certificate" value="<%=rs.getString("birth_certificate")==null?"":rs.getString("birth_certificate")%>" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formMarriageCertificate"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="marriage_certificate" value="<%=rs.getString("marriage_certificate")==null?"":rs.getString("marriage_certificate")%>" onBlur="upCaseCtrl(this)">
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPartnerName"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="partner_name" value="<%=rs.getString("partner_name")==null?"":rs.getString("partner_name")%>" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formFatherName"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="father_name" value="<%=rs.getString("father_name")==null?"":rs.getString("father_name")%>" onBlur="upCaseCtrl(this)">
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formMotherName"/>:</b> </td>
+      <td align="left"> 
+        <input type="text" name="mother_name" value="<%=rs.getString("mother_name")==null?"":rs.getString("mother_name")%>" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <%}%> 
     <tr valign="top"> 
       <td  align="right"> <b><bean:message key="demographic.demographiceditdemographic.formAddr"/>: </b></td>
       <td align="left" > 
-        <input type="text" name="address" value="<%=rs.getString("address")%>">
+        <input type="text" name="address" value="<%=rs.getString("address")%>"><% if (vLocale.getCountry().equals("BR")) { %>
+        <b><bean:message key="demographic.demographicaddrecordhtm.formAddressNo"/>:</b>
+        <input type="text" name="address_no" value="<%=rs.getString("address_no")==null?"":rs.getString("address_no")%>" size="6">        
+        <%}%>
       </td>
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formCity"/>: </b></td>
       <td align="left"> 
         <input type="text" name="city" value="<%=rs.getString("city")%>">
       </td>
     </tr>
+    <% if (vLocale.getCountry().equals("BR")) { %>
+    <tr valign="top"> 
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formComplementaryAddress"/>: </b> </td>
+      <td  align="left"> 
+        <input type="text" name="complementary_address" value="<%=rs.getString("complementary_address")==null?"":rs.getString("complementary_address")%>" onBlur="upCaseCtrl(this)">
+      </td>
+      <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDistrict"/>: </b> </td>
+      <td  align="left"> 
+        <input type="text" name="district" value="<%=rs.getString("district")==null?"":rs.getString("district")%>" onBlur="upCaseCtrl(this)">
+      </td>
+    </tr>
+    <%}%>
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formProcvince"/>: </b> </td>
       <td  align="left"> 
@@ -426,6 +492,18 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         <input type="text" name="chart_no" value="<%=rs.getString("chart_no")%>">
       </td>
     </tr>
+    <% 
+    if (vLocale.getCountry().equals("BR")) { %>  
+    <tr valign="top"> 
+      <td align="right"><b></b></td>
+      <td align="left" > 
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartAddress"/>:</b></td>
+      <td align="left"> 
+        <input type="text" name="chart_address" value="<%=rs.getString("chart_address")==null?"":rs.getString("chart_address")%>">
+      </td>
+    </tr>
+    <%}%>
     <tr valign="top"> 
       <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
       <td align="left" > 
@@ -476,6 +554,10 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
           <tr> 
             <td width="30%"> 
               <input type="hidden" name="dboperation" value="update_record">
+	          <% 
+	          if (vLocale.getCountry().equals("BR")) { %>  
+	          <input type="hidden" name="dboperation2" value="update_record_ptbr">          
+	          <%}%> 
               <input type="button" name="Button" value="<bean:message key="global.btnBack" />" onclick=history.go(-1);>
               <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onclick=self.close();>
             </td>

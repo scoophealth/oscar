@@ -69,6 +69,8 @@ function checkTypeIn() {
 <TH width="10%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=phone&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnPhone"/></a></b></font></TH>
 </tr>
 <%
+    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+    
 	GregorianCalendar now=new GregorianCalendar();
 	int curYear = now.get(Calendar.YEAR);
 	int curMonth = (now.get(Calendar.MONTH)+1);
@@ -120,7 +122,14 @@ function checkTypeIn() {
 			//}	
 %>
 <tr bgcolor="<%=bodd?"white":"#EEEEFF"%>">
-      <td align="center"> <a href="demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("demographic_no")%></a></td>
+      <td align="center"> 
+	    <% 	
+	    if (vLocale.getCountry().equals("BR")) { %>  
+	       	<a href="demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr"><%=rs.getString("demographic_no")%></a>
+	    <%}else{%>
+			<a href="demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("demographic_no")%></a>	        
+		<%}%>
+      </td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
       <td align="center"><%=rs.getString("chart_no")==null||rs.getString("chart_no").equals("")?"&nbsp;":rs.getString("chart_no")%></td>
@@ -154,6 +163,8 @@ function checkTypeIn() {
 <%
 }
 %>
+
+<p><a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message key="demographic.search.btnCreateNew"/></font></b></a></p><br>
 <p><bean:message key="demographic.demographicsearchresults.msgClick"/></p></center>
 </body>
 </html:html>
