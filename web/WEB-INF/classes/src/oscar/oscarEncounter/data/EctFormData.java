@@ -39,7 +39,7 @@ public class EctFormData {
         ResultSet rs = db.GetSQL(sql);
 
         while(rs.next()) {
-            Form frm = new Form(rs.getString("form_name"), rs.getString("form_value"), rs.getString("form_table"));
+            Form frm = new Form(rs.getString("form_name"), rs.getString("form_value"), rs.getString("form_table"), (rs.getString("hidden").equals("1")?false:true));
             forms.add(frm);
         }
 
@@ -55,12 +55,14 @@ public class EctFormData {
         private String formName;
         private String formPage;
         private String formTable;
+        private boolean hidden;
 
         //Constructor
-        public Form(String formName, String formPage, String formTable) {
+        public Form(String formName, String formPage, String formTable, boolean hidden) {
             this.formName = formName;
             this.formPage = formPage;
             this.formTable = formTable;
+            this.hidden = hidden;
         }
 
         public String getFormName() {
@@ -71,6 +73,10 @@ public class EctFormData {
         }
         public String getFormTable() {
             return formTable;
+        }
+        
+        public boolean isHidden() {
+            return hidden;
         }
     }
 
