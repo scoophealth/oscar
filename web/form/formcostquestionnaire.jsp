@@ -165,8 +165,10 @@
     
     function goToPage2(){              
         var checkboxes = new Array(6,7,10,11);
+        var a = new Array(0,9999, 23,26,29);
+        var allInputs = new Array(a);        
         var numericFields = new Array(8,9,12,13,14,15,16,17,18,19,20,22,23,25,26,28,29);
-        if (is1CheckboxChecked(0, checkboxes)==true && allAreNumeric(0, numericFields)==true){
+        if (is1CheckboxChecked(0, checkboxes)==true && allAreNumeric(0, numericFields)==true && areInRange(0, allInputs)==true){
             document.getElementById('page1').style.display = 'none';
             document.getElementById('page2').style.display = 'block'; 
             document.getElementById('page3').style.display = 'none'; 
@@ -183,9 +185,13 @@
             document.getElementById('page3').style.display = 'block';  
                 
         }
-    }
+    }        
     
-
+    function roundCost(index){
+        var originalNb = document.forms[0].elements[index].value;
+        var newNb = Math.round(originalNb);
+        document.forms[0].elements[index].value = newNb;
+    }
 </script>
 <script type="text/javascript" src="formScripts.js">          
 </script>
@@ -265,7 +271,7 @@
                         <table width="100%">
                             <tr>
                                 <td width="50%" align="left"><font style="font-weight:bold; text-decoration:underline">Service provider visited</font></td>                                
-                                <td width="40%" align="center"><font style="font-weight:bold; text-decoration:underline">Number of visited</font></td>
+                                <td width="40%" align="center"><font style="font-weight:bold; text-decoration:underline">Number of visits</font></td>
                             </tr>
                             <tr>
                                 <td>Visiting Nurse (VON, Para med)</td>
@@ -326,7 +332,7 @@
                                     # of hours <input type="text" name="paidServiceHour1" size="5" class="textbox" value="<%= props.getProperty("paidServiceHour1", "") %>"/>                                    
                                 </td>
                                 <td width="35%"> 
-                                    Cost $<input type="text" name="paidServiceCost1" size="20" class="textbox" value="<%= props.getProperty("paidServiceCost1", "") %>"/>                                    
+                                    Cost $<input type="text" onchange="javascript:roundCost('23')" name="paidServiceCost1" size="20" class="textbox" value="<%= props.getProperty("paidServiceCost1", "") %>"/>                                    
                                 </td>
                             </tr>
                             <tr>
@@ -337,7 +343,7 @@
                                     # of hours <input type="text" name="paidServiceHour2" size="5" class="textbox" value="<%= props.getProperty("paidServiceHour2", "") %>"/>                                    
                                 </td>
                                 <td> 
-                                    Cost $<input type="text" name="paidServiceCost2" size="20" class="textbox" value="<%= props.getProperty("paidServiceCost2", "") %>"/>                                    
+                                    Cost $<input type="text" onchange="javascript:roundCost('26')" name="paidServiceCost2" size="20" class="textbox" value="<%= props.getProperty("paidServiceCost2", "") %>"/>                                    
                                 </td>
                             </tr>
                             <tr>
@@ -348,7 +354,7 @@
                                     # of hours <input type="text" name="paidServiceHour3" size="5" class="textbox" value="<%= props.getProperty("paidServiceHour3", "") %>"/>                                    
                                 </td>
                                 <td> 
-                                    Cost $<input type="text" name="paidServiceCost3" size="20" class="textbox" value="<%= props.getProperty("paidServiceCost3", "") %>"/>                                    
+                                    Cost $<input type="text" onchange="javascript:roundCost('29')" name="paidServiceCost3" size="20" class="textbox" value="<%= props.getProperty("paidServiceCost3", "") %>"/>                                    
                                 </td>
                             </tr>
                         </table>
