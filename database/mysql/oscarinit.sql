@@ -2964,6 +2964,8 @@ CREATE TABLE formType2Diabetes (
   initials3 varchar(30) default NULL,
   initials4 varchar(30) default NULL,
   initials5 varchar(30) default NULL,
+  resource1 tinyint(1) default NULL,
+  resource2 tinyint(1) default NULL,
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
