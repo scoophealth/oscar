@@ -61,12 +61,20 @@
 
     <table cellspacing="1" cellpadding="2" width="90%" border="0">
     <tr bgcolor='<%=deepcolor%>'><th>File Name</th><th>Size</th></tr>
-<%
+<%    
     String backuppath = oscarVariables.getProperty("backup_path") ; //"c:\\root";
+    if ( backuppath == null || backuppath.equals("") ) {
+        Exception e = new Exception("Unable to find the key backup_path in the properties file.  Please check the value of this key or add it if it is missing.");
+        throw e;
+    }
     session.setAttribute("backupfilepath", backuppath);
     
-    File f = new File(backuppath+"."); 
+    File f = new File(backuppath); 
     String[] contents = f.list() ;
+    if (contents == null) {
+        Exception e = new Exception("Unable to find any files in the directory "+backuppath+".  (If this is the incorrect directory, please modify the value of backup_path in your properties file to reflect the correct directory).");
+        throw e;
+    }
     for(int i=0; i<contents.length; i++) {
       bodd = bodd?false:true ;
       if((new File(backuppath+contents[i])).isDirectory() || contents[i].equals("BackupClient.class")  || contents[i].startsWith(".")) continue;
