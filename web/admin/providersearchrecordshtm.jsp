@@ -77,8 +77,7 @@
               <input type="radio"  checked name="search_mode" value="search_name"><bean:message key="admin.providersearch.formName"/></font></td>
             
         <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_providerno">
-          Provider No.</font></td>
+          <input type="radio" name="search_mode" value="search_providerno"><bean:message key="admin.providersearch.formNo"/></font></td>
       <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="provider_search_titlename" >
