@@ -38,9 +38,14 @@ public class DBPreparedHandler  {
   Statement stmt = null; 
   PreparedStatement preparedStmt = null;
   
-  public DBPreparedHandler(String dbDriver,String dbName, String dbUser,String dbPwd ) throws Exception, SQLException {      
-    init(dbDriver,dbName,dbUser,dbPwd);      
+  public DBPreparedHandler(String dbDriver,String dbName, String dbUser,String dbPwd ) throws SQLException {      
+      try {
+          init(dbDriver,dbName,dbUser,dbPwd);      
+      } catch (Exception e) {
+          throw new SQLException(e.getMessage());  // cast all exceptions to SQLExceptions because having this function throw and Exception breaks too much code
+      }
   }
+  
   public void init(String dbDriver,String dbUrl, String dbUser,String dbPwd ) throws Exception, SQLException {
     connDriver=dbDriver;
     connURL=dbUrl;
