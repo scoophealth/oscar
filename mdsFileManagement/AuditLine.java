@@ -70,29 +70,27 @@ public class AuditLine {
         return (String[]) retval.toArray(retval2);
     }
     
-    public String auditFormType(int segID){
-        String retval = null;
+    public String[] auditFormType(int segID){
+        ArrayList retval = new ArrayList();
         DBHandler db =null;
         try{
             db = new DBHandler(DBHandler.MDS_DATA);             
             ResultSet rs;
-            String sql ="select messageConID from mdsMSH where segmentID = '"+segID+"' ";
+            String sql ="select reportForm from mdsZFR where segmentID = '"+segID+"' ";
             
             rs = db.GetSQL(sql);
-            if(rs.next()){
-                String messageConID = rs.getString("messageConID");
-                //StringTokenizer tokenizer = new StringTokenizer(messageConID,"-");
-                String[] messageParts = messageConID.split("-");
-                retval = messageParts[2];
-                
+            while(rs.next()){
+                retval.add(formTypeHelper(rs.getString("reportForm")));                
             }
             db.CloseConn();
         }catch(Exception e){
             try{ if(db !=null){ db.CloseConn(); } }
             catch(Exception f){ System.out.println("Inside the auditFormType::"+f); f.printStackTrace();  }
         }
-        return formTypeHelper(retval);
+        String[] retval2 = new String[retval.size()];
+        return (String[]) retval.toArray(retval2);
     }
+    
     public String formTypeHelper(String str){
         HashMap hm = new HashMap();
         hm.put("1", "S");

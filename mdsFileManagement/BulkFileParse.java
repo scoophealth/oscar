@@ -58,7 +58,7 @@ public class BulkFileParse {
         String procTime = null;   //make time up
         String logId = "REC";
         String[] formStatus;   //table mdsZFR column reportFormStatus
-        String formType   = null;     //mySQL table mdsMSH column messageConID   last char of the field have to convert from numeric to Letter version
+        String[] formType;     //mySQL table mdsZFR column reportForm   last char of the field have to convert from numeric to Letter version
         String accession  = null;
         String hcNum      = null;
         String hcVerCode  = null;
@@ -91,8 +91,8 @@ public class BulkFileParse {
         messageTime = new SimpleDateFormat("HH:mm:ss").format(mdsDate);
         
         for (int i = 0; i < formStatus.length; i++) {
-            al.addToAuditFile(al.getAuditLine(procDate, procTime, logId, formStatus[i], formType, accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime), auditLogFile);        
-            System.out.println(al.getAuditLine(procDate, procTime, logId, formStatus[i], formType, accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime));
+            al.addToAuditFile(al.getAuditLine(procDate, procTime, logId, formStatus[i], formType[i], accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime), auditLogFile);        
+            System.out.println(al.getAuditLine(procDate, procTime, logId, formStatus[i], formType[i], accession, hcNum, hcVerCode, patientName, orderingClient, messageDate, messageTime));
         }
     }
     
@@ -105,12 +105,12 @@ public class BulkFileParse {
             MDSHL7Message segm = (MDSHL7Message) aList.get(i);
 
             int dupResult = checkForDuplicates(segm) ;
-            if (dupResult == 0){
+            if (dupResult == 0) {
                 insertID = commitSegmentToDB(i);
                 auditHelper(insertID,auditLogFile);
                 providerRouteReport(insertID);
                 patientRouteReport(insertID);
-            }else{
+            } else {
                 System.out.println("THOSE WERE DUPS");
 
                 Long lon = new Long(Calendar.getInstance().getTimeInMillis());
@@ -363,12 +363,13 @@ public class BulkFileParse {
     public int checkForDuplicates(MDSHL7Message segm){
         int retval = 0;
         String messageControlId = segm.MSHTag.getMessageConID();
+        String dateTime = segm.MSHTag.getDateTime();
         String sql = null;
         DBHandler db =null;
         try{
             db = new DBHandler(DBHandler.MDS_DATA);
             ResultSet rs;
-            sql ="select segmentID from mdsMSH where messageConID = '"+messageControlId+"' ";
+            sql ="select segmentID from mdsMSH where messageConID = '"+messageControlId+"' and date_format(dateTime, '%Y%m%d%H%i%s') = '"+dateTime+"'";
             
             rs = db.GetSQL(sql);
             if(rs.next()){
