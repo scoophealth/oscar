@@ -41,6 +41,7 @@ import oscar.oscarDB.*;
  */
 public class Survey {
    
+   static long seed = 0;
    
    String surveyTitle;
    String surveyQuestion;
@@ -56,9 +57,18 @@ public class Survey {
    public static String NOTSELECTED = "P";
    public static String ANSWERED = "A";
    public static String DOESNOTMEETCRITERIA = "C";
+   Random random = null;
    
    /** Creates a new instance of Survey */
    public Survey() {
+      initRandom();
+   }
+   
+   private void initRandom(){
+      while (seed == System.currentTimeMillis());
+      seed = System.currentTimeMillis();
+      System.out.println("setting seed "+seed );
+      random =  new Random(seed);      
    }
    
    /**
@@ -91,8 +101,7 @@ public class Survey {
    }
    
    boolean isPatientRandomlySelected(){
-      boolean isPatientSelect = false;
-      Random random = new Random();
+      boolean isPatientSelect = false;            
       int randomValue = random.nextInt(randomness);
       if (randomValue == 0){
          isPatientSelect = true;
@@ -395,6 +404,17 @@ public class Survey {
       return retval;
    }
    
+   public String getAnswerStringById(String answerID){
+      String answerString = "";
+      for( int i = 0 ; i < answers.size(); i++){
+         Answer a = (Answer) answers.get(i);
+         if( answerID.equals(a.answerValue) ){
+            answerString = a.answerString;
+         }
+      }
+      return answerString;
+   }
+   
    public Enumeration getAnswers(){
       return answerTable.keys();
    } 
@@ -443,6 +463,50 @@ public class Survey {
          }
       }
    }
+   
+   
+   
+   
+   
+   public ArrayList getStatusCount(String surveyId){
+      ArrayList list = new ArrayList();
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         String sql = "select status , count(status) as countstatus from surveyData where surveyId = '"+surveyId+"' group by status";
+         ResultSet rs = db.GetSQL(sql);  
+         
+         while(rs.next()){
+            String[] s =  {rs.getString("status"),rs.getString("countstatus")};
+            list.add(s);
+         }
+         
+         db.CloseConn();         
+      }catch(Exception e){
+         e.printStackTrace();
+      }      
+      return list;
+   }
+   
+   public ArrayList getAnswerCount(String surveyId){
+      ArrayList list = new ArrayList();
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         String sql = "select answer , count(answer) as countanswer from surveyData where surveyId = '"+surveyId+"' and status = 'A'  group by answer;";
+         
+         ResultSet rs = db.GetSQL(sql);  
+         
+         while(rs.next()){
+            String[] s =  {rs.getString("answer"),rs.getString("countanswer")};
+            list.add(s);
+         }
+         
+         db.CloseConn();         
+      }catch(Exception e){
+         e.printStackTrace();
+      }      
+      return list;
+   }
+   
    
    
    class Answer {
