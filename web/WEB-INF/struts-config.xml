@@ -262,6 +262,10 @@
                     type="oscar.oscarProvider.pageUtil.ProEditSignatureForm"/>
 <!-- oscarProvider formbeans stop -->
 
+<!-- OscarDxResearch Start-->
+    <form-bean      name="dxResearchForm"
+                    type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchForm"/>
+<!-- OscarDxResearch End-->
 <!-- oscarBilling Brazil start -->
     <form-bean      name="procedimentoRealizadoForm"
                     type="oscar.billing.controler.ProcedimentoRealizadoForm"/>
@@ -1320,6 +1324,38 @@
 
     <!-- oscarProvider end   -->
 
+    <!-- OscarDxResearch Start-->
+        <action   path="/oscarResearch/oscarDxResearch/setupDxResearch"
+                  type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction"
+                  name=""
+                  scope="request"
+                  input="/oscarEncounter/Index.jsp">
+                <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp"/>
+        </action>
+        <action   path="/oscarResearch/oscarDxResearch/dxResearch"
+                  type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchAction"
+                  name="dxResearchForm"
+                  scope="request"
+                  input="/oscarResearch/oscarDxResearch/dxResearch.jsp">
+                <forward name="codeSearch" path="/oscarResearch/oscarDxResearch/dxcodeSearch.do"/>
+                <forward name="success" path="/oscarResearch/oscarDxResearch/setupDxResearch.do"/>
+        </action>
+        <action   path="/oscarResearch/oscarDxResearch/dxResearchCodeSearch"
+                  type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchCodeSearchAction"
+                  name=""
+                  scope="request"
+                  input="/oscarEncounter/dxResearch.jsp">
+                <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchCodeSearch.jsp"/>
+        </action>
+        <action   path="/oscarResearch/oscarDxResearch/dxResearchUpdate"
+                  type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateAction"
+                  name=""
+                  scope="request"
+                  input="/oscarEncounter/dxResearch.jsp">
+                <forward name="success" path="/oscarResearch/oscarDxResearch/setupDxResearch.do"/>
+        </action>
+    <!-- OscarDxResearch end-->
+    
     <!-- ProcedimentoRealizado start -->
   
         <action   path="/oscar/billing/procedimentoRealizado/init"
