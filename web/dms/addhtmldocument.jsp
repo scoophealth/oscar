@@ -167,7 +167,7 @@ document.aDoc.docdesc.value = document.aDoc.docdesc.value + " (Link)";
             </tr>
             <tr> 
               <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF" size="1"><b><i> 
-                <input type="SUBMIT" value="Submit" name="SUBMIT">
+                <input type="SUBMIT" name="SUBMIT" value="<bean:message key="dms.addHTMLDocument.btnSubmit"/>">
                 </i></b></font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
             </tr>
           </table>
