@@ -145,7 +145,11 @@ public class AppointmentMainBean {
   	return rs;
   }
 
-    /* This method is called by querys that dont need to se a PreparedStatement */
+    public ResultSet queryResults(int[] parameters, String dboperation) throws Exception{
+      String sqlQuery = dbSQL.getDef(dboperation);
+      return dbPH.queryResults(sqlQuery, parameters);
+    }
+    /* This method is called by querys that dont need to set a PreparedStatement */
     public ResultSet queryResults(String dboperation) throws Exception {
       String sqlQuery = dbSQL.getDef(dboperation);
       return dbPH.queryResults(sqlQuery);

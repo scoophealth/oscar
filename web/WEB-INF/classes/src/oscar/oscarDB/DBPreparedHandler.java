@@ -131,6 +131,13 @@ public class DBPreparedHandler  {
     rs=preparedStmt.executeQuery();
     return rs;
   }
+  synchronized public ResultSet queryResults(String preparedSQL, int[] param)throws SQLException{
+    preparedStmt = conn.prepareStatement(preparedSQL);
+    for(int i=0;i<param.length;i++) {
+      preparedStmt.setInt((i+1), param[i]);
+    }
+    return (preparedStmt.executeQuery());
+  }
   synchronized public ResultSet queryResults(String preparedSQL, String param) throws SQLException {
     preparedStmt = conn.prepareStatement(preparedSQL);
     preparedStmt.setString(1, param);
