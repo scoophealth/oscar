@@ -23,7 +23,9 @@
  * Ontario, Canada 
  */
 -->
-
+<%
+  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+%>
 <%@ page language="java" %>
 <%@ page import="java.util.*,oscar.oscarReport.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -58,7 +60,7 @@ function showHideLayers() { //v6.0
 </script>
 <head>
 <title>
-Query By Examples
+    <bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/>
 </title>
 <style type="text/css">
    td.nameBox {
@@ -131,10 +133,10 @@ Query By Examples
     }
 
     function write2TextArea(){ 
-        if (RptByExampleForm.selectedRecentSearch.options[RptByExampleForm.selectedRecentSearch.selectedIndex].value=='Recent Search')
-            RptByExampleForm.sql.value = '';
+        if (document.forms[0].selectedRecentSearch.options[document.forms[0].selectedRecentSearch.selectedIndex].value=='Recent Search')
+            document.forms[0].sql.value = '';
         else
-            RptByExampleForm.sql.value = RptByExampleForm.selectedRecentSearch.options[RptByExampleForm.selectedRecentSearch.selectedIndex].value;
+            document.forms[0].sql.value = document.forms[0].selectedRecentSearch.options[document.forms[0].selectedRecentSearch.selectedIndex].value;
      }
 </script>
 
@@ -156,7 +158,7 @@ Query By Examples
 <html:form action="/oscarReport/RptByExample.do">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                Report
+                <bean:message key="oscarReport.CDMReport.msgReport"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar" >                 
@@ -165,6 +167,7 @@ Query By Examples
                     </tr>                  
                 </table>
             </td>
+        </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top"> 
                 <table>
@@ -172,7 +175,10 @@ Query By Examples
                     <td><a href="#" onMouseOver="showHideLayers('Layer1','','show')"><bean:message key="oscarReport.RptByExample.MsgShowTextVersion"/></a></td>
                   </tr>
                   <tr>
-                    <td><a href="#" onMouseOver="showHideLayers('Layer1','','hide')"><bean:message key="oscarReport.RptByExample.MsgHide"/></a></td>
+                    <td><a href="#" onMouseOver="showHideLayers('Layer1','','hide')"><bean:message key="oscarReport.RptByExample.MsgHideTextVersion"/></a></td>                    
+                  </tr>
+                  <tr>
+                    <td><a href="#" onClick="popupPage(600, 1000, 'RptByExamplesAllFavorites.do')">Edit My Favorite</a></td>
                   </tr>
                 </table>
             </td>
@@ -195,14 +201,14 @@ Query By Examples
                    </tr>
                    <tr>
                         <td>
-                            <bean:message key="oscarReport.RptByExample.MsgSelectFromOldQueries"/>
+                            <bean:message key="oscarReport.RptByExample.MsgSelectFromMyFavorites"/>
                         </td>
                    </tr>
                    <tr>
                         <td>
                             <html:select property="selectedRecentSearch" style="width:660" onchange="write2TextArea();return false;">
-                                <html:option value="Recent Search" disabled="true"/> 
-                                <html:options collection="recentSearches" property="query" labelProperty="query"/>
+                                <html:option value="My favorites" disabled="true"/> 
+                                <html:options collection="favorites" property="query" labelProperty="queryName"/>
                             </html:select>
                         </td>
                         <td>
@@ -223,6 +229,14 @@ Query By Examples
                 </table>
             </td>
         </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            &nbsp;
+            </td>
+
+            <td class="MainTableBottomRowRightColumn">
+            &nbsp;
+            </td>
         </tr>
         </table>
         
