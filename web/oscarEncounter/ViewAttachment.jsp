@@ -13,6 +13,14 @@
     String attachment = (String) request.getAttribute("attachment");
     String thesubject = (String) request.getAttribute("thesubject");
     String sentBy     = (String) request.getAttribute("sentBy");
+
+    Document xmlDoc = null;
+
+    xmlDoc = UtilXML.parseXML(attachment);
+
+    Element root = xmlDoc.getDocumentElement();
+    System.out.println(UtilXML.toXML(root));
+
 %>
 
 
@@ -45,50 +53,42 @@
 <html:html locale="true">
 <head>
 <style type="text/css">
-    BODY
-    {
+    BODY{
         font-family: Verdana, Tahoma, Arial, sans-serif;
         font-size: 10pt;
         text-decoration: none;
     }
 
-    SPAN.treeNode
-    {
+    SPAN.treeNode{
         font-size: 10pt;
         font-weight: bold;
         cursor: hand;
     }
 
-    IMG.treeNode
-    {
+    IMG.treeNode{
         vertical-align: middle;
     }
 
-    IMG.collapse
-    {
+    IMG.collapse{
         cursor: hand;
         margin-left: 15px;
     }
 
 
-    TABLE.treeTable
-    {
+    TABLE.treeTable{
         margin-left: 15px;
     }
 
-    TH.treeTable
-    {
+    TH.treeTable{
         font-weight: bold;
     }
 
-    PRE
-    {
+    PRE{
         font-size: 9pt;
         font-weight: normal;
     }
 
-    .content
-    {
+    .content{
         margin-left: 15px;
         border-width: 1px;
         border-color: #A9A9A9;
@@ -97,8 +97,7 @@
         background-color: #F5F5F5;
     }
 
-    .borderTop
-    {
+    .borderTop{
         border-top-width: 1px;
         border-top-color: #A9A9A9;
         border-top-style: solid;
@@ -106,44 +105,49 @@
 </style>
 
 <script language="javascript">
-    function showTbl(tblName)
-    {
+    var browserName=navigator.appName; 
+    if (browserName=="Netscape"){ 
+
+        if( document.implementation ){
+            //this detects W3C DOM browsers (IE is not a W3C DOM Browser)
+            if( Event.prototype && Event.prototype.__defineGetter__ ){
+                //this detects Mozilla Based Browsers
+                Event.prototype.__defineGetter__( "srcElement", function(){
+                    var src = this.target;
+                    if( src && src.nodeType == Node.TEXT_NODE )
+                        src = src.parentNode;
+                        return src;
+                    }
+                );
+            }
+        }
+    }
+    
+    function showTbl(tblName,event){
         var i;
 
         var span;
 
-        if(event.srcElement.tagName=='SPAN')
-        {
+        if(event.srcElement.tagName=='SPAN'){
             span = event.srcElement;
-        }
-        else
-        {
-            if(event.srcElement.parentNode.tagName=='SPAN')
-            {
+        }else{
+            if(event.srcElement.parentNode.tagName=='SPAN'){
                 span = event.srcElement.parentNode;
-            }
-            else
-            {
-                if(event.srcElement.tagName=='IMG')
-                {
+            }else{
+                if(event.srcElement.tagName=='IMG'){
                     span = event.srcElement.parentNode.getElementsByTagName('SPAN').item(0);
                 }
             }
         }
 
-        if(span != 'undefined')
-        {
+        if(span != 'undefined'){
             var imgs = span.getElementsByTagName('IMG');
-            if(imgs.length>0)
-            {
+            if(imgs.length>0){
                 var img = imgs.item(0);
                 var s = img.src;
-                if(s.search('plus.gif')>-1)
-                {
+                if(s.search('plus.gif')>-1){
                     img.src = s.replace('plus.gif', 'minus.gif');
-                }
-                else
-                {
+                }else{
                     img.src = s.replace('minus.gif', 'plus.gif');
                 }
             }
@@ -151,18 +155,13 @@
             var nods = span.parentNode.childNodes;
 
 
-            for(i=0; i<nods.length; i++)
-            {
+            for(i=0; i<nods.length; i++){
                 var nod = nods.item(i);
 
-                if(nod.id == tblName)
-                {
-                    if(nod.style.display=="none")
-                    {
+                if(nod.id == tblName){
+                    if(nod.style.display=="none"){
                         nod.style.display = "";
-                    }
-                    else
-                    {
+                    }else{
                         nod.style.display = "none";
                     }
                 }
@@ -170,157 +169,40 @@
         }
     }
 
-    function expandAll()
-    {
+    function expandAll(){
         var i;
         var root = document.all('tblRoot');
 
         var col = root.getElementsByTagName('IMG');
 
-        for(i=0; i<col.length; i++)
-        {
+        for(i=0; i<col.length; i++){
             var nod = col.item(i);
 
-            if(nod.src.search('plus.gif')>-1)
-            {
+            if(nod.src.search('plus.gif')>-1){
                 nod.click();
             }
         }
     }
 
-    function collapseAll()
-    {
+    function collapseAll(){
         var i;
         var root = document.all('tblRoot');
 
         var col = root.getElementsByTagName('IMG');
 
-        for(i=0; i<col.length; i++)
-        {
+        for(i=0; i<col.length; i++){
             var nod = col.item(i);
 
-            if(nod.src.search('minus.gif')>-1)
-            {
+            if(nod.src.search('minus.gif')>-1){
                 nod.click();
             }
         }
     }
 
-    function chkClick()
-    {
+    function chkClick(){
         event.cancelBubble = true;
     }
 </script>
-<%
-    Document xmlDoc = null;
-
-    xmlDoc = UtilXML.parseXML(attachment);
-
-    Element root = xmlDoc.getDocumentElement();
-    System.out.println(UtilXML.toXML(root));
-
-%>
-<%!
-    String spanStartRoot = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblRoot');\">"
-        + "<img class=\"treeNode\" src=\"graphics/minus.gif\" border=\"0\" />";
-
-    String spanStart = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblNode');\">"
-        + "<img class=\"treeNode\" src=\"graphics/plus.gif\" border=\"0\" />";
-    String spanEnd = "</span>";
-
-    String tblStartRoot = "<table class=\"treeTable\" id=\"tblRoot\" cellspacing=0 cellpadding=3>";
-    String tblStart = "<table class=\"treeTable\" id=\"tblNode\" style=\"display:none\" cellspacing=0 cellpadding=3>";
-    String tblStartContent = "<table class=\"content\" id=\"tblNode\" style=\"display:none\" cellspacing=0 cellpadding=3>";
-
-    String tblRowStart = "<tr><td>";
-    String tblRowEnd = "</td></tr>";
-
-    String tblEnd = "</table>";
-
-    void DrawDoc(Element root, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
-        out.print(spanStartRoot); %>
-	Document Transfer
-	<% out.print(spanEnd);
-        out.print(tblStartRoot);
-
-        NodeList lst = root.getChildNodes();
-        for(int i=0; i<lst.getLength(); i++)
-        {
-            out.print(tblRowStart);
-            DrawTable((Element)lst.item(i), out);
-            out.print(tblRowEnd);
-        }
-
-        out.print(tblEnd);
-    }
-
-    void DrawTable(Element tbl, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
-        out.print(spanStart + tbl.getAttribute("name") + spanEnd);
-        out.print(tblStart);
-
-        NodeList lst = tbl.getChildNodes();
-        for(int i=0; i<lst.getLength(); i++)
-        {
-            out.print(tblRowStart);
-            DrawItem((Element)lst.item(i), out);
-            out.print(tblRowEnd);
-        }
-        out.print(tblEnd);
-    }
-
-    void DrawItem(Element item, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
-        out.print(spanStart);
-        if(! item.getAttribute("removable").equalsIgnoreCase("false"))
-        {
-            String sName = "item" + item.getAttribute("itemId");
-            out.print("<input type=checkbox name='" + sName + "' onclick='javascript:chkClick();'/>");
-        }
-        out.print(item.getAttribute("name") + ": " + item.getAttribute("value") + spanEnd);
-        out.print(tblStartContent);
-
-        NodeList lst = item.getChildNodes();
-        for(int i=0; i<lst.getLength(); i++)
-        {
-            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE)
-            {
-                if(((Element)lst.item(i)).getTagName().equals("content"))
-                {
-                    DrawContent((Element)lst.item(i), out);
-                }
-            }
-        }
-        out.print(tblEnd);
-    }
-
-    void DrawContent(Element content, JspWriter out)
-            throws javax.servlet.jsp.JspException, java.io.IOException
-    {
-        NodeList lst = content.getChildNodes();
-        for(int i=0; i<lst.getLength(); i++)
-        {
-            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE)
-            {
-                Element fld = (Element)lst.item(i);
-                if(fld.getTagName().equals("fld"))
-                {
-                    out.print("<tr><td style='font-weight:bold'>");
-                    out.print(fld.getAttribute("name") + ": ");
-                    out.print("</td><td>");
-                    out.print(fld.getAttribute("value"));
-                    out.print("</td></tr>");
-                }
-            }
-        }
-    }
-%>
-
-
 
 <title>
 <bean:message key="oscarEncounter.ViewAttachment.title"/>
@@ -417,3 +299,102 @@
     </table>
 </body>
 </html:html>
+<%!
+    String spanStartRoot = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblRoot',event);\">"
+        + "<img class=\"treeNode\" src=\"graphics/minus.gif\" border=\"0\" />";
+
+    String spanStart = "<span class=\"treeNode\" onclick=\"javascript:showTbl('tblNode',event);\">"
+        + "<img class=\"treeNode\" src=\"graphics/plus.gif\" border=\"0\" />";
+    String spanEnd = "</span>";
+
+    String tblStartRoot = "<table class=\"treeTable\" id=\"tblRoot\" cellspacing=0 cellpadding=3>";
+    String tblStart = "<table class=\"treeTable\" id=\"tblNode\" style=\"display:none\" cellspacing=0 cellpadding=3>";
+    String tblStartContent = "<table class=\"content\" id=\"tblNode\" style=\"display:none\" cellspacing=0 cellpadding=3>";
+
+    String tblRowStart = "<tr><td>";
+    String tblRowEnd = "</td></tr>";
+
+    String tblEnd = "</table>";
+
+    void DrawDoc(Element root, JspWriter out)
+            throws javax.servlet.jsp.JspException, java.io.IOException
+    {
+        out.print(spanStartRoot);
+	     out.print("Document Transfer");
+	     out.print(spanEnd);
+        out.print(tblStartRoot);
+
+        NodeList lst = root.getChildNodes();
+        for(int i=0; i<lst.getLength(); i++)
+        {
+            out.print(tblRowStart);
+            DrawTable((Element)lst.item(i), out);
+            out.print(tblRowEnd);
+        }
+
+        out.print(tblEnd);
+    }
+
+    void DrawTable(Element tbl, JspWriter out)
+            throws javax.servlet.jsp.JspException, java.io.IOException
+    {
+        out.print(spanStart + tbl.getAttribute("name") + spanEnd);
+        out.print(tblStart);
+
+        NodeList lst = tbl.getChildNodes();
+        for(int i=0; i<lst.getLength(); i++)
+        {
+            out.print(tblRowStart);
+            DrawItem((Element)lst.item(i), out);
+            out.print(tblRowEnd);
+        }
+        out.print(tblEnd);
+    }
+
+    void DrawItem(Element item, JspWriter out)
+            throws javax.servlet.jsp.JspException, java.io.IOException
+    {
+        out.print(spanStart);
+        if(! item.getAttribute("removable").equalsIgnoreCase("false"))
+        {
+            String sName = "item" + item.getAttribute("itemId");
+            out.print("<input type=checkbox name='" + sName + "' onclick='javascript:chkClick();'/>");
+        }
+        out.print(item.getAttribute("name") + ": " + item.getAttribute("value") + spanEnd);
+        out.print(tblStartContent);
+
+        NodeList lst = item.getChildNodes();
+        for(int i=0; i<lst.getLength(); i++)
+        {
+            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE)
+            {
+                if(((Element)lst.item(i)).getTagName().equals("content"))
+                {
+                    DrawContent((Element)lst.item(i), out);
+                }
+            }
+        }
+        out.print(tblEnd);
+    }
+
+    void DrawContent(Element content, JspWriter out)
+            throws javax.servlet.jsp.JspException, java.io.IOException
+    {
+        NodeList lst = content.getChildNodes();
+        for(int i=0; i<lst.getLength(); i++)
+        {
+            if(lst.item(i).getNodeType()==Node.ELEMENT_NODE)
+            {
+                Element fld = (Element)lst.item(i);
+                if(fld.getTagName().equals("fld"))
+                {
+                    out.print("<tr><td style='font-weight:bold'>");
+                    out.print(fld.getAttribute("name") + ": ");
+                    out.print("</td><td>");
+                    out.print(fld.getAttribute("value"));
+                    out.print("</td></tr>");
+                }
+            }
+        }
+    }
+%>
