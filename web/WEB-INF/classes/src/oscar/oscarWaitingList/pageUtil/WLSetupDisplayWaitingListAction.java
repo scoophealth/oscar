@@ -56,7 +56,7 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         ProviderNameBeanHandler phd = new ProviderNameBeanHandler();
         WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler();
         Collection allWaitingListName = wlNameHd.getWaitingListNameVector();
-        Collection allProviders = phd.getProviderNameVector();
+        Collection allProviders = phd.getDoctorNameVector();
         String nbPatients = Integer.toString(hd.getWaitingListVector().size());
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd");
         HttpSession session = request.getSession();
