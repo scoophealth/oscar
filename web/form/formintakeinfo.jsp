@@ -372,7 +372,7 @@
                     </td>
                     <td>Married (once)</td>
                     <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="maritalStWidowed" <%= props.getProperty("maritalStWidoweds", "") %>/>
+                        <input type="checkbox"  class="checkbox" name="maritalStWidowed" <%= props.getProperty("maritalStWidowed", "") %>/>
                     </td>
                     <td>Widowed</td>
                 </tr>
