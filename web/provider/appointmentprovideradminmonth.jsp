@@ -128,6 +128,7 @@
     myGrpBean.setProperty(rsgroup.getString("provider_no"), curGrp);
   }
   }
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);   
 %>
 
 <html:html locale="true">
@@ -232,7 +233,15 @@ function refresh1() {
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='<bean:message key="provider.appointmentprovideradminmonth.msgGenReport"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentprovideradminmonth.msgGenReport"/>' ; return true"><bean:message key="provider.appointmentprovideradminmonth.btnReport"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>' onmouseover="window.status='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>';return true"><bean:message key="provider.appointmentprovideradminmonth.btnBilling"/></a></font></td>
+
+             <% 
+                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
+                if (vLocale.getCountry().equals("BR")) { %>  
+               <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+             <% } else {%>  
+				<a HREF="#" ONCLICK ="popupPage2('../billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>' onmouseover="window.status='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>';return true"><bean:message key="provider.appointmentprovideradminmonth.btnBilling"/></a></font></td>
+             <% } %>
+
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../lab/lablinks.htm');return false;" TITLE='<bean:message key="provider.appointmentprovideradminmonth.msgLabRep"/>'><bean:message key="provider.appointmentprovideradminmonth.btnLab"/></a></font></td>
 <!--oscarMessenger Code Block-->
