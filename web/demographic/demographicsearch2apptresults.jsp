@@ -140,8 +140,7 @@ function searchAll() {
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
 	  <tr class="subject"><th><bean:message key="demographic.demographicsearch2apptresults.patientsRecord"/></th></tr>
 </table>
-
-  <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#CCCCFF">
+<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#CCCCFF">
 	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
 	<%--@ include file="zdemographictitlesearch.htm"--%>
         <tr>
@@ -277,8 +276,12 @@ onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no"
 </SCRIPT>
 <%
   }
+  if(nItems==0 && nLastPage<=0) {
 %>
-
+  <bean:message key="demographic.search.noResultsWereFound"/> <a href="../demographic/demographicaddarecordhtm.jsp"><bean:message key="demographic.search.btnCreateNew"/></a>
+<%
+    }
+%>
 <script language="JavaScript">
 <!--
 function last() {
