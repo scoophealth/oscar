@@ -87,10 +87,12 @@ if (hasSig){
         	<input type="image" src="img/rx.gif" border="0" value="submit" alt="[Submit]" name="submit"
  			title="Print in a half letter size paper" onclick="javascript:return onPrint();">
 			<input type="hidden" name="printPageSize" value="PageSize.A6"/>
+			<% 	String clinicTitle = provider.getClinicName() + "<br>" ;
+			 	clinicTitle += provider.getClinicAddress() + "<br>" ;
+			 	clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
+			%>
 			<input type="hidden" name="doctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
-			<input type="hidden" name="clinicName" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicName()) %>"/>
-			<input type="hidden" name="clinicAddress" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicAddress()) %>"/>
-			<input type="hidden" name="clinicCityPostal" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicCity())+"   " + StringEscapeUtils.escapeHtml(provider.getClinicPostal())%>"/>
+			<input type="hidden" name="clinicName" value="<%= StringEscapeUtils.escapeHtml(clinicTitle.replaceAll("(<br>)","\\\n")) %>"/>
 			<input type="hidden" name="clinicPhone" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicPhone()) %>"/>
 			<input type="hidden" name="clinicFax" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicFax()) %>"/>
 
