@@ -92,6 +92,8 @@ function BackToOscar()
  		                <div class="DivContentTitle"><br>
                                                      <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.msgStep1"/><br>
                                                      <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.msgStep2"/><br>
+                                                     <bean:message key="oscarEncounter.immunization.config.createImmunizationSetinit.msgStep3"/><br>
+
                                                      <br><br>
 
 
