@@ -337,7 +337,7 @@ function FillThreeBoxes(serNbr)	{
 //-->
 </SCRIPT>
 
-<script language="javascript">
+<script type="text/javascript" language="javascript">
 function BackToOscar() {
        window.close();
 }
@@ -363,12 +363,26 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 
+function checkForm(submissionVal,formName){  
+
+   var msg = "<bean:message key="Errors.service.noServiceSelected"/>";
+   msg  = msg.replace('<li>','');
+   msg  = msg.replace('</li>','');   
+  if (document.EctConsultationFormRequestForm.service.options.selectedIndex == 0){
+     alert(msg);
+     document.EctConsultationFormRequestForm.service.focus();
+     return false;
+  }
+  document.forms[formName].submission.value=submissionVal; 
+  document.forms[formName].submit();
+  return true;
+}
 </script>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
 <html:errors/>
 
-<html:form action="/oscarEncounter/RequestConsultation">
+<html:form action="/oscarEncounter/RequestConsultation" onsubmit="alert('HTHT'); return false;" >
         <input type="hidden" name="providerNo" value="<%=providerNo%>">
         <input type="hidden" name="demographicNo" value="<%=demo%>">
         <input type="hidden" name="requestId" value="<%=requestId%>">
@@ -806,19 +820,19 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </td>
        </tr>
        <tr>
-            <td colspan=2>
+            <td colspan=2>            
 	        <input type="hidden" name="submission" value="">
                 <%if (request.getAttribute("id") != null){ %>
-      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');"/>
+                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"  onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');"/>
                     <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Update And Fax'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"  onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');"/>
                     <%}%>
                 <%}else{%>
-      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit Consultation Request'; document.forms['EctConsultationFormRequestForm'].submit();"/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit Consultation Request And Print Preview'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); "/>
+                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); "/>
                     <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"  onclick="document.forms['EctConsultationFormRequestForm'].submission.value='Submit And Fax'; document.forms['EctConsultationFormRequestForm'].submit();"/>
+                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"  onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');"/>
                     <%}%>
                 <%}%>
             </td>
@@ -862,7 +876,8 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             </td>
         </tr>
     </table>
+    </html:form>
 </body>
-</html:form>
+
 </html:html>
 
