@@ -27,23 +27,26 @@
   //operation available to the client - dboperation
   String orderby="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
-  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1");
+  if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1")+", ";
   if(request.getParameter("limit2")!=null) {
     limit2=request.getParameter("limit2");
     limit="limit "+limit2+" offset " +limit1;
   }
-  
+   
+ 
+   
   
   String [][] dbQueries=new String[][] {
     {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
-    {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
-    {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no != '' order by last_name"},
+    {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no || null and provider_no like ? order by last_name"},
+    {"search_provider_dt_checkstatus", "select * from provider where provider_type='doctor' and status='1' and ohip_no || null and provider_no like ? order by last_name"},
+    {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no || null order by last_name"},    
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
     {"search_provider_name", "select * from provider where provider_no=?"},
     {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
-    {"save_bill", "insert into billing (clinic_no, demographic_no, provider_no, appointment_no, organization_spec_code, demographic_name, hin, update_date, update_time, billing_date, billing_time, clinic_ref_code, content, total, status, dob, visitdate, visittype, provider_ohip_no, provider_rma_no, apptprovider_no, asstprovider_no, creator) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
-    {"search_billing_no", "select billing_no from billing where demographic_no=?  order by update_date desc, update_time desc limit 1 offset 0"},
-    {"search_billing_no_by_appt", "select max(billing_no) as billing_no from billing where status <> 'D' and demographic_no=? and appointment_no=?  order by update_date desc, update_time desc limit 1 offset 0"},
+    {"save_bill", "insert into billing values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"search_billing_no", "select billing_no from billing where demographic_no=?  order by update_date desc, update_time desc limit 0, 1"},
+    {"search_billing_no_by_appt", "select max(billing_no) billing_no from billing where status <> 'D' and demographic_no=? and appointment_no=?  order by update_date desc, update_time desc limit 0, 1"},
     {"search_bill_location", "select * from clinic_location where clinic_no=1 and clinic_location_no=?"},    
     {"search_clinic_location", "select * from clinic_location where clinic_no=? order by clinic_location_no"},  
     {"save_clinic_location","insert into clinic_location values(?,?,?)"},
@@ -67,13 +70,13 @@
     {"search_bill_mismatch", "select distinct a.appointment_no, a.appointment_date, a.start_time, d.first_name, d.last_name, p.first_name, p.last_name, b.provider_no, b.billing_no from billing b, appointment a, demographic d, provider p where a.provider_no=? and a.appointment_no=b.appointment_no and a.demographic_no=d.demographic_no and p.provider_no=b.provider_no and b.status<>'B' and b.status<>'D' order by a.appointment_date desc, a.start_time desc;"},  
     {"search_servicecode", "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype = ? and c.service_group =? order by c.service_order"},    
     {"search_servicecode_detail", "select b.service_code, b.description, b.value, b.percentage from billingservice b where b.service_code=?"},
-    {"save_bill_record", "insert into billingdetail (billing_no, service_code, service_desc, billing_amount, diagnostic_code, appointment_date, status, billingunit) values(?,?,?,?,?,?,?,?)"},
+    {"save_bill_record", "insert into billingdetail values('\\N',?,?,?,?,?,?,?,?)"},
     {"updatediagnostic", "update diagnosticcode set description=? where diagnostic_code=?"},
     {"searchapptstatus", "select status from appointment where appointment_no=? "}, 
     {"updateapptstatus", "update appointment set status=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=? and demographic_no=?"},
     {"search_bill", "select * from billing where billing_no= ?"},
     {"search_bill_record", "select * from billingdetail where billing_no=? and status <> 'D'"},
-    {"search_ctl_diagnostic_code", "select diagnosticcode.diagnostic_code as dcode, diagnosticcode.description as des from diagnosticcode, ctl_diagcode where ctl_diagcode.diagnostic_code=diagnosticcode.diagnostic_code and ctl_diagcode.servicetype=? order by diagnosticcode.description"},
+    {"search_ctl_diagnostic_code", "select diagnosticcode.diagnostic_code dcode, diagnosticcode.description des from diagnosticcode, ctl_diagcode where ctl_diagcode.diagnostic_code=diagnosticcode.diagnostic_code and ctl_diagcode.servicetype=? order by diagnosticcode.description"},
     {"search_diagnostic_code", "select * from diagnosticcode where diagnostic_code like ?"},
     {"search_diagnostic_text", "select * from diagnosticcode where description like ?"},
     {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time "}, 
@@ -83,8 +86,8 @@
     {"archive_bill", "insert into recycle_bin values(?,'billing',?,?)"},
     {"update_bill_header", "update billing set hin=?,dob=?,visittype=?,visitdate=?,clinic_ref_code=?,provider_no=?,status=?, update_date=?, total=? , content=? where billing_no=?"},  
     {"search_bill_generic", "select distinct demographic.last_name dl, demographic.first_name df, provider.last_name pl, provider.first_name pf, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no, billing.hin from billing, provider, appointment, demographic where provider.provider_no=appointment.provider_no and demographic.demographic_no= billing.demographic_no and billing.appointment_no=appointment.appointment_no and billing.status <> 'D' and billing.billing_no=?"},
-    {"save_rahd", "insert into raheader (filename, paymentdate, payable, totalamount, records, claims, status, readdate, content) values(?,?,?,?,?,?,?,?,?)"},
-    {"save_radt", "insert into radetail (raheader_no, providerohip_no, billing_no, service_code, service_count, hin, amountclaim, amountpay, service_date, error_code, billtype) values(?,?,?,?,?,?,?,?,?,?,?)"},
+    {"save_rahd", "insert into raheader values('\\N',?,?,?,?,?,?,?,?,?)"},
+    {"save_radt", "insert into radetail values('\\N',?,?,?,?,?,?,?,?,?,?,?)"},
     {"search_all_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where status <> ? order by paymentdate desc"},
     {"search_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where filename=? and paymentdate=? and status <> 'D' order by paymentdate"},
     {"search_rahd_content", "select * from raheader where raheader_no=? and status <>'D'"},
