@@ -47,13 +47,14 @@ function popPage(url) {
 }
 
 function checkDelete(url, c, u,n){
-	if (c == u || n == '<%=oscarVariables.getProperty("SUPERUSER")%>'){
+// revision Apr 05 2004 - we now allow anyone to delete documents
+	// if (c == u || n == '<%=oscarVariables.getProperty("SUPERUSER")%>'){
 		if(confirm("<bean:message key="dms.documentReport.msgDelete"/>")) {
 			popPage(url);
 		}
-	}else{
-		alert("<bean:message key="dms.documentReport.msgNotAllowed"/>");
-	}
+	//}else{
+	//	alert("<bean:message key="dms.documentReport.msgNotAllowed"/>");
+	//}
 }
 
 function setfocus() {
