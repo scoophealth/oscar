@@ -3,29 +3,29 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -40,19 +40,19 @@
     function closeit() {
       //parent.refresh();
       close();
-    }   
+    }
     //-->
 </script>
 </head>
 <body  onload="start()" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
+      <tr bgcolor="#486ebd">
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
             <bean:message key="demographic.demographicaddarecord.title"/></font></th>
       </tr>
     </table>
- 
+
 <%
   //if action is good, then give me the result
 	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
@@ -76,7 +76,7 @@
 	  param[14]=request.getParameter("ver");
 	  param[15]=request.getParameter("roster_status");
 	  param[16]=request.getParameter("patient_status");
-	  // Databases have an alias for today. It is not necessary give the current date.          
+	  // Databases have an alias for today. It is not necessary give the current date.
           // ** Overridden - we want to give users option to change if needed
           // ** Now defaults to current date on the add demographic screen
 	  param[17]=request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
@@ -149,7 +149,7 @@
 	  }
 
 	  param[25] =  year + "-" + month + "-" + day;
-	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "");    
+	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "");
 
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].trim();
@@ -159,15 +159,32 @@
 	  paramName[4]=param[12].trim();
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
-    
+
     if(rs.next()) {  %>
       ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord"/></font>***<br>
       <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
       <% return;
     }
 
+    // add checking dob/hin duplicated record, if there is a HIN number
+    if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5) {
+  		//oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
+		//String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
+		String[] paramNameHin =new String[4];
+		paramNameHin[0]=request.getParameter("hin").trim();
+		paramNameHin[1]=param[10].trim();
+		paramNameHin[2]=param[11].trim();
+		paramNameHin[3]=param[12].trim();
+	    ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hindob");
+	    if(rsHin.next()) {  %>
+	      ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord"/></font>***<br>
+	      <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
+      <% return;
+	    }
+    }
+
     // int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, param, request.getParameter("dboperation"));
-    
+
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
     //find the demo_no and add democust record for alert
@@ -179,12 +196,12 @@
 	  param1[4]=request.getParameter("date_of_birth");
 	  param1[5]=request.getParameter("hin");
 	  param1[6]=request.getParameter("ver");
-    
+
     rs = apptMainBean.queryResults(param1, "search_demoaddno");
     if(rs.next()) { //
         //add democust record for alert
         String[] param2 =new String[6];
-	    param2[0]=rs.getString("demographic_no");            
+	    param2[0]=rs.getString("demographic_no");
 	    param2[1]=request.getParameter("cust1");
 	    param2[2]=request.getParameter("cust2");
 	    param2[3]=request.getParameter("cust3");
@@ -192,12 +209,12 @@
 	    param2[5]="<unotes>"+request.getParameter("content")+"</unotes>";
 	    System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
-        
+
         //add to waiting list if the waiting_list parameter in the property file is set to true
-       
+
         WaitingList wL = WaitingList.getInstance();
         if(wL.getFound()){
-    
+
             String[] paramWLPosition = new String[1];
             paramWLPosition[0] = request.getParameter("list_id");
             if(paramWLPosition[0].compareTo("")!=0){
@@ -217,7 +234,7 @@
 
 	  	if (request.getParameter("dboperation2") != null) {
 	  	  	String[] parametros = new String[13];
-  	  	
+
 	  	  	parametros[0]=rs.getString("demographic_no");
 	  	  	parametros[1]=request.getParameter("cpf");
 	  	  	parametros[2]=request.getParameter("rg");
@@ -231,21 +248,21 @@
 	  	  	parametros[10]=request.getParameter("district");
 	  	  	parametros[11]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
 	  	  	parametros[12]=request.getParameter("complementary_address");
-  	
-  	
+
+
 	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros, request.getParameter("dboperation2")); //add_record
 	  	}
-      
+
     }
-    
+
 %>
   <p><h2><bean:message key="demographic.demographicaddarecord.msgSuccessful"/>
   </h2></p>
-<%  
+<%
   } else {
 %>
   <p><h1><bean:message key="demographic.demographicaddarecord.msgFailed"/></h1></p>
-<%  
+<%
   }
   apptMainBean.closePstmtConn();
 %>
