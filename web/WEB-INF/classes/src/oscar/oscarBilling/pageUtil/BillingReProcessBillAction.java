@@ -95,15 +95,15 @@ public class BillingReProcessBillAction extends Action {
         String practitionerNo=billform.getPracNo(providerNo);//p
         String hcNo = demo.getHIN().trim();//d
         String dependentNo = frm.getDependentNo();//f
-        String billUnit  = frm.getBilling_unit(); //f
+        
         String visitLocation = frm.getLocationVisit();//f
         String clarificationCode = visitLocation.substring(0,2);//f
         String anatomicalArea = frm.getAnatomicalArea();//f
         String afterHour = frm.getAfterHours();//f
         String newProgram = frm.getNewProgram();//f
-        String billingUnit = frm.getBilling_unit();///f
+        String billingUnit = frm.getBillingUnit();///f
         String billingServiceCode = frm.getService_code();//f
-        String billingServicePrice =frm.getBilling_amount();//f
+        String billingServicePrice =frm.getBillingAmount();//f
         String payment_mode = frm.getPaymentMode();//f
         String serviceDate = frm.getServiceDate();//f
         String serviceToDate = frm.getServiceToDay();//f
@@ -197,7 +197,7 @@ public class BillingReProcessBillAction extends Action {
                         + "billing_code = '"+billingServiceCode+"', "
                         + "bill_amount = '"+billingServicePrice+"', "
                         +" payment_mode = '"+payment_mode+"', "
-                        +" service_date = '"+serviceDate+"', "
+                        +" service_date = '"+convertDate8Char(serviceDate)+"', "
                         +" service_to_day = '"+serviceToDate+"', "
                         + "submission_code = '"+submissionCode+"', "
                         + "extended_submission_code = '"+exSubmissionCode+"', "
