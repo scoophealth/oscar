@@ -122,6 +122,7 @@ if(connected){
 	// send to ping
 	oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();
 	DMRecord DMRecord = _respFactory.createDMRecord();
+        DMRecord.setSubject("Diabetes Record");
 	DMRecord.setFpVisit(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[0]), ""));
 	DMRecord.setBloodPressure(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[1]), ""));
 	DMRecord.setHbA1C(form.getProperty(studyMapping.getProperty(nodeName+"."+elementName1[2]), ""));
