@@ -22,6 +22,8 @@
  * Hamilton 
  * Ontario, Canada 
  */
+
+Use returnForm and returnItem request params and this page will fill in that input item on that page
 -->
 <%@ page language="java" contentType="text/html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -49,7 +51,7 @@
   int delta = request.getParameter("delta")==null?0:Integer.parseInt(request.getParameter("delta")); //add or minus month
   GregorianCalendar now = new GregorianCalendar(year,month-1,1);
 
- 	now.add(now.MONTH, delta);
+  now.add(now.MONTH, delta);
   year = now.get(Calendar.YEAR);
   month = now.get(Calendar.MONTH)+1;
 %>
@@ -93,9 +95,9 @@ function typeMultiDate(year1,month1,day1){
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   			<tr>
         	  <td BGCOLOR="#FFD7C4" width="50%" align="center" >
-			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
+			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;<img src="../../../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
               </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;next month <img src="../../../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
   			</TR>
 		</table>
 <p>
