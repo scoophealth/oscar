@@ -104,7 +104,7 @@ public class BillingBillingManager {
         if (service1.compareTo("") != 0){
             if (service1unit.compareTo("")==0){
                 service1unit = "1";
-            }
+            }            
             for (int j=0; j < Integer.parseInt(service1unit); j++){
                 lst.add(service1);
             }
@@ -153,6 +153,63 @@ public class BillingBillingManager {
         return null;
     }
     
+    
+    public ArrayList getDups2(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {        
+        ArrayList billingItemsArray = new ArrayList();
+        for (int i =0 ; i < service.length ; i++){           
+            addBillItem(billingItemsArray,service[i],1);
+        }        
+        if (service1.compareTo("") != 0){
+            if (service1unit.compareTo("")==0){
+                service1unit = "1";
+            }          
+            int numUnit = Integer.parseInt(service1unit);
+            addBillItem(billingItemsArray,service1,numUnit);
+                        
+        }
+        if (service2.compareTo("") != 0){
+            if (service2unit.compareTo("")==0){
+                service2unit = "1";
+            }
+            int numUnit = Integer.parseInt(service2unit);
+            addBillItem(billingItemsArray,service2,numUnit);
+            
+        }
+        if (service3.compareTo("") != 0){
+            if (service3unit.compareTo("")==0){
+                service3unit = "1";
+            }
+            int numUnit = Integer.parseInt(service3unit);
+            addBillItem(billingItemsArray,service3,numUnit);            
+        }
+        
+       
+        
+        return billingItemsArray;
+        
+    }
+    
+    
+    private BillingItem addBillItem(ArrayList ar,String code,int serviceUnits){
+        boolean newCode = true;
+        BillingItem bi = null;
+        for (int i = 0; i < ar.size() ;i++ ){
+            bi = (BillingItem) ar.get(i);
+            if (bi.service_code.equals(code)) {
+                newCode = false;
+                bi.addUnits(serviceUnits);
+                i = ar.size();
+            }
+        }
+        if(newCode){
+            bi = new BillingItem(code,serviceUnits);
+            bi.fill();
+            ar.add(bi);
+        }
+        return bi;
+    }
+    
+    
     public String getGrandTotal(ArrayList ar){
         double grandtotal = 0.00;
         for (int i=0; i< ar.size(); i++){
@@ -164,7 +221,7 @@ public class BillingBillingManager {
         return bdFee.toString();
         
     }
-    
+
     
     public class BillingItem {
         
@@ -186,6 +243,10 @@ public class BillingBillingManager {
         public BillingItem(String service_code, String units1) {
             this.service_code= service_code;
             this.units = Integer.parseInt(units1);
+        }
+        public BillingItem(String service_code, int units1) {
+            this.service_code= service_code;
+            this.units = units1;
         }
         
         public void addUnits(int num){
