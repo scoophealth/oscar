@@ -1,53 +1,53 @@
 <% 
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-  String user_no="";
-user_no = (String) session.getAttribute("user");
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+String user_no = (String) session.getAttribute("user");
 %> 
+
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbBilling.jsp" %>
-<% 	GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
-  
-    String[] yearArray = new String[5];
-  String thisyear = request.getParameter("year")==null?String.valueOf(curYear):request.getParameter("year").compareTo("")==0?String.valueOf(curYear):request.getParameter("year");
-if (thisyear.compareTo("")==0) thisyear = String.valueOf(curYear);
+
+<%
+GregorianCalendar now=new GregorianCalendar();
+int curYear = now.get(Calendar.YEAR);
+int curMonth = (now.get(Calendar.MONTH)+1);
+int curDay = now.get(Calendar.DAY_OF_MONTH);
+String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
+
+String[] yearArray = new String[5];
+String thisyear = (request.getParameter("year")==null || request.getParameter("year").compareTo("")==0) ? String.valueOf(curYear) : request.getParameter("year");
+
 String yearColor = "";  
 yearArray[0] = String.valueOf(curYear);
-    yearArray[1] = String.valueOf(curYear-1);
-      yearArray[2] = String.valueOf(curYear-2);
-        yearArray[3] = String.valueOf(curYear-3);
-          yearArray[4] = String.valueOf(curYear-4);
+yearArray[1] = String.valueOf(curYear-1);
+yearArray[2] = String.valueOf(curYear-2);
+yearArray[3] = String.valueOf(curYear-3);
+yearArray[4] = String.valueOf(curYear-4);
           
 if (thisyear.compareTo(yearArray[0])==0) yearColor="#B1D3EF";
-
 if (thisyear.compareTo(yearArray[1])==0) yearColor="#BBBBBB";
 if (thisyear.compareTo(yearArray[2])==0) yearColor="#CCCCCC";
 if (thisyear.compareTo(yearArray[3])==0) yearColor="#DDDDDD";
 if (thisyear.compareTo(yearArray[4])==0) yearColor="#EEEEEE";
 
 String monthCode = "";
-  if (curMonth == 1) monthCode = "A";
-    if (curMonth == 2) monthCode = "B";
-      if (curMonth == 3) monthCode = "C";
-        if (curMonth == 4) monthCode = "D";
-          if (curMonth == 5) monthCode = "E";
-            if (curMonth == 6) monthCode = "F";
-              if (curMonth == 7) monthCode = "G";
-                if (curMonth == 8) monthCode = "H";
-                  if (curMonth == 9) monthCode = "I";
-                    if (curMonth == 10) monthCode = "J";
-                      if (curMonth == 11) monthCode = "K";
-                        if (curMonth == 12) monthCode = "L";
-     String ohipdownload = oscarVariables.getProperty("HOME_DIR") ;;
-     session.setAttribute("ohipdownload", ohipdownload);      
-  %>
+if (curMonth == 1) monthCode = "A";
+if (curMonth == 2) monthCode = "B";
+if (curMonth == 3) monthCode = "C";
+if (curMonth == 4) monthCode = "D";
+if (curMonth == 5) monthCode = "E";
+if (curMonth == 6) monthCode = "F";
+if (curMonth == 7) monthCode = "G";
+if (curMonth == 8) monthCode = "H";
+if (curMonth == 9) monthCode = "I";
+if (curMonth == 10) monthCode = "J";
+if (curMonth == 11) monthCode = "K";
+if (curMonth == 12) monthCode = "L";
+String ohipdownload = oscarVariables.getProperty("HOME_DIR") ;;
+session.setAttribute("ohipdownload", ohipdownload);      
+%>
 
 <!--  
 /*
@@ -175,7 +175,7 @@ function showHideLayers() { //v3.0
       <td width="254"><font face="Arial, Helvetica, sans-serif" size="2"> 
      <!--   <select name="billcenter">
         
-        <% String centerCode="";
+        <%-- String centerCode="";
            String centerDesc="";
            
            int Count1 = 0;
@@ -186,9 +186,9 @@ function showHideLayers() { //v3.0
               centerCode = rsCenter.getString("billcenter_code");
               centerDesc = rsCenter.getString("billcenter_desc");
   
-        %>
+       %>
             <option value="<%=centerCode%>" <%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
-        <% } %>
+        <% } --%>
  </select>-->
       </td>
  <td width="277"> <font color="#003366"> 
@@ -219,51 +219,43 @@ function showHideLayers() { //v3.0
       <b>Activity List </b></font></td>
   </tr>
   <tr> 
-    <td width="14%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Provider</font></td>
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Group 
-      Number</font></td>
-    <td width="16%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Creation 
-      Date </font></td>
-    <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Claims/Records</font></td>
-    <td width="19%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">MSP 
-      Filename</font></td>
-    <td width="24%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">HTML 
-      Filename</font></td>
+    <th width="12%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Provider</font></th>
+    <th width="14%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Group Number</font></th>
+    <th width="20%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Creation Date </font></th>
+    <th width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Claims/Records</font></th>
+    <th width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">MSP Filename</font></th>
+    <th><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">HTML Filename</font></th>
   </tr>
   
-  <%
-   String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
-   rslocal = null;
-   
-   String[] paramYear = new String[2];
-    paramYear[0] = thisyear+"/01/01";
-    paramYear[1] = thisyear+"/12/31";
-       rslocal = null;
-    rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
-   while(rslocal.next()){
-   pro_ohip = rslocal.getString("providerohipno"); 
-   pro_group = rslocal.getString("groupno");
-   updatedate = rslocal.getString("updatedatetime");
-   cr = rslocal.getString("claimrecord");
-   oFile = rslocal.getString("ohipfilename");
-   hFile = rslocal.getString("htmlfilename");
- 
+<%
+	String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
 
-   %>
+	String[] paramYear = new String[2];
+	paramYear[0] = thisyear+"/01/01";
+	paramYear[1] = thisyear+"/12/31";
+	rslocal = null;
+	rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
+	while(rslocal.next()){
+		pro_ohip = rslocal.getString("providerohipno"); 
+		pro_group = rslocal.getString("groupno");
+		updatedate = rslocal.getString("updatedatetime");
+		cr = rslocal.getString("claimrecord");
+		oFile = rslocal.getString("ohipfilename");
+		hFile = rslocal.getString("htmlfilename");
+%>
 
   <tr> 
-    <td width="14%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_ohip%></font></td>
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_group%></font></td>
-    <td width="16%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=updatedate%></font></td>
-    <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=cr%></font><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"></font></td>
-   <td width="19%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
-    <td width="24%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
+    <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_ohip%></font></td>
+    <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_group%></font></td>
+    <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=updatedate%></font></td>
+    <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=cr%></font><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"></font></td>
+   <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
+    <td><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
   </tr>            
-  <%  }
-  
-   
- apptMainBean.closePstmtConn();
-  %>
+<% 
+}
+apptMainBean.closePstmtConn();
+%>
 </table>
 </body>
 </html>
