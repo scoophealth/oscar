@@ -78,7 +78,7 @@ public class BillingSessionBean {
     private String submissionCode = "";
     private String service_to_date = "";
     private String shortClaimNote = "";
-    
+    private String messageNotes = "";
     public String getIcbc_claim_no(){
         this.icbc_claim_no = (null != this.icbc_claim_no) ? this.icbc_claim_no : "";
         if (icbc_claim_no.compareTo("") == 0 || (this.billingType.compareTo("ICBC") != 0)){
@@ -311,6 +311,22 @@ public class BillingSessionBean {
      */
     public void setShortClaimNote(java.lang.String shortClaimNote) {
        this.shortClaimNote = shortClaimNote;
+    }
+    
+    /**
+     * Getter for property messageNotes.
+     * @return Value of property messageNotes.
+     */
+    public java.lang.String getMessageNotes() {
+       return messageNotes;
+    }
+    
+    /**
+     * Setter for property messageNotes.
+     * @param messageNotes New value of property messageNotes.
+     */
+    public void setMessageNotes(java.lang.String messageNotes) {
+       this.messageNotes = messageNotes;
     }
     
     // public void estUserName(){
