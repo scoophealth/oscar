@@ -1,25 +1,23 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
- <%      
-  if(session.getValue("user") == null)
-      response.sendRedirect("../logout.jsp");
-  String user_no; 
-  user_no = (String) session.getAttribute("user");
-  String asstProvider_no = "";
-   String color ="";
-  String premiumFlag="";
+<%      
+if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+String user_no = (String) session.getAttribute("user");
+String asstProvider_no = "";
+String color ="";
+String premiumFlag="";
 String service_form="", service_name="";
-%>       
+%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %>            
+
 <%
-  String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
-   String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
- 
+String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
+String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html:html locale="true">
 <head>
@@ -110,21 +108,19 @@ function setfocus() {
 }
    
 function valid(form){
-if (validateServiceType(form)){
-form.action = "dbManageBillingform_add.jsp"
-form.submit()}
-
-else{}
+	if (validateServiceType(form)){
+		form.action = "dbManageBillingform_add.jsp"
+		form.submit()
+	} else{}
 }
+
 function validateServiceType() {
-  if (document.servicetypeform.typeid.value == "MFP") {
-alert("<bean:message key="billing.manageBillingform.msgIDExists"/>");
-	return false;
- }
- else{
- return true;
-} 
-    
+	if (document.servicetypeform.typeid.value == "MFP") {
+		alert("<bean:message key="billing.manageBillingform.msgIDExists"/>");
+		return false;
+	} else{
+		return true;
+	} 
 }
 function refresh() {
   var u = self.location.href;
@@ -132,12 +128,6 @@ function refresh() {
     self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
   } else {
     history.go(0);
-  }
-}
-
-function onUnbilled(url) {
-  if(confirm("<bean:message key="billing.manageBillingform.msgDeleteBillingConfirm"/>")) {
-    popupPage(700,720, url);
   }
 }
 //-->
@@ -148,88 +138,71 @@ function onUnbilled(url) {
 <body leftmargin="0" topmargin="5" rightmargin="0">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
-    <td height="40" width="10%"> </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.manageBillingform.msgBilling"/></font></font></b></font> 
-      </p>
-    </td>
-  </tr>
+<tr bgcolor="#000000"> 
+	<td height="40" width="10%"> </td>
+	<td width="90%" align="left"> 
+	<p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.manageBillingform.msgBilling"/></font></font></b></font> 
+	</p>
+	</td>
+</tr>
 </table> 
+
 <table width="100%" border="0" bgcolor="#EEEEFF">
-  <form name="serviceform" method="get" action="">
-    <tr> 
-      <td width="30%" align="right"> <font size="2" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
-        <input type="radio" name="reportAction" value="servicecode" <%=reportAction.equals("servicecode")?"checked":""%>>
-        <bean:message key="billing.manageBillingform.formServiceCode"/>
-        <input type="radio" name="reportAction" value="dxcode"  <%=reportAction.equals("dxcode")?"checked":""%>>
-        <bean:message key="billing.manageBillingform.formDxCode"/></font> </td>
-      <td width="50%"> <div align="right"></div>
-         <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="billing.manageBillingform.formSelectForm"/></b></font> 
-          
- 	   	  <select name="billingform">
-           <option value="000" <%=clinicview.equals("000")?"selected":""%>><bean:message key="billing.manageBillingform.formAddDelete"/> </option>
-            <option value="***" <%=clinicview.equals("***")?"selected":""%>><bean:message key="billing.manageBillingform.formManagePremium"/> </option>
-  		    <% String formDesc="";
-            String formID="";
-            int Count = 0;  
-        ResultSet rslocal;
-        rslocal = null;
- rslocal = apptMainBean.queryResults("%", "search_billingform");
- while(rslocal.next()){
- formDesc = rslocal.getString("servicetype_name");
- formID = rslocal.getString("servicetype"); 
-  
+<form name="serviceform" method="post" action="manageBillingform.jsp">
+<tr> 
+	<td width="30%" align="right"> <font size="2" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
+	<input type="radio" name="reportAction" value="servicecode" <%=reportAction.equals("servicecode")?"checked":""%>>
+	<bean:message key="billing.manageBillingform.formServiceCode"/>
+	<input type="radio" name="reportAction" value="dxcode"  <%=reportAction.equals("dxcode")?"checked":""%>>
+	<bean:message key="billing.manageBillingform.formDxCode"/></font> </td>
+	<td width="50%" align="center">
+	<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="billing.manageBillingform.formSelectForm"/></b></font> 
+
+	<select name="billingform">
+		<option value="000" <%=clinicview.equals("000")?"selected":""%>><bean:message key="billing.manageBillingform.formAddDelete"/> </option>
+		<option value="***" <%=clinicview.equals("***")?"selected":""%>><bean:message key="billing.manageBillingform.formManagePremium"/> </option>
+
+<% 
+String formDesc="";
+String formID="";
+int Count = 0;  
+ResultSet rslocal = apptMainBean.queryResults("%", "search_billingform");
+
+while(rslocal.next()){
+	formDesc = rslocal.getString("servicetype_name");
+	formID = rslocal.getString("servicetype"); 
 %>  
-               <option value="<%=formID%>" <%=clinicview.equals(formID)?"selected":""%>><%=formDesc%></option>
-            <%
-      }      
-   
-  %>
-          </select>
-        </div></td>
-      <td width="40%"> <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
-        
-        <input type="submit" name="Submit" value="<bean:message key="billing.manageBillingform.btnManage"/>">
-        </font></td>
-    </tr>
-  </form>
+		<option value="<%=formID%>" <%=clinicview.equals(formID)?"selected":""%>><%=formDesc%></option>
+<%
+}      
+%>
+	</select>
+	</td><td width="40%">
+	<font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
+	<input type="submit" name="Submit" style="width=100px;" value="<bean:message key="billing.manageBillingform.btnManage"/>">
+	</font></td>
+</tr>
+</form>
 </table>
-<% if (clinicview.compareTo("000") == 0) { %>
-<%@ include file="manageBillingform_add.jsp" %> 
 
-<%} else{ %>
-<% if (clinicview.compareTo("***") == 0) { %>
-<%@ include file="manageBillingform_premium.jsp" %> 
-
-<%} else{ %>
-
-
-<% if (reportAction.compareTo("") == 0 || reportAction == null){%>
-
-  <p>&nbsp; </p>
-<% } else {  
-if (reportAction.compareTo("servicecode") == 0) {
-%> 
-<%@ include file="manageBillingform_service.jsp" %> 
 <%
-} else {
+if (clinicview.compareTo("000") == 0) { %>
+	<%@ include file="manageBillingform_add.jsp" %> 
+<%} else if (clinicview.compareTo("***") == 0) { %>
+	<%@ include file="manageBillingform_premium.jsp" %> 
+<%} else if (reportAction.compareTo("") == 0 || reportAction == null){ %>
+	<p>&nbsp; </p>
+<%} else if (reportAction.compareTo("servicecode") == 0) {  %> 
+	<%@ include file="manageBillingform_service.jsp" %> 
+<%} else if (reportAction.compareTo("dxcode") == 0) { %> 
+	<%@ include file="manageBillingform_dx.jsp" %> 
+<%
+}
+
+apptMainBean.closePstmtConn();
 %>
 
-<%
-if (reportAction.compareTo("dxcode") == 0) {
-%> 
-<%@ include file="manageBillingform_dx.jsp" %> 
-<%
-}}}}}
-%>
-
-  
-    <%
- apptMainBean.closePstmtConn();
-  %>
-
-<%@ include file="../demographic/zfooterbackclose.jsp" %> 
+<%@ include file="zfooterbackclose.jsp" %> 
 
 </body>
 </html:html>
