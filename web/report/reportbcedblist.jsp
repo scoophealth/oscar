@@ -135,12 +135,12 @@ function setfocus() {
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="reportnewedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="report.reportnewdblist.msgLastPage"/></a> |
+<a href="reportbcedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="report.reportnewdblist.msgLastPage"/></a> |
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="reportnewedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="report.reportnewdblist.msgNextPage"/></a>
+<a href="reportbcedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="report.reportnewdblist.msgNextPage"/></a>
 <%
 }
 %>
