@@ -196,9 +196,9 @@
         <canPrefill>true</canPrefill>
      </measurement>
      <measurement>
-        <type>FTNo</type>
-        <typeDesc>No Significan Pathology</typeDesc>
-        <typeDisplayName>Foot Exam: No Significant Pathology</typeDisplayName>
+        <type>FTEx</type>
+        <typeDesc>Significan Pathology</typeDesc>
+        <typeDisplayName>Foot Exam: Significant Pathology</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
@@ -266,9 +266,9 @@
         </validationRule>
      </measurement>
      <measurement>
-        <type>iNo</type>
-        <typeDesc>No Significant Pathology</typeDesc>
-        <typeDisplayName>Eye Exam: No Significant Pathology</typeDisplayName>
+        <type>iEx</type>
+        <typeDesc>Significant Pathology</typeDesc>
+        <typeDisplayName>Eye Exam: Significant Pathology</typeDisplayName>
         <measuringInstrc>Yes/No</measuringInstrc>
         <validationRule>
            <name>Yes/No</name>
