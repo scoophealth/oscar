@@ -52,7 +52,7 @@ CREATE TABLE appointment (
   demographic_no int(10) default NULL,
   notes varchar(80) default NULL,
   reason varchar(80) default NULL,
-  location varchar(10) default NULL,
+  location varchar(30) default NULL,
   resources varchar(10) default NULL,
   type varchar(10) default NULL,
   style varchar(10) default NULL,
@@ -124,7 +124,9 @@ CREATE TABLE billing (
   apptProvider_no varchar(6) default NULL,
   asstProvider_no varchar(6) default NULL,
   creator varchar(6) default NULL,
-  PRIMARY KEY  (billing_no)
+  PRIMARY KEY  (billing_no),
+  KEY appointment_no (appointment_no,demographic_no),
+  KEY demographicno (demographic_no)
 ) TYPE=MyISAM;
 
 --
@@ -141,7 +143,8 @@ CREATE TABLE billingdetail (
   appointment_date date default NULL,
   status char(1) default NULL,
   billingunit char(1) default NULL,
-  PRIMARY KEY  (billing_dt_no)
+  PRIMARY KEY  (billing_dt_no),
+  KEY billingno (billing_no)
 ) TYPE=MyISAM;
 
 --
@@ -341,7 +344,6 @@ CREATE TABLE ctl_provider (
   status char(1) default NULL
 ) TYPE=MyISAM;
 
-
 --
 -- Table structure for table 'ctl_specialinstructions'
 --
@@ -351,7 +353,6 @@ CREATE TABLE ctl_specialinstructions (
   description varchar(50) NOT NULL default '',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
-
 
 --
 -- Table structure for table 'demographic'
@@ -564,7 +565,8 @@ CREATE TABLE eChart (
   ongoingConcerns text,
   reminders text,
   encounter text,
-  PRIMARY KEY  (eChartId)
+  PRIMARY KEY  (eChartId),
+  KEY demographicno (demographicNo)
 ) TYPE=MyISAM;
 
 --
@@ -666,6 +668,7 @@ CREATE TABLE encounterForm (
   form_name varchar(30) NOT NULL default '',
   form_value varchar(255) NOT NULL default '',
   form_table varchar(50) NOT NULL default '',
+  hidden char(2) default '1',
   PRIMARY KEY  (form_value)
 ) TYPE=MyISAM;
 
@@ -1589,6 +1592,212 @@ CREATE TABLE formAnnual (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table `formAnnualV2`
+--
+
+CREATE TABLE formAnnualV2 (
+  ID int(10) NOT NULL auto_increment,
+  demographic_no int(10) default NULL,
+  provider_no int(10) default NULL,
+  formCreated date default NULL,
+  formEdited timestamp(14) NOT NULL,
+  pName varchar(60) default NULL,
+  age char(3) default NULL,
+  formDate date default NULL,
+  pmhxPshxUpdated tinyint(1) default NULL,
+  famHxUpdated tinyint(1) default NULL,
+  socHxUpdated tinyint(1) default NULL,
+  allergiesUpdated tinyint(1) default NULL,
+  medicationsUpdated tinyint(1) default NULL,
+  weight varchar(4) default NULL,
+  height varchar(4) default NULL,
+  waist varchar(4) default NULL,
+  lmp date default NULL,
+  BP varchar(6) default NULL,
+  smokingNo tinyint(1) default NULL,
+  smokingYes tinyint(1) default NULL,
+  smoking varchar(100) default NULL,
+  etohNo tinyint(1) default NULL,
+  etohYes tinyint(1) default NULL,
+  etoh varchar(100) default NULL,
+  caffineNo tinyint(1) default NULL,
+  caffineYes tinyint(1) default NULL,
+  caffine varchar(100) default NULL,
+  otcNo tinyint(1) default NULL,
+  otcYes tinyint(1) default NULL,
+  otc varchar(100) default NULL,
+  exerciseNo tinyint(1) default NULL,
+  exerciseYes tinyint(1) default NULL,
+  exercise varchar(100) default NULL,
+  nutritionNo tinyint(1) default NULL,
+  nutritionYes tinyint(1) default NULL,
+  nutrition varchar(100) default NULL,
+  dentalNo tinyint(1) default NULL,
+  dentalYes tinyint(1) default NULL,
+  dental varchar(100) default NULL,
+  occupationalNo tinyint(1) default NULL,
+  occupationalYes tinyint(1) default NULL,
+  occupational varchar(100) default NULL,
+  travelNo tinyint(1) default NULL,
+  travelYes tinyint(1) default NULL,
+  travel varchar(100) default NULL,
+  sexualityNo tinyint(1) default NULL,
+  sexualityYes tinyint(1) default NULL,
+  sexuality varchar(100) default NULL,
+  generalN tinyint(1) default NULL,
+  generalAbN tinyint(1) default NULL,
+  general varchar(100) default NULL,
+  headN tinyint(1) default NULL,
+  headAbN tinyint(1) default NULL,
+  head varchar(100) default NULL,
+  chestN tinyint(1) default NULL,
+  chestAbN tinyint(1) default NULL,
+  chest varchar(100) default NULL,
+  cvsN tinyint(1) default NULL,
+  cvsAbN tinyint(1) default NULL,
+  cvs varchar(100) default NULL,
+  giN tinyint(1) default NULL,
+  giAbN tinyint(1) default NULL,
+  gi varchar(100) default NULL,
+  guN tinyint(1) default NULL,
+  guAbN tinyint(1) default NULL,
+  gu varchar(100) default NULL,
+  cnsN tinyint(1) default NULL,
+  cnsAbN tinyint(1) default NULL,
+  cns varchar(100) default NULL,
+  mskN tinyint(1) default NULL,
+  mskAbN tinyint(1) default NULL,
+  msk varchar(100) default NULL,
+  skinN tinyint(1) default NULL,
+  skinAbN tinyint(1) default NULL,
+  skin varchar(100) default NULL,
+  moodN tinyint(1) default NULL,
+  moodAbN tinyint(1) default NULL,
+  mood varchar(100) default NULL,
+  otherN tinyint(1) default NULL,
+  otherAbN tinyint(1) default NULL,
+  other text,
+  eyesN tinyint(1) default NULL,
+  eyesAbN tinyint(1) default NULL,
+  eyes varchar(100) default NULL,
+  earsN tinyint(1) default NULL,
+  earsAbN tinyint(1) default NULL,
+  ears varchar(100) default NULL,
+  oropharynxN tinyint(1) default NULL,
+  oropharynxAbN tinyint(1) default NULL,
+  oropharynx varchar(100) default NULL,
+  thyroidN tinyint(1) default NULL,
+  thyroidAbN tinyint(1) default NULL,
+  thyroid varchar(100) default NULL,
+  lnodesN tinyint(1) default NULL,
+  lnodesAbN tinyint(1) default NULL,
+  lnodes varchar(100) default NULL,
+  clearN tinyint(1) default NULL,
+  clearAbN tinyint(1) default NULL,
+  clear varchar(100) default NULL,
+  bilatN tinyint(1) default NULL,
+  bilatAbN tinyint(1) default NULL,
+  bilat varchar(100) default NULL,
+  wheezesN tinyint(1) default NULL,
+  wheezesAbN tinyint(1) default NULL,
+  wheezes varchar(100) default NULL,
+  cracklesN tinyint(1) default NULL,
+  cracklesAbN tinyint(1) default NULL,
+  crackles varchar(100) default NULL,
+  chestOther varchar(100) default NULL,
+  s1s2N tinyint(1) default NULL,
+  s1s2AbN tinyint(1) default NULL,
+  s1s2 varchar(100) default NULL,
+  murmurN tinyint(1) default NULL,
+  murmurAbN tinyint(1) default NULL,
+  murmur varchar(100) default NULL,
+  periphPulseN tinyint(1) default NULL,
+  periphPulseAbN tinyint(1) default NULL,
+  periphPulse varchar(100) default NULL,
+  edemaN tinyint(1) default NULL,
+  edemaAbN tinyint(1) default NULL,
+  edema varchar(100) default NULL,
+  jvpN tinyint(1) default NULL,
+  jvpAbN tinyint(1) default NULL,
+  jvp varchar(100) default NULL,
+  rhythmN tinyint(1) default NULL,
+  rhythmAbN tinyint(1) default NULL,
+  rhythm varchar(100) default NULL,
+  chestbpN tinyint(1) default NULL,
+  chestbpAbN tinyint(1) default NULL,
+  chestbp varchar(100) default NULL,
+  cvsOther varchar(100) default NULL,
+  breastLeftN tinyint(1) default NULL,
+  breastLeftAbN tinyint(1) default NULL,
+  breastLeft varchar(100) default NULL,
+  breastRightN tinyint(1) default NULL,
+  breastRightAbN tinyint(1) default NULL,
+  breastRight varchar(100) default NULL,
+  softN tinyint(1) default NULL,
+  softAbN tinyint(1) default NULL,
+  soft varchar(100) default NULL,
+  tenderN tinyint(1) default NULL,
+  tenderAbN tinyint(1) default NULL,
+  tender varchar(100) default NULL,
+  bsN tinyint(1) default NULL,
+  bsAbN tinyint(1) default NULL,
+  bs varchar(100) default NULL,
+  hepatomegN tinyint(1) default NULL,
+  hepatomegAbN tinyint(1) default NULL,
+  hepatomeg varchar(100) default NULL,
+  splenomegN tinyint(1) default NULL,
+  splenomegAbN tinyint(1) default NULL,
+  splenomeg varchar(100) default NULL,
+  massesN tinyint(1) default NULL,
+  massesAbN tinyint(1) default NULL,
+  masses varchar(100) default NULL,
+  rectalN tinyint(1) default NULL,
+  rectalAbN tinyint(1) default NULL,
+  rectal varchar(100) default NULL,
+  cxN tinyint(1) default NULL,
+  cxAbN tinyint(1) default NULL,
+  cx varchar(100) default NULL,
+  bimanualN tinyint(1) default NULL,
+  bimanualAbN tinyint(1) default NULL,
+  bimanual varchar(100) default NULL,
+  adnexaN tinyint(1) default NULL,
+  adnexaAbN tinyint(1) default NULL,
+  adnexa varchar(100) default NULL,
+  papN tinyint(1) default NULL,
+  papAbN tinyint(1) default NULL,
+  pap varchar(100) default NULL,
+  exammskN tinyint(1) default NULL,
+  exammskAbN tinyint(1) default NULL,
+  exammsk varchar(100) default NULL,
+  examskinN tinyint(1) default NULL,
+  examskinAbN tinyint(1) default NULL,
+  examskin varchar(100) default NULL,
+  examcnsN tinyint(1) default NULL,
+  examcnsAbN tinyint(1) default NULL,
+  examcns text,
+  impressionPlan text,
+  toDoSexualHealth text,
+  toDoObesity text,
+  toDoCholesterol text,
+  toDoOsteoporosis text,
+  toDoPAPs text,
+  toDoMammogram text,
+  toDoColorectal text,
+  toDoElderly text,
+  immunizationtd tinyint(1) default NULL,
+  immunizationPneumovax tinyint(1) default NULL,
+  immunizationFlu tinyint(1) default NULL,
+  immunizationMenjugate tinyint(1) default NULL,
+  toDoImmunization text,
+  signature varchar(60) default NULL,
+  examGenitaliaN tinyint(1) default NULL,
+  examGenitaliaAbN tinyint(1) default NULL,
+  examGenitalia varchar(100) default NULL,
+  toDoProstateCancer text,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'formLabReq'
 --
 
@@ -2116,7 +2325,7 @@ CREATE TABLE formRourke (
   provider_no int(10) default NULL,
   formCreated date default NULL,
   formEdited timestamp(14) NOT NULL,
-  c_lastVisited char(1) default NULL,
+  c_lastVisited char(3) default NULL,
   c_birthRemarks text,
   c_riskFactors text,
   c_pName varchar(60) default NULL,
@@ -3146,6 +3355,25 @@ CREATE TABLE studydata (
   status varchar(30) default NULL,
   content text,
   PRIMARY KEY  (studydata_no)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `studylogin`
+--
+
+CREATE TABLE studylogin (
+  id int(6) NOT NULL auto_increment,
+  provider_no varchar(6) default NULL,
+  study_no int(3) default NULL,
+  remote_login_url varchar(100) default NULL,
+  url_name_username varchar(20) NOT NULL default '',
+  url_name_password varchar(20) NOT NULL default '',
+  username varchar(30) NOT NULL default '',
+  password varchar(100) NOT NULL default '',
+  current tinyint(1) default NULL,
+  creator varchar(6) NOT NULL default '',
+  timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
 --
