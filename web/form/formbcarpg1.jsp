@@ -41,6 +41,9 @@
 .demo  {color:#000033; background-color:#cccccc; layer-background-color:#cccccc;
         position:absolute; top:150px; left:270px; width:120px; height:230px;
         z-index:99;  visibility:hidden;}
+.demo1  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:40px; left:370px; width:190px; height:80px;
+        z-index:99;  visibility:hidden;}
 -->
 </style>
 </head>
@@ -313,6 +316,14 @@ function calByLMP() {
      <tr><td><a href=# onclick="insertBox('Urdu','pg1_langPref', 'Langdiv'); return false;">Urdu</a></td></tr>
    </table>
 </div>
+<div ID="Instrdiv" class="demo1">
+	<center>
+   <table bgcolor='orange' width='99%'>
+     <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;">X</a></th></tr>
+     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="green">Double click pink fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
+   </table>
+   </center>
+</div>
 
 <!--
 @oscar.formDB Table="formBCAR" 
@@ -351,9 +362,9 @@ function calByLMP() {
 <%
   if (!bView) {
 %>
-         <!--td>
-           <a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
-        </td-->
+         <td>
+           <a href=# title="Double click pink fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
+        </td>
 
         <td align="right"><b>View:</b> 
             <a href="javascript: popupPage('formbcarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.1)</font></a> |
@@ -414,7 +425,7 @@ function calByLMP() {
 	  </td>
 	  
 	  <td><span class="small9">LANGUAGE PREFERRED</span><br>
-      <input type="text" name="pg1_langPref" style="background-color: #99ccff;" onDblClick="showHideBox('Langdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_langPref", "") %>" @oscar.formDB  />
+      <input type="text" name="pg1_langPref" style="background-color: #FFCCCC;" onDblClick="showHideBox('Langdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_langPref", "") %>" @oscar.formDB  />
 	  </td>
     </tr>
   </table>
@@ -542,7 +553,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit1" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth1" style="background-color: #99ccff;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth1", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth1" style="background-color: #FFCCCC;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth1", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -571,7 +582,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit2" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth2" style="background-color: #99ccff;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth2", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth2" style="background-color: #FFCCCC;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth2", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -600,7 +611,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit3" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth3" style="background-color: #99ccff;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth3", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth3" style="background-color: #FFCCCC;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth3", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -629,7 +640,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit4" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit4", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth4" style="background-color: #99ccff;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth4", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth4" style="background-color: #FFCCCC;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth4", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td>
@@ -658,7 +669,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_birthWeit5" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_presHealth5" style="background-color: #99ccff;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth5", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_presHealth5" style="background-color: #FFCCCC;" onDblClick='showDef("A&W", this);' style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_presHealth5", "") %>" @oscar.formDB />
   </td>
 </tr>
 </table>
@@ -676,7 +687,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
     <input type="text" name="pg1_mensCycle" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_mensCycle", "") %>" @oscar.formDB />
 	</td>
     <td>EDD BY DATES<br> dd/mm/yyyy<br>
-    <input type="text" name="pg1_eddByDate"  style="background-color: #99ccff; width:100%;" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" onDblClick="calByLMP();" @oscar.formDB dbType="date"/>
+    <input type="text" name="pg1_eddByDate"  style="background-color: #FFCCCC; width:100%;" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" onDblClick="calByLMP();" @oscar.formDB dbType="date"/>
 	</td>
   </tr>
   <tr>
