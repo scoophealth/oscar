@@ -4,12 +4,12 @@
     response.sendRedirect("../logout.jsp");
 
   if(request.getParameter("year")==null && request.getParameter("month")==null && request.getParameter("day")==null && request.getParameter("displaymode")==null && request.getParameter("dboperation")==null) {
-
-GregorianCalendar now=new GregorianCalendar();
+    GregorianCalendar now=new GregorianCalendar();
     int nowYear = now.get(Calendar.YEAR);
     int nowMonth = now.get(Calendar.MONTH)+1 ; //be care for the month +-1
     int nowDay = now.get(Calendar.DAY_OF_MONTH);
     response.sendRedirect("./receptionistcontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday");
+    return;
   }
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
