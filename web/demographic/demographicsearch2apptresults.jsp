@@ -31,6 +31,7 @@
   if(session.getValue("user") == null)    response.sendRedirect("../logout.htm");
   // String curProvider_no = (String) session.getAttribute("user");
   String curProvider_no = request.getParameter("provider_no");
+      
   String strLimit1="0";
   String strLimit2="10";
   StringBuffer bufChart = null, bufName = null, bufNo = null;
@@ -65,6 +66,16 @@
     .blueText{
         font-size:9pt;        
         vertical-align: top;
+    }
+    .mbttn {
+        background: #D7DBF2;
+        border-bottom: 1px solid #104A7B;
+        border-right: 1px solid #104A7B;
+        border-left: 1px solid #AFC4D5;
+        border-top:1px solid #AFC4D5;
+        color:#000066;height:19px;
+        text-decoration:none;
+        cursor: hand
     }
     .subject {
         background-color: #000000;
@@ -153,10 +164,10 @@ function searchAll() {
         <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
         <input type="hidden" name="displaymode" value="Search " >
         <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
-        <input type="SUBMIT" name="displaymode" value='<bean:message key="global.search"/>' size="17" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>
+        <input type="SUBMIT"  class="mbttn" name="displaymode" value='<bean:message key="global.search"/>' size="17" title='<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>'>
         &nbsp;&nbsp;
-        <INPUT TYPE="button" onclick="searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>" VALUE="<bean:message key="demographic.search.Inactive"/>">
-        <INPUT TYPE="button" onclick="searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>" VALUE="<bean:message key="demographic.search.All"/>">        
+        <INPUT TYPE="button"  class="mbttn" onclick="searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>" VALUE="<bean:message key="demographic.search.Inactive"/>">
+        <INPUT TYPE="button"  class="mbttn" onclick="searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>" VALUE="<bean:message key="demographic.search.All"/>">        
       </td></tr>
     <tr>
        <td class="blueText" nowrap>
@@ -188,9 +199,9 @@ function searchAll() {
 <script language="JavaScript">
 
 var fullname="";
-function addName(demographic_no, lastname, firstname, chartno, provider_no, messageID) {  
+function addName(demographic_no, lastname, firstname, chartno, messageID) {  
   fullname=lastname+","+firstname;
-  document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&provider_no="+provider_no+"&bFirstDisp=false"+"&messageID="+messageID;  //+"\"" ;
+  document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false"+"&messageID="+messageID;  //+"\"" ;
   document.addform.submit(); // 
   //return;
 }
@@ -212,8 +223,8 @@ function addName(demographic_no, lastname, firstname, chartno, provider_no, mess
 
 <%@ include file="../demographic/zdemographicsearchresult.jsp" %>
  
-<tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
-      <td><input type="submit" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="addName('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=URLEncoder.encode(curProvider_no)%>','<%=request.getParameter("messageId")%>')"></td>
+<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>" align="center">
+      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="addName('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
       <td><%=age%></td>
@@ -279,12 +290,12 @@ function next() {
 <%
   if(nLastPage>=0) {
 %>
-<input type="submit" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"  onClick="last()">
+<input type="submit" class="mbttn" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"  onClick="last()">
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<input type="submit" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"  onClick="next()">
+<input type="submit" class="mbttn" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"  onClick="next()">
 <%
 }
 %>
