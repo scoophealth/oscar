@@ -563,8 +563,14 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
 <% } else {%>  
     <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="<bean:message key="global.billing"/>">|-<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>
 <% } %>          
+    <% if (vLocale.getCountry().equals("BR")) {%>
+    <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr');return false;" 
+    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
+    <%}else{%>
     <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;" 
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
+    <%}%>
+
       <% if (!vLocale.getCountry().equals("BR")) { %>
       <!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|Rx</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=<bean:message key="global.oscarRx"/>')">|<bean:message key="global.rx"/></a>
       <% } %>
