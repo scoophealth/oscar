@@ -26,14 +26,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
 
 public final class FrmFormForm extends ActionForm {
-
+ 
+   static int howmany = 0;
+   
    public FrmFormForm(){
-      System.out.println("FrmFormForm gets instantiated");
+      howmany++;
+      System.out.println("FrmFormForm gets instantiated howmany = "+howmany+" ");
+      System.out.println("FrmFormForm currentMem = "+currentMem());
    }
     //Using map-backed method to get the value of each field
     //key: the field property
     //value: the value of the associated key
-    private final Map values = new HashMap();
+    private Map values = new HashMap();
 
     public void setValue(String key, Object value) {
        System.out.println("adding key "+key+" value "+value+" Size of FrmFormForm "+values.size());
@@ -43,5 +47,17 @@ public final class FrmFormForm extends ActionForm {
     public Object getValue(String key) {        
         return values.get(key);
     }
+    
+    public void finalize(){
+       howmany--;
+       System.out.println("FrmFormForm gets finalized howmany = "+howmany+" ");
+       System.out.println("FrmFormForm currentMem = "+currentMem());
+    }
         
+    public String currentMem(){        
+       long total = Runtime.getRuntime().totalMemory();
+       long free  = Runtime.getRuntime().freeMemory();
+       long Used = total -  free;
+       return "Total "+total+" Free "+free+" USED "+Used;
+    }
 }
