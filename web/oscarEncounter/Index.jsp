@@ -762,7 +762,7 @@ border-right: 2px solid #cfcfcf;
                     </td>
                 </tr>                
                 <tr>                    
-                    <td><a href=# onClick="popupPage(600,1000,'<rewrite:reWrite jspPage="oscarMeasurements/SetupDisplayHistory.do"/>'); return false;" ><bean:message key="oscarEncounter.Index.oldMeasurements"/></a>
+                    <td><a href=# onClick="popupPage(600,1000,'<rewrite:reWrite jspPage="oscarMeasurements/SetupHistoryIndex.do"/>'); return false;" ><bean:message key="oscarEncounter.Index.oldMeasurements"/></a>
                     </td>                                    
                 </tr> 
                 </form>
