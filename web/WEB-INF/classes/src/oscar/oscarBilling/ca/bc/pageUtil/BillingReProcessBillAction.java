@@ -98,6 +98,7 @@ public class BillingReProcessBillAction extends Action {
         String name_verify  = demographicFirstName.substring(0,1) + " " + demographicLastName.substring(0,2);  //d
         String billingGroupNo=billform.getGroupNo(providerNo);
         String practitionerNo=billform.getPracNo(providerNo);//p
+        
         String hcNo = demo.getHIN().trim();//d
         String dependentNo = frm.getDependentNo();//f
         
@@ -205,6 +206,7 @@ public class BillingReProcessBillAction extends Action {
             String sql = "update billingmaster set "                                                   
                         + "billingstatus = '"+billingStatus+"', "                                                                      
                         + "datacenter = '"+dataCenterId+"', "
+                        //TODO 
                         + "payee_no = '"+billingGroupNo+"', "
                         + "practitioner_no = '"+practitionerNo+"', "
                         + "phn = '"+hcNo+"', "
@@ -256,15 +258,19 @@ public class BillingReProcessBillAction extends Action {
                         + "oin_postalcode = '"+UtilMisc.mysqlEscape(oinPostalcode)+"'  "
                         +" where billingmaster_no  = '"+billingmasterNo+"'";
             
+            String providerSQL = "update billing set provider_no = '"+providerNo+"' where billing_no ='"+frm.getBillNumber()+"'";
+            
             System.out.println("\n"+sql+"\n");
             try {                                                
                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-               db.RunSQL(sql);
+               db.RunSQL(sql);    
+               db.RunSQL(providerSQL);
+               
                if (secondSQL != null){
                     System.out.println(secondSQL);
                     db.RunSQL(secondSQL);
                }
-               
+                                             
                if (correspondenceCode.equals("N") || correspondenceCode.equals("B")){                          
                  MSPBillingNote n = new MSPBillingNote();
                  n.addNote(billingmasterNo,(String) request.getSession().getAttribute("user"),frm.getNotes());              
