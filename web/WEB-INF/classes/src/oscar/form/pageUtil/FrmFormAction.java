@@ -138,6 +138,8 @@ public class FrmFormAction extends Action {
             props.setProperty("provider_no", providerNo);
             props.setProperty("visitCod", visitCod);
             String diagnosisVT = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT"));
+            System.out.println("diagnosisVT >"+diagnosisVT+"< form val >"+frm.getValue("diagnosisVT"));
+            
             //for VTForm            
             props.setProperty("diagnosis", diagnosisVT);
             //System.out.println("diagnosis: " + props.getProperty("diagnosis"));
