@@ -50,8 +50,8 @@ public final class LoginAction extends Action {
         strAuth = cl.auth(userName, password, pin, ip) ;
     } catch (Exception e) {
         String newURL = mapping.findForward("error").getPath();
-        if (e.getClass().toString().equals("class java.lang.ClassNotFoundException")) {
-            newURL = newURL + "?errormsg=Database driver "+e.getMessage()+" not found.";
+        if (e.getMessage().startsWith("java.lang.ClassNotFoundException")) {
+            newURL = newURL + "?errormsg=Database driver "+e.getMessage().substring(e.getMessage().indexOf(':')+2)+" not found.";
         } else {
             newURL = newURL + "?errormsg=Database connection error: "+e.getMessage()+".";
         }
