@@ -40,7 +40,7 @@ public class EctSaveEncounterAction extends Action {
 	    }
         try {
             DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-            String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" + UtilDateUtilities.DateToString(date, "yyyyMMddHHmmss", httpservletrequest.getLocale()) + "'," + sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +  UtilMisc.charEscape(sessionbean.subject, '\'') + "','" + UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" + UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" + UtilMisc.charEscape(sessionbean.encounter, '\'') + "')" ;
+            String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" + UtilDateUtilities.DateToString(date, "yyyy-MM-dd HH:mm:ss") + "'," + sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +  UtilMisc.charEscape(sessionbean.subject, '\'') + "','" + UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" + UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" + UtilMisc.charEscape(sessionbean.encounter, '\'') + "')" ;
             dbhandler.RunSQL(s);
 
             //change the appt status
