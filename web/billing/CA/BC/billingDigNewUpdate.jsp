@@ -26,7 +26,7 @@
 
   <%
   if(session.getValue("user") == null) 
-    response.sendRedirect("../logout.htm");
+    response.sendRedirect("../../../logout.htm");
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");    
 //  mygroupno = (String) session.getAttribute("groupno");  
@@ -103,20 +103,35 @@ function CodeAttach(File0, File1, File2) {
 <%
 
   String code = request.getParameter("update");
-  code = code.substring(code.length()-5);
+  code = code.substring(6).trim();
+
   
+
+/*for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
+         System.out.println(e.nextElement());
+    }
+  
+  */
  int rowsAffected=0;
     
     String[] param1 =new String[2];
-	  param1[0]=request.getParameter(code);
+	  param1[0]= (String)request.getParameter(code);
 	  param1[1]=code;
-          System.out.println("hghghghg"+param1);
+          try{
+          System.out.println("code >"+code+"< the value to change >"+param1[0]+"<  this should also be code >"+param1[1]+"<");
+          }catch(Exception e){
+
+          }   
 //	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+          try{
   	 rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updatedigcode");
+            apptMainBean.closePstmtConn();
+         }catch(Exception e){
+                      //System.out.println("code >"+code+"< the value to change >"+param1[0]+"<  this should also be code >"+param1[1]+"<");
+            e.printStackTrace();
+         }
  
-%>
-<%  
-   apptMainBean.closePstmtConn();
+
 %>
   <p><h1>Successful Addition of a billing Record.</h1></p>
 <script LANGUAGE="JavaScript">
