@@ -79,6 +79,7 @@
 <!--<script type="application/x-javascript" language="javascript" src="/javascript/sizing.js"></script>-->
 <script type="text/javascript" language=javascript>
     var X       = 10;
+    var pBSmall = 30;
     var small   = 60;
     var normal  = 166;
     var medium  = 272;
@@ -360,7 +361,7 @@ function presBoxX(){
     setBoxesFullWidth();    
 }
 function presBoxSmall(){   
-    document.getElementById("presBox").style.height=small;
+    document.getElementById("presBox").style.height=pBSmall;
     setBoxesFullWidth();
 }
 function presBoxNormal(){
