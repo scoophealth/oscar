@@ -188,6 +188,7 @@ public class ExtractBean extends Object implements Serializable {
 		} else {
 			patientHeader2 = "";
 		}
+		checkHeader1();
 		if (visitType == null || visitType.compareTo("00") == 0) {
 			patientHeader = HE + "H" + hin + dob + zero(count) + invNo + spec
 					+ "P" + referralDoc + space(4) + space(8) + space(4)
@@ -307,9 +308,14 @@ public class ExtractBean extends Object implements Serializable {
 		}
 		errorMsg += errorPartMsg;
 	}
+	private void checkHeader1() {
+		if (referralDoc != null && referralDoc.length() != 6 )
+			errorPartMsg = "Header1: Referral Doc. No. wrong!<br>";
+		errorMsg += errorPartMsg;
+	}
 	private void checkHeader2() {
 		if (hcHin.length() == 0 || hcHin.length() > 12)
-			errorPartMsg = "Header2: Reg. No. wrong!<br>";
+			errorPartMsg += "Header2: Reg. No. wrong!<br>";
 		if (hcLast.length() == 0)
 			errorPartMsg += "Header2: Patient's Lastname wrong!<br>";
 		if (hcFirst.length() == 0)

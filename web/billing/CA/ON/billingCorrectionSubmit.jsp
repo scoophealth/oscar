@@ -23,7 +23,9 @@
  * Ontario, Canada 
  */
 -->
- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%  
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm");
+%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
