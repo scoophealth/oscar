@@ -20,6 +20,13 @@
   }
 
   String fieldname="", regularexp="like"; // exactly search is not required by users, e.g. regularexp="=";
+  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+  if (strDbType.trim().equalsIgnoreCase("mysql")) {
+    regularexp = "regexp";
+  } else if (strDbType.trim().equalsIgnoreCase("postgresql"))  {
+    regularexp = "~*";
+  }
+
   if(request.getParameter("search_mode")!=null) {
 	  if(request.getParameter("keyword").indexOf("*")!=-1 || request.getParameter("keyword").indexOf("%")!=-1) regularexp="like";
     if(request.getParameter("search_mode").equals("search_address")) fieldname="address";
