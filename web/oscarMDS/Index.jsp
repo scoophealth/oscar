@@ -138,7 +138,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 <html>
 <head>
 <title>
-Lab Reports
+<bean:message key="oscarMDS.index.title"/>
 </title>
 </head>
 
@@ -176,7 +176,7 @@ function checkSelected() {
     if (aBoxIsChecked) {
         popupStart(300, 400, 'SelectProvider.jsp', 'providerselect');
     } else {
-        alert("Please select at least one lab to be reassigned.");
+        alert('<bean:message key="oscarMDS.index.msgSelectOneLab"/>');
     }
 }
 
@@ -198,15 +198,15 @@ function checkSelected() {
                                 <input type="hidden" name="status" value="<%= ackStatus %>">                                
                                 <input type="hidden" name="selectedProviders">
                                 <% if (demographicNo == null) { %>
-                                    <input type="button" class="smallButton" value="Search" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                                
-                                <input type="button" class="smallButton" value="Close" onClick="window.close()">
+                                <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="window.close()">
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
-                                    <input type="button" class="smallButton" value="Default View" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
                                 <% if (demographicNo == null && mDSData.segmentID.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
-                                    <input type="button" class="smallButton" value="Forward" onClick="checkSelected()">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                 <% } %>
                             </td>
                             <td align="center" valign="center" width="40%" class="Nav">
@@ -216,7 +216,7 @@ function checkSelected() {
                                 <% } %>
                             </td>                            
                             <td align="right" valign="center" width="30%">
-                                <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')">Help</a> | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" >About</a>
+                                <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" ><bean:message key="global.about"/></a>
                             </td>
                         </tr>
                     </table>                        
@@ -224,31 +224,31 @@ function checkSelected() {
             </tr>
             <tr>
                 <th align="left" valign="bottom" class="cell">
-                    Health Number
+                    <bean:message key="oscarMDS.index.msgHealthNumber"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Patient Name
+                    <bean:message key="oscarMDS.index.msgPatientName"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Sex
+                    <bean:message key="oscarMDS.index.msgSex"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Result Status
+                    <bean:message key="oscarMDS.index.msgResultStatus"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Date of Test
+                    <bean:message key="oscarMDS.index.msgDateTest"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Order Priority
+                    <bean:message key="oscarMDS.index.msgOrderPriority"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Requesting Client
+                    <bean:message key="oscarMDS.index.msgRequestingClient"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Discipline
+                    <bean:message key="oscarMDS.index.msgDiscipline"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
-                    Report Status
+                    <bean:message key="oscarMDS.index.msgReportStatus"/>
                 </th>
 
             </tr>
@@ -306,7 +306,7 @@ function checkSelected() {
             if ( endIndex == 0 ) { %>
             <tr>
                 <td colspan="9" align="center">
-                    <i>--- no reports found matching the selected criteria ---</i>
+                    <i><bean:message key="oscarMDS.index.msgNoReports"/></i>
                 </td>
             </tr>
          <% } %>
@@ -316,28 +316,28 @@ function checkSelected() {
                         <tr> 
                             <td align="left" valign="middle" width="30%">                                
                                 <% if (demographicNo == null) { %>
-                                    <input type="button" class="smallButton" value="Search" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                                
-                                <input type="button" class="smallButton" value="Close " onClick="window.close()">
+                                <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="window.close()">
                                 <% if (request.getParameter("fname") != null) { %>
-                                    <input type="button" class="smallButton" value="Default View" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                             
                                 <% if (demographicNo == null && mDSData.segmentID.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
-                                    <input type="button" class="smallButton" value="Forward" onClick="checkSelected()">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnFoward"/>" onClick="checkSelected()">
                                 <% } %>
                             </td>
                             <td align="center" valign="middle" width="40%">
                                 <div class="Nav">
                                 <% if ( pageNum > 1 || mDSData.segmentID.size() > endIndex ) {
                                     if ( pageNum > 1 ) { %>
-                                        <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>">< prev</a>
+                                        <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>">< <bean:message key="oscarMDS.index.btnPrevious"/></a>
                                  <% } else { %>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                  <% } %>
                                        [<%= pageNum %>] 
                                  <% if ( mDSData.segmentID.size() > endIndex ) { %>
-                                        <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>">next ></a>                                        
+                                        <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message key="oscarMDS.index.btnNext"/> ></a>
                                  
                                  <% } else { %>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
