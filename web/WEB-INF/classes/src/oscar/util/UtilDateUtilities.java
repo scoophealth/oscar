@@ -81,46 +81,47 @@ public class UtilDateUtilities {
         return gregoriancalendar.getTime();
     }
 
-    public static String calcAge(Date date)    {
-        GregorianCalendar gregoriancalendar = new GregorianCalendar();
-        int i = gregoriancalendar.get(1);
-        int j = gregoriancalendar.get(2) + 1;
-        int k = gregoriancalendar.get(5);
-        GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
-        gregoriancalendar1.setTime(date);
-        int l = gregoriancalendar1.get(1);
-        int i1 = gregoriancalendar1.get(2) + 1;
-        int j1 = gregoriancalendar1.get(5);
-        String s = "";
-        int k1 = 0;
-        k1 = i - l;
-        s = k1 + " years";
-        if(j > i1 || j == i1 && k >= j1)        {
-            k1 = i - l;
-            s = k1 + " years";
+    public static String calcAge(Date DOB)    {
+        GregorianCalendar now = new GregorianCalendar();
+        int curYear = now.get(Calendar.YEAR);
+        int curMonth = now.get(Calendar.MONTH) + 1;
+        int curDay = now.get(Calendar.DAY_OF_MONTH);
+        
+        GregorianCalendar birthDate = new GregorianCalendar();
+        birthDate.setTime(DOB);
+        int birthYear = birthDate.get(Calendar.YEAR);
+        int birthMonth = birthDate.get(Calendar.MONTH) + 1;
+        int birthDay = birthDate.get(5);
+                
+        int ageInYears = curYear - birthYear;
+        String result = ageInYears + " years";
+        
+        if (curMonth > birthMonth || curMonth == birthMonth && curDay >= birthDay)        {
+            ageInYears = curYear - birthYear;
+            result = ageInYears + " years";
         } else        {
-            k1 = i - l - 1;
-            s = k1 + " years";
+            ageInYears = curYear - birthYear - 1;
+            result = ageInYears + " years";
         }
-        if(k1 < 2)        {
-            int i2 = i - l;
-            int l1;
-            if(i2 == 2)
-                l1 = (gregoriancalendar1.getActualMaximum(6) - gregoriancalendar1.get(6)) + gregoriancalendar.get(6) + 365;
-            else
-            if(i2 == 1)
-                l1 = (gregoriancalendar1.getActualMaximum(6) - gregoriancalendar1.get(6)) + gregoriancalendar.get(6);
-            else
-                l1 = gregoriancalendar.get(6) - gregoriancalendar1.get(6);
-            if(l1 / 7 > 9)
-                s = l1 / 30 + " months";
-            else
-            if(l1 >= 14)
-                s = l1 / 7 + " weeks";
-            else
-                s = l1 + " days";
+        if (ageInYears < 2)        {
+            int yearDiff = curYear - birthYear;
+            int ageInDays;
+            if (yearDiff == 2) {
+                ageInDays = (birthDate.getActualMaximum(Calendar.DAY_OF_YEAR) - birthDate.get(Calendar.DAY_OF_YEAR)) + now.get(Calendar.DAY_OF_YEAR) + 365;
+            } else if (yearDiff == 1) {
+                ageInDays = (birthDate.getActualMaximum(Calendar.DAY_OF_YEAR) - birthDate.get(Calendar.DAY_OF_YEAR)) + now.get(Calendar.DAY_OF_YEAR);
+            } else {
+                ageInDays = now.get(Calendar.DAY_OF_YEAR) - birthDate.get(Calendar.DAY_OF_YEAR);
+            }
+            if (ageInDays / 7 > 9) {
+                result = ageInDays / 30 + " months";
+            } else if (ageInDays >= 14) {
+                result = ageInDays / 7 + " weeks";
+            } else {
+                result = ageInDays + " days";
+            }
         }
-        return s;
+        return result;
     }
 
     public static int calcAge(String year_of_birth, String month_of_birth, String date_of_birth)    {
