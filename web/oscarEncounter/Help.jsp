@@ -38,10 +38,10 @@ Template
 
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
-    <table class="MainTable" id="scrollNumber1" name="encounterTable" height="95%" width="100">
-        <tr bgcolor="#000099" height="35">
+    <table class="MainTable" id="scrollNumber1" name="encounterTable" height="95%" width="100" cellpadding="10">
+        <tr bgcolor="#000099" height="20">
             <td>
-                <font color="white" size="+1"><b>&nbsp;Help</b></font>
+                <font color="white" size="+1"><b>Help</b></font>
             </td>            
         </tr>
         <tr>

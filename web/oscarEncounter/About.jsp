@@ -38,16 +38,15 @@ Template
 
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
-    <table class="MainTable" id="scrollNumber1" name="encounterTable" height="95%" width="100">
-        <tr bgcolor="#000099" height="35">
+    <table class="MainTable" id="scrollNumber1" name="encounterTable" height="95%" width="100" cellpadding="10">
+        <tr bgcolor="#000099" height="20">
             <td>
-                <font color="white" size="+1"><b>&nbsp;About</b></font>
+                <font color="white" size="+1"><b>About</b></font>
             </td>            
         </tr>
         <tr>
             <form action="">
-                <td height="95%">
-                    <br>
+                <td height="95%">                    
                         Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
                         This software is published under the GPL GNU General Public License. 
                         This program is free software; you can redistribute it and/or 
@@ -60,8 +59,6 @@ Template
                         GNU General Public License for more details.  You should have received a copy of the GNU General Public License 
                         along with this program; if not, write to the Free Software 
                         Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-                        <br><br>
-                        OSCAR TEAM
                         <br><br>
                         This software was written for the<br>
                         Department of Family Medicine<br>
