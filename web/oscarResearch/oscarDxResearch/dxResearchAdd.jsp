@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,69 +22,56 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
- <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat"  %>
 <%@ include file="../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDxResearch.jsp" %>
 <%
-
-GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
-  String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
+String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
 String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="";
 int Count = 0;
-         
-          String dxcode ="";
-    for (int i=1; i<6; i++){
-    dxcode=request.getParameter("xml_research"+i)==null?"":request.getParameter("xml_research"+i);
-    if (dxcode.compareTo("")!=0){
 
- ResultSet rsdemo2 = null;
-      	  	  
-      	  		 	          	     String[] param4=new String[2];
-      	  		 	          	    	
-      	  		 	          	    	       param4[0]=request.getParameter("demographicNo");
-      	  		 	          	    		   param4[1] = dxcode;
-      	  		 	          
-      	  		 	          	   rsdemo2 = apptMainBean.queryResults(param4, "search_dxresearch_bycode");
-      	  		 	             if(rsdemo2==null) {   
+String dxcode ="";
+for (int i=1; i<6; i++){
+	dxcode=request.getParameter("xml_research"+i)==null?"":request.getParameter("xml_research"+i);
 
-   }else{
-	    while(rsdemo2.next()){
-	    Count = Count +1;
-	        String[] param =new String[3];
-	    	  param[0]=nowDate;
-	    	  param[1]="A";
-	    	  param[2]=rsdemo2.getString("dxresearch_no");
-	    	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_dxresearch");
-	    	    
-	    }}
-	    
-	    if (Count == 0){
-	        String[] param =new String[5];
-	              param[0]=request.getParameter("demographicNo");
-	    	  param[1]=nowDate;
-	    	  param[2]=nowDate;
-	    	  param[3]="A";
-	    	  param[4]=dxcode;
-	    	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_dxresearch_code");
-	    }	    
-	 
-	    }
-	            
-	    }
+	if (dxcode.compareTo("")!=0){
+		ResultSet rsdemo2 = null;
 
+		String[] param4=new String[2];
+		param4[0]=request.getParameter("demographicNo");
+		param4[1] = dxcode;
 
+		rsdemo2 = apptMainBean.queryResults(param4, "search_dxresearch_bycode");
+		if(rsdemo2==null) {   
+		}else{
+			while(rsdemo2.next()){
+				Count = Count +1;
+				String[] param =new String[3];
+				param[0]=nowDate;
+				param[1]="A";
+				param[2]=rsdemo2.getString("dxresearch_no");
+				int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_dxresearch");
+			}
+		}
 
+		if (Count == 0){
+			String[] param =new String[5];
+			param[0]=request.getParameter("demographicNo");
+			param[1]=nowDate;
+			param[2]=nowDate;
+			param[3]="A";
+			param[4]=dxcode;
+			int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_dxresearch_code");
+		}	    
+	}
+}
 
 %>
 
-             <jsp:forward page='dxResearch.jsp' >
-	     <jsp:param name="demographicNo" value='<%=request.getParameter("demographicNo")%>' />
-	   
+<jsp:forward page='dxResearch.jsp' >
+<jsp:param name="demographicNo" value='<%=request.getParameter("demographicNo")%>' />
+
 </jsp:forward>
