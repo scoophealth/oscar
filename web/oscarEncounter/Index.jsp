@@ -777,7 +777,7 @@ border-right: 2px solid #cfcfcf;
                         <td><bean:message key="oscarEncounter.Index.searchFor"/></td>
                     </tr>
                     <tr>
-                        <td><input type="text" name="term" class="ControlSelect" value=""/></td>                        
+                        <td><input type="text" name="keyword" class="ControlSelect" value=""/></td>                        
                     </tr>
                     <tr>
                         <td><bean:message key="oscarEncounter.Index.using"/></td>
@@ -795,7 +795,7 @@ border-right: 2px solid #cfcfcf;
                     </tr>
                     <tr>
                         <td>
-                            <input type="button" name="button" class="ControlPushButton" value="<bean:message key="oscarEncounter.Index.btnGo"/>" onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].term.value) ); return false;">                        
+                            <input type="button" name="button" class="ControlPushButton" value="<bean:message key="oscarEncounter.Index.btnGo"/>" onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">                        
                         </td>
                     </tr>                   
                 </form>                               
