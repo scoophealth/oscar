@@ -110,18 +110,18 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
+
 function checkTypeIn() {
-  var dob = document.titlesearch.keyword ;
-  if(document.titlesearch.search_mode[2].checked) {
-    if(dob.value.length==8) {
-      dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
-      //alert(dob.value.length);
-    } else if(dob.value.length != 10) {
-      alert("<bean:message key="demographic.demographiceditdemographic.msgWrongDOB"/>");
-	  return false;
+  var typeInOK = false;
+    if(document.updatedelete.last_name.value!="" && document.updatedelete.first_name.value!="" && document.updatedelete.sex.value!="") {
+      if(checkTypeNum(document.updatedelete.year_of_birth.value) && checkTypeNum(document.updatedelete.month_of_birth.value) && checkTypeNum(document.updatedelete.date_of_birth.value) ){
+	    typeInOK = true;
+      }
     }
-  }
+  if(!typeInOK) alert ("<bean:message key="demographic.demographicaddrecordhtm.msgMissingFields"/>");
+  return typeInOK;
 }
+  
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
 	var i = 0;
@@ -239,7 +239,7 @@ function refresh() {
 </table> 
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp">
+  <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeIn();">
     <input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
     <tr> 
       <td align="right" title='<%=rs.getString("demographic_no")%>'> <b><bean:message key="demographic.demographiceditdemographic.formLastName"/>: </b></td>
@@ -628,7 +628,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
             </td>
             <td  width="30%" align='center'> 
               <input type="hidden" name="displaymode" value="Update Record" >
-              <input type="submit" value="<bean:message key="demographic.demographiceditdemographic.btnUpdate"/>" onClick="checkPhoneNum()">
+              <input type="submit" value="<bean:message key="demographic.demographiceditdemographic.btnUpdate"/>">
             </td>
             <td width="40%" align='right'> 
                <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="window.open('zdemographicswipe.jsp','', 'scrollbars=yes,resizable=yes,width=600,height=300, top=360, left=0')";>
