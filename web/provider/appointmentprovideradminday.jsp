@@ -15,7 +15,7 @@
         response.sendRedirect("../logout.jsp");
 
 	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-    response.addCookie(cs.GiveMeACookie());
+    response.addCookie(cs.GiveMeACookie(cs.providerCookie));
 
 	String curUser_no = (String) session.getAttribute("user");
     String mygroupno = (String) session.getAttribute("groupno");  

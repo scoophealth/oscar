@@ -5,8 +5,12 @@
 <%
   if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("receptionist"))
     response.sendRedirect("../logout.jsp");
-    	ResultSet rsTickler = null;
-String tickler_no="", textColor="", tickler_note="";
+
+  oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
+  response.addCookie(cs.GiveMeACookie(cs.receptionistCookie));
+
+  ResultSet rsTickler = null;
+  String tickler_no="", textColor="", tickler_note="";
   String curUser_no,userfirstname,userlastname, userprofession, mygroupno;
   curUser_no = (String) session.getAttribute("user");
   mygroupno = (String) session.getAttribute("groupno");  

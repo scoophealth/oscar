@@ -14,9 +14,6 @@
 	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 
 	response.setHeader("Cache-Control","no-cache");
-
-	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-	response.addCookie(cs.GiveMeACookie());
 %>
 
 <%

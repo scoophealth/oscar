@@ -24,107 +24,59 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarSecurity;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.Properties;
+import javax.servlet.http.Cookie;
+import java.util.Random;
+import java.util.zip.Adler32;
 
-public class CookieSecurity extends HttpServlet
+public class CookieSecurity
 {
-
-    private String cookieName;
-    private String cookieValue;
-
-    private void setCookieName( String tree )
-    {
-        this.cookieName = tree;
-    }
-
-    public String getCookieName()
-    {
-        if( this.cookieName == null )
-        {
-            setCookieNameValue();
+    public static String providerCookie = "oscprvid";
+    public static String receptionistCookie = "oscrcpid";    
+    
+    public Cookie GiveMeACookie(String cookieName) {
+        Random rndGenerator = new Random();
+        Adler32 adler32 = new Adler32();
+        String cookieVal = "";        
+        for (int i = 0; i < 32; i++) {
+            int j = rndGenerator.nextInt(10);                       
+            cookieVal = cookieVal.concat(Integer.toString(j));            
+            adler32.update(j);            
         }
-        return this.cookieName;
-    }
-
-    private void setCookieValue( String tree )
-    {
-        this.cookieValue = tree;
-    }
-    public String getCookieValue()
-    {
-        if( this.cookieValue == null )
-        {
-            setCookieNameValue();
-        }
-        return this.cookieValue;
-    }
-
-    public void setCookieNameValue()
-    {
-        InputStream configFile = CookieSecurity.class.getResourceAsStream("oscar_security.properties");
-        Properties ap = new Properties();
-        try
-        {
-            ap.load(configFile);
-            setCookieName(ap.getProperty("cookieName"));
-            setCookieValue(ap.getProperty("cookieValue"));
-        }
-        catch(IOException e)
-        {
-            System.err.println("IO error in setCookieNameValue: " + e.getMessage());
-        }
-        finally
-        {
-            if (configFile != null)
-            {
-                try {
-                     configFile.close();
-                }
-                catch (IOException ioe) {
-                }
-            }
-        }
-    }
-
-    public Cookie GiveMeACookie()
-    {
-        CookieSecurity cs = new CookieSecurity();
-        cs.setCookieNameValue();
-        String name = cs.cookieName;
-        String val = cs.cookieValue;
-        Cookie cookie = new Cookie(cs.getCookieName(), cs.getCookieValue());
+        // System.out.println("Cookieval before concat with checksum: "+cookieVal);        
+        cookieVal = cookieVal.concat(Long.toString(adler32.getValue()));
+        // System.out.println("Cookieval after concat with checksum: "+cookieVal);        
+        Cookie cookie = new Cookie(cookieName, cookieVal);
         cookie.setPath("/");
         return cookie;
     }
-
-    public boolean FindThisCookie(Cookie[] cookies, String reqName, String reqValue)
-    {
-        boolean pass = false;
-        if( cookies != null )
+    
+    public boolean FindThisCookie(Cookie[] cookies, String cookieName) {        
+        if ( cookies != null )
         {
-            Cookie cookie;
-            String storedValue = null;
             for (int i=0; i<cookies.length; i++)
-            {
-                cookie = cookies[i];
-                if (reqName.equals(cookie.getName()))
+            {         
+                if (cookieName.equals(cookies[i].getName()))
                 {
-                    storedValue = cookie.getValue();
+                    System.out.println("In FindThisCookie: found cookie with name " + cookies[i].getName());
+                    return CheckCookieValue(cookies[i].getValue());
                 }
             }
-            if (!reqValue.equalsIgnoreCase(storedValue))
-            {
-                //System.out.println("You did not pass the security test");
-            }
-            else
-            {
-                //System.out.println("You passed the security test");
-                pass = true;
-            }
         }
-        return pass;
+        return false;
     }
+    
+    private boolean CheckCookieValue(String cookieValue) {        
+        Adler32 adler32 = new Adler32();        
+        //adler32.update(cookieValue.substring(0, 32).getBytes());
+        for (int i=0; i < 32; i++) {
+            adler32.update(Integer.parseInt(cookieValue.substring(i, i+1)));
+            System.out.print(adler32.getValue()+" ");
+        }        
+        if (Long.parseLong(cookieValue.substring(32, cookieValue.length())) == adler32.getValue()) {            
+            return true;
+        } else {            
+            return false;
+        }
+    }        
+    
 }

@@ -34,8 +34,6 @@
     //session cookie with the appropriate name and value, if the required cookie is not available
     //it dumps you out to an erros page.
 
-    oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-    response.addCookie(cs.GiveMeACookie());
     oscar.oscarSecurity.SessionBean bean = null;
     if((bean=(oscar.oscarSecurity.SessionBean)request.getSession().getAttribute("SessionBean"))==null)
     {response.sendRedirect("error.jsp");

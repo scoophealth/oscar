@@ -38,7 +38,7 @@
 
         oscar.oscarSecurity.CookieSecurity cs   = new oscar.oscarSecurity.CookieSecurity();
 
-        if(!cs.FindThisCookie(request.getCookies(),cs.getCookieName(),cs.getCookieValue())){
+        if(!cs.FindThisCookie(request.getCookies(),cs.providerCookie)){
         response.sendRedirect("error.jsp");
         return;
         }
