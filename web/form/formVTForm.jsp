@@ -152,7 +152,9 @@ Vascular Tracker (Draft)
             text-decoration: underline;
             color: blue;
         }
-        
+        .detail{
+            d
+        }
 
     </style>
 
@@ -237,6 +239,22 @@ function showHideItem(id){
         document.getElementById(id).style.display = 'none'; 
 }
 
+function showHideDetail(){
+    showHideItem('subjective');
+    showHideItem('objective');
+    showHideItem('detailDiag');
+    showHideItem('plan');
+    showHideItem('detailVital');
+    showHideItem('detailHistory');
+    showHideItem('detailFT');
+    showHideItem('detailEye');
+    showHideItem('detailLab');
+    showHideItem('detailCounselling');
+    showHideItem('showDetailTitle');
+    showHideItem('hideDetailTitle');
+    
+}
+
 function updateWaistHip(){
     var r = document.forms[0].elements[ratio].value;
     var w = document.forms[0].elements[waist].value;
@@ -293,7 +311,7 @@ function updateHipAndRatio(){
 
 function storeSMKSupportData(){
     //getElementbyId function doesn't work on these elements
-    //here is the work around    
+    //here is the work around   
     
     document.forms[0].elements[smkSDate].value = document.getElementById('SmkDate').value;
     document.forms[0].elements[smkHDate].value = document.getElementById('SmkDate').value;
@@ -589,6 +607,7 @@ function clearAll(yRadio, nRadio){
     document.forms[0].elements[yRadio].checked=false;
     document.forms[0].elements[nRadio].checked=false;
 }
+
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport(); initialize();">
 <!--  -->
@@ -604,7 +623,7 @@ function clearAll(yRadio, nRadio){
                 <input type="submit" value="Update VT" onclick="javascript:onSave();" />
                 <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
                 <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-                <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+                <input type="button" value="Print" onclick="javascript:return onPrint();"/>                
             </td>
         </tr>
     </table>
@@ -628,11 +647,11 @@ function clearAll(yRadio, nRadio){
                                             <td colspan="2">
                                                 <table width="95%">
                                                     <tr>
-                                                        <td width="25%">
+                                                        <td valign="top" width="22%">
                                                             <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
                                                         </td>
-                                                        <td>
-                                                            <table width="60%">
+                                                        <td  width="53%">
+                                                            <table>
                                                                 <tr>                                                                                                      
                                                                     <td align="left" class="sixtyPercent"><html:checkbox property="value(DMValue)" onclick="javascript: DMCheck();"/></td>
                                                                     <td align="left" class="sixtyPercent"><html:checkbox property="value(HTNValue)"/></td>
@@ -645,19 +664,19 @@ function clearAll(yRadio, nRadio){
                                                                     <td align="left" class="sixtyPercent"><html:checkbox property="value(PVDValue)" onclick="javascript: PVDCheck();"/></td>                                                    
                                                                 </tr>
                                                                 <tr>                                                                                                      
-                                                                    <td align="center" class="sixtyPercent"> DM</td>
-                                                                    <td align="center" class="sixtyPercent"> HTN</td>
-                                                                    <td align="center" class="sixtyPercent"> Hyperlipidemia</td>
-                                                                    <td align="center" class="sixtyPercent"> MI</td>
-                                                                    <td align="center" class="sixtyPercent"> Angina</td>
-                                                                    <td align="center" class="sixtyPercent"> ACS</td>
-                                                                    <td align="center" class="sixtyPercent"> Revascularization</td>
-                                                                    <td align="center" class="sixtyPercent"> CVD</td>
-                                                                    <td align="center" class="sixtyPercent"> PVD</td>                                                    
+                                                                    <td valign="top" align="center" class="sixtyPercent"> DM</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> HTN</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> Hyperlipidemia</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> MI</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> Angina</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> Acute coronary syndrome</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> Revascularization</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> Stroke/TIA</td>
+                                                                    <td valign="top" align="center" class="sixtyPercent"> PVD</td>                                                    
                                                                 </tr>
                                                             </table>
                                                         </td>
-                                                        <td align="right">
+                                                        <td valign="top" width="25%" align="right">
                                                             <table>
                                                                 <tr>
                                                                     <td>FP Visit Date</td>
@@ -671,11 +690,27 @@ function clearAll(yRadio, nRadio){
                                                     </tr>
                                                 </table>                                                
                                             </td>
-                                        </tr>                                                                                                                   
+                                        </tr>            
+                                        <tr>                                            
+                                            <th colspan='2'>
+                                                <table width="100%" id="showDetailTitle" >
+                                                    <tr><th><a href="javascript: showHideDetail();">Show Details >></a></th></tr>
+                                                </table>
+                                                <table style="display:none" width="100%" id="hideDetailTitle">
+                                                    <tr><th><a href="javascript: showHideDetail();">Hide Details << </a></th></tr>
+                                                </table>
+                                            </th>
+                                        </tr>
                                         <tr>
                                             <th class="soap" width="2%">S</th>
                                             <th>
-                                                <html:textarea property="value(subjective)" cols="78" style="height:40"></html:textarea>
+                                                <table id="subjective" style="display:none">
+                                                    <tr>
+                                                        <th>
+                                                        <html:textarea property="value(subjective)" cols="78" style="height:40"></html:textarea>
+                                                        </th>
+                                                    </tr> 
+                                                </table>
                                             </th>
                                         </tr>
                                         <tr>
@@ -683,12 +718,12 @@ function clearAll(yRadio, nRadio){
                                             <th class="title" width="98%">
                                             <a href="javascript: showHideItem('history');" >History >> </a>
                                             </th>
-                                        </tr>                                        
+                                        </tr>                                         
                                          <tr>
                                             <td></td>
-                                            <td ><table style="display:none" cellpadding='1' cellspacing='0' id="history">
+                                            <td ><table style="display:none" cellpadding='1' cellspacing='0' id="history">                                            
                                             <tr><td>
-                                            <table cellpadding='1' cellspacing='0'width="100%">   
+                                            <table style="display:none" id="detailHistory" cellpadding='1' cellspacing='0'width="100%">                                                   
                                                 <tr>
                                                     <td class="subTitle" style="text-align:left">
                                                         On Going Concern
@@ -974,17 +1009,23 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                         <tr>
                                             <th class="soap" width="2%">O</th>
-                                            <th><html:textarea property="value(objective)" cols="78" style="height:40"></html:textarea></th>
+                                            <th>
+                                                <table id="objective" style="display:none">
+                                                    <tr>
+                                                        <th><html:textarea property="value(objective)" cols="78" style="height:40"></html:textarea></th>
+                                                    </tr>
+                                                </table>
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th></th>
                                             <th class="title">
                                             <a href="javascript: showHideItem('vital');">Vitals >> </a>
                                             </th>
-                                        </tr>
+                                        </tr>                                        
                                          <tr>
                                             <td></td>                                            
-                                            <td><table style="display:none" cellpadding='1' cellspacing='0' id="vital">
+                                            <td><table style="display:none" cellpadding='0' cellspacing='0' id="vital">                                                
                                                 <tr>
                                                     <td class="subTitle" width="34%">                                                        
                                                     </td>                                                    
@@ -1045,48 +1086,21 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(WCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
+                                                 <tr><td colspan="5"><table cellpadding="0" cellspacing="0" width="100%" style="display:none" id="detailVital">
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("HCDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HCMeasuringInstrc")%></font></td>
-                                                    <td class="dataEntryTable" align="center">
+                                                    <td width="34%" class="dataEntryTable"><%=request.getAttribute("HCDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HCMeasuringInstrc")%></font></td>
+                                                    <td width="16%" class="dataEntryTable" align="center">
                                                         <logic:present name="HCLastData">
                                                         <table cellpadding='0' cellspacing='0'>                                                            
                                                             <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HCLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HCLastData")%></td></tr>
-                                                            
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HCLastData")%></td></tr>                                                            
                                                         </table>
                                                         </logic:present>
                                                         
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistAndRatio();"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
-                                                 </tr>                                                 
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("WTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WTMeasuringInstrc")%></font></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <logic:present name="WTLastData">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WTLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WTLastData")%></td></tr>                                                            
-                                                        </table>
-                                                        </logic:present>                                                        
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTValue)" size="5%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="30%" tabindex="9999"/></td>
-                                                 </tr>
-                                                 <tr>                                                    
-                                                    <td class="dataEntryTable"><%=request.getAttribute("HTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HTMeasuringInstrc")%></font></td>   
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HTLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HTLastData")%></td></tr>
-                                                           
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTValue)" size="5%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTComments)" size="30%" tabindex="9999"/></td>
+                                                    <td width="7%" class="dataEntryTable" align="center"><html:text property="value(HCValue)" size="5%"  onchange="javascript: updateWaistAndRatio();"/></td>
+                                                    <td width="10%" class="dataEntryTable" align="center"><html:text property="value(HCDate)" size="10%" tabindex="9999"/></td>
+                                                    <td width="33%" class="dataEntryTable" align="center"><html:text property="value(HCComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("HRDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HRMeasuringInstrc")%></font></td>
@@ -1100,7 +1114,35 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRValue)" size="5%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRDate)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HRComments)" size="30%" tabindex="9999"/></td>
+                                                 </tr>                                                 
+                                                 <tr>                                                    
+                                                    <td class="dataEntryTable"><%=request.getAttribute("HTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("HTMeasuringInstrc")%></font></td>   
+                                                    <td class="dataEntryTable" align="center">
+                                                        <table cellpadding='0' cellspacing='0'>                                                            
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("HTLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("HTLastData")%></td></tr>
+                                                           
+                                                        </table>
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTValue)" size="5%" /></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTDate)" size="10%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(HTComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
+                                                 </table></td></tr>                                                 
+                                                 <tr>
+                                                    <td class="dataEntryTable"><%=request.getAttribute("WTDisplay")%><br><font class="eightyPercent"><%=request.getAttribute("WTMeasuringInstrc")%></font></td>
+                                                    <td class="dataEntryTable" align="center">
+                                                        <logic:present name="WTLastData">
+                                                        <table cellpadding='0' cellspacing='0'>                                                            
+                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("WTLDDate")%></td></tr>
+                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("WTLastData")%></td></tr>                                                            
+                                                        </table>
+                                                        </logic:present>                                                        
+                                                    </td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTValue)" size="5%" /></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTDate)" size="10%" tabindex="9999"/></td>
+                                                    <td class="dataEntryTable" align="center"><html:text property="value(WTComments)" size="30%" tabindex="9999"/></td>
+                                                 </tr>                                                 
                                             </table></td>
                                         </tr> 
                                        <tr>
@@ -1111,7 +1153,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table style="display:none" cellpadding='1' cellspacing='0' id="examination">
+                                            <td><table style="display:none" cellpadding='0' cellspacing='0' id="examination">
                                                 <tr>
                                                     <td class="subTitle" width="28%">                                                        
                                                     </td>                                                    
@@ -1132,7 +1174,7 @@ function clearAll(yRadio, nRadio){
                                                     <th class="dataEntryTable" colspan="3">Foot Exam</th>                                                    
                                                     <td class="dataEntryTable" valign="top" align="center"><input type="text" id="FTDate" name="FTDate" value="<%=request.getAttribute("FTNeDate")%>" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" rowspan="8" valign="top" align="center">
-                                                        <textarea name="FTComments" wrap="hard" cols="24" style="height:180" tabindex="9999"><logic:present name="FTExComments"><%=request.getAttribute("FTExComments")%></logic:present></textarea>
+                                                        <textarea name="FTComments" wrap="hard" cols="24" style="height:80" tabindex="9999"><logic:present name="FTExComments"><%=request.getAttribute("FTExComments")%></logic:present></textarea>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1222,21 +1264,26 @@ function clearAll(yRadio, nRadio){
                                                     <html:hidden property="value(FTInComments)" />
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("FTOtDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTOtLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTOtLastData")%></td></tr>
-                                                            
+                                                    <td colspan='3'>
+                                                        <table cellpadding="0" cellspacing="0" width="100%" style="display:none" id="detailFT">
+                                                         <tr>
+                                                            <td width="29%" class="dataEntryTable"><%=request.getAttribute("FTOtDesc")%></td>
+                                                            <td width="16%" class="dataEntryTable" align="center">
+                                                                <table cellpadding='0' cellspacing='0'>                                                            
+                                                                    <tr><td class="eightyPercent" align="left"><%=request.getAttribute("FTOtLDDate")%></td></tr>
+                                                                    <tr><td class="eightyPercent" align="right"><%=request.getAttribute("FTOtLastData")%></td></tr>
+                                                                </table>
+                                                            </td>
+                                                            <td width="22%" class="dataEntryTable" align="center">
+                                                                <html:radio property="value(FTOtValue)" value="yes" />Yes
+                                                                <html:radio property="value(FTOtValue)" value="no" />No
+                                                                <a title="clear all" href="javascript:clearAll(ftOtId, ftOtId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
+                                                            </td>
+                                                            <html:hidden property="value(FTOtDate)" />
+                                                            <html:hidden property="value(FTOtComments)" />
+                                                         </tr>
                                                         </table>
                                                     </td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(FTOtValue)" value="yes" />Yes
-                                                        <html:radio property="value(FTOtValue)" value="no" />No
-                                                        <a title="clear all" href="javascript:clearAll(ftOtId, ftOtId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
-                                                    </td>
-                                                    <html:hidden property="value(FTOtDate)" />
-                                                    <html:hidden property="value(FTOtComments)" />
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("FTReDesc")%></td>
@@ -1259,7 +1306,7 @@ function clearAll(yRadio, nRadio){
                                                     <th class="dataEntryTable" colspan="3">Eye Exam</th>                                                    
                                                     <td class="dataEntryTable" valign="top" align="center"><input type="text" name="iDate" value="<%=request.getAttribute("iDiaDate")%>" size="10%"/></td>
                                                     <td class="dataEntryTable" rowspan="8" valign="top" align="center">
-                                                        <textarea name="iComments" wrap="hard" cols="24" style="height:180"><logic:present name="iExComments"><%=request.getAttribute("iExComments")%></logic:present></textarea>
+                                                        <textarea name="iComments" wrap="hard" cols="24" style="height:80"><logic:present name="iExComments"><%=request.getAttribute("iExComments")%></logic:present></textarea>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1281,56 +1328,62 @@ function clearAll(yRadio, nRadio){
                                                     <html:hidden property="value(iExComments)" />
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("iHypDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iHypLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iHypLastData")%></td></tr>
-                                                            
+                                                    <td colspan='3'>
+                                                        <table cellpadding="0" cellspacing="0" width="100%" style="display:none" id="detailEye">                                                                                                                 
+                                                             <tr>
+                                                                <td width="29%" class="dataEntryTable"><%=request.getAttribute("iHypDesc")%></td>
+                                                                <td width="16%" class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iHypLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iHypLastData")%></td></tr>
+
+                                                                    </table>
+                                                                </td>
+                                                                <td width="22%" class="dataEntryTable" align="center">
+                                                                    <html:radio property="value(iHypValue)" value="yes" />Yes
+                                                                    <html:radio property="value(iHypValue)" value="no" />No
+                                                                    <a title="clear all" href="javascript:clearAll(eyeHypId, eyeHypId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
+                                                                </td>
+                                                                <html:hidden property="value(iHypDate)" />
+                                                                <html:hidden property="value(iHypComments)" />
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("iDiaDesc")%></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iDiaLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iDiaLastData")%></td></tr>
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <html:radio property="value(iDiaValue)" value="yes" />Yes
+                                                                    <html:radio property="value(iDiaValue)" value="no" />No
+                                                                    <a title="clear all" href="javascript:clearAll(eyeDiaId, eyeDiaId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
+                                                                </td>
+                                                                <html:hidden property="value(iDiaDate)"/>
+                                                                <html:hidden property="value(iDiaComments)"/>
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("iOthDesc")%></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iOthLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iOthLastData")%></td></tr>
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <html:radio property="value(iOthValue)" value="yes" />Yes
+                                                                    <html:radio property="value(iOthValue)" value="no" />No
+                                                                    <a title="clear all" href="javascript:clearAll(eyeOthId, eyeOthId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
+                                                                </td>
+                                                                <html:hidden property="value(iOthDate)"/>
+                                                                <html:hidden property="value(iOthComments)"/>
+                                                             </tr>
                                                         </table>
                                                     </td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(iHypValue)" value="yes" />Yes
-                                                        <html:radio property="value(iHypValue)" value="no" />No
-                                                        <a title="clear all" href="javascript:clearAll(eyeHypId, eyeHypId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
-                                                    </td>
-                                                    <html:hidden property="value(iHypDate)" />
-                                                    <html:hidden property="value(iHypComments)" />
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("iDiaDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iDiaLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iDiaLastData")%></td></tr>
-                                                            
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(iDiaValue)" value="yes" />Yes
-                                                        <html:radio property="value(iDiaValue)" value="no" />No
-                                                        <a title="clear all" href="javascript:clearAll(eyeDiaId, eyeDiaId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
-                                                    </td>
-                                                    <html:hidden property="value(iDiaDate)"/>
-                                                    <html:hidden property="value(iDiaComments)"/>
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("iOthDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iOthLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iOthLastData")%></td></tr>
-                                                            
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <html:radio property="value(iOthValue)" value="yes" />Yes
-                                                        <html:radio property="value(iOthValue)" value="no" />No
-                                                        <a title="clear all" href="javascript:clearAll(eyeOthId, eyeOthId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
-                                                    </td>
-                                                    <html:hidden property="value(iOthDate)"/>
-                                                    <html:hidden property="value(iOthComments)"/>
-                                                 </tr>
+                                                </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><bean:write name="iRefDesc"/></td>
                                                     <td class="dataEntryTable" align="center">
@@ -1358,7 +1411,7 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                          <tr>
                                             <td></td>
-                                            <td><table style="display:none" cellpadding='1' cellspacing='0' id="labs">
+                                            <td><table style="display:none" cellpadding='0' cellspacing='0' id="labs">
                                                 <tr>
                                                     <td class="subTitle" width="34%">                                                        
                                                     </td>                                                    
@@ -1387,20 +1440,7 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Value)" size="4%" /></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Date)" size="10%" tabindex="9999"/></td>
                                                     <td class="dataEntryTable" align="center"><html:text property="value(HbA1Comments)" size="30%" tabindex="9999"/></td>
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("BGDesc")%><br><font class="eightyPercent"><%=request.getAttribute("BGMeasuringInstrc")%></font></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("BGLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("BGLastData")%></td></tr>
-                                                           
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGValue)" size="4%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(BGComments)" size="30%" tabindex="9999"/></td>
-                                                 </tr>
+                                                 </tr>                                                 
                                                  <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("LDLDesc")%><br><font class="eightyPercent"><%=request.getAttribute("LDLMeasuringInstrc")%></font></td>
                                                     <td class="dataEntryTable" align="center">
@@ -1441,17 +1481,36 @@ function clearAll(yRadio, nRadio){
                                                     <td class="dataEntryTable" align="center"><html:text property="value(TCHLComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("TRIGDesc")%><br><font class="eightyPercent"><%=request.getAttribute("TRIGMeasuringInstrc")%></font></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("TRIGLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("TRIGLastData")%></td></tr>
-                                                            
+                                                    <td colspan='5'>
+                                                        <table cellpadding="0" cellspacing="0" width="100%" style="display:none" id="detailLab">
+                                                             <tr>
+                                                                <td width="34%" class="dataEntryTable"><%=request.getAttribute("TRIGDesc")%><br><font class="eightyPercent"><%=request.getAttribute("TRIGMeasuringInstrc")%></font></td>
+                                                                <td width="16%" class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("TRIGLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("TRIGLastData")%></td></tr>
+
+                                                                    </table>
+                                                                </td>
+                                                                <td width="5%" class="dataEntryTable" align="center"><html:text property="value(TRIGValue)" size="4%" /></td>
+                                                                <td width="10%" class="dataEntryTable" align="center"><html:text property="value(TRIGDate)" size="10%" tabindex="9999"/></td>
+                                                                <td width="35%" class="dataEntryTable" align="center"><html:text property="value(TRIGComments)" size="30%" tabindex="9999"/></td>
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("BGDesc")%><br><font class="eightyPercent"><%=request.getAttribute("BGMeasuringInstrc")%></font></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("BGLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("BGLastData")%></td></tr>
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(BGValue)" size="4%" /></td>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(BGDate)" size="10%" tabindex="9999"/></td>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(BGComments)" size="30%" tabindex="9999"/></td>
+                                                             </tr>
                                                         </table>
                                                     </td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGValue)" size="4%" /></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGDate)" size="10%" tabindex="9999"/></td>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(TRIGComments)" size="30%" tabindex="9999"/></td>
                                                  </tr>
                                                  <tr>
                                                     <td class="dataEntryTable"><%=request.getAttribute("UALBDesc")%><br><font class="eightyPercent"><%=request.getAttribute("UALBMeasuringInstrc")%></font></td>
@@ -1489,26 +1548,35 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th class="title">
-                                            <a href="javascript: showHideItem('diagnosis');">Diagnosis >> </a>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                <table style="display:none" cellpadding='1' cellspacing='0' id="diagnosis">
-                                                <tr>
-                                                    <td>
-                                                        <html:textarea property="value(diagnosisVT)" cols="78" style="height:40"></html:textarea>
-                                                    </td>
-                                                </tr>
+                                            <th width="98%">
+                                                <table width="100%" style="display:none" id="detailDiag">
+                                                    <tr>                                                        
+                                                        <th width="100%" class="title">
+                                                        <a href="javascript: showHideItem('diagnosis');">Diagnosis >> </a>
+                                                        </th>
+                                                    </tr>
+                                                    <tr>                                                        
+                                                        <td>
+                                                            <table style="display:none" cellpadding='1' cellspacing='0' id="diagnosis">
+                                                            <tr>
+                                                                <td>
+                                                                    <html:textarea property="value(diagnosisVT)" cols="78" style="height:40"></html:textarea>
+                                                                </td>
+                                                            </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
                                                 </table>
-                                            </td>
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th class="soap" width="2%">P</th>
                                             <th>
-                                                <html:textarea property="value(plan)" cols="78" style="height:40"></html:textarea>
+                                                <table id="plan" style="display:none">
+                                                    <tr>
+                                                        <th><html:textarea property="value(plan)" cols="78" style="height:40"></html:textarea></th>
+                                                    </tr>
+                                                </table>
                                             </th>
                                         </tr>
                                         <tr>
@@ -1559,107 +1627,114 @@ function clearAll(yRadio, nRadio){
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th class="title">
-                                            <a href="javascript: showHideItem('counselling');" >Counselling >></a>
+                                            <th width="98%">
+                                                <table cellpadding="0" cellspacing="0" width="100%" style="display:none" id="detailCounselling">
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="title" width="100%">
+                                                        <a href="javascript: showHideItem('counselling');" >Counselling >></a>
+                                                        </th>
+                                                    </tr>
+                                                     <tr>
+                                                        <td></td>
+                                                        <td><table width="100%" style="display:none" cellpadding='1' cellspacing='0' id="counselling">
+                                                            <tr>
+                                                                <td class="subTitle" width="29%">                                                        
+                                                                </td>                                                    
+                                                                <td class="subTitle" width="16%">
+                                                                    Last Data<br> Entered on
+                                                                </td>
+                                                                <td class="subTitle" width="10%">                                                        
+                                                                    &nbsp;
+                                                                </td>                                                                                                        
+                                                                <td class="subTitle" width="45%">
+                                                                    <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
+                                                                </td>                                                    
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("NtrCDesc")%></td>   
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("NtrCLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("NtrCLastData")%></td></tr>                                                            
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center"><html:checkbox property="value(NtrCValue)" /></td>
+                                                                <html:hidden property="value(NtrCDate)"/>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(NtrCComments)" size="45" tabindex="9999"/></td>
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("ExeCDesc")%></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("ExeCLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("ExeCLastData")%></td></tr>                                                           
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center"><html:checkbox property="value(ExeCValue)" /></td>
+                                                                <html:hidden property="value(ExeCDate)"/>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(ExeCComments)" size="45" tabindex="9999"/></td>
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("SmCCDesc")%></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("SmCCLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("SmCCLastData")%></td></tr>                                                           
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center"><html:checkbox property="value(SmCCValue)" /></td>
+                                                                <html:hidden property="value(SmCCDate)"/>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(SmCCComments)" size="45"tabindex="9999"/></td>
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("DiaCDesc")%></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DiaCLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("DiaCLastData")%></td></tr>                                                           
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center"><html:checkbox property="value(DiaCValue)" /></td>
+                                                                <html:hidden property="value(DiaCDate)"/>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(DiaCComments)" size="45" tabindex="9999"/></td>
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("PsyCDesc")%></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("PsyCLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("PsyCLastData")%></td></tr>                                                           
+
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center"><html:checkbox property="value(PsyCValue)" /></td>
+                                                                <html:hidden property="value(PsyCDate)"/>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(PsyCComments)" size="45" tabindex="9999"/></td>
+                                                             </tr>
+                                                             <tr>
+                                                                <td class="dataEntryTable"><%=request.getAttribute("OthCDesc")%></td>
+                                                                <td class="dataEntryTable" align="center">
+                                                                    <table cellpadding='0' cellspacing='0'>                                                            
+                                                                        <tr><td class="eightyPercent" align="left"><%=request.getAttribute("OthCLDDate")%></td></tr>
+                                                                        <tr><td class="eightyPercent" align="right"><%=request.getAttribute("OthCLastData")%></td></tr>                                                           
+                                                                        <html:hidden property="value(OthCLDDate)"/>
+                                                                        <html:hidden property="value(OthCLastData)"/>                                                            
+                                                                    </table>
+                                                                </td>
+                                                                <td class="dataEntryTable" align="center"><html:checkbox property="value(OthCValue)" /></td>
+                                                                <html:hidden property="value(OthCDate)"/>
+                                                                <td class="dataEntryTable" align="center"><html:text property="value(OthCComments)" size="45" tabindex="9999"/></td>
+                                                             </tr>
+                                                        </table></td>
+                                                    </tr>                              
+                                                </table>
                                             </th>
                                         </tr>
-                                         <tr>
-                                            <td></td>
-                                            <td><table style="display:none" cellpadding='1' cellspacing='0' id="counselling">
-                                                <tr>
-                                                    <td class="subTitle" width="29%">                                                        
-                                                    </td>                                                    
-                                                    <td class="subTitle" width="16%">
-                                                        Last Data<br> Entered on
-                                                    </td>
-                                                    <td class="subTitle" width="10%">                                                        
-                                                        &nbsp;
-                                                    </td>                                                                                                        
-                                                    <td class="subTitle" width="45%">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
-                                                    </td>                                                    
-                                                </tr>
-                                                <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("NtrCDesc")%></td>   
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("NtrCLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("NtrCLastData")%></td></tr>                                                            
-                                                            
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(NtrCValue)" /></td>
-                                                    <html:hidden property="value(NtrCDate)"/>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(NtrCComments)" size="45" tabindex="9999"/></td>
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("ExeCDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("ExeCLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("ExeCLastData")%></td></tr>                                                           
-                                                                                                                   
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(ExeCValue)" /></td>
-                                                    <html:hidden property="value(ExeCDate)"/>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(ExeCComments)" size="45" tabindex="9999"/></td>
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("SmCCDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("SmCCLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("SmCCLastData")%></td></tr>                                                           
-                                                            
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(SmCCValue)" /></td>
-                                                    <html:hidden property="value(SmCCDate)"/>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(SmCCComments)" size="45"tabindex="9999"/></td>
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("DiaCDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("DiaCLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("DiaCLastData")%></td></tr>                                                           
-                                                            
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(DiaCValue)" /></td>
-                                                    <html:hidden property="value(DiaCDate)"/>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(DiaCComments)" size="45" tabindex="9999"/></td>
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("PsyCDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("PsyCLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("PsyCLastData")%></td></tr>                                                           
-                                                            
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(PsyCValue)" /></td>
-                                                    <html:hidden property="value(PsyCDate)"/>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(PsyCComments)" size="45" tabindex="9999"/></td>
-                                                 </tr>
-                                                 <tr>
-                                                    <td class="dataEntryTable"><%=request.getAttribute("OthCDesc")%></td>
-                                                    <td class="dataEntryTable" align="center">
-                                                        <table cellpadding='0' cellspacing='0'>                                                            
-                                                            <tr><td class="eightyPercent" align="left"><%=request.getAttribute("OthCLDDate")%></td></tr>
-                                                            <tr><td class="eightyPercent" align="right"><%=request.getAttribute("OthCLastData")%></td></tr>                                                           
-                                                            <html:hidden property="value(OthCLDDate)"/>
-                                                            <html:hidden property="value(OthCLastData)"/>                                                            
-                                                        </table>
-                                                    </td>
-                                                    <td class="dataEntryTable" align="center"><html:checkbox property="value(OthCValue)" /></td>
-                                                    <html:hidden property="value(OthCDate)"/>
-                                                    <td class="dataEntryTable" align="center"><html:text property="value(OthCComments)" size="45" tabindex="9999"/></td>
-                                                 </tr>
-                                            </table></td>
-                                        </tr>                                                                                
                                 </td>   
                             </tr>
                         </table>
