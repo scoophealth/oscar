@@ -1,38 +1,38 @@
-<%      
-  if(session.getValue("user") == null)
+<%
+  if(session.getAttribute("user") == null)
     response.sendRedirect("../../../logout.jsp");
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.bc.MSP.*, java.net.*"  %>
+<%@ page import="java.util.*, java.sql.*, oscar.oscarBilling.ca.bc.MSP.*"  %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %> 
+<%@ include file="dbBilling.jsp" %>
 
 
 <% GregorianCalendar now=new GregorianCalendar();
@@ -42,17 +42,17 @@
    String oscar_home= oscarVariables.getProperty("project_home")+".properties";
 
    String provider = request.getParameter("provider");
-   String proOHIP=""; 
-   String specialty_code; 
+   String proOHIP="";
+   String specialty_code;
    String billinggroup_no;
    String groupFile = "";
-   if (ExtractBean.HasBillingItemsToSubmit()){
-      if (provider.compareTo("all") == 0 ){  
+   if (oscar.oscarBilling.ca.bc.MSP.ExtractBean.HasBillingItemsToSubmit()){
+      if (provider.compareTo("all") == 0 ){
          batchCount = "0";
          int fileCount = 0;
          ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_ohip_dt");
-         while(rslocal.next()){    
-            proOHIP = rslocal.getString("ohip_no"); 
+         while(rslocal.next()){
+            proOHIP = rslocal.getString("ohip_no");
             billinggroup_no= rslocal.getString("billing_no");
             specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
@@ -61,7 +61,7 @@
                         param2[0]=request.getParameter("monthCode");
                         param2[1]=billinggroup_no;
                         param2[2]=curYear+"/01/01";
-               ResultSet rslocal2;	  
+               ResultSet rslocal2;
                rslocal2 = apptMainBean.queryResults(param2, "search_billactivity_group_monthCode");
                while(rslocal2.next()){
                   batchCount = rslocal2.getString("batchcount");
@@ -73,11 +73,11 @@
             }
 
             if (specialty_code == null || specialty_code.compareTo("") == 0 || specialty_code.compareTo("null")==0){
-               specialty_code = "00"; 
+               specialty_code = "00";
             }
             if ( billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0){
                billinggroup_no = "0000";
-            } 
+            }
             ExtractBean extract = new ExtractBean();
             extract.seteFlag("1");
             extract.setVSFlag(vsFlag);
@@ -89,7 +89,7 @@
             extract.setSpecialty(specialty_code);
             extract.setBatchCount(String.valueOf(bCount));
             extract.dbQuery();
-                
+
             vsFlag = vsFlag +1;
             int fLength = 3 - batchCount.length();
             String zero ="";
@@ -110,7 +110,7 @@
                      param[10]=request.getParameter("curDate");
                      param[11]="A";
                      param[12]= extract.getTotalAmount();
- 
+
             int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_billactivity");
 
             extract.setHtmlFilename("H" + request.getParameter("monthCode") +proOHIP + "_" + zero + batchCount+".htm");
@@ -122,16 +122,18 @@
             groupFile = groupFile + filecontext ;
             bCount = bCount + 1;
             extract.writeFile(groupFile);
-            //groupFile =  groupFile+"\n"  ;            
+            //groupFile =  groupFile+"\n"  ;
          }
       }else {
          batchCount = "0";
          int fileCount = 0;
          ResultSet rslocal;
-         rslocal = apptMainBean.queryResults(request.getParameter("provider").substring(0,6), "search_provider_ohip_dt");
+         String providerBillingNo = request.getParameter("provider");
+         providerBillingNo = providerBillingNo.substring(0, providerBillingNo.indexOf(",")).trim();
+         rslocal = apptMainBean.queryResults(providerBillingNo, "search_provider_ohip_dt");
          while(rslocal.next()){
-            proOHIP = rslocal.getString("ohip_no"); 
-            billinggroup_no= rslocal.getString("billing_no"); 
+            proOHIP = rslocal.getString("ohip_no");
+            billinggroup_no= rslocal.getString("billing_no");
             specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
             if (bCount == 1) {
@@ -139,7 +141,7 @@
                         param2[0]=request.getParameter("monthCode");
                         param2[1]=billinggroup_no;
                         param2[2]=curYear+"/01/01";
-               ResultSet rslocal2;	  
+               ResultSet rslocal2;
                rslocal2 = apptMainBean.queryResults(param2, "search_billactivity_group_monthCode");
                while(rslocal2.next()){
                   batchCount = rslocal2.getString("batchcount");
@@ -151,11 +153,11 @@
             }
 
             if (specialty_code == null || specialty_code.compareTo("") == 0 || specialty_code.compareTo("null")==0){
-               specialty_code = "00"; 
+               specialty_code = "00";
             }
             if ( billinggroup_no == null ||  billinggroup_no.compareTo("") == 0 ||  billinggroup_no.compareTo("null")==0){
                billinggroup_no = "0000";
-            } 
+            }
             ExtractBean extract = new ExtractBean();
                         extract.setOscarHome(oscar_home);
                         extract.seteFlag("1");
