@@ -36,7 +36,7 @@ String functionString = getFullName(apptMainBean, function, functionid);
 <!--
 var remote=null;
 function refresh() {
-	history.go(0);
+  document.location.reload();
 }
 function rs(n,u,w,h,x) {
 	args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
@@ -54,6 +54,7 @@ function popPage(url) {
 	awnd.focus();
 }
 
+
 function checkDelete(url, c, u,n){
 // revision Apr 05 2004 - we now allow anyone to delete documents
 	// if (c == u || n == '<%=oscarVariables.getProperty("SUPERUSER")%>'){
@@ -64,6 +65,8 @@ function checkDelete(url, c, u,n){
 	//	alert("<bean:message key="dms.documentReport.msgNotAllowed"/>");
 	//}
 }
+
+
 
 function setfocus() {
 	this.focus();
