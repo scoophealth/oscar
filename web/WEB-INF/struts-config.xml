@@ -980,7 +980,7 @@
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementTypesAction" 
                 name="EctDeleteMeasurementTypesForm"
                 scope="request">                
-       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessDisplayMeasurementTypesAction.jsp"/>
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/SetupDisplayMeasurementTypes.do"/>
     </action> 
     <action     path="/oscarEncounter/oscarMeasurements/SetupMeasurements"
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupMeasurementsAction"
@@ -997,7 +997,7 @@
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataAction" 
                 name="EctDeleteDataForm"
                 scope="request">                
-       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessDisplayHistoryAction.jsp"/>
+       <forward name="success" path="/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do"/>
     </action> 
     <action     path="/oscarEncounter/oscarMeasurements/SetupAddMeasuringInstruction"
                 type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasuringInstructionAction"
