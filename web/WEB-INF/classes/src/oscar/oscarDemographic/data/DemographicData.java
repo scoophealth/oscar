@@ -173,17 +173,31 @@ public class DemographicData {
         public String getPin() {
             return pin;
         }
-        
-        
+                
         public String getAge() {
-            return (String.valueOf(oscar.util.UtilDateUtilities.calcAge(year_of_birth,month_of_birth,date_of_birth)));
-            
+           return (String.valueOf(oscar.util.UtilDateUtilities.calcAge(year_of_birth,month_of_birth,date_of_birth)));            
         }
         
         public String getDob() {
-            return addZero(year_of_birth,4)+addZero(month_of_birth,2)+addZero(date_of_birth,2);
+           return addZero(year_of_birth,4)+addZero(month_of_birth,2)+addZero(date_of_birth,2);
         }
         
+        public String getDob(String seperator){
+	   return this.getYearOfBirth() + seperator + this.getMonthOfBirth() + seperator + this.getDateOfBirth();
+	}
+        
+        public String getYearOfBirth(){
+	   return addZero(year_of_birth, 4);
+	}
+
+        public String getMonthOfBirth(){
+	   return addZero(month_of_birth, 2);
+        }
+	
+        public String getDateOfBirth(){
+	   return addZero(date_of_birth, 2);
+	}
+		        
         public String getHIN() {
             return hin + ver;
         }
