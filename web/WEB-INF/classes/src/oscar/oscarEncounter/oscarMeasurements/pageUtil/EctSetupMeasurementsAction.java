@@ -63,8 +63,7 @@ public final class EctSetupMeasurementsAction extends Action {
         String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
         String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
         String today = year+"-"+month+"-"+day;
-        
-        request.setAttribute("today", today);
+                
         request.setAttribute("groupName", groupName);
         request.setAttribute("css", css);
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
