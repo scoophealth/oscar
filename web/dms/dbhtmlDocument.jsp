@@ -40,125 +40,81 @@ GregorianCalendar now=new GregorianCalendar();
   
   String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
 
-String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="";
+  String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="";
 
-module = request.getParameter("function");
-module_id = request.getParameter("functionid");
-doctype = request.getParameter("doctype");
-docdesc = request.getParameter("docdesc");
-doccreator = request.getParameter("doccreator");
-docdate = request.getParameter("docdate");
-docfilename =request.getParameter("docfilename");
- docxml =request.getParameter("docxml");
+  module = request.getParameter("function");
+  module_id = request.getParameter("functionid");
+  doctype = request.getParameter("doctype");
+  docdesc = request.getParameter("docdesc");
+  doccreator = request.getParameter("doccreator");
+  docdate = request.getParameter("docdate");
+  docfilename =request.getParameter("docfilename");
+  docxml =request.getParameter("docxml");  
 %>
 
 <html:html locale="true">
-<%
-if (docdesc.compareTo("") == 0 || docfilename.compareTo("") == 0 || doctype.compareTo("") == 0  || docxml.compareTo("")==0) {
-
-%>
-<jsp:forward page='errorpage.jsp' >
-<jsp:param name="msg" value='<bean:message key="dms.documentDelete.msgError"/>' />
-<jsp:param name="doctype" value='<%=doctype%>' />
-<jsp:param name="docfilename" value='<%=docfilename%>' />
-<jsp:param name="docdesc" value='<%=docdesc%>' />
-
-</jsp:forward>
-<%
-
-}
-else {  
-
-	    ResultSet rsdemo2 = null;
-	    int count1 = 0;
-		 	          	     String[] param4=new String[4];
-		 	          	    	
-		 	          	    	   
-		 	          	    		   param4[0] = docfilename;
-					                   param4[1] = "";
-					                   param4[2] = "";
-     							   param4[3] = "";
+<%if (docdesc.compareTo("") == 0 || docfilename.compareTo("") == 0 || doctype.compareTo("") == 0  || docxml.compareTo("")==0) { %>    
+   <jsp:forward page='errorpage.jsp' >
+      <jsp:param name="msg" value='<bean:message key="dms.documentDelete.msgError"/>' />
+      <jsp:param name="doctype" value='<%=doctype%>' />
+      <jsp:param name="docfilename" value='<%=docfilename%>' />
+      <jsp:param name="docdesc" value='<%=docdesc%>' />
+   </jsp:forward>
+<%}else{     
+     ResultSet rsdemo2 = null;
+	  int count1 = 0;
+     String[] param4=new String[1];
+		 	     param4[0] = docfilename;				  
 		 	          
-		 	          	    rsdemo2 = apptMainBean.queryResults(param4, "search_document");
-		 	             while (rsdemo2.next()) {   
+     rsdemo2 = apptMainBean.queryResults(param4, "search_document_by_file_name");
+     while (rsdemo2.next()) {   
+        count1 = count1 + 1;
+     }
+     if ( count1 > 0){ %>
+             
+        <jsp:forward page='documentList.jsp' >
+	        <jsp:param name="orderby" value='updatedatetime desc' />
+	        <jsp:param name="creator" value='<%=doccreator%>' />
+	        <jsp:param name="doctype" value='' />
+	        <jsp:param name="docdesc" value='' />
+	        <jsp:param name="docfilename" value='' />
+        </jsp:forward>
+                          
+   <%} else {       
+        String[] param =new String[7];
+	              param[0]=doctype;
+	              param[1]=docdesc;
+	              param[2]=docxml;
+	              param[3]=docfilename;
+	              param[4]=doccreator;
+	              param[5]=docdate;
+	              param[6]="H";
+	     int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_document");	    
+	     String docNo = null;	        	 
+		  ResultSet rsdemo = null;
+		  String[] param3 =new String[1];
+                 param3[0]=docfilename;
+                 
+		  rsdemo = apptMainBean.queryResults(param3, "search_document_by_file_name");
+		  while (rsdemo.next()) {   
+           docNo = rsdemo.getString("document_no");
+        }
+        int recordAffected=0;
+        String[] param2 = new String[4];
+                 param2[0] = module.trim();
+                 param2[1] = module_id.trim();
+                 param2[2] = docNo.trim();
+                 param2[3] = "H";
 		 	           
-		 	             count1 = count1 + 1;
-		 	          }
-             if ( count1 > 0){
-             %>
-             
-             <jsp:forward page='documentList.jsp' >
-	     <jsp:param name="orderby" value='updatedatetime desc' />
-	     <jsp:param name="creator" value='<%=doccreator%>' />
-	     <jsp:param name="doctype" value='' />
-	     <jsp:param name="docdesc" value='' />
-	     <jsp:param name="docfilename" value='' />
-</jsp:forward>
-             
-             
-       <%
-             }
-             else {
-             
-             
-
-
-    String[] param =new String[7];
-	  param[0]=doctype;
-	  param[1]=docdesc;
-	  param[2]=docxml;
-	  param[3]=docfilename;
-	  param[4]=doccreator;
-	  param[5]=docdate;
-	  param[6]="H";
-	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_document");
-	    
-	          String docNo = null;
-	         	 
-		 	          	    ResultSet rsdemo = null;
-		 	          	     String[] param3 =new String[4];
-		 	          	    	
-		 	          	    	   
-		 	          	    	  param3[0]=docfilename;
-		 	          	    	  param3[1]="";
-		 	          	    	  param3[2]="";
-		 	          	    	  param3[3]="";
-		 	          
-		 	          	    rsdemo = apptMainBean.queryResults(param3, "search_document");
-		 	             while (rsdemo.next()) {   
-		 	             docNo = rsdemo.getString("document_no");
-		 	          }
-		 	       
-		 	       
-		 	       int recordAffected=0;
-		 	      
-		 	     
-		 	           String[] param2 = new String[4];
-		 	           param2[0] = module.trim();
-		 	           param2[1] = module_id.trim();
-		 	           param2[2] = docNo.trim();
-		 	           param2[3] = "H";
-		 	          
-		 	           
-	           recordAffected = apptMainBean.queryExecuteUpdate(param2,"save_ctl_document");
-	           
-	    
-	    
-
-
-
-
-%>
-<jsp:forward page='documentList.jsp' >
-<jsp:param name="orderby" value='updatedatetime desc' />
-<jsp:param name="creator" value='<%=doccreator%>' />
-<jsp:param name="doctype" value='' />
-<jsp:param name="docdesc" value='' />
-<jsp:param name="docfilename" value='' />
-</jsp:forward>
-<%
-}
-}
-
-%> 
+	     recordAffected = apptMainBean.queryExecuteUpdate(param2,"save_ctl_document");
+   %>
+        <jsp:forward page='documentList.jsp' >
+           <jsp:param name="orderby" value='updatedatetime desc' />
+           <jsp:param name="creator" value='<%=doccreator%>' />
+           <jsp:param name="doctype" value='' />
+           <jsp:param name="docdesc" value='' />
+           <jsp:param name="docfilename" value='' />
+        </jsp:forward>
+   <%}
+ }%> 
 </html:html>
