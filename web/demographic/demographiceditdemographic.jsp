@@ -314,8 +314,27 @@ function checkPhoneNum() {
     <%}%>
     <tr valign="top"> 
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formProcvince"/>: </b> </td>
-      <td  align="left"> 
+      <td  align="left">
+        <% if (vLocale.getCountry().equals("BR")) { %>
         <input type="text" name="province" value="<%=rs.getString("province")%>">
+        <% } else { %>
+        <select name="province">
+        <% String province = rs.getString("province"); %>          
+          <option value="AB"<%=province.equals("AB")?" selected":""%>>AB-Alberta</option>
+          <option value="BC"<%=province.equals("BC")?" selected":""%>>BC-British Columbia</option>
+          <option value="MB"<%=province.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+          <option value="NB"<%=province.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+          <option value="NF"<%=province.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NT"<%=province.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+          <option value="NS"<%=province.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+          <option value="NU"<%=province.equals("NU")?" selected":""%>>NU-Nunavut</option>
+          <option value="ON"<%=province.equals("ON")?" selected":""%>>ON-Ontario</option>
+          <option value="PE"<%=province.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+          <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
+          <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+          <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option>                             
+        </select>
+        <% } %>
       </td>
       <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPostal"/>: </b> </td>
       <td  align="left"> 
@@ -395,17 +414,19 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
         <!--input type="text" name="hc_type" value=""-->
 		<% String hctype = rs.getString("hc_type")==null?"":rs.getString("hc_type"); %>
         <select name="hc_type">
-          <option value="<%=hctype%>" selected><%=hctype%></option>
-          <option value="ON" <%=hctype.equals("ON")?"selected":"" %> >ON-Ontario</option>
-          <option value="AB" <%=hctype.equals("AB")?"selected":"" %> >AB-Alberta</option>
-          <option value="BC" <%=hctype.equals("BC")?"selected":"" %> >BC-British Columbia</option>
-          <option value="MB" <%=hctype.equals("MB")?"selected":"" %> >MB-Manitoba</option>
-          <option value="NF" <%=hctype.equals("NF")?"selected":"" %> >NF-Newfoundland</option>
-          <option value="NB" <%=hctype.equals("NB")?"selected":"" %> >NB-New Brunswick</option>
-          <option value="YT" <%=hctype.equals("YT")?"selected":"" %> >YT-Yukon</option>
-          <option value="NS" <%=hctype.equals("NS")?"selected":"" %> >NS-Nova Scotia</option>
-          <option value="PE" <%=hctype.equals("PE")?"selected":"" %> >PE-Prince Edward Island</option>
-          <option value="SK" <%=hctype.equals("SK")?"selected":"" %> >SK-Saskatchewan</option>
+          <option value="AB"<%=hctype.equals("AB")?" selected":""%>>AB-Alberta</option>
+          <option value="BC"<%=hctype.equals("BC")?" selected":""%>>BC-British Columbia</option>
+          <option value="MB"<%=hctype.equals("MB")?" selected":""%>>MB-Manitoba</option>          
+          <option value="NB"<%=hctype.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+          <option value="NF"<%=hctype.equals("NF")?" selected":""%>>NF-Newfoundland & Labrador</option>
+          <option value="NT"<%=hctype.equals("NT")?" selected":""%>>NT-Northwest Territory</option>         
+          <option value="NS"<%=hctype.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+          <option value="NU"<%=hctype.equals("NU")?" selected":""%>>NU-Nunavut</option>
+          <option value="ON"<%=hctype.equals("ON")?" selected":""%>>ON-Ontario</option>
+          <option value="PE"<%=hctype.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+          <option value="QC"<%=hctype.equals("QC")?" selected":""%>>QC-Quebec</option>
+          <option value="SK"<%=hctype.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+          <option value="YT"<%=hctype.equals("YT")?" selected":""%>>YT-Yukon</option>                                       
         </select>
 		      </td>
       <td align="right" nowrap  bgcolor='ivory'><b><bean:message key="demographic.demographiceditdemographic.formNurse"/>: </b> </td>
@@ -463,7 +484,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
     </tr>
     
     <tr valign="top"> 
-      <td align="right" nowrap><b><font size="-2"><bean:message key="demographic.demographiceditdemographic.formPCN"/> </font><font size="-1"><bean:message key="demographic.demographiceditdemographic.formRosterStatus"/></font>:</b></td>
+      <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: </b></td>
       <td align="left" > 
         <input type="text" name="roster_status" value="<%=rs.getString("roster_status")%>" onBlur="upCaseCtrl(this)">
       </td>
@@ -484,8 +505,19 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
     </tr>
     <tr valign="top"> 
       <td align="right"><b>Patient Status:</b> <b> </b></td>
-      <td align="left" > 
-        <input type="text" name="patient_status" value="<%=rs.getString("patient_status")%>">
+      <td align="left" >
+        <% if (vLocale.getCountry().equals("BR")) { %>
+          <input type="text" name="patient_status" value="<%=rs.getString("patient_status")%>">
+        <% } else { 
+        String patientStatus = rs.getString("patient_status"); %>
+        <select name="patient_status">
+          <option value="AC"<%=patientStatus.equals("AC")?" selected":""%>>AC - Active</option>
+          <option value="IN"<%=patientStatus.equals("IN")?" selected":""%>>IN - Inactive</option>
+          <option value="DE"<%=patientStatus.equals("DE")?" selected":""%>>DE - Deceased</option>
+          <option value="MO"<%=patientStatus.equals("MO")?" selected":""%>>MO - Moved</option>
+          <option value="FI"<%=patientStatus.equals("FI")?" selected":""%>>FI - Fired</option>
+        </select>
+        <% } %>
       </td>
       <td align="right" bgcolor='<%=deepcolor%>'><b><bean:message key="demographic.demographiceditdemographic.formChartNo"/>:</b> </td>
       <td align="left" bgcolor='<%=deepcolor%>'> 
@@ -498,7 +530,7 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
       <td align="right"><b></b></td>
       <td align="left" > 
       </td>
-      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartAddress"/>:</b></td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formChartAddress"/>: </b></td>
       <td align="left"> 
         <input type="text" name="chart_address" value="<%=rs.getString("chart_address")==null?"":rs.getString("chart_address")%>">
       </td>
