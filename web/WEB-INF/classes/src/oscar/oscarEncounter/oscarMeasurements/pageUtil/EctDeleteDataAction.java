@@ -52,6 +52,12 @@ public class EctDeleteDataAction extends Action {
         request.getSession().setAttribute("EctDeleteDataForm", frm);
         String[] deleteCheckbox = frm.getDeleteCheckbox();
  
+        GregorianCalendar now=new GregorianCalendar(); 
+        int curYear = now.get(Calendar.YEAR);
+        int curMonth = (now.get(Calendar.MONTH)+1);
+        int curDay = now.get(Calendar.DAY_OF_MONTH);
+        String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
+
         boolean valid = true;
                 
         try{
@@ -60,9 +66,20 @@ public class EctDeleteDataAction extends Action {
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
                     System.out.println(deleteCheckbox[i]);
-                    String sql = "DELETE  FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'";                                        
+                    String sql = "SELECT * FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'";                                        
                     System.out.println(" sql statement "+sql);
-                    db.RunSQL(sql);                                
+                    ResultSet rs = db.GetSQL(sql);
+                    if(rs.next()){
+                        sql = "INSERT INTO measurementsDeleted"
+                             +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
+                             +" VALUES ('"+rs.getString("type")+"','"+rs.getString("demographicNo")+"','"+rs.getString("providerNo")+"','"
+                             + rs.getString("dataField")+"','" + rs.getString("measuringInstruction")+"','"+rs.getString("comments")+"','"
+                             + rs.getString("dateObserved")+"','"+rs.getString("dateEntered")+"','"+dateDeleted+"')";
+                        db.RunSQL(sql);
+                        rs.close();
+                        sql = "DELETE FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'"; 
+                        db.RunSQL(sql);
+                    }
                 }
             }
             
