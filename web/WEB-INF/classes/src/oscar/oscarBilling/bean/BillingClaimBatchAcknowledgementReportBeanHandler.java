@@ -33,9 +33,10 @@ import oscar.oscarDB.DBHandler;
 public class BillingClaimBatchAcknowledgementReportBeanHandler {
     
     Vector batchAckReportBeanVector = new Vector();
+    public boolean verdict = true;
 
     public BillingClaimBatchAcknowledgementReportBeanHandler(FileInputStream file) {
-        init(file);
+        verdict=init(file);
     }
     
     public boolean init(FileInputStream file) {
@@ -44,7 +45,7 @@ public class BillingClaimBatchAcknowledgementReportBeanHandler {
         InputStreamReader reader = new InputStreamReader(file);
         BufferedReader input = new BufferedReader(reader);
         String nextline;
-        boolean verdict = true;
+        
         try{
             while ((nextline=input.readLine())!=null){
                 String headerCount = nextline.substring(2,3);
@@ -83,6 +84,9 @@ public class BillingClaimBatchAcknowledgementReportBeanHandler {
         }
         catch (IOException ioe) {
             ioe.printStackTrace();         
+        }
+        catch (StringIndexOutOfBoundsException ioe) {
+            verdict = false;   
         }
         return verdict;
     }

@@ -33,7 +33,8 @@ import oscar.oscarDB.DBHandler;
 public class BillingClaimsErrorReportBeanHandler {
     
     Vector claimsErrorReportBeanVector = new Vector();
-
+    public boolean verdict = true;
+    
     public BillingClaimsErrorReportBeanHandler(FileInputStream file) {
         init(file);
     }
@@ -45,7 +46,7 @@ public class BillingClaimsErrorReportBeanHandler {
         BufferedReader input = new BufferedReader(reader);
         String nextline;
         BillingClaimsErrorReportBean CERBean = new BillingClaimsErrorReportBean();
-        boolean verdict = true;
+        
         boolean isNewHin = false;
         try{
             while ((nextline=input.readLine())!=null){
@@ -140,6 +141,9 @@ public class BillingClaimsErrorReportBeanHandler {
         }
         catch (IOException ioe) {
             ioe.printStackTrace();         
+        }
+        catch (StringIndexOutOfBoundsException ioe) {
+            verdict = false;   
         }
         return verdict;
     }

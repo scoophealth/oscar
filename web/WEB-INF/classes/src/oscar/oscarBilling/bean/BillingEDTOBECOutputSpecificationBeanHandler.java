@@ -33,7 +33,8 @@ import oscar.oscarDB.DBHandler;
 public class BillingEDTOBECOutputSpecificationBeanHandler {
     
     Vector EDTOBECOutputSecifiationBeanVector = new Vector();
-
+    public boolean verdict = true;
+    
     public BillingEDTOBECOutputSpecificationBeanHandler(FileInputStream file) {
         init(file);
     }
@@ -44,7 +45,7 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
         InputStreamReader reader = new InputStreamReader(file);
         BufferedReader input = new BufferedReader(reader);
         String nextline;
-        boolean verdict = true;
+        
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             while ((nextline=input.readLine()) != null){
@@ -99,7 +100,10 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
         catch(SQLException e)
         {
             System.out.println(e.getMessage());
-        }  
+        } 
+        catch (StringIndexOutOfBoundsException ioe) {
+            verdict =  false;   
+        }
         return verdict;
     }
         
