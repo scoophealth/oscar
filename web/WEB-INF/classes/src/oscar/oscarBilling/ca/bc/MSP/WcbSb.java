@@ -359,8 +359,8 @@ public class WcbSb {
              "</a>" + 
           "</td>" +
           "<td class='bodytext'>" + demoName    + "</td>" +
-          "<td class='bodytext'>" + phn         + "</td>" +
-          "<td class='bodytext'>" + serviceDate + "</td>" +
+          "<td class='bodytext'>" + w_phn         + "</td>" +
+          "<td class='bodytext'>" + dateFormat(serviceDate) + "</td>" +
           "<td class='bodytext'>" + billingCode + "</td>" +
           "<td align='right' class='bodytext'>"+ billAmount +"</td>" +
           "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx1, 5) + "</td>" +
