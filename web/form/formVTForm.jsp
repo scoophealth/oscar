@@ -182,12 +182,16 @@ Vascular Tracker
         return ret;
     }
 
-function write2Parent(text){
+function popupDecisiontSupport(varpage){
+    var vheight = 500;
+    var vwidth = 400;
+    var posX = 400;
+    var posY = 0;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=600";
+    var popup=window.open(varpage, "Decision Support", windowprops);  
     
-    self.close();
-    opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
  }
-
+  
 function showHideItem(id){ 
     if(document.getElementById(id).style.display == 'none')
         document.getElementById(id).style.display = 'block'; 
@@ -371,7 +375,7 @@ function controlEyeExam(){
     }
 }
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(660,700)">
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(660,700); popupDecisiontSupport('http://www.google.ca');">
 <!--  -->
     
     <html:form action="/form/SubmitForm" enctype="multipart/form-data">    
