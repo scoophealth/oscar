@@ -336,7 +336,7 @@ public class ExtractBean extends Object implements Serializable {
 		errorMsg += errorPartMsg;
 	}
 	private void checkItem() {
-		if (serviceCode.length() != 5)
+		if (serviceCode.trim().length() != 5)
 			errorPartMsg = "Item: Service Code wrong!<br>";
 		errorMsg += errorPartMsg;
 	}
