@@ -83,6 +83,27 @@
 		height: <%=windowSizes.getProperty("presBoxSize")%>;
 		overflow: auto;
 	}
+	
+	div.presBox ul{ 
+       width:8em;
+       list-style:none;
+       list-style-type:none; 
+       list-style-position:outside;
+       //border-top: 1pt soild #888888;
+       //border-left: 1pt soild #888888;
+       padding-left:1px;
+       margin-left:1px;    
+       margin-top:1px;
+       padding-top:1px;
+	}
+	         
+	div.presBox li{
+	    border-bottom: 1pt solid #888888;
+	}
+	
+	div.presBox li a{
+	   font-size:10px;
+	}
 </style>
 <!-- This is from OscarMessenger to get the top and left borders on -->
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
@@ -259,6 +280,7 @@ function reset() {
     document.encForm.enTextarea.style.height=large;
     document.encForm.rowThreeSize.value=large;
     document.getElementById("presBox").style.height=pBSmall;
+    document.getElementById("allergyBox").style.height=pBSmall;
     document.encForm.presBoxSize.value=pBSmall;
 }
 function rowOneX(){
@@ -378,22 +400,27 @@ function rowThreeFull(){
 
 function presBoxX(){
     document.getElementById("presBox").style.height=X;    
-    document.encForm.presBoxSize.value=X; 
+    document.getElementById("allergyBox").style.height=X;    
+    document.encForm.presBoxSize.value=X;     
 }
 function presBoxSmall(){   
     document.getElementById("presBox").style.height=pBSmall;
+    document.getElementById("allergyBox").style.height=pBSmall;    
     document.encForm.presBoxSize.value=pBSmall;
 }
 function presBoxNormal(){
     document.getElementById("presBox").style.height=normal;
+    document.getElementById("allergyBox").style.height=normal;    
     document.encForm.presBoxSize.value=normal;
 }
 function presBoxLarge(){
     document.getElementById("presBox").style.height=large;
+    document.getElementById("allergyBox").style.height=large;    
     document.encForm.presBoxSize.value=large;
 }
 function presBoxFull(){
     document.getElementById("presBox").style.height=full;
+    document.getElementById("allergyBox").style.height=full;    
     document.getElementById("presTopTable").scrollIntoView(top);
     document.encForm.presBoxSize.value=full;
 }
@@ -962,17 +989,32 @@ border-right: 2px solid #cfcfcf;
     <!-- prescription row -->
 		<tr>
 		   <td >
-		      <table bgcolor="#ccccff" id="presTopTable">
-                        <tr>
-                            <td valign="top">
-                                    <div class="RowTop" >Drug Info:</div>
+		      <table bgcolor="#ccccff" id="presTopTable" border="0">
+                        <tr>  <!--hr style="border-bottom: 0pt solid #888888; background-color: #888888;"--> 
+                            <td valign="top">                                                    
+                                    <div class="RowTop" ><a href=# onClick="popupOscarRx(700,960,'../oscarRx/showAllergy.do?demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.allergies"/></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
+                                    <div class="presBox" id="allergyBox">
+                                    <ul >
+                                    <%      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
+                                            = new oscar.oscarRx.data.RxPatientData().getPatient(demoNo).getAllergies();
+        
+                                            for (int j=0; j<allergies.length; j++){%>              
+                                        <li>
+                                           <a title="<%= allergies[j].getAllergy().getDESCRIPTION() %>" >
+                                              <%=allergies[j].getAllergy().getShortDesc(13,8,"...")%>                                            
+                                           </a>
+                                        </li>                                        
+                                    <%}%>                                    
+                                    </ul>
+                                    </div>
+                                    
                             </td>
                             <td width="100%" style="font-size: 10px;">
-                                    <table width="100%" cellpadding=0 cellspacing=0>
+                                    <table width="100%" cellpadding=0 cellspacing=0 border="0">
                                         <tr>
-                                            <td width=75><div class="RowTop" >Rx Date</td>
+                                            <td width=60><div class="RowTop" >Rx Date</td>
                                             <td>
-                                                 <div class="RowTop" >Prescription</div>
+                                                 <div class="RowTop" ><div class="RowTop" ><a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a></div></div>
                                             </td>
                                             <td align=right>
                                                 <div style="font-size:8pt;text-align:right;vertical-align:bottom">             
