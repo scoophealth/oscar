@@ -139,6 +139,7 @@ CREATE TABLE billing (
   KEY demographic_no (demographic_no),
   KEY billing_date (billing_date),
   KEY provider_no (provider_no),
+  KEY provider_ohip_no (provider_ohip_no),
   KEY apptProvider_no (apptProvider_no),
   KEY creator (creator)
 ) TYPE=MyISAM;
