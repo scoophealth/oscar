@@ -40,7 +40,7 @@ public class MspErrorCodes extends Properties{
    /** Creates a new instance of MspErrorCodes */
    public MspErrorCodes() {         
       try {
-            load(new FileInputStream(oscar.OscarProperties.getInstance().getProperty("MSP_EDIT_CODES"))); 
+            load(new FileInputStream(oscar.OscarProperties.getInstance().getProperty("msp_error_codes"))); 
       } catch (IOException e) {
 		e.printStackTrace();
                 System.out.println("Error loading MSP Error codes file");
