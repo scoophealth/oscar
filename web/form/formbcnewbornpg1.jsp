@@ -37,7 +37,7 @@
 
 <head>
     <title>New Born Record (Baby)</title>
-    <link rel="stylesheet" type="text/css" href="<%=bView?"arStyleView.css" : "bcArStyle.css"%>">
+    <link rel="stylesheet" type="text/css" href="<%=bView?"bcArStyleView.css" : "bcArStyle.css"%>">
     <html:base/>
 </head>
 

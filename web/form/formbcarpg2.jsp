@@ -37,7 +37,7 @@
 <head>
     <title>Antenatal Record 2</title>
     <html:base/>
-    <link rel="stylesheet" type="text/css" href="<%=bView?"arStyleView.css" : "bcArStyle.css"%>">
+    <link rel="stylesheet" type="text/css" href="<%=bView?"bcArStyleView.css" : "bcArStyle.css"%>">
 </head>
 
 <script type="text/javascript" language="Javascript">
