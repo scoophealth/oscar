@@ -124,7 +124,7 @@
 	    groupFile = groupFile + filecontext ;
 	    bCount = bCount + 1;
 	    extract.writeFile(groupFile);
-	    groupFile =  groupFile+"\n"  ;
+	    //groupFile =  groupFile+"\n"  ;            
 	}
    }else {
 	    batchCount = "0";
