@@ -566,6 +566,7 @@ CREATE TABLE dxresearch (
   update_date date default '0001-01-01',
   status char(1) default 'A',
   dxresearch_code varchar(10) default '',
+  coding_system varchar(20),
   PRIMARY KEY  (dxresearch_no)
 ) TYPE=MyISAM;
 
