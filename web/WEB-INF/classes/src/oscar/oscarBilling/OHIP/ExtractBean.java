@@ -279,9 +279,11 @@ public class ExtractBean extends Object implements Serializable {
 		return htmlCode;
 	}
 	private String buildItem() {
+		//return ("\n" + HE + "T" + serviceCode + space(2) + zero(count) + fee	+ "0" + billingUnit + apptDate + diagcode + space(12)+ space(5) + space(2) + space(6) + space(25) + "\r");
 		return ("\n" + HE + "T" + serviceCode + space(2) + zero(count) + fee
-				+ "0" + billingUnit + apptDate + diagcode + space(12)
+				+ forwardZero(billingUnit, 2) + apptDate + diagcode + space(12)
 				+ space(5) + space(2) + space(6) + space(25) + "\r");
+		
 	}
 	private String buildTrailer() {
 		return ("\n" + HE + "E" + zero(flagOrder) + pCount + zero(thirdFlag)
@@ -580,4 +582,15 @@ public class ExtractBean extends Object implements Serializable {
 		}
 		return returnZeroValue;
 	}
+	
+	// return x length string with zero str, e.g. 0018
+    public String forwardZero(String y, int x) {
+    	// x must >= y.length()
+        String returnZeroValue = "";
+        for(int i=y.length(); i < x; i++) {
+            returnZeroValue += "0";
+        }
+        
+        return (returnZeroValue+y);
+    }
 }
