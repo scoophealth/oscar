@@ -1,4 +1,7 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
+
+import java.lang.*;
+import java.sql.*;
 import org.apache.struts.action.ActionForm;
 import oscar.Misc;
 /*
@@ -82,6 +85,8 @@ public final class WCBForm extends ActionForm {
     w_servicelocation;
     public WCBForm() {
     }
+    
+    
     public boolean Valid() {
         boolean isValid = true;
         return isValid;
@@ -219,6 +224,68 @@ public final class WCBForm extends ActionForm {
         this.w_address = demo.getAddress();
         this.w_opcity = demo.getCity();
         this.w_city = demo.getCity();
+    }
+    
+    public void setWCBForms(ResultSet result){
+       try {
+          if (result.next()) {
+            demographic_no = result.getString("demographic_no");
+            provider_no= result.getString("provider_no");
+            formCreated= result.getString("formCreated");
+            formEdited= result.getString("formEdited");
+            w_reportype= result.getString("w_reporttype");
+            w_fname= result.getString("w_fname");
+            w_lname= result.getString("w_lname");
+            w_mname= result.getString("w_mname");
+            w_gender= result.getString("w_gender");
+            w_dob= result.getString("w_dob");
+            w_doi= result.getString("w_doi");
+            w_address= result.getString("w_address");
+            w_city= result.getString("w_city");
+            w_postal= result.getString("w_postal");
+            w_area= result.getString("w_area");
+            w_phone= result.getString("w_phone");
+            w_phn= result.getString("w_phn");
+            w_empname= result.getString("w_empname");
+            w_emparea= result.getString("w_emparea");
+            w_empphone= result.getString("w_empphone");
+            w_wcbno= result.getString("w_wcbno");
+            w_opaddress= result.getString("w_opaddress");
+            w_opcity= result.getString("w_opcity");
+            w_rphysician= result.getString("w_rphysician");
+            w_duration= result.getString("w_duration");
+            w_ftreatment= result.getString("w_ftreatment");
+            w_problem= result.getString("w_problem");
+            w_servicedate= result.getString("w_servicedate");
+            w_diagnosis= result.getString("w_diagnosis");
+            w_icd9= result.getString("w_icd9");
+            w_bp= result.getString("w_bp");
+            w_side= result.getString("w_side");
+            w_noi= result.getString("w_noi");
+            w_work= result.getString("w_work");
+            w_workdate= result.getString("w_workdate");
+            w_clinicinfo= result.getString("w_clinicinfo");  
+            w_capreason= result.getString("w_capreason");
+            w_capability= result.getString("w_capability");
+            w_capreason= result.getString("w_capreason");
+            w_estimate= result.getString("w_estimate");
+            w_rehab= result.getString("w_rehab");
+            w_rehabtype= result.getString("w_rehabtype");
+            w_estimatedate= result.getString("w_estimatedate");
+            w_tofollow= result.getString("w_tofollow");
+            w_payeeno= result.getString("w_payeeno");
+            w_pracno= result.getString("w_pracno");
+            //w_pracname= result.getString("w_pracname");
+            w_wcbadvisor= result.getString("w_wcbadvisor");
+            w_feeitem= result.getString("w_feeitem");
+            w_extrafeeitem= result.getString("w_extrafeeitem");
+            w_servicelocation = result.getString("w_servicelocation");
+             
+          }
+       }catch (java.lang.Exception ex) {
+         System.err.println("Teleplan  Form WCB: (setWCBForms) " + ex.getMessage());
+         ex.printStackTrace();
+      }
     }
     public void setW_feeitem(String fi) {
         this.w_feeitem = fi;
