@@ -55,8 +55,15 @@ public class EctMeasurementsAction extends Action {
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         request.getSession().setAttribute("EctSessionBean", bean);
         
-
-        String dateEntered = (String) frm.getValue("dateEntered");   
+        java.util.Calendar calender = java.util.Calendar.getInstance();
+        String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
+        String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
+        String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
+        String hour = Integer.toString(calender.get(java.util.Calendar.HOUR));
+        String min = Integer.toString(calender.get(java.util.Calendar.MINUTE));
+        String second = Integer.toString(calender.get(java.util.Calendar.SECOND));
+        String dateEntered = year+"-"+month+"-"+day+" " + hour + ":" + min + ":" + second + ":";
+        
         String numType = (String) frm.getValue("numType");        
         int iType = Integer.parseInt(numType);
  
