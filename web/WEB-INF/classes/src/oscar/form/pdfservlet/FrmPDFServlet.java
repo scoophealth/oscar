@@ -302,26 +302,32 @@ public class FrmPDFServlet extends HttpServlet {
                         }
                     }
 
-                    //make the graphic class
-                    FrmPdfGraphicAR myClass = new FrmPdfGraphicAR();
-                    myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY,
-                            fEndY, dateFormat, fEDB);
-                    Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
+                    if (fEDB != null && fEDB.length() >= 8) {
+                        //make the graphic class
+                        FrmPdfGraphicAR myClass = new FrmPdfGraphicAR();
+                        myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX,
+                                fStartY, fEndY, dateFormat, fEDB);
+                        Properties gProp = myClass.getGraphicXYProp(xDate,
+                                yHeight);
 
-                    //draw the pic
-                    cb.setLineWidth(1.5f);
-                    //cb.setRGBColorStrokeF(0f, 255f, 0f); //cb.circle(52f,
-                    // height - 751f, 1f);//cb.circle(52f, height - 609f, 1f);
-                    for (Enumeration e = gProp.propertyNames(); e
-                            .hasMoreElements();) {
-                        tempName = new StringBuffer(e.nextElement().toString());
-                        tempValue = gProp.getProperty(tempName.toString(), "");
-                        if (tempValue.equals("")) continue;
+                        //draw the pic
+                        cb.setLineWidth(1.5f);
+                        //cb.setRGBColorStrokeF(0f, 255f, 0f); //cb.circle(52f,
+                        // height - 751f, 1f);//cb.circle(52f, height - 609f,
+                        // 1f);
+                        for (Enumeration e = gProp.propertyNames(); e
+                                .hasMoreElements();) {
+                            tempName = new StringBuffer(e.nextElement()
+                                    .toString());
+                            tempValue = gProp.getProperty(tempName.toString(),
+                                    "");
+                            if (tempValue.equals("")) continue;
 
-                        cb.circle((origX + Float
-                                .parseFloat(tempName.toString())), (height
-                                - origY + Float.parseFloat(tempValue)), 1.5f);
-                        cb.stroke();
+                            cb.circle((origX + Float.parseFloat(tempName
+                                    .toString())), (height - origY + Float
+                                    .parseFloat(tempValue)), 1.5f);
+                            cb.stroke();
+                        }
                     }
                 }
 
