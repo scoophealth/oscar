@@ -255,7 +255,6 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                 }
 
                                 function Delete(){
-                                    alert("cally");
                                     if(document.getElementsByName('chkDelete')!=null){
                                         var checks = document.getElementsByName('chkDelete');
                                         var s='';
@@ -272,7 +271,6 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                                 s = s.substring(0, s.length - 1);
 
                                                 document.forms[1].drugList.value = s;
-                                                alert(document.forms[1].drugList.value);
                                                 document.forms[1].submit();
                                             }
                                         }
