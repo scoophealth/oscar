@@ -117,12 +117,31 @@ Query By Examples
        }
     }
   }
+  
+    function popupPage(vheight,vwidth,varpage) { //open a new popup window
+      var page = "" + varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+      var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self;
+          alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
+        }
+      }
+    }
+
+    function write2TextArea(){ 
+        if (RptByExampleForm.selectedRecentSearch.options[RptByExampleForm.selectedRecentSearch.selectedIndex].value=='Recent Search')
+            RptByExampleForm.sql.value = '';
+        else
+            RptByExampleForm.sql.value = RptByExampleForm.selectedRecentSearch.options[RptByExampleForm.selectedRecentSearch.selectedIndex].value;
+     }
 </script>
 
 </head>
 
 <body vlink="#0000FF" class="BodyStyle" >
-<div id="Layer1" style="position:absolute; left:5px; top:160px; width:800px; height:600px; z-index:1; visibility: hidden;"> 
+<div id="Layer1" style="position:absolute; left:5px; top:200px; width:800px; height:600px; z-index:1; visibility: hidden;"> 
   <table width="100%" border="1" cellpadding="0" cellspacing="0" bgcolor="#D6D5C5">
     <tr>
       <td><font size="2" face="Tahoma">
@@ -140,32 +159,73 @@ Query By Examples
                 Report
             </td>
             <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >
-                 
+                <table class="TopStatusBar" >                 
                     <tr>
-                        <td>Query By Examples</td>
-                        <td>
-                        <html:textarea property="sql" cols="45" rows="4"/>
-                        <input type="button" value="Query" onclick="submit();"/>
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
-                        </td>
+                        <td><bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/></td>                                               
                     </tr>                  
                 </table>
             </td>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top"> 
+                <table>
+                  <tr> 
+                    <td><a href="#" onMouseOver="showHideLayers('Layer1','','show')"><bean:message key="oscarReport.RptByExample.MsgShowTextVersion"/></a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="#" onMouseOver="showHideLayers('Layer1','','hide')"><bean:message key="oscarReport.RptByExample.MsgHide"/></a></td>
+                  </tr>
+                </table>
+            </td>
+            <td class="MainTableRightColumn">
+                <table>
+                   <tr>
+                        <td>
+                            <bean:message key="oscarReport.RptByExample.MsgEnterAQuery"/>                           
+                        </td> 
+                   </tr>
+                   <tr>
+                        <td>
+                            <html:textarea property="sql" cols="80" rows="4"/>
+                        </td>
+                   </tr>
+                   <tr>
+                        <td>
+                            <bean:message key="oscarReport.RptByExample.MsgOr"/>
+                        </td>
+                   </tr>
+                   <tr>
+                        <td>
+                            <bean:message key="oscarReport.RptByExample.MsgSelectFromOldQueries"/>
+                        </td>
+                   </tr>
+                   <tr>
+                        <td>
+                            <html:select property="selectedRecentSearch" style="width:660" onchange="write2TextArea();return false;">
+                                <html:option value="Recent Search" disabled="true"/> 
+                                <html:options collection="recentSearches" property="query" labelProperty="query"/>
+                            </html:select>
+                        </td>
+                        <td>
+                            <input type="button" value="View All" onclick="popupPage(600,1000,'RptViewAllQueryByExamples.do')"/>
+                        </td>
+                   </tr>
+                   <tr>
+                        <td>
+                            <input type="button" value="Query" onclick="submit();"/>
+                        </td>
+                   </tr>
+                   <tr></tr>
+                   <tr>
+                        <logic:present name="results">                            
+                            <bean:write name="results" filter="false"/>
+                        </logic:present>
+                    </tr>
+                </table>
+            </td>
+        </tr>
         </tr>
         </table>
-        <logic:present name="results">
-            <table width="800" border="0" cellspacing="0" cellpadding="0">
-              <tr> 
-                <td><a href="#" onMouseOver="showHideLayers('Layer1','','show')">Show Text 
-                  Version</a></td>
-                <td><a href="#" onMouseOver="showHideLayers('Layer1','','hide')">Hide</a></td>
-              </tr>
-            </table>
-            <bean:write name="results" filter="false"/>
-        </logic:present>
+        
 </html:form>
 </body>
 </html:html>
