@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,15 +22,14 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
+--%>
 <%
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
   int oox=0, ooy=0;
   if(request.getParameter("oox")!=null) oox = Integer.parseInt(request.getParameter("oox"));
   if(request.getParameter("ooy")!=null) ooy = Integer.parseInt(request.getParameter("ooy"));
 %>
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.UtilMisc, oscar.form.graphic.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html>
@@ -63,8 +62,8 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 </div>
 
 <script language="JavaScript">
-ff(750,10,50,20,'<span class="title"><a href=# onClick="window.print()">Print</a></span>' );
-ff(750,40,50,20,'<span class="title"><a href=# onClick="history.go(-1)">Back</a></span>' );
+ff(750,10,1,10,'<span class="title"><a href=# onClick="window.print()">Print</a></span>' );
+ff(750,40,1,10,'<span class="title"><a href=# onClick="history.go(-1)">Back</a></span>' );
 ff(192,0,300,20,'<span class="title">Antenatal Record 2</span>' );
 ff(9,65,100,20,'<span class="tdname">Name</span>' );
 ff(8,87,100,20,'<span class="tdname">Address</span>' );
@@ -455,7 +454,8 @@ ff(665,956,200,20,'<span class="smalltdname">7530-4654</span>' );
 </script>
 
 <div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=10+oox%>px; top:<%=ooy+172%>px; width:330px; height:60px;"> 
-<pre><%=request.getParameter("xml_rfi")%></pre>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><%=UtilMisc.htmlJsEscape(request.getParameter("xml_rfi"))%>
+</td></tr></table>
 </div>
 <div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=347+oox%>px; top:<%=ooy+172%>px; width:180px; height:50px;"> 
 <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><%=request.getParameter("xml_Alert_demographicaccessory")%>
@@ -555,6 +555,36 @@ ff(665,956,200,20,'<span class="smalltdname">7530-4654</span>' );
 </td></tr></table>
 </div>
 
+<%
+String fedb = request.getParameter("xml_fedb");
+String urlparam = "";
+
+int width = 200, height = 235 ;
+int x = 0, y = 0;
+int ox = 21, oy = 254;
+float dx = 0f, dy = 0f;
+int ipos = 0;
+
+if (fedb != null && fedb.length() == 10 ) {
+	FrmGraphicAR arG = new FrmGraphicAR();
+    for (int i = 1; i < 18; i++) {
+        if (request.getParameter("xml_sv" + i + "da") != null && request.getParameter("xml_sv" + i + "da").length() == 10 ) {
+			dx = arG.getWeekByEDB(fedb, request.getParameter("xml_sv" + i + "da"));
+			if (arG.getWeekInt() < 19 || arG.getWeekInt() > 40 || request.getParameter("xml_sv" + i + "sf") == null  || (request.getParameter("xml_sv" + i + "sf")).equals("-") || arG.getHt(request.getParameter("xml_sv" + i + "sf")).equals("")) continue;
+       		dy = Float.parseFloat(arG.getHt(request.getParameter("xml_sv" + i + "sf")));
+	        x = (int) ((ox + (dx -19) * width / (11.5 * 2)) -2) ;
+	        y = (int) ((oy - (dy - 11.818) * height / (5.636 * 5)) -1) ; //System.out.println(dx + " : " +dy);
+            urlparam += "&x" + (i-1) + "=" + x + "|" + y;
+			System.out.println(urlparam);
+		}
+	}
+%>
+<div ID="graphic" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=3+oox%>px; top:<%=653+ooy%>px; width:501px; height:280px;">
+<embed type="image/svg+xml" src="../oscarEncounter/formAR2svg.jsp?bgimage=<%=URLEncoder.encode("../images/formar2_99_08gra.gif")%>&bgimagewidth=222&bgimageheight=276<%=urlparam%>" width="221" height="276"  wmode="transparent" />
+</div>
+<%
+}
+%>
 
 </body>
 </html>

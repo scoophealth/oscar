@@ -23,7 +23,6 @@
  * Ontario, Canada 
  */
 -->
-
   <%
   if(session.getValue("user") == null) 
     response.sendRedirect("../logout.htm");
@@ -796,7 +795,7 @@ str = sBuffer.toString();
     <p><%=errorMsg%></p>
      <% session.setAttribute("content", content); %>
     <form>
-    <input type=button name=back value='Go Back and Change' onClick='javascript:location.href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0"'>
+    <input type=button name=back value='Go Back and Change' onClick='javascript:location.href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0"'>
     </form>
     
 <% } else { %>
@@ -873,6 +872,7 @@ str = sBuffer.toString();
               <input type="hidden" name="dboperation" value="save_bill">
               <input type="hidden" name="appointment_date" value="<%=request.getParameter("xml_appointment_date")%>">
               <input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
+                   <input type="hidden" name="status" value="<%=request.getParameter("status")%>">
               <input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
               <input type="hidden" name="displaymode" value="savebill">
                <input type="hidden" name="demographic_dob" value="<%=demoDOB%>">
@@ -882,9 +882,9 @@ str = sBuffer.toString();
               <input type="hidden" name="total" value="<%=BigTotal%>">
               <input type="hidden" name="clinic_ref_code" value="<%=location1%>">
 				<input type="hidden" name="visitdate" value="<%=visitdate%>">
-    <input type="submit" name="Submit" value="Confirm">
+    <input type="button" name="Submit" value="Confirm" onDblClick="" onClick="form.submit()">
   <!--  <input type="button" name="Submit2" value="Edit" onclick="javascript:history.go(-1)">
-  -->  <a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
+  -->  <a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
  <% session.setAttribute("content", content); %>
   </p>
   <p></p>

@@ -1,32 +1,7 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.start_time") ;
+    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.start_time") ;
+    String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -34,17 +9,16 @@
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
-  String [][] dbQueries=new String[][] { 
-{"search_daysheetall", "select a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no from appointment a, demographic d, provider p where a.appointment_date=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, "+orderby }, 
-{"search_daysheetsingleall", "select a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by "+orderby }, 
-{"search_daysheetnew", "select a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no from appointment a, demographic d, provider p where a.appointment_date=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, "+orderby }, 
-{"search_daysheetsinglenew", "select a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by "+orderby }, 
+    String [][] dbQueries=new String[][] { 
+{"search_daysheetall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date>=? and a.appointment_date<=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby }, 
+{"search_daysheetsingleall", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date>=? and a.appointment_date<=? and a.provider_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
+{"search_daysheetnew", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a, demographic d, provider p where a.appointment_date=? and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby }, 
+{"search_daysheetsinglenew", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no,d.roster_status from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby }, 
 {"searchmygroupall", "select * from mygroup where mygroup_no= ?"}, 
 {"update_apptstatus", "update appointment set status='T' where appointment_date=? and status='t' " }, 
 {"update_apptstatussingle", "update appointment set status='T' where appointment_date=? and provider_no=? and status='t' " }, 
-  };
-  String[][] responseTargets=new String[][] {  };
-  daySheetBean.doConfigure(dbParams,dbQueries,responseTargets);
+    };
+    daySheetBean.doConfigure(dbParams,dbQueries);
 %>
 <html>
 <head>
@@ -56,52 +30,55 @@
 <!--
 function setfocus() {
   this.focus();
-  //document.titlesearch.keyword.select();
 }
-
 //-->
 </SCRIPT>
 </head>
 <% 
-  GregorianCalendar now=new GregorianCalendar();
-  String createtime = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) +" "+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) ;
-  now.add(now.DATE, 1);
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
+    GregorianCalendar now=new GregorianCalendar();
+    String createtime = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) +" "+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) ;
+    now.add(now.DATE, 1);
+    int curYear = now.get(Calendar.YEAR);
+    int curMonth = (now.get(Calendar.MONTH)+1);
+    int curDay = now.get(Calendar.DAY_OF_MONTH);
 
-  String sdate = request.getParameter("sdate")!=null?request.getParameter("sdate"):(curYear+"-"+curMonth+"-"+curDay) ;
-  String provider_no = request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"175" ;
-  ResultSet rsdemo = null ;
-  boolean bodd = false;
+    String sdate = request.getParameter("sdate")!=null?request.getParameter("sdate"):(curYear+"-"+curMonth+"-"+curDay) ;
+    String edate = request.getParameter("edate")!=null?request.getParameter("edate"):"" ;
+    String provider_no = request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"175" ;
+    ResultSet rsdemo = null ;
+    boolean bodd = false;
   
-  //initial myGroupBean if neccessary
-  if(provider_no.startsWith("_grp_")) {
-	rsdemo = daySheetBean.queryResults(provider_no.substring(5), "searchmygroupall");
-    while (rsdemo.next()) { 
-	  myGroupBean.setProperty(rsdemo.getString("provider_no"),"true");
-//System.out.println(provider_no.substring(5)+"  ******"+ rsdemo.getString("provider_no"));
+    //initial myGroupBean if neccessary
+    if(provider_no.startsWith("_grp_")) {
+	    rsdemo = daySheetBean.queryResults(provider_no.substring(5), "searchmygroupall");
+        while (rsdemo.next()) { 
+	        myGroupBean.setProperty(rsdemo.getString("provider_no"),"true");
+        }
     }
-  }
 %>
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica">DAY SHEET</font></th>
+  <tr bgcolor="<%=deepColor%>"><th>DAY SHEET</th>
     <th width="10%" nowrap><%=createtime%> 
       <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
 </table>
+
 <%
   boolean bFistL = true; //first line in a table for TH
   String strTemp = "";
   String [] param = new String[2];
   param[0] = sdate;
   param[1] = provider_no;
+  String [] parama = new String[3];
+  parama[0] = sdate;
+  parama[1] = edate;
+  parama[2] = provider_no;
   if(request.getParameter("dsmode")!=null && request.getParameter("dsmode").equals("all") ) {
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
-	  rsdemo = daySheetBean.queryResults(param, "search_daysheetsingleall");
+	  rsdemo = daySheetBean.queryResults(parama, "search_daysheetsingleall");
     } else { //select all providers
-	  rsdemo = daySheetBean.queryResults(param[0], "search_daysheetall");
+	  rsdemo = daySheetBean.queryResults(new String[] {parama[0], parama[1]}, "search_daysheetall");
     }
   } else { //new appt, need to update status
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
@@ -130,25 +107,29 @@ function setfocus() {
     bodd = false ;
 %>
 <table width="480" border="0" cellspacing="1" cellpadding="0" ><tr> 
-<td><%=providerBean.getProperty(rsdemo.getString("a.provider_no"))+" - " +sdate %>  </td>
+<td><%=providerBean.getProperty(rsdemo.getString("a.provider_no")) + " - " +sdate + " " + edate%>  </td>
 <td align="right"></td>
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time">Appt Time</a></b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=d.last_name">Patient's Last Name</a> </b></TH>
-<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=d.first_name">Patient's First Name</a> </b></TH>
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=d.chart_no">Chart No</a></b></TH>
-<TH width="40%"><b>Comments</b></TH>
+<TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.appointment_date">Appt Date</a></b></TH>
+<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=a.start_time">Appt Time</a></b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.last_name">Patient's Last Name</a> </b></TH>
+<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.first_name">Patient's First Name</a> </b></TH>
+<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.chart_no">Chart No</a></b></TH>
+<TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=d.roster_status">Roster Status</a></b></TH>
+<TH width="20%"><b>Comments</b></TH>
 </tr>
 <%
     }
 %> 
 <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-      <td align="center" title="<%="End Time: "+rsdemo.getString("a.end_time")%>"><%=rsdemo.getString("a.start_time")%></td>
+      <td align="center" nowrap><%=rsdemo.getString("a.appointment_date")%></td>
+      <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("a.end_time")%>"><%=rsdemo.getString("a.start_time")%></td>
       <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name"))%></td>
       <td align="center"><%=Misc.toUpperLowerCase(rsdemo.getString("d.first_name"))%></td>
       <td align="center"><%=rsdemo.getString("d.chart_no")%></td>
+      <td align="center"><%=rsdemo.getString("d.roster_status")%></td>
       <td><%=rsdemo.getString("a.reason")%>&nbsp;</td>
 </tr>
 <%

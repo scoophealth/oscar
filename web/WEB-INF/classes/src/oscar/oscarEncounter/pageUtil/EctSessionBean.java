@@ -1,27 +1,3 @@
-// -----------------------------------------------------------------------------------------------------------------------
-// *
-// *
-// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-// * This software is published under the GPL GNU General Public License. 
-// * This program is free software; you can redistribute it and/or 
-// * modify it under the terms of the GNU General Public License 
-// * as published by the Free Software Foundation; either version 2 
-// * of the License, or (at your option) any later version. * 
-// * This program is distributed in the hope that it will be useful, 
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-// * along with this program; if not, write to the Free Software 
-// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-// * 
-// * <OSCAR TEAM>
-// * This software was written for the 
-// * Department of Family Medicine 
-// * McMaster Unviersity 
-// * Hamilton 
-// * Ontario, Canada 
-// *
-// -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.pageUtil;
 import oscar.oscarDB.*;
 import oscar.util.*;
@@ -48,6 +24,7 @@ public class EctSessionBean {
     public String patientLastName;
     public String patientSex;
     public String patientAge;
+    public String familyDoctorNo;
     public String monthOfBirth;
     public String yearOfBirth;
     public String dateOfBirth;
@@ -65,6 +42,7 @@ public class EctSessionBean {
     public String ongoingConcerns;
     public String reminders;
     public String encounter;
+    public String subject;
     public String template = "";
     public ArrayList eChartIdArray;
     public ArrayList socialHistoryArray;
@@ -86,12 +64,14 @@ public class EctSessionBean {
       dateOfBirth ="";
       patientSex ="";
       patientAge ="";
+      familyDoctorNo ="";
       socialHistory = "";
       familyHistory = "";
       medicalHistory = "";
       ongoingConcerns = "";
       reminders = "";
       encounter = "";
+      subject = "";
       address = "";
       city = "";
       postal = "";
@@ -128,6 +108,7 @@ public class EctSessionBean {
                 city = rs.getString("city");
                 postal = rs.getString("postal");
                 phone = rs.getString("phone");
+                familyDoctorNo = rs.getString("provider_no");
                 yearOfBirth = rs.getString("year_of_birth");
                 monthOfBirth = rs.getString("month_of_birth");
                 dateOfBirth = rs.getString("date_of_birth");
@@ -163,7 +144,7 @@ public class EctSessionBean {
             db.CloseConn();
         }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
         try{
-            sql = "select * from eChart where demographicNo="+demographicNo+" ORDER BY eChartId DESC";
+            sql = "select * from eChart where demographicNo="+demographicNo+" ORDER BY eChartId DESC limit 1";
             rs = db.GetSQL(sql);
             if(rs.next()){
                 eChartTimeStamp = rs.getDate("timeStamp");
@@ -173,6 +154,7 @@ public class EctSessionBean {
                 ongoingConcerns =rs.getString("ongoingConcerns");
                 reminders = rs.getString("reminders");
                 encounter = rs.getString("encounter");
+                subject = rs.getString("subject");
             } else {
                 eChartTimeStamp = null;
                 socialHistory = "";
@@ -181,6 +163,7 @@ public class EctSessionBean {
                 ongoingConcerns = "";
                 reminders = "";
                 encounter = "";
+                subject = "";
             }
             rs.close();
             db.CloseConn();
@@ -238,7 +221,7 @@ public class EctSessionBean {
         }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
         try{
 //            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            sql = "select * from eChart where demographicNo='"+demographicNo+"' ORDER BY eChartId DESC" ;
+            sql = "select * from eChart where demographicNo='"+demographicNo+"' ORDER BY eChartId DESC limit 1" ;
             rs = db.GetSQL(sql);;
             if(rs.next()){
                 eChartTimeStamp = rs.getDate("timeStamp");
@@ -248,6 +231,7 @@ public class EctSessionBean {
                 ongoingConcerns =rs.getString("ongoingConcerns");
                 reminders = rs.getString("reminders");
                 encounter = rs.getString("encounter");
+                subject = rs.getString("subject");
             } else {
                 eChartTimeStamp = null;
                 socialHistory = "";
@@ -256,6 +240,7 @@ public class EctSessionBean {
                 ongoingConcerns = "";
                 reminders = "";
                 encounter = "";
+                subject = "";
             }
             rs.close();
             db.CloseConn();
@@ -273,6 +258,63 @@ public class EctSessionBean {
                 city = rs.getString("city");
                 postal = rs.getString("postal");
                 phone = rs.getString("phone");
+                familyDoctorNo = rs.getString("provider_no");
+                yearOfBirth = rs.getString("year_of_birth");
+                monthOfBirth = rs.getString("month_of_birth");
+                dateOfBirth = rs.getString("date_of_birth");
+                roster =rs.getString("roster_status");
+                patientSex = rs.getString("sex");
+                if(yearOfBirth.equals("null")){yearOfBirth = "0";}
+                if(monthOfBirth.equals("null")){monthOfBirth = "0";}
+                if(dateOfBirth.equals("null")){dateOfBirth = "0";}
+            }
+            rs.close();
+            db.CloseConn();
+            UtilDateUtilities dateUtil = new oscar.util.UtilDateUtilities();
+            patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(yearOfBirth,monthOfBirth,dateOfBirth));
+        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    }
+    /**
+     * over loaded method sets up the encounter page for print
+     * @param eChartId, demographic_no
+     */
+    public void setUpEncounterPage(String echartid, String demographicNo){
+        resetAll();
+
+        String tmp;
+        DBHandler db = null;
+        ResultSet rs;
+        String sql ;
+
+        try{
+            db = new DBHandler(DBHandler.OSCAR_DATA);
+            sql = "select * from eChart where eChartId = " + echartid + " and demographicNo="+demographicNo ;
+            rs = db.GetSQL(sql);;
+            if (rs.next()){
+                eChartTimeStamp = rs.getDate("timeStamp");
+                socialHistory = rs.getString("socialHistory");
+                familyHistory = rs.getString("familyHistory");
+                medicalHistory = rs.getString("medicalHistory");
+                ongoingConcerns =rs.getString("ongoingConcerns");
+                reminders = rs.getString("reminders");
+                encounter = rs.getString("encounter");
+                subject = rs.getString("subject");
+            }
+            rs.close();
+            db.CloseConn();
+        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+
+        try{
+            sql = "select * from demographic where demographic_no="+demographicNo ;
+            rs = db.GetSQL(sql);
+            while(rs.next()){
+                patientLastName = rs.getString("last_name");
+                patientFirstName = rs.getString("first_name");
+                address = rs.getString("address");
+                city = rs.getString("city");
+                postal = rs.getString("postal");
+                phone = rs.getString("phone");
+                familyDoctorNo = rs.getString("provider_no");
                 yearOfBirth = rs.getString("year_of_birth");
                 monthOfBirth = rs.getString("month_of_birth");
                 dateOfBirth = rs.getString("date_of_birth");

@@ -2,24 +2,24 @@
 // *
 // *
 // * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-// * This software is published under the GPL GNU General Public License. 
-// * This program is free software; you can redistribute it and/or 
-// * modify it under the terms of the GNU General Public License 
-// * as published by the Free Software Foundation; either version 2 
-// * of the License, or (at your option) any later version. * 
-// * This program is distributed in the hope that it will be useful, 
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-// * along with this program; if not, write to the Free Software 
-// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-// * 
+// * This software is published under the GPL GNU General Public License.
+// * This program is free software; you can redistribute it and/or
+// * modify it under the terms of the GNU General Public License
+// * as published by the Free Software Foundation; either version 2
+// * of the License, or (at your option) any later version. *
+// * This program is distributed in the hope that it will be useful,
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+// * along with this program; if not, write to the Free Software
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+// *
 // * <OSCAR TEAM>
-// * This software was written for the 
-// * Department of Family Medicine 
-// * McMaster Unviersity 
-// * Hamilton 
-// * Ontario, Canada 
+// * This software was written for the
+// * Department of Family Medicine
+// * McMaster Unviersity
+// * Hamilton
+// * Ontario, Canada
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar;
@@ -31,30 +31,32 @@ import java.security.*;
 
 public class dbBillingData {
   private String username="";
-  private String password=""; 
+  private String password="";
   DBPreparedHandler accessDB=null;
-  private String db_service_code=null; 
-  private String service_code=null; 
-  private String description=null; 
-  private String value=null; 
-  private String percentage=null; 
-  private MessageDigest md; 
+  private String db_service_code=null;
+  private String service_code=null;
+  private String description=null;
+  private String value=null;
+  private String percentage=null;
+  private MessageDigest md;
   Properties  oscarVariables= null;
-   
-  
+
+
   public dbBillingData() {}
-  
+
   public void setService_code(String value) {
     service_code=value;
+    // System.out.println("Service Code =" + value);
   }
     public void setVariables(Properties variables) {
     this.oscarVariables=variables;
-		
+
   }
   public String[] ejbLoad() {
     getService_code();
+    System.out.println("Service Code from db=" + db_service_code);
     if(db_service_code==null) return null; // the user is not in security table
-    
+
     if(service_code.equals(db_service_code)) { // login successfully
      	String[] strAuth = new String [4];
     	strAuth[0] = db_service_code;
@@ -70,15 +72,17 @@ public class dbBillingData {
   private void getService_code() { //if failed, username will be null
   	String [] temp=new String[4];
     try {
-      accessDB = new DBPreparedHandler(oscarVariables.getProperty("db_driver"),oscarVariables.getProperty("db_uri"),oscarVariables.getProperty("db_username"),oscarVariables.getProperty("db_password"));
+      accessDB = new DBPreparedHandler(oscarVariables.getProperty("db_driver"),oscarVariables.getProperty("db_uri")+oscarVariables.getProperty("db_name")+"?user="+oscarVariables.getProperty("db_username")+"&password="+oscarVariables.getProperty("db_password"),oscarVariables.getProperty("db_username"),oscarVariables.getProperty("db_password"));
       String strSQL="select service_code, description, value, percentage from billingservice where service_code = '" + service_code +"'";
+    //   System.out.println("SQL=" + strSQL);
+
       temp = searchDB(strSQL, "service_code", "description", "value", "percentage" ); //use StringBuffer later
-      if(temp[0]!=null) { //password is in the table
+      if(temp!=null) {
         db_service_code=temp[0];
         description = temp[1];
         value= temp[2];
         percentage = temp[3];
-        
+
       } else { //no this user in the table
         accessDB.closeConn();
        	return;
@@ -106,6 +110,6 @@ public class dbBillingData {
     return null;
   }
 
- 
-  
+
+
 }

@@ -84,6 +84,9 @@ while ((nextline=input.readLine())!=null){
 
    totalsum = Integer.parseInt(total);
    total = String.valueOf(totalsum);
+   if (total.compareTo("0") == 0){
+   total = "000";
+   }
    total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2) + totalStatus;      
    
           String[] param2 = new String[2];
@@ -275,7 +278,7 @@ xml_ra = transaction + balancefwd + "<xml_cheque>"+total+"</xml_cheque>";
 <link rel="stylesheet" href="../billing/billing.css" >
 <title>Billing 
       Reconcilliation</title>
-      
+       
 <script language="JavaScript">
 <!--
 var remote=null;
@@ -324,7 +327,7 @@ alert("You have cancel the action!");
       <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
   </tr>
 </table>
-
+ 
 <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
   <tr>  
     <td width="10%" height="16">Read Date</td>
@@ -358,7 +361,7 @@ alert("You have cancel the action!");
     <td width="10%" height="16"><%=strcount%>/<%=strtCount%></td>
     <td width="10%" height="16"><%=total%></td>
     <td width="30%" height="16"><a href="../billing/genRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | <a href="../billing/genRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| <a href="../billing/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
-     <td width="10%" height="16"><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">Settle 35</a>":rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">Settle 35</a>":"Processed"%></td>
+     <td width="10%" height="16"><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
   </tr>
  <%}%>
  </table>

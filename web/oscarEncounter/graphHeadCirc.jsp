@@ -50,7 +50,10 @@
     String chart = "graphics/boyHeadCirc36m.jpg";
     String red = "graphics/redMark.gif";
     String blue = "graphics/blueMark.gif";
-    if(props.getProperty("female", "").equalsIgnoreCase("1"))
+//Edited By Jay November 26
+//    if(props.getProperty("female", "").equalsIgnoreCase("1"))
+
+    if(rec.isFemale(demoNo))
     {
         chart = "graphics/girlHeadCirc36m.jpg";
     }

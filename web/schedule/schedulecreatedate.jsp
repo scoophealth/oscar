@@ -1,34 +1,9 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String user_no = (String) session.getAttribute("user");
   String user_name = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
   boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
+  int yearLimit = Integer.parseInt(session.getAttribute("schedule_yearlimit") != null ? ((String)session.getAttribute("schedule_yearlimit")) : "2");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -122,7 +97,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   String[] param3 =new String[7];
   GregorianCalendar cal = new GregorianCalendar(y,m-1,d);
 //  GregorianCalendar cal = new GregorianCalendar(year,month-1,1);
-  for(int i=0;i<365;i++) {
+  for(int i=0;i<365*yearLimit;i++) {
     y = cal.get(Calendar.YEAR);
     m = cal.get(Calendar.MONTH)+1;
     d = cal.get(Calendar.DATE);

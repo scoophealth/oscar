@@ -32,6 +32,8 @@
 
 <%
 String demo = request.getParameter("de");
+String proNo = request.getParameter("proNo");
+
 if (demo != null ){
   EctSessionBean bean;
 //  oscar.oscarSecurity.SessionBean bean;
@@ -39,10 +41,19 @@ if (demo != null ){
     bean = (EctSessionBean ) request.getSession().getAttribute("EctSessionBean");
     bean.setDemographicNo(demo);
     bean.consultationRequestId = null;
+    //if (proNo != null){
+        //bean.providerNo = proNo;
+        bean.providerNo =  (String) session.getAttribute("user");
+    //}
   }else{
     bean = new EctSessionBean();
     bean.setDemographicNo(demo);
 	  bean.consultationRequestId = null;
+    //if (proNo != null){
+    //    bean.providerNo = proNo;
+    //}
+    bean.providerNo =  (String) session.getAttribute("user");
+
     request.getSession().setAttribute("EctSessionBean",bean);
   }
 }
@@ -110,7 +121,7 @@ function BackToOscar() {
 }
 </script>
 </head>
-<body onload="javascript: makeFocus(2);"  topmargin="0" marginheight="0">
+<body   topmargin="0" marginheight="0">
 
 <table width="100%">
 <tr>

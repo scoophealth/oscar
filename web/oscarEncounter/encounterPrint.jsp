@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -30,6 +30,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@page import="oscar.oscarEncounter.data.*,java.net.*"%>
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
 <link rel="stylesheet" type="text/css" media="print" href="print.css"/>
 <link rel="stylesheet" type="text/css" href="encounterPrintStyles.css"/>
 <%
@@ -74,9 +76,12 @@
         <td style="text-align:left;height:34px;" >
             <span style="font-weight:bold;"><%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%></span>
         </td>
+        <td style="text-align:right;height:34px;">
+            <span style="font-weight:bold;">Dr. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>
+        </td>
     </tr>
     <tr>
-        <td style="border-left: 2px solid #A9A9A9;border-right: 2px solid #A9A9A9;border-bottom:2px solid #A9A9A9;" valign="top">
+        <td colspan=2 style="border-left: 2px solid #A9A9A9;border-right: 2px solid #A9A9A9;border-bottom:2px solid #A9A9A9;" valign="top">
             <table width="100%">
                 <tr>
                     <td>

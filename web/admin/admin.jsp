@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%@ taglib uri="../WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
 
 <%
@@ -160,10 +134,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <tr> 
       <td> 
         <p>
+                         <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingLocation.jsp');return false;">Add Billing Location</a><br>
                  <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a><br>
              <a href=# onClick ="popupPage(800,700,'../billing/billingOHIPsimulation.jsp?html=');return false;">Simulation OHIP Diskette</a><br>
         	
-	  <a href=# onClick ="popupPage(800,600,'../billing/billingOHIPreport.jsp');return false;">Generate OHIP Diskette</a><br>
+	  <a href=# onClick ="popupPage(800,720,'../billing/billingOHIPreport.jsp');return false;">Generate OHIP Diskette</a><br>
            <a href=# onClick ="popupPage(800,640,'../billing/billingCorrection.jsp?billing_no=');return false;">Billing Correction</a><br>
          <a href=# onClick ="popupPage(800,640,'../billing/inr/reportINR.jsp?provider_no=all');return false;">INR Batch Billing</a><br>
          	         <a href=# onClick ="popupPage(600,800,'../billing/billingRA.jsp');return false;">Billing Reconcilliation</a><br>
@@ -196,10 +171,20 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       </tr>
       <tr>
           <td colspan="2" nowrap>
+          <%      session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/"); 
+          %>
+           <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/RptByExample.do');return false;">
+              Query By Example</a><br>
                <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/dbReportAgeSex.jsp');return false;">
               Age-Sex Report</a><br>
                   <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportVisitControl.jsp');return false;">
-              Visit Report</a>
+              Visit Report</a><br>
+                              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportCatchment.jsp');return false;">
+              PCN Catchment Report</a><br>
+                              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/FluBilling.do?orderby=');return false;">
+              Flu Billing Report</a>
+               <br> <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.do');return false;">Overnight Batch Elgibility Checking</a>
+ <br>   <a href=# onClick ="popupPage(600,1000,'../billing/billingOBECEA.jsp');return false;">OBEC Response Report Generator</a><br>
           </td>
       </tr>
     </table>
@@ -240,21 +225,32 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <!--e forms block -->
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> E-forms</td>
+      <td colspan="2"> E-Forms</td>
     </tr>
     <tr> 
-      <td> <a href="../e_form/UploadHtml.jsp">Upload a form</a><br>
+      <td> <a href="../eform/uploadhtml.jsp">Upload a Form</a><br>
         </td>
     </tr>
     <tr> 
-      <td> <a href="../e_form/UploadImages.jsp">Upload an image</a><br>
+      <td> <a href="../eform/uploadimages.jsp">Upload an Image</a><br>
         </td>
     </tr>
   </table>
 <!--// end e forms block -->
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <tr>
-      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" > Update Resident </a></td>
+      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" > Update Patient Provider </a></td>
+    </tr>
+  </table>
+  <table cellspacing="0" cellpadding="2" width="90%" border="0">
+    <tr>
+      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,800,'providertemplate.jsp');return false;" > Insert a Template </a></td>
+    </tr>
+  </table>
+
+  <table cellspacing="0" cellpadding="2" width="90%" border="0">
+    <tr>
+      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" > Study </a></td>
     </tr>
   </table>
 

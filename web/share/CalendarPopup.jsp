@@ -1,35 +1,16 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
+<%--
+  /*
+    input: urlfrom and param
+	output: urlfrom + "?year-day" + param
+  */
+--%>
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <%
   String urlfrom = request.getParameter("urlfrom")==null?"":request.getParameter("urlfrom") ;
+  String param = request.getParameter("param")==null?"":request.getParameter("param") ;
   //to prepare calendar display  
   int year = Integer.parseInt(request.getParameter("year"));
   int month = Integer.parseInt(request.getParameter("month"));
@@ -37,7 +18,7 @@
   int delta = request.getParameter("delta")==null?0:Integer.parseInt(request.getParameter("delta")); //add or minus month
   GregorianCalendar now = new GregorianCalendar(year,month-1,1);
 
- 	now.add(now.MONTH, delta);
+  now.add(now.MONTH, delta);
   year = now.get(Calendar.YEAR);
   month = now.get(Calendar.MONTH)+1;
   
@@ -60,7 +41,15 @@ function setfocus() {
 }
 function typeInDate(year1,month1,day1) {
   self.close();
-  opener.location.href="<%=urlfrom%>"+"?year=" + year1 + "&month=" + month1 + "&day=" + day1 +"&view=0&displaymode=day&dboperation=searchappointmentday" ;
+<%
+    if (param.startsWith("&formdatebox=")) {
+%>
+  opener.<%=param.substring("&formdatebox=".length())%> = year1 + "-" + month1 + "-" + day1; 
+<%
+    } else {
+%>  
+  opener.location.href="<%=urlfrom%>"+"?year=" + year1 + "&month=" + month1 + "&day=" + day1 +"<%=param%>"; 
+<%  }  %>  
 }
 //-->
 </script>
@@ -73,11 +62,16 @@ function typeInDate(year1,month1,day1) {
   int [][] dateGrid = aDate.getMonthDateGrid();
 %>
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-  			<tr>
-        	  <td BGCOLOR="#CCCCFF" width="50%" align="center" >
-			  <a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&delta=-1"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
+  			<tr BGCOLOR="#CCCCFF" >
+			  <td><a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-12">
+			  <img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Last Year" vspace="2"></a></td>
+        	  <td width="50%" align="center" nowrap>
+			  <a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-1"> &nbsp;&nbsp;
+			  <img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
               </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&delta=1"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+        <a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=1"> &nbsp;&nbsp;next month <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+		      <td align='right'><a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=12">
+			  <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Next Year" vspace="2"></a></td>
   			</TR>
 		</table>
     <table width="100%" border="0" cellspacing="0" cellpadding="2" >
@@ -86,7 +80,7 @@ function typeInDate(year1,month1,day1) {
 <%
   for(int i=0; i<12; i++) {
 %>
-<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=i+1%>"><font SIZE="2" <%=(i+1)==month?"color='blue'":""%>><%=arrayMonth[i]%></a>
+<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=i+1%>&param=<%=URLEncoder.encode(param)%>"><font SIZE="2" <%=(i+1)==month?"color='blue'":""%>><%=arrayMonth[i]%></a>
 <% } %>
        </th>
     </tr></table>

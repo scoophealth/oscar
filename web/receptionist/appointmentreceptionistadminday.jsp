@@ -1,35 +1,10 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
-<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*,java.net.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*,java.net.*, oscar.*, oscar.appt.*" errorPage="errorpage.jsp" %>
 <%
   if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("receptionist"))
     response.sendRedirect("../logout.jsp");
-    
+    	ResultSet rsTickler = null;
+String tickler_no="", textColor="", tickler_note="";
   String curUser_no,userfirstname,userlastname, userprofession, mygroupno;
   curUser_no = (String) session.getAttribute("user");
   mygroupno = (String) session.getAttribute("groupno");  
@@ -45,6 +20,7 @@
   if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
 <jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%
@@ -272,7 +248,7 @@ function findProvider(p,m,d) {
          <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')">
          <oscarmessage:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')">
+         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')">
          con</a></font>
          </td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -318,7 +294,7 @@ function findProvider(p,m,d) {
          <b><span CLASS=title><%=strDayOfWeek%>, <%=strYear%>-<%=strMonth%>-<%=strDay%></span></b>
          <a href="receptionistcontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day+1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
          <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next DAY" vspace="2">&nbsp;&nbsp;</a>
-         <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../receptionist/receptionistcontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>')">Calendar</a>
+         <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../receptionist/receptionistcontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday")%>')">Calendar</a>
         </td>
         <TD ALIGN="center" width="33%"><% if(view==1) out.println("<a href='receptionistcontrol.jsp?year="+strYear+"&month="+strMonth+"&day="+strDay+"&view=0&displaymode=day&dboperation=searchappointmentday'>Group View</a>"); %></TD>
         <td ALIGN="RIGHT">
@@ -363,7 +339,7 @@ function findProvider(p,m,d) {
    int ih=0, im=0, iSn=0, iEn=0 ; //hour, minute, nthStartTime, nthEndTime, rowspan
    boolean bFirstTimeRs=true;
    boolean bFirstFirstR=true;
-
+ 	 String[] paramTickler =new String[2];
  	 String[] param =new String[2];
 	 String strsearchappointmentday=request.getParameter("dboperation");
    ResultSet rs = null;
@@ -435,66 +411,53 @@ function findProvider(p,m,d) {
          	    iRows=((iE*60+iEm)-ih)/depth+1; //to see if the period across an hour period
           	  String name = Misc.toUpperLowerCase(rs.getString("name"));
           	  int demographic_no = rs.getInt("demographic_no");
+          	  	  			paramTickler[0]=String.valueOf(demographic_no);
+		  	 		 		paramTickler[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
+		            	       rsTickler = null;
+		            	  	rsTickler = apptMainBean.queryResults(paramTickler, "search_tickler");
+		            	  	tickler_no = "";
+		            	  	while (rsTickler.next()){
+		            	  	tickler_no = rsTickler.getString("tickler_no");
+		            	  		tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
+          	  	}
+		            	  	
           	  String reason = rs.getString("reason");
           	  String notes = rs.getString("notes");
           	  String status = rs.getString("status");
           	  bFirstTimeRs=true;
+			  //ApptStatusData as = new ApptStatusData();
+			    as.setApptStatus(status);
         %>	    
-            <td bgcolor=<%=status.indexOf('T')!=-1||status.indexOf('t')!=-1?"#FDFEC7":status.indexOf('P')!=-1?"#FFBBFF":status.indexOf('H')!=-1?"#00ee00":status.indexOf('B')!=-1?"#3ea4e1":status.indexOf('N')!=-1?"#cccccc":"#999999"%> rowspan="<%=iRows%>" <%=view==0?(len==lenLimitedL?"nowrap":""):"nowrap"%> >
-            <%
-              if(status.indexOf('t')!=-1) {
-            %>
-            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('t',' ').trim()%>&statusch=T&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="To Do" >
-            <img src="../images/starbill.gif" border="0" height="10"></a>
-            <%
-              } else if(status.indexOf('T')!=-1) {
-            %>
-            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('T',' ').trim()%>&statusch=H&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Daysheet Printed" >
-            <img src="../images/todo.gif" border="0" height="10"></a>
-            <%
-              } else if(status.indexOf('P')!=-1) {
-            %>
-            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('P',' ').trim()%>&statusch=N&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Picked" >
-            <img src="../images/picked.gif" border="0" ></a>
-            <%
-              } else if(status.indexOf('H')!=-1) {
-            %>
-            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('H',' ').trim()%>&statusch=P&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Here" >
-            <img src="../images/here.gif" border="0" ></a>
-            <%
-              } else if(status.indexOf('N')!=-1) {
-            %>
-            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('N',' ').trim()%>&statusch=C&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="No Show" >
-            <img src="../images/noshow.gif" border="0" ></a>
-            <%
-              } else if(status.indexOf('C')!=-1) {
-            %>
-            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('C',' ').trim()%>&statusch=t&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Cancelled" >
-            <img src="../images/cancel.gif" border="0" ></a>
-            <%
-              } else if(status.indexOf('B')!=-1) {
-            %>
-            <img src="../images/billed.gif" border="0"  title="Billed">
-            <%
-              } else {
-            %>
-            &nbsp;
-            <%
-              } 
-            %>
+            <td bgcolor='<%=as.getBgColor()%>' rowspan="<%=iRows%>" <%=view==0?(len==lenLimitedL?"nowrap":""):"nowrap"%> >
+<%
+			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
+%>
+            <a href="receptionistcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="<%=as.getTitle()%>" >
+<%
+				} 
+			    if (as.getNextStatus() != null) {
+%>
+            <img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=as.getTitle()%>"></a>
+<%
+                } else {
+	                out.print("&nbsp;");
+                }
+%>
 <%--|--%>
         <%
         			if(demographic_no==0) {
         %>
-        		<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
+        		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="Tickler Msg: <%=Misc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 reason: <%=Misc.htmlEscape(reason)%>
-notes: <%=Misc.htmlEscape(notes)%>" >
+notes: <%=Misc.htmlEscape(notes)%>">
             .<%=(view==0?(name.length()>len?name.substring(0,len):name):name).toUpperCase()%></font></a></td>
 <%
         			} else {
         			  //System.out.println(name+" / " +demographic_no);
 %>
-        		<a href=# onClick ="tsr('appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>');return false;" title="<%=name%>
+        		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title="Tickler Msg: <%=Misc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+<a href=# onClick ="tsr('appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>');return false;" title="<%=name%>
 reason: <%=Misc.htmlEscape(reason)%>
 notes: <%=Misc.htmlEscape(notes)%>" >
         		<%=view==0?(name.length()>len?name.substring(0,len):name):name%></a>

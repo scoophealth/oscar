@@ -1,4 +1,4 @@
-<!--  
+ <!--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -23,8 +23,7 @@
  * Ontario, Canada 
  */
 -->
-
- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -127,7 +126,9 @@
     <td><strong><font size="2" face="Arial, Helvetica, sans-serif">Referral Doctor: 
 <%=SxmlMisc.getXmlContent(billingDataBean.getContent(), "<xml_referral>","</xml_referral>").equals("checked")?"Yes":"N/A"%>
       </font></strong></td>
-    <td>&nbsp;</td>
+    <td><strong><font size="2" face="Arial, Helvetica, sans-serif">Roster Status: 
+<%=SxmlMisc.getXmlContent(billingDataBean.getContent(), "<xml_roster>","</xml_roster>")%>
+      </font></strong></td>
   </tr>
 </table>
 <table width="600" border="0">

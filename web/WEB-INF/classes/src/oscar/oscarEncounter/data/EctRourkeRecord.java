@@ -276,4 +276,28 @@ public class EctRourkeRecord {
         return age;
     }
 
+
+
+
+//////////////new/ Done By Jay////
+    public boolean isFemale(int demo){
+        boolean retval = false;
+        DBHandler db;
+        ResultSet rs;
+        String str = "M";
+        try{
+                db = new DBHandler(DBHandler.OSCAR_DATA);
+                rs = db.GetSQL("select sex from demographic where demographic_no = "+demo);
+                if(rs.next()){
+                        str = rs.getString("sex");
+                        if (str.equalsIgnoreCase("F")){
+                                retval = true;
+                        }
+                }
+        rs.close();
+        db.CloseConn();
+        }catch(Exception exc){exc.printStackTrace();}
+        return retval;
+    }
+///////////////////////////////////
 }

@@ -204,6 +204,12 @@ var maxYear=3100;
         return b;
 
     }
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
+  var popup=window.open(page, "aplan", windowprops);
+}
+
 </script>
 
 
@@ -236,6 +242,8 @@ var maxYear=3100;
             <input type="button" value="Print" onclick="javascript:return onPrint();"/>
 <a href="formAnnualFemalePrint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provN
 o=<%=provNo%>">Print Page</a>
+        </td><td align='right'>
+            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">Annual Review Planner</a>
         </td>
     </tr>
 </table>
@@ -508,6 +516,11 @@ o=<%=provNo%>">Print Page</a>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
+                    <td><a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provN
+o=<%=provNo%>');">Risk/Check List</a>
+					</td>
+                </tr>
+                <!--tr>
                     <td><input type="checkbox" name="mammogram" <%= props.getProperty("mammogram", "") %> /></td>
                     <td>Mammogram</td>
                 </tr>
@@ -542,7 +555,7 @@ o=<%=provNo%>">Print Page</a>
                 <tr>
                     <td><input type="checkbox" name="femaleOther2c" <%= props.getProperty("femaleOther2c", "") %> /></td>
                     <td><input type="text" name="femaleOther2" class="ScreeningReview" value="<%= props.getProperty("femaleOther2", "") %>" /></td>
-                </tr>
+                </tr-->
             </table>
         </td>
     </tr>
@@ -628,6 +641,8 @@ o=<%=provNo%>">Print Page</a>
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+        </td><td align='right'>
+            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">Annual Review Planner</a>
         </td>
     </tr>
 </table>

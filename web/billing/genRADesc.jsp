@@ -38,7 +38,7 @@ user_no = (String) session.getAttribute("user");
 <% String raNo = "", note="", htmlContent="", transaction="", messages="";
 raNo = request.getParameter("rano");
 //note = request.getParameter("note");
-String filepath="", filename = "", header="", headerCount="", total="", new_total="",other_total="",local_total="", ob_total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
+String filepath="", filename = "", header="", headerCount="", total="", new_total="",other_total="",local_total="",co_total="", ob_total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
 String transactiontype="", providerno="", specialty="", account="", patient_last="", patient_first="", provincecode="", newhin="", hin="", ver="", billtype="", location="";
 String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
 String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime="", checkAccount="", strcount="", strtCount="";
@@ -92,8 +92,10 @@ while ((nextline=input.readLine())!=null){
    
 
    totalsum = Integer.parseInt(total);
+   if (totalsum == 0){ total = "0.00"; }else{
    total = String.valueOf(totalsum);
    total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2) + totalStatus;      
+   }
   }
           if (headerCount.compareTo("6") == 0){
       // balancefwd = "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4'>Balance Forward Record - Amount Brought Forward (ABF)</td></tr><tr><td>Claims Adjustment</td><td>Advances</td><td>Reductions</td><td>Deductions</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table>";
@@ -118,7 +120,7 @@ while ((nextline=input.readLine())!=null){
          if (cheque_indicator.compareTo("M")==0) cheque_indicator="Manual Cheque issued";
          if (cheque_indicator.compareTo("C")==0) cheque_indicator="Computer Cheque issued";
          if (cheque_indicator.compareTo("I")==0) cheque_indicator="Interim payment Cheque/Direct Bank Deposit issued";
-         
+           if (cheque_indicator.compareTo(" ")==0 || cheque_indicator.compareTo("N")==0) cheque_indicator="No Cheque issued";
          trans_date = nextline.substring(6,14);
          trans_amount= nextline.substring(14,20)+"."+nextline.substring(20,23);
          trans_message = nextline.substring(23,73);
@@ -173,6 +175,7 @@ new_total = SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_total>","<
 other_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_other_total>","</xml_other_total>");
 local_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_local>","</xml_local>");
 ob_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_ob_total>","</xml_ob_total>");
+co_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_co_total>","</xml_co_total>");
 }
  
    %>
@@ -188,6 +191,16 @@ ob_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_ob_total>","
 		  
 		  }
 
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "attachment", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
     //-->
     </script>
 </head>
@@ -197,13 +210,16 @@ ob_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_ob_total>","
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
             Reconcillation Report </font></th>
+            <th align="right"><form><input type="button" onClick="popupPage(700,600,'billingClipboard.jsp')" value="Clipboard"></form></th>
       </tr>
     </table>
 Cheque amount: <%=total%> <br>
-Total amount : <%=new_total%> <br>
+<%=url.toUpperCase()%>: <%=local_total%> <br>
 Other clinic : <%=other_total%><br>
-Local clinic : <%=local_total%> <br>
+
 OB Total : <%=ob_total%><br>
+Colposcopy Total : <%=co_total%><br>
+
 <br>
 <br>
 <table bgcolor="#EEEEEE"  bordercolor="#666666" border="1" >

@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,15 +22,14 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
-<!-- Oct 8, 2002,-->
+--%>
+<!-- Mar 8, 2003,-->
 <%@ page language="java"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
-<%@page import="oscar.oscarEncounter.data.*,java.net.*"%>
+<%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*"%>
 <%
   response.setHeader("Cache-Control","no-cache");
   //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
@@ -57,6 +56,7 @@
   String patientAge = pd.getAge();
   String patientSex = pd.getSex();
   String providerName = bean.userName;
+  String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
 %>
 
 <html:html locale="true">
@@ -64,6 +64,13 @@
 <head>
 <title>oscarEncounter</title>
 <html:base/>
+
+<style type="text/css">
+	div.presBox {
+		height: 20;
+		overflow: auto;
+	}
+</style>
 <!-- This is from OscarMessenger to get the top and left borders on -->
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <!--<script type="application/x-javascript" language="javascript" src="/javascript/sizing.js"></script>-->
@@ -86,11 +93,16 @@
         var x = window.confirm("Are you sure your wish to exit oscarEncounter without saving?");
         if(x) {window.close();}
     }
-    function saveAndCloseEncounterWindow() {
-        var x = window.confirm("Are you sure your wish to exit oscarEncounter without saving?");
-        if(x) {window.close();}
-    }
+    //function saveAndCloseEncounterWindow() {
+    //    var x = window.confirm("Are you sure your wish to exit oscarEncounter without saving?");
+    //    if(x) {window.close();}
+    //}
     //get another encounter from the select list
+    function onSplit() {
+        //document.forms[0].submit.value="save";
+        var ret = confirm("Are you sure you want to Split the Chart?");
+        return ret;
+    }
     function popUpImmunizations(vheight,vwidth,varpage) {
         var page = varpage;
         windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
@@ -191,6 +203,7 @@ function reset() {
     document.encForm.reTextarea.style.height=small;
     document.encForm.enTextarea.style.overflow="auto";
     document.encForm.enTextarea.style.height=large;
+    document.getElementById("presBox").style.height=20;
 }
 function rowOneX(){
     document.encForm.shTextarea.style.overflow="auto";
@@ -287,6 +300,39 @@ function rowThreeFull(){
     document.encForm.enInput.scrollIntoView(top);
 }
 
+<!--new function from Jay Nov 17 2002-->
+function presBoxX(){
+    document.getElementById("presBox").style.height=X;
+    //document.encForm.enTextarea.style.overflow="auto";
+    //document.encForm.enTextarea.style.height=X;
+}
+function presBoxSmall(){
+    //document.encForm.enTextarea.style.overflow="auto";
+    //document.encForm.enTextarea.style.height=small;
+    document.getElementById("presBox").style.height=small;
+}
+function presBoxNormal(){
+    //document.encForm.enTextarea.style.overflow="auto";
+    //document.encForm.enTextarea.style.height=normal;
+    document.getElementById("presBox").style.height=normal;
+}
+function presBoxLarge(){
+    //document.encForm.enTextarea.style.overflow="auto";
+    //document.encForm.enTextarea.style.height=large;
+    document.getElementById("presBox").style.height=large;
+}
+function presBoxFull(){
+    //document.encForm.enTextarea.style.overflow="auto";
+    //document.encForm.enTextarea.style.height=full;
+    document.getElementById("presBox").style.height=full;
+    document.getElementById("presTopTable").scrollIntoView(top);
+}
+<!--new functions end from jay--> 
+
+
+
+
+
 function popupSearchPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
@@ -315,7 +361,8 @@ function getActiveText(e) {
 function popupPageK(page) {
     windowprops = "height=700,width=960,location=no,"
     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
-    window.open(page, "apptProviderSearch", windowprops);
+    var popup = window.open(page, "apptProviderSearch", windowprops);
+    popup.focus();
 }
 function selectBox(name) {
     to = name.options[name.selectedIndex].value;
@@ -332,11 +379,13 @@ function popupOscarRx(vheight,vwidth,varpage) {
       popup.opener = self;
     }
   }
+  popup.focus();
 }
 function popupOscarCon(vheight,vwidth,varpage) { 
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(varpage, "oscarConsultation", windowprops);
+  popup.focus();
 }
 
 
@@ -349,6 +398,7 @@ function popupOscarComm(vheight,vwidth,varpage) {
       popup.opener = self;
     }
   }
+  popup.focus();
 }
 
 function goToSearch() { 
@@ -356,17 +406,17 @@ function goToSearch() {
         if(x)
         {  location = "./search/DemographicSearch.jsp";}
 }
-function sign(){
-        document.encForm.enTextarea.value =document.encForm.enTextarea.value +"\n[Signed on <%=dateConvert.DateToString(bean.currentDate)%> by <%=bean.userName%>]";
-}
+//function sign(){
+//        document.encForm.enTextarea.value =document.encForm.enTextarea.value +"\n[Signed on <%=dateConvert.DateToString(bean.currentDate)%> by <%=bean.userName%>]";
+//}
 
-function saveEncounter(){
-        location="SaveEncounter.do";
-}
+//function saveEncounter(){
+//        location="SaveEncounter.do";
+//}
 
-function saveSignEncounter(){
-        location="SaveEncounter.do";
-}
+//function saveSignEncounter(){
+//        location="SaveEncounter.do";
+//}
 
 function loader(){
     window.focus();
@@ -375,7 +425,63 @@ function loader(){
     tmp = document.encForm.enTextarea.value;
     document.encForm.enTextarea.value = tmp;
 }
+function testt(){
+	document.getElementById("blahh").style.height=large;
+}
+
 </script>
+<script language="javascript">
+
+function showpic(picture){
+        if (document.getElementById){ // Netscape 6 and IE 5+
+                var targetElement = document.getElementById(picture);
+        targetElement.style.visibility = 'visible';
+    }
+}
+
+function hidepic(picture){
+        if (document.getElementById){ // Netscape 6 and IE 5+
+                var targetElement = document.getElementById(picture);
+        targetElement.style.visibility = 'hidden';
+        }
+}
+function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
+  hidepic('Layer1');
+  var page = varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
+  var popup=window.open(varpage, pageName, windowprops);
+      popup.opener = self;
+  popup.focus();
+}
+</script>
+
+<style type="text/css">
+        td.menuLayer{
+                background-color: #ccccff;
+                font-size: 14px;
+        }
+        table.layerTable{
+                border-top: 2px solid #cfcfcf;
+                border-left: 2px solid #cfcfcf;
+                border-bottom: 2px solid #333333;
+                border-right: 2px solid #333333;
+        }
+
+        table.messButtonsA{
+border-top: 2px solid #cfcfcf;
+border-left: 2px solid #cfcfcf;
+border-bottom: 2px solid #333333;
+border-right: 2px solid #333333;
+}
+
+table.messButtonsD{
+border-top: 2px solid #333333;
+border-left: 2px solid #333333;
+border-bottom: 2px solid #cfcfcf;
+border-right: 2px solid #cfcfcf;
+}
+
+</style>
 
 </head>
 
@@ -386,7 +492,7 @@ function loader(){
     <tr>
         <td class="hidePrint" bgcolor="#003399" style="border-left: 2px solid #A9A9A9;border-right: 2px solid #A9A9A9;height:34px;" >
             <div class="Title">
-                oscarEncounter
+			Encounter
             </div>
         </td>
 
@@ -440,15 +546,14 @@ function loader(){
     <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="Unbil">-Billing</a>
 <% } %>
 <br>
-                        <!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">prescriptions</a> -->
+                        <!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">prescriptions</a><br>-->
                         <a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx');return false;">prescriptions</a><br>
                         <a href=# onClick="popupOscarCon(100,355,'oscarConsultationRequest/ConsultChoice.jsp');return false;">consultations</a><br>
                         <a href="javascript:popUpImmunizations(700,960,'immunization/initSchedule.do')">immunizations</a><br>
-                        <!--<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')">oscarComm</a><br>-->
-                        <a href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')">oscarComm</a><br>
-                        <a href=# onClick="popupOscarCon(580,900,'../oscarResearch/oscarDxResearch/dxResearch.jsp?demographicNo=<%=bean.demographicNo%>');return false;">Diagnostic Coding</a><br>
-                  <a href=# onClick="popupOscarCon(580,800,'../appointment/appointmentcontrol.jsp?keyword=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&displaymode=<%=URLEncoder.encode("Search ")%>&search_mode=search_name&originalpage=<%=URLEncoder.encode("../tickler/ticklerAdd.jsp")%>&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=<%=bean.demographicNo%>');return false;">Add Tickler</a><br>
-                
+                        <!--<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')">oscarComm</a><br> -->
+                        <a href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')">oscarComm</a><br> 
+                        <!--<a href=# onClick="popupOscarCon(580,900,'../oscarResearch/oscarDxResearch/dxResearch.jsp?demographicNo=<%=bean.demographicNo%>');return false;">Diagnostic Coding</a><br>-->
+                  <a href=# onClick="popupOscarCon(580,800,'../appointment/appointmentcontrol.jsp?keyword=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&displaymode=<%=URLEncoder.encode("Search ")%>&search_mode=search_name&originalpage=<%=URLEncoder.encode("../tickler/ticklerAdd.jsp")%>&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=<%=bean.demographicNo%>');return false;">Add Tickler</a><br>                
                  </td>
                 </tr>
                 <tr><td>&nbsp;</td></tr>
@@ -469,31 +574,13 @@ function loader(){
                             for(int j=0; j<forms.length; j++) {
                                 EctFormData.Form frm = forms[j];
                                 String table = frm.getFormTable();
-                                EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
+                                EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table, 0,1);
                                 if(pforms.length>0) {
                                     EctFormData.PatientForm pfrm = pforms[0];
                             %>
                             <option value="<%=frm.getFormPage()+demoNo+"&formId="+pfrm.getFormId()+"&provNo="+provNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
                             <%}}
 
-                            %>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="selectOldForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View any of <%=patientName%>\'s past forms.'; return true;">
-                            <option value="null" selected>-old forms-
-                            <%
-                            for(int j=0; j<forms.length; j++) {
-                                EctFormData.Form frm = forms[j];
-                                String table = frm.getFormTable();
-                                EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
-                                for(int i=1; i<pforms.length; i++) {
-                                    EctFormData.PatientForm pfrm = pforms[i];
-                            %>
-                                    <option value="<%=frm.getFormPage()+demoNo+"&formId="+pfrm.getFormId()+"&provNo="+provNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
-                            <%}}
                             %>
                         </select>
                     </td>
@@ -515,6 +602,11 @@ function loader(){
                         %>
                         </select>
 
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href=# onClick='popupPage2("formlist.jsp?demographic_no=<%=demoNo%>"); return false;' >
+					-old forms-</a>
                     </td>
                 </tr>
 
@@ -557,8 +649,58 @@ function loader(){
                     <td>
                         <a href="#" ONCLICK ="popupPage2('http://67.69.12.117:8080/oscarResource/');return false;" title="Resources" onmouseover="window.status='View Resources';return true">resource</a><br>
                         <a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
-                        <a href="#" onClick="popupPage(500,600, '../e_form/ShowMyForm.jsp?demographic_no=<%=bean.demographicNo%>');return false;">E-Forms</a><br>
+                        <a href="#" onClick="popupPage(500,600, '../eform/showmyform.jsp?demographic_no=<%=bean.demographicNo%>');return false;">E-Forms</a><br>
                  	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;">View Tickler</a>
+                        <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');" >calculators</a>
+                           <span style="position:relative;">
+                              <div id="Layer1" style="position:absolute; left:1px; top:1px; width:180px; height:311px; visibility: hidden; z-index:1"   >
+                                 <table border=0 cellpadding="0" cellspacing="1"  width="100%" class="layerTable" bgcolor="#FFFFFF"  >
+                                   <tr>
+                                       <td align="right" valign="top" class="menuLayer">
+                                          <a href="javascript: function myFunction() {return false; }" onclick="hidepic('Layer1');" style="text-decoration: none;">X</a>
+                                       </td>
+                                   </tr>
+                                   <tr><td align="center" class="menuLayer">
+                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.intmed.mcw.edu/clincalc/body.html','BodyMassIndex');">
+                                             Body Mass Index
+                                          </a>
+                                   </td></tr>
+                                   <tr><td align="center" class="menuLayer">
+                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/CoronaryArteryDiseaseRiskPrediction.html?sex=<%=bean.patientSex%>&age=<%=pAge%>','CoronaryArteryDiseaseRisk');">
+                                             Coronary Artery
+                                          </a>
+                                   </td></tr>
+                                   <tr><td align="center" class="menuLayer">
+                                           <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.htm?sex=<%=bean.patientSex%>&age=<%=pAge%>','OsteoporoticFracture');">
+                                             Osteoporotic Fracture
+                                           </a>
+                                   </td></tr>
+                                   <tr>
+                                       <td align="center" class="menuLayer">
+                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.intmed.mcw.edu/clincalc/pregnancy.html','PregancyCalculator');">
+                                             Pregnancy Calculator
+                                          </a>
+                                       </td>
+                                   </tr>
+				   <tr>
+                                       <td align="center" class="menuLayer">
+                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(400,500,'calculators/SimpleCalculator.htm','SimpleCalc');">
+                                             Simple Calculator
+                                          </a>
+                                       </td>
+                                   </tr>
+                                   <tr> 
+                                       <td align="center" class="menuLayer">
+                                          <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'calculators/GeneralCalculators.htm','GeneralConversions'); ">
+                                             General Conversions
+                                          </a>
+                                       </td>
+                                   </tr>
+
+
+                                                          </table>
+                                                        </div>
+                                                </span>
 
                  </td>
                 </tr>
@@ -600,10 +742,10 @@ ults?title=">OSCAR Search</option>
                         <table bgcolor="#CCCCFF" id="rowOne" >
                             <tr>
                                <td>
-                                    <div class="RowTop" >Social History:</div><input type="hidden" name="shInput"/>
+                                    <div class="RowTop" >Social & Family History:</div><input type="hidden" name="shInput"/>
                                 </td>
                                 <td>
-                                    <div class="RowTop" >Family History:</div>
+                                    <div class="RowTop" >Other Medications:</div>
                                 </td>
                                 <td>
                                     <div class="RowTop" >Medical History:</div>
@@ -689,10 +831,29 @@ ults?title=">OSCAR Search</option>
                     <td>
                         <table bgcolor="#CCCCFF" name="rowThree">
                            <tr>
-                                <td>
-                                    <div class="RowTop" >Encounter: <%=bean.reason%></div><input type="hidden" name="enInput"/>
+                                <td nowrap width='80%' >
+                                    <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
+									  <tr><td width='75%' >
+                                    <a href=# onClick="popupPage2('../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><div class="RowTop" >Encounter: <%=bean.reason%></div></a><input type="hidden" name="enInput"/>
+									  </td><td width='5%' >
+								<%
+										boolean bSplit = request.getParameter("splitchart")!=null?true:false;
+										int nEctLen = bean.encounter.length();
+									    boolean bTruncate = bSplit &&  nEctLen > 5120?true:false;
+										int consumption = (int) ((bTruncate?5120:nEctLen) / (10.24*32));
+                    consumption = consumption == 0 ? 1 : consumption;
+									    String ccolor = consumption>=70? "red":(consumption>=50?"orange":"green"); 
+								%> 
+									  <div class="RowTop"><%=consumption+"%"%></div>
+									  </td><td align='right'>
+                                     <table  border="0" cellpadding="0" cellspacing="0" bgcolor="white" width="100%" %>
+									  <tr><td width='<%=consumption+"%"%>' bgcolor='<%=ccolor%>'><div class="RowTop">&nbsp;</div></td>
+									  <td><% if (consumption<100) { %><div class="RowTop">&nbsp;</div><% } %></td>
+									  </tr>
+									 </table>
+									</td></tr></table>
                                 </td>
-                                <td>
+                                <td nowrap>
                                     <div style="font-size:8pt;text-align:right;vertical-align:bottom">
                                     <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowThreeX();">
                                         X</a> |
@@ -711,21 +872,29 @@ ults?title=">OSCAR Search</option>
                             </tr>
                             <tr>
                                 <td colspan="2" valign="top" style="text-align:right">
-                                    <textarea name='enTextarea' wrap="hard" cols="99" style="border-right:6px solid #ccccff;border-right:6px solid #ccccff;height:435;overflow:auto"><%=bean.encounter%><%if(bean.eChartTimeStamp==null){%><%="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
+                                    <textarea name='enTextarea' wrap="hard" cols="99" style="border-right:6px solid #ccccff;border-right:6px solid #ccccff;height:415;overflow:auto"><% if(!bSplit) out.print(bean.encounter); else if(bTruncate) out.print(bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n"); else out.print(bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n");%><%if(bean.eChartTimeStamp==null){%><%="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
                                         else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0)
-                                        {%><%="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
+                                        {%><%="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"%><%}
                                         if(!bean.template.equals("")){%><%=bean.template%><%}%></textarea>
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="2" style="text-align:right">
+                        </table>
+						<table border=0  bgcolor="#CCCCFF" width=100% >
+                            <tr nowrap>
+							    <td>
+                                    <input type="hidden" name="subject" value="<%=UtilMisc.htmlEscape(bean.reason)%>">
+									<% if (consumption>=50) {%>
+                                    <input type="submit" style="height:20px"  name="buttonPressed" value="Split Chart" class="ControlPushButton"  onClick="return (onSplit());">
+									<% } %>
+								</td>
+                                <td style="text-align:right" nowrap>
 					                <input type="button" style="height:20px;" value="Print" onClick="javascript:popupPageK('encounterPrint.jsp');"/>
                                     <input type="submit" style="height:20px"  name="buttonPressed" value="Save" class="ControlPushButton">
                                     <input type="submit" style="height:20px"  name="buttonPressed" value="Sign,Save and Exit" class="ControlPushButton">
+                                    <input type="submit" style="height:20px"  name="buttonPressed" value="Verify and Sign" class="ControlPushButton">
                                     <input type="button" style="height:20px" onclick="javascript:closeEncounterWindow()" name="buttonPressed" value="Exit" class="ControlPushButton">
-                                    <input type="button" style="height:20px" onclick="javascript:goToSearch()" name="buttonPressed" value="Search New Patient" class="ControlPushButton">
+                                    <!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="buttonPressed" value="Search New Patient" class="ControlPushButton"-->
                                 </td>
-
                             </tr>
                         </table>
                     </td>

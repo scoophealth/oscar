@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
   String curProvider_no = request.getParameter("provider_no");
@@ -43,12 +17,13 @@
   String [][] dbQueries=new String[][] { 
     {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
+    {"search_demographic_statusroster", "select patient_status,roster_status from demographic where demographic_no = ? " }, 
   };
   addApptBean.doConfigure(dbParams,dbQueries);
 %>
 
 <html>
-<head><title> ADD APPOINTMENTS</title></head>
+<head><title>ADD APPOINTMENT</title></head>
 <meta http-equiv="Cache-Control" content="no-cache" >
 
 
@@ -318,23 +293,42 @@ function calculateEndTime() {
 </FORM>
 <%
   //to show Alert msg
-  if( !bFirstDisp && !request.getParameter("demographic_no").equals("")) {
-	  rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_demographiccust_alert");
-    while (rsdemo.next()) { 
-      if(rsdemo.getString("cust3")!=null && !rsdemo.getString("cust3").equals("") ) {
+  if (!bFirstDisp && !request.getParameter("demographic_no").equals("")) {
+	  rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_demographic_statusroster");
+      while (rsdemo.next()) { 
+		  String patientStatus = rsdemo.getString("patient_status");
+          patientStatus = (patientStatus != null && !patientStatus.equalsIgnoreCase("AC")) ? 
+			  (" Patient Status:<font color='yellow'>" + patientStatus + "</font>" ) : "";
+
+		  String rosterStatus = rsdemo.getString("roster_status");
+          rosterStatus = (rosterStatus != null && !rosterStatus.equalsIgnoreCase("RO")) ?
+			  (" Roster Status:<font color='yellow'>" + rosterStatus + "</font> ") : "";
+
+		  if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
+              String rsbgcolor = "BGCOLOR=\"orange\"" ;
+			  String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
 %>
-<table width="98%" BGCOLOR="yellow" border=1 align='center'>
-  <tr>
-    <TD ><font color='red'>Alert:
-        <b><%=rsdemo.getString("cust3")%></b>
-      </TD>
+<table width="98%" <%=rsbgcolor%> border=0 align='center'>
+  <tr><td><font color='blue' title='<%=exp%>'> <b><%=patientStatus + " " + rosterStatus%></b></td>
   </tr>
-</TABLE>
+</table>
+<% 
+	      }
+      }
+	  rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_demographiccust_alert");
+      while (rsdemo.next()) { 
+          if(rsdemo.getString("cust3")!=null && !rsdemo.getString("cust3").equals("") ) {
+%>
+<p>
+<table width="98%" BGCOLOR="yellow" border=1 align='center'>
+  <tr><td><font color='red'>Alert: <b><%=rsdemo.getString("cust3")%></b></td>
+  </tr>
+</table>
 
 <%    
+          }
       }
-    }
-    addApptBean.closePstmtConn();
+      addApptBean.closePstmtConn();
   }
   
   if(apptnum!=0) {

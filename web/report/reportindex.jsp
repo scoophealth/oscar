@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,11 +22,8 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
-<%--
 /*
- * $RCSfile: reportindex.jsp,v $ *
+ * $RCSfile: AbstractApplication.java,v $ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
 */ 
 --%>
@@ -35,7 +32,7 @@
   String curUser_no = (String) session.getAttribute("user");
   String mygroupno = (String) session.getAttribute("groupno");  
 %>
-<%@ page import="java.util.*, oscar.*, java.sql.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, oscar.*, java.sql.*, java.text.*, java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
 <%@ include file="reportMainBeanConn.jsp" %>  
@@ -68,17 +65,28 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
+function ogo() {
+  var s = document.report.startDate.value.replace('/', '-');
+  s = s.replace('/', '-');
+  var e = document.report.endDate.value.replace('/', '-');
+  e = e.replace('/', '-');
+  var u = 'reportnewedblist.jsp?startDate=' + s + '&endDate=' + e;
+	popupPage(600,750,u);
+}
 function go(r) {
 //s.options[s.selectedIndex].value
   var s = document.report.provider_no.value ;
   var t = document.report.sdate.value ;
-  var u = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
+  var u = document.report.asdate.value ;
+  var v = document.report.aedate.value ;
+  var w = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
+  var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v;
   if(r=='new') {
     if(confirm("Are you sure you want to see only new appts? (The new appts status would be changed to 'old'.)") ) {
-	  popupPage(600,750,u);
+	  popupPage(600,750,w);
 	}
   } else {
-	popupPage(600,750,u);
+	popupPage(600,750,x);
   }
 }
 function ggo(r) {
@@ -94,6 +102,12 @@ function pcgo() {
   var u = 'reportpatientchartlist.jsp?provider_no=' + s;
 	popupPage(600,750,u);
 }
+function opcgo() {
+  var s = document.report.opcprovider_no.value ;
+  var a = document.report.age.value ;
+  var u = 'reportpatientchartlistspecial.jsp?provider_no=' + s + '&age=' + a;
+	popupPage(600,1010,u);
+}
 function nsgo() {
   var s = document.report.nsprovider_no.value ;
   var t = document.report.nsdate.value ;
@@ -104,6 +118,11 @@ function nsgo() {
 </script>
 </head>
 <body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<%
+  GregorianCalendar now = new GregorianCalendar();
+  GregorianCalendar cal = (GregorianCalendar) now.clone();
+  String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
+%>
 <form name='report' >
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="#486ebd"> 
@@ -118,7 +137,10 @@ function nsgo() {
   <tr>
     <td> 
       <ol>
-        <!--li><a HREF="#" ONCLICK ="popupPage(600,750,'reportedblist.jsp')" >EDB List</a></li-->
+        <li><a HREF="#" ONCLICK ="ogo()" >EDB List</a> &nbsp;
+           from <INPUT TYPE="text" NAME="startDate" VALUE="0000/00/00" size='10'> &nbsp; to 
+           <INPUT TYPE="text" NAME="endDate" VALUE="<%=today%>" size='10'>
+           <INPUT TYPE="button" NAME="button" VALUE="CREATE REPORT" onClick="ogo()"></li>
         <li><a HREF="#" ONCLICK ="popupPage(600,750,'reportactivepatientlist.jsp')" >Active Patient List</a></li>
         <li>Day Sheet
 <select name="provider_no" >
@@ -140,12 +162,17 @@ function nsgo() {
 %>
   <option value="*"  >All Providers</option>
 </select>
+
+<br>
+*  <a HREF="#" ONCLICK ="go('all')" >All appointments</a> 
+<a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.asdate.value")%>')">from</a>
+<input type='text' name="asdate" VALUE="<%=today%>"  size=10>
+<a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.aedate.value")%>')">to </a>
+<input type='text' name="aedate" VALUE="<%=today%>" size=10>
+<br>
+*  <a HREF="#" ONCLICK ="go('new')" title="New appts will be old after this view, !">Print Day Sheet or only new appointments</a>
 <select name="sdate" >
 <%
-  GregorianCalendar now = new GregorianCalendar();
-  GregorianCalendar cal = (GregorianCalendar) now.clone();
-  String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
-
   cal.add(cal.DATE, -1) ;
   for(int i=0; i<31; i++) {
     String dateString = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE) ;
@@ -156,9 +183,7 @@ function nsgo() {
  	}
 %>
 </select>
-<br>
-*  <a HREF="#" ONCLICK ="go('all')" >All appointments</a><br>
-*  <a HREF="#" ONCLICK ="go('new')" title="New appts will be old after this view, !">Print Day Sheet or only new appointments</a> 
+
         <li><!--a HREF="#" ONCLICK ="popupPage(600,750,'reportnoshowlist.jsp')" -->No Show List & Letters</a></li>
         <li><a HREF="#" ONCLICK ="ggo('all')" >Bad Appt Sheet</a>
 <select name="pprovider_no" >
@@ -212,6 +237,26 @@ function nsgo() {
 %>
 </select>
         </li>
+        <li><a HREF="#"  ONCLICK ="opcgo()">Old Patient List</a>
+<select name="opcprovider_no" >
+<%
+   rsgroup = reportMainBean.queryResults("mygroup_no", "search_group");
+ 	 while (rsgroup.next()) { 
+%>
+  <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
+<%
+ 	 } 
+%>
+<%
+     rsgroup = reportMainBean.queryResults("last_name", "search_provider");
+ 	 while (rsgroup.next()) { 
+%>
+  <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+<%
+ 	 }
+%>
+</select> age > <input type=text name=age value='65'>
+        </li>
         <li><a HREF="#"  ONCLICK ="nsgo()">No Show Appointment List</a>
 <select name="nsprovider_no" >
 <%
@@ -245,7 +290,19 @@ function nsgo() {
 </select>
 
         </li>
-      </ol>
+        <li>
+         <a href="../oscarReport/ConsultationReport.jsp" target="_blank">Consultation Report</a>
+        </li>
+        <li>
+         <a href="../oscarReport/LabReqReport.jsp" target="_blank">Laboratory Requisition Report</a>
+        </li>
+        <li>
+          <a href="../oscarReport/ReportDemographicReport.jsp" target="_blank">Demographic Report Tool</a>
+        </li>        
+        <li>
+          <a href=# onClick="popupPage(600,750,'demographicstudyreport.jsp')" >Demographic Study List</a>
+        </li>        
+		</ol>
     </td>
             </tr>
             <tr>

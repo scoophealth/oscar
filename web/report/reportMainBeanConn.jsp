@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,29 +22,24 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ include file="../admin/dbconnection.jsp" %>  
 <%
-  //operation available to the client -- dboperation
   String [][] dbQueries=new String[][] {
-//    {"drop_reporttemp", "DROP TABLE IF EXISTS ?" }, 
-    {"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by ?"}, 
+    {"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by ?"}, 
     {"search_group", "select * from mygroup group by mygroup_no order by ?"}, 
- 
     {"drop_reporttemp", "DROP TABLE ?" }, 
     {"create_reporttemp", "create table reporttemp ( edb date not null,last_name varchar(30) not null,first_name varchar(30) not null,family_doctor varchar(20) not null,address varchar(60),phone varchar(20))" }, 
     {"delete_reporttemp", "delete from reporttemp where demographic_no like ? " }, 
     {"add_reporttemp", "insert into reporttemp (demographic_no, edb,demo_name,provider_no,address) values(?,?,?,?,?)" },
     {"search_reporttemp", "select * from reporttemp where edb >= ? order by ? desc limit ?, ?" }, 
 
-    {"search_form_aredb", "select * from form where demographic_no = ? and form_name like ? order by form_date desc, form_time desc limit 0, 1" }, 
+	{"search_form_aredb", "select * from form where demographic_no = ? and form_name like ? order by form_date desc, form_time desc limit 0, 1" }, 
     {"search_form_demo", "select demographic_no from form group by ?"},
 
     {"search_demo_active", "select * from demographic where end_date = \"0000-00-00\" order by ? limit ?, ?"},
   };
-  
-  //associate each operation with an output JSP file -- displaymode
-  String[][] responseTargets=new String[][] {  };
-  reportMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+
+  reportMainBean.doConfigure(dbParams,dbQueries);
 %> 

@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%  
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
@@ -57,6 +31,7 @@
  String m_review="";
   String specialty="";
  String r_status="";
+  String roster_status="";
  int rowCount = 0; 
  int rowReCount = 0;
   ResultSet rslocation = null;  
@@ -226,7 +201,9 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     <td><strong><font size="2" face="Arial, Helvetica, sans-serif">Referral Doctor: 
       <input type="checkbox" name="referral" value="checkbox" <%=r_status.equals("checked")?"checked":""%>>
       </font></strong></td>
-    <td>&nbsp;</td>
+    <td><strong><font size="2" face="Arial, Helvetica, sans-serif">Roster Status: 
+      <input type="hidden" name="roster" value="<%=roster_status%>"><%=roster_status%>
+      </font></strong></td>
   </tr>
 </table>
 <table width="600" border="0">
@@ -297,6 +274,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
                 <option value="02" <%=visittype.equals("02")?"selected":""%>>02 | Hospital Visit</option>
                 <option value="03" <%=visittype.equals("03")?"selected":""%>>03 | ER</option>
                 <option value="04" <%=visittype.equals("04")?"selected":""%>>04 | Nursing Home</option>
+                <option value="05" <%=visittype.equals("05")?"selected":""%>>05 | Home Visit</option>
                 </select></font></b></td>
     <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_visitdate" value="<%=visitdate%>"><a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=admission","380","300","0")'> Admission Date:</a> 
               <input type="text" style="font-size:80%;" name="xml_vdate" value="<%=visitdate%>"></font></b></td>
@@ -342,7 +320,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
       <td width="50%"><font face="Arial, Helvetica, sans-serif" size="1"><%=serviceDesc%></font></td>
        <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_billing_unit<%=rowCount%>" value="<%=billingunit%>"><input type="text" style="font-size:80%;" name="billingunit<%=rowCount-1%>" value="<%=billingunit%>" size="5" maxlength="5"></font></td>
       <td width="13%"> 
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%></font></div>
+        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_billing_amount<%=rowCount%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"><input type="text" style="font-size:80%;" size="5" maxlength="5" name="billingamount<%=rowCount-1%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"></font></div>
       </td>
     </tr>
 <%
@@ -356,7 +334,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
       <td width="50%"><font face="Arial, Helvetica, sans-serif" size="2">&nbsp;</font></td>
         <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="billingunit<%=i%>" value="" size="5" maxlength="5"></font></td>
       <td width="13%"> 
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"></font></div>
+        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="billingamount<%=i%>" value="" size="5" maxlength="5"></font></div>
       </td>
     </tr>
 <% }

@@ -49,7 +49,7 @@
     props.setProperty("c_lastVisited", "Outcome");
 %>
 
-</head>
+
 
 <script type="text/javascript" language="Javascript">
     function onPrint() {
@@ -127,6 +127,62 @@
             alert("case not covered");
             break;
         }
+    }
+    function numvalidate() {
+            if( isNaN(document.forms[0].o_sp1.value) ) {
+                bringthToAttentionth(document.forms[0].o_sp1);
+                return false;
+            }
+            if( isNaN(document.forms[0].o_sp2.value)) {
+                bringthToAttentionth(document.forms[0].o_sp2);
+                return false;
+            }
+            if(isNaN(document.forms[0].o_sp3.value)) {
+                bringthToAttentionth(document.forms[0].o_sp3);
+                return false;
+            }
+            if(isNaN(document.forms[0].o_pe1.value)) {
+                bringthToAttentionth(document.forms[0].o_pe1);
+                return false;
+            }
+            if(isNaN(document.forms[0].o_pe2.value)) {
+                 bringthToAttentionth(document.forms[0].o_pe2);
+                 return false;
+            }
+            if(isNaN(document.forms[0].o_pe3.value)) {
+                 bringthToAttentionth(document.forms[0].o_pe3);
+                 return false;
+            }
+            if(isNaN(document.forms[0].o_d1.value)) {
+                 bringthToAttentionth(document.forms[0].o_d1);
+                 return false;
+            }
+            if(isNaN(document.forms[0].o_d2.value)) {
+                 bringthToAttentionth(document.forms[0].o_d2);
+                 return false;
+            }
+            if(isNaN(document.forms[0].o_d3.value)) {
+                 bringthToAttentionth(document.forms[0].o_d3);
+                 return false;
+            }
+            if(isNaN(document.forms[0].o_pns1.value)) {
+                 bringthToAttentionth(document.forms[0].o_pns1);
+                 return false;
+            }
+            if(isNaN(document.forms[0].o_pns2.value)) {
+                 bringthToAttentionth(document.forms[0].o_pns2);
+                 return false;
+            }
+            if(isNaN(document.forms[0].o_pns3.value)) {
+                 bringthToAttentionth(document.forms[0].o_pns3);
+                 return false;
+            }
+
+
+    }
+    function bringthToAttentionth(docItem){
+       docItem.focus();
+       alert("This value must be numeric.");
     }
 
 /**
@@ -257,10 +313,29 @@ var maxYear=3100;
         return b;
     }
 </script>
+<style type="text/css">
+ A.mhlink:link {
+        COLOR: black;
+        TEXT-DECORATION: none;
+ }
 
+ A.mhlink:visited {
+        COLOR: black;
+        TEXT-DECORATION: none;
+ }
+ A.mhlink:active {
+        COLOR: black;
+        TEXT-DECORATION: none;
+ }
+ A.mhlink:hover {
+        color: red;
+        TEXT-DECORATION: underline;
+ }
+</style>
 
+</head>
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
-<html:form action="/oscarEncounter/MentalHealth">
+<html:form action="/oscarEncounter/MentalHealth" onsubmit="return numvalidate()">
 
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="ID" value="<%= props.getProperty("ID", "0") %>"/>
@@ -347,14 +422,19 @@ var maxYear=3100;
             <table border="1" cellpadding="2" cellspacing="0" width="100%">
                 <tr>
                     <td class="mhList" valign="top">
-                        Services Provided:<br>
+                        Services Provided:<br><br>
+                        &nbsp;
+                        1. <input type="text" name="o_sp1" value="<%= props.getProperty("o_sp1", "") %>" size="2"/> &nbsp;
+                        2. <input type="text" name="o_sp2" value="<%= props.getProperty("o_sp2", "") %>" size="2"/> &nbsp;
+                        3. <input type="text" name="o_sp3" value="<%= props.getProperty("o_sp3", "") %>" size="2"/>
+                        <br><br>
                         <% String[] sp = list.loadData("mhOutcome/ServicesProvided.txt", projecthome );
                             for (int i=0; i<sp.length; i++)
                             {
                                 if(sp[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('o_sp', <%=i+1%>);"><%=i+1%>. <%= sp[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink"  onclick="javascript:insert('o_sp', <%=i+1%>);"><%=i+1%>. <%= sp[i] %></a><br>
                         <%
                                 }
                             }
@@ -362,14 +442,19 @@ var maxYear=3100;
                         &nbsp;<input type="text" name="o_spOther" value="<%= props.getProperty("o_spOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Problems Encountered:<br>
+                        Problems Encountered:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="o_pe1" value="<%= props.getProperty("o_pe1", "") %>" size="2" /> &nbsp;
+                        2. <input type="text" name="o_pe2" value="<%= props.getProperty("o_pe2", "") %>" size="2" /> &nbsp;
+                        3. <input type="text" name="o_pe3" value="<%= props.getProperty("o_pe3", "") %>" size="2" />
+                        <br><br>
                         <% String[] pe = list.loadData("mhOutcome/ProblemsEncountered.txt", projecthome );
                             for (int i=0; i<pe.length; i++)
                             {
                                 if(pe[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('o_pe', <%=i+1%>);"><%=i+1%>. <%= pe[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }" class="mhlink" onclick="javascript:insert('o_pe', <%=i+1%>);"><%=i+1%>. <%= pe[i] %></a><br>
                         <%
                                 }
                             }
@@ -377,14 +462,19 @@ var maxYear=3100;
                         &nbsp;<input type="text" name="o_peOther" value="<%= props.getProperty("o_peOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Disposition:<br>
+                        Disposition:<br><br>
+                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         1. <input type="text" name="o_d1" value="<%= props.getProperty("o_d1", "") %>" size="2"/> &nbsp;
+                         2. <input type="text" name="o_d2" value="<%= props.getProperty("o_d2", "") %>" size="2"/> &nbsp;
+                         3. <input type="text" name="o_d3" value="<%= props.getProperty("o_d3", "") %>" size="2"/>
+                         <br><br>
                         <% String[] d = list.loadData("mhOutcome/Disposition.txt", projecthome );
                             for (int i=0; i<d.length; i++)
                             {
                                 if(d[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('o_d', <%=i+1%>);"><%=i+1%>. <%= d[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('o_d', <%=i+1%>);"><%=i+1%>. <%= d[i] %></a><br>
                         <%
                                 }
                             }
@@ -392,14 +482,19 @@ var maxYear=3100;
                         &nbsp;<input type="text" name="o_dOther" value="<%= props.getProperty("o_dOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Patient Not Seen:<br>
+                        Patient Not Seen:<br><br>
+                        &nbsp;
+                        1. <input typns="text" name="o_pns1" value="<%= props.getProperty("o_pns1", "") %>" size="2" /> &nbsp;
+                        2. <input typns="text" name="o_pns2" value="<%= props.getProperty("o_pns2", "") %>" size="2" /> &nbsp;
+                        3. <input typns="text" name="o_pns3" value="<%= props.getProperty("o_pns3", "") %>" size="2" />
+                        <br><br>
                         <% String[] pns = list.loadData("mhOutcome/PatientNotSeen.txt", projecthome );
                             for (int i=0; i<pns.length; i++)
                             {
                                 if(pns[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('o_pns', <%=i+1%>);"><%=i+1%>. <%= pns[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }" class="mhlink" onclick="javascript:insert('o_pns', <%=i+1%>);"><%=i+1%>. <%= pns[i] %></a><br>
                         <%
                                 }
                             }
@@ -409,28 +504,16 @@ var maxYear=3100;
                 </tr>
                 <tr>
                     <td class="mhSelect">
-                        Services Provided:<br>
-                        1. <input type="text" name="o_sp1" value="<%= props.getProperty("o_sp1", "") %>" /><br>
-                        2. <input type="text" name="o_sp2" value="<%= props.getProperty("o_sp2", "") %>" /><br>
-                        3. <input type="text" name="o_sp3" value="<%= props.getProperty("o_sp3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Problems Encountered:<br>
-                        1. <input type="text" name="o_pe1" value="<%= props.getProperty("o_pe1", "") %>" /><br>
-                        2. <input type="text" name="o_pe2" value="<%= props.getProperty("o_pe2", "") %>" /><br>
-                        3. <input type="text" name="o_pe3" value="<%= props.getProperty("o_pe3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Dispostion:<br>
-                        1. <input type="text" name="o_d1" value="<%= props.getProperty("o_d1", "") %>" /><br>
-                        2. <input type="text" name="o_d2" value="<%= props.getProperty("o_d2", "") %>" /><br>
-                        3. <input type="text" name="o_d3" value="<%= props.getProperty("o_d3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Patient Not Seen:<br>
-                        1. <input typns="text" name="o_pns1" value="<%= props.getProperty("o_pns1", "") %>" /><br>
-                        2. <input typns="text" name="o_pns2" value="<%= props.getProperty("o_pns2", "") %>" /><br>
-                        3. <input typns="text" name="o_pns3" value="<%= props.getProperty("o_pns3", "") %>" />
+                        <br>
                     </td>
                 </tr>
                 <tr>

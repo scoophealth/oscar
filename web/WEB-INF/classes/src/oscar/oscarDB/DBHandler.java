@@ -30,11 +30,11 @@ import java.sql.*;
 public class DBHandler {
     public static String IDDF_DATA = "iddf";
     
-    public static String  OSCAR_DATA = "oscar";
+    public static String  OSCAR_DATA = "oscar_sfhc";
     private static String  connDriver = "org.gjt.mm.mysql.Driver";
-    private static String  connURL = "jdbc:mysql://"; //change to "jdbc:mysql:///"
+    private static String  connURL = "jdbc:mysql://";     //"jdbc:mysql://";/; //oscar?user=root&password=oscar"; 
     private static String  connUser = "root";
-    private static String  connPwd = "oscar";
+    private static String  connPwd = "liyi";
     
     private int     connInitialConnections = 1;
     private int     connMaxConnections = 100;

@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%@ page  import="java.util.*,java.net.*"  errorPage="errorpage.jsp"%>
 <%
   if(session.getValue("user") == null || !( ((String) session.getValue("userprofession")).equalsIgnoreCase("doctor") ))
@@ -40,9 +14,12 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="../admin/dbconnection.jsp" %>  
 
-<%
+<% 
   //operation available to the client - dboperation
   String [][] dbOperation=new String[][] {
+    {"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
+    {"search_studycount","select count(study_no) from demographicstudy where demographic_no=? "},
+    {"search_study","select s.* from demographicstudy d, study s where demographic_no=? and d.study_no = s.study_no limit 0,1 "},
     {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time, status desc "}, 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "}, 
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "}, 
@@ -83,8 +60,8 @@
     {"search_encounterformname", "select encounterform_name from encounterform order by ?"},
     {"search_provider_slp", "select comments from provider where provider_no=?"},
 
-    {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' order by ?"}, 
-    {"searchallprovider", "select * from provider order by ?"}, 
+    {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by ?"}, 
+    {"searchallprovider", "select * from provider where status='1' order by ?"}, 
     {"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" }, 
     {"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? order by sdate" }, 
     {"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? order by sdate" }, 

@@ -1,39 +1,18 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 
 <table width="75%" border="0" cellpadding="2">
-  <tr bgcolor="#CCCCFF">
-    <td>Provider</td>
-    <td>&nbsp;</td>
-    <td>Clinic</td>
-    <td>Outpatient</td>
-    <td>Hospital</td>
-    <td>ER</td>
-    <td>Nursing Home</td>
+  <tr>
+    <td bgcolor="#CCCCFF">Provider</td>
+    <td bgcolor="#CCCCFF">&nbsp;</td>
+    <td bgcolor="#CCCCFF">Clinic</td>
+    <td bgcolor="#CCCCFF">Outpatient</td>
+    <td bgcolor="#CCCCFF">Hospital</td>
+    <td bgcolor="#CCCCFF">ER</td>
+    <td bgcolor="#CCCCFF">Nursing Home</td>
+    <td bgcolor="#FFCC00">Clinic</td>
+    <td bgcolor="#FFCC00">Outpatient</td>
+    <td bgcolor="#FFCC00">Hospital</td>
+    <td bgcolor="#FFCC00">ER</td>
+    <td bgcolor="#FFCC00">Nursing Home</td>
   </tr>
 
 <%
@@ -67,12 +46,8 @@ param2[4] = "04";
 String[] param3 = new String[4];
 
 String[] visitcount = new String[5];
-visitcount[0] = "";
-visitcount[1] = "";
-visitcount[2] = "";
-visitcount[3] = "";
-visitcount[4] = "";
- 
+String[] apptvisitcount = new String[5];
+
     BigDecimal ccTotal = new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
     BigDecimal hhTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
     BigDecimal BigTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
@@ -88,7 +63,20 @@ visitcount[4] = "";
       BigDecimal Total1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
       BigDecimal Total2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
       BigDecimal Total3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-   BigDecimal Total4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);   
+      BigDecimal Total4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);   
+      
+      
+        BigDecimal ABigTotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+         BigDecimal ABigTotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+         BigDecimal ABigTotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+         BigDecimal ABigTotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+         BigDecimal ABigTotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+         
+            BigDecimal ATotal0= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+            BigDecimal ATotal1= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+            BigDecimal ATotal2= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+            BigDecimal ATotal3= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
+      		BigDecimal ATotal4= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);   
  boolean bodd=true;	     
 
 rs = null;
@@ -99,64 +87,31 @@ p_first = rs.getString("first_name");
 p_no = rs.getString("provider_no");
 team = rs.getString("team");
 
-param3[0] = p_no;
-param3[1] = param2[0];
-param3[2] = dateBegin;
-param3[3] = dateEnd ;
+oscar.oscarReport.data.VisitReportData vrd = new oscar.oscarReport.data.VisitReportData();
+vrd.setDateBegin(dateBegin);
+vrd.setDateEnd(dateEnd);
+vrd.setProviderNo(p_no);
+visitcount = vrd.getCreatorCount();
+apptvisitcount = vrd.getApptProviderCount();
 
-rs2 = apptMainBean.queryResults(param3, "count_visit");
-while(rs2.next()){
-visitcount[0] = rs2.getString("n");
-}
-param3[0] = p_no;
-param3[1] = param2[1];
-param3[2] = dateBegin;
-param3[3] = dateEnd ;
-
-rs3 = apptMainBean.queryResults(param3, "count_visit");
-while(rs3.next()){
-visitcount[1] = rs3.getString("n");
-}
-param3[0] = p_no;
-param3[1] = param2[2];
-param3[2] = dateBegin;
-param3[3] = dateEnd ;
-
-rs4 = apptMainBean.queryResults(param3, "count_visit");
-while(rs4.next()){
-visitcount[2] = rs4.getString("n");
-}
-param3[0] = p_no;
-param3[1] = param2[3];
-param3[2] = dateBegin;
-param3[3] = dateEnd ;
-
-rs5 = apptMainBean.queryResults(param3, "count_visit");
-while(rs5.next()){
-visitcount[3] = rs5.getString("n");
-}
-param3[0] = p_no;
-param3[1] = param2[4];
-param3[2] = dateBegin;
-param3[3] = dateEnd ;
-
-rs6 = apptMainBean.queryResults(param3, "count_visit");
-while(rs6.next()){
-visitcount[4] = rs6.getString("n");
-}
 
 if (oldteam.compareTo(team) != 0)  bodd=bodd?false:true; //for the color of rows
 
 %>
-<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-    <td><%=oldteam.equals(team)?"":team%></td>
-    <td><%=p_no%> <%=p_last%>,<%=p_first%></td>
-    <td><%=visitcount[0]%></td>
-    <td><%=visitcount[1]%></td>
-    <td><%=visitcount[2]%></td>
-    <td><%=visitcount[3]%></td>
-    <td><%=visitcount[4]%></td>
-  </tr>
+<tr>
+    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=oldteam.equals(team)?"":team%></td>
+    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=p_no%> <%=p_last%>,<%=p_first%></td>
+    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[0]%></td>
+    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[1]%></td>
+    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[2]%></td>
+    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[3]%></td>
+    <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[4]%></td>
+    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[0]%></td>
+    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[1]%></td>
+    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[2]%></td>
+    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[3]%></td>
+    <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[4]%></td>
+</tr>
 
 <%
 
@@ -170,16 +125,32 @@ BigTotal1 = BigTotal1.add(Total1);
 BigTotal2 = BigTotal2.add(Total2);
 BigTotal3 = BigTotal3.add(Total3);
 BigTotal4 = BigTotal4.add(Total4);
+
+    ATotal0= new BigDecimal(Integer.parseInt(apptvisitcount[0].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+      ATotal1= new BigDecimal(Integer.parseInt(apptvisitcount[1].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+       ATotal2= new BigDecimal(Integer.parseInt(apptvisitcount[2].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+       ATotal3= new BigDecimal(Integer.parseInt(apptvisitcount[3].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
+   ATotal4= new BigDecimal(Integer.parseInt(apptvisitcount[4].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);  
+ABigTotal0 = ABigTotal0.add(ATotal0);
+ABigTotal1 = ABigTotal1.add(ATotal1);
+ABigTotal2 = ABigTotal2.add(ATotal2);
+ABigTotal3 = ABigTotal3.add(ATotal3);
+ABigTotal4 = ABigTotal4.add(ATotal4);
 oldteam = team;
    
 }   %>
-  <tr bgcolor="#CCCCFF">
-    <td>&nbsp;</td>
-    <td>SUBTOTAL</td>
-    <td><%=BigTotal0%></td>
-    <td><%=BigTotal1%></td>
-    <td><%=BigTotal2%></td>
-    <td><%=BigTotal3%></td>
-    <td><%=BigTotal4%></td>
+  <tr>
+    <td bgcolor="#CCCCFF">&nbsp;</td>
+    <td bgcolor="#CCCCFF">TOTAL</td>
+    <td bgcolor="#CCCCFF"><%=BigTotal0%></td>
+    <td bgcolor="#CCCCFF"><%=BigTotal1%></td>
+    <td bgcolor="#CCCCFF"><%=BigTotal2%></td>
+    <td bgcolor="#CCCCFF"><%=BigTotal3%></td>
+    <td bgcolor="#CCCCFF"><%=BigTotal4%></td>
+    <td bgcolor="#FFCC00"><%=ABigTotal0%></td>
+    <td bgcolor="#FFCC00"><%=ABigTotal1%></td>
+    <td bgcolor="#FFCC00"><%=ABigTotal2%></td>
+    <td bgcolor="#FFCC00"><%=ABigTotal3%></td>
+    <td bgcolor="#FFCC00"><%=ABigTotal4%></td>
   </tr>
 </table>

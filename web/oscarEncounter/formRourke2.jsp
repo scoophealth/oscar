@@ -291,7 +291,7 @@ var maxYear=3100;
                 &nbsp;&nbsp;
                 Birth Date (yyyy/mm/dd): <input type="text" name="c_birthDate" size="10" maxlength="10" value="<%= props.getProperty("c_birthDate", "") %>" readonly="true">
                 &nbsp;&nbsp;
-                <% if(props.getProperty("c_male", "") == "1")
+                <% if(!rec.isFemale(demoNo))
                 {
                     %>Male<%
                 }else

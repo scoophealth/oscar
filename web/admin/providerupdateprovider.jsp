@@ -1,35 +1,4 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../login.htm");
-  //call the bean's queryResults() method to get the record data for updating
-%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html>
@@ -38,38 +7,36 @@
 <title>OSCAR Project</title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
-    <!--
-		function setfocus() {
-		  document.updatearecord.last_name.focus();
-		  document.updatearecord.last_name.select();
-		}
-
-    //-->
-    </script>
+<!--
+function setfocus() {
+  document.updatearecord.last_name.focus();
+  document.updatearecord.last_name.select();
+}
+//-->
+</script>
 </head>
 
-<body   background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            UPDATE A PROVIDER RECORD</font></th>
-      </tr>
-    </table>
-  <form method="post" action="admincontrol.jsp" name="updatearecord" >
+<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+  <tr bgcolor="#486ebd"><th><font face="Helvetica" color="#FFFFFF">UPDATE A PROVIDER RECORD</font></th>
+  </tr>
+</table>
+
+<form method="post" action="admincontrol.jsp" name="updatearecord" >
 <%
   ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
   if(rs==null) {
     out.println("failed");
   } else {
     while (rs.next()) {
-    // the cursor of ResultSet only goes through once from top
 %>
 <xml id="xml_list">
 <providercomments>
      <%=rs.getString("comments")%>
 </providercomments>
 </xml>
+
 <table cellspacing="0" cellpadding="2" width="100%" border="0" datasrc='#xml_list'>
 
   <tr> 
@@ -99,7 +66,7 @@
     <td><input type="text" name="team" value="<%= rs.getString("team") %>"></td>
   </tr>
   <tr> 
-    <td align="right">Sex: </td>
+    <td align="right">Sex(F/M): </td>
     <td><input type="text" name="sex" value="<%= rs.getString("sex") %>"></td>
   </tr>
   <tr> 
@@ -111,9 +78,10 @@
     <td><input type="text" name="address" value="<%= rs.getString("address") %>" size="40"></td>
   </tr>
   <tr> 
-    <td align="right">Phone: </td>
-    <td><input type="text" name="phone" value="<%= rs.getString("phone") %>"></td>
-  </tr>
+    <td align="right">Phone (home): </td>
+    <td><input type="text" name="phone" value="<%= rs.getString("phone") %>">
+    Phone (work): 
+    <input type="text" name="workphone" value="<%= rs.getString("work_phone") == null?"":(rs.getString("work_phone")) %>"></td></tr>
   <tr> 
     <td align="right">Pager: </td>
     <td>

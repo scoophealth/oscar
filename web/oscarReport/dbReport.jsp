@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
  <%   
   //operation available to the client - dboperation
   String orderby="", limit="", limit1="", limit2="";
@@ -36,6 +10,7 @@
   
   
   String [][] dbQueries=new String[][] {
+  {"search_catchment", "select * from demographic where roster_status=? and (postal not like 'L0R%' and postal not like 'L3M%' and postal not like 'L8E%' and postal not like 'L9A%' and postal not like 'L8G%' and postal not like 'L9B%' and postal not like 'L8H%' and postal not like 'L9C%' and postal not like 'L8J%' and postal not like 'L9G%' and postal not like 'L8K%' and postal not like 'L9H%' and postal not like 'L8L%' and postal not like 'L9K%' and postal not like 'L8M%' and postal not like 'L8N%' and postal not like 'N0A%' and postal not like 'L8P%' and postal not like 'N3W%' and postal not like 'L8R%' and postal not like 'L8S%' and postal not like 'L8T%' and postal not like 'L8V%' and postal not like 'L8W%' and postal not like 'K8R%' and postal not like 'L0R%' and postal not like 'L5P%' and postal not like 'L8A%' and postal not like 'L8B%' and postal not like 'L8C%' and postal not like 'L8L%' and postal not like 'L9L%' and postal not like 'L9N%' and postal not like 'L9S%' and postal not like 'M9C%' and postal not like 'NOB%')  limit ?,?"},
     {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
     {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no || null and provider_no like ? order by last_name"},
      {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no || null order by last_name"},

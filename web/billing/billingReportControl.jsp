@@ -14,17 +14,16 @@
  * along with this program; if not, write to the Free Software 
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
  * 
- * <OSCAR TEAM>
+ * <OSCAR TEAM> 
  * 
  * This software was written for the 
  * Department of Family Medicine 
  * McMaster Unviersity 
  * Hamilton 
  * Ontario, Canada 
- */
+ */ 
 -->
-
- <%      
+<%      
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no; 
@@ -32,7 +31,7 @@
   int  nItems=0;    
       String strLimit1="0"; 
     String strLimit2="5";
-    if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+     if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
@@ -48,7 +47,7 @@ GregorianCalendar now=new GregorianCalendar();
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   
   
-  
+   
   %><% 
   	int flag = 0, rowCount=0;
   String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
@@ -125,7 +124,7 @@ function refresh() {
 //-->
 </script>
 
-
+ 
 </head> 
 
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
@@ -184,7 +183,7 @@ String billinggroup_no;
       }      
    
   %>
-           </select>   
+            </select>   
         </div>
       </td>
       <td width="20%"> <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 

@@ -209,6 +209,7 @@ batchCount = rslocal2.getString("batchcount");
 
 
 <jsp:forward page='billingOHIPreport.jsp' >
+<jsp:param name="year" value='' />
 </jsp:forward>
 
 

@@ -59,6 +59,7 @@ String regNumber="", patient_last="", patient_first="", patient_sex="", province
 String header1Count="", header2Count="", itemCount="", messageCount="";
 String batchNumber="", batchCreateDate="", batchSequenceNumber="", microStart="", microEnd="", microType="", batchProcessDate="", claimNumber="", recordNumber="";
 String mailDate="", mailTime="", mailFile="";
+String obecHIN="", obecVer="", obecResponse="", obecId="", obecSex="", obecDOB="", obecExpiry="", obecLast="", obecFirst="", obecSecond="", obecMOH="";
 %>
 
 
@@ -125,7 +126,7 @@ String ReportName="", ReportFlag="";
 if (filename.substring(0,1).compareTo("E")==0) {ReportName="Claims Error Report"; ReportFlag="A";}
 if (filename.substring(0,1).compareTo("B")==0){ ReportName="Claim Batch Acknowledgement Report"; ReportFlag="B";}
 if (filename.substring(0,1).compareTo("X")==0){ ReportName="Claim File Rejection Report"; ReportFlag="C";}
-
+if (filename.substring(0,1).compareTo("R")==0){ ReportName="EDT OBEC Output Specification"; ReportFlag="D";}
 %>
 <table border="0" cellspacing="0" cellpadding="0" width="100%"  onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
     <tr bgcolor="#486ebd">
@@ -203,12 +204,12 @@ InputStreamReader reader = new InputStreamReader(file);
 BufferedReader input = new BufferedReader(reader);
 String nextline;
 while ((nextline=input.readLine())!=null){
-
-  headerCount = nextline.substring(2,3);
-   if (headerCount.compareTo("1") == 0){
+ headerCount = nextline.substring(2,3);
+  if (headerCount.compareTo("1") == 0){
 
 batchNumber=nextline.substring(6,11);
 operatorNumber=nextline.substring(11,17);
+
 providerNumber=nextline.substring(56,62); 
 groupNumber=nextline.substring(52,56);
 batchCreateDate=nextline.substring(17,25);
@@ -239,14 +240,94 @@ explain=nextline.substring(81,111);
 
 
 <%
-}
-}
 
+}
+}
 
 %>  </table>  
 <%
 } else{
 %>
+<%
+if (ReportFlag.compareTo("D") == 0){
+// String obecHIN="", obecVer="", obecResponse="", obecId="", obecSex="", obecDOB="", obecExpiry="", obecLast="", obecFirst="", obecSecond="", obecMOH="";
+
+%>
+<table width="102%" border="1" cellspacing="2" cellpadding="2" bgcolor="#F1E9FE">
+  <tr bgcolor="#CCCCFF"> 
+    <td>Health #</td>
+    <td>Ver</td>
+    <td>Response Code</td>
+    <td>Identifier</td>
+    <td>Sex</td>
+    <td>DOB</td>
+    <td>Expiry</td>
+    <td>Last Name</td>
+    <td>First Name</td>
+    <td>Second Name</td>
+    <td>Reserved for MOH</td>
+      
+  </tr>
+
+<%
+InputStreamReader reader = new InputStreamReader(file);
+BufferedReader input = new BufferedReader(reader);
+String nextline;
+while ((nextline=input.readLine()) != null){
+
+ if (nextline.length() > 2){
+
+obecHIN=nextline.substring(0,10);
+obecVer=nextline.substring(10,12);
+obecResponse=nextline.substring(12,14); 
+
+if (nextline.length() > 14){
+obecId=nextline.substring(14,18);
+obecSex=nextline.substring(18,19);
+obecDOB=nextline.substring(19,27);
+obecExpiry=nextline.substring(27,35);
+obecLast=nextline.substring(35,65);
+obecFirst=nextline.substring(65,85);
+obecSecond=nextline.substring(85,105);
+obecMOH=nextline.substring(105,207);
+
+}
+}
+
+
+
+
+%>
+  <tr bgcolor="#F9F1FE"> 
+    <td><%=obecHIN%> &nbsp;</td>
+    <td><%=obecVer%> &nbsp;</td>
+    <td><%=obecResponse%> &nbsp;</td>
+    <td><%=obecId%> &nbsp;</td>
+    <td><%=obecSex%>  &nbsp;</td>
+    <td><%=obecDOB%> &nbsp;</td>
+    <td><%=obecExpiry%>&nbsp;</td>
+    <td><%=obecLast%> &nbsp;</td>
+    <td><%=obecFirst%>&nbsp;</td>
+    <td><%=obecSecond%> &nbsp;</td>
+    <td><%=obecMOH%> &nbsp;</td>
+
+  </tr>
+
+
+<%
+
+}
+
+
+%>  </table>  
+
+<%
+} else{
+%>
+
+
+
+
 <%
 if (ReportFlag.compareTo("A") == 0){
 
@@ -429,14 +510,13 @@ error = nextline.substring(5,60);
 
 
 %>
-<table width="100%" border="0" cellspacing="2" cellpadding="2" bgcolor="#EEEEFF">
   <tr> 
     <td width="20%"><b>Error/Description</b></td>
  <td width="20%"><%=explain%>    </td>
  <td width="60%"><%=error%> </td>
 
  </tr>
-</table>
+
 <%
 }
 %>    
@@ -474,6 +554,7 @@ messageCount=nextline.substring(24,31);
 %>    
 
 <%
+}
 }
 }
 }

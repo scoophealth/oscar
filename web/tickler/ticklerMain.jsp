@@ -1,33 +1,3 @@
-<!--
-Testing CSV 
--->
-
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
  <%    
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -40,7 +10,7 @@ Testing CSV
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -96,6 +66,16 @@ function refresh() {
     history.go(0);
   }
 }
+
+
+
+function allYear()
+{       
+var newD = "9999-12-31";
+var beginD = "0000-00-00"
+	document.serviceform.xml_appointment_date.value = newD;
+		document.serviceform.xml_vdate.value = beginD;
+}
 //-->
 </script>
 <script>
@@ -103,11 +83,13 @@ function refresh() {
     function Check(e)
     {
 	e.checked = true;
-	    }
+	//Highlight(e);
+    }
 
     function Clear(e)
     {
 	e.checked = false;
+	//Unhighlight(e);
     }
 
     function CheckAll()
@@ -120,7 +102,8 @@ function refresh() {
 		Check(e);
 	    }
 	}
-   }
+	//ml.toggleAll.checked = true;
+    }
 
     function ClearAll()
     {
@@ -132,6 +115,7 @@ function refresh() {
 		Clear(e);
 	    }
 	}
+	//ml.toggleAll.checked = false;
     }
 
     function Highlight(e)
@@ -246,10 +230,17 @@ function refresh() {
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:11px;}
 	TD.black              {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
 	TD.lilac              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
+	TD.lilacRed              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #EEEEFF  ;}
+	
 	TD.boldlilac          {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
 	TD.lilac A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
 	TD.lilac A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
 	TD.lilac A:hover      {font-weight: normal;                                                                            color: #000000; background-color: #CDCFFF  ;}
+	TD.lilacRed A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #EEEEFF  ;}
+	TD.lilacRed A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #EEEEFF  ;}
+	TD.lilacRed A:hover      {font-weight: normal;                                                                            color: red; background-color: #CDCFFF  ;}
+	TD.whiteRed              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #FFFFFF;}
+	
 	TD.white              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
 	TD.heading            {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
 	H2                    {font-weight: bold  ; font-size: 12pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
@@ -267,6 +258,10 @@ function refresh() {
 	TD.white A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
 	TD.white A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
 	TD.white A:hover      {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #CDCFFF  ;}
+	TD.whiteRed A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #FFFFFF;}
+		TD.whiteRed A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #FFFFFF;}
+		TD.whiteRed A:hover      {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #CDCFFF  ;}
+	
 	#navbar               {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
 	SPAN.navbar A:link    {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
 	SPAN.navbar A:visited {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #EFEFEF; background-color: #666699   ;}
@@ -310,7 +305,7 @@ function refresh() {
       </td>
       <td width="40%"> 
         <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
-        <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End:</a></font> 
+        <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End:</a> &nbsp; &nbsp; <a href="#" onClick="allYear()">View All</a></font> 
       </td>
     </tr>
     <tr> 
@@ -319,7 +314,7 @@ function refresh() {
         <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Move To </b> <select name="ticklerview"><option value="A" <%=ticklerview.equals("A")?"selected":""%>>Active</option><option value="C" <%=ticklerview.equals("C")?"selected":""%>>Completed</option><option value="D" <%=ticklerview.equals("D")?"selected":""%>>Deleted</option></select>
       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select 
           provider </b></font> <select name="providerview">
-           <option value="%" <%=providerview.equals("all")?"selected":""%>>All Providers</option
+           <option value="%" <%=providerview.equals("all")?"selected":""%>>All Providers</option>
 			<% String proFirst="";
            String proLast="";
            String proOHIP="";
@@ -371,9 +366,15 @@ String billinggroup_no;
 <%
  String dateBegin = xml_vdate;
    String dateEnd = xml_appointment_date;
+String redColor = "", lilacColor = "" , whiteColor = "";
+String vGrantdate = "1980-01-07 00:00:00.0";
+DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS"); 
+
+
   if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
    if (dateBegin.compareTo("") == 0) dateBegin="0000-00-00";
- ResultSet rs=null ;
+
+   ResultSet rs=null ;
   String[] param =new String[4];
    boolean bodd=false;
    param[0] = ticklerview;
@@ -384,16 +385,41 @@ String billinggroup_no;
   rs = apptMainBean.queryResults(param, "search_tickler");
    while (rs.next()) {
        nItems = nItems +1;
+
+
    bodd=bodd?false:true;
+   vGrantdate = rs.getString("service_date")+ " 00:00:00.0";
+   java.util.Date grantdate = dateFormat.parse(vGrantdate); 
+   java.util.Date toDate = new java.util.Date(); 
+    long millisDifference = toDate.getTime() - grantdate.getTime(); 
+long daysDifference = millisDifference / (1000 * 60 * 60 * 24); 
+if (daysDifference > 0){
+%>
+
+<tr >
+<TD width="5%"  ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><input type="checkbox" name="checkbox" value="<%=rs.getString("tickler_no")%>"></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("provider_last")%>,<%=rs.getString("provider_first")%></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("service_date")%> </TD>
+<TD width="10%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
+<TD width="30%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("message")%></TD>
+ </tr>
+<%
+}else {
 %>
 <tr >
-<TD width="5%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><input type="checkbox" name="checkbox" value="<%=rs.getString("tickler_no")%>"></TD>
-<TD width="20%" ROWSPAN="1"  class="<%=bodd?"lilac":"white"%>"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></TD>
-<TD width="20%" ROWSPAN="1"  class="<%=bodd?"lilac":"white"%>"><%=rs.getString("provider_last")%>,<%=rs.getString("provider_first")%></TD>
-<TD width="20%" ROWSPAN="1"  class="<%=bodd?"lilac":"white"%>"><%=rs.getString("service_date")%> </TD>
-<TD width="10%"ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
+<TD width="5%"  ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><input type="checkbox" name="checkbox" value="<%=rs.getString("tickler_no")%>"></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("provider_last")%>,<%=rs.getString("provider_first")%></TD>
+<TD width="20%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("service_date")%> </TD>
+<TD width="10%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("status").equals("A")?"Active":rs.getString("status").equals("C")?"Completed":rs.getString("status").equals("D")?"Deleted":rs.getString("status")%></TD>
 <TD width="30%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("message")%></TD>
  </tr>
+<%
+}
+
+%>
+
 <%}
 
 apptMainBean.closePstmtConn();

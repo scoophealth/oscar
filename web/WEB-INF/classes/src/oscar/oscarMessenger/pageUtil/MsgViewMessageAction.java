@@ -108,7 +108,7 @@ System.out.println("attach "+att);
               }
 
               if (i == 1){
-                 rs = db.GetSQL("update messagelisttbl set status = \"read\" where provider_no = \""+providerNo+"\" and message = \""+messageNo+"\" and status not like 'del'");
+                 db.RunSQL("update messagelisttbl set status = \"read\" where provider_no = \""+providerNo+"\" and message = \""+messageNo+"\" and status not like 'del'");
               }
 
 

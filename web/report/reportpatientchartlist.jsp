@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,8 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
+
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
@@ -37,7 +38,7 @@
 <% 
   String [][] dbQueries=new String[][] { 
 //{"search_patient", "select provider_no, last_name, first_name, chart_no from demographic where provider_no = ? order by "+orderby }, 
-{"search_patient", "select d.provider_no,c.cust1,c.cust2, d.last_name, d.first_name, d.chart_no from demographic d LEFT JOIN demographiccust c ON d.demographic_no = c.demographic_no where d.provider_no = ? or (c.cust1=? or c.cust2=? ) order by "+orderby }, 
+{"search_patient", "select d.provider_no,c.cust1,c.cust2, d.last_name, d.first_name, d.chart_no from demographic d LEFT JOIN demographiccust c ON d.demographic_no = c.demographic_no where (d.provider_no = ? or c.cust1=? or c.cust2=? ) and (d.patient_status like 'AC' or d.patient_status like 'UHIP') order by "+orderby }, 
 {"searchmygroupall", "select * from mygroup where mygroup_no= ? order by last_name"}, 
   };
   String[][] responseTargets=new String[][] {  };

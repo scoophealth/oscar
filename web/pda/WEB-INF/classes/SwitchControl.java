@@ -1,7 +1,7 @@
 package bean;
 
 /*
- * $RCSfile: SwitchControl.java,v $
+ * $RCSfile: AbstractApplication.java,v1.0 $
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  *

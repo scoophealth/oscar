@@ -1,4 +1,5 @@
-<!--  
+<%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,17 +23,17 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
+--%>
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String curProvider_no = (String) session.getAttribute("user");
-  String demographic_no = request.getParameter("demographic_no") ;
-  String userfirstname = (String) session.getAttribute("userfirstname");
-  String userlastname = (String) session.getAttribute("userlastname");
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
-  String str = null;
-  int nStrShowLen = 14;
+	if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+	
+	String curProvider_no = (String) session.getAttribute("user");
+	String demographic_no = request.getParameter("demographic_no") ;
+	String userfirstname = (String) session.getAttribute("userfirstname");
+	String userlastname = (String) session.getAttribute("userlastname");
+	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
+	String str = null;
+	int nStrShowLen = 14;
 %>
 
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="../appointment/errorpage.jsp" %>
@@ -60,7 +61,6 @@ function rs(n,u,w,h,x) {
 
 var awnd=null;
 function ScriptAttach() {
-
   awnd=rs('swipe','zdemographicswipe.htm',600,600,1);
   awnd.focus();
 }
@@ -83,7 +83,16 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
-//<!--oscarMessenger code block-->
+function popupEChart(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
+  var popup=window.open(page, "apptProvider", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
 function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
@@ -94,18 +103,36 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
-//<!--/oscarMessenger code block -->
 function checkTypeIn() {
   var dob = document.titlesearch.keyword ;
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
       //alert(dob.value.length);
-    }
-    if(dob.value.length != 10) {
-      alert("You have a wrong DOB input!!!");
+    } else if(dob.value.length != 10) {
+      alert("You have a wrong DOB format input!!!");
+	  return false;
     }
   }
+}
+function checkTypeNum(typeIn) {
+	var typeInOK = true;
+	var i = 0;
+	var length = typeIn.length;
+	var ch;
+	// walk through a string and find a number
+	if (length>=1) {
+	  while (i <  length) {
+		  ch = typeIn.substring(i, i+1);
+		  if (ch == "-") { i++; continue; }
+		  if ((ch < "0") || (ch > "9") ) {
+			  typeInOK = false;
+			  break;
+		  }
+	    i++;
+    }
+	} else typeInOK = false;
+	return typeInOK;
 }
 function checkPhoneNum() {
   var typeIn = document.updatedelete.phone.value ;
@@ -118,78 +145,69 @@ function checkPhoneNum() {
 //-->
 </script>
 
-
-
 </head>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica">PATIENT'S DETAIL RECORD</font></th></tr>
 </table>
+<%-- log:info category="Demographic">Demographic [<%=demographic_no%>] is viewed by User [<%=userfirstname%> <%=userlastname %>]  </log:info --%>
 
 <%@ include file="zdemographicfulltitlesearch.htm" %>
 
 <%
-
- //----------------------------REFERRAL DOCTOR------------------------------
+	//----------------------------REFERRAL DOCTOR------------------------------
+	String rdohip="", rd="", fd="", family_doc = "";
  
- String rdohip="", rd="", fd="";
- //----------------------------REFERRAL DOCTOR --------------end-----------
- 
-  String resident="", nurse="", alert="", notes="";
-  ResultSet rs = null;
-  rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
-  while (rs.next()) {
-    resident= rs.getString("cust1");
-    nurse= rs.getString("cust2");
-    alert= rs.getString("cust3");
-    notes= SxmlMisc.getXmlContent(rs.getString("content"),"unotes") ;
-	notes=notes==null?"":notes; 
-  }
+	String resident="", nurse="", alert="", notes="";
+	ResultSet rs = null;
+	rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
+	while (rs.next()) {
+		resident = rs.getString("cust1");
+		nurse = rs.getString("cust2");
+		alert = rs.getString("cust3");
+		notes = SxmlMisc.getXmlContent(rs.getString("content"),"unotes") ;
+		notes = notes==null?"":notes; 
+	}
 
-  GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  int age=0, dob_year=0, dob_month=0, dob_date=0;
+	GregorianCalendar now=new GregorianCalendar();
+	int curYear = now.get(Calendar.YEAR);
+	int curMonth = (now.get(Calendar.MONTH)+1);
+	int curDay = now.get(Calendar.DAY_OF_MONTH);
+	int age=0, dob_year=0, dob_month=0, dob_date=0;
   
-  int param = Integer.parseInt(demographic_no);
-  // System.out.println("from editcpp : "+ param);
+	int param = Integer.parseInt(demographic_no);
  
-  rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
-  if(rs==null) {
-    out.println("failed!!!");
-  } else {
-    while (rs.next()) {
+	rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
+	if(rs==null) {
+		out.println("failed!!!");
+	} else {
+		while (rs.next()) {
+			//----------------------------REFERRAL DOCTOR------------------------------
+			fd=rs.getString("family_doctor");
+			if (fd==null) {
+				rd = "";
+				rdohip="";
+				family_doc = "";
+			}else{
+				rd = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rd")    ;
+				rd = rd !=null ? rd : "" ;
+				rdohip = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rdohip");
+				rdohip = rdohip !=null ? rdohip : "" ;
+				family_doc = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"family_doc");
+				family_doc = family_doc !=null ? family_doc : "" ;
+			}
+			//----------------------------REFERRAL DOCTOR --------------end-----------
     
-         //----------------------------REFERRAL DOCTOR------------------------------
-          
-          fd=rs.getString("family_doctor");
-          
-          if (fd==null) {
-          rd = "";
-          rdohip="";
-          }else{
-              rd = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rd")    ;
-                
-          rdohip = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rdohip");
-          }
-          //----------------------------REFERRAL DOCTOR --------------end-----------
-    
-
-    
-    
-    dob_year = Integer.parseInt(rs.getString("year_of_birth"));
-      dob_month = Integer.parseInt(rs.getString("month_of_birth"));
-      dob_date = Integer.parseInt(rs.getString("date_of_birth"));
-      if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
-/*  if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {    	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {    		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));    	} else {    		if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&    			curDay>Integer.parseInt(rs.getString("date_of_birth"))) {    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"));    		} else {    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1;     		}    	}	     }
-*/   
+			dob_year = Integer.parseInt(rs.getString("year_of_birth"));
+			dob_month = Integer.parseInt(rs.getString("month_of_birth"));
+			dob_date = Integer.parseInt(rs.getString("date_of_birth"));
+			if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 %> 
 <table width="100%" border="1" cellspacing="0" cellpadding="1" bgcolor="#CCCCFF" bordercolor="#669966">
   <tr>
     <!--th><a href="#" onClick="popupPage(500,600,'demographicsummary.jsp?demographic_no=<%=rs.getString("demographic_no")%>')">Patient Summary</a> </th-->
     <th><a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=rs.getString("demographic_no")%>&curUser=<%=curProvider_no%>')">Documents</a></th>
-    <th><a href="../e_form/ShowMyForm.jsp?demographic_no=<%=demographic_no%>">E-Forms</a></th>
+    <th><a href="../eform/showmyform.jsp?demographic_no=<%=demographic_no%>">E-Form</a></th>
     <th><a href='demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10'>Appt.History</a></th>
     <th>
       <!--a href="#" onClick="popupPage(500,600,'../billing/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing History</a-->
@@ -246,6 +264,16 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
       <td  align="right"><b>Phone(W):</b> </td>
       <td  align="left"> 
         <input type="text" name="phone2" value="<%=rs.getString("phone2")%>">
+      </td>
+    </tr>
+    <tr valign="top"> 
+      <td align="right"><b>Email: </b> </td>
+      <td  align="left"> 
+        <input type="text" name="email" value="<%=rs.getString("email")!=null? rs.getString("email") : ""%>">
+      </td>
+      <td  align="right"><b>PIN: </b> </td>
+      <td  align="left"> 
+        <input type="text" name="pin" value="<%=rs.getString("pin")!=null? rs.getString("pin") : ""%>" >
       </td>
     </tr>
     <tr valign="top"> 
@@ -428,19 +456,19 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
 </table>
 <table width="100%" border="1" cellspacing="0" cellpadding="1" bgcolor="#CCCCFF" bordercolor="#669966">
   <tr>
-    <th><a href="../e_form/MyForm.jsp?demographic_no=<%=demographic_no%>" > Add E-Form </a></th>
+    <th><a href="../eform/myform.jsp?demographic_no=<%=demographic_no%>" > Add E-Form </a></th>
     <th><a href=# onclick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300');return false;">Add Document</a></th>
     <th><!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
-    <a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;" title="E-Chart">
+    <a href=# onClick="popupEChart(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;" title="E-Chart">
             E-Chart</a></th>
     <th><a href=# onclick="popupPage(700, 1000, '../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=0000-00-00&start_time=0:00&bNewForm=1');return false;" title="bill a patient">Add Billing</a></th>
     <th><a href=# onclick="window.open('../billing/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&demo_sex=<%=URLEncoder.encode(rs.getString("sex"))%>&demo_hctype=<%=URLEncoder.encode(rs.getString("hc_type")==null?"null":rs.getString("hc_type"))%>&rd=<%=URLEncoder.encode(rd==null?"null":rd)%>&rdohip=<%=URLEncoder.encode(rdohip==null?"null":rdohip)%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=640,height=400');return false;" title='Add Flu Billing'>Flu Billing</a></th>
    
     <th><a href=# onclick="window.open('../billing/inr/addINRbilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;" title='Add INR Billing'>Add INR</a></th>
         <th><a href=# onclick="window.open('../billing/inr/reportINR.jsp?provider_no=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600');return false;" title='INR Billing'>Bill INR</a></th>
-     <th><!--<a href=# onClick="popupOscarRx(700,960,'../../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')">Prescription</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx')">Prescription</a></th>
+     <th><!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')">Prescription</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx')">Prescription</a></th>
 <th>
-<a href=# onclick="popupPage(100,355,'../oscarEncounter/oscarConsultationRequest/ConsultChoice.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')">Consultations</a></th>
+<a href="javascript: function myFunction() {return false; }" onclick="popupPage(100,355,'../oscarEncounter/oscarConsultationRequest/ConsultChoice.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')">Consultations</a></th>
 </th>  
 </tr> 
 </table>            <!--a href=# onClick="popupPage(600,750,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%--=demographic_no--%>&curProvider_no=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">

@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
  <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -75,7 +49,9 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       	      <tr bgcolor="#333333">
       	        <th align='CENTRE'><form action="genRAError.jsp"><input type="hidden" name="rano" value="<%=raNo%>"><select name="proNo"><option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
 	
-	<%   ResultSet rsdemo2 = null;
+	<%   
+	    ResultSet rsdemo3 = null;
+	    ResultSet rsdemo2 = null;
       	    ResultSet rsdemo = null;
       	  	    rsdemo = apptMainBean.queryResults(raNo, "search_raprovider");
       	     while (rsdemo.next()) {   
@@ -97,9 +73,10 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       %>
       <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
         <tr> 
-         <td width="15%" height="16">Billing No</td>
-         <td width="15%" height="16">Service Date </td>
-         <td width="15%" height="16">Service Code </td>
+         <td width="10%" height="16">Billing No</td>
+         <td width="15%" height="16">Demographic </td>
+         <td width="10%" height="16">Service Date </td>
+         <td width="10%" height="16">Service Code </td>
          <td width="15%" height="16">Count</td>
          <td width="15%" height="16" align=right>Claim</td>
          <td width="15%" height="16" align=right>Pay </td>
@@ -121,7 +98,13 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
             	    account = rsdemo.getString("billing_no");
             	    param0[0]=raNo;
             	    param0[1]=account;
+            	      demoLast = "";
+            	    rsdemo3 =apptMainBean.queryResults(param0[1],"search_bill");
+            	    while (rsdemo3.next()) {
+            	    demoLast = rsdemo3.getString("demographic_name");
+            	    }
             	    rsdemo2 = apptMainBean.queryResults(param0,"search_rabillno");
+            	    
             	    while (rsdemo2.next()) {   
              	   servicecode = rsdemo2.getString("service_code");
              	   servicedate = rsdemo2.getString("service_date");
@@ -134,9 +117,10 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       	           }      
       %>
         <tr> 
-               <td width="15%" height="16"><%=account%></td>
-               <td width="15%" height="16"><%=servicedate%></td>
-               <td width="15%" height="16"><%=servicecode%></td>
+               <td width="10%" height="16"><%=account%></td>
+               <td width="10%" height="16"><%=demoLast%></td>
+               <td width="10%" height="16"><%=servicedate%></td>
+               <td width="10%" height="16"><%=servicecode%></td>
                <td width="15%" height="16"><%=serviceno%></td>
                <td width="15%" height="16" align=right><%=amountsubmit%></td>
                <td width="15%" height="16" align=right><%=amountpay%></td>
@@ -151,15 +135,16 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
       %>
      
             <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
-              <tr> 
-               <td width="15%" height="16">Billing No</td>
-               <td width="15%" height="16">Service Date </td>
-               <td width="15%" height="16">Service Code </td>
-               <td width="15%" height="16">Count</td>
-               <td width="15%" height="16" align=right>Claim</td>
-               <td width="15%" height="16" align=right>Pay </td>
-               <td width="10%" height="16" align=right>Error</td>
-        </tr>
+             <tr> 
+              <td width="10%" height="16">Billing No</td>
+              <td width="15%" height="16">Demographic </td>
+              <td width="10%" height="16">Service Date </td>
+              <td width="10%" height="16">Service Code </td>
+              <td width="15%" height="16">Count</td>
+              <td width="15%" height="16" align=right>Claim</td>
+              <td width="15%" height="16" align=right>Pay </td>
+              <td width="10%" height="16" align=right>Error</td>
+  </tr>
             <%
             
                  String[] param0 = new String[2];
@@ -169,11 +154,17 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                 param[2] = proNo+"%";
             rsdemo2 = null;
             rsdemo = null;
+               rsdemo3 = null;
                   	    rsdemo = apptMainBean.queryResults(param, "search_raerror");
                   	     while (rsdemo.next()) {   
 			              	    account = rsdemo.getString("billing_no");
 			              	    param0[0]=raNo;
 			              	    param0[1]=account;
+			              	    demoLast = "";
+			              	      rsdemo3 =apptMainBean.queryResults(param0[1],"search_bill");
+					                	    while (rsdemo3.next()) {
+					                	    demoLast = rsdemo3.getString("demographic_name");
+            	    }
 			              	    rsdemo2 = apptMainBean.queryResults(param0,"search_rabillno");
 			              	    while (rsdemo2.next()) {   
 			               	   servicecode = rsdemo2.getString("service_code");
@@ -186,16 +177,17 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 				            	           explain = "**";
       	           }      
             %>
-              <tr> 
-                     <td width="15%" height="16"><%=account%></td>
-                     <td width="15%" height="16"><%=servicedate%></td>
-                     <td width="15%" height="16"><%=servicecode%></td>
-                     <td width="15%" height="16"><%=serviceno%></td>
-                     <td width="15%" height="16" align=right><%=amountsubmit%></td>
-                     <td width="15%" height="16" align=right><%=amountpay%></td>
-                     <td width="10%" height="16" align=right><%=explain%></td>
-        </tr>
-            
+          <tr> 
+                 <td width="10%" height="16"><%=account%></td>
+                 <td width="10%" height="16"><%=demoLast%></td>
+                 <td width="10%" height="16"><%=servicedate%></td>
+                 <td width="10%" height="16"><%=servicecode%></td>
+                 <td width="15%" height="16"><%=serviceno%></td>
+                 <td width="15%" height="16" align=right><%=amountsubmit%></td>
+                 <td width="15%" height="16" align=right><%=amountpay%></td>
+                 <td width="10%" height="16" align=right><%=explain%></td>
+    </tr>
+      
             
             <%
             }

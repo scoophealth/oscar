@@ -28,6 +28,15 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
+ <%   
+  if(session.getValue("user") == null)
+    response.sendRedirect("../../logout.jsp");
+  String user_no;
+  user_no = (String) session.getAttribute("user");
+           String docdownload = oscarVariables.getProperty("project_home") ;;
+           session.setAttribute("homepath", docdownload);      
+
+%>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -35,8 +44,8 @@ GregorianCalendar now=new GregorianCalendar();
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   
   String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
-                     String docdownload = oscarVariables.getProperty("project_home") ;;
-         session.setAttribute("homepath", docdownload);      
+     //                String docdownload = oscarVariables.getProperty("project_home") ;;
+     //    session.setAttribute("homepath", docdownload);      
 
   String proFirst="", proLast="", proOHIP="", proNo="";
    int Count = 0;

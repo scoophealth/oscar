@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 /*
- * $RCSfile: Utility.java,v $
+ * $RCSfile: AbstractApplication.java,v1.0 $
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  *

@@ -1,27 +1,3 @@
-// -----------------------------------------------------------------------------------------------------------------------
-// *
-// *
-// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-// * This software is published under the GPL GNU General Public License. 
-// * This program is free software; you can redistribute it and/or 
-// * modify it under the terms of the GNU General Public License 
-// * as published by the Free Software Foundation; either version 2 
-// * of the License, or (at your option) any later version. * 
-// * This program is distributed in the hope that it will be useful, 
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-// * along with this program; if not, write to the Free Software 
-// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-// * 
-// * <OSCAR TEAM>
-// * This software was written for the 
-// * Department of Family Medicine 
-// * McMaster Unviersity 
-// * Hamilton 
-// * Ontario, Canada 
-// *
-// -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
@@ -33,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilMisc;
+import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 public class EctConsultationFormRequestAction extends Action {
@@ -48,14 +24,15 @@ public class EctConsultationFormRequestAction extends Action {
         String referalDate = frm.getReferalDate();
         String serviceId = frm.getService();
         String specId = frm.getSpecialist();
-        String appointmentDate = frm.getAppointmentYear() + "/" + frm.getAppointmentMonth() + "/" + frm.getAppointmentDay() ;
+        String appointmentDate = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(frm.getAppointmentYear())))).append("/").append(frm.getAppointmentMonth()).append("/").append(frm.getAppointmentDay())));
         String appointmentHour = frm.getAppointmentHour();
         String appointmentPm = frm.getAppointmentPm();
         if(appointmentPm.equals("PM"))
         {
             appointmentHour = Integer.toString(Integer.parseInt(appointmentHour) + 12);
+            System.out.println(String.valueOf(String.valueOf((new StringBuffer("\n\n\nlook at the time")).append(appointmentHour).append("\n\n\n"))));
         }
-        String appointmentTime = appointmentHour + ":" + frm.getAppointmentMinute();
+        String appointmentTime = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(appointmentHour)))).append(":").append(frm.getAppointmentMinute())));
         String reason = frm.getReasonForConsultation();
         String clinicalInfo = frm.getClinicalInformation();
         String currentMeds = frm.getCurrentMedications();
@@ -69,12 +46,19 @@ public class EctConsultationFormRequestAction extends Action {
         String statusText = frm.getAppointmentNotes();
         String urg = frm.getUrgency();
         String requestId = "";
-        if(submission.equals("Submit Consultation Request") || submission.equals("Submit Consultation Request And Print Preview"))
+        MsgStringQuote str = new MsgStringQuote();
+        if(submission.equals("Submit Consultation Request") || submission.equals("Submit Consultation Request And Print Preview") || submission.equals("Submit,Fax"))
         {
             try
             {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                String sql = "insert into consultationRequests (referalDate,serviceId,specId,appointmentDate,appointmentTime,reason,clinicalInfo,currentMeds,allergies,providerNo,demographicNo,status,statusText,sendTo,concurrentProblems,urgency) values ('" + UtilMisc.charEscape(referalDate,'\'') + "','" + UtilMisc.charEscape(serviceId,'\'') + "','" + UtilMisc.charEscape(specId,'\'') + "','" + UtilMisc.charEscape(appointmentDate,'\'') + "','" + UtilMisc.charEscape(appointmentTime,'\'') + "','" + UtilMisc.charEscape(reason,'\'') + "','" + UtilMisc.charEscape(clinicalInfo,'\'') + "','" + UtilMisc.charEscape(currentMeds,'\'') + "','" + UtilMisc.charEscape(allergies,'\'') + "','" + UtilMisc.charEscape(providerNo,'\'') + "','" + UtilMisc.charEscape(demographicNo,'\'') + "','" + UtilMisc.charEscape(status,'\'') + "','" + UtilMisc.charEscape(statusText,'\'') + "','" + UtilMisc.charEscape(sendTo,'\'') + "','" + UtilMisc.charEscape(concurrentProblems,'\'') + "','" + urg + "')" ;
+                String sql = "insert into consultationRequests "
+                            +"(referalDate,serviceId,specId,appointmentDate,appointmentTime,reason,"
+                            +"clinicalInfo,currentMeds,allergies,providerNo,demographicNo,status,statusText,sendTo,concurrentProblems,urgency) "
+                            +" values ('"+str.q(referalDate)+"','"+str.q(serviceId)+"','"+str.q(specId)+"','"+str.q(appointmentDate)+"','"+str.q(appointmentTime)+"', "
+                            +"'"+str.q(reason)+"','"+str.q(clinicalInfo)+"','"+str.q(currentMeds)+"','"+str.q(allergies)+"','"+str.q(providerNo)+"','"+str.q(demographicNo)
+                            +"','"+str.q(status)+"','"+str.q(statusText)+"','"+str.q(sendTo)+"','"+str.q(concurrentProblems)+"','"+urg+"')";
+                System.out.println(" sql statement "+sql);
                 db.RunSQL(sql);
                 ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
                 if(rs.next())
@@ -87,14 +71,14 @@ public class EctConsultationFormRequestAction extends Action {
             }
             request.setAttribute("transType", "2");
         } else
-        if(submission.equals("Update Consultation Request") || submission.equals("Update Consultation Request And Print Preview"))
+        if(submission.equals("Update Consultation Request") || submission.equals("Update Consultation Request And Print Preview") || submission.equals("Update,Fax"))
         {
             requestId = bean.getConsultationRequestId();
-            //System.out.println("request id = ".concat(String.valueOf(String.valueOf(bean.getConsultationRequestId()))));
+            System.out.println("request id = ".concat(String.valueOf(String.valueOf(bean.getConsultationRequestId()))));
             try
             {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                String sql = "update consultationRequests set  serviceId = '" + UtilMisc.charEscape(serviceId,'\'') + "', " + " specId = '" + UtilMisc.charEscape(specId,'\'') + "', " + " appointmentDate = '" + UtilMisc.charEscape(appointmentDate,'\'') + "', " + " appointmentTime = '" + UtilMisc.charEscape(appointmentTime,'\'') + "', " + " reason = '" + UtilMisc.charEscape(reason,'\'') + "', " + " clinicalInfo = '" + UtilMisc.charEscape(clinicalInfo,'\'') + "', " + " currentMeds = '" + UtilMisc.charEscape(currentMeds,'\'') + "', " + " allergies = '" + UtilMisc.charEscape(allergies,'\'') + "', " + " status = '" + UtilMisc.charEscape(status,'\'') + "', " + " statusText = '" + UtilMisc.charEscape(statusText,'\'') + "', " + " sendTo = '" + UtilMisc.charEscape(sendTo,'\'') + "', " + " urgency = '" + urg + "', " + " concurrentProblems = '" + UtilMisc.charEscape(concurrentProblems,'\'') + "' " + " where requestId = '" + UtilMisc.charEscape(requestId,'\'') + "'" ;
+                String sql = String.valueOf(String.valueOf((new StringBuffer("update consultationRequests set  serviceId = '")).append(str.q(serviceId)).append("', ").append(" specId = '").append(str.q(specId)).append("', ").append(" appointmentDate = '").append(str.q(appointmentDate)).append("', ").append(" appointmentTime = '").append(str.q(appointmentTime)).append("', ").append(" reason = '").append(str.q(reason)).append("', ").append(" clinicalInfo = '").append(str.q(clinicalInfo)).append("', ").append(" currentMeds = '").append(str.q(currentMeds)).append("', ").append(" allergies = '").append(str.q(allergies)).append("', ").append(" status = '").append(str.q(status)).append("', ").append(" statusText = '").append(str.q(statusText)).append("', ").append(" sendTo = '").append(str.q(sendTo)).append("', ").append(" urgency = '").append(urg).append("', ").append(" concurrentProblems = '").append(str.q(concurrentProblems)).append("' ").append(" where requestId = '").append(str.q(requestId)).append("'")));
                 db.RunSQL(sql);
                 db.CloseConn();
             }
@@ -105,12 +89,10 @@ public class EctConsultationFormRequestAction extends Action {
             request.setAttribute("transType", "1");
         }
         bean.setConsultationRequestId("");
-        if(submission.equals("Update Consultation Request And Print Preview") || submission.equals("Submit Consultation Request And Print Preview"))
-        {
+        if(submission.equals("Update Consultation Request And Print Preview") || submission.equals("Submit Consultation Request And Print Preview")){
             request.setAttribute("reqId", requestId);
             return mapping.findForward("print");
-        } else
-        {
+        }else {
             return mapping.findForward("success");
         }
     }

@@ -1,30 +1,4 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
-<%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page  import="java.sql.*, java.util.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
  
 <html>
@@ -51,14 +25,18 @@ function closeit() {
       </tr>
     </table>
 <%
+  String creator = (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
+  String createdatetime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss");
+
   int rowsAffected = 0;
   if(request.getParameter("buttoncancel")!=null && ( request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show")) ) {
-    String[] param1 =new String[2];
+    String[] param1 =new String[4];
 	  param1[0]=request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
-	  param1[1]=request.getParameter("appointment_no");
-    rowsAffected = apptMainBean.queryExecuteUpdate(param1, "updatestatus");
+	  param1[1]=creator;  //request.getParameter("creator");
+	  param1[2]=createdatetime;
+	  param1[3]=request.getParameter("appointment_no");
+    rowsAffected = apptMainBean.queryExecuteUpdate(param1, "updatestatusc");
   } else {
-  
     int[] intparam=new int [1];
 	  if(!(request.getParameter("demographic_no").equals(""))) intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
 	  else intparam[0]=0;
@@ -76,8 +54,8 @@ function closeit() {
 	  param[9]=request.getParameter("style");
 	  param[10]=request.getParameter("billing");
 	  param[11]=request.getParameter("status");
-	  param[12]=request.getParameter("createdatetime");
-	  param[13]=request.getParameter("creator");
+	  param[12]=createdatetime;  //request.getParameter("createdatetime");
+	  param[13]=creator;  //request.getParameter("creator");
 	  param[14]=request.getParameter("remarks");
 	  param[15]=request.getParameter("appointment_no");
     rowsAffected = apptMainBean.queryExecuteUpdate(intparam,param, request.getParameter("dboperation"));

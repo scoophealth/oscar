@@ -23,8 +23,7 @@
  * Ontario, Canada 
  */
 -->
-
- <%   
+<%   
   //operation available to the client - dboperation
   String orderby="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
@@ -47,6 +46,7 @@
     {"search_billing_no_by_appt", "select max(billing_no) billing_no from billing where status <> 'D' and demographic_no=? and appointment_no=?  order by update_date desc, update_time desc limit 0, 1"},
     {"search_bill_location", "select * from clinic_location where clinic_no=1 and clinic_location_no=?"},    
     {"search_clinic_location", "select * from clinic_location where clinic_no=? order by clinic_location_no"},  
+    {"save_clinic_location","insert into clinic_location values(?,?,?)"},
     {"search_bill_center", "select * from billcenter where billcenter_desc like ?"},    
     {"search_bill_history", "select distinct provider.last_name, provider.first_name, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no from billing, provider, appointment where provider.provider_no=appointment.provider_no and billing.appointment_no=appointment.appointment_no and billing.status <> 'D' and billing.demographic_no =? order by billing.billing_date desc, billing.billing_time desc "+ limit },    
     {"search_bill_beforedelete", "select billing_no, status from billing where appointment_no=?"},
@@ -69,6 +69,7 @@
     {"search_servicecode_detail", "select b.service_code, b.description, b.value, b.percentage from billingservice b where b.service_code=?"},
     {"save_bill_record", "insert into billingdetail values('\\N',?,?,?,?,?,?,?,?)"},
     {"updatediagnostic", "update diagnosticcode set description=? where diagnostic_code=?"},
+    {"searchapptstatus", "select status from appointment where appointment_no=? "}, 
     {"updateapptstatus", "update appointment set status=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=? and demographic_no=?"},
     {"search_bill", "select * from billing where billing_no= ?"},
     {"search_bill_record", "select * from billingdetail where billing_no=? and status <> 'D'"},
@@ -84,8 +85,8 @@
     {"search_bill_generic", "select distinct demographic.last_name dl, demographic.first_name df, provider.last_name pl, provider.first_name pf, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no, billing.hin from billing, provider, appointment, demographic where provider.provider_no=appointment.provider_no and demographic.demographic_no= billing.demographic_no and billing.appointment_no=appointment.appointment_no and billing.status <> 'D' and billing.billing_no=?"},
     {"save_rahd", "insert into raheader values('\\N',?,?,?,?,?,?,?,?,?)"},
     {"save_radt", "insert into radetail values('\\N',?,?,?,?,?,?,?,?,?,?,?)"},
-    {"search_all_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where status <> ? order by readdate desc"},
-    {"search_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where filename=? and paymentdate=? and status <> 'D'"},
+    {"search_all_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where status <> ? order by paymentdate desc"},
+    {"search_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where filename=? and paymentdate=? and status <> 'D' order by paymentdate"},
     {"search_rahd_content", "select * from raheader where raheader_no=? and status <>'D'"},
     {"update_rahd", "update raheader set totalamount=?, records=?,claims=?, content=? where paymentdate=? and filename=?"},
     {"search_raprovider", "select r.providerohip_no, p.last_name,p.first_name from radetail r, provider p where p.ohip_no=r.providerohip_no and r.raheader_no=? group by r.providerohip_no"},
@@ -99,7 +100,7 @@
     {"search_service_code", "select service_code, description from billingservice where service_code like ? or service_code like ? or service_code like ? or description like ? or description like ? or description like ?"},
     {"search_research_code", "select ichppccode, description from ichppccode where ichppccode like ? or ichppccode like ? or ichppccode like ? or description like ? or description like ? or description like ?"},
     {"save_billactivity", "insert into billactivity values(?,?,?,?,?,?,?,?,?,?,?,?,?)"},
-    {"search_billactivity", "select * from billactivity where updatedatetime > ? and status <> 'D' order by updatedatetime desc"},
+    {"search_billactivity", "select * from billactivity where updatedatetime >= ? and updatedatetime <=? and status <> 'D' order by updatedatetime desc"},
     {"search_billactivity_monthCode", "select * from billactivity where monthCode=? and providerohipno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
     {"search_billactivity_group_monthCode", "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
     {"updatebillservice", "update billingservice set description=? where service_code=?"},
@@ -107,8 +108,16 @@
     {"update_rahd_status","update raheader set status=? where raheader_no=?"},
     {"update_rahd_content","update raheader set content=? where raheader_no=?"},
     {"search_billob", "select distinct b.billing_no,b.total,b.status,b.billing_date, b.demographic_name from billing b, billingdetail bd where bd.billing_no=b.billing_no and b.status<>'D' and( bd.service_code='P006A' or bd.service_code='P011A' or bd.service_code='P009A'or bd.service_code='P020A' or bd.service_code='P022A' or bd.service_code='P028A' or bd.service_code='P023A' or bd.service_code='P007A' or bd.service_code='P008B' or bd.service_code='P018B' or bd.service_code='E502A' or bd.service_code='C989A' or bd.service_code='E409A' or bd.service_code='E410A' or bd.service_code='E411A' or bd.service_code='H001A') and b.provider_no like ? and b.billing_date>=? and b.billing_date<=?"},
+    {"search_billflu", "select distinct b.content, b.billing_no,b.total,b.status,b.billing_date, b.demographic_name from billing b, billingdetail bd where bd.billing_no=b.billing_no and b.status<>'D' and( bd.service_code='G590A' or bd.service_code='G591A') and b.creator like ? and b.billing_date>=? and b.billing_date<=? order by b.demographic_name"},
+    {"search_allbill_history", "select distinct provider.last_name, provider.first_name, billing.apptProvider_no, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no from billing, provider where provider.provider_no = billing.provider_no and billing.status <> 'D' and billing.demographic_no =? order by billing.billing_date desc, billing.billing_time desc " + limit},
     {"search_raob", "select distinct billing_no from radetail where raheader_no=? and (service_code='P006A' or service_code='P020A' or service_code='P022A' or service_code='P028A' or service_code='P023A' or service_code='P007A' or service_code='P009A' or service_code='P011A' or service_code='P008B' or service_code='P018B' or service_code='E502A' or service_code='C989A' or service_code='E409A' or service_code='E410A' or service_code='E411A' or service_code='H001A')"},
+    {"search_racolposcopy", "select distinct billing_no from radetail where raheader_no=? and (service_code='A004A' or service_code='A005A' or service_code='Z731A' or service_code='Z666A' or service_code='Z730A' or service_code='Z720A')"},
+    {"search_billingservice_premium_dt", "select * from ctl_billingservice_premium where status=?"},
     {"search_billingservice_premium", "select status from ctl_billingservice_premium where service_code=?"},
+    {"search_ctlpremium", "select b.service_code, c.description service_desc from ctl_billingservice_premium b, billingservice c where b.service_code=c.service_code and b.status=?"},
+    {"save_ctlpremium", "insert into ctl_billingservice_premium values(?,?,?,?)"},
+   {"delete_ctlpremium", "delete from ctl_billingservice_premium where service_code=?"},
+   
     {"search_billingform","select distinct  servicetype_name, servicetype from ctl_billingservice where servicetype like ?"},
     {"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
       

@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,14 +22,14 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page language="java"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="oscar.oscarEncounter.data.EctARRecord" %>
-<%@ page import="oscar.oscarEncounter.data.EctFormData" %>
+<%@ page import="oscar.util.*, oscar.oscarEncounter.data.EctARRecord, oscar.oscarEncounter.data.EctFormData" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -54,12 +54,21 @@
 
 <script type="text/javascript" language="Javascript">
 
+    function reset() {
+        document.forms[0].target = "apptProviderSearch";
+        document.forms[0].action = "/<%=oscarVariables.getProperty("project_home")%>/oscarEncounter/AR.do" ;
+	}
     function onPrint() {
-        document.forms[0].submit.value="printAR1";
+        document.forms[0].submit.value="print"; //printAR1
         var ret = checkAllDates();
         if(ret==true)
         {
-            ret = confirm("Do you wish to save this form and view the print preview?");
+            //ret = confirm("Do you wish to save this form and view the print preview?");
+            popupFixedPage(650,850,'../provider/notice.htm');
+            document.forms[0].action = "formAR1Print.jsp";
+            document.forms[0].target="planner";
+            document.forms[0].submit();
+            document.forms[0].target="apptProviderSearch";
         }
         return ret;
     }
@@ -68,6 +77,7 @@
         var ret = checkAllDates();
         if(ret==true)
         {
+            reset();
             ret = confirm("Are you sure you want to save this form?");
         }
         return ret;
@@ -84,6 +94,7 @@
         var ret = checkAllDates();
         if(ret == true)
         {
+            reset();
             ret = confirm("Are you sure you wish to save and close this window?");
         }
         return ret;
@@ -91,7 +102,7 @@
     function popupPage(varpage) {
         windowprops = "height=700,width=960"+
             ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=50,screenY=50,top=20,left=20";
-        var popup = window.open(varpage, "ar1", windowprops);
+        var popup = window.open(varpage, "ar2", windowprops);
         if (popup.opener == null) {
             popup.opener = self;
         }
@@ -247,24 +258,41 @@ var maxYear=9900;
 <input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
 <input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" />
 <input type="hidden" name="submit" value="exit"/>
+<%
+  boolean bView = false;
+  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+%>
 
 <table class="Head" class="hidePrint">
     <tr>
         <td align="left">
+<%
+  if (!bView) {
+%>
             <input type="submit" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+<%
+  }
+%>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
         </td>
+<%
+  if (!bView) {
+%>
         <td align="right">
-            AR1
-            &nbsp;|&nbsp;
-            <a href="javascript: popupPage('formARPg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR2 Pg.1</a>
-            &nbsp;|&nbsp;
-            <a href="javascript: popupPage('formARPg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR2 Pg.2</a>
-            &nbsp;|&nbsp;
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a>
+            <a href="javascript: popupPage('formARPg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">View AR2 Pg.1</a> |
+            <a href="javascript: popupPage('formARPg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 Pg.2</a>
+            &nbsp;
         </td>
+        <td align="right">
+            <a href="formARPg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Edit AR2 Pg.1</a> |
+            <a href="formARPg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 Pg.2</a> |
+            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a>
+        </td>
+<%
+  }
+%>
     </tr>
 </table>
 
@@ -281,7 +309,7 @@ var maxYear=9900;
     </tr>
     <tr>
         <td valign="top" colspan='4'>Address
-            <input type="text" name="c_address" style="width:100%" size="60" maxlength="80" value="<%= props.getProperty("c_address", "") %>"/>
+            <input type="text" name="c_address" style="width:100%" size="60" maxlength="80" value="<%= UtilMisc.htmlEscape(props.getProperty("c_address", "")) %>"/>
         </td>
     </tr>
     <tr>
@@ -297,32 +325,32 @@ var maxYear=9900;
             <input type="checkbox" name="pg1_msSingle" <%= props.getProperty("pg1_msSingle", "") %>/>S
         </td>
         <td>Education level <br>
-            <input type="text" name="pg1_eduLevel" size="15" style="width:100%" maxlength="25" value="<%= props.getProperty("pg1_eduLevel", "") %>"/>
+            <input type="text" name="pg1_eduLevel" size="15" style="width:100%" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_eduLevel", "")) %>"/>
         </td>
     </tr>
 </table>
 <table width="100%" border="1"  cellspacing="0" cellpadding="0">
     <tr>
         <td>Occupation<br>
-            <input type="text" name="pg1_occupation" size="15" style="width:100%" maxlength="25" value="<%= props.getProperty("pg1_occupation", "") %>"/>
+            <input type="text" name="pg1_occupation" size="15" style="width:100%" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_occupation", "")) %>"/>
 	    </td>
         <td>Language<br>
-            <input type="text" name="pg1_language" size="15" style="width:100%" maxlength="25" value="<%= props.getProperty("pg1_language", "") %>"/>
+            <input type="text" name="pg1_language" size="15" style="width:100%" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_language", "")) %>"/>
         </td>
         <td>Home phone<br>
-            <input type="text" name="pg1_homePhone" size="15" style="width:100%" maxlength="20" value="<%= props.getProperty("pg1_homePhone", "") %>"/>
+            <input type="text" name="pg1_homePhone" size="15" style="width:100%" maxlength="20" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_homePhone", "")) %>"/>
         </td>
         <td>Work phone<br>
             <input type="text" name="pg1_workPhone" size="15" style="width:100%" maxlength="20" value="<%= props.getProperty("pg1_workPhone", "") %>"/>
         </td>
         <td>Name of partner<br>
-            <input type="text" name="pg1_partnerName" size="15" style="width:100%" maxlength="50" value="<%= props.getProperty("pg1_partnerName", "") %>"/>
+            <input type="text" name="pg1_partnerName" size="15" style="width:100%" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerName", "")) %>"/>
         </td>
         <td>Age<br>
             <input type="text" name="pg1_partnerAge" size="2" style="width:100%" maxlength="2" value="<%= props.getProperty("pg1_partnerAge", "") %>"/>
         </td>
         <td valign="top">Occupation<br>
-            <input type="text" name="pg1_partnerOccupation" size="15" style="width:100%" maxlength="25" value="<%= props.getProperty("pg1_partnerOccupation", "") %>"/>
+            <input type="text" name="pg1_partnerOccupation" size="15" style="width:100%" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerOccupation", "")) %>"/>
         </td>
     </tr>
 </table>
@@ -332,7 +360,7 @@ var maxYear=9900;
             <input type="checkbox" name="pg1_baObs" <%= props.getProperty("pg1_baObs", "") %>/>OBS
             <input type="checkbox" name="pg1_baFP"  <%= props.getProperty("pg1_baFP", "") %> />FP
             <input type="checkbox" name="pg1_baMidwife" <%= props.getProperty("pg1_baMidwife", "") %>/>Midwife<br>
-            <input type="text" name="c_ba" size="15" style="width:100%" maxlength="25" value="<%= props.getProperty("c_ba", "") %>"/>
+            <input type="text" name="c_ba" size="15" style="width:100%" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("c_ba", "")) %>"/>
 	    </td>
         <td nowrap valign="top">Family physician<br>
             <div align="center"><textarea name="pg1_famPhys" style="width:100%" cols="30" rows="2"><%= props.getProperty("pg1_famPhys", "") %></textarea></div>
@@ -370,17 +398,17 @@ var maxYear=9900;
 <table width="100%" border="1"  cellspacing="0" cellpadding="0">
     <tr>
         <td valign="top" nowrap>Menstrual history (LMP):
-            <input type="text" name="pg1_menLMP" size="10" maxlength="10" value="<%= props.getProperty("pg1_menLMP", "") %>"/>&nbsp; &nbsp; &nbsp; Cycle
-            <input type="text" name="pg1_menCycle" size="7" maxlength="7" value="<%= props.getProperty("pg1_menCycle", "") %>"/>&nbsp; &nbsp; &nbsp;
+            <input type="text" name="pg1_menLMP" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_menLMP", "")) %>"/>&nbsp; &nbsp; &nbsp; Cycle
+            <input type="text" name="pg1_menCycle" size="7" maxlength="7" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_menCycle", "")) %>"/>&nbsp; &nbsp; &nbsp;
             <input type="checkbox" name="pg1_menReg" <%= props.getProperty("pg1_menReg", "") %>/>Regular &nbsp; &nbsp; &nbsp; EDB
             <input type="text" name="pg1_menEDB" size="10" maxlength="10" value="<%= props.getProperty("pg1_menEDB", "") %>"/><br>
             Contraception:<br>
             <input type="checkbox" name="pg1_iud" <%= props.getProperty("pg1_iud", "") %>/>IUD
             <input type="checkbox" name="pg1_hormone" <%= props.getProperty("pg1_hormone", "") %>/>Hormonal(type)
-            <input type="text" name = "hormoneType" size="15" maxlength="25" value="<%= props.getProperty("pg1_hormoneType", "") %>"/>
+            <input type="text" name = "pg1_hormoneType" size="15" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_hormoneType", "")) %>"/>
             <input type="checkbox" name="pg1_otherAR1" <%= props.getProperty("pg1_otherAR1", "") %>/>Other
-            <input type="text" name="pg1_otherAR1Name" size="15" maxlength="25" value="<%= props.getProperty("pg1_otherAR1Name", "") %>"/>
-            Last used<input type="text" name="pg1_lastUsed" size="10" maxlength="10" value="<%= props.getProperty("pg1_lastUsed", "") %>"/>
+            <input type="text" name="pg1_otherAR1Name" size="15" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_otherAR1Name", "")) %>"/>
+            Last used<input type="text" name="pg1_lastUsed" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_lastUsed", "")) %>"/>
         </td>
         <td valign="top" width="25%"> <font size="+1"><b>Final EDB</font></b></font>
             (yyyy/mm/dd) <br>
@@ -391,13 +419,13 @@ var maxYear=9900;
 <table width="100%" border="1"  cellspacing="0" cellpadding="0">
 	<tr>
         <td>Gravida<br>
-            <input type="text" name="c_gravida" size="5" style="width:100%" maxlength="10" value="<%= props.getProperty("c_gravida", "") %>"/>
+            <input type="text" name="c_gravida" size="5" style="width:100%" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("c_gravida", "")) %>"/>
 	    </td>
         <td>Term<br>
-            <input type="text" name="c_term" size="5" style="width:100%" maxlength="10" value="<%= props.getProperty("c_term", "") %>"/>
+            <input type="text" name="c_term" size="5" style="width:100%" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("c_term", "")) %>"/>
 	    </td>
         <td>Prem<br>
-            <input type="text" name="c_prem" size="5" style="width:100%" maxlength="8" value="<%= props.getProperty("c_prem", "") %>"/>
+            <input type="text" name="c_prem" size="5" style="width:100%" maxlength="8" value="<%= UtilMisc.htmlEscape(props.getProperty("c_prem", "")) %>"/>
 	    </td>
         <td valign="top" nowrap>
             No. of pregnancy loss(es)<br>&nbsp; &nbsp;
@@ -411,7 +439,7 @@ var maxYear=9900;
             <input type="text" name="pg1_stillbornBox" size="2" maxlength="2" value="<%= props.getProperty("pg1_stillbornBox", "") %>" />
         </td>
         <td>Living<br>
-            <input type="text" name="c_living" size="5" style="width:100%" maxlength="10" value="<%= props.getProperty("c_living", "") %>"/>
+            <input type="text" name="c_living" size="5" style="width:100%" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("c_living", "")) %>"/>
 	    </td>
         <td nowrap>Multipregnancy<br>
             No.<input type="text" name="pg1_multi" size="5" style="width:100%" maxlength="10" value="<%= props.getProperty("pg1_multi", "") %>"/>
@@ -440,91 +468,91 @@ var maxYear=9900;
                     <td>1</td>
                     <td><input type="text" name="pg1_year1" size="5" maxlength="8" style="width:90%" value="<%= props.getProperty("pg1_year1", "") %>"/></td>
                     <td><input type="text" name="pg1_sex1" size="1" maxlength="1" style="width:50%" value="<%= props.getProperty("pg1_sex1", "") %>"/></td>
-                    <td><input type="text" name="pg1_oh_gest1" size="3" maxlength="5" style="width:80%" value="<%= props.getProperty("pg1_oh_gest1", "") %>"/></td>
-                    <td><input type="text" name="pg1_weight1" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_weight1", "") %>"/></td>
-                    <td><input type="text" name="pg1_length1" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_length1", "") %>"/></td>
-                    <td><input type="text" name="pg1_place1" size="8" maxlength="20" style="width:80%" value="<%= props.getProperty("pg1_place1", "") %>"/></td>
+                    <td><input type="text" name="pg1_oh_gest1" size="3" maxlength="5" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_gest1", "")) %>"/></td>
+                    <td><input type="text" name="pg1_weight1" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_weight1", "")) %>"/></td>
+                    <td><input type="text" name="pg1_length1" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_length1", "")) %>"/></td>
+                    <td><input type="text" name="pg1_place1" size="8" maxlength="20" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_place1", "")) %>"/></td>
                     <td>
                         <input type="checkbox" name="pg1_svb1" <%= props.getProperty("pg1_svb1", "") %>/>
                         <input type="checkbox" name="pg1_cs1" <%= props.getProperty("pg1_cs1", "") %>/>
                         <input type="checkbox" name="pg1_ass1" <%= props.getProperty("pg1_ass1", "") %>/>
                     </td>
-                    <td align="left"><input type="text" name="pg1_oh_comments1" size="20" maxlength="80" style="width:100%" value="<%= props.getProperty("pg1_oh_comments1", "") %>"/></td>
+                    <td align="left"><input type="text" name="pg1_oh_comments1" size="20" maxlength="80" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_comments1", "")) %>"/></td>
                 </tr>
                 <tr align="center">
                     <td>2</td>
                     <td><input type="text" name="pg1_year2" size="5" maxlength="8" style="width:90%" value="<%= props.getProperty("pg1_year2", "") %>"/></td>
                     <td><input type="text" name="pg1_sex2" size="1" maxlength="1" style="width:50%" value="<%= props.getProperty("pg1_sex2", "") %>"/></td>
-                    <td><input type="text" name="pg1_oh_gest2" size="3" maxlength="5" style="width:80%" value="<%= props.getProperty("pg1_oh_gest2", "") %>"/></td>
-                    <td><input type="text" name="pg1_weight2" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_weight2", "") %>"/></td>
-                    <td><input type="text" name="pg1_length2" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_length2", "") %>"/></td>
-                    <td><input type="text" name="pg1_place2" size="8" maxlength="20" style="width:80%" value="<%= props.getProperty("pg1_place2", "") %>"/></td>
+                    <td><input type="text" name="pg1_oh_gest2" size="3" maxlength="5" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_gest2", "")) %>"/></td>
+                    <td><input type="text" name="pg1_weight2" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_weight2", "")) %>"/></td>
+                    <td><input type="text" name="pg1_length2" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_length2", "")) %>"/></td>
+                    <td><input type="text" name="pg1_place2" size="8" maxlength="20" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_place2", "")) %>"/></td>
                     <td>
                         <input type="checkbox" name="pg1_svb2" <%= props.getProperty("pg1_svb2", "") %>/>
                         <input type="checkbox" name="pg1_cs2" <%= props.getProperty("pg1_cs2", "") %>/>
                         <input type="checkbox" name="pg1_ass2" <%= props.getProperty("pg1_ass2", "") %>/>
                     </td>
-                    <td align="left"><input type="text" name="pg1_oh_comments2"size="20" maxlength="80" style="width:100%" value="<%= props.getProperty("pg1_oh_comments2", "") %>"/></td>
+                    <td align="left"><input type="text" name="pg1_oh_comments2"size="20" maxlength="80" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_comments2", "")) %>"/></td>
                 </tr>
                 <tr align="center">
                     <td>3</td>
                     <td><input type="text" name="pg1_year3" size="5" maxlength="8" style="width:90%" value="<%= props.getProperty("pg1_year3", "") %>"/></td>
                     <td><input type="text" name="pg1_sex3" size="1" maxlength="1" style="width:50%" value="<%= props.getProperty("pg1_sex3", "") %>"/></td>
-                    <td><input type="text" name="pg1_oh_gest3" size="3" maxlength="5" style="width:80%" value="<%= props.getProperty("pg1_oh_gest3", "") %>"/></td>
-                    <td><input type="text" name="pg1_weight3" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_weight3", "") %>"/></td>
-                    <td><input type="text" name="pg1_length3" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_length3", "") %>"/></td>
-                    <td><input type="text" name="pg1_place3" size="8" maxlength="20" style="width:80%" value="<%= props.getProperty("pg1_place3", "") %>"/></td>
+                    <td><input type="text" name="pg1_oh_gest3" size="3" maxlength="5" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_gest3", "")) %>"/></td>
+                    <td><input type="text" name="pg1_weight3" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_weight3", "")) %>"/></td>
+                    <td><input type="text" name="pg1_length3" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_length3", "")) %>"/></td>
+                    <td><input type="text" name="pg1_place3" size="8" maxlength="20" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_place3", "")) %>"/></td>
                     <td>
                         <input type="checkbox" name="pg1_svb3" <%= props.getProperty("pg1_svb3", "") %> />
                         <input type="checkbox" name="pg1_cs3" <%= props.getProperty("pg1_cs3", "") %> />
                         <input type="checkbox" name="pg1_ass3" <%= props.getProperty("pg1_ass3", "") %> />
                     </td>
-                    <td align="left"><input type="text" name="pg1_oh_comments3" size="20" maxlength="80" style="width:100%" value="<%= props.getProperty("pg1_oh_comments3", "") %>"/></td>
+                    <td align="left"><input type="text" name="pg1_oh_comments3" size="20" maxlength="80" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_comments3", "")) %>"/></td>
                 </tr>
                 <tr align="center">
                     <td>4</td>
                     <td><input type="text" name="pg1_year4" size="5" maxlength="8" style="width:90%" value="<%= props.getProperty("pg1_year4", "") %>"/></td>
                     <td><input type="text" name="pg1_sex4" size="1" maxlength="1" style="width:50%" value="<%= props.getProperty("pg1_sex4", "") %>"/></td>
-                    <td><input type="text" name="pg1_oh_gest4" size="3" maxlength="5" style="width:80%" value="<%= props.getProperty("pg1_oh_gest4", "") %>"/></td>
-                    <td><input type="text" name="pg1_weight4" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_weight4", "") %>"/></td>
-                    <td><input type="text" name="pg1_length4" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_length4", "") %>"/></td>
-                    <td><input type="text" name="pg1_place4" size="8" maxlength="20" style="width:80%" value="<%= props.getProperty("pg1_place4", "") %>"/></td>
+                    <td><input type="text" name="pg1_oh_gest4" size="3" maxlength="5" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_gest4", "")) %>"/></td>
+                    <td><input type="text" name="pg1_weight4" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_weight4", "")) %>"/></td>
+                    <td><input type="text" name="pg1_length4" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_length4", "")) %>"/></td>
+                    <td><input type="text" name="pg1_place4" size="8" maxlength="20" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_place4", "")) %>"/></td>
                     <td>
                         <input type="checkbox" name="pg1_svb4" <%= props.getProperty("pg1_svb4", "") %> />
                         <input type="checkbox" name="pg1_cs4" <%= props.getProperty("pg1_cs4", "") %> />
                         <input type="checkbox" name="pg1_ass4" <%= props.getProperty("pg1_ass4", "") %> />
                     </td>
-                    <td align="left"><input type="text" name="pg1_oh_comments4"size="20" maxlength="80" style="width:100%" value="<%= props.getProperty("pg1_oh_comments4", "") %>"/></td>
+                    <td align="left"><input type="text" name="pg1_oh_comments4"size="20" maxlength="80" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_comments4", "")) %>"/></td>
                 </tr>
                 <tr align="center">
                     <td>5</td>
                     <td><input type="text" name="pg1_year5" size="5" maxlength="8" style="width:90%" value="<%= props.getProperty("pg1_year5", "") %>"/></td>
                     <td><input type="text" name="pg1_sex5" size="1" maxlength="1" style="width:50%" value="<%= props.getProperty("pg1_sex5", "") %>"/></td>
-                    <td><input type="text" name="pg1_oh_gest5" size="3" maxlength="5" style="width:80%" value="<%= props.getProperty("pg1_oh_gest5", "") %>"/></td>
-                    <td><input type="text" name="pg1_weight5" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_weight5", "") %>"/></td>
-                    <td><input type="text" name="pg1_length5" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_length5", "") %>"/></td>
-                    <td><input type="text" name="pg1_place5" size="8" maxlength="20" style="width:80%" value="<%= props.getProperty("pg1_place5", "") %>"/></td>
+                    <td><input type="text" name="pg1_oh_gest5" size="3" maxlength="5" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_gest5", "")) %>"/></td>
+                    <td><input type="text" name="pg1_weight5" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_weight5", "")) %>"/></td>
+                    <td><input type="text" name="pg1_length5" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_length5", "")) %>"/></td>
+                    <td><input type="text" name="pg1_place5" size="8" maxlength="20" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_place5", "")) %>"/></td>
                     <td>
                         <input type="checkbox" name="pg1_svb5" <%= props.getProperty("pg1_svb5", "") %> />
                         <input type="checkbox" name="pg1_cs5" <%= props.getProperty("pg1_cs5", "") %> />
                         <input type="checkbox" name="pg1_ass5" <%= props.getProperty("pg1_ass5", "") %> />
                     </td>
-                    <td align="left"><input type="text" name="pg1_oh_comments5" size="20" maxlength="80" style="width:100%" value="<%= props.getProperty("pg1_oh_comments5", "") %>"/></td>
+                    <td align="left"><input type="text" name="pg1_oh_comments5" size="20" maxlength="80" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_comments5", "")) %>"/></td>
                 </tr>
                 <tr align="center">
                     <td>6</td>
                     <td><input type="text" name="pg1_year6" size="5" maxlength="8" style="width:90%" value="<%= props.getProperty("pg1_year6", "") %>"/></td>
                     <td><input type="text" name="pg1_sex6" size="1" maxlength="1" style="width:50%" value="<%= props.getProperty("pg1_sex6", "") %>"/></td>
-                    <td><input type="text" name="pg1_oh_gest6" size="3" maxlength="5" style="width:80%" value="<%= props.getProperty("pg1_oh_gest6", "") %>"/></td>
-                    <td><input type="text" name="pg1_weight6" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_weight6", "") %>"/></td>
-                    <td><input type="text" name="pg1_length6" size="5" maxlength="6" style="width:80%" value="<%= props.getProperty("pg1_length6", "") %>"/></td>
-                    <td><input type="text" name="pg1_place6" size="8" maxlength="20" style="width:80%" value="<%= props.getProperty("pg1_place6", "") %>"/></td>
+                    <td><input type="text" name="pg1_oh_gest6" size="3" maxlength="5" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_gest6", "")) %>"/></td>
+                    <td><input type="text" name="pg1_weight6" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_weight6", "")) %>"/></td>
+                    <td><input type="text" name="pg1_length6" size="5" maxlength="6" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_length6", "")) %>"/></td>
+                    <td><input type="text" name="pg1_place6" size="8" maxlength="20" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_place6", "")) %>"/></td>
                     <td>
                         <input type="checkbox" name="pg1_svb6" <%= props.getProperty("pg1_svb6", "") %> />
                         <input type="checkbox" name="pg1_cs6" <%= props.getProperty("pg1_cs6", "") %> />
                         <input type="checkbox" name="pg1_ass6" <%= props.getProperty("pg1_ass6", "") %> />
                     </td>
-                    <td align="left"><input type="text" name="pg1_oh_comments6" size="20" maxlength="80" style="width:100%" value="<%= props.getProperty("pg1_oh_comments6", "") %>"/></td>
+                    <td align="left"><input type="text" name="pg1_oh_comments6" size="20" maxlength="80" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_oh_comments6", "")) %>"/></td>
                 </tr>
             </table>
         </td>
@@ -582,7 +610,7 @@ var maxYear=9900;
                     <td valign="top">3.</td>
                     <td nowrap><a href=# onClick='popupPage("<%=resource%>c3p1");return false;'>Smoking</a><br>
                         <font size=1>cig/day
-                        <input type="text" name="pg1_box3" size="2" value="<%= props.getProperty("pg1_box3", "") %>"></font>
+                        <input type="text" name="pg1_box3" size="2" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_box3", "")) %>"></font>
                     </td>
                     <td valign="bottom"><input type="checkbox" name="pg1_cp3" <%= props.getProperty("pg1_cp3", "") %>></td>
                 </tr>
@@ -595,7 +623,7 @@ var maxYear=9900;
                     <td valign="top">5.</td>
                     <td nowrap><a href=# onClick='popupPage("<%=resource%>c5p1");return false;'>Alcohol</a><br>
                         <font size=1>drinks/day
-                        <input type="text" name="pg1_box5" size="2" maxlength="3" value="<%= props.getProperty("pg1_box5", "") %>"></font>
+                        <input type="text" name="pg1_box5" size="2" maxlength="3" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_box5", "")) %>"></font>
                     </td>
                     <td valign="bottom"><input type="checkbox" name="pg1_cp5" <%= props.getProperty("pg1_cp5", "") %>/></td>
                 </tr>
@@ -753,7 +781,7 @@ var maxYear=9900;
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td><input type="text" name="pg1_box25" size="15" maxlength="25" value="<%= props.getProperty("pg1_box25", "") %>"></td>
+                    <td><input type="text" name="pg1_box25" size="15" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_box25", "")) %>"></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
@@ -877,7 +905,7 @@ var maxYear=9900;
                 <tr>
                     <td>42.</td>
                     <td><a href=# onClick='popupPage("<%=resource%>c42p1");return false;'>TB/Other</a>
-                        <input type="text" name="pg1_box42" size="10" maxlength="20" value="<%= props.getProperty("pg1_box42", "") %>"></td>
+                        <input type="text" name="pg1_box42" size="10" maxlength="20" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_box42", "")) %>"></td>
                     <td><input type="checkbox" name="pg1_idt42" <%= props.getProperty("pg1_idt42", "") %>></td>
                 </tr>
                 <tr>
@@ -925,18 +953,18 @@ var maxYear=9900;
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td colspan="2">
-                        Ht.<input type="text" name="pg1_ht" size="5" maxlength="6"  value="<%= props.getProperty("pg1_ht", "") %>" />
-                        Wt.<input type="text" name="pg1_wt" size="5" maxlength="6"  value="<%= props.getProperty("pg1_wt", "") %>" />
+                        Ht.<input type="text" name="pg1_ht" size="5" maxlength="6"  value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_ht", "")) %>" />
+                        Wt.<input type="text" name="pg1_wt" size="5" maxlength="6"  value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_wt", "")) %>" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        Pre-preg. wt.<input type="text" name="c_ppWt" size="6" maxlength="6" value="<%= props.getProperty("c_ppWt", "") %>">
+                        Pre-preg. wt.<input type="text" name="c_ppWt" size="6" maxlength="6" value="<%= UtilMisc.htmlEscape(props.getProperty("c_ppWt", "")) %>">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        BP<input type="text" name="pg1_BP" size="10" maxlength="10" value="<%= props.getProperty("pg1_BP", "") %>">
+                        BP<input type="text" name="pg1_BP" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_BP", "")) %>">
                     </td>
                 </tr>
                 <tr>
@@ -989,7 +1017,7 @@ var maxYear=9900;
                 </tr>
                 <tr>
                     <td nowrap>Uterus
-                        <input type="text" name="pg1_uterusBox" size="3" maxlength="3" value="<%= props.getProperty("pg1_uterusBox", "") %>">
+                        <input type="text" name="pg1_uterusBox" size="3" maxlength="3" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_uterusBox", "")) %>">
                         <span class="small"> (no. of wks.)</span>
                     </td>
                     <td align="right"><input type="checkbox" name="pg1_uterus" <%= props.getProperty("pg1_uterus", "") %>></td>
@@ -1016,7 +1044,7 @@ var maxYear=9900;
     </tr>
     <tr>
         <td>Signature of attendant<br>
-            <input type="text" name="pg1_signature" size="30" maxlength="50" style="width:80%" value="<%= props.getProperty("pg1_signature", "") %>">
+            <input type="text" name="pg1_signature" size="30" maxlength="50" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_signature", "")) %>">
 	    </td>
         <td>Date (yyyy/mm/dd)<br>
             <input type="text" name="pg1_formDate" size="30" maxlength="50" style="width:80%" value="<%= props.getProperty("pg1_formDate", "") %>">
@@ -1028,20 +1056,33 @@ var maxYear=9900;
 <table class="Head" class="hidePrint">
     <tr>
         <td align="left">
+<%
+  if (!bView) {
+%>
             <input type="submit" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+<%
+  }
+%>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
         </td>
+<%
+  if (!bView) {
+%>
         <td align="right">
-            AR1
-            &nbsp;|&nbsp;
-            <a href="javascript: popupPage('formARPg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR2 Pg.1</a>
-            &nbsp;|&nbsp;
-            <a href="javascript: popupPage('formARPg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR2 Pg.2</a>
-            &nbsp;|&nbsp;
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a>
+            <a href="javascript: popupPage('formARPg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">View AR2 Pg.1</a> |
+            <a href="javascript: popupPage('formARPg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 Pg.2</a>
+            &nbsp;
         </td>
+        <td align="right">
+            <a href="formARPg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Edit AR2 Pg.1</a> |
+            <a href="formARPg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 Pg.2</a> |
+            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a>
+        </td>
+<%
+  }
+%>
     </tr>
 </table>
 

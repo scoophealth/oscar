@@ -67,12 +67,12 @@ public class MsgMessengerAdminAction extends Action {
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
               String sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
-              rs = db.GetSQL(sql);
+              db.RunSQL(sql);
               for (int i = 0; i < providers.length ; i++){
                   sql = new String("insert into groupMembers_tbl (groupID,provider_No) values ('"+grpNo+"','"+providers[i]+"')");
-                  db.GetSQL(sql);
+                  db.RunSQL(sql);
               }
-              rs.close();
+              
               MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
               boolean  res = addMake.updateAddressBook();
               System.out.println("new address book = ? "+res);
@@ -103,10 +103,10 @@ public class MsgMessengerAdminAction extends Action {
                     return (mapping.findForward("failure"));
                  }else{
                     sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
-                    rs = db.GetSQL(sql);
+                    db.RunSQL(sql);
 
                     sql = new String("delete from groups_tbl where groupID = '"+grpNo+"'");
-                    rs = db.GetSQL(sql);
+                    db.RunSQL(sql);
 
                  }
               rs.close();

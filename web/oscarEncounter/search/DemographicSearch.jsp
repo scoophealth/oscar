@@ -25,16 +25,16 @@
 -->
 
 <%@ page language="java" %>
-<%@ page import="oscar.encounter.immunization.data.*, oscar.encounter.immunization.util.*" %>
-<%@ page import="oscar.encounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
+<%@ page import="oscar.oscarEncounter.immunization.data.*, oscar.util.*" %>
+<%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="/oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <html>
 <head>
 <title>
-<bean:message key="ViewConsultationRequests.title"/>
+<bean:message key="ectViewConsultationRequests.title"/>
 </title>
 </head>
 <html:base/>
@@ -116,7 +116,7 @@ function BackToOscar()
             <!----Start new rows here-->
                 <tr>
                     <td>
-                                <html:form action="SearchDemographic">
+                                <html:form action="/oscarEncounter/SearchDemographic">
                 <table>
                    <tr>
                         <td class="tite4">
@@ -270,13 +270,13 @@ function BackToOscar()
                     <%
 
                         for ( int i = 0; i < searchVec.size(); i++){
-                            oscar.oscarEncounter.search.data.DemographicData demo = (oscar.oscarEncounter.search.data.DemographicData) searchVec.elementAt(i);
+                            oscar.oscarEncounter.search.data.EctDemographicData demo = (oscar.oscarEncounter.search.data.EctDemographicData) searchVec.elementAt(i);
                             String forClass;
                             if ( (i % 2) == 0){ forClass="even"; }else{ forClass="odd"; }
                         %>
                             <tr class="<%=forClass%>">
                                 <td>
-                                <a href="/oscarEncounter/IncomingEncounter.do?demographicSearch=true&demographicNo=<%=demo.demographicNo%>" >
+                                <a href="../../IncomingEncounter.do?demographicSearch=true&demographicNo=<%=demo.demographicNo%>" >
                                 <%=demo.demographicNo%>
                                 </a>
                                 </td>

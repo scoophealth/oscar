@@ -101,7 +101,7 @@ batchCount = rslocal2.getString("batchcount");
 	  	    
 	  	    
 	  	    
-	         String[] param =new String[12];
+	         String[] param =new String[13];
 	     	  param[0]=request.getParameter("monthCode");
 	     	  param[1]=batchCount;
 	     	  param[2]="H" + request.getParameter("monthCode") + proOHIP + "_" + zero +  batchCount + ".htm";
@@ -220,6 +220,5 @@ batchCount = rslocal2.getString("batchcount");
 
 
 <jsp:forward page='billingOHIPGroupReport.jsp' >
+<jsp:param name="year" value='' />
 </jsp:forward>
-
-

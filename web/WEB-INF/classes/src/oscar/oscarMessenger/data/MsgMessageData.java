@@ -188,7 +188,7 @@ public class MsgMessageData {
           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
           java.sql.ResultSet rs;
 
-          rs = db.GetSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo)"
+          db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo)"
                         +" values (curdate(),curtime(),'"
                         +str.q(message)+"','"
                         +str.q(subject)+"','"
@@ -202,7 +202,7 @@ public class MsgMessageData {
           }
 
           for (int i =0 ; i < providers.length ; i++){
-             rs = db.GetSQL("insert into messagelisttbl (message,provider_no,status) values (\""+messageid+"\",\""+providers[i]+"\",\"new\")");
+             db.RunSQL("insert into messagelisttbl (message,provider_no,status) values (\""+messageid+"\",\""+providers[i]+"\",\"new\")");
           }
 
         rs.close();
@@ -217,7 +217,7 @@ public class MsgMessageData {
     //into the messagelisttbl
     //insert all the provider ids that will get the message along with the
     //message id plus a status of new
-//messageId = messageData.sendMessage(message,       subject,       userName,       sentToWho,       userNo,              providerListing );
+    //messageId = messageData.sendMessage(message,       subject,       userName,       sentToWho,       userNo,              providerListing );
     public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,java.util.ArrayList providers,String attach ){
         System.out.println("message "+message+" subject "+subject+" userName "+userName+" sentToWho "+sentToWho+" userNo "+userNo);
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
@@ -240,7 +240,7 @@ public class MsgMessageData {
                        +getCurrentLocationId()+"','"
                        +attach+"')");
          System.out.println("here2 "+sql);
-         rs = db.GetSQL(sql);
+         db.RunSQL(sql);
          System.out.println("here3");
          rs = db.GetSQL("SELECT LAST_INSERT_ID()");
          System.out.println("here4");
@@ -250,7 +250,7 @@ public class MsgMessageData {
             System.out.println("Sending message to this many providers"+providers.size());
          for (int i =0 ; i < providers.size(); i++){
             MsgProviderData providerData = (MsgProviderData) providers.get(i);
-            rs = db.GetSQL("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
+            db.RunSQL("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
          }
 
        rs.close();

@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
  <%      
   if(session.getValue("user") == null)
@@ -31,7 +5,7 @@
   String user_no; 
   user_no = (String) session.getAttribute("user");
   String asstProvider_no = "";
-  String color ="";
+   String color ="";
   String premiumFlag="";
 String service_form="", service_name="";
 %>       
@@ -48,10 +22,15 @@ String service_form="", service_name="";
 <head>
 <title>oscarBilling :: manage billing form  ::</title>
 <link rel="stylesheet" href="billing.css" >
-
+ 
 <style type="text/css">
 	<!--
+	A, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
+	
 	BODY                  {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TR.list                    {                     font-size: 8pt ; font-family: tahoma,verdana,arial,helvetica; color: #CDCFFF;}                                                    }
+	TR.swap                    {                     font-size: 8pt ; font-family: tahoma,verdana,arial,helvetica; color: #000000;								 background-color: #CDCFFF;}
+	 
 	TD                    {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000                                                    }
 	TD.black              {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
 	TD.lilac              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
@@ -61,6 +40,23 @@ String service_form="", service_name="";
 	TD.lilac A:hover      {font-weight: normal;                                                                            color: #000000; background-color: #CDCFFF  ;}
 	TD.white              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
 	TD.heading            {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
+	
+	td.bottomBorder A:link       { font-size: 8pt ; font-family: verdana,arial,helvetica; color: #AAAAAA;}
+	td.bottomBorder A:visited    { font-size: 8pt ; font-family: verdana,arial,helvetica; color: #AAAAAA;}
+	td.bottomBorder A:hover      {                                                        color: #616130;}
+	      
+	td.allBorder{border-style: dotted;border-color: #aaaaaa;border-width: 1px 1px 1px 1px;}
+	td.topBorder{	border-top: 1pt solid #aaaaaa;}
+	td.topBottomBorder{		border-top: 1pt solid #aaaaaa;	    border-bottom: 1pt solid #aaaaaa;}
+	td.topRightBottomBorder{	border-right: 1pt solid #aaaaaa;	border-top: 1pt solid #aaaaaa;  border-bottom: 1pt solid #aaaaaa;}
+	td.topRightBorder{	border-right: 1pt solid #aaaaaa;	border-top: 1pt solid #aaaaaa;}
+	td.bottomRightBorder{	border-right: 1pt solid #aaaaaa;	border-bottom: 1pt solid #aaaaaa;}
+	td.bottomBorder{	border-bottom: 1pt solid #aaaaaa;	padding: 0px 0px 0px 4px;}
+	td.rightBorder{	border-right: 1pt solid #aaaaaa;}
+	td.sideTite{	color: #003377;	font-family: tahoma,Arial, Helvetica, Sans Serif;	font-size: 10pt;	border-bottom: 1pt solid #dddddd;}
+	td.sideMenuItem{	/*background-color: #fafafa;*/	border-bottom: 1pt solid #fafafa;}
+	td.mainTableTite{	font-family: tahoma,Arial, Helvetica, Sans Serif;	font-size: 14pt;}
+  
 	H2                    {font-weight: bold  ; font-size: 12pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
 	H3                    {font-weight: bold  ; font-size: 10pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
 	H4                    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
@@ -124,7 +120,7 @@ alert("Service Type ID exists, please verify!");
  }
  else{
  return true;
-}
+} 
     
 }
 function refresh() {
@@ -147,6 +143,7 @@ function onUnbilled(url) {
 </head>
 
 <body leftmargin="0" topmargin="5" rightmargin="0">
+
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
     <td height="40" width="10%"> </td>
@@ -165,11 +162,12 @@ function onUnbilled(url) {
         <input type="radio" name="reportAction" value="dxcode"  <%=reportAction.equals("dxcode")?"checked":""%>>
         Dx Code</font> </td>
       <td width="50%"> <div align="right"></div>
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select 
-          form</b></font> 
+         <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select 
+           form</b></font> 
           
  	   	  <select name="billingform">
            <option value="000" <%=clinicview.equals("000")?"selected":""%>>Add/Delete Form </option>
+            <option value="***" <%=clinicview.equals("***")?"selected":""%>>Manage Premium Form </option>
   		    <% String formDesc="";
             String formID="";
             int Count = 0;  
@@ -181,7 +179,7 @@ function onUnbilled(url) {
  formID = rslocal.getString("servicetype"); 
   
 %>  
-            <option value="<%=formID%>" <%=clinicview.equals(formID)?"selected":""%>><%=formDesc%></option>
+               <option value="<%=formID%>" <%=clinicview.equals(formID)?"selected":""%>><%=formDesc%></option>
             <%
       }      
    
@@ -199,6 +197,10 @@ function onUnbilled(url) {
 <%@ include file="manageBillingform_add.jsp" %> 
 
 <%} else{ %>
+<% if (clinicview.compareTo("***") == 0) { %>
+<%@ include file="manageBillingform_premium.jsp" %> 
+
+<%} else{ %>
 
 
 <% if (reportAction.compareTo("") == 0 || reportAction == null){%>
@@ -211,12 +213,13 @@ if (reportAction.compareTo("servicecode") == 0) {
 <%
 } else {
 %>
+
 <%
 if (reportAction.compareTo("dxcode") == 0) {
 %> 
 <%@ include file="manageBillingform_dx.jsp" %> 
 <%
-}}}}
+}}}}}
 %>
 
   

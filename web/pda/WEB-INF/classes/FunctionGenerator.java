@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 /*
- * $RCSfile: FunctionGenerator.java,v $
+ * $RCSfile: AbstractApplication.java,v1.0 $
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  *

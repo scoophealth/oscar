@@ -24,7 +24,7 @@
  */
 -->
 
- <% 
+<% 
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no="";
@@ -40,7 +40,25 @@ user_no = (String) session.getAttribute("user");
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
-  String monthCode = "";
+  
+    String[] yearArray = new String[5];
+  String thisyear = request.getParameter("year")==null?String.valueOf(curYear):request.getParameter("year").compareTo("")==0?String.valueOf(curYear):request.getParameter("year");
+if (thisyear.compareTo("")==0) thisyear = String.valueOf(curYear);
+String yearColor = "";  
+yearArray[0] = String.valueOf(curYear);
+    yearArray[1] = String.valueOf(curYear-1);
+      yearArray[2] = String.valueOf(curYear-2);
+        yearArray[3] = String.valueOf(curYear-3);
+          yearArray[4] = String.valueOf(curYear-4);
+          
+if (thisyear.compareTo(yearArray[0])==0) yearColor="#B1D3EF";
+
+if (thisyear.compareTo(yearArray[1])==0) yearColor="#BBBBBB";
+if (thisyear.compareTo(yearArray[2])==0) yearColor="#CCCCCC";
+if (thisyear.compareTo(yearArray[3])==0) yearColor="#DDDDDD";
+if (thisyear.compareTo(yearArray[4])==0) yearColor="#EEEEEE";
+
+String monthCode = "";
   if (curMonth == 1) monthCode = "A";
     if (curMonth == 2) monthCode = "B";
       if (curMonth == 3) monthCode = "C";
@@ -72,12 +90,26 @@ function setfocus() {
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
+ <div id="Layer1" style="position:absolute; left:90px; top:35px; width:0px; height:12px; z-index:1"></div>
+ <div id="Layer2" style="position:absolute; left:45px; top:61px; width:129px; height:123px; z-index:2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;"> 
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+     <tr bgcolor="#DDDDEE"> 
+       <td align='CENTER'><font size="2" face="Tahoma, Geneva, Arial, Helvetica, san-serif"><strong>Last 
+         5 Years</strong></font></td>
+     </tr>
+ <% for (int i=0; i<5;i++) { %>
+     <tr> 
+       <td align='CENTER'><font size="2" face="Tahoma, Geneva, Arial, Helvetica, san-serif"><a href="billingOHIPreport.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
+     </tr>
+     <% } %>
+   </table>
+ </div>
 <table border="0" cellspacing="0" cellpadding="0" width="100%"  onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
     <tr bgcolor="#486ebd">
      <th align='LEFT'>
 		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
     <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"> 
-      OHIP Group Report</font></th>
+      OHIP Group Report - <%=thisyear%></font></th>
       <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
   </tr>
 </table>
@@ -86,6 +118,8 @@ function setfocus() {
 <table width="100%" border="0" bgcolor="#E6F0F7">
   <form name="form1" method="post" action="genGroupReport.jsp">
     <tr> 
+     <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="#" onClick="showHideLayers('Layer2','','show')">Show 
+        Archive</a> </font></b></td>
       <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Select 
         provider </font></b></td>
       <td width="254"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
@@ -118,12 +152,27 @@ String billinggroup_no;
   %>
         </select>
         </font></b></td>
-      <td width="254"><font color="#003366"><b><font face="Arial, Helvetica, sans-serif" size="2">Bill 
-        center: 
-        <input type="hidden" name="billcenter" value="G">
-        </font></b><font face="Arial, Helvetica, sans-serif" size="2">Hamilton 
-        </font></font></td>
-      <td width="277"> <font color="#003366"> 
+      <td width="181"><b><font face="Arial, Helvetica, sans-serif" size="2">Select 
+        billing center</font></b></td>
+      <td width="254"><font face="Arial, Helvetica, sans-serif" size="2"> 
+        <select name="billcenter">
+        
+        <% String centerCode="";
+           String centerDesc="";
+           
+           int Count1 = 0;
+        ResultSet rsCenter;
+        rsCenter = null;
+ rsCenter = apptMainBean.queryResults("%", "search_bill_center");
+ while(rsCenter.next()){
+ centerCode = rsCenter.getString("billcenter_code");
+ centerDesc = rsCenter.getString("billcenter_desc");
+  
+ %>
+            <option value="<%=centerCode%>" <%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
+<% } %>
+ </select></td>
+ <td width="277"> <font color="#003366"> 
         <input type="submit" name="Submit" value="Create Report">
         <input type="hidden" name="monthCode" value="<%=monthCode%>">
         <input type="hidden" name="verCode" value="V03">
@@ -139,7 +188,7 @@ String billinggroup_no;
     </tr>
   </form>
 </table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#B1D3EF">
+<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="<%=yearColor%>">
   <tr> 
     <td colspan="6"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
       <b>Activity List </b></font></td>
@@ -160,7 +209,12 @@ String billinggroup_no;
   <%
    String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
    rslocal = null;
-   rslocal = apptMainBean.queryResults(curYear+"/01/01", "search_billactivity");
+   
+   String[] paramYear = new String[2];
+    paramYear[0] = thisyear+"/01/01";
+    paramYear[1] = thisyear+"/12/31";
+       rslocal = null;
+    rslocal = apptMainBean.queryResults(paramYear, "search_billactivity");
    while(rslocal.next()){
    pro_ohip = rslocal.getString("providerohipno"); 
    pro_group = rslocal.getString("groupno");

@@ -22,9 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
-
+--> 
 <table width="100%" border="2" cellpadding="0" cellspacing="0">
 
   <% 
@@ -34,7 +32,10 @@
    if (dateBegin.compareTo("") == 0) dateBegin="0000-00-00";
   BigDecimal bdOBFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  BigDecimal BigOBTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-      
+     BigDecimal Total1 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal Total2 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+            
  double dOBFee = 0.00;
 
  ResultSet rs=null ;
@@ -45,8 +46,12 @@
   param[0] = request.getParameter("providerview");
  param[1] = dateBegin;  
   param[2] = dateEnd;  
-  rs = apptMainBean.queryResults(param, "search_allbill_daterange");
+  rs = apptMainBean.queryResults(param, "search_billflu");
 int rCount = 0;
+int rowCount1 = 0;
+
+        
+     		
   boolean bodd=false;
    nItems=0;
   String apptDoctorNo="", apptNo="", demoNo = "", demoName="", userno="", apptDate="", apptTime="", reason="",  note="", total="";
@@ -58,7 +63,8 @@ int rCount = 0;
     <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">INVOICE</font></b></TH>
     <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
     <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">DATE</font></b></TH>
-    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">BILLED</font></b></TH>
+    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">APPT.CLINIC</font></b></TH>
+    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">WALK-IN</font></b></TH>
     <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">STATUS</font></b></TH>
     
   </tr>
@@ -87,27 +93,58 @@ int rCount = 0;
         <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
         <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
 
+    <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
   
-    <TD align="right" width="20%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
+    <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
    <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
 
   </tr>
+  <%  rowCount1 = rowCount1 + 1;
+      rowCount = rowCount + 1;
+      BigDecimal bdFee = new BigDecimal(Double.parseDouble(total)).setScale(2, BigDecimal.ROUND_HALF_UP);
+      Total1 = Total1.add(bdFee);
+  } else{
+  %>
+    <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
+      <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../billing/billingOB2.jsp?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+        <%=rs.getString("billing_no")%></a></font></b></TD>
+          <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
+          <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
+      <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
+      <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
+    
   
-  <%  rowCount = rowCount + 1;
-    }
+     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
+  
+    </tr>
+  <%  
+    rowCount = rowCount + 1;
+    BigDecimal bdFee = new BigDecimal(Double.parseDouble(total)).setScale(2, BigDecimal.ROUND_HALF_UP);
+          Total2 = Total2.add(bdFee);
+
+  }
     
     }
     }
     if (rowCount == 0) {
     %>
   <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-    <TD colspan="5" align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">No 
+    <TD colspan="6" align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">No 
       flu billing items</font></b></TD>
   </tr>
   <% }else{
 %>
   <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-    <TD colspan="5" align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">Total Count: <%=rowCount%></font></b></TD>
+       <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif">Total</font></b></TD>
+       <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif">Clinic Count: <%=rowCount-rowCount1%></font></b></TD>
+       <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif">Walk-in Count: <%=rowCount1%></font></font></b></TD>
+	 <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=Total2%></font></b></TD>
+      <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=Total1%></font></b></TD>
+    
+  
+     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
+  
+
   </tr>
 <%
 }}%>

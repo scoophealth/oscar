@@ -101,8 +101,10 @@ String billNo ="";
   
   if (rowsAffected ==1) {
     //apptMainBean.closePstmtConn();//change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
-   String[] param1 =new String[2];
-	  param1[0]="P";
+  oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+String unbillStatus = as.unbillStatus(request.getParameter("status"));
+  String[] param1 =new String[2];
+	  param1[0]=unbillStatus;
 	  param1[1]=request.getParameter("appointment_no");
 //	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
    rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");

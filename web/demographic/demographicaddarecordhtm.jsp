@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
@@ -184,6 +158,16 @@ function checkTypeIn() {
       </td>
     </tr>
     <tr valign="top"> 
+      <td  align="right"><b>Email: </b> </td>
+      <td align="left" > 
+        <input type="text" name="email" value="">
+      </td>
+      <td  align="right"><b>PIN:</b> </td>
+      <td  align="left"> 
+        <input type="text" name="pin" value="">
+      </td>
+    </tr>
+    <tr valign="top"> 
       <td  align="right"><b>DOB</b><font size="-2">(yyyymmdd)</font><b><font color="red">:</font></b></td>
       <td  align="left" nowrap> 
         <table border="0" cellpadding="0" cellspacing="0">
@@ -196,15 +180,15 @@ function checkTypeIn() {
             <td> 
               <!--input type="text" name="month_of_birth" size="2" maxlength="2"-->
               <select name="month_of_birth">
-                <option value="01">1 
-                <option value="02">2 
-                <option value="03">3 
-                <option value="04">4 
-                <option value="05">5 
-                <option selected value="06">6 
-                <option value="07">7 
-                <option value="08">8 
-                <option value="09">9 
+                <option value="01">01 
+                <option value="02">02 
+                <option value="03">03 
+                <option value="04">04 
+                <option value="05">05 
+                <option selected value="06">06 
+                <option value="07">07 
+                <option value="08">08 
+                <option value="09">09 
                 <option value="10">10 
                 <option value="11">11 
                 <option value="12">12 
@@ -214,15 +198,15 @@ function checkTypeIn() {
             <td> 
               <!--input type="text" name="date_of_birth" size="2" maxlength="2"-->
               <select name="date_of_birth">
-                <option value="1">1 
-                <option value="2">2 
-                <option value="3">3 
-                <option value="4">4 
-                <option value="5">5 
-                <option value="6">6 
-                <option value="7">7 
-                <option value="8">8 
-                <option value="9">9 
+                <option value="01">01 
+                <option value="02">02 
+                <option value="03">03 
+                <option value="04">04 
+                <option value="05">05 
+                <option value="06">06 
+                <option value="07">07 
+                <option value="08">08 
+                <option value="09">09 
                 <option value="10">10 
                 <option value="11">11 
                 <option value="12">12 
@@ -367,7 +351,7 @@ function checkTypeIn() {
     <tr valign="top"> 
       <td align="right"><b>Patient Status:</b></td>
       <td align="left" > 
-        <input type="text" name="patient_status">
+        <input type="text" name="patient_status" value="AC" onBlur="upCaseCtrl(this)">
       </td>
       <td align="right"><b>Chart No.:</b></td>
       <td align="left"> 

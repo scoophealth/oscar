@@ -202,6 +202,13 @@ var maxYear=3100;
         return b;
 
     }
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
+  var popup=window.open(page, "aplan", windowprops);
+}
+
+
 </script>
 
 
@@ -209,8 +216,10 @@ var maxYear=3100;
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
     int provNo = Integer.parseInt(request.getParameter("provNo"));
+    out.print("demo "+demoNo+" formId "+formId+" provNo "+provNo);
     EctAnnualRecord rec = new EctAnnualRecord();
     java.util.Properties props = rec.getAnnualRecord(demoNo, formId);
+    props.list(System.out);
 %>
 
 <BODY bgproperties="fixed" onLoad="javascript:window.focus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -232,6 +241,8 @@ var maxYear=3100;
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+        </td><td align='right'>
+            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">Annual Review Planner</a>
         </td>
     </tr>
 </table>
@@ -287,7 +298,7 @@ var maxYear=3100;
                     <td colspan="2"><b>AbN</b></td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" name="headN" <%= props.getProperty("headN", "") %> /></td>
+                    <td><input type="checkbox" name="headN" <%= props.getProperty("headN", "") %>  /></td>
                     <td><input type="checkbox" name="headAbN" <%= props.getProperty("headAbN", "") %> /></td>
                     <td align="left" nowrap="true">Head & Neck:</td>
                     <td align="right"><input type="text" name="head" class="SystemsReview" value="<%= props.getProperty("head", "") %>" /></td>
@@ -474,6 +485,11 @@ var maxYear=3100;
                     <td colspan="2">&nbsp;</td>
                 </tr>
                 <tr>
+                    <td><a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provN
+o=<%=provNo%>');">Risk/Check List</a>
+					</td>
+                </tr>
+                <!--tr>
                     <td><input type="checkbox" name="rectal" <%= props.getProperty("rectal", "") %> /></td>
                     <td>Rectal Exam
                 </tr>
@@ -495,7 +511,7 @@ var maxYear=3100;
                 </tr>
                 <tr style="height:100%;">
                     <td>&nbsp;</td>
-                </tr>
+                </tr-->
             </table>
         </td>
     </tr>
@@ -581,10 +597,13 @@ var maxYear=3100;
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+        </td><td align='right'>
+            <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">Annual Review Planner</a>
         </td>
     </tr>
 </table>
 
 </html:form>
+<%props.list(System.out);%>
 </body>
 </html:html>

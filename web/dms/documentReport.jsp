@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
   <%
   if(session.getValue("user") == null) 
     response.sendRedirect("../logout.htm");
@@ -33,7 +7,7 @@
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
 
-%> 
+%>  
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -170,7 +144,7 @@ function setfocus() {
           <td width="15%"><%=dispType%></td>
           <td width="17%"><%=proLast%>, <%=proFirst%></td>
           <td width="21%"><%=dispUpdatedate%></td>
-          <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>','<%=userlastname%>')">Delete</td>
+          <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>','<%=userlastname%>')">Delete</a> &nbsp; &nbsp; <a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')">Edit</a></td>
   </tr> 
 
 <%
@@ -244,7 +218,7 @@ if (count0 == 0) {
             <td width="15%"><%=dispType%></td>
             <td width="17%"><%=proLast%>, <%=proFirst%></td>
             <td width="21%"><%=dispUpdatedate%></td>
-            <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')">Delete</td>
+            <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')">Delete</a>&nbsp; &nbsp;<a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')">Edit</a>&nbsp; &nbsp;</td>
     </tr> 
   
   <%

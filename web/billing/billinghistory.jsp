@@ -24,7 +24,7 @@
  */
 -->
 
- <%
+<%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
   String curProvider_no;
@@ -81,15 +81,21 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <hr>
 <CENTER><table width="100%" border="2" bgcolor="#ffffff"> 
 <tr bgcolor="#339999">
-      <TH align="center" width="20%"><b>APPOINTMENT DATE</b></TH>
-      <TH align="center" width="10%"><b>TIME</b></TH>      
+      <TH align="center" width="5%"><b>INVOICE#</b></TH>
+      <TH align="left" width="25%"><b>APPOINTMENT DATE-TIME</b></TH>      
       <TH align="center" width="10%"><b>BILL TYPE</b></TH>
-      <TH align="center" width="20%"><b>PROVIDER</b></TH>
+      <TH align="center" width="15%"><b>BILL PROVIDER</b></TH>
+      <TH align="center" width="15%"><b>APPT PROVIDER</b></TH>
       <TH align="center" width="10%"><b>COMMENTS</b></TH>
 </tr>
 <%
-  ResultSet rs=null ;
-  rs = apptMainBean.queryResults(Integer.parseInt(request.getParameter("demographic_no")), "search_bill_history");
+ String proFirst="";
+ String proLast="";
+ String proNo = "";
+ ResultSet rslocal;
+ rslocal = null;
+   ResultSet rs=null ;
+  rs = apptMainBean.queryResults(Integer.parseInt(request.getParameter("demographic_no")), "search_allbill_history");
 
   boolean bodd=false;
   int nItems=0;
@@ -101,26 +107,43 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
        billCode = rs.getString("status");
-      if (billCode.compareTo("B") == 0){ billType = "Billed"; }
+      if (billCode.compareTo("B") == 0){ billType = "Submitted OHIP"; }
        if (billCode.substring(0,1).compareTo("O") == 0){ billType = "Bill OHIP"; }
        if (billCode.substring(0,1).compareTo("N") == 0){ billType = "Do Not Bill"; }
        if (billCode.substring(0,1).compareTo("P") == 0){ billType = "Bill Patient"; }
        if (billCode.substring(0,1).compareTo("W") == 0){ billType = "Bill WCB"; }
        if (billCode.substring(0,1).compareTo("H") == 0){ billType = "Capitated"; }
-      
+   if (billCode.substring(0,1).compareTo("S") == 0){ billType = "Settled"; }     
+  if (billCode.substring(0,1).compareTo("D") == 0){billType = "Deleted";}
+  proNo = rs.getString("apptProvider_no")==null?"":rs.getString("apptProvider_no");
+  
+  if (proNo.compareTo("") ==0 || proNo.compareTo("000") ==0 || proNo.compareTo("none")==0){
+  proFirst = "Not Available";
+  proLast = "";
+  }else{
+  
+  rslocal = apptMainBean.queryResults(proNo, "search_provider_all_dt");
+   while(rslocal.next()){
+   proFirst = rslocal.getString("first_name");
+   proLast = rslocal.getString("last_name") + ",";
+
+}
+}
 %>
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td width="20%" align="center" height="25"><a href=# onClick="popupPage(600,800, '../billing/billingOB2.jsp?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_date")%></a></td>
-      <td align="center" width="20%" height="25"><%=rs.getString("billing_time")%></td>
-      <td align="center" width="20%" height="25"><%=billType%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
-      <% if (billCode.substring(0,1).compareTo("B")==0) { %>
-      <td align="center" width="10%" height="25"></td>
+      <td width="5%" align="center" height="25"><a href=# onClick="popupPage(600,800, '../billing/billingOB2.jsp?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a></td>
+      <td align="left" width="25%" height="25"><%=rs.getString("billing_date")%> &nbsp; &nbsp; &nbsp; &nbsp; <%=rs.getString("billing_time")%></td>
+      <td align="center" width="10%" height="25"><%=billType%></td>
+      <td align="center" width="15%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
+       <td align="center" width="15%" height="25"><%=proLast+" "+proFirst%></td>
+    
+      <% if (billCode.substring(0,1).compareTo("B")==0 || billCode.substring(0,1).compareTo("S")==0) { %>
+      <td align="center" width="10%" height="25">&nbsp;</td>
       <% } else { %>
-      <td align="center" width="10%" height="25"><a href="../billing/billingDelete.jsp?appointment_no=<%=rs.getString("appointment_no")%>&billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+      <td align="center" width="10%" height="25"><a href="../billing/billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
       <% } %>
 </tr>
-<%
+<% 
     }
   }
   apptMainBean.closePstmtConn();

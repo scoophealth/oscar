@@ -67,9 +67,9 @@ public class MsgMessengerCreateGroupAction extends Action {
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                  java.sql.ResultSet rs;
                  String sql = "insert into groups_tbl (parentID,groupDesc) values ('"+parentID+"','"+grpName+"')";
-                 rs = db.GetSQL(sql);
+                 db.RunSQL(sql);
 
-                 rs.close();
+                 
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
                  addMake.updateAddressBook();
                  db.CloseConn();
@@ -80,9 +80,8 @@ public class MsgMessengerCreateGroupAction extends Action {
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                  java.sql.ResultSet rs;
                  String sql = "update groups_tbl set groupDesc = '"+grpName+"' where groupID = '"+parentID+"'";
-                 rs = db.GetSQL(sql);
+                 db.RunSQL(sql);
 
-                 rs.close();
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
                  addMake.updateAddressBook();
                  db.CloseConn();

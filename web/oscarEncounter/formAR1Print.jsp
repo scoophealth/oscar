@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
@@ -31,7 +31,7 @@
   if(request.getParameter("ooy")!=null) ooy += Integer.parseInt(request.getParameter("ooy"));
 %>
 <%@ page language="java"%>
-<%@ page import="java.util.*, java.sql.*, oscar.*"  %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"  %>
 <%@ page import="oscar.oscarEncounter.data.EctARRecord" %>
 
 <html>
@@ -61,25 +61,29 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 </head>
 
 <%
-    int demoNo = Integer.parseInt(request.getParameter("demoNo"));
-    int formId = Integer.parseInt(request.getParameter("formId"));
-    int provNo = Integer.parseInt(request.getParameter("provNo"));
-//    System.out.println("AR1Print d: "+demoNo+" f: "+formId+" p: "+provNo);
-    EctARRecord rec = new EctARRecord();
-    java.util.Properties props = rec.getARPrintRecord(demoNo, formId);
+    //int demoNo = Integer.parseInt(request.getParameter("demoNo"));
+    //int formId = Integer.parseInt(request.getParameter("formId"));
+    //int provNo = Integer.parseInt(request.getParameter("provNo"));
+    //    System.out.println("AR1Print d: "+demoNo+" f: "+formId+" p: "+provNo);
+    //EctARRecord rec = new EctARRecord();
+    //java.util.Properties props = rec.getARPrintRecord(demoNo, formId);
+
+    Properties props = new Properties();
+    StringBuffer temp = new StringBuffer("");
+	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
+	    temp = new StringBuffer(e.nextElement().toString());
+		props.setProperty(temp.toString(), request.getParameter(temp.toString()));
+    }
 %>
 
 
 <body onLoad="setfocus()" topmargin="0" leftmargin="1" rightmargin="1" bgcolor="navy">
 <img src="graphics/formAR1.gif"/>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=50+oox%>px; top:<%=74+ooy%>px; width:400px; height:20px;">
-<%= props.getProperty("pName", "")%>
-</div>
-
 <script language="JavaScript">
 ff(750,10,50,20,'<span class="title"><a href="javascript: window.print();">Print</a></span>' );
-ff(750,40,50,20,'<span class="title"><a href="formAR.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">Cancel</a></span>' );
+//<!--ff(750,40,50,20,'<span class="title"><a href="formAR.jsp?demographic_no=&formId=&provNo=">Cancel</a></span>' );-->
+ff(750,40,50,20,'<span class="title"><a href=# onClick="window.close()">Cancel</a></span>' );
 ff(192,0,300,20,'<span class="title">Antenatal Record 1</span>' );
 ff(8,68,100,20,'<span class="tdname">Name</span>' );
 ff(8,90,100,20,'<span class="tdname">Address</span>' );
@@ -91,13 +95,14 @@ ff(165,123,50,20,'<span class="tdname">M</span>' );
 ff(194,123,50,20,'<span class="tdname">CL</span>' );
 ff(224,123,50,20,'<span class="tdname">S</span>' );
 
-ff(50,98,500,20,"<%=props.getProperty("c_address", "") %>" );
+ff(50,75,500,20,"<%= UtilMisc.JSEscape(props.getProperty("c_pName", "")) %>" );
+ff(50,98,500,20,"<%=UtilMisc.JSEscape(props.getProperty("c_address", "")) %>" );
 ff(25,126,100,20,"<%= props.getProperty("pg1_dateOfBirth", "") %>");
 ff(120,126,50,20,"<%= props.getProperty("pg1_age", "") %>" );
-ff(153,123,20,20,"<%= props.getProperty("pg1_msMarried", "")%>" );
-ff(181,123,20,20,"<%= props.getProperty("pg1_msCommonLaw", "")%>" );
-ff(212,123,20,20,"<%= props.getProperty("pg1_msSingle", "")%>" );
-ff(240,126,200,20,"<%= props.getProperty("pg1_eduLevel", "") %>" );
+ff(153,123,20,20,"<%= props.getProperty("pg1_msMarried", "").equals("")?"":"X"%>" );
+ff(181,123,20,20,"<%= props.getProperty("pg1_msCommonLaw", "").equals("")?"":"X"%>" );
+ff(212,123,20,20,"<%= props.getProperty("pg1_msSingle", "").equals("")?"":"X"%>" );
+ff(240,126,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_eduLevel", "")) %>" );
 
 ff(8,137,200,20,'<span class="tdname">Occupation</span>' );
 ff(113,137,200,20,'<span class="tdname">Language</span>' );
@@ -107,13 +112,13 @@ ff(400,137,200,20,'<span class="tdname">Name of partner</span>' );
 ff(550,137,200,20,'<span class="tdname">Age</span>' );
 ff(580,137,200,20,'<span class="tdname">Occupation</span>' );
 
-ff(8,148,140,20,"<%= props.getProperty("pg1_occupation", "") %>" );
-ff(113,148,140,20,"<%= props.getProperty("pg1_language", "") %>" );
+ff(8,148,140,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_occupation", "")) %>" );
+ff(113,148,140,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_language", "")) %>" );
 ff(213,148,140,20,"<%= props.getProperty("pg1_homePhone", "") %>" );
 ff(310,148,140,20,"<%= props.getProperty("pg1_workPhone", "") %>" );
-ff(400,148,200,20,"<%= props.getProperty("pg1_partnerName", "") %>" );
+ff(400,148,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_partnerName", "")) %>" );
 ff(555,148,50,20,"<%= props.getProperty("pg1_partnerAge", "") %>" );
-ff(580,148,140,20,"<%= props.getProperty("pg1_partnerOccupation", "") %>" );
+ff(580,148,140,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_partnerOccupation", "")) %>" );
 
 ff(8,160,200,20,'<span class="tdname">Birth attendants</span>' );
 ff(150,160,200,20,'<span class="tdname">Family physician</span>' );
@@ -126,32 +131,32 @@ ff(337,175,50,20,'<span class="tdname">Ped.</span>' );
 ff(378,175,50,20,'<span class="tdname">FP</span>' );
 ff(415,175,100,20,'<span class="tdname">Midwife</span>' );
 
-ff(13,175,20,20,"<%= props.getProperty("pg1_baObs", "") %>" );
-ff(55,175,20,20,"<%= props.getProperty("pg1_baFP", "") %>" );
-ff(90,175,20,20,"<%= props.getProperty("pg1_baMidwife", "") %>" );
-ff(10,195,200,20,"<%= props.getProperty("c_ba", "") %>" );
-ff(150,175,200,100,"<%= props.getProperty("pg1_famPhys", "") %>" );
-ff(324,175,20,20,"<%= props.getProperty("pg1_ncPed", "") %>" );
-ff(365,175,20,20,"<%= props.getProperty("pg1_ncFP", "") %>" );
-ff(400,175,20,20,"<%= props.getProperty("pg1_ncMidwife", "") %>" );
-ff(320,195,200,20,"<%= props.getProperty("c_nc", "") %>" );
+ff(13,175,20,20,"<%= props.getProperty("pg1_baObs", "").equals("")?"":"X"  %>" );
+ff(55,175,20,20,"<%= props.getProperty("pg1_baFP", "").equals("")?"":"X" %>" );
+ff(90,175,20,20,"<%= props.getProperty("pg1_baMidwife", "").equals("")?"":"X" %>" );
+ff(10,195,200,20,"<%= UtilMisc.JSEscape(props.getProperty("c_ba", "")) %>" );
+ff(150,175,200,100,"<%= UtilMisc.JSEscape(props.getProperty("pg1_famPhys", "")) %>" );
+ff(324,175,20,20,"<%= props.getProperty("pg1_ncPed", "").equals("")?"":"X" %>" );
+ff(365,175,20,20,"<%= props.getProperty("pg1_ncFP", "").equals("")?"":"X" %>" );
+ff(400,175,20,20,"<%= props.getProperty("pg1_ncMidwife", "").equals("")?"":"X" %>" );
+ff(320,195,200,20,"<%= UtilMisc.JSEscape(props.getProperty("c_nc", "")) %>" );
 
 ff(23,216,200,20,'<span class="tdname">VBAC</span>' );
 ff(23,236,200,20,'<span class="tdname">Repeat CS</span>' );
 ff(81,214,200,20,'<span class="tdname">Allergies (list)</span>' );
 ff(392,214,200,20,'<span class="tdname">Medications (list)</span>' );
 
-ff(12,216,20,20,"<%= props.getProperty("pg1_vbac", "") %>" );
-ff(12,236,20,20,"<%= props.getProperty("pg1_repeatCS", "") %>" );
+ff(12,216,20,20,"<%= props.getProperty("pg1_vbac", "").equals("")?"":"X" %>" );
+ff(12,236,20,20,"<%= props.getProperty("pg1_repeatCS", "").equals("")?"":"X" %>" );
 
 ff(6,275,200,20,'<span class="tdname">Menstrual history(LMP):</span>' );
 ff(230,275,200,20,'<span class="tdname">Cycle</span>' );
 ff(354,278,200,20,'<span class="tdname">Regular</span>' );
 ff(420,278,200,20,'<span class="tdname">EDB</span>' );
 
-ff(121,271,100,20,"<%= props.getProperty("pg1_menLMP", "") %>" );
-ff(270,273,100,20,"<%= props.getProperty("pg1_menCycle", "") %>" );
-ff(342,277,20,20,"<%= props.getProperty("pg1_menReg", "") %>" );
+ff(121,271,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_menLMP", "")) %>" );
+ff(270,273,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_menCycle", "")) %>" );
+ff(342,277,20,20,"<%= props.getProperty("pg1_menReg", "").equals("")?"":"X" %>" );
 ff(453,273,100,20,"<%= props.getProperty("pg1_menEDB", "") %>" );
 ff(550,298,100,20,"<%= props.getProperty("c_finalEDB", "") %>" );
 
@@ -161,12 +166,12 @@ ff(65,306,200,20,'<span class="tdname">Hormonal(type)</span>' );
 ff(257,306,200,20,'<span class="tdname">Other</span>' );
 ff(390,303,200,20,'<span class="tdname">Last used</span>' );
 
-ff(12,306,20,20,"<%= props.getProperty("pg1_iud", "") %>" );
-ff(53,306,20,20,"<%= props.getProperty("pg1_hormone", "") %>" );
-ff(140,306,200,20,"<%= props.getProperty("pg1_hormoneType", "") %>" );
-ff(244,306,20,20,"<%= props.getProperty("pg1_other", "") %>" );
-ff(286,303,200,20,"<%= props.getProperty("pg1_otherName", "") %>" );
-ff(440,298,100,20,"<%= props.getProperty("pg1_lastUsed", "") %>" );
+ff(12,306,20,20,"<%= props.getProperty("pg1_iud", "").equals("")?"":"X" %>" );
+ff(53,306,20,20,"<%= props.getProperty("pg1_hormone", "").equals("")?"":"X" %>" );
+ff(140,306,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_hormoneType", "")) %>" );
+ff(244,306,20,20,"<%= props.getProperty("pg1_otherAR1", "").equals("")?"":"X" %>" );
+ff(286,303,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_otherAR1Name", "")) %>" );
+ff(440,298,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_lastUsed", "")) %>" );
 
 ff(6,334,200,20,'<span class="tdname">Gravida</span>' );
 ff(66,334,200,20,'<span class="tdname">Term</span>' );
@@ -180,18 +185,18 @@ ff(605,334,100,20,'<span class="tdname">Living</span>' );
 ff(638,334,200,20,'<span class="tdname">Multipregnancy</span>' );
 ff(639,349,50,20,'<span class="tdname">No.</span>' );
 
-ff(12,348,100,20,"<%= props.getProperty("c_gravida", "") %>" );
-ff(70,348,100,20,"<%= props.getProperty("c_term", "") %>" );
-ff(93,348,100,20,"<%= props.getProperty("c_prem", "") %>" );
-ff(131,347,20,20,"<%= props.getProperty("pg1_ectopic", "") %>" );
-ff(189,344,100,20,"<%= props.getProperty("pg1_ectopicBox", "") %>" );
-ff(244,347,20,20,"<%= props.getProperty("pg1_termination", "") %>" );
-ff(312,344,100,20,"<%= props.getProperty("pg1_terminationBox", "") %>" );
-ff(367,347,20,20,"<%= props.getProperty("pg1_spontaneous", "") %>" );
-ff(442,344,100,20,"<%= props.getProperty("pg1_spontaneousBox", "") %>" );
-ff(504,347,20,20,"<%= props.getProperty("pg1_stillborn", "") %>" );
-ff(555,344,100,20,"<%= props.getProperty("pg1_stillbornBox", "") %>" );
-ff(605,348,100,20,"<%= props.getProperty("c_living", "") %>" );
+ff(12,348,100,20,"<%= UtilMisc.JSEscape(props.getProperty("c_gravida", "")) %>" );
+ff(70,348,100,20,"<%= UtilMisc.JSEscape(props.getProperty("c_term", "")) %>" );
+ff(93,348,100,20,"<%= UtilMisc.JSEscape(props.getProperty("c_prem", "")) %>" );
+ff(131,347,20,20,"<%= props.getProperty("pg1_ectopic", "").equals("")?"":"X" %>" );
+ff(189,344,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_ectopicBox", "")) %>" );
+ff(244,347,20,20,"<%= props.getProperty("pg1_termination", "").equals("")?"":"X" %>" );
+ff(312,344,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_terminationBox", "")) %>" );
+ff(367,347,20,20,"<%= props.getProperty("pg1_spontaneous", "").equals("")?"":"X" %>" );
+ff(442,344,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_spontaneousBox", "")) %>" );
+ff(504,347,20,20,"<%= props.getProperty("pg1_stillborn", "").equals("")?"":"X" %>" );
+ff(555,344,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_stillbornBox", "")) %>" );
+ff(605,348,100,20,"<%= UtilMisc.JSEscape(props.getProperty("c_living", "")) %>" );
 ff(653,350,200,20,"<%= props.getProperty("pg1_multi", "") %>" );
 
 ff(12,395,50,20,'<span class="tdname">No.</span>' );
@@ -214,73 +219,67 @@ ff(12,421,20,20,"1" );
 ff(36,421,100,20,"<%= props.getProperty("pg1_year1", "") %>" );
 ff(78,421,20,20,"<%= props.getProperty("pg1_sex1", "") %>" );
 ff(100,421,100,20,"<%= props.getProperty("pg1_oh_gest1", "") %>" );
-ff(148,421,100,20,"<%= props.getProperty("pg1_weight1", "") %>" );
-ff(200,421,100,20,"<%= props.getProperty("pg1_length1", "") %>" );
-ff(245,421,200,20,"<%= props.getProperty("pg1_place1", "") %>" );
-ff(338,421,20,20,"<%= props.getProperty("pg1_svb1", "") %>" );
-ff(353,421,20,20,"<%= props.getProperty("pg1_cs1", "") %>" );
-ff(369,421,20,20,"<%= props.getProperty("pg1_ass1", "") %>" );
-//ff(392,421,340,20,"<%= props.getProperty("pg1_oh_comments1", "") %>" );
+ff(148,421,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_weight1", "")) %>" );
+ff(200,421,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_length1", "")) %>" );
+ff(245,421,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_place1", "")) %>" );
+ff(338,421,20,20,"<%= props.getProperty("pg1_svb1", "").equals("")?"":"X" %>" );
+ff(353,421,20,20,"<%= props.getProperty("pg1_cs1", "").equals("")?"":"X" %>" );
+ff(369,421,20,20,"<%= props.getProperty("pg1_ass1", "").equals("")?"":"X" %>" );
 
 ff(12,439,20,20,"2" );
 ff(36,439,100,20,"<%= props.getProperty("pg1_year2", "") %>" );
 ff(78,439,20,20,"<%= props.getProperty("pg1_sex2", "") %>" );
 ff(100,439,100,20,"<%= props.getProperty("pg1_oh_gest2", "") %>" );
-ff(148,439,100,20,"<%= props.getProperty("pg1_weight2", "") %>" );
-ff(200,439,100,20,"<%= props.getProperty("pg1_length2", "") %>" );
-ff(245,439,200,20,"<%= props.getProperty("pg1_place2", "") %>" );
-ff(338,439,20,20,"<%= props.getProperty("pg1_svb2", "") %>" );
-ff(353,439,20,20,"<%= props.getProperty("pg1_cs2", "") %>" );
-ff(369,439,20,20,"<%= props.getProperty("pg1_ass2", "") %>" );
-//ff(392,439,340,20,"<%= props.getProperty("pg1_oh_comments2", "") %>" );
+ff(148,439,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_weight2", "")) %>" );
+ff(200,439,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_length2", "")) %>" );
+ff(245,439,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_place2", "")) %>" );
+ff(338,439,20,20,"<%= props.getProperty("pg1_svb2", "").equals("")?"":"X" %>" );
+ff(353,439,20,20,"<%= props.getProperty("pg1_cs2", "").equals("")?"":"X" %>" );
+ff(369,439,20,20,"<%= props.getProperty("pg1_ass2", "").equals("")?"":"X" %>" );
 
 ff(12,457,20,20,"3" );
 ff(36,457,100,20,"<%= props.getProperty("pg1_year3", "") %>" );
 ff(78,457,20,20,"<%= props.getProperty("pg1_sex3", "") %>" );
 ff(100,457,100,20,"<%= props.getProperty("pg1_oh_gest3", "") %>" );
-ff(148,457,100,20,"<%= props.getProperty("pg1_weight3", "") %>" );
-ff(200,457,100,20,"<%= props.getProperty("pg1_length3", "") %>" );
-ff(245,457,200,20,"<%= props.getProperty("pg1_place3", "") %>" );
-ff(338,457,20,20,"<%= props.getProperty("pg1_svb3", "") %>" );
-ff(353,457,20,20,"<%= props.getProperty("pg1_cs3", "") %>" );
-ff(369,457,20,20,"<%= props.getProperty("pg1_ass3", "") %>" );
-//ff(392,457,340,20,"<%= props.getProperty("pg1_oh_comments3", "") %>" );
+ff(148,457,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_weight3", "")) %>" );
+ff(200,457,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_length3", "")) %>" );
+ff(245,457,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_place3", "")) %>" );
+ff(338,457,20,20,"<%= props.getProperty("pg1_svb3", "").equals("")?"":"X" %>" );
+ff(353,457,20,20,"<%= props.getProperty("pg1_cs3", "").equals("")?"":"X" %>" );
+ff(369,457,20,20,"<%= props.getProperty("pg1_ass3", "").equals("")?"":"X" %>" );
 
 ff(12,476,20,20,"4" );
 ff(36,476,100,20,"<%= props.getProperty("pg1_year4", "") %>" );
 ff(78,476,20,20,"<%= props.getProperty("pg1_sex4", "") %>" );
 ff(100,476,100,20,"<%= props.getProperty("pg1_oh_gest4", "") %>" );
-ff(148,476,100,20,"<%= props.getProperty("pg1_weight4", "") %>" );
-ff(200,476,100,20,"<%= props.getProperty("pg1_length4", "") %>" );
-ff(245,476,200,20,"<%= props.getProperty("pg1_place4", "") %>" );
-ff(338,476,20,20,"<%= props.getProperty("pg1_svb4", "") %>" );
-ff(353,476,20,20,"<%= props.getProperty("pg1_cs4", "") %>" );
-ff(369,476,20,20,"<%= props.getProperty("pg1_ass4", "") %>" );
-//ff(392,476,340,20,"<%= props.getProperty("pg1_oh_comments4", "") %>" );
+ff(148,476,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_weight4", "")) %>" );
+ff(200,476,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_length4", "")) %>" );
+ff(245,476,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_place4", "")) %>" );
+ff(338,476,20,20,"<%= props.getProperty("pg1_svb4", "").equals("")?"":"X" %>" );
+ff(353,476,20,20,"<%= props.getProperty("pg1_cs4", "").equals("")?"":"X" %>" );
+ff(369,476,20,20,"<%= props.getProperty("pg1_ass4", "").equals("")?"":"X" %>" );
 
 ff(12,494,20,20,"5" );
 ff(36,494,100,20,"<%= props.getProperty("pg1_year5", "") %>" );
 ff(78,494,20,20,"<%= props.getProperty("pg1_sex5", "") %>" );
 ff(100,494,100,20,"<%= props.getProperty("pg1_oh_gest5", "") %>" );
-ff(148,494,100,20,"<%= props.getProperty("pg1_weight5", "") %>" );
-ff(200,494,100,20,"<%= props.getProperty("pg1_length5", "") %>" );
-ff(245,494,200,20,"<%= props.getProperty("pg1_place5", "") %>" );
-ff(338,494,20,20,"<%= props.getProperty("pg1_svb5", "") %>" );
-ff(353,494,20,20,"<%= props.getProperty("pg1_cs5", "") %>" );
-ff(369,494,20,20,"<%= props.getProperty("pg1_ass5", "") %>" );
-//ff(392,494,340,20,"<%= props.getProperty("pg1_oh_comments5", "") %>" );
+ff(148,494,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_weight5", "")) %>" );
+ff(200,494,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_length5", "")) %>" );
+ff(245,494,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_place5", "")) %>" );
+ff(338,494,20,20,"<%= props.getProperty("pg1_svb5", "").equals("")?"":"X" %>" );
+ff(353,494,20,20,"<%= props.getProperty("pg1_cs5", "").equals("")?"":"X" %>" );
+ff(369,494,20,20,"<%= props.getProperty("pg1_ass5", "").equals("")?"":"X" %>" );
 
 ff(12,512,20,20,"6" );
 ff(36,512,100,20,"<%= props.getProperty("pg1_year6", "") %>" );
 ff(78,512,20,20,"<%= props.getProperty("pg1_sex6", "") %>" );
 ff(100,512,100,20,"<%= props.getProperty("pg1_oh_gest6", "") %>" );
-ff(148,512,100,20,"<%= props.getProperty("pg1_weight6", "") %>" );
-ff(200,512,100,20,"<%= props.getProperty("pg1_length6", "") %>" );
-ff(245,512,200,20,"<%= props.getProperty("pg1_place6", "") %>" );
-ff(338,512,20,20,"<%= props.getProperty("pg1_svb6", "") %>" );
-ff(353,512,20,20,"<%= props.getProperty("pg1_cs6", "") %>" );
-ff(369,512,20,20,"<%= props.getProperty("pg1_ass6", "") %>" );
-//ff(392,512,340,20,"<%= props.getProperty("pg1_oh_comments6", "") %>" );
+ff(148,512,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_weight6", "")) %>" );
+ff(200,512,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_length6", "")) %>" );
+ff(245,512,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_place6", "")) %>" );
+ff(338,512,20,20,"<%= props.getProperty("pg1_svb6", "").equals("")?"":"X" %>" );
+ff(353,512,20,20,"<%= props.getProperty("pg1_cs6", "").equals("")?"":"X" %>" );
+ff(369,512,20,20,"<%= props.getProperty("pg1_ass6", "").equals("")?"":"X" %>" );
 
 ff(16,549,200,20,'<span class="tdname">Current Pregnancy</span>' );
 ff(145,549,200,20,'<span class="tdname">Medical</span>' );
@@ -313,16 +312,16 @@ ff(7,679,200,20,'<span class="smalltdname">8.</span>' );
 ff(25,679,200,20,'<span class="smalltdname">Occup./Env.</span>' );
 ff(25,689,200,20,'<span class="smalltdname">hazards</span>' );
 
-ff(102,572,20,20,"<%= props.getProperty("pg1_cp1", "") %>" );
-ff(102,584,20,20,"<%= props.getProperty("pg1_cp2", "") %>" );
-ff(66,605,100,20,"<%= props.getProperty("pg1_box3", "") %>" );
-ff(102,608,20,20,"<%= props.getProperty("pg1_cp3", "") %>" );
-ff(102,620,20,20,"<%= props.getProperty("pg1_cp4", "") %>" );
-ff(69,641,100,20,"<%= props.getProperty("pg1_box5", "") %>" );
-ff(102,644,20,20,"<%= props.getProperty("pg1_cp5", "") %>" );
-ff(102,656,20,20,"<%= props.getProperty("pg1_cp6", "") %>" );
-ff(102,668,20,20,"<%= props.getProperty("pg1_cp7", "") %>" );
-ff(102,680,20,20,"<%= props.getProperty("pg1_cp8", "") %>" );
+ff(102,572,20,20,"<%= props.getProperty("pg1_cp1", "").equals("")?"":"X" %>" );
+ff(102,584,20,20,"<%= props.getProperty("pg1_cp2", "").equals("")?"":"X" %>" );
+ff(66,605,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_box3", "")) %>" );
+ff(102,608,20,20,"<%= props.getProperty("pg1_cp3", "").equals("")?"":"X" %>" );
+ff(102,620,20,20,"<%= props.getProperty("pg1_cp4", "").equals("")?"":"X" %>" );
+ff(69,641,100,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_box5", "")) %>" );
+ff(102,644,20,20,"<%= props.getProperty("pg1_cp5", "").equals("")?"":"X" %>" );
+ff(102,656,20,20,"<%= props.getProperty("pg1_cp6", "").equals("")?"":"X" %>" );
+ff(102,668,20,20,"<%= props.getProperty("pg1_cp7", "").equals("")?"":"X" %>" );
+ff(102,680,20,20,"<%= props.getProperty("pg1_cp8", "").equals("")?"":"X" %>" );
 
 ff(10,704,200,20,'<span class="smalltdname"><b>Nutrition Assessment</b></span>' );
 ff(10,714,200,20,'<span class="smalltdname"><i>(check if positive)</i></span>' );
@@ -333,11 +332,11 @@ ff(27,759,200,20,'<span class="smalltdname">Balanced</span>' );
 ff(27,770,200,20,'<span class="smalltdname">Restricted</span>' );
 ff(8,782,200,20,'<span class="smalltdname">Dietitian referral</span>' );
 
-ff(102,727,20,20,"<%= props.getProperty("pg1_naFolic", "") %>" );
-ff(102,739,20,20,"<%= props.getProperty("pg1_naMilk", "") %>" );
-ff(102,758,20,20,"<%= props.getProperty("pg1_naDietBal", "") %>" );
-ff(102,771,20,20,"<%= props.getProperty("pg1_naDietRes", "") %>" );
-ff(102,783,20,20,"<%= props.getProperty("pg1_naRef", "") %>" );
+ff(102,727,20,20,"<%= props.getProperty("pg1_naFolic", "").equals("")?"":"X" %>" );
+ff(102,739,20,20,"<%= props.getProperty("pg1_naMilk", "").equals("")?"":"X" %>" );
+ff(102,758,20,20,"<%= props.getProperty("pg1_naDietBal", "").equals("")?"":"X" %>" );
+ff(102,771,20,20,"<%= props.getProperty("pg1_naDietRes", "").equals("")?"":"X" %>" );
+ff(102,783,20,20,"<%= props.getProperty("pg1_naRef", "").equals("")?"":"X" %>" );
 
 ff(122,572,200,20,'<span class="smalltdname">9.</span>' );
 ff(137,572,200,20,'<span class="smalltdname">Hypertension</span>' );
@@ -374,41 +373,41 @@ ff(137,752,200,20,'<span class="smalltdname">Psychiatric illness</span>' );
 ff(122,764,200,20,'<span class="smalltdname">25.</span>' );
 ff(137,764,200,20,'<span class="smalltdname">Other</span>' );
 
-ff(228,573,20,20,"<%= props.getProperty("pg1_yes9", "") %>" );
-ff(246,573,20,20,"<%= props.getProperty("pg1_no9", "") %>" );
-ff(228,585,20,20,"<%= props.getProperty("pg1_yes10", "") %>" );
-ff(246,585,20,20,"<%= props.getProperty("pg1_no10", "") %>" );
-ff(228,597,20,20,"<%= props.getProperty("pg1_yes11", "") %>" );
-ff(246,597,20,20,"<%= props.getProperty("pg1_no11", "") %>" );
-ff(228,609,20,20,"<%= props.getProperty("pg1_yes12", "") %>" );
-ff(246,609,20,20,"<%= props.getProperty("pg1_no12", "") %>" );
-ff(228,621,20,20,"<%= props.getProperty("pg1_yes13", "") %>" );
-ff(246,621,20,20,"<%= props.getProperty("pg1_no13", "") %>" );
-ff(228,633,20,20,"<%= props.getProperty("pg1_yes14", "") %>" );
-ff(246,633,20,20,"<%= props.getProperty("pg1_no14", "") %>" );
-ff(228,645,20,20,"<%= props.getProperty("pg1_yes15", "") %>" );
-ff(246,645,20,20,"<%= props.getProperty("pg1_no15", "") %>" );
-ff(228,657,20,20,"<%= props.getProperty("pg1_yes16", "") %>" );
-ff(246,657,20,20,"<%= props.getProperty("pg1_no16", "") %>" );
-ff(228,669,20,20,"<%= props.getProperty("pg1_yes17", "") %>" );
-ff(246,669,20,20,"<%= props.getProperty("pg1_no17", "") %>" );
-ff(228,681,20,20,"<%= props.getProperty("pg1_yes18", "") %>" );
-ff(246,681,20,20,"<%= props.getProperty("pg1_no18", "") %>" );
-ff(228,693,20,20,"<%= props.getProperty("pg1_yes19", "") %>" );
-ff(246,693,20,20,"<%= props.getProperty("pg1_no19", "") %>" );
-ff(228,705,20,20,"<%= props.getProperty("pg1_yes20", "") %>" );
-ff(246,705,20,20,"<%= props.getProperty("pg1_no20", "") %>" );
-ff(228,717,20,20,"<%= props.getProperty("pg1_yes21", "") %>" );
-ff(246,717,20,20,"<%= props.getProperty("pg1_no21", "") %>" );
-ff(228,729,20,20,"<%= props.getProperty("pg1_yes22", "") %>" );
-ff(246,729,20,20,"<%= props.getProperty("pg1_no22", "") %>" );
-ff(228,741,20,20,"<%= props.getProperty("pg1_yes23", "") %>" );
-ff(246,741,20,20,"<%= props.getProperty("pg1_no23", "") %>" );
-ff(228,753,20,20,"<%= props.getProperty("pg1_yes24", "") %>" );
-ff(246,753,20,20,"<%= props.getProperty("pg1_no24", "") %>" );
-ff(228,765,20,20,"<%= props.getProperty("pg1_yes25", "") %>" );
-ff(246,765,20,20,"<%= props.getProperty("pg1_no25", "") %>" );
-ff(136,780,200,20,"<%= props.getProperty("pg1_box25", "") %>" );
+ff(228,573,20,20,"<%= props.getProperty("pg1_yes9", "").equals("")?"":"X" %>" );
+ff(246,573,20,20,"<%= props.getProperty("pg1_no9", "").equals("")?"":"X" %>" );
+ff(228,585,20,20,"<%= props.getProperty("pg1_yes10", "").equals("")?"":"X" %>" );
+ff(246,585,20,20,"<%= props.getProperty("pg1_no10", "").equals("")?"":"X" %>" );
+ff(228,597,20,20,"<%= props.getProperty("pg1_yes11", "").equals("")?"":"X" %>" );
+ff(246,597,20,20,"<%= props.getProperty("pg1_no11", "").equals("")?"":"X" %>" );
+ff(228,609,20,20,"<%= props.getProperty("pg1_yes12", "").equals("")?"":"X" %>" );
+ff(246,609,20,20,"<%= props.getProperty("pg1_no12", "").equals("")?"":"X" %>" );
+ff(228,621,20,20,"<%= props.getProperty("pg1_yes13", "").equals("")?"":"X" %>" );
+ff(246,621,20,20,"<%= props.getProperty("pg1_no13", "").equals("")?"":"X" %>" );
+ff(228,633,20,20,"<%= props.getProperty("pg1_yes14", "").equals("")?"":"X" %>" );
+ff(246,633,20,20,"<%= props.getProperty("pg1_no14", "").equals("")?"":"X" %>" );
+ff(228,645,20,20,"<%= props.getProperty("pg1_yes15", "").equals("")?"":"X" %>" );
+ff(246,645,20,20,"<%= props.getProperty("pg1_no15", "").equals("")?"":"X" %>" );
+ff(228,657,20,20,"<%= props.getProperty("pg1_yes16", "").equals("")?"":"X" %>" );
+ff(246,657,20,20,"<%= props.getProperty("pg1_no16", "").equals("")?"":"X" %>" );
+ff(228,669,20,20,"<%= props.getProperty("pg1_yes17", "").equals("")?"":"X" %>" );
+ff(246,669,20,20,"<%= props.getProperty("pg1_no17", "").equals("")?"":"X" %>" );
+ff(228,681,20,20,"<%= props.getProperty("pg1_yes18", "").equals("")?"":"X" %>" );
+ff(246,681,20,20,"<%= props.getProperty("pg1_no18", "").equals("")?"":"X" %>" );
+ff(228,693,20,20,"<%= props.getProperty("pg1_yes19", "").equals("")?"":"X" %>" );
+ff(246,693,20,20,"<%= props.getProperty("pg1_no19", "").equals("")?"":"X" %>" );
+ff(228,705,20,20,"<%= props.getProperty("pg1_yes20", "").equals("")?"":"X" %>" );
+ff(246,705,20,20,"<%= props.getProperty("pg1_no20", "").equals("")?"":"X" %>" );
+ff(228,717,20,20,"<%= props.getProperty("pg1_yes21", "").equals("")?"":"X" %>" );
+ff(246,717,20,20,"<%= props.getProperty("pg1_no21", "").equals("")?"":"X" %>" );
+ff(228,729,20,20,"<%= props.getProperty("pg1_yes22", "").equals("")?"":"X" %>" );
+ff(246,729,20,20,"<%= props.getProperty("pg1_no22", "").equals("")?"":"X" %>" );
+ff(228,741,20,20,"<%= props.getProperty("pg1_yes23", "").equals("")?"":"X" %>" );
+ff(246,741,20,20,"<%= props.getProperty("pg1_no23", "").equals("")?"":"X" %>" );
+ff(228,753,20,20,"<%= props.getProperty("pg1_yes24", "").equals("")?"":"X" %>" );
+ff(246,753,20,20,"<%= props.getProperty("pg1_no24", "").equals("")?"":"X" %>" );
+ff(228,765,20,20,"<%= props.getProperty("pg1_yes25", "").equals("")?"":"X" %>" );
+ff(246,765,20,20,"<%= props.getProperty("pg1_no25", "").equals("")?"":"X" %>" );
+ff(136,780,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_box25", "")) %>" );
 
 ff(267,571,200,20,'<span class="smalltdname">26.</span>' );
 ff(283,571,200,20,'<span class="smalltdname">Age&gt;=35 at EDB</span>' );
@@ -423,14 +422,14 @@ ff(283,619,200,20,'<span class="minitdname">(includes maternal diabetes)</span>'
 ff(267,630,200,20,'<span class="smalltdname">29.</span>' );
 ff(283,630,200,20,'<span class="smalltdname">Previous birth defect</span>' );
 
-ff(402,573,20,20,"<%= props.getProperty("pg1_yes26", "") %>" );
-ff(420,573,20,20,"<%= props.getProperty("pg1_no26", "") %>" );
-ff(402,585,20,20,"<%= props.getProperty("pg1_yes27", "") %>" );
-ff(420,585,20,20,"<%= props.getProperty("pg1_no27", "") %>" );
-ff(402,613,20,20,"<%= props.getProperty("pg1_yes28", "") %>" );
-ff(420,613,20,20,"<%= props.getProperty("pg1_no28", "") %>" );
-ff(402,632,20,20,"<%= props.getProperty("pg1_yes29", "") %>" );
-ff(420,632,20,20,"<%= props.getProperty("pg1_no29", "") %>" );
+ff(402,573,20,20,"<%= props.getProperty("pg1_yes26", "").equals("")?"":"X" %>" );
+ff(420,573,20,20,"<%= props.getProperty("pg1_no26", "").equals("")?"":"X" %>" );
+ff(402,585,20,20,"<%= props.getProperty("pg1_yes27", "").equals("")?"":"X" %>" );
+ff(420,585,20,20,"<%= props.getProperty("pg1_no27", "").equals("")?"":"X" %>" );
+ff(402,613,20,20,"<%= props.getProperty("pg1_yes28", "").equals("")?"":"X" %>" );
+ff(420,613,20,20,"<%= props.getProperty("pg1_no28", "").equals("")?"":"X" %>" );
+ff(402,632,20,20,"<%= props.getProperty("pg1_yes29", "").equals("")?"":"X" %>" );
+ff(420,632,20,20,"<%= props.getProperty("pg1_no29", "").equals("")?"":"X" %>" );
 
 ff(267,640,200,20,'<span class="smalltdname"><b>Family history of:</b></span>' );
 ff(267,651,200,20,'<span class="smalltdname">30.</span>' );
@@ -457,24 +456,24 @@ ff(283,768,200,20,'<span class="smalltdname">MSS</span>' );
 ff(283,777,200,20,'<span class="smalltdname">Offered</span>' );
 ff(283,786,200,20,'<span class="smalltdname">Accepted</span>' );
 
-ff(402,652,20,20,"<%= props.getProperty("pg1_yes30", "") %>" );
-ff(420,652,20,20,"<%= props.getProperty("pg1_no30", "") %>" );
-ff(402,664,20,20,"<%= props.getProperty("pg1_yes31", "") %>" );
-ff(420,664,20,20,"<%= props.getProperty("pg1_no31", "") %>" );
-ff(402,676,20,20,"<%= props.getProperty("pg1_yes32", "") %>" );
-ff(420,676,20,20,"<%= props.getProperty("pg1_no32", "") %>" );
-ff(402,699,20,20,"<%= props.getProperty("pg1_yes33", "") %>" );
-ff(420,699,20,20,"<%= props.getProperty("pg1_no33", "") %>" );
-ff(402,712,20,20,"<%= props.getProperty("pg1_yes34", "") %>" );
-ff(420,712,20,20,"<%= props.getProperty("pg1_no34", "") %>" );
-ff(402,731,20,20,"<%= props.getProperty("pg1_yes35", "") %>" );
-ff(420,731,20,20,"<%= props.getProperty("pg1_no35", "") %>" );
-ff(402,759,20,20,"<%= props.getProperty("pg1_yes36", "") %>" );
-ff(420,759,20,20,"<%= props.getProperty("pg1_no36", "") %>" );
-ff(402,776,20,20,"<%= props.getProperty("pg1_yes37off", "") %>" );
-ff(420,776,20,20,"<%= props.getProperty("pg1_no37off", "") %>" );
-ff(402,788,20,20,"<%= props.getProperty("pg1_yes37acc", "") %>" );
-ff(420,788,20,20,"<%= props.getProperty("pg1_no37acc", "") %>" );
+ff(402,652,20,20,"<%= props.getProperty("pg1_yes30", "").equals("")?"":"X" %>" );
+ff(420,652,20,20,"<%= props.getProperty("pg1_no30", "").equals("")?"":"X" %>" );
+ff(402,664,20,20,"<%= props.getProperty("pg1_yes31", "").equals("")?"":"X" %>" );
+ff(420,664,20,20,"<%= props.getProperty("pg1_no31", "").equals("")?"":"X" %>" );
+ff(402,676,20,20,"<%= props.getProperty("pg1_yes32", "").equals("")?"":"X" %>" );
+ff(420,676,20,20,"<%= props.getProperty("pg1_no32", "").equals("")?"":"X" %>" );
+ff(402,699,20,20,"<%= props.getProperty("pg1_yes33", "").equals("")?"":"X" %>" );
+ff(420,699,20,20,"<%= props.getProperty("pg1_no33", "").equals("")?"":"X" %>" );
+ff(402,712,20,20,"<%= props.getProperty("pg1_yes34", "").equals("")?"":"X" %>" );
+ff(420,712,20,20,"<%= props.getProperty("pg1_no34", "").equals("")?"":"X" %>" );
+ff(402,731,20,20,"<%= props.getProperty("pg1_yes35", "").equals("")?"":"X" %>" );
+ff(420,731,20,20,"<%= props.getProperty("pg1_no35", "").equals("")?"":"X" %>" );
+ff(402,759,20,20,"<%= props.getProperty("pg1_yes36", "").equals("")?"":"X" %>" );
+ff(420,759,20,20,"<%= props.getProperty("pg1_no36", "").equals("")?"":"X" %>" );
+ff(402,776,20,20,"<%= props.getProperty("pg1_yes37off", "").equals("")?"":"X" %>" );
+ff(420,776,20,20,"<%= props.getProperty("pg1_no37off", "").equals("")?"":"X" %>" );
+ff(402,788,20,20,"<%= props.getProperty("pg1_yes37acc", "").equals("")?"":"X" %>" );
+ff(420,788,20,20,"<%= props.getProperty("pg1_no37acc", "").equals("")?"":"X" %>" );
 
 ff(442,571,200,20,'<span class="smalltdname">38.</span>' );
 ff(461,571,200,20,'<span class="smalltdname">STDs/Herpes</span>' );
@@ -487,12 +486,12 @@ ff(461,607,200,20,'<span class="smalltdname">Toxo/CMV/Parvo</span>' );
 ff(442,619,200,20,'<span class="smalltdname">42.</span>' );
 ff(461,619,200,20,'<span class="smalltdname">TB/Other</span>' );
 
-ff(572,573,20,20,"<%= props.getProperty("pg1_idt38", "") %>" );
-ff(572,585,20,20,"<%= props.getProperty("pg1_idt39", "") %>" );
-ff(572,597,20,20,"<%= props.getProperty("pg1_idt40", "") %>" );
-ff(572,609,20,20,"<%= props.getProperty("pg1_idt41", "") %>" );
-ff(500,617,200,20,'<span class="smalltdname"><%= props.getProperty("pg1_box42", "") %></span>' );
-ff(572,621,20,20,"<%= props.getProperty("pg1_idt42", "") %>" );
+ff(572,573,20,20,"<%= props.getProperty("pg1_idt38", "").equals("")?"":"X" %>" );
+ff(572,585,20,20,"<%= props.getProperty("pg1_idt39", "").equals("")?"":"X" %>" );
+ff(572,597,20,20,"<%= props.getProperty("pg1_idt40", "").equals("")?"":"X" %>" );
+ff(572,609,20,20,"<%= props.getProperty("pg1_idt41", "").equals("")?"":"X" %>" );
+ff(500,617,200,20,'<span class="smalltdname"><%= UtilMisc.JSEscape(props.getProperty("pg1_box42", "")) %></span>' );
+ff(572,621,20,20,"<%= props.getProperty("pg1_idt42", "").equals("")?"":"X" %>" );
 
 ff(442,640,200,20,'<span class="smalltdname"><b>Psychosocial discussion topics</b></span>' );
 ff(442,654,200,20,'<span class="smalltdname">43.</span>' );
@@ -508,12 +507,12 @@ ff(461,702,200,20,'<span class="smalltdname">Family violence</span>' );
 ff(442,714,200,20,'<span class="smalltdname">48.</span>' );
 ff(461,714,200,20,'<span class="smalltdname">Parenting concerns</span>' );
 
-ff(572,656,20,20,"<%= props.getProperty("pg1_pdt43", "") %>" );
-ff(572,668,20,20,"<%= props.getProperty("pg1_pdt44", "") %>" );
-ff(572,680,20,20,"<%= props.getProperty("pg1_pdt45", "") %>" );
-ff(572,692,20,20,"<%= props.getProperty("pg1_pdt46", "") %>" );
-ff(572,704,20,20,"<%= props.getProperty("pg1_pdt47", "") %>" );
-ff(572,716,20,20,"<%= props.getProperty("pg1_pdt48", "") %>" );
+ff(572,656,20,20,"<%= props.getProperty("pg1_pdt43", "").equals("")?"":"X" %>" );
+ff(572,668,20,20,"<%= props.getProperty("pg1_pdt44", "").equals("")?"":"X" %>" );
+ff(572,680,20,20,"<%= props.getProperty("pg1_pdt45", "").equals("")?"":"X" %>" );
+ff(572,692,20,20,"<%= props.getProperty("pg1_pdt46", "").equals("")?"":"X" %>" );
+ff(572,704,20,20,"<%= props.getProperty("pg1_pdt47", "").equals("")?"":"X" %>" );
+ff(572,716,20,20,"<%= props.getProperty("pg1_pdt48", "").equals("")?"":"X" %>" );
 
 ff(442,734,200,20,'<span class="smalltdname"><b>Risk factors identified</b></span>' );
 
@@ -522,10 +521,10 @@ ff(652,565,100,20,'<span class="smalltdname">Wt.</span>' );
 ff(590,587,200,20,'<span class="smalltdname">Pre-preg. wt.</span>' );
 ff(590,608,100,20,'<span class="smalltdname">BP</span>' );
 
-ff(602,565,20,20,"<%= props.getProperty("pg1_ht", "") %>" );
-ff(672,565,20,20,"<%= props.getProperty("pg1_wt", "") %>" );
-ff(642,585,20,20,"<%= props.getProperty("c_ppWt", "") %>" );
-ff(610,608,20,20,"<%= props.getProperty("pg1_BP", "") %>" );
+ff(602,565,20,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_ht", "")) %>" );
+ff(672,565,20,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_wt", "")) %>" );
+ff(642,585,20,20,"<%= UtilMisc.JSEscape(props.getProperty("c_ppWt", "")) %>" );
+ff(610,608,20,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_BP", "")) %>" );
 
 ff(591,630,200,20,'<span class="smalltdname"><b>Checkmark if normal:</b></span>' );
 ff(591,643,200,20,'<span class="smalltdname">Head, teeth, ENT</span>' );
@@ -543,22 +542,22 @@ ff(591,771,200,20,'<span class="smalltdname">Uterus</span>' );
 ff(640,771,200,20,'<span class="smalltdname">(no. of wks.)</span>' );
 ff(591,785,200,20,'<span class="smalltdname">Adnexa</span>' );
 
-ff(693,643,20,20,"<%= props.getProperty("pg1_head", "") %>" );
-ff(693,655,20,20,"<%= props.getProperty("pg1_thyroid", "") %>" );
-ff(693,667,20,20,"<%= props.getProperty("pg1_chest", "") %>" );
-ff(693,679,20,20,"<%= props.getProperty("pg1_breasts", "") %>" );
-ff(693,691,20,20,"<%= props.getProperty("pg1_cardio", "") %>" );
-ff(693,703,20,20,"<%= props.getProperty("pg1_abdomen", "") %>" );
-ff(693,715,20,20,"<%= props.getProperty("pg1_vari", "") %>" );
-ff(693,727,20,20,"<%= props.getProperty("pg1_neuro", "") %>" );
-ff(693,739,20,20,"<%= props.getProperty("pg1_pelvic", "") %>" );
-ff(693,751,20,20,"<%= props.getProperty("pg1_extGen", "") %>" );
-ff(693,763,20,20,"<%= props.getProperty("pg1_cervix", "") %>" );
-ff(622,771,20,20,'<span class="smalltdname"><%= props.getProperty("pg1_uterusBox", "") %></span>' );
-ff(693,775,20,20,"<%= props.getProperty("pg1_uterus", "") %>" );
-ff(693,787,20,20,"<%= props.getProperty("pg1_adnexa", "") %>" );
+ff(693,643,20,20,"<%= props.getProperty("pg1_head", "").equals("")?"":"X" %>" );
+ff(693,655,20,20,"<%= props.getProperty("pg1_thyroid", "").equals("")?"":"X" %>" );
+ff(693,667,20,20,"<%= props.getProperty("pg1_chest", "").equals("")?"":"X" %>" );
+ff(693,679,20,20,"<%= props.getProperty("pg1_breasts", "").equals("")?"":"X" %>" );
+ff(693,691,20,20,"<%= props.getProperty("pg1_cardio", "").equals("")?"":"X" %>" );
+ff(693,703,20,20,"<%= props.getProperty("pg1_abdomen", "").equals("")?"":"X" %>" );
+ff(693,715,20,20,"<%= props.getProperty("pg1_vari", "").equals("")?"":"X" %>" );
+ff(693,727,20,20,"<%= props.getProperty("pg1_neuro", "").equals("")?"":"X" %>" );
+ff(693,739,20,20,"<%= props.getProperty("pg1_pelvic", "").equals("")?"":"X" %>" );
+ff(693,751,20,20,"<%= props.getProperty("pg1_extGen", "").equals("")?"":"X" %>" );
+ff(693,763,20,20,"<%= props.getProperty("pg1_cervix", "").equals("")?"":"X" %>" );
+ff(622,771,20,20,'<span class="smalltdname"><%= UtilMisc.JSEscape(props.getProperty("pg1_uterusBox", "")) %></span>' );
+ff(693,775,20,20,"<%= props.getProperty("pg1_uterus", "").equals("")?"":"X" %>" );
+ff(693,787,20,20,"<%= props.getProperty("pg1_adnexa", "").equals("")?"":"X" %>" );
 
-ff(20,935,200,20,"<%= props.getProperty("pg1_signature", "") %>" );
+ff(20,935,200,20,"<%= UtilMisc.JSEscape(props.getProperty("pg1_signature", "")) %>" );
 ff(500,935,100,20,"<%= props.getProperty("pg1_formDate", "") %>" );
 
 ff(6,919,300,20,'<span class="tdname">Signature of attendant</span>' );

@@ -47,7 +47,9 @@
     java.util.Properties props = rec.getMentalHealthRecord(demoNo, formId, provNo);
     oscar.oscarEncounter.util.EctFileUtil list = new oscar.oscarEncounter.util.EctFileUtil();
     props.setProperty("c_lastVisited", "Assessment");
-    props.setProperty("a_formDate", oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "yyyy/MM/dd"));
+    if (props.getProperty("a_formDate","").equals("")){
+       props.setProperty("a_formDate", oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "yyyy/MM/dd"));
+    }
 %>
 
 
@@ -110,11 +112,88 @@
             break;
         }
     }
+    function numvalidate() {
+            if( isNaN(document.forms[0].a_aps1.value) ) {
+                bringthToAttentionth(document.forms[0].a_aps1);
+                return false;
+            }
+            if( isNaN(document.forms[0].a_aps2.value)) {
+                bringthToAttentionth(document.forms[0].a_aps2);
+                return false;
+            }
+            if(isNaN(document.forms[0].a_aps3.value)) {
+                bringthToAttentionth(document.forms[0].a_aps3);
+                return false;
+            }
+            if(isNaN(document.forms[0].a_api1.value)) {
+                bringthToAttentionth(document.forms[0].a_api1);
+                return false;
+            }
+            if(isNaN(document.forms[0].a_api2.value)) {
+                 bringthToAttentionth(document.forms[0].a_api2);
+                 return false;
+            }
+            if(isNaN(document.forms[0].a_api3.value)) {
+                 bringthToAttentionth(document.forms[0].a_api3);
+                 return false;
+            }
+            if(isNaN(document.forms[0].a_ampi1.value)) {
+                 bringthToAttentionth(document.forms[0].a_ampi1);
+                 return false;
+            }
+            if(isNaN(document.forms[0].a_ampi2.value)) {
+                 bringthToAttentionth(document.forms[0].a_ampi2);
+                 return false;
+            }
+            if(isNaN(document.forms[0].a_ampi3.value)) {
+                 bringthToAttentionth(document.forms[0].a_ampi3);
+                 return false;
+            }
+            if(isNaN(document.forms[0].a_tp1.value)) {
+                 bringthToAttentionth(document.forms[0].a_tp1);
+                 return false;
+            }
+            if(isNaN(document.forms[0].a_tp2.value)) {
+                 bringthToAttentionth(document.forms[0].a_tp2);
+                 return false;
+            }
+            if(isNaN(document.forms[0].a_tp3.value)) {
+                 bringthToAttentionth(document.forms[0].a_tp3);
+                 return false;
+            }
+
+
+    }
+    function bringthToAttentionth(docItem){
+       docItem.focus();
+       alert("This value must be numeric.");
+    }
+
 </script>
+<style type="text/css">
+ A.mhlink:link {
+        COLOR: black;
+        TEXT-DECORATION: none;
+ }
+
+ A.mhlink:visited {
+        COLOR: black;
+        TEXT-DECORATION: none;
+ }
+ A.mhlink:active {
+        COLOR: black;
+        TEXT-DECORATION: none;
+ }
+ A.mhlink:hover {
+        color: red;
+        TEXT-DECORATION: underline;
+ }
+</style>
+
 </head>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
-<html:form action="/oscarEncounter/MentalHealth">
+<html:form action="/oscarEncounter/MentalHealth" onsubmit="return numvalidate()">
 
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="ID" value="<%= props.getProperty("ID", "0") %>"/>
@@ -187,7 +266,7 @@
                 </tr>
                 <tr>
                     <td>Assessment Date<small>(yyyy/mm/dd)</small>: </td>
-                    <td><input type="text" name="a_formDate" size="40" value="<%= props.getProperty("a_formDate", "") %>" readonly="true"/></td>
+                    <td><input type="text" name="a_formDate" size="40" value="<%= props.getProperty("a_formDate", "") %>" /></td>
                     <td>HSO Specialist: </td>
                     <td align="right"><input type="text" name="a_specialist" size="40" value="<%= props.getProperty("a_specialist", "") %>" /></td>
                 </tr>
@@ -199,14 +278,19 @@
             <table border="1" cellpadding="2" cellspacing="0" width="100%">
                 <tr>
                     <td class="mhList" valign="top">
-                        Psychiatric Symptoms:<br>
+                        Psychiatric Symptoms:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="a_aps1" value="<%= props.getProperty("a_aps1", "") %>" size="2" /> &nbsp;
+                        2. <input type="text" name="a_aps2" value="<%= props.getProperty("a_aps2", "") %>" size="2" /> &nbsp;
+                        3. <input type="text" name="a_aps3" value="<%= props.getProperty("a_aps3", "") %>" size="2" />
+                        <br><br>
                         <% String[] aps = list.loadData("mhAssessment/PsychiatricSymptoms.txt", projecthome );
                             for (int i=0; i<aps.length; i++)
                             {
                                 if(aps[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('a_aps', <%=i+1%>);"><%=i+1%>. <%= aps[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('a_aps', <%=i+1%>);"><%=i+1%>. <%= aps[i] %></a><br>
                         <%
                                 }
                             }
@@ -214,14 +298,19 @@
                         &nbsp;<input type="text" name="a_apsOther" value="<%= props.getProperty("a_apsOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Psychosocial Issues:<br>
+                        Psychosocial Issues:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="a_api1" value="<%= props.getProperty("a_api1", "") %>" size="2" /> &nbsp;
+                        2. <input type="text" name="a_api2" value="<%= props.getProperty("a_api2", "") %>" size="2" /> &nbsp;
+                        3. <input type="text" name="a_api3" value="<%= props.getProperty("a_api3", "") %>" size="2" />
+                        <br><br>
                         <% String[] api = list.loadData("mhAssessment/PsychosocialIssues.txt", projecthome );
                             for (int i=0; i<api.length; i++)
                             {
                                 if(api[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('a_api', <%=i+1%>);"><%=i+1%>. <%= api[i] %></a><br>
+                                    <a  href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('a_api', <%=i+1%>);"><%=i+1%>. <%= api[i] %></a><br>
                         <%
                                 }
                             }
@@ -229,14 +318,19 @@
                         &nbsp;<input type="text" name="a_apiOther" value="<%= props.getProperty("a_apiOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Med/Phy Issues:<br>
+                        Med/Phy Issues:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="a_ampi1" value="<%= props.getProperty("a_ampi1", "") %>" size="2" /> &nbsp;
+                        2. <input type="text" name="a_ampi2" value="<%= props.getProperty("a_ampi2", "") %>" size="2" /> &nbsp;
+                        3. <input type="text" name="a_ampi3" value="<%= props.getProperty("a_ampi3", "") %>" size="2" />                        
+                        <br><br>
                         <% String[] ampi = list.loadData("mhAssessment/MedPhyIssues.txt", projecthome );
                             for (int i=0; i<ampi.length; i++)
                             {
                                 if(ampi[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('a_ampi', <%=i+1%>);"><%=i+1%>. <%= ampi[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('a_ampi', <%=i+1%>);"><%=i+1%>. <%= ampi[i] %></a><br>
                         <%
                                 }
                             }
@@ -246,34 +340,30 @@
                 </tr>
                 <tr>
                     <td class="mhSelect">
-                        Psychiatric Symptoms:<br>
-                        1. <input type="text" name="a_aps1" value="<%= props.getProperty("a_aps1", "") %>" /><br>
-                        2. <input type="text" name="a_aps2" value="<%= props.getProperty("a_aps2", "") %>" /><br>
-                        3. <input type="text" name="a_aps3" value="<%= props.getProperty("a_aps3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Psychosocial Issues:<br>
-                        1. <input type="text" name="a_api1" value="<%= props.getProperty("a_api1", "") %>" /><br>
-                        2. <input type="text" name="a_api2" value="<%= props.getProperty("a_api2", "") %>" /><br>
-                        3. <input type="text" name="a_api3" value="<%= props.getProperty("a_api3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Med/Phy Issues:<br>
-                        1. <input type="text" name="a_ampi1" value="<%= props.getProperty("a_ampi1", "") %>" /><br>
-                        2. <input type="text" name="a_ampi2" value="<%= props.getProperty("a_ampi2", "") %>" /><br>
-                        3. <input type="text" name="a_ampi3" value="<%= props.getProperty("a_ampi3", "") %>" />
+                        <br>
                     </td>
                 </tr>
                 <tr>
                     <td class="mhList" valign="top">
-                        Treatment Plan:<br>
+                        Treatment Plan:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="a_tp1" value="<%= props.getProperty("a_tp1", "") %>" size="2" /> &nbsp;
+                        2. <input type="text" name="a_tp2" value="<%= props.getProperty("a_tp2", "") %>" size="2" /> &nbsp;
+                        3. <input type="text" name="a_tp3" value="<%= props.getProperty("a_tp3", "") %>" size="2" />
+                        <br><br>
                         <% String[] tp = list.loadData("mhAssessment/TreatmentPlan.txt", projecthome );
                             for (int i=0; i<tp.length; i++)
                             {
                                 if(tp[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('a_tp', <%=i+1%>);"><%=i+1%>. <%= tp[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('a_tp', <%=i+1%>);"><%=i+1%>. <%= tp[i] %></a><br>
                         <%
                                 }
                             }
@@ -287,10 +377,7 @@
                 </tr>
                 <tr>
                     <td class="mhSelect">
-                        Treatment Plan:<br>
-                        1. <input type="text" name="a_tp1" value="<%= props.getProperty("a_tp1", "") %>" /><br>
-                        2. <input type="text" name="a_tp2" value="<%= props.getProperty("a_tp2", "") %>" /><br>
-                        3. <input type="text" name="a_tp3" value="<%= props.getProperty("a_tp3", "") %>" />
+                        <br>
                     </td>
                 </tr>
             </table>

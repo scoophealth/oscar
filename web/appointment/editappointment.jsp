@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
   String curProvider_no = request.getParameter("provider_no");
@@ -144,7 +118,7 @@ function calculateEndTime() {
   String chartno="", phone="", rosterstatus="", alert="";
   String[] param = new String[1];
   param[0]=request.getParameter("appointment_no");
-  String strApptDate = bFirstDisp?(request.getParameter("year")+"-"+request.getParameter("month")+"-"+request.getParameter("day") ):request.getParameter("appointment_date") ;
+  String strApptDate = bFirstDisp?"":request.getParameter("appointment_date") ;
 
   ResultSet rs = null, rsdemo = null;
   if(bFirstDisp) rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
@@ -194,7 +168,7 @@ function calculateEndTime() {
               <div align="right"><font face="arial"> Date :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=strApptDate%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=bFirstDisp?rs.getString("appointment_date"):strApptDate%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
             <td width="5%"  ></td>
             <td width="20%"  ALIGN="LEFT"> 
@@ -339,7 +313,8 @@ function calculateEndTime() {
 
 <table width="100%" BGCOLOR="<%=deepcolor%>">
   <tr>
-      <TD align="left"> 
+      <TD align="left">
+	  <input type="submit" name="displaymode" value="Group Action" onClick="onButUpdate()" >
 <input type="submit" name="displaymode" value="Update Appt" onClick="onButUpdate()"><input type = "submit" name="displaymode" value = "Delete Appt" onClick="onButDelete()" >
         <input type = "button" name="buttoncancel" value = "Cancel Appt" onClick="window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'"><input type = "button" name="buttoncancel" value = "No Show" onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'" ></td>
       <TD align="right"> 

@@ -25,7 +25,7 @@
 -->
 
 <%@ page language="java" %>
-<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*" %>
+<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, oscar.util.*" %>
 <%@ page import="java.util.*, org.w3c.dom.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -372,14 +372,26 @@ Document Transfer
 
                 <% DrawDoc(root, out); %>
                     <br>
-                    <input type=submit value="Save Attachments" />
-                </form>
-
                 <div style="font-size: 8pt; margin-top: 15px;">
+                    <input type=submit value="Save Attachments" />
+
                     <a href="javascript:expandAll();">Expand All</a>
                     &nbsp;|&nbsp;
                     <a href="javascript:collapseAll();">Collapse All</a>
+<%
+    java.util.Properties prop = UtilXML.getPropText(xmlDoc, "table", "sqlFrom",  "name"); //
+	if (prop.getProperty("formAR") != null && prop.getProperty("formAR").equals("AR Form") ) {
+%>
+                    &nbsp;|&nbsp;
+                    <a href="../oscarEncounter/formCommARPg1.jsp?messageid=<%=request.getAttribute("attId")%>">AR1</a>
+                    &nbsp;|&nbsp;
+                    <a href="../oscarEncounter/formCommARPg2.jsp?messageid=<%=request.getAttribute("attId")%>">AR2 Pg1</a>
+                    &nbsp;|&nbsp;
+                    <a href="../oscarEncounter/formCommARPg3.jsp?messageid=<%=request.getAttribute("attId")%>">AR2 Pg2</a>
+<%
+    }    %>
                 </div>
+                </form>
             </td>
         </tr>
         <tr>

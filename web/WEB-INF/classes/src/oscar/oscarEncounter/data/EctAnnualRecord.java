@@ -1,27 +1,3 @@
-// -----------------------------------------------------------------------------------------------------------------------
-// *
-// *
-// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-// * This software is published under the GPL GNU General Public License. 
-// * This program is free software; you can redistribute it and/or 
-// * modify it under the terms of the GNU General Public License 
-// * as published by the Free Software Foundation; either version 2 
-// * of the License, or (at your option) any later version. * 
-// * This program is distributed in the hope that it will be useful, 
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-// * along with this program; if not, write to the Free Software 
-// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-// * 
-// * <OSCAR TEAM>
-// * This software was written for the 
-// * Department of Family Medicine 
-// * McMaster Unviersity 
-// * Hamilton 
-// * Ontario, Canada 
-// *
-// -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.data;
 
 import oscar.oscarDB.*;
@@ -40,6 +16,7 @@ public class EctAnnualRecord
     public Properties getAnnualRecord(int demographicNo, int existingID)
             throws SQLException
     {
+	System.out.println("GetAnnualRecord");
         Properties props = new Properties();
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -70,12 +47,14 @@ public class EctAnnualRecord
         }
         else
         {
+	System.out.println("Im exsiting");
             sql = "SELECT * FROM formAnnual WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
             rs = db.GetSQL(sql);
 
             if(rs.next())
             {
+		System.out.println("getting metaData");
                 ResultSetMetaData md = rs.getMetaData();
 
                 for(int i=1; i<=md.getColumnCount(); i++)
@@ -83,17 +62,20 @@ public class EctAnnualRecord
                     String name = md.getColumnName(i);
 
                     String value;
-
-                    if(md.getColumnTypeName(i).equalsIgnoreCase("TINY")
-                            && md.getScale(i)==1)
+			System.out.println(" name = "+name+" type = "+md.getColumnTypeName(i)+" scale = "+md.getScale(i));
+                    if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))
+//                            && md.getScale(i)==1)
                     {
+
                         if(rs.getInt(i)==1)
                         {
                             value = "checked='checked'";
+		            System.out.println("checking "+name);
                         }
                         else
                         {
                             value = "";
+		            System.out.println("not checking "+name);
                         }
                     }
                     else
@@ -145,28 +127,32 @@ public class EctAnnualRecord
             if(name.equalsIgnoreCase("ID"))
             {
                 rs.updateNull(name);
+		
             }
             else
             {
                 String value = props.getProperty(name, null);
-
-                if(md.getColumnTypeName(i).equalsIgnoreCase("TINY")
-                        && md.getScale(i)==1)
+                System.out.println("name = "+name+" type ="+md.getColumnTypeName(i)+" scale = "+md.getScale(i)+" pres "+md.getPrecision(i));
+                if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))
+//                        && md.getScale(i)==1)
                 {
                     if(value!=null)
                     {
                         if(value.equalsIgnoreCase("on"))
                         {
                             rs.updateInt(name, 1);
+			    System.out.print("annHealth na = "+name+" = 1");
                         }
                         else
                         {
                             rs.updateInt(name, 0);
+			    System.out.print("annHealth na = "+name+" = 0");
                         }
                     }
                     else
                     {
                         rs.updateInt(name, 0);
+			System.out.print("this is why it doesn't work");
                     }
                 }
                 else

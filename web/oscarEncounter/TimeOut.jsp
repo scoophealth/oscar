@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,15 +22,20 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
-<!-- May 22, 2002,-->
+<!-- Jan 20, 2003,-->
 <%@ page language="java"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%
     response.setHeader("Cache-Control","no-cache");
+    oscar.oscarEncounter.pageUtil.EctSessionBean sessionbean = null;
+    if((sessionbean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
+        response.sendRedirect("error.jsp");
+        return;
+    }
 %>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html>
@@ -38,6 +43,11 @@
     function loadUp(){
         window.resizeTo(900,50);
         setTimeout("window.close()",1000);
+<%
+    if (sessionbean.status != null && !sessionbean.status.equals("")) {
+        out.print("opener.refresh();");
+    }
+%>
     }
 </script>
 <head>
@@ -46,6 +56,7 @@ TimeOut
 </title>
 </head>
 <body onload="javascript:loadUp()">
+
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">

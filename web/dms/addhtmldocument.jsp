@@ -1,33 +1,16 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbDMS.jsp" %>
+ <%   
+  if(session.getValue("user") == null)
+    response.sendRedirect("../../logout.jsp");
+  String user_no;
+  user_no = (String) session.getAttribute("user");
+           String docdownload = oscarVariables.getProperty("project_home") ;;
+           session.setAttribute("homepath", docdownload);      
+
+%>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -81,6 +64,19 @@ function ScriptAttach() {
   awnd=rs('att','../dms/zadddocument.htm' ,400,200,1);
   awnd.focus();
 }
+
+
+
+
+function addRedirect()
+{       
+
+var newD = document.aDoc.hyperlink.value;
+	document.aDoc.docxml.value = "<HTML><HEAD><META HTTP-EQUIV='REFRESH' CONTENT = '1; URL="+newD+"'></HEAD><BODY BGCOLOR=FFFFFF VLINK=000066 LINK=000066></BODY></HTML>";
+document.aDoc.docdesc.value = document.aDoc.docdesc.value + " (Link)"; 
+}
+
+
 //-->
 </script>
 <link rel="stylesheet" href="../web.css" />
@@ -144,7 +140,7 @@ function ScriptAttach() {
               <td width="16%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Document 
                 Description</font></td>
               <td width="84%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="text" name="docdesc"  size="20">
+                <input type="text" name="docdesc"  size="20">    URL: <input type="text" name="hyperlink" value=""><a href=# onClick="addRedirect()">Redirect</a>
                 </font></td>
             </tr>
             <tr> 

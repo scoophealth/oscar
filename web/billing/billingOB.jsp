@@ -24,7 +24,7 @@
  */
 -->
 
- <%      
+<%      
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no; 
@@ -46,12 +46,18 @@ String service_form="";
 <html>
 <head>
 <title>Billing Record</title>
+<style type="text/css">
+	<!--
+	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
+	
+	-->
+</style>  
 <script language="JavaScript">
 <!--
 
 function setfocus() {
-		  document.serviceform.xml_diagnostic_code.focus();
-		  document.serviceform.xml_diagnostic_code.select();
+		  //document.serviceform.xml_diagnostic_code.focus();
+		  //document.serviceform.xml_diagnostic_code.select();
 		}
 		
 function RecordAttachments(Files, File0, File1, File2) {
@@ -174,6 +180,8 @@ function showHideLayers() { //v3.0
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
+  int dob_year=0, dob_month=0, dob_date=0, age=0;
+  String DemoSex="",DemoStatus="", DemoRoster="";
   String appt_no= request.getParameter("appointment_no");
   String demoname=request.getParameter("demographic_name");
   String demo_no =request.getParameter("demographic_no");
@@ -181,7 +189,26 @@ function showHideLayers() { //v3.0
     String apptProvider_no = request.getParameter("apptProvider_no");
     String ctlBillForm = request.getParameter("billForm");
     int ctlCount = 0;
-  
+    String assgProvider_no = "", assgProvider_name="";
+    
+    ResultSet rsPatient = null;
+     rsPatient = apptMainBean.queryResults(demo_no, "search_demographic_details");
+     while(rsPatient.next()){
+          assgProvider_no = rsPatient.getString("provider_no");
+          DemoSex = rsPatient.getString("sex");
+     DemoStatus = rsPatient.getString("patient_status")==null?"":rsPatient.getString("patient_status").toUpperCase();
+     DemoRoster = rsPatient.getString("roster_status")==null?"":rsPatient.getString("roster_status").toUpperCase();
+      dob_year = Integer.parseInt(rsPatient.getString("year_of_birth"));
+           dob_month = Integer.parseInt(rsPatient.getString("month_of_birth"));
+           dob_date = Integer.parseInt(rsPatient.getString("date_of_birth"));
+           if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
+
+     }
+     ResultSet rslocal = null;  
+ rslocal = apptMainBean.queryResults(assgProvider_no, "search_provider_name");
+ while(rslocal.next()){
+ assgProvider_name = rslocal.getString("first_name")+" " + rslocal.getString("last_name");
+ }
   
 %>
 
@@ -284,7 +311,7 @@ function showHideLayers() { //v3.0
             }
             %>
     <tr bgcolor=<%=color%>> 
-      <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=ctlcodename%></a></font></b></td>
+      <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><a href="billingOB.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=ctlcodename%></a></font></b></td>
     </tr>
     <% } %>
      </table>
@@ -295,19 +322,35 @@ function showHideLayers() { //v3.0
     <tr> 
       <td valign="top" height="221"> 
         <table width="107%" border="0" cellspacing="0" cellpadding="0">
-          <tr> 
-            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b>Patient</b>:<br>
-              </font></td>
+          <tr>
+            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b>Patient</b>:</font></td>
             <td><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><u><%=demoname%></u><%=billingdatetime%></font></td>
+            <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b>Patient 
+              Status</b>:</font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=DemoStatus%> 
+              &nbsp;&nbsp;&nbsp;&nbsp; <b>Roster Status: <%=DemoRoster%></b></font></b></td>
+            <td width="19%"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Assigned 
+              Physician</strong></font></td>
+            <td width="24%"><%=assgProvider_name%></td>
+          </tr>
+          <tr> 
+            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1">Age:</font></b><br>
+              </font></td>
+            <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=age%></font></b></td>
             <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show')">Billing 
-              form</a>:</font></b><% rsctlcode = null;  
+              form</a>:</font></b>
+              <% rsctlcode = null;  
                  
                 
                  rsctlcode = apptMainBean.queryResults(ctlBillForm, "search_ctlbillservice");
                   while (rsctlcode.next()){
                  ctlcode = rsctlcode.getString("servicetype");
                  ctlcodename = rsctlcode.getString("servicetype_name");
-                 } if (ctlcodename.length()<30){%><%=ctlcodename%><%}else{%><%=ctlcodename.substring(0,30)%><%}%></font></td>
+                 } if (ctlcodename.length()<30){%>
+              <%=ctlcodename%>
+              <%}else{%>
+              <%=ctlcodename.substring(0,30)%>
+              <%}%>
+              </font></td>
             <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <%
   if( bNew ) { //the new billing form
@@ -328,7 +371,7 @@ billingdatetime = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now
               <select name="xml_provider" datafld='xml_provider'>
                 <option value="000000" <%=providerview.equals("000000")?"selected":""%>><b>Select 
                 Provider</b></option>
-                <% ResultSet rslocal = null;  
+                <% 
 // Retrieving Provider
 String proFirst="", proLast="", proOHIP="";
  // int Count = 0;
@@ -352,11 +395,10 @@ String proFirst="", proLast="", proOHIP="";
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b>Billing 
               Type</b> </font></td>
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
-              <select name="xml_billtype" datafld='xml_billtype'>
-                <option value="HSO | Capitated">Capitated</option>
+              <select name="xml_billtype" datafld='xml_billtype' >
                 <option value="ODP | Bill OHIP" selected>Bill OHIP</option>
                 <option value="PAT | Bill Patient">Bill Patient</option>
-                <option value="NOB | Do Not Bill">Do Not Bill</option>
+                <option value="NOB | Do Not Bill" <%=DemoStatus.compareTo("UHIP")==0?"selected":DemoStatus.compareTo("IFH")==0?"selected":""%>>Do Not Bill</option>
                 <option value="WCB | Worker's Compensation Board">WSIB</option>
               </select>
               </font></td>
@@ -385,7 +427,7 @@ String proFirst="", proLast="", proOHIP="";
           </tr>
           <tr> 
             <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b>Visit 
-               Location</b> </font></td>
+              Location</b> </font></td>
             <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <select name="xml_location" datafld='xml_location'>
                 <% ResultSet rsclinic = null;
@@ -401,7 +443,8 @@ String proFirst="", proLast="", proOHIP="";
              }
              %>
               </select>
-              <input type="checkbox" name="xml_referral" value="checked" <%=bNew?"":"datafld='xml_referral'"%>><b>Referral ?</b></font></td>
+              <input type="checkbox" name="xml_referral" value="checked" <%=bNew?"":"datafld='xml_referral'"%>>
+              <b>Referral ?</b></font></td>
             <td width="19%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=admission","380","300","0")'>Admission 
               Date:</a> </font></td>
@@ -728,7 +771,7 @@ serviceDisp = serviceValue;
                         </td>
                       </tr>
                     </table>
-                    <table>
+                    <table width="100%" border="0" cellspacing="2" cellpadding="2">
                       <tr bgcolor="#CCCCFF"> 
                         <td colspan="4"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">Diagnostic 
                           Codes</font></b></td>
@@ -740,7 +783,7 @@ serviceDisp = serviceValue;
 
 %>
                           <input type="hidden" name="xml_diagnostic_code" value="000|Select a diagnosis">
-                           
+                                    <input type="hidden" name="status" value="<%=request.getParameter("status")%>">
        
                         
                           <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">

@@ -1,6 +1,6 @@
 <!--  
 /*
- * 
+ * $RCSfile: AbstractApplication.java,v $ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
  * This program is free software; you can redistribute it and/or 
@@ -15,16 +15,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
  * 
  * <OSCAR TEAM>
- * 
  * This software was written for the 
  * Department of Family Medicine 
  * McMaster Unviersity 
  * Hamilton 
  * Ontario, Canada 
  */
--->
-
-<%@ page language="java" %>
+--><%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -135,12 +132,6 @@ function CloseWindow()
        window.close();
 }
 
-function CloseWindow()
-{
-       window.close();
-}
-
-
 function flipFaxFooter(){
 
       if (flag == 1 ){
@@ -160,7 +151,7 @@ ConsultationFormPrint
 <body>
 <table class="header" >
     <tr>
-       	<td>
+	<td>
             <input type=button value="Fax Footer" onclick="javascript :flipFaxFooter();"/>
         </td>
         
@@ -177,11 +168,13 @@ ConsultationFormPrint
 <!--header-->
 <tr>
     <td>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
     </td>
 </tr>
 <tr>

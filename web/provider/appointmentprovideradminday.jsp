@@ -1,102 +1,87 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
+<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
-<%
-  if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("doctor"))
-    response.sendRedirect("../logout.jsp");
 
-  oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-  response.addCookie(cs.GiveMeACookie());
-
-  String curUser_no,userfirstname,userlastname, userprofession, mygroupno;
-  curUser_no = (String) session.getAttribute("user");
-  mygroupno = (String) session.getAttribute("groupno");  
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
-  userprofession = (String) session.getAttribute("userprofession");
-  int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
-  int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
-  int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
-  int view=0;
-  int lenLimitedL=11, lenLimitedS=3;
-  int len = lenLimitedL;
-  if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view
-%>
-<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
+<jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
+
 <%
-  String resourcebaseurl = "http://67.69.12.117:8080/oscarResource/";
-  ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
-  while (rsgroup1.next()) { 
- 	  resourcebaseurl = rsgroup1.getString("value");
-  }
+    if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("doctor"))
+        response.sendRedirect("../logout.jsp");
 
-	GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  int year = Integer.parseInt(request.getParameter("year"));
-  int month = Integer.parseInt(request.getParameter("month"));
-  int day = Integer.parseInt(request.getParameter("day"));
-  String strYear=null, strMonth=null, strDay=null;
-  String strDayOfWeek=null;
-  String[] arrayDayOfWeek = new String[] {  "Sun","Mon","Tue","Wed","Thu","Fri","Sat"  };
+	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
+    response.addCookie(cs.GiveMeACookie());
 
-  //verify the input date is really existed 
-	now=new GregorianCalendar(year,(month-1),day);
-  year = now.get(Calendar.YEAR);
-  month = (now.get(Calendar.MONTH)+1);
-  day = now.get(Calendar.DAY_OF_MONTH);
-  int dayOfWeek = now.get(Calendar.DAY_OF_WEEK);
-  strDayOfWeek=arrayDayOfWeek[dayOfWeek-1];
-  strYear=""+year;
-  strMonth=month>9?(""+month):("0"+month);
-  strDay=day>9?(""+day):("0"+day);
+	String curUser_no = (String) session.getAttribute("user");
+    String mygroupno = (String) session.getAttribute("groupno");  
+    String userfirstname = (String) session.getAttribute("userfirstname");
+    String userlastname = (String) session.getAttribute("userlastname");
+
+	boolean bShortcutForm = oscarVariables.getProperty("appt_formview", "").equalsIgnoreCase("on") ? true : false;
+	String formName = bShortcutForm ? oscarVariables.getProperty("appt_formview_name") : ""; 
+	String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName; 
+
+    //String userprofession = (String) session.getAttribute("userprofession");
+    int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
+    int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
+    int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
+
+    int lenLimitedL=11, lenLimitedS=3; //L - long, S - short
+    int len = lenLimitedL;
+    int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
+%>
+<%
+    ResultSet rsTickler = null;
+    ResultSet rsStudy = null;
+    String tickler_no="", textColor="", tickler_note="";
+    StringBuffer study_no=null, study_link=null,studyDescription=null;
+	String studySymbol = "#", studyColor = "red";
+
+    String resourcebaseurl = "http://67.69.12.117:8080/oscarResource/";
+    ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
+    while (rsgroup1.next()) { 
+ 	    resourcebaseurl = rsgroup1.getString("value");
+    }
+    rsgroup1 = null;
+
+    GregorianCalendar cal = new GregorianCalendar();
+    int curYear = cal.get(Calendar.YEAR);
+    int curMonth = (cal.get(Calendar.MONTH)+1);
+    int curDay = cal.get(Calendar.DAY_OF_MONTH);
+
+    int year = Integer.parseInt(request.getParameter("year"));
+    int month = Integer.parseInt(request.getParameter("month"));
+    int day = Integer.parseInt(request.getParameter("day"));
+
+    //verify the input date is really existed 
+    cal = new GregorianCalendar(year,(month-1),day);
+    year = cal.get(Calendar.YEAR);
+    month = (cal.get(Calendar.MONTH)+1);
+    day = cal.get(Calendar.DAY_OF_MONTH);
+
+    String strDate = year + "-" + month + "-" + day;
+    SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd");
+	String formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");
+    String strYear=""+year;
+    String strMonth=month>9?(""+month):("0"+month);
+    String strDay=day>9?(""+day):("0"+day);
 %>
 
 <html>
 <head>
 <title>Doctor Appointment Access - appointmentprovideradminday</title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      <meta http-equiv="refresh" content="180;">
+<% response.setHeader("Cache-Control","no-cache");%>
+<meta http-equiv="refresh" content="180;">
 </head>
 <script language="JavaScript">
 <!--
 function setfocus() {
   //this.focus();
-  //document.jumptodate.year.focus();
-  //document.jumptodate.year.select();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
+function popupPage(vheight,vwidth,varpage) { 
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
   var popup=window.open(page, "apptProvider", windowprops);
@@ -113,10 +98,8 @@ windowprops = "height=700,width=1000,location=no,"
 window.open(page, "apptProviderSearch", windowprops);
 }
 
-
-
 //<!--oscarMessenger code block-->
-function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
+function popupOscarRx(vheight,vwidth,varpage) { 
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(varpage, "oscarRx", windowprops);
@@ -126,20 +109,15 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
-//<!--/oscarMessenger code block -->
-
-
-
-
 
 function review(key) {
-if(self.location.href.lastIndexOf("?") > 0) {
-  if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
-  else a = self.location.href;
-} else {
-  a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday";
-}
-	self.location.href = a + "&viewall="+key ;
+  if(self.location.href.lastIndexOf("?") > 0) {
+    if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
+    else a = self.location.href;
+  } else {
+    a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday";
+  }
+  self.location.href = a + "&viewall="+key ;
 }
 
 function refresh() {
@@ -176,7 +154,7 @@ function goZoomView(s, n) {
 }
 //-->
 </SCRIPT>
-<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#EEEEFF" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
 <%
    int numProvider=0, numAvailProvider=0;
@@ -199,7 +177,7 @@ function goZoomView(s, n) {
 
        String [] param3 = new String [2];
        param3[0] = mygroupno;
-       param3[1] = strYear +"-"+ strMonth +"-"+ strDay ;
+       param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
   	   rsgroup = apptMainBean.queryResults(param3, "search_numgrpscheduledate");
  	     while (rsgroup.next()) { 
          numAvailProvider = rsgroup.getInt("count(scheduledate.provider_no)");
@@ -239,19 +217,19 @@ function goZoomView(s, n) {
    //set timecode bean
    String bgcolordef = "#486ebd" ;
    String [] param3 = new String[2];
-   param3[0] = strYear+"-"+strMonth+"-"+strDay;
+   param3[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
      param3[1] = curProvider_no[nProvider];
 	   rsgroup = apptMainBean.queryResults(param3, "search_appttimecode");
      while (rsgroup.next()) { 
-       DateTimeCodeBean.put(rsgroup.getString("provider_no"), rsgroup.getString("timecode"));
+       dateTimeCodeBean.put(rsgroup.getString("provider_no"), rsgroup.getString("timecode"));
      } 
    }
 	 rsgroup = apptMainBean.queryResults("code", "search_timecode");
    while (rsgroup.next()) { 
-     DateTimeCodeBean.put("description"+rsgroup.getString("code"), rsgroup.getString("description"));
-     DateTimeCodeBean.put("duration"+rsgroup.getString("code"), rsgroup.getString("duration"));
-     DateTimeCodeBean.put("color"+rsgroup.getString("code"), (rsgroup.getString("color")==null || rsgroup.getString("color").equals(""))?bgcolordef:rsgroup.getString("color") );
+     dateTimeCodeBean.put("description"+rsgroup.getString("code"), rsgroup.getString("description"));
+     dateTimeCodeBean.put("duration"+rsgroup.getString("code"), rsgroup.getString("duration"));
+     dateTimeCodeBean.put("color"+rsgroup.getString("code"), (rsgroup.getString("color")==null || rsgroup.getString("color").equals(""))?bgcolordef:rsgroup.getString("color") );
    } 
    
 %>
@@ -279,12 +257,12 @@ function goZoomView(s, n) {
 
 <!-- oscarMessenger code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')">
+         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="Messenger">
          <oscarmessage:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
 <!--/oscarMessenger code block -->
 <!-- oscarEcounter/consultationRequest.jsp code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')">
+         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="View Consultation Requests">
          con</a></font>
          </td>
 <!--/oscarEcounter code block -->
@@ -321,21 +299,10 @@ function goZoomView(s, n) {
     </table>
 
   </td>
-  <form method="post" name="jumptodate" action="providercontrol.jsp">
   <td align="right" valign="bottom">
   <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')">Help</a>  
-  &nbsp;&nbsp;<!--<input type="button" name="Button" value="My Document" onclick="window.open('../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>-->
-   <%--=mygroupno--%> &nbsp;
-   <!--INPUT TYPE="text" NAME="year" VALUE="<%=strYear%>" WIDTH="4" HEIGHT="10" border="0"  size="4" maxlength="4">-
-   <INPUT TYPE="text" NAME="month" VALUE="<%--=strMonth%>" WIDTH="2" HEIGHT="10" border="0" size="2" maxlength="2">-
-   <INPUT TYPE="text" NAME="day" VALUE="<%=strDay%>" WIDTH="2" HEIGHT="10" border="0" size="2" maxlength="2">
-   <INPUT TYPE="hidden" NAME="view" VALUE="<%=view%>" >
-   <INPUT TYPE="hidden" NAME="curProvider" VALUE="<%=request.getParameter("curProvider")%>" >
-   <INPUT TYPE="hidden" NAME="curProviderName" VALUE="<%=request.getParameter("curProviderName")--%>" >
-   <INPUT TYPE="hidden" NAME="displaymode" VALUE="day" >
-   <INPUT TYPE="hidden" NAME="dboperation" VALUE="searchappointmentday" >
-   <INPUT TYPE="SUBMIT" NAME="Go" VALUE="GO" SIZE="5"-->
-  </td></form>
+  &nbsp;&nbsp;
+  </td>
 </tr>
 </table>
 
@@ -346,10 +313,10 @@ function goZoomView(s, n) {
         <td BGCOLOR="ivory" width="33%">
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day-1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
          &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Previous DAY" vspace="2"></a> 
-         <b><span CLASS=title><%=strDayOfWeek%>, <%=strYear%>-<%=strMonth%>-<%=strDay%></span></b>
+         <b><span CLASS=title><%=formatDate%></span></b>
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day+1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
          <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next DAY" vspace="2">&nbsp;&nbsp;</a>
-         <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>')">Calendar</a></td>
+         <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday")%>')">Calendar</a></td>
         <td ALIGN="center"  BGCOLOR="ivory" width="33%"><% if(view==1) out.println("<a href='providercontrol.jsp?year="+strYear+"&month="+strMonth+"&day="+strDay+"&view=0&displaymode=day&dboperation=searchappointmentday'>Group View</a>"); else out.println("<B>Hello "+ userfirstname+" "+userlastname +"</b>"); %> </TD>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
   <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="Change your Group No.">Group:</a>
@@ -386,7 +353,7 @@ function goZoomView(s, n) {
    int ih=0, im=0, iSn=0, iEn=0 ; //hour, minute, nthStartTime, nthEndTime, rowspan
    boolean bFirstTimeRs=true;
    boolean bFirstFirstR=true;
-
+ 	 String[] paramTickler =new String[2];
  	 String[] param =new String[2];
 	 String strsearchappointmentday=request.getParameter("dboperation");
    ResultSet rs = null;
@@ -405,7 +372,7 @@ function goZoomView(s, n) {
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
 //     bColor=bColor?false:true;
      userAvail = true; 
-     param1[0] = strYear+"-"+strMonth+"-"+strDay;
+     param1[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
      param1[1] = curProvider_no[nProvider];
      rsgroup = apptMainBean.queryResults(param1, "search_scheduledate_single");
      
@@ -443,18 +410,18 @@ function goZoomView(s, n) {
             bColorHour=minuteCursor==0?true:false; //every 00 minute, change color
       
             //templatecode     
-            if(DateTimeCodeBean.get(curProvider_no[nProvider]) != null) {       
-	            int nLen = 24*60 / ((String) DateTimeCodeBean.get(curProvider_no[nProvider]) ).length();
+            if(dateTimeCodeBean.get(curProvider_no[nProvider]) != null) {       
+	            int nLen = 24*60 / ((String) dateTimeCodeBean.get(curProvider_no[nProvider]) ).length();
 	            int ratio = (hourCursor*60+minuteCursor)/nLen;
-              hourmin = new StringBuffer(DateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) DateTimeCodeBean.get(curProvider_no[nProvider])).substring(ratio,ratio+1):" " );
+              hourmin = new StringBuffer(dateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) dateTimeCodeBean.get(curProvider_no[nProvider])).substring(ratio,ratio+1):" " );
             } else { hourmin = new StringBuffer(); }
         %>
           <tr>
             <td align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b><font face="verdana,arial,helvetica" size="2"> 
-             <a href=# onClick ="popupPage(360,680,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=DateTimeCodeBean.get("duration"+hourmin.toString())%>');return false;" 
+             <a href=# onClick ="popupPage(360,680,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>');return false;" 
              title='<%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+ (minuteCursor<10?"0":"")+minuteCursor)%> - <%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+((minuteCursor+depth-1)<10?"0":"")+(minuteCursor+depth-1))%>' class="adhour">
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></font></b></td>
-            <td width='1%' <%=DateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=DateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(DateTimeCodeBean.get("color"+hourmin.toString())!=null && !DateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font>
+            <td width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font>
             </td>
 				<%
           	while (bFirstTimeRs?rs.next():true) { //if it's not the first time to parse the standard time, should pass it by
@@ -480,81 +447,89 @@ function goZoomView(s, n) {
          	    //get time format: 00:00am/pm
          	    //String startTime = (iS>12?("0"+(iS-12)):rs.getString("start_time").substring(0,2))+":"+rs.getString("start_time").substring(3,5)+am_pm ; 
          	    //String endTime   = (iE>12?("0"+(iE-12)):rs.getString("end_time").substring(0,2))  +":"+rs.getString("end_time").substring(3,5)+(iE<12?"am":"pm");
-          	  String name = Misc.toUpperLowerCase(rs.getString("name"));
+          	  String name = UtilMisc.toUpperLowerCase(rs.getString("name"));
           	  int demographic_no = rs.getInt("demographic_no");
+                  paramTickler[0]=String.valueOf(demographic_no);
+                  paramTickler[1]=strDate; //year+"-"+month+"-"+day;//e.g."2001-02-02";
+                  rsTickler = null;
+                  rsTickler = apptMainBean.queryResults(paramTickler, "search_tickler");
+                  tickler_no = "";
+                  tickler_note="";
+                  while (rsTickler.next()){
+                      tickler_no = rsTickler.getString("tickler_no");
+                      tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
+                  }
+          	  
+                  study_no = new StringBuffer("");
+                  study_link = new StringBuffer("");
+				  studyDescription = new StringBuffer("");
+                  rsStudy = null;
+                  rsStudy = apptMainBean.queryResults(demographic_no, "search_studycount");
+				  int numStudy = 0;
+				  if (rsStudy.next()) numStudy =  rsStudy.getInt("count(study_no)");
+				  if (numStudy == 1) {
+                      rsStudy = null;
+                      rsStudy = apptMainBean.queryResults(demographic_no, "search_study");
+                      while (rsStudy.next()){
+                          study_no = new StringBuffer(rsStudy.getString("s.study_no"));
+                          study_link = new StringBuffer(rsStudy.getString("s.study_link"));
+                          studyDescription = new StringBuffer(rsStudy.getString("s.description"));
+                      }
+				  } else if (numStudy > 1) {
+                      study_no = new StringBuffer("0");
+                      study_link = new StringBuffer("formstudy.jsp");
+				      studyDescription = new StringBuffer("Form Studies");
+				  } 
+            
           	  String reason = rs.getString("reason");
           	  String notes = rs.getString("notes");
           	  String status = rs.getString("status");
           	  bFirstTimeRs=true;
+			    as.setApptStatus(status);
         %>	    
-            <td bgcolor=<%=status.indexOf('T')!=-1||status.indexOf('t')!=-1?"#FDFEC7":status.indexOf('P')!=-1?"#FFBBFF":status.indexOf('H')!=-1?"#00ee00":status.indexOf('B')!=-1?"#3ea4e1":status.indexOf('N')!=-1?"orange":"#999999"%> rowspan="<%=iRows%>" <%=view==0?(len==lenLimitedL?"nowrap":""):"nowrap"%> >
-            <%--td bgcolor=--%><%--=status.indexOf('T')!=-1?"#FDFEC7":status.indexOf('P')!=-1?"#e0ffff":status.indexOf('H')!=-1?"#00ee00":status.indexOf('B')!=-1?"#3ea4e1":status.indexOf('N')!=-1?"#cccccc":"#999999" rowspan="<%=iRows"  nowrap--%>
+            <td bgcolor='<%=as.getBgColor()%>' rowspan="<%=iRows%>" <%=view==0?(len==lenLimitedL?"nowrap":""):"nowrap"%> >
+            
             <%
-              if(status.indexOf('t')!=-1) {
+			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('t',' ').trim()%>&statusch=T&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="To Do" >
-            <img src="../images/starbill.gif" border="0" height="10"></a>
+            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="<%=as.getTitle()%>" >
             <%
-              } else if(status.indexOf('T')!=-1) {
+				} 
+			    if (as.getNextStatus() != null) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('T',' ').trim()%>&statusch=H&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Star Bill" >
-            <img src="../images/todo.gif" border="0" height="10"></a>
+            <img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=as.getTitle()%>"></a>
             <%
-              } else if(status.indexOf('P')!=-1) {
-            %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('P',' ').trim()%>&statusch=N&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Picked" >
-            <img src="../images/picked.gif" border="0"></a>
-            <%
-              } else if(status.indexOf('H')!=-1) {
-            %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('H',' ').trim()%>&statusch=P&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Here" >
-            <img src="../images/here.gif" border="0" ></a>
-            <%
-              } else if(status.indexOf('N')!=-1) {
-            %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('N',' ').trim()%>&statusch=C&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="No Show" >
-            <img src="../images/noshow.gif" border="0"></a>
-            <%
-              } else if(status.indexOf('C')!=-1) {
-            %>
-            <a href="providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=<%=status.replace('C',' ').trim()%>&statusch=t&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=rs.getString("start_time")%>&demographic_no=<%=demographic_no==0?"0":(""+demographic_no)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="Cancelled" >
-            <img src="../images/cancel.gif" border="0"></a>
-            <%
-              } else if(status.indexOf('B')!=-1) {
-            %>
-            <img src="../images/billed.gif" border="0"  title="Billed">
-            <%
-              } else {
-            %>
-            <!--&nbsp;-->
-            <%
-              } 
+                } else {
+	                out.print("&nbsp;");
+                }
             %>
 <%--|--%>
         <%
         			if(demographic_no==0) {
         %>
-        		<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
+        		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="Tickler Msg: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+<a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
-reason: <%=Misc.htmlEscape(reason)%>
-notes: <%=Misc.htmlEscape(notes)%>" >
+reason: <%=UtilMisc.htmlEscape(reason)%>
+notes: <%=UtilMisc.htmlEscape(notes)%>" >
             .<%=(view==0&&numAvailProvider!=1)?(name.length()>len?name.substring(0,len).toUpperCase():name.toUpperCase()):name.toUpperCase()%></font></a></td>
         <%
         			} else {
         			  //System.out.println(name+" / " +demographic_no);
-				%>
+				%>	<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title="Tickler Msg: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+<% if (study_no.toString().compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../form/study/forwardstudyname.jsp?study_link=<%=study_link.toString()%>&demographic_no=<%=demographic_no%>&study_no=<%=study_no%>');return false;" title="Study: <%=UtilMisc.htmlEscape(studyDescription.toString())%>"><%="<font color='"+studyColor+"'>"+studySymbol+"</font>"%></a><%} %>
+
 <a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;" title="<%=name%>
-reason: <%=Misc.htmlEscape(reason)%>
-notes: <%=Misc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
+reason: <%=UtilMisc.htmlEscape(reason)%>
+notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 <a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="Encounter">
-            |E</a><!--a href=# onClick="popupPage(750,1000,'providercontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&demographic_no=<%=demographic_no%>&curProvider_no=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&username=<%= userfirstname+" "+userlastname %>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&status=<%=status%>&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Encounter">
-            |E</a--><% if(status.indexOf('B')==-1) { %><a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="Billing">|B|</a>
+            |E</a><%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%><% if(status.indexOf('B')==-1) { %><a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rs.getString("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="Billing">|B|</a>
 <% } else {%>  
-    <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="Billing">|-B|</a>
+    <a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="Billing">|-B|</a>
 <% } %>          
     <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;" 
-    title="Master file">M</a><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx')">|Rx</a>
+    title="Master file">M</a><!--<a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|Rx</a>--><a href=# onClick="popupOscarRx(700,960,'../packageNA.jsp?pkg=oscarRx')">|Rx</a>
 <% } %>
         		</font></td>
         <% 
@@ -600,7 +575,7 @@ notes: <%=Misc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substr
         	<td BGCOLOR="ivory" width="50%">
          	 <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day-1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
          	 &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Previous DAY" vspace="2"></a> 
-           <b><span CLASS=title><%=strDayOfWeek%>, <%=strYear%>-<%=strMonth%>-<%=strDay%></span></b>
+           <b><span CLASS=title><%=formatDate%></span></b>
            <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=(day+1)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday">
            <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next DAY" vspace="2">&nbsp;&nbsp;</a></td>
         	<td ALIGN="RIGHT" BGCOLOR="Ivory">

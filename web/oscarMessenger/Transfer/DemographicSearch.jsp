@@ -120,7 +120,7 @@ function conf()
 
             </td>
             <td class="MainTableRightColumn">
-                            <html:form action="SearchDemographic">
+                            <html:form action="/oscarMessenger/SearchDemographic">
                                 <%
                                 aId = (String) request.getAttribute("IDenc");
                                 System.out.println("aId ="+aId);
@@ -283,7 +283,7 @@ function conf()
                     <%
 
                         for ( int i = 0; i < searchVec.size(); i++){
-                            oscar.oscarEncounter.search.data.DemographicData demo = (oscar.oscarEncounter.search.data.DemographicData) searchVec.elementAt(i);
+                            oscar.oscarEncounter.search.data.EctDemographicData demo = (oscar.oscarEncounter.search.data.EctDemographicData) searchVec.elementAt(i);
                             String forClass;
 
 
@@ -291,7 +291,7 @@ function conf()
                         %>
                             <tr class="<%=forClass%>">
                                 <td>
-                                <a href="/oscarMessenger/Proceed.do?demoId=<%=demo.demographicNo%>&id=<%=aId%>" onclick="javascript:return conf()"; >
+                                <a href="../../oscarMessenger/Transfer/Proceed.do?demoId=<%=demo.demographicNo%>&id=<%=aId%>" onclick="javascript:return conf()"; >
                                 <%=demo.demographicNo%>
                                 </a>
                                 </td>

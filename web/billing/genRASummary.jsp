@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
  <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -60,12 +34,13 @@ String filepath="", filename = "", header="", headerCount="", total="", paymentd
 String transactiontype="", providerno="", specialty="", account="", patient_last="", patient_first="", provincecode="", hin="", ver="", billtype="", location="";
 String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
 String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime="", checkAccount="", proName="";
-String sqlRAOB="", OBflag="0", amountOB="";
+String sqlRACO="",sqlRAOB="", OBflag="0",COflag="0", amountOB="", amountCO="";
 String demo_name ="",demo_hin="";
 
 // sqlOBfee = "select distinct billing_no from radetail where raheader_no='"+raNo+"' and (service_code='P006A' or service_code='P020A' or service_code='P022A' or service_code='P028A' or service_code='P023A' or service_code='P007A' or service_code='P008B' or service_code='P018B' or service_code='E502A' or service_code='C989A' or service_code='E409A' or service_code='E410A' or service_code='E411A' or service_code='H001A')";
 
 ArrayList OBbilling_no = new ArrayList();
+ArrayList CObilling_no = new ArrayList();
  raNo = request.getParameter("rano");
 
       	    ResultSet rsdemo1 = null;
@@ -73,10 +48,17 @@ ArrayList OBbilling_no = new ArrayList();
       	     while (rsdemo1.next()) {
       	     OBbilling_no.add((String)rsdemo1.getString("billing_no"));
       	     }
-      	   
+      	    ResultSet rsdemo01 = null;
+	         	    rsdemo01 = apptMainBean.queryResults(raNo, "search_racolposcopy");
+	         	     while (rsdemo01.next()) {
+	         	     CObilling_no.add((String)rsdemo01.getString("billing_no"));
+      	     }
+      	     
+      	     
  BigDecimal bdCFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 BigDecimal bdPFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
+BigDecimal bdCOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 
  BigDecimal bdFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  BigDecimal bdHFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -84,6 +66,7 @@ BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
   BigDecimal BigCTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
   BigDecimal BigPTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
   BigDecimal BigOTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    BigDecimal BigCOTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  BigDecimal BigLTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  
  BigDecimal BigHTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -91,6 +74,7 @@ BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  BigDecimal BigOBTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  double dHFee = 0.00;        
  double dFee = 0.00;
+ double dCOFee = 0.00; 
  double dOBFee = 0.00; 
  double dCFee = 0.00;       	
  double dPFee = 0.00;       	       	
@@ -197,13 +181,19 @@ BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 	    		        	BigPTotal = BigPTotal.add(bdPFee);
       	    
       	    
-      	    
+      	      OBflag="0";
+      	        COflag="0";
       	    for (int i=0; i<OBbilling_no.size(); i++){
       	    sqlRAOB = (String)OBbilling_no.get(i);
       	    if(sqlRAOB.compareTo(account)==0)OBflag = "1";
       	     	    
       	    }
-      	        
+      	         for (int j=0; j<CObilling_no.size(); j++){
+		      	    sqlRACO = (String)CObilling_no.get(j);
+		      	    if(sqlRACO.compareTo(account)==0)COflag = "1";
+		      	     	    
+      	    }
+      	    
       	        if(OBflag.equals("1")) {
       	        amountOB=amountpay;
       	         dOBFee = Double.parseDouble(amountOB);
@@ -213,7 +203,17 @@ BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
       	        }else{
       	        amountOB="N/A";
       	        } 
-      	        
+      	       
+      	        if(COflag.equals("1")) {
+	             	        amountCO=amountpay;
+	             	         dCOFee = Double.parseDouble(amountCO);
+	       		  				               	          
+	       		  				               	bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+	       				               	BigCOTotal = BigCOTotal.add(bdCOFee);
+	             	        }else{
+	             	        amountCO="N/A";
+	             	        } 
+      	       
                    
       	           if (explain.compareTo("") == 0 || explain == null){
       	           explain = "**";
@@ -368,23 +368,39 @@ BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
       	    dPFee = Double.parseDouble(amountpay);
 	    	                     bdPFee = new BigDecimal(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 	    	    		        	BigPTotal = BigPTotal.add(bdPFee);
-      	    
+      	      COflag="0";
             OBflag="0";
-            	             for (int i=0; i<OBbilling_no.size(); i++){
-      	    sqlRAOB = (String)OBbilling_no.get(i);
-      	    if(sqlRAOB.compareTo(account)==0)OBflag = "1";
-      	     	    
-      	    }
-      	        
-      	        if(OBflag.equals("1")) {
-      	        amountOB=amountpay;
-      	         dOBFee = Double.parseDouble(amountOB);
-		  				               	          
-		  				               	bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-				               	BigOBTotal = BigOBTotal.add(bdOBFee);
-      	        }else{
-      	        amountOB="N/A";
-      	        } 
+         for (int i=0; i<OBbilling_no.size(); i++){
+	      	    sqlRAOB = (String)OBbilling_no.get(i);
+	      	    if(sqlRAOB.compareTo(account)==0)OBflag = "1";
+	      	     	    
+	      	    }
+	      	         for (int j=0; j<CObilling_no.size(); j++){
+			      	    sqlRACO = (String)CObilling_no.get(j);
+			      	    if(sqlRACO.compareTo(account)==0)COflag = "1";
+			      	     	    
+	      	    }
+	      	    
+	      	        if(OBflag.equals("1")) {
+	      	        amountOB=amountpay;
+	      	         dOBFee = Double.parseDouble(amountOB);
+			  				               	          
+			  				               	bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					               	BigOBTotal = BigOBTotal.add(bdOBFee);
+	      	        }else{
+	      	        amountOB="N/A";
+	      	        } 
+	      	       
+	      	        if(COflag.equals("1")) {
+		             	        amountCO=amountpay;
+		             	         dCOFee = Double.parseDouble(amountCO);
+		       		  				               	          
+		       		  				               	bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+		       				               	BigCOTotal = BigCOTotal.add(bdCOFee);
+		             	        }else{
+		             	        amountCO="N/A";
+		             	        } 
+      	       
             	         
             //	           proName = rsdemo.getString("last_name") + "," + rsdemo.getString("first_name");
             	           
@@ -509,7 +525,7 @@ transaction= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_transacti
 balancefwd= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_balancefwd>","</xml_balancefwd>");
 }
 content = content + "<xml_transaction>" + transaction + "</xml_transaction>" + "<xml_balancefwd>" + balancefwd + "</xml_balancefwd>";
-content = content + "<xml_local>" + BigLTotal + "</xml_local>"+ "<xml_total>" + BigPTotal + "</xml_total>" + "<xml_other_total>" + BigOTotal + "</xml_other_total>" + "<xml_ob_total>" + BigOBTotal + "</xml_ob_total>";
+content = content + "<xml_local>" + BigLTotal + "</xml_local>"+ "<xml_total>" + BigPTotal + "</xml_total>" + "<xml_other_total>" + BigOTotal + "</xml_other_total>" + "<xml_ob_total>" + BigOBTotal + "</xml_ob_total>" + "<xml_co_total>" + BigCOTotal + "</xml_co_total>";
 
   int recordAffected=0;
        String[] param2 = new String[2];

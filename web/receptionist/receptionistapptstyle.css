@@ -1,6 +1,9 @@
 	<STYLE type="text/css"> 
 	<!--
-
+                	A.orange {		text-decoration: none;		font-weight: bold;		color:#9966CC;	}
+	A.orange:Hover {		text-decoration: none;		color:#red;	}     
+       	A.black {		text-decoration: none;		font-weight: bold;		color:black;	}
+	A.black:Hover {		text-decoration: none;		color:red;	}
 	A {		text-decoration: none;		font-weight: bold;		color:black;	}
 	A:Hover {		text-decoration: none;		color:red;	}
   input,select,textarea { font-size:11px; background-color: #F4EaD7; border: 1 solid #0097cf;}

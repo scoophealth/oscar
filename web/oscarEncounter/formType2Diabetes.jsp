@@ -271,7 +271,7 @@ function checkAllDates()
             DOB<small>(yyyy/mm/dd)</small>: <input type="text" class="Type2DiabetesInput" readonly="true" name="birthDate" size="11" value="<%= props.getProperty("birthDate", "") %>" readonly="true" />
         </td>
         <td>
-            Date of Dx<small>(yyyy/mm/dd)</small>: <input type="text" class="Type2DiabetesInput" name="dateDX" size="11" value="<%=props.getProperty("dateDX", "") %>" />
+            Date of Dx<small>(yyyy/mm/dd)</small>: <input type="text" class="Type2DiabetesInput" name="dateDx" size="11" value="<%=props.getProperty("dateDx", "") %>" />
         </td>
         <td>
             Height: <input type="text" class="Type2DiabetesInput" name="height" size="5" value="<%= props.getProperty("height", "") %>" />

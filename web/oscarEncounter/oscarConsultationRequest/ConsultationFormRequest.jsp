@@ -381,35 +381,16 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
                 thisForm.setAppointmentPm(consultUtil.appointmentPm);
                 thisForm.setConcurrentProblems(consultUtil.concurrentProblems);
                 thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
+                thisForm.setUrgency(consultUtil.urgency);
 
                 System.out.println("this is from in the form setter "+ consultUtil.patientName);
 
         }else if(request.getAttribute("validateError") == null){
-              //  oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
-              //  oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
-              //  arr = prescriptData.getPrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
-              //  StringBuffer stringBuffer = new StringBuffer();
-              //  for (int i = 0; i < arr.length; i++){
-  		//    stringBuffer.append(arr[i].getRxDisplay()+"\n");
-	//	}
-
-          //      oscar.oscarRx.data.RxPatientData pData = new oscar.oscarRx.data.RxPatientData();
-            //    oscar.oscarRx.data.RxPatientData.Patient patient = pData.getPatient(Integer.parseInt(bean.demographicNo));
-              //  oscar.oscarRx.data.RxPatientData.Patient.Allergy [] allergies = {};
-             //   allergies = patient.getAllergies();                 
-             //   StringBuffer stringBuffer2 = new StringBuffer();
-              //  for (int i=0; i < allergies.length; i++){
-              //     oscar.oscarRx.data.RxAllergyData.Allergy allerg = allergies[i].getAllergy();
-              //     stringBuffer2.append(allerg.getDESCRIPTION()+"  "+allerg.getTypeDesc()+" \n");
-	      //  }
-              //  thisForm.setAllergies(stringBuffer2.toString());
-  	//	thisForm.setCurrentMedications(stringBuffer.toString());
-				thisForm.setAppointmet
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
                 thisForm.setConcurrentProblems(bean.ongoingConcerns);
-				thisForm.setAppointmentYear(year);
-        }
+        	thisForm.setAppointmentYear(year);
+	}
         %>
 
 
@@ -818,7 +799,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
             <td colspan=2>
                 <%if (request.getAttribute("id") != null){ %>
                 <input type="submit" name="submission" value="Update Consultation Request"/>
-                <input type="submit" name="submission" value="Update Consultation Request And Print Preview"/>        
+                <input type="submit" name="submission" value="Update Consultation Request And Print Preview"/>   
                 <%}else{%>
                 <input type="submit" name="submission" value="Submit Consultation Request"/>
                 <input type="submit" name="submission" value="Submit Consultation Request And Print Preview"/>
@@ -869,9 +850,6 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
   	</tr>
 </table>
 </html:form>
-id <%=(String) request.getAttribute("id")%>
-con ser <%=consultUtil.service%> 
-con spec <%=consultUtil.specialist%>
 
 </body>
 </html:html>

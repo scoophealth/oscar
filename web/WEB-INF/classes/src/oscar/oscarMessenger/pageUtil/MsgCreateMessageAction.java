@@ -99,15 +99,15 @@ public class MsgCreateMessageAction extends Action {
             messageId = messageData.sendMessage2(message,subject,userName,sentToWho,userNo,providerListing,att);
 
             System.out.println("messages id = "+messageId);
-/*
-            if (messageData.isRemotes()){
-                oscar.oscarMessenger.data.MsgRemoteMessageData  remoteMessageData;
-                remoteMessageData = new oscar.oscarMessenger.data.MsgRemoteMessageData(messageId,currLoco);
 
-                remoteMessageData.start();
+            if (messageData.isRemotes()){
+//                oscar.oscarMessenger.data.MsgRemoteMessageData  remoteMessageData;
+//                remoteMessageData = new oscar.oscarMessenger.data.MsgRemoteMessageData(messageId,currLoco);
+//
+//                remoteMessageData.start();
 
             }
-*/
+
 
     request.setAttribute("SentMessageProvs",sentToWho.toString());
 

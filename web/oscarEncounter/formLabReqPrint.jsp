@@ -87,10 +87,11 @@
                 </tr>
                 <tr>
                     <td colspan="3" nowrap="true" >
-                        Requisitioning Physician/Practioner:<br><br>
-                        <input type="hidden" style="width:100%" name="provName" value="<%=props.getProperty("provName", "")%>"  />
-                        <%=props.getProperty("provName", "")%>&nbsp;<br>
-                        <input type="hidden" style="width:100%" name="clinicAddress" value="<%=props.getProperty("clinicAddress", "")%>"  />
+                        Requisitioning Physician/Practioner:<br>
+                     <input type="hidden" style="width:100%" name="provName" value="<%=props.getProperty("provName", "")%>"  />
+                     <%=props.getProperty("apptProvName", "").compareTo("")==0?props.getProperty("provName", ""):props.getProperty("apptProvName", "")%>&nbsp;<br>
+                       <br> Family Physician: <br><%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>
+                           <input type="hidden" style="width:100%" name="clinicAddress" value="<%=props.getProperty("clinicAddress", "")%>"  />
                         <%=props.getProperty("clinicAddress", "")%>&nbsp;<br>
                         <input type="hidden" style="width:100%" name="clinicCity" value="<%=props.getProperty("clinicCity", "")%>"  />
                         <%=props.getProperty("clinicCity", "")%>&nbsp;<br>
@@ -247,7 +248,7 @@
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="b_creatine" <%=props.getProperty("b_creatine", "")%> /></td>
-                                <td>Creatine</td>
+                                <td>Creatinine</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>

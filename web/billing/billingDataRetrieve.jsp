@@ -23,7 +23,6 @@
  * Ontario, Canada 
  */
 -->
-
 <% 
  
 
@@ -67,7 +66,7 @@ specialty = SxmlMisc.getXmlContent(rslocation.getString("content"),"<specialty>"
   HCTYPE = rsPatient.getString("hc_type")==null?"ON":rsPatient.getString("hc_type");
 if (DemoSex.equals("M")) HCSex = "1";
 if (DemoSex.equals("F")) HCSex = "2";
- 
+ roster_status = rsPatient.getString("roster_status");
    }
    
 

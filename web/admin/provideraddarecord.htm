@@ -1,76 +1,47 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <html>
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title>Add a Provider</title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
-    <!--
+<!--
+function setfocus() {
+  document.searchprovider.provider_no.focus();
+  document.searchprovider.provider_no.select();
+}
 
-		function setfocus() {
-		  document.searchprovider.provider_no.focus();
-		  document.searchprovider.provider_no.select();
-		}
-
-    function onsub() {
-      if(document.searchprovider.provider_no.value=="" ||
-	     document.searchprovider.last_name.value=="" ||
-		 document.searchprovider.first_name.value=="" ||
-	     document.searchprovider.provider_type.value=="" 
-		) {
-        alert("You forgot to input a keyword!");
-        return false;
-      } else return true;
+function onsub() {
+  if(document.searchprovider.provider_no.value=="" ||
+     document.searchprovider.last_name.value=="" ||
+	 document.searchprovider.first_name.value=="" ||
+     document.searchprovider.provider_type.value==""  ) {
+     alert("You forgot to input a keyword!");
+     return false;
+  } else return true;
       // do nothing at the moment
       // check input data in the future 
-    }
-	function upCaseCtrl(ctrl) {
-		ctrl.value = ctrl.value.toUpperCase();
-	}
-
-    //-->
-    </script>
+}
+function upCaseCtrl(ctrl) {
+  ctrl.value = ctrl.value.toUpperCase();
+}
+//-->
+</script>
 </head>
 
-<body   background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
+   <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
             ADD A PROVIDER</font></th>
       </tr>
-    </table>
+   </table>
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
       <tr> 
         <td width="50%" align="right">Provider No.<font color="red">:</font> </td>
         <td>
-          <input type="text" name="provider_no" >
+          <input type="text" name="provider_no" maxlength="6">
         </td>
       </tr>
       <tr> 
@@ -97,6 +68,8 @@
           <select name="provider_type">
             <option value="receptionist">receptionist</option>
             <option value="doctor">doctor</option>
+            <option value="doctor">nurse</option>
+            <option value="doctor">resident</option>
             <option value="admin">admin</option>
           </select>
         </td>
@@ -114,7 +87,7 @@
         </td>
       </tr>
       <tr> 
-        <td align="right">Sex: </td>
+        <td align="right">Sex(F/M): </td>
         <td> 
           <input type="text" name="sex" maxlength="1"  onBlur="upCaseCtrl(this)">
         </td>
@@ -132,9 +105,10 @@
         </td>
       </tr>
       <tr> 
-        <td align="right">Phone: </td>
+        <td align="right">Phone (home): </td>
         <td>
           <input type="text" name="phone" >
+          Phone (work): <input type="text" name="workphone" value="">
         </td>
       </tr>
   <tr> 
@@ -188,7 +162,7 @@
       <tr> 
         <td align="right">Status: </td>
         <td>
-          <input type="text" name="status" >
+          <input type="text" name="status" value='1'>
         </td>
       </tr>
       <tr> 

@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%  
   //operation available to the client - dboperation
   String orderby="", whereClause="", limit="", limit1="", limit2="";
@@ -47,8 +21,8 @@
     {"save_document","insert into document values('\\N',?,?,?,?,?,?,?)"},
      {"save_tickler","insert into tickler values('\\N',?,?,?,?,?,?)"},
          {"update_tickler","update tickler set status=? where tickler_no=?"},
-     {"search_tickler","select t.tickler_no, d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and d.provider_no like ?"},
-     {"search_tickler_bydemo","select t.tickler_no, d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and t.demographic_no like ?"},
+     {"search_tickler","select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and d.provider_no like ? order by t.service_date desc"},
+     {"search_tickler_bydemo","select t.tickler_no, d.demographic_no,d.last_name,d.first_name, p.last_name provider_last, p.first_name provider_first, t.status,t.message,t.service_date from demographic d,tickler t, provider p where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and p.provider_no=d.provider_no and t.demographic_no like ? order by t.service_date desc"},
    
     {"save_ctl_document","insert into ctl_document values(?,?,?,?)"},
     {"search_document", "select * from document where status <> 'D' and docfilename=? or doctype=? or docdesc like ?  or doccreator = ? " + orderby},

@@ -42,15 +42,20 @@
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
     EctRourkeRecord rec = new EctRourkeRecord();
-    java.util.Properties props = rec.getGraph(demoNo, formId);
+    java.util.Properties props = rec.getRourkeRecord(demoNo, formId);
 
     String chart = "graphics/boyLength36m.jpg";
     String red = "graphics/redMark.gif";
     String blue = "graphics/blueMark.gif";
-    if(props.getProperty("female", "").equalsIgnoreCase("1"))
+// Edited By Jay Nov 26
+//    if(props.getProperty("female", "").equalsIgnoreCase("1"))
+    if(rec.isFemale(demoNo))
+//    if(props.getProperty("c_female", "").equalsIgnoreCase("checked='checked'"))
     {
         chart = "graphics/girlLength36m.jpg";
     }
+
+	props = rec.getGraph(demoNo, formId);
 %>
 
 <%! double age(String dob, String today)

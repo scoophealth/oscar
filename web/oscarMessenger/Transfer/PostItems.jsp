@@ -49,17 +49,13 @@
 
     //out.println(checks);
     String xmlDoc = oscar.oscarMessenger.docxfer.util.MsgCommxml.decode64(request.getParameter("xmlDoc"));
-    //out.println(xmlDoc);
     java.util.ArrayList aList = new java.util.ArrayList();
     String sXML = MsgCommxml.toXML(new MsgSendDocument().parseChecks2(xmlDoc, checks, aList));
-
-
+System.out.println(sXML);
 
     oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
     bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
     bean.setAttachment(sXML);
-
-
 
     response.sendRedirect("../CreateMessage.jsp");
 

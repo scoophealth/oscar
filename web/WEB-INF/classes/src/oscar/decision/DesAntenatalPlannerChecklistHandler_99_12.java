@@ -122,7 +122,7 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
   			results += "<tr>";
 	  	
 	    	if(checkbox) {
-		  	  results += "<td width='5%' align='center'><input type='checkbox' name='apchecklist_" + clname +"d' value='checked' datafld='apchecklist_" +clname+ "d'></td><td width='5%' align='center'><input type='checkbox' name='apchecklist_" + clname +"na' value='checked' datafld='apchecklist_" +clname+ "na'></td>\n";
+		  	  results += "<td width='5%' align='center'><input type='checkbox' name='checklist_" + clname +"d' value='checked' datafld='checklist_" +clname+ "d'></td><td width='5%' align='center'><input type='checkbox' name='checklist_" + clname +"na' value='checked' datafld='checklist_" +clname+ "na'></td>\n";
 			  } else {
 			 	  results += "<td></td><td></td>";
 			  }

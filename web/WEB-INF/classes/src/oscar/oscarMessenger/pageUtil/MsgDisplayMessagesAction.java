@@ -82,8 +82,7 @@ public class MsgDisplayMessagesAction extends Action {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 java.sql.ResultSet rs;
                 String sql = new String("update messagelisttbl set status = \"del\" where provider_no = \""+providerNo+"\" and message = \""+messageNo[i]+"\"");
-                rs = db.GetSQL(sql);
-                rs.close();
+                db.RunSQL(sql);
                 db.CloseConn();
               }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
             }//for

@@ -1,29 +1,3 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
@@ -31,30 +5,42 @@
   boolean bOrigAlt = false;
 
 %>
-<%@ page import="java.util.*, java.net.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
 <%  if(!scheduleMainBean.getBDoConfigure()) { %>
 <%@ include file="scheduleMainBeanConn.jsp" %>  
-<% } 
-  SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd");
-  GregorianCalendar now = (GregorianCalendar)Calendar.getInstance(); //new GregorianCalendar();
-//  int year = now.get(Calendar.YEAR); int month = now.get(Calendar.MONTH)+1;  int day = now.get(Calendar.DATE);
-  String today = inform.format(inform.parse(now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE)) ); //now.get(Calendar.YEAR)+"-"+MyDateFormat.getDigitalXX((now.get(Calendar.MONTH)+1))+"-"+MyDateFormat.getDigitalXX(now.get(Calendar.DATE));
+<% } %>
+<%
+  String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );
+  String lastYear = (Integer.parseInt(today.substring(0,today.indexOf('-'))) - 1) + today.substring(today.indexOf('-'));
+  //System.out.println("last year is: " + lastYear);
 
-  if(request.getParameter("delete")!= null && request.getParameter("delete").equals("1") ) {
+  if(request.getParameter("delete")!= null && request.getParameter("delete").equals("1") ) { //delete rschedule
     String[] param =new String[2];
+	String edate = null;
     param[0]=request.getParameter("provider_no");
     param[1]=request.getParameter("sdate")!=null?request.getParameter("sdate"):today;
     ResultSet rsgroup = scheduleMainBean.queryResults(param,"search_rschedule_current1");
     while (rsgroup.next()) { 
       param[1]= rsgroup.getString("sdate");
+      edate= rsgroup.getString("edate");
     }
     String[] param1 =new String[3];
     param1[0]=param[0];
     param1[1]="1";
     param1[2]=param[1];
     int rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
+
+	if(request.getParameter("deldate")!= null && (request.getParameter("deldate").equals("b") || request.getParameter("deldate").equals("all")) ) { //delete scheduledate
+	  String dbOpt = "delete_scheduledate_all";
+	  if(request.getParameter("deldate").equals("b")) dbOpt = "delete_scheduledate_b"; 
+      String[] param0 =new String[3];
+      param0[0]=param[0];
+      param0[1]=param[1] ;
+      param0[2]=edate ;
+      rowsAffected = scheduleMainBean.queryExecuteUpdate(param0,dbOpt);
+	}
     response.sendRedirect("scheduletemplateapplying.jsp?provider_no="+param[0]+"&provider_name="+URLEncoder.encode(request.getParameter("provider_name")) );
   } else {
 %>
@@ -72,8 +58,6 @@
 <!--
 function setfocus() {
   this.focus();
-  //document.schedule.keyword.focus();
-  //document.schedule.keyword.select();
 }
 function selectrschedule(s) {
   if(self.location.href.lastIndexOf("&sdate=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&sdate="));
@@ -81,8 +65,8 @@ function selectrschedule(s) {
 	self.location.href = a + "&sdate=" +s.options[s.selectedIndex].value ;
 }
 function onBtnDelete() {
-  if( confirm("Are you sure you want to delete this template setting?") ) {
-    self.location.href += "&delete=1" ;
+  if( confirm("Are you sure you want to delete this template setting ?") ) {
+    self.location.href += "&delete=1&deldate=all" ;
   } else {;}
 }
 
@@ -246,10 +230,18 @@ function addDataString1() {
   param1[1]=request.getParameter("sdate")!=null?request.getParameter("sdate"):today;
   ResultSet rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_current1");
   
-  while (rsgroup.next()) { 
+  if (rsgroup.next()) { 
     scheduleRscheduleBean.setRscheduleBean(rsgroup.getString("provider_no"),rsgroup.getString("sdate"),rsgroup.getString("edate"), rsgroup.getString("available"),rsgroup.getString("day_of_week"), rsgroup.getString("avail_hourB"), rsgroup.getString("avail_hour"), rsgroup.getString("creator"));
     if(rsgroup.getString("available").equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
-    break;
+    //break;
+  } else {
+      rsgroup = null;
+      rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_current2");
+      if (rsgroup.next()) { 
+        scheduleRscheduleBean.setRscheduleBean(rsgroup.getString("provider_no"),rsgroup.getString("sdate"),rsgroup.getString("edate"), rsgroup.getString("available"),rsgroup.getString("day_of_week"), rsgroup.getString("avail_hourB"), rsgroup.getString("avail_hour"), rsgroup.getString("creator"));
+        if(rsgroup.getString("available").equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
+        //break;
+	  }
   }
 %>
 <body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -286,7 +278,7 @@ function addDataString1() {
 <center>
 <%
 
-//System.out.println("llllppppppppppppppp" + scheduleRscheduleBean.day_of_week + scheduleRscheduleBean.avail_hourB + scheduleRscheduleBean.avail_hour); 
+//System.out.println(":" + scheduleRscheduleBean.day_of_week + scheduleRscheduleBean.avail_hourB + scheduleRscheduleBean.avail_hour); 
 //System.out.println(scheduleRscheduleBean.sdate); 
   String syear = "",smonth="",sday="",eyear="",emonth="",eday="";
   String[] param2 =new String[7];
@@ -331,13 +323,12 @@ function addDataString1() {
               </td>
               <td bgcolor="#CCFFCC" nowrap align="right"> 
                   <select name="select"  onChange="selectrschedule(this)">
-                    <option value="<%=today%>" <%=request.getParameter("sdate")!=null?(today.equals(request.getParameter("sdate"))?"selected":""):""%>>Current R Schedule</option>
 <%
-  param1[1]=today; //query for the future date
+  param1[1]=lastYear; //today - query for the future date
   rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_future1");
  	while (rsgroup.next()) { 
 %>
-                  <option value="<%=rsgroup.getString("sdate")%>" <%=request.getParameter("sdate")!=null?(rsgroup.getString("sdate").equals(request.getParameter("sdate"))?"selected":""):""%> >
+                  <option value="<%=rsgroup.getString("sdate")%>" <%=request.getParameter("sdate")!=null?(rsgroup.getString("sdate").equals(request.getParameter("sdate"))?"selected":""):(rsgroup.getString("sdate").equals(scheduleRscheduleBean.sdate)?"selected":"")%> >
                   <%=rsgroup.getString("sdate")+" ~ "+rsgroup.getString("edate")%></option>
 <%
  	}

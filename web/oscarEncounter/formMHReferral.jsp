@@ -121,11 +121,105 @@
             break;
         }
     }
-</script>
+
+     function numvalidate() {
+
+            if( document.forms[0].r_rps1.value != "" && isNaN(document.forms[0].r_rps1.value) ) {
+                bringthToAttentionth(document.forms[0].r_rps1); 
+                return false;
+            }
+            if(document.forms[0].r_rps2.value != "" && isNaN(document.forms[0].r_rps2.value)) {
+                bringthToAttentionth(document.forms[0].r_rps2); 
+                return false;
+            }
+            if(isNaN(document.forms[0].r_rps3.value)) {
+                bringthToAttentionth(document.forms[0].r_rps3);
+                return false;
+            }
+            if(isNaN(document.forms[0].r_rpi1.value)) {
+                bringthToAttentionth(document.forms[0].r_rpi1); 
+                return false;
+            }
+            if(isNaN(document.forms[0].r_rpi2.value)) {
+                 bringthToAttentionth(document.forms[0].r_rpi2); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_rpi3.value)) {
+                 bringthToAttentionth(document.forms[0].r_rpi3); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_rmpi1.value)) {
+                 bringthToAttentionth(document.forms[0].r_rmpi1); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_rmpi2.value)) {
+                 bringthToAttentionth(document.forms[0].r_rmpi2); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_rmpi3.value)) {
+                 bringthToAttentionth(document.forms[0].r_rmpi3); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_ir1.value)) {
+                 bringthToAttentionth(document.forms[0].r_ir1); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_ir2.value)) {
+                 bringthToAttentionth(document.forms[0].r_ir2); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_ir3.value)) {
+                 bringthToAttentionth(document.forms[0].r_ir3); 
+                 return false;
+            }
+
+            if(isNaN(document.forms[0].r_arm1.value)) {
+                 bringthToAttentionth(document.forms[0].r_arm1); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_arm2.value)) {
+                 bringthToAttentionth(document.forms[0].r_arm2); 
+                 return false;
+            }
+            if(isNaN(document.forms[0].r_arm3.value)) {
+                 bringthToAttentionth(document.forms[0].r_arm3); 
+                 return false;
+            }
+        
+    }
+    function bringthToAttentionth(docItem){
+       docItem.focus();
+       alert("This value must be numeric.");
+    } 
+
+    function  myFunction(){
+        var pagey = 0; 
+        return false;
+    }
+</script> 
+<style type="text/css">
+ A.mhlink:link {
+	COLOR: black;
+	TEXT-DECORATION: none;
+ }
+ 
+ A.mhlink:visited {
+	COLOR: black;
+	TEXT-DECORATION: none;
+ }
+ A.mhlink:active {
+	COLOR: black;
+	TEXT-DECORATION: none;
+ }
+ A.mhlink:hover {
+	color: red;
+	TEXT-DECORATION: underline;
+ } 
+</style>
 </head>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
-<html:form action="/oscarEncounter/MentalHealth">
+<html:form action="/oscarEncounter/MentalHealth" onsubmit="return numvalidate()">
 
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="ID" value="<%= props.getProperty("ID", "0") %>"/>
@@ -192,9 +286,9 @@
             <table class="TableWithBorder" cellpadding="2" cellspacing="0" width="100%">
                 <tr>
                     <td>Referral Date<small>(yyyy/mm/dd)</small>: </td>
-                    <td><input type="text" name="c_referralDate" size="40" value="<%= props.getProperty("c_referralDate", "") %>" readonly="true" /></td>
+                    <td><input type="text" name="c_referralDate" size="40" value="<%= props.getProperty("c_referralDate", "") %>"  /></td>
                     <td>Referred By: </td>
-                    <td align="right"><input type="text" name="c_referredBy" size="40" value="<%= props.getProperty("c_referredBy", "") %>" readonly="true" /></td>
+                    <td align="right"><input type="text" name="c_referredBy" size="40" value="<%= props.getProperty("c_referredBy", "") %>"  /></td>
                 </tr>
             </table>
         </td>
@@ -204,14 +298,19 @@
             <table border="1" cellpadding="2" cellspacing="0" width="100%">
                 <tr>
                     <td class="mhList" valign="top">
-                        Psychiatric Symptoms:<br>
+                        Psychiatric Symptoms: <br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="r_rps1" value="<%= props.getProperty("r_rps1", "") %>" size="2"/> &nbsp;
+                        2. <input type="text" name="r_rps2" value="<%= props.getProperty("r_rps2", "") %>" size="2" /> &nbsp;
+                        3. <input type="text" name="r_rps3" value="<%= props.getProperty("r_rps3", "") %>" size="2"/>
+                        <br><br>
                         <% String[] rps = list.loadData("mhReferral/PsychiatricSymptoms.txt", projecthome );
                             for (int i=0; i<rps.length; i++)
                             {
                                 if(rps[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('r_rps', <%=i+1%>);"><%=i+1%>. <%= rps[i] %></a><br>
+                                    <a  href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('r_rps', <%=i+1%>);"><%=i+1%>. <%= rps[i] %></a><br>
                         <%
                                 }
                             }
@@ -219,14 +318,19 @@
                         &nbsp;<input type="text" name="r_rpsOther" value="<%= props.getProperty("r_rpsOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Psychosocial Issues:<br>
+                        Psychosocial Issues:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="r_rpi1" value="<%= props.getProperty("r_rpi1", "") %>" size="2"/> &nbsp;
+                        2. <input type="text" name="r_rpi2" value="<%= props.getProperty("r_rpi2", "") %>" size="2"/> &nbsp;
+                        3. <input type="text" name="r_rpi3" value="<%= props.getProperty("r_rpi3", "") %>" size="2"/>
+                        <br><br>
                         <% String[] rpi = list.loadData("mhReferral/PsychosocialIssues.txt", projecthome );
                             for (int i=0; i<rpi.length; i++)
                             {
                                 if(rpi[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('r_rpi', <%=i+1%>);"><%=i+1%>. <%= rpi[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('r_rpi', <%=i+1%>);"><%=i+1%>. <%= rpi[i] %></a><br>
                         <%
                                 }
                             }
@@ -234,14 +338,19 @@
                         &nbsp;<input type="text" name="r_rpiOther" value="<%= props.getProperty("r_rpiOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Med/Phy Issues:<br>
+                        Med/Phy Issues:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="r_rmpi1" value="<%= props.getProperty("r_rmpi1", "") %>" size="2" /> &nbsp;
+                        2. <input type="text" name="r_rmpi2" value="<%= props.getProperty("r_rmpi2", "") %>" size="2"/> &nbsp;
+                        3. <input type="text" name="r_rmpi3" value="<%= props.getProperty("r_rmpi3", "") %>" size="2"/>
+                        <br><br>
                         <% String[] rmpi = list.loadData("mhReferral/MedPhyIssues.txt", projecthome );
                             for (int i=0; i<rmpi.length; i++)
                             {
                                 if(rmpi[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('r_rmpi', <%=i+1%>);"><%=i+1%>. <%= rmpi[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('r_rmpi', <%=i+1%>);"><%=i+1%>. <%= rmpi[i] %></a><br>
                         <%
                                 }
                             }
@@ -251,34 +360,30 @@
                 </tr>
                 <tr>
                     <td class="mhSelect">
-                        Psychiatric Symptoms:<br>
-                        1. <input type="text" name="r_rps1" value="<%= props.getProperty("r_rps1", "") %>" /><br>
-                        2. <input type="text" name="r_rps2" value="<%= props.getProperty("r_rps2", "") %>" /><br>
-                        3. <input type="text" name="r_rps3" value="<%= props.getProperty("r_rps3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Psychosocial Issues:<br>
-                        1. <input type="text" name="r_rpi1" value="<%= props.getProperty("r_rpi1", "") %>" /><br>
-                        2. <input type="text" name="r_rpi2" value="<%= props.getProperty("r_rpi2", "") %>" /><br>
-                        3. <input type="text" name="r_rpi3" value="<%= props.getProperty("r_rpi3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Med/Phy Issues:<br>
-                        1. <input type="text" name="r_rmpi1" value="<%= props.getProperty("r_rmpi1", "") %>" /><br>
-                        2. <input type="text" name="r_rmpi2" value="<%= props.getProperty("r_rmpi2", "") %>" /><br>
-                        3. <input type="text" name="r_rmpi3" value="<%= props.getProperty("r_rmpi3", "") %>" />
+                        <br>
                     </td>
                 </tr>
                 <tr>
                     <td class="mhList" valign="top">
-                        Interventions Requested:<br>
+                        Interventions Requested:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="r_ir1" value="<%= props.getProperty("r_ir1", "") %>" size="2" /> &nbsp;
+                        2. <input type="text" name="r_ir2" value="<%= props.getProperty("r_ir2", "") %>" size="2"/> &nbsp;
+                        3. <input type="text" name="r_ir3" value="<%= props.getProperty("r_ir3", "") %>" size="2"/>
+                        <br><br>
                         <% String[] ir = list.loadData("mhReferral/InterventionsRequested.txt", projecthome );
                             for (int i=0; i<ir.length; i++)
                             {
                                 if(ir[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('r_ir', <%=i+1%>);"><%=i+1%>. <%= ir[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('r_ir', <%=i+1%>);"><%=i+1%>. <%= ir[i] %></a><br>
                         <%
                                 }
                             }
@@ -286,14 +391,19 @@
                         &nbsp;<input type="text" name="r_irOther" value="<%= props.getProperty("r_irOther", "") %>" />
                     </td>
                     <td class="mhList" valign="top">
-                        Advice Regarding Management:<br>
+                        Advice Regarding Management:<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        1. <input type="text" name="r_arm1" value="<%= props.getProperty("r_arm1", "") %>" size="2"/> &nbsp;
+                        2. <input type="text" name="r_arm2" value="<%= props.getProperty("r_arm2", "") %>" size="2"/> &nbsp;
+                        3. <input type="text" name="r_arm3" value="<%= props.getProperty("r_arm3", "") %>" size="2"/>
+                        <br><br>
                         <% String[] arm = list.loadData("mhReferral/AdviceRegardingManagement.txt", projecthome );
                             for (int i=0; i<arm.length; i++)
                             {
                                 if(arm[i]!=null)
                                 {
                         %>
-                                    <a onclick="javascript:insert('r_arm', <%=i+1%>);"><%=i+1%>. <%= arm[i] %></a><br>
+                                    <a href="javascript: function myFunction() {return false; }"  class="mhlink" onclick="javascript:insert('r_arm', <%=i+1%>);"><%=i+1%>. <%= arm[i] %></a><br>
                         <%
                                 }
                             }
@@ -307,16 +417,10 @@
                 </tr>
                 <tr>
                     <td class="mhSelect">
-                        Interventions Requested:<br>
-                        1. <input type="text" name="r_ir1" value="<%= props.getProperty("r_ir1", "") %>" /><br>
-                        2. <input type="text" name="r_ir2" value="<%= props.getProperty("r_ir2", "") %>" /><br>
-                        3. <input type="text" name="r_ir3" value="<%= props.getProperty("r_ir3", "") %>" />
+                        <br>
                     </td>
                     <td class="mhSelect">
-                        Advice Regarding Management:<br>
-                        1. <input type="text" name="r_arm1" value="<%= props.getProperty("r_arm1", "") %>" /><br>
-                        2. <input type="text" name="r_arm2" value="<%= props.getProperty("r_arm2", "") %>" /><br>
-                        3. <input type="text" name="r_arm3" value="<%= props.getProperty("r_arm3", "") %>" />
+                        <br>
                     </td>
                 </tr>
             </table>

@@ -1,3 +1,4 @@
+
 <!--  
 /*
  * 
@@ -23,7 +24,6 @@
  * Ontario, Canada 
  */
 -->
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head> 
@@ -31,7 +31,7 @@
 <title></title>
 </head>
 <body>
-<%@ page  import="java.io.*, java.sql.*, java.util.*,java.net.*, oscar.oscarDB.*, oscar.*, java.math.*" %>
+<%@ page  import="java.io.*, java.sql.*, java.util.*,java.net.*, oscar.*, java.math.*"  errorPage="errorpage.jsp"%>
 
 
 <jsp:useBean id="dbBillingDataBean" scope="page" class="oscar.dbBillingData">
@@ -57,18 +57,20 @@
 String numCode="";
 String diagcode="";
 String diagnostic_code = request.getParameter("xml_diagnostic_detail");
-String billunit = "", content="";
-String r_doctor =request.getParameter("rd")==null?"":request.getParameter("rd");
+String billunit = "", content="", billingamount="";
+String r_doctor =request.getParameter("rd");
+String roster_status = request.getParameter("roster")==null?"": request.getParameter("roster");
 String m_review = request.getParameter("m_review")==null?"":"checked";
-String r_doctor_ohip=request.getParameter("rdohip")==null?"":request.getParameter("rdohip");
+String r_doctor_ohip=request.getParameter("rdohip");
 String r_status = request.getParameter("referral")==null?"":"checked";
-String HCTYPE = request.getParameter("hc_type")==null?"":request.getParameter("hc_type");
-String HCSex = request.getParameter("hc_sex")==null?"":request.getParameter("hc_sex");
-String specialty = request.getParameter("specialty")==null?"":request.getParameter("specialty");
+String HCTYPE = request.getParameter("hc_type");
+String HCSex = request.getParameter("hc_sex");
+String specialty = request.getParameter("specialty");
        content = content + "<rdohip>" + r_doctor_ohip+"</rdohip>" + "<rd>" + r_doctor + "</rd>";
    content = content + "<xml_referral>" + r_status +"</xml_referral>" + "<mreview>" + m_review + "</mreview>";
     content = content + "<hctype>" + HCTYPE+"</hctype>" + "<demosex>" + HCSex + "</demosex>";
 content = content + "<specialty>" + specialty + "</specialty>";
+content = content + "<xml_roster>" + roster_status + "</xml_roster>";
 
 
 if (diagnostic_code == null || diagnostic_code.compareTo("") == 0){
@@ -92,18 +94,19 @@ for(int i=0;i<diagcode.length();i++)
 }
        String pValue="", pCode="", pDesc="", pPerc="", pUnit = "";
        String eValue="", eCode="", eDesc="", ePerc="", eUnit = "";
-       String xValue="", xCode="", xDesc="", xPerc="", xUnit = "";
+         String xValue="", xCode="", xDesc="", xPerc="", xUnit = "";
        String eFlag = "", xFlag="";
- 	String otherstr2="", otherstr="", scode = "", desc="", value="", percentage="";
+  	String otherstr2="", otherstr="", scode = "", desc="", value="", percentage="";
  	String temp=null;//default is not null  
-  	String tempBill=null;
-  	String[] strAuth=null;
- 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
- 		temp=e.nextElement().toString();
- 		if( temp.indexOf("xml_")==-1 ) continue;
+ 	String tempBill=null;
+ 	String[] strAuth=null;
+	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
+		temp=e.nextElement().toString();
+		if( temp.indexOf("xml_")==-1 ) continue;
   	content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
          }
        
+         
 
 		BigDecimal pValue1 = new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP);
 	 BillingBean billing = new BillingBean();
@@ -112,16 +115,22 @@ for(int i=0;i<diagcode.length();i++)
 		tempBill=f.nextElement().toString();
 		if( tempBill.indexOf("servicecode")==-1 ) continue;
 		billunit = request.getParameter("billingunit" + tempBill.substring(11));
+		billingamount = request.getParameter("billingamount" + tempBill.substring(11));
   	    dbBillingDataBean.setService_code(request.getParameter(tempBill));      
-  	   dbBillingDataBean.setVariables(oscarVariables);
+  	    dbBillingDataBean.setVariables(oscarVariables);
   	    strAuth = dbBillingDataBean.ejbLoad();
-
   	     if(strAuth!=null) { //login successfully
  		 scode = strAuth[0];
  		 desc = strAuth[1];
   		 value = strAuth[2];
   		 percentage = strAuth[3];
-  	
+  	if (billingamount==null || billingamount.compareTo("")==0){
+	value = value;
+	}else{
+	value = billingamount;
+	
+	
+}
   	
   	BigDecimal otherunit2 = new BigDecimal(Double.parseDouble(value)).setScale(2, BigDecimal.ROUND_HALF_UP);
   billingunit = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -174,6 +183,8 @@ for(int i=0;i<diagcode.length();i++)
 	//        otherunit2 = billingunit.multiply(otherunit2).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigTotal = BigTotal.add(otherunit2);
 otherstr2 = otherunit2.toString();
+
+
 StringBuffer sotherBuffer = new StringBuffer(otherstr2);
 int f0 = otherstr2.indexOf('.');
 sotherBuffer.deleteCharAt(f0);
