@@ -65,63 +65,15 @@ public class FrmStudyPING_DiabetesRecord extends FrmStudyRecord {
         //props.list(System.out);
         return props;
     }
-
+    
     public int saveFormRecord(Properties props) throws SQLException {
         String demographic_no = props.getProperty("demographic_no");
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no="
-                + demographic_no + " AND ID=0";
-        ResultSet rs = db.GetSQL(sql, true);
-        rs.moveToInsertRow();
-        ResultSetMetaData md = rs.getMetaData();
-        for (int i = 1; i <= md.getColumnCount(); i++) {
-            String name = md.getColumnName(i);
-            if (name.equalsIgnoreCase("ID")) {
-                rs.updateNull(name);
-                continue;
-            }
-            String value = props.getProperty(name, null);
-            if (md.getColumnTypeName(i).equalsIgnoreCase("TINY")
-                    && md.getScale(i) == 1) {
-                if (value != null) {
-                    if (value.equalsIgnoreCase("on"))
-                        rs.updateInt(name, 1);
-                    else
-                        rs.updateInt(name, 0);
-                } else {
-                    rs.updateInt(name, 0);
-                }
-                continue;
-            }
-            if (md.getColumnTypeName(i).equalsIgnoreCase("date")) {
-                Date d;
-                if (md.getColumnName(i).equalsIgnoreCase("formEdited")) {
-                    d = UtilDateUtilities.Today();
-                } else {
-                    d = UtilDateUtilities.StringToDate(value, "yyyy/MM/dd");
-                }
-                if (d == null)
-                    rs.updateNull(name);
-                else
-                    rs.updateDate(name, new java.sql.Date(d.getTime()));
-                continue;
-            }
-            if (value == null)
-                rs.updateNull(name);
-            else
-                rs.updateString(name, value);
-        }
+            + demographic_no + " AND ID=0";
 
-        rs.insertRow();
-        rs.close();
-        int ret = 0;
-        sql = "SELECT LAST_INSERT_ID()";
-        rs = db.GetSQL(sql);
-        if (rs.next()) ret = rs.getInt(1);
-        rs.close();
-        db.CloseConn();
-        return ret;
+		return ((new oscar.form.FrmRecordHelp()).saveFormRecord(props, sql));
     }
+
 
     public String findActionValue(String submit) throws SQLException {
         if (submit != null && submit.equalsIgnoreCase("print")) {
