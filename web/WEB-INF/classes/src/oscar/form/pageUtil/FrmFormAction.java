@@ -156,11 +156,14 @@ public class FrmFormAction extends Action {
                     props.setProperty(type+"LastData", lastData);
                 if(lastDataEnteredDate!=null)
                     props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
+                System.out.println("type: " + type + " input: " + inputValue);
                 org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+                props.setProperty(type+"Date", observationDate);
+                props.setProperty(type+"Comments", comments);                
+                    
                 if(!gValidator.isBlankOrNull(inputValue)){
                     props.setProperty(type+"Value", inputValue);
-                    props.setProperty(type+"Date", observationDate);
-                    props.setProperty(type+"Comments", comments);                
+                    
                     if(type.equalsIgnoreCase("BP")){
                         //extract SBP and DBP for blood pressure
                         String bp = inputValue;
@@ -269,7 +272,7 @@ public class FrmFormAction extends Action {
                 saveErrors(request, errors);
                 valid = false;
             }
-            if(!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
+            if(mt.getType().equalsIgnoreCase("BP")&&!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
                 errors.add(inputValueName,
                 new ActionError("error.bloodPressure"));
                 saveErrors(request, errors);
