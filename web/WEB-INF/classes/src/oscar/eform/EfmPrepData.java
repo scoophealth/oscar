@@ -39,7 +39,13 @@ public class EfmPrepData {
   private String DOB;
   private String Email;
   private String HIN;
-  private String NameAddress;
+  private String clinic_name;
+  private String clinic_phone;
+  private String clinic_fax;
+  private String clinic_label;
+  private String clinic_addressLine;
+  private String clinic_address;
+  private String NameAddress;  
   private String Problem_List ;
   private String Medication ;
   private String Family_Social_History ;
@@ -72,12 +78,18 @@ public class EfmPrepData {
     setNameAddress();
     setEmail();
     setHIN();
+    setClinicName();
+    setClinicPhone();
+    setClinicFax();
+    setClinicLabel();
+    setClinicAddressLine();
+    setClinicAddress();
     setEChartAcc();
     createDemoAcc();
     
-    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders" };    
+    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=clinic_name","oscarDB=clinic_phone","oscarDB=clinic_fax","oscarDB=clinic_label","oscarDB=clinic_addressLine","oscarDB=clinic_address","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders" };
     try {
-      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders };        
+      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, clinic_name, clinic_phone, clinic_fax, clinic_label, clinic_addressLine, clinic_address, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders };
     } catch(Exception ex) {
       System.err.println(" : " + ex.getMessage());
     }
@@ -175,6 +187,24 @@ public class EfmPrepData {
    }
   public void setHIN() {
     HIN = " value=\"" + (new EfmDataOpt()).getHIN(demographic_no) + "\"";
+  }
+  public void setClinicName() {
+    clinic_name = " value=\"" + (new EfmDataOpt()).getClinicName() + "\"";
+  }
+  public void setClinicPhone() {
+    clinic_phone = " value=\"" + (new EfmDataOpt()).getClinicPhone() + "\"";
+  }
+  public void setClinicFax() {
+    clinic_fax = " value=\"" + (new EfmDataOpt()).getClinicFax() + "\"";
+  }
+  public void setClinicLabel() {  
+    clinic_label = (new EfmDataOpt()).getClinicLabel();
+  }
+  public void setClinicAddressLine() {
+    clinic_addressLine = " value=\"" + (new EfmDataOpt()).getClinicAddressLine() + "\"";
+  }
+  public void setClinicAddress() {
+    clinic_address = (new EfmDataOpt()).getClinicAddress();
   }
   public void setPatientName() {  
     patient_name = " value=\"" + (new EfmDataOpt()).getPatientName(demographic_no) + "\"";
