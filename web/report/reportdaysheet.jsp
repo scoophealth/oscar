@@ -32,6 +32,9 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" >
+<style>
+td { font-size: 16px; }
+</style>
 <script language="JavaScript">
 <!--
 function setfocus() {
