@@ -74,6 +74,25 @@ function checkTypeNum(typeIn) {
 	} else typeInOK = false;
 	return typeInOK;
 }
+
+function checkTypeInSearch() {
+  var dob = document.titlesearch.keyword; typeInOK = false;
+  
+  if(document.titlesearch.search_mode[2].checked) {
+    if(dob.value.length==8) {
+      dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
+      //alert(dob.value.length);
+      typeInOK = true;
+    }
+    if(dob.value.length != 10) {
+      alert("<bean:message key="demographic.search.msgWrongDOB"/>");
+      typeInOK = false;
+    }
+    
+    return typeInOK ;
+  }
+}
+
 function checkTypeIn() {
 	var typeInOK = false;
 	if(document.adddemographic.last_name.value!="" && document.adddemographic.first_name.value!="" && document.adddemographic.sex.value!="") {
@@ -96,7 +115,7 @@ function checkTypeIn() {
 	  </tr>
 	</table>
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">
-	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="checkTypeIn()">
+	<form method="post" name="titlesearch" action="demographiccontrol.jsp" onsubmit="return checkTypeInSearch();">
 		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.demographicaddrecordhtm.msgSearch"/>
         </i></b></font></td>
 			
