@@ -416,7 +416,7 @@ public String space(int i) {
         String moneyStr = "0.00";
         try{             
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
-        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+        }catch (Exception moneyException) { }//moneyException.printStackTrace(); }
     return moneyStr;
     }
     ///
