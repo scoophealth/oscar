@@ -44,12 +44,12 @@ public class EctGroupNameBeanHandler {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT DISTINCT name FROM measurementGroup";
+            String sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
             System.out.println("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                EctGroupNameBean groupName = new EctGroupNameBean(rs.getString("name"));
+                EctGroupNameBean groupName = new EctGroupNameBean(rs.getString("groupName"));
                 groupNameVector.add(groupName);
             }
 
