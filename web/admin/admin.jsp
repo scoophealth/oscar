@@ -13,6 +13,33 @@ String userlastname = (String) session.getAttribute("userlastname");
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <% String country = request.getLocale().getCountry(); %>
 
+
+
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM> 
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */ 
+-->
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
@@ -128,9 +155,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         <p>
         <% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
           <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a><br>
-          <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan Diskette</a><br>
-          <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanCorrection.jsp?billing_no=');return false;">Billing Correction</a><br>
-          <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Billing Reconcilliation</a><br>          
+          <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a><br>          
+          <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Upload Remittance Files</a><br>     
+          <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">Billing Reconcilliation Reports</a><br>          
+          <a href=# onClick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp');return false;">Bill Status</a><br>            
+
        <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
           <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
           <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
