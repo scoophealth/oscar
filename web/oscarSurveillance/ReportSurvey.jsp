@@ -109,13 +109,17 @@ int total = 0;
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
-          &nbsp;          <a href="CreateSurveillanceFile.do?surveyId=<%=survey.getSurveyId()%>" >create file</a>    <br/> <br/>
-            <%for (int i = 0; i < fileList.size(); i++){ 
+            <a href="ReportSurveillance.jsp" >Menu</a>    <br/> <br/>
+            &nbsp;
+            <%if (survey.hasExport()){ %>
+               <a href="CreateSurveillanceFile.do?surveyId=<%=survey.getSurveyId()%>" >create file</a>    <br/> <br/>
+               <%for (int i = 0; i < fileList.size(); i++){ 
                    String[] file = (String[]) fileList.get(i);   %> 
                    <a href="../Download?dir_property=surveillance_directory&filename=<%=file[0]%>" target="_blank" title="<%=file[0]%> create on :<%=file[1]%>" >
                    <%=file[0]%>
                    </a>   </br>
-              <%}%>
+               <%}%>
+            <%}%>
             </td>
             <td class="MainTableRightColumn">
 				<table>
