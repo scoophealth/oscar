@@ -754,7 +754,7 @@ function newStatus() {
                                 }
                                %>
                                 <select name="list_id">
-                                  <option value="" ></option>
+                                  <option value="0" >--Select Waiting List--</option>
                                   <%
                                       ResultSet rsWL = apptMainBean.queryResults("search_waiting_list");
                                       while (rsWL.next()) {
