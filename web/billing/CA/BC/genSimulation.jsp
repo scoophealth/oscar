@@ -27,7 +27,7 @@
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.MSP.*, java.net.*" errorPage="../../../errorpage.jsp" %>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.bc.MSP.*, java.net.*" errorPage="../../../errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -67,7 +67,7 @@ while(rslocal.next()){
 		billinggroup_no = "";
 	} 
 
-	oscar.oscarBilling.MSP.ExtractBean extract = new oscar.oscarBilling.MSP.ExtractBean();
+	oscar.oscarBilling.ca.bc.MSP.ExtractBean extract = new oscar.oscarBilling.ca.bc.MSP.ExtractBean();
 	extract.setOscarHome(oscar_home);
 	extract.seteFlag("0");
 	extract.setDateRange(dateRange);
@@ -76,7 +76,7 @@ while(rslocal.next()){
 	extract.setOhipCenter(request.getParameter("billcenter"));
 	extract.setGroupNo(billinggroup_no);
 	extract.setBatchCount(String.valueOf(bCount));
-	extract.dbQuery(dbParams);
+	extract.dbQuery();
 
 	htmlValue = "<font color='red'>" + errorMsg + "</font>" + extract.getHtmlCode();
 }
