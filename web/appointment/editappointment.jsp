@@ -27,7 +27,7 @@ function demographicdetail(vheight,vwidth) {
   var popup=window.open(page, "demographic", windowprops);
 }
 function onButRepeat() {
-	document.forms[0].action = "appointmentrepeatbooking.jsp" ;
+	document.forms[0].action = "appointmenteditrepeatbooking.jsp" ;
 	document.forms[0].submit();
 }
 // stop javascript -->
