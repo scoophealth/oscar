@@ -202,14 +202,14 @@ public class MSPReconcile{
     }
     
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate){
-       return getBills(statusType,providerNo,startDate,endDate,null,false,false,false);
+       return getBills(statusType,providerNo,startDate,endDate,null,false,false,false,false);
     }
     
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate,String demoNo){
-       return getBills(statusType,providerNo,startDate,endDate,demoNo,false,false,false);
+       return getBills(statusType,providerNo,startDate,endDate,demoNo,false,false,false,false);
     }
     
-    public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate,String demoNo,boolean excludeWCB,boolean excludeMSP, boolean excludePrivate){
+    public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate,String demoNo,boolean excludeWCB,boolean excludeMSP, boolean excludePrivate, boolean exludeICBC){
         
         
         BillSearch billSearch = new BillSearch();
@@ -245,6 +245,10 @@ public class MSPReconcile{
         
         if (excludePrivate){
            billingType += " and b.billingType != 'PRIV' ";
+        }
+        
+        if (exludeICBC){
+           billingType += " and b.billingType != 'ICBC' ";
         }
         //
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.billingtype,"
