@@ -416,7 +416,7 @@ public class BillingSaveBillingAction extends Action {
         ActionForward af = mapping.findForward("success");
         if (frm.getSubmit().equals("Another Bill")){
            af = mapping.findForward("anotherBill");
-        } else if ( frm.getSubmit().equals("Print Receipt")){
+        } else if ( frm.getSubmit().equals("Save & Print Receipt")){
            af = new ActionForward("/billing/CA/BC/billingView.do?billing_no="+billingid+"&receipt=yes");           
         }
         return af;//(mapping.findForward("success"));
