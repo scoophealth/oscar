@@ -143,12 +143,50 @@ public class BillingSaveBillingAction extends Action {
                     //			| oin_postalcode           | varcha
                     
                     
-                    sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,";
-                    sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
-                    sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment) ";
-                    sql = sql + "values ('\\N','"+ billingid+"',CURRENT_TIMESTAMP(), 'O', '" + bean.getPatientNo() + "', '" + bean.getApptNo() + "','C02','"+dataCenterId+"', '" + bean.getBillingGroupNo() + "','" + bean.getBillingPracNo() + "','" + bean.getPatientPHN() + "','" + bean.getPatientFirstName().substring(0,1) + " " + bean.getPatientLastName().substring(0,2) + "','" + "00" + "','" + ((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getUnit() +"'," ;
-                    sql = sql + "'" + bean.getVisitLocation().substring(0,2) + "','00','0','00','" +((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()  + "','" + ((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getDispPrice() + "','0','" +   convertDate8Char(bean.getServiceDate()) + "','" + "00" + "','" + "0" + "',' ','" + bean.getDx1() + "', '" + bean.getDx2() + "','" + bean.getDx3() + "',";
-                    sql = sql + "' ','" + bean.getVisitType().substring(0,1) + "','" + bean.getReferType1() + "','" + bean.getReferral1() + "','" + bean.getReferType2() + "','" + bean.getReferral2() + "','0000', '" + bean.getStartTime() + "','" + bean.getEndTime() + "','" + convertDate8Char(bean.getPatientDoB()) + "','', '0','')";
+                    sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,"
+                        + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, "
+                        + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment) "
+                        + "values ('\\N',"
+                        +"'"+ billingid+"',"
+                        +"CURRENT_TIMESTAMP(),"
+                        +"'O',"
+                        +"'" + bean.getPatientNo() + "',"
+                        +"'" + bean.getApptNo() + "',"
+                        +"'C02',"
+                        +"'"+dataCenterId+"',"
+                        +"'" + bean.getBillingGroupNo() + "',"
+                        +"'" + bean.getBillingPracNo() + "',"
+                        +"'" + bean.getPatientPHN() + "',"
+                        +"'" + bean.getPatientFirstName().substring(0,1) + " " + bean.getPatientLastName().substring(0,2) + "',"
+                        +"'" + "00" + "',"
+                        +"'" + ((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getUnit() +"'," 
+                        +"'" + bean.getVisitLocation().substring(0,2) + "',"
+                        +"'00',"
+                        +"'0',"
+                        +"'00',"
+                        +"'" +((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()  + "',"
+                        +"'" + ((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getDispPrice() + "',"
+                        +"'0',"
+                        +"'" +   convertDate8Char(bean.getServiceDate()) + "',"
+                        +"'" + "00" + "',"
+                        +"'" + "0" + "',"
+                        +"' ',"
+                        +"'" + bean.getDx1() + "',"
+                        +"'" + bean.getDx2() + "',"
+                        +"'" + bean.getDx3() + "',"
+                        +"' ',"
+                        +"'" + bean.getVisitType().substring(0,1) + "',"
+                        +"'" + bean.getReferType1() + "',"
+                        +"'" + bean.getReferral1() + "',"
+                        +"'" + bean.getReferType2() + "',"
+                        +"'" + bean.getReferral2() + "',"
+                        +"'0000',"
+                        +"'" + bean.getStartTime() + "',"
+                        +"'" + bean.getEndTime() + "',"
+                        +"'" + convertDate8Char(bean.getPatientDoB()) + "',"
+                        +"'',"
+                        +"'0',"
+                        +"'')";
                     try {
                         
                         
