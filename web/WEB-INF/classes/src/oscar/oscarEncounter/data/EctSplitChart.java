@@ -63,6 +63,8 @@ public class EctSplitChart {
                                                     
             vec.add(s);
          }
+         rs.close();
+         db.CloseConn();
          
       }catch(SQLException e){
          e.printStackTrace();
