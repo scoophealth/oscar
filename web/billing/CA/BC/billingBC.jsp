@@ -341,7 +341,13 @@ function showHideLayers() { //v3.0
                 thisForm.setXml_provider( sxml_provider);       
                 thisForm.setXml_visittype(sxml_visittype);    
             }
-        }  
+            String apDate = thisForm.getXml_appointment_date();
+            if ( apDate != null && apDate.trim().length() == 0 ){
+                thisForm.setXml_appointment_date(bean.getApptDate());
+            }
+            System.out.println("app date "+thisForm.getXml_appointment_date());
+            
+        }
         %>
         
   <table width="100%" border="0" cellspacing="0" cellpadding="0" >
@@ -374,7 +380,7 @@ function showHideLayers() { //v3.0
               <html:select property="xml_provider"  value="<%=sxml_provider%>">
                 <html:option value="000000" ><b>Select Provider</b></html:option>
                      <% for (int j=0; j< billphysician.length; j++){ %>
-	                        <html:option value="<%=billphysician[j].getProviderNo()%>"><%=billphysician[j].getProviderName()%></html:option>
+	             <html:option value="<%=billphysician[j].getProviderNo()%>"><%=billphysician[j].getProviderName()%></html:option>
                <%}%>
               </html:select>
               </font></td>
@@ -415,17 +421,17 @@ function showHideLayers() { //v3.0
           </tr>
           <tr> 
             <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
-                <a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=service","380","300","0")'><bean:message key="billing.servicedate"/></a> </font>                
+                <a href="javascript: function myFunction() {return false; }"  onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=service","380","300","0")'><bean:message key="billing.servicedate"/></a> </font>                
             </td>
             <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2" nowrap>                                           
-              <html:text property="xml_appointment_date" value="<%=bean.getApptDate()%>" size="12" />
+              <html:text property="xml_appointment_date"  size="12" />
               <strong><bean:message key="billing.servicedate.starttime"/></strong> 
               <html:text property="xml_starttime" size="12" maxlength="4" />
               <strong><bean:message key="billing.servicedate.endtime"/></strong> 
               <html:text property="xml_endtime" size="12" maxlength="4" />
               </font></td>
             <td width="14%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">                                  
-              <a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=admission","380","300","0")'><bean:message key="billing.admissiondate"/></a> </font></td>
+              <a href="javascript: function myFunction() {return false; }"  onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=admission","380","300","0")'><bean:message key="billing.admissiondate"/></a> </font></td>
             <td width="29%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <html:text property="xml_vdate" />
               </font></td>  
