@@ -3,7 +3,7 @@
 
 <%
     //this is a quick independent page to let you add studying patient.
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 	if (request.getParameter("form") != null) {  response.sendRedirect("demographicstudysearchresults.jsp?search_mode="+request.getParameter("search_mode")+"&keyword="+request.getParameter("keyword") +"&limit1=0&limit2=10");
 	}
 
@@ -93,6 +93,16 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
+function popupPage1(varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height=660,width=1000,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
+  var popup=window.open(page, "studydemo", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
 function refreshstudy() {
   history.go(0);
 }
@@ -169,7 +179,7 @@ function refreshstudy() {
         bgcolor = rsdemo.getString("s.study_no")!=null ? rightColor: bgcolor;
 %>  
   <tr bgcolor="<%=bgcolor%>">
-    <td align="center"><a href="../demographic/demographiceditdemographic.jsp?demographic_no=<%=rsdemo.getString("d.demographic_no")%>"><%=rsdemo.getString("d.demographic_no")%></a></td>
+    <td align="center"><a href=# onclick="popupPage1('../demographic/demographiccontrol.jsp?demographic_no=<%=rsdemo.getString("d.demographic_no")%>&displaymode=edit&dboperation=search_detail');return false;"><%=rsdemo.getString("d.demographic_no")%></a></td>
     <td><%=rsdemo.getString("d.last_name")%></td>
     <td><%=rsdemo.getString("d.first_name")%></td>
     <td align="center"><%=rsdemo.getString("d.sex")%></td>
