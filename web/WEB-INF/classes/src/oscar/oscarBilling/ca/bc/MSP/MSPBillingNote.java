@@ -62,11 +62,12 @@ public class MSPBillingNote {
    public void addNote(String billingmaster_no,String provider_no,String note ) throws SQLException{
       
       note = oscar.Misc.removeNewLine(note);
-      String  notesql = "insert into billingnote (billingmaster_no,provider_no,createdate,note) values ( " +
+      String  notesql = "insert into billingnote (billingmaster_no,provider_no,createdate,note,note_type) values ( " +
                         "'"+billingmaster_no+"'," +
                         "'"+provider_no+"'," +
                         "now()," +
-                        "'"+UtilMisc.mysqlEscape(note)+"')";
+                        "'"+UtilMisc.mysqlEscape(note)+"'," +
+                        "'1')";
       
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 db.RunSQL(notesql);
@@ -80,7 +81,7 @@ public class MSPBillingNote {
     */   
    public Note getFullNote(String billingmaster_no){
       Note n = new Note();
-      String notesql = "select * from billingnote where billingmaster_no = '"+billingmaster_no+"' order by createdate desc limit 1";
+      String notesql = "select * from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '1' order by createdate desc limit 1";
       try{
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       ResultSet rs = db.GetSQL(notesql);
@@ -102,7 +103,7 @@ public class MSPBillingNote {
    //TODO make sure this is the latest note
    public String getNote(String billingmaster_no){      
       String retStr = "";
-      String notesql = "select note from billingnote where billingmaster_no = '"+billingmaster_no+"' order by createdate desc limit 1 ";
+      String notesql = "select note from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '1' order by createdate desc limit 1 ";
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs = db.GetSQL(notesql);
@@ -117,7 +118,8 @@ public class MSPBillingNote {
       return retStr;
    }
  
-   
+      
+    
    
    /*
    First - REC-CODE-IN (3) must be 'N01' 
