@@ -89,14 +89,14 @@
         }
 
         .checkbox{
-            height: 22px;
-            width: 22px;     
+            height: 25px;
+            width: 25px;     
             background-color: #FFFFFF;
         }
 
         .checkboxError{
-            height: 22px;
-            width: 22px;     
+            height: 25px;
+            width: 25px;     
             background-color: red;
         }
 
@@ -132,6 +132,7 @@
 <script type="text/javascript" language="Javascript">
     
     var choiceFormat  = new Array(6,10,12,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,59,61,62,64,65,67,68,70,71,73,74,76,77,79,83,85,90,92,96,98,103,105,110,112,117,119,124,126,131,133,138,140,145,147,152,154,158,161,166,168,172,174,178,180,184,186,190);        
+    var allNumericField = null;
     var action = "/<%=project_home%>/form/formname.do";
     
     function goToPage1(){             
