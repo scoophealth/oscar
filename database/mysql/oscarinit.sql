@@ -515,9 +515,9 @@ CREATE TABLE diseases (
 CREATE TABLE document (
   document_no int(6) NOT NULL auto_increment,
   doctype varchar(20) default NULL,
-  docdesc varchar(50) NOT NULL default '',
+  docdesc varchar(255) NOT NULL default '',
   docxml text,
-  docfilename varchar(50) NOT NULL default '',
+  docfilename varchar(255) NOT NULL default '',
   doccreator varchar(30) NOT NULL default '',
   updatedatetime datetime default NULL,
   status char(1) NOT NULL default '',
