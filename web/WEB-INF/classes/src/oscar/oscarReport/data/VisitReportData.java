@@ -32,12 +32,13 @@ public class VisitReportData {
     public String[] getCreatorCount(){
        String retval = "";
        String retcount = "";
-       String[] retVisit = new String[5];
+       String[] retVisit = new String[6];
        retVisit[0] = "0";
-        retVisit[1] = "0";
-         retVisit[2] = "0";
-          retVisit[3] = "0";
-           retVisit[4] = "0";
+       retVisit[1] = "0";
+       retVisit[2] = "0";
+       retVisit[3] = "0";
+       retVisit[4] = "0";
+       retVisit[5] = "0";
 
        try{
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -63,12 +64,13 @@ public class VisitReportData {
         public String[] getApptProviderCount(){
 	       String retval = "";
 	       String retcount = "";
-	       String[] retVisit = new String[5];
+	       String[] retVisit = new String[6];
 	       retVisit[0] = "0";
-	        retVisit[1] = "0";
-	         retVisit[2] = "0";
-	          retVisit[3] = "0";
-	           retVisit[4] = "0";
+	       retVisit[1] = "0";
+	       retVisit[2] = "0";
+	       retVisit[3] = "0";
+	       retVisit[4] = "0";
+               retVisit[5] = "0";
 
 	       try{
 	             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
