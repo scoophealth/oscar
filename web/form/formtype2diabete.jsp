@@ -310,7 +310,7 @@ function checkAllDates()
         <td><input type="text" class="Type2DiabetesTextarea" name="weight5" value="<%= props.getProperty("weight5", "") %>" /></td>
     </tr>
     <tr>
-        <td align="left">*BP (ideally &lt;130/85)</td>
+        <td align="left">*BP (ideally &lt;130/80)</td>
         <td><input type="text" class="Type2DiabetesTextarea" name="bp1" value="<%= props.getProperty("bp1", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="bp2" value="<%= props.getProperty("bp2", "") %>" /></td>
         <td><input type="text" class="Type2DiabetesTextarea" name="bp3" value="<%= props.getProperty("bp3", "") %>" /></td>
@@ -399,7 +399,7 @@ function checkAllDates()
             <span style="padding-left:20px;"></span>
             <small>*if &gt; 30mg albumin ?ACE<br></small>
             <span style="padding-left:20px;"></span>
-            Nephrologist (if cr. clear <font face="Symbols">&#223</font> by 50%)
+            Nephrologist (if cr. clear <font face="Symbol">&#223</font> by 60%)
         </td>
         <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance1"><%= props.getProperty("urineClearance1", "") %></textarea></td>
         <td><textarea style="height:67px;" class="Type2DiabetesTextarea" name="urineClearance2"><%= props.getProperty("urineClearance2", "") %></textarea></td>
@@ -601,7 +601,7 @@ function checkAllDates()
     </tr>
     <tr class="Type2DiabetesFooter">
         <td colspan="3">
-            *This form is based on (April 2000) Diabetes Guidelines, CMAJ 1999<br>
+            Revised 2004<br>
             DISCLAIMER: This is a guidline only and should be modified according to current evidence and guidelines<br>
             <br>
             <b>GRADE A</b>: good evidence <span style="padding-left:20px;"></span><i>GRADE B</i>: fair evidence<br>
