@@ -39,7 +39,7 @@ boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 String ChartNo;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean" %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -48,9 +48,7 @@ String ChartNo;
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
-  
+  int curDay = now.get(Calendar.DAY_OF_MONTH);   
   
   %><% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
@@ -293,7 +291,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
                     proOHIP = rslocal.getString("provider_no"); 
 
             %> 
-            <option value="<%=proOHIP%>"><%=proLast%>, <%=proFirst%></option>
+            <option value="<%=proOHIP%>" <%=user_no.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
             <%
                 }      
                 apptMainBean.closePstmtConn();
