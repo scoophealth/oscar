@@ -308,6 +308,11 @@ public class ExtractBean extends Object implements Serializable {
 	private void checkHeader1() {
 		if (referralDoc != null && referralDoc.length() != 6 )
 			errorPartMsg = "Header1: Referral Doc. No. wrong!<br>";
+		if (visitType != null && visitType.compareTo("00") != 0) {
+		    if((outPatient != null && outPatient.length() != 4) || outPatient == null ){
+				errorPartMsg = "Header1: outPatient Visit. wrong!<br>";
+		    }
+		}
 		errorMsg += errorPartMsg;
 	}
 	private void checkHeader2() {
