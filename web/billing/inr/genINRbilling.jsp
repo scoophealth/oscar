@@ -68,8 +68,8 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
       
       demono = rsdemo.getString("demographic_no");
       demo_name = rsdemo.getString("demographic_name");
-      demo_hin = rsdemo.getString("hin");
-      demo_dob = rsdemo.getString("dob");
+      demo_hin = rsdemo.getString("hin") + rsdemo.getString("ver");
+      demo_dob = rsdemo.getString("year_of_birth") + rsdemo.getString("month_of_birth") + rsdemo.getString("date_of_birth");     
       provider_no = rsdemo.getString("provider_no");
       provider_ohip_no = rsdemo.getString("provider_ohip_no");
       provider_rma_no = rsdemo.getString("provider_rma_no");
