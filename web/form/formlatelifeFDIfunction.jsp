@@ -30,7 +30,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>The Home Falls and Accidents Screening Tool (HOME FAST)</title>
+    <title>Late Life FDI: Function component</title>
     <html:base/>
         <style type="text/css">
         a:link{
@@ -180,7 +180,11 @@
 
 
 <script type="text/javascript" language="Javascript">
-    var choiceFormat  = new Array(6,7,8,9,10,11,12,14,15,17,18,20,21,22,23,24,25,27,28,30,31,33,34,36,37,38,39,40,41,42,43,44,45,46,47,49,50,52,53,55,56,58,59,60,61,63,64,65,66,68);
+    var choiceFormat  = new Array(6,10,11,15,16,20,21,25,26,30,31,35,36,40,41,45,
+                                  46,50,51,55,56,60,61,65,66,70,71,75,76,80,81,85,
+                                  86,90,91,95,96,100,101,105,106,110,111,115,116,120,121,125,
+                                  126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165,
+                                  166,170,171,175,176,180,181,185,186,190,191,195,196,200,201,205);
     var allNumericField = null;     
     var allMatch = null;
     var action = "/<%=project_home%>/form/formname.do";
@@ -242,8 +246,8 @@
     }
     
     function goToPage2(){      
-        //var checkboxes = new Array(6,7,8,9,10,11,12,14);
-        //if (is1CheckboxChecked(0, checkboxes)==true){
+        var checkboxes = new Array(6,10,11,15,16,20,21,25,26,30,31,35,36,40,41,45);
+        if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('visualAid1').style.display = 'none';
             document.getElementById('visualAid2').style.display = 'none';
@@ -255,13 +259,12 @@
             document.getElementById('subject2').style.display = 'none';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
-        //}
+        }
     }
 
     function goToPage3(){      
-        //var checkboxes = new Array(15,17,18,20,21,22,23,24,25,27);
-        //var numericFields = new Array(57,58,59,60);
-        //if (is1CheckboxChecked(0, checkboxes)==true){
+        var checkboxes = new Array(46,50,51,55,56,60,61,65,66,70,71,75,76,80,81,85);        
+        if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('visualAid1').style.display = 'none';
             document.getElementById('visualAid2').style.display = 'none';
@@ -273,12 +276,12 @@
             document.getElementById('subject2').style.display = 'none';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
-        //}
+        }
     }
 
     function goToPage4(){    
-        //var checkboxes = new Array(28,30,31,33,34,36,37,38,39,40,41,42);
-        //if (is1CheckboxChecked(0, checkboxes)==true){
+        var checkboxes = new Array(86,90,91,95,96,100,101,105,106,110,111,115,116,120,121,125);
+        if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('visualAid1').style.display = 'none';
             document.getElementById('visualAid2').style.display = 'none';
@@ -290,12 +293,12 @@
             document.getElementById('subject2').style.display = 'none';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
-        //}
+        }
     }
 
     function goToPage5(){      
-        //var checkboxes = new Array(43,44,45,46,47,49,50,52,53,55);
-        //if (is1CheckboxChecked(0, checkboxes)==true){
+        var checkboxes = new Array(126,130,131,135,136,140,141,145,146,150,151,155,156,160,161,165);
+        if (is1CheckboxChecked(0, checkboxes)==true){
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('visualAid1').style.display = 'none';
             document.getElementById('visualAid2').style.display = 'none';
@@ -307,7 +310,7 @@
             document.getElementById('subject2').style.display = 'block';
             document.getElementById('functionBar').style.display = 'block';
             document.getElementById('copyRight').style.display = 'none';
-        //}
+        }
     }
     function showSubtitle(){
         if(document.getElementById('questionnaire').style.display == 'block')
