@@ -124,7 +124,7 @@ if (hasSig){
                         <%= patient.getCity() %> <%= patient.getPostal() %><br>
                         <%= patient.getPhone() %><br>
                         <b>
-                        <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
+                        <!--bean:message key="oscar.oscarRx.hin"/--><%--= patient.getHin() --%>
                       </b>
                     </td>
                     <td align=right valign=top><b>
@@ -149,7 +149,7 @@ if (hasSig){
                             <%= rx.getFullOutLine().replaceAll(";","<br/>") %>
                             <hr>
                             <%
-                            strRx += rx.getFullOutLine();
+                            strRx += rx.getFullOutLine() + ";;";
                         }
                         %>
 			<input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>
