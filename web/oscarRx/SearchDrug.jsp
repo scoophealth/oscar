@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -62,6 +63,17 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
       }
     }
 
+    function popupWindow(vheight,vwidth,varpage,varPageName) { //open a new popup window
+      var page = varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=40,screenY=10,top=10,left=60";
+      var popup=window.open(varpage,varPageName, windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self;
+        }
+      }
+    }
+    
     function customWarning(){
         if (confirm('This feature will allow you to manually enter a drug.'
                + '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
@@ -112,8 +124,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 <!----Start new rows here-->
             <tr>
                 <td>
-                    <div class="DivContentTitle"><bean:message key="SearchDrug.title"/></div>
-                </td>
+                    <div class="DivContentTitle"><bean:message key="SearchDrug.title"/></div>                    
+               </td>
             </tr>
             <tr>
  		        <td>
@@ -134,6 +146,13 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                 <jsp:getProperty name="patient" property="age"/>
                             </td>
                         </tr>
+                        <oscarProp:oscarPropertiesCheck property="PHR" value="yes">
+                        <tr>
+                            <td colspan="3">
+                            <a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record</a>                                
+                            </td>                            
+                        </tr>                        
+                        </oscarProp:oscarPropertiesCheck>
                     </table>
                 </td>
             </tr>
