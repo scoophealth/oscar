@@ -169,6 +169,8 @@ QueryString_Parse();
                 <%}else{%>
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
                 <%}%>
+                <br>
+                <a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a>
                 
             </td>
             <td class="MainTableRightColumn">
