@@ -14,7 +14,7 @@
 <meta http-equiv="Cache-Control" content="no-cache" >
 
 <script language="javascript">
-<!-- start javascript ---- check to see if it is really empty in database
+
 function setfocus() {
   this.focus();
   document.UPDATEPRE.mygroup_no.focus();
@@ -46,7 +46,7 @@ function checkTypeNum(typeIn) {
 
 function checkTypeIn(obj) {
     if(!checkTypeNum(obj.value) ) {
-	  alert ("You must type in a number in the field.");
+	  alert ("<bean:message key="provider.providerpreference.msgMustBeNumber"/>");
 	}
 }
 
@@ -64,17 +64,17 @@ function checkTypeInAll() {
         if(i <= (e - s)*60 && i > 0){
           checkin = true;
         }else{
-          alert ("Enter a positive Period less than Start minus End.");
+          alert ("<bean:message key="provider.providerpreference.msgPositivePeriod"/>");
           this.focus();
           document.UPDATEPRE.every_min.focus();
          }
       }else{
-        alert ("Enter a Start Hour earlier than End Hour.");
+        alert ("<bean:message key="provider.providerpreference.msgStartHourErlierEndHour"/>");
         this.focus();
         document.UPDATEPRE.start_hour.focus();
        }
     }else{
-      alert ("Enter an End Hour less than 24.");
+      alert ("<bean:message key="provider.providerpreference.msgHourLess24"/>");
       this.focus();
       document.UPDATEPRE.end_hour.focus();
      }
@@ -111,7 +111,7 @@ function isNumeric(strString){
    }
 
 
-// stop javascript -->
+
 </script>
 
 <body bgproperties="fixed"  onLoad="setfocus();" topmargin="0"leftmargin="0" rightmargin="0">
@@ -184,7 +184,7 @@ function isNumeric(strString){
      </td>
   </tr>
   <tr>
-    <td align="center"><a href=# onClick ="popupPage(230,600,'providerSignature.jsp');return false;"><bean:message key="provider.btnEditSignature"/></a>
+    <td align="center"><a href=# onClick ="popupPage(230,860,'providerSignature.jsp');return false;"><bean:message key="provider.btnEditSignature"/></a>
     </td>
   </tr>
 
