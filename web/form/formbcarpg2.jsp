@@ -71,6 +71,9 @@
 .demo1  {color:#000033; background-color:silver; layer-background-color:#cccccc;
         position:absolute; top:40px; left:370px; width:190px; height:80px;
         z-index:99;  visibility:hidden;}
+.demo2  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:40px; left:370px; width:190px; height:80px;
+        z-index:99;  visibility:hidden;}
 -->
 </style>
 </head>
@@ -102,6 +105,25 @@ function showBox(layerName, iState, field, e) { // 1 visible, 0 hidden
         var obj = document.getElementById(layerName);
         obj.style.top = e.screenY + (481-e.screenY + 26*fieldName);
         obj.style.left = "390px";
+        obj.style.visibility = iState ? "visible" : "hidden";
+    } else if(document.all)	// IE 4
+    {
+        document.all[layerName].style.visibility = iState ? "visible" : "hidden";
+    }
+    fieldObj = field;
+}
+function showBMIBox(layerName, iState, field, e) { // 1 visible, 0 hidden
+    fieldObj = field;
+    //get the number of the field
+    fieldName = fieldObj.name;
+    fieldName = fieldName.substring("pg2_pos".length);
+
+    if(document.layers)	{   //NN4+
+       document.layers[layerName].visibility = iState ? "show" : "hide";
+    } else if(document.getElementById) {	  //gecko(NN6) + IE 5+
+        var obj = document.getElementById(layerName);
+        obj.style.top = e.screenY + (401-e.screenY + 26*fieldName);
+        obj.style.left = "30px";
         obj.style.visibility = iState ? "visible" : "hidden";
     } else if(document.all)	// IE 4
     {
@@ -710,10 +732,19 @@ function calToday(field) {
 <div ID="Instrdiv" class="demo1">
 	<center>
    <table bgcolor='#007FFF' width='99%'>
-     <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;">X</a></th></tr>
-     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click pink fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
+     <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
+     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click shaded fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
    </table>
    </center>
+</div>
+<div ID="BMIdiv" class="demo2">
+   <table bgcolor='#007FFF' width='99%'>
+     <tr><th align='right'><a href=# onclick="showHideBox('BMIdiv',0); return false;"><font color="red">X</font></a></th></tr>
+     <tr><td><a href=# onclick="showHideBox('BMIdiv',0); return false;">
+     <font color="#66FF66">The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell. <br>
+      If putting in weight or hight in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the hight or weight cells (kg.) or it will not calculate the BMI.</font><br>&nbsp;</a>
+     </td></tr>
+   </table>
 </div>
 
 <html:form action="/form/formname">
@@ -749,7 +780,7 @@ function calToday(field) {
   if (!bView) {
 %> 
          <td>
-           <a href=# title="Double click pink fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
+           <a href=# title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
         </td>
 
         <td align="right"><b>View:</b>
@@ -1058,7 +1089,9 @@ function calToday(field) {
 		  <td width="10%">HEIGHT<br>
           <input type="text" name="c_ppHt"  class="spe" style="width:100%;" onDblClick="htEnglish2Metric();" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>" @oscar.formDB />
 		  </td>
-		  <td width="12%">BMI<br>
+		  <td width="12%">
+		  <a href=# onClick="showBMIBox('BMIdiv',1, this, event);return false;" title='The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell.  If putting in weight or hight in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the hight or weight cells (kg.) or it will not calculate the BMI.'>
+		  <font color='red'><b>BMI</b></color></a><br>
           <input type="text" name="c_ppBMI"  class="spe" style="width:100%;" onDblClick="calcBMIMetric();" size="5" maxlength="5" value="<%= props.getProperty("c_ppBMI", "") %>" @oscar.formDB />
 		  </td>
 		  <td width="25%">LMP <span class="small8">DD/MM/YYYY</span><br>

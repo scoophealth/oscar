@@ -343,8 +343,8 @@ function calByLMP() {
 <div ID="Instrdiv" class="demo1">
 	<center>
    <table bgcolor='#007FFF' width='99%'>
-     <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;">X</a></th></tr>
-     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click pink fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
+     <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
+     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click shaded fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
    </table>
    </center>
 </div>
@@ -387,7 +387,7 @@ function calByLMP() {
   if (!bView) {
 %>
          <td>
-           <a href=# title="Double click pink fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
+           <a href=# title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
         </td>
 
         <td align="right"><b>View:</b> 
