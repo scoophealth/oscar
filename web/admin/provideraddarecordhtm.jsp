@@ -98,6 +98,7 @@ function upCaseCtrl(ctrl) {
             <option value="doctor"><bean:message key="admin.provider.formType.optionDoctor"/></option>
             <option value="doctor"><bean:message key="admin.provider.formType.optionNurse"/></option>
             <option value="doctor"><bean:message key="admin.provider.formType.optionResident"/></option>
+            <option value="doctor"><bean:message key="admin.provider.formType.optionMidwife"/></option>
             <option value="admin"><bean:message key="admin.provider.formType.optionAdmin"/></option>
           </select>
           <% } %>
@@ -136,7 +137,13 @@ function upCaseCtrl(ctrl) {
       <tr> 
         <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
         <td>
-          <input type="text" name="phone" ><bean:message key="admin.provider.formWorkPhone"/>: <input type="text" name="workphone" value="">
+          <input type="text" name="phone" >
+        </td>
+      </tr>
+      <tr>
+        <td align="right"><bean:message key="admin.provider.formWorkPhone"/>: </td>
+        <td>
+          <input type="text" name="workphone" value="">
         </td>
       </tr>
   <tr> 
@@ -186,13 +193,7 @@ function upCaseCtrl(ctrl) {
         <td>
           <input type="text" name="hso_no" >
         </td>
-      </tr>
-      <tr> 
-        <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
-        <td>
-          <input type="text" name="status" value='1'>
-        </td>
-      </tr>
+      </tr>      
       <tr> 
         <td align="right"><bean:message key="admin.provider.formSpecialtyCode"/>: </td>
         <td>
@@ -225,6 +226,12 @@ function upCaseCtrl(ctrl) {
         <td align="right"><bean:message key="admin.provider.formSlpPassword"/>: </td>
         <td>
           <input type="text" name="xml_p_slppassword" >
+        </td>
+      </tr>
+      <tr> 
+        <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
+        <td>
+          <input type="text" name="status" value='1'>
         </td>
       </tr>
       <tr> 
