@@ -131,6 +131,7 @@
             color: #FFFFFF;            
             font-weight: bold;
             text-align: center;
+            height="10px"
         }
         .subTitle {
             backgroud-color: #F2F2F2;
@@ -652,125 +653,113 @@
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" height="85%" width="100%" id="page1">        
         <tr>        
             <td valign="top" colspan="2">
-                <table width="100%" height="590px" border="0"  cellspacing="0" cellpadding="0" >                                        
-                    <tr class="title" >
-                        <th colspan="6">How much difficulty do you have...?</th>
+                <table width="100%" height="590px" border="0"  cellspacing="1px" cellpadding="0" >                                        
+                    <tr class="title">
+                        <th colspan="7">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <tr class="title" ><th>How much difficulty do you have...?</th></tr>
+                                <tr class="title" ><th align="left"><font style="font-size: 65%; text-align:left;">(Remember this is without the help of someone else and without the use of any
+                                        assistive walking device.)</font>
+                                </tr></th>
+                            </table>
+                        </th>                        
                     </tr> 
                     <tr class="title">
-                        <td colspan="6"><font style="font-size: 70%">(Remember this is without the help of someone else and without the use of any
-                        assistive walking device.)</font>
+                        <td colspan="2">
                         </td>
+                        <td width="5%"><font style="font-size: 65%;">None</font></td>
+                        <td width="5%"><font style="font-size: 65%;">A little</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Some</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Quite a lot</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Cannot do</font></td>
+                    </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F1.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Unscrewing the lid off a previously unopened jar without using any devices
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F1None" <%= props.getProperty("F1None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F1ALittle" <%= props.getProperty("F1ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F1Some" <%= props.getProperty("F1Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F1ALot" <%= props.getProperty("F1ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F1Cannot" <%= props.getProperty("F1Cannot", "") %>/> Cannot do</td>                  
+                        </td>                                        
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F1None" <%= props.getProperty("F1None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F1ALittle" <%= props.getProperty("F1ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F1Some" <%= props.getProperty("F1Some", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F1ALot" <%= props.getProperty("F1ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F1Cannot" <%= props.getProperty("F1Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F2.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Going up & down a flight of stairs inside, using a handrail
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F2None" <%= props.getProperty("F2None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F2ALittle" <%= props.getProperty("F2ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F2Some" <%= props.getProperty("F2Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F2ALot" <%= props.getProperty("F2ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F2Cannot" <%= props.getProperty("F2Cannot", "") %>/> Cannot do</td>                  
+                        </td>                                        
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F2None" <%= props.getProperty("F2None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F2ALittle" <%= props.getProperty("F2ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F2Some" <%= props.getProperty("F2Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F2ALot" <%= props.getProperty("F2ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F2Cannot" <%= props.getProperty("F2Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F3.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Putting on and taking off long pants (including managing fasteners)
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F3None" <%= props.getProperty("F3None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F3ALittle" <%= props.getProperty("F3ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F3Some" <%= props.getProperty("F3Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F3ALot" <%= props.getProperty("F3ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F3Cannot" <%= props.getProperty("F3Cannot", "") %>/> Cannot do</td>                  
+                        </td>                                                                
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F3None" <%= props.getProperty("F3None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F3ALittle" <%= props.getProperty("F3ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F3Some" <%= props.getProperty("F3Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F3ALot" <%= props.getProperty("F3ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F3Cannot" <%= props.getProperty("F3Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F4.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Running 1/2 mile or more
                         </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F4None" <%= props.getProperty("F4None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F4ALittle" <%= props.getProperty("F4ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F4Some" <%= props.getProperty("F4Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F4ALot" <%= props.getProperty("F4ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F4Cannot" <%= props.getProperty("F4Cannot", "") %>/> Cannot do</td>                  
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F4None" <%= props.getProperty("F4None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F4ALittle" <%= props.getProperty("F4ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F4Some" <%= props.getProperty("F4Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F4ALot" <%= props.getProperty("F4ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F4Cannot" <%= props.getProperty("F4Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F5.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Using common utensils for preparing meals (e.g., can opener, potato peeler, or sharp knife)
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F5None" <%= props.getProperty("F5None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F5ALittle" <%= props.getProperty("F5ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F5Some" <%= props.getProperty("F5Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F5ALot" <%= props.getProperty("F5ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F5Cannot" <%= props.getProperty("F5Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F5None" <%= props.getProperty("F5None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F5ALittle" <%= props.getProperty("F5ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F5Some" <%= props.getProperty("F5Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F5ALot" <%= props.getProperty("F5ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F5Cannot" <%= props.getProperty("F5Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F6.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Holding a full glass of water in one hand
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F6None" <%= props.getProperty("F6None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F6ALittle" <%= props.getProperty("F6ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F6Some" <%= props.getProperty("F6Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F6ALot" <%= props.getProperty("F6ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F6Cannot" <%= props.getProperty("F6Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F6None" <%= props.getProperty("F6None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F6ALittle" <%= props.getProperty("F6ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F6Some" <%= props.getProperty("F6Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F6ALot" <%= props.getProperty("F6ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F6Cannot" <%= props.getProperty("F6Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F7.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Walking a mile, taking rests as necessary
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F7None" <%= props.getProperty("F7None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F7ALittle" <%= props.getProperty("F7ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F7Some" <%= props.getProperty("F7Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F7ALot" <%= props.getProperty("F7ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F7Cannot" <%= props.getProperty("F7Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F7None" <%= props.getProperty("F7None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F7ALittle" <%= props.getProperty("F7ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F7Some" <%= props.getProperty("F7Some", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F7ALot" <%= props.getProperty("F7ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F7Cannot" <%= props.getProperty("F7Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F8.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Going up & down a flight of stairs outside, without using a handrail
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F8None" <%= props.getProperty("F8None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F8ALittle" <%= props.getProperty("F8ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F8Some" <%= props.getProperty("F8Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F8ALot" <%= props.getProperty("F8ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F8Cannot" <%= props.getProperty("F8Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td  bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F8None" <%= props.getProperty("F8None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F8ALittle" <%= props.getProperty("F8ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F8Some" <%= props.getProperty("F8Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F8ALot" <%= props.getProperty("F8ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F8Cannot" <%= props.getProperty("F8Cannot", "") %>/></td>                  
                     </tr>                    
                 </table>            
             </td>
@@ -786,126 +775,113 @@
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page2" >    
         <tr>        
             <td valign="top" colspan="2">
-               <table width="100%" height="590px" border="0"  cellspacing="0" cellpadding="0" >                                   
-                    <tr class="title" >
-                        <th colspan="6">How much difficulty do you have...?</th>
+               <table width="100%" height="590px" border="0"  cellspacing="1px" cellpadding="0" >                                   
+                    <tr class="title">
+                        <th colspan="7">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <tr class="title" ><th>How much difficulty do you have...?</th></tr>
+                                <tr class="title" ><th align="left"><font style="font-size: 65%; text-align:left;">(Remember this is without the help of someone else and without the use of any
+                                        assistive walking device.)</font>
+                                </tr></th>
+                            </table>
+                        </th>                        
                     </tr> 
                     <tr class="title">
-                        <td colspan="6"><font style="font-size: 70%">(Remember this is without the help of someone else and without the use of any
-                        assistive walking device.)</font>
+                        <td colspan="2">
                         </td>
+                        <td width="5%"><font style="font-size: 65%;">None</font></td>
+                        <td width="5%"><font style="font-size: 65%;">A little</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Some</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Quite a lot</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Cannot do</font></td>
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F9.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Running a short distance, such as to catch a bus
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F9None" <%= props.getProperty("F9None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F9ALittle" <%= props.getProperty("F9ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F9Some" <%= props.getProperty("F9Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F9ALot" <%= props.getProperty("F9ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F9Cannot" <%= props.getProperty("F9Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F9None" <%= props.getProperty("F9None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F9ALittle" <%= props.getProperty("F9ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F9Some" <%= props.getProperty("F9Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F9ALot" <%= props.getProperty("F9ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F9Cannot" <%= props.getProperty("F9Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F10.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Reaching overhead while standing, as if to pull a light cord
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F10None" <%= props.getProperty("F10None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F10ALittle" <%= props.getProperty("F10ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F10Some" <%= props.getProperty("F10Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F10ALot" <%= props.getProperty("F10ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F10Cannot" <%= props.getProperty("F10Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F10None" <%= props.getProperty("F10None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F10ALittle" <%= props.getProperty("F10ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F10Some" <%= props.getProperty("F10Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F10ALot" <%= props.getProperty("F10ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F10Cannot" <%= props.getProperty("F10Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F11.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Sitting down in and standing up from a low, soft couch
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F11None" <%= props.getProperty("F11None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F11ALittle" <%= props.getProperty("F11ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F11Some" <%= props.getProperty("F11Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F11ALot" <%= props.getProperty("F11ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F11Cannot" <%= props.getProperty("F11Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F11None" <%= props.getProperty("F11None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F11ALittle" <%= props.getProperty("F11ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F11Some" <%= props.getProperty("F11Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F11ALot" <%= props.getProperty("F11ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F11Cannot" <%= props.getProperty("F11Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F12.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Putting on and taking off a coat or jacket
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F12None" <%= props.getProperty("F12None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F12ALittle" <%= props.getProperty("F12ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F12Some" <%= props.getProperty("F12Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F12ALot" <%= props.getProperty("F12ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F12Cannot" <%= props.getProperty("F12Cannot", "") %>/> Cannot do</td>                  
+                        </td>                                        
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F12None" <%= props.getProperty("F12None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F12ALittle" <%= props.getProperty("F12ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F12Some" <%= props.getProperty("F12Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F12ALot" <%= props.getProperty("F12ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F12Cannot" <%= props.getProperty("F12Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F13.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Reaching behind your back as if to put a belt through a belt loop
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F13None" <%= props.getProperty("F13None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F13ALittle" <%= props.getProperty("F13ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F13Some" <%= props.getProperty("F13Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F13ALot" <%= props.getProperty("F13ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F13Cannot" <%= props.getProperty("F13Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F13None" <%= props.getProperty("F13None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F13ALittle" <%= props.getProperty("F13ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F13Some" <%= props.getProperty("F13Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F13ALot" <%= props.getProperty("F13ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F13Cannot" <%= props.getProperty("F13Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F14.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Stepping up and down from a curb
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14None" <%= props.getProperty("F14None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14ALittle" <%= props.getProperty("F14ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14Some" <%= props.getProperty("F14Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14ALot" <%= props.getProperty("F14ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14Cannot" <%= props.getProperty("F14Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14None" <%= props.getProperty("F14None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14ALittle" <%= props.getProperty("F14ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14Some" <%= props.getProperty("F14Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14ALot" <%= props.getProperty("F14ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14Cannot" <%= props.getProperty("F14Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F15.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Opening a heavy, outside door
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15None" <%= props.getProperty("F15None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15ALittle" <%= props.getProperty("F15ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15Some" <%= props.getProperty("F15Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15ALot" <%= props.getProperty("F15ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15Cannot" <%= props.getProperty("F15Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15None" <%= props.getProperty("F15None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15ALittle" <%= props.getProperty("F15ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15Some" <%= props.getProperty("F15Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15ALot" <%= props.getProperty("F15ALot", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15Cannot" <%= props.getProperty("F15Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F16.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Rip open a package of snack food (e.g. cellophane wrapping on crackers) using only your hands
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F16None" <%= props.getProperty("F16None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F16ALittle" <%= props.getProperty("F16ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F16Some" <%= props.getProperty("F16Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F16ALot" <%= props.getProperty("F16ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F16Cannot" <%= props.getProperty("F16Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F16None" <%= props.getProperty("F16None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F16ALittle" <%= props.getProperty("F16ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F16Some" <%= props.getProperty("F16Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F16ALot" <%= props.getProperty("F16ALot", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F16Cannot" <%= props.getProperty("F16Cannot", "") %>/></td>                  
                     </tr>                    
                 </table>     
             </td>
@@ -923,126 +899,113 @@
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page3" >    
         <tr>        
             <td valign="top" colspan="2">
-               <table width="100%" height="590px" border="0"  cellspacing="0" cellpadding="0" >                                   
-                    <tr class="title" >
-                        <th colspan="6">How much difficulty do you have...?</th>
+               <table width="100%" height="590px" border="0"  cellspacing="1px" cellpadding="0" >                                   
+                    <tr class="title">
+                        <th colspan="7">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <tr class="title" ><th>How much difficulty do you have...?</th></tr>
+                                <tr class="title" ><th align="left"><font style="font-size: 65%; text-align:left;">(Remember this is without the help of someone else and without the use of any
+                                        assistive walking device.)</font>
+                                </tr></th>
+                            </table>
+                        </th>                        
                     </tr> 
                     <tr class="title">
-                        <td colspan="6"><font style="font-size: 70%">(Remember this is without the help of someone else and without the use of any
-                        assistive walking device.)</font>
+                        <td colspan="2">
                         </td>
+                        <td width="5%"><font style="font-size: 65%;">None</font></td>
+                        <td width="5%"><font style="font-size: 65%;">A little</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Some</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Quite a lot</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Cannot do</font></td>
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F17.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Pouring from a large pitcher
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F17None" <%= props.getProperty("F17None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F17ALittle" <%= props.getProperty("F17ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F17Some" <%= props.getProperty("F17Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F17ALot" <%= props.getProperty("F17ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F17Cannot" <%= props.getProperty("F17Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F17None" <%= props.getProperty("F17None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F17ALittle" <%= props.getProperty("F17ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F17Some" <%= props.getProperty("F17Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F17ALot" <%= props.getProperty("F17ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F17Cannot" <%= props.getProperty("F17Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F18.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Getting into and out of a car/taxi (sedan)
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F18None" <%= props.getProperty("F18None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F18ALittle" <%= props.getProperty("F18ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F18Some" <%= props.getProperty("F18Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F18ALot" <%= props.getProperty("F18ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F18Cannot" <%= props.getProperty("F18Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td  bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F18None" <%= props.getProperty("F18None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F18ALittle" <%= props.getProperty("F18ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F18Some" <%= props.getProperty("F18Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F18ALot" <%= props.getProperty("F18ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F18Cannot" <%= props.getProperty("F18Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F19.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Hiking a couple of miles on uneven surfaces, including hills
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F19None" <%= props.getProperty("F19None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F19ALittle" <%= props.getProperty("F19ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F19Some" <%= props.getProperty("F19Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F19ALot" <%= props.getProperty("F19ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F19Cannot" <%= props.getProperty("F19Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F19None" <%= props.getProperty("F19None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F19ALittle" <%= props.getProperty("F19ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F19Some" <%= props.getProperty("F19Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F19ALot" <%= props.getProperty("F19ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F19Cannot" <%= props.getProperty("F19Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F20.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Going up and down 3 flights of stairs inside, using a handrail
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F20None" <%= props.getProperty("F20None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F20ALittle" <%= props.getProperty("F20ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F20Some" <%= props.getProperty("F20Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F20ALot" <%= props.getProperty("F20ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F20Cannot" <%= props.getProperty("F20Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F20None" <%= props.getProperty("F20None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F20ALittle" <%= props.getProperty("F20ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F20Some" <%= props.getProperty("F20Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F20ALot" <%= props.getProperty("F20ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F20Cannot" <%= props.getProperty("F20Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F21.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Picking up a kitchen chair and moving it, in order to clean
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F21None" <%= props.getProperty("F21None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F21ALittle" <%= props.getProperty("F21ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F21Some" <%= props.getProperty("F21Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F21ALot" <%= props.getProperty("F21ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F21Cannot" <%= props.getProperty("F21Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F21None" <%= props.getProperty("F21None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F21ALittle" <%= props.getProperty("F21ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F21Some" <%= props.getProperty("F21Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F21ALot" <%= props.getProperty("F21ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F21Cannot" <%= props.getProperty("F21Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F22.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Using a step stool to reach into a high cabinet
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F22None" <%= props.getProperty("F22None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F22ALittle" <%= props.getProperty("F22ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F22Some" <%= props.getProperty("F22Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F22ALot" <%= props.getProperty("F22ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F22Cannot" <%= props.getProperty("F22Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F22None" <%= props.getProperty("F22None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F22ALittle" <%= props.getProperty("F22ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F22Some" <%= props.getProperty("F22Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F22ALot" <%= props.getProperty("F22ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F22Cannot" <%= props.getProperty("F22Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F23.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Making a bed, including spreading and tucking in bed sheets
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14None" <%= props.getProperty("F14None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14ALittle" <%= props.getProperty("F14ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14Some" <%= props.getProperty("F14Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14ALot" <%= props.getProperty("F14ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F14Cannot" <%= props.getProperty("F14Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14None" <%= props.getProperty("F14None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14ALittle" <%= props.getProperty("F14ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14Some" <%= props.getProperty("F14Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14ALot" <%= props.getProperty("F14ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F14Cannot" <%= props.getProperty("F14Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F24.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Carrying something in both arms while climbing a flight of stairs (e.g. laundry basket)
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15None" <%= props.getProperty("F15None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15ALittle" <%= props.getProperty("F15ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15Some" <%= props.getProperty("F15Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15ALot" <%= props.getProperty("F15ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F15Cannot" <%= props.getProperty("F15Cannot", "") %>/> Cannot do</td>                  
+                        </td> 
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15None" <%= props.getProperty("F15None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15ALittle" <%= props.getProperty("F15ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15Some" <%= props.getProperty("F15Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15ALot" <%= props.getProperty("F15ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F15Cannot" <%= props.getProperty("F15Cannot", "") %>/></td>                  
                     </tr>                     
                 </table>      
             </td>
@@ -1060,126 +1023,113 @@
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page4" >    
         <tr>        
             <td valign="top" colspan="2">
-                <table width="100%" height="590px" border="0"  cellspacing="0" cellpadding="0" >                                   
-                    <tr class="title" >
-                        <th colspan="6" width="100%">How much difficulty do you have...?</th>
+                <table width="100%" height="590px" border="0"  cellspacing="1px" cellpadding="0" >                                   
+                    <tr class="title">
+                        <th colspan="7">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <tr class="title" ><th>How much difficulty do you have...?</th></tr>
+                                <tr class="title" ><th align="left"><font style="font-size: 65%; text-align:left;">(Remember this is without the help of someone else and without the use of any
+                                        assistive walking device.)</font>
+                                </tr></th>
+                            </table>
+                        </th>                        
                     </tr> 
                     <tr class="title">
-                        <td colspan="6"><font style="font-size: 70%">(Remember this is without the help of someone else and without the use of any
-                        assistive walking device.)</font>
+                        <td colspan="2">
                         </td>
+                        <td width="5%"><font style="font-size: 65%;">None</font></td>
+                        <td width="5%"><font style="font-size: 65%;">A little</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Some</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Quite a lot</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Cannot do</font></td>
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F25.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Bending over from a standing position to pick up a piece of clothing from the floor
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F25None" <%= props.getProperty("F25None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F25ALittle" <%= props.getProperty("F25ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F25Some" <%= props.getProperty("F25Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F25ALot" <%= props.getProperty("F25ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F25Cannot" <%= props.getProperty("F25Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F25None" <%= props.getProperty("F25None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F25ALittle" <%= props.getProperty("F25ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F25Some" <%= props.getProperty("F25Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F25ALot" <%= props.getProperty("F25ALot", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F25Cannot" <%= props.getProperty("F25Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F26.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Walking around one floor of your home, taking into consideration thresholds, doors, furniture, and a variety of floor coverings
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F26None" <%= props.getProperty("F26None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F26ALittle" <%= props.getProperty("F26ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F26Some" <%= props.getProperty("F26Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F26ALot" <%= props.getProperty("F26ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F26Cannot" <%= props.getProperty("F26Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F26None" <%= props.getProperty("F26None", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F26ALittle" <%= props.getProperty("F26ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F26Some" <%= props.getProperty("F26Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F26ALot" <%= props.getProperty("F26ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F26Cannot" <%= props.getProperty("F26Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F27.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Getting up from the floor (as if you were laying on the ground)
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F27None" <%= props.getProperty("F27None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F27ALittle" <%= props.getProperty("F27ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F27Some" <%= props.getProperty("F27Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F27ALot" <%= props.getProperty("F27ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F27Cannot" <%= props.getProperty("F27Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F27None" <%= props.getProperty("F27None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F27ALittle" <%= props.getProperty("F27ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F27Some" <%= props.getProperty("F27Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F27ALot" <%= props.getProperty("F27ALot", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F27Cannot" <%= props.getProperty("F27Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F28.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Washing dishes, pots, and utensils by hand while standing at sink
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F28None" <%= props.getProperty("F28None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F28ALittle" <%= props.getProperty("F28ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F28Some" <%= props.getProperty("F28Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F28ALot" <%= props.getProperty("F28ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F28Cannot" <%= props.getProperty("F28Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F28None" <%= props.getProperty("F28None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F28ALittle" <%= props.getProperty("F28ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F28Some" <%= props.getProperty("F28Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F28ALot" <%= props.getProperty("F28ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F28Cannot" <%= props.getProperty("F28Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F29.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Walking several blocks
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F29None" <%= props.getProperty("F29None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F29ALittle" <%= props.getProperty("F29ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F29Some" <%= props.getProperty("F29Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F29ALot" <%= props.getProperty("F29ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F29Cannot" <%= props.getProperty("F29Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F29None" <%= props.getProperty("F29None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F29ALittle" <%= props.getProperty("F29ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F29Some" <%= props.getProperty("F29Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F29ALot" <%= props.getProperty("F29ALot", "") %>/> </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F29Cannot" <%= props.getProperty("F29Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F30.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Taking a 1 mile, brisk walk without stopping to rest                                                                                                  
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F30None" <%= props.getProperty("F30None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F30ALittle" <%= props.getProperty("F30ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F30Some" <%= props.getProperty("F30Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F30ALot" <%= props.getProperty("F30ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F30Cannot" <%= props.getProperty("F30Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F30None" <%= props.getProperty("F30None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F30ALittle" <%= props.getProperty("F30ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F30Some" <%= props.getProperty("F30Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F30ALot" <%= props.getProperty("F30ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F30Cannot" <%= props.getProperty("F30Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">F31.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" >
                         Stepping on and off a bus
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F31None" <%= props.getProperty("F31None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F31ALittle" <%= props.getProperty("F31ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F31Some" <%= props.getProperty("F31Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F31ALot" <%= props.getProperty("F31ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F31Cannot" <%= props.getProperty("F31Cannot", "") %>/> Cannot do</td>                  
+                        </td> 
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F31None" <%= props.getProperty("F31None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F31ALittle" <%= props.getProperty("F31ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F31Some" <%= props.getProperty("F31Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F31ALot" <%= props.getProperty("F31ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F31Cannot" <%= props.getProperty("F31Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">F32.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" >
                         Walking on a slippery surface outdoors
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F32None" <%= props.getProperty("F32None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F32ALittle" <%= props.getProperty("F32ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F32Some" <%= props.getProperty("F32Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F32ALot" <%= props.getProperty("F32ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="F32Cannot" <%= props.getProperty("F32Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F32None" <%= props.getProperty("F32None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F32ALittle" <%= props.getProperty("F32ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F32Some" <%= props.getProperty("F32Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F32ALot" <%= props.getProperty("F32ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="F32Cannot" <%= props.getProperty("F32Cannot", "") %>/></td>                  
                     </tr>                    
                 </table>
             </td>
@@ -1197,122 +1147,113 @@
     <table border="0" cellspacing="0" cellpadding="0" style="display:none" width="100%" height="85%" id="page5" >    
         <tr>        
             <td valign="top" colspan="2">
-                   <table width="100%" height="530px" border="0"  cellspacing="0" cellpadding="0" >                                   
-                    <tr class="title" >
-                        <th colspan="6" width="100%">When you use your cane, walker, or other walking devices, 
-                        <br>how much difficulty do you have...?</th>
+                   <table width="100%" height="540px" border="0"  cellspacing="1px" cellpadding="0" >                                   
+                    <tr class="title">
+                        <th colspan="7">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <tr class="title" ><th>How much difficulty do you have...?</th></tr>
+                                <tr class="title" ><th align="left"><font style="font-size: 65%; text-align:left;">(Remember this is without the help of someone else and without the use of any
+                                        assistive walking device.)</font>
+                                </tr></th>
+                            </table>
+                        </th>                        
+                    </tr> 
+                    <tr class="title">
+                        <td colspan="2">
+                        </td>
+                        <td width="5%"><font style="font-size: 65%;">None</font></td>
+                        <td width="5%"><font style="font-size: 65%;">A little</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Some</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Quite a lot</font></td>
+                        <td width="5%"><font style="font-size: 65%;">Cannot do</font></td>
                     </tr>                     
                     <tr>
                         <td class="question" valign="top" width="5%">FD7.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" width="45%">
                         Walking a mile, taking rests as necessary
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD7None" <%= props.getProperty("FD7None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD7ALittle" <%= props.getProperty("FD7ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD7Some" <%= props.getProperty("FD7Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD7ALot" <%= props.getProperty("FD7ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD7Cannot" <%= props.getProperty("FD7Cannot", "") %>/> Cannot do</td>                  
+                        </td>                                       
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD7None" <%= props.getProperty("FD7None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD7ALittle" <%= props.getProperty("FD7ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD7Some" <%= props.getProperty("FD7Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD7ALot" <%= props.getProperty("FD7ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD7Cannot" <%= props.getProperty("FD7Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">FD8.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" >
                         Going up & down a flight of stairs outside, without using a handrail
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD8None" <%= props.getProperty("FD8None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD8ALittle" <%= props.getProperty("FD8ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD8Some" <%= props.getProperty("FD8Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD8ALot" <%= props.getProperty("FD8ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD8Cannot" <%= props.getProperty("FD8Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD8None" <%= props.getProperty("FD8None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD8ALittle" <%= props.getProperty("FD8ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD8Some" <%= props.getProperty("FD8Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD8ALot" <%= props.getProperty("FD8ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD8Cannot" <%= props.getProperty("FD8Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">FD14.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top" >
                         Stepping up and down from a curb
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD14None" <%= props.getProperty("FD14None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD14ALittle" <%= props.getProperty("FD14ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD14Some" <%= props.getProperty("FD14Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD14ALot" <%= props.getProperty("FD14ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD14Cannot" <%= props.getProperty("FD14Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD14None" <%= props.getProperty("FD14None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD14ALittle" <%= props.getProperty("FD14ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD14Some" <%= props.getProperty("FD14Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD14ALot" <%= props.getProperty("FD14ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD14Cannot" <%= props.getProperty("FD14Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">FD15.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Opening a heavy, outside door
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD15None" <%= props.getProperty("FD15None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD15ALittle" <%= props.getProperty("FD15ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD15Some" <%= props.getProperty("FD15Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD15ALot" <%= props.getProperty("FD15ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD15Cannot" <%= props.getProperty("FD15Cannot", "") %>/> Cannot do</td>                  
+                        </td> 
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD15None" <%= props.getProperty("FD15None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD15ALittle" <%= props.getProperty("FD15ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD15Some" <%= props.getProperty("FD15Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD15ALot" <%= props.getProperty("FD15ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD15Cannot" <%= props.getProperty("FD15Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">FD26.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Walking around one floor of your home, taking into consideration thresholds, doors, furniture, and a variety of floor coverings
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD26None" <%= props.getProperty("FD26None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD26ALittle" <%= props.getProperty("FD26ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD26Some" <%= props.getProperty("FD26Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD26ALot" <%= props.getProperty("FD26ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD26Cannot" <%= props.getProperty("FD26Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD26None" <%= props.getProperty("FD26None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD26ALittle" <%= props.getProperty("FD26ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD26Some" <%= props.getProperty("FD26Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD26ALot" <%= props.getProperty("FD26ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD26Cannot" <%= props.getProperty("FD26Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">FD29.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Walking several blocks                                                                                            
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD29None" <%= props.getProperty("FD29None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD29ALittle" <%= props.getProperty("FD29ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD29Some" <%= props.getProperty("FD29Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD29ALot" <%= props.getProperty("FD29ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD29Cannot" <%= props.getProperty("FD29Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD29None" <%= props.getProperty("FD29None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD29ALittle" <%= props.getProperty("FD29ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD29Some" <%= props.getProperty("FD29Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD29ALot" <%= props.getProperty("FD29ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD29Cannot" <%= props.getProperty("FD29Cannot", "") %>/></td>                  
                     </tr> 
                     <tr>
                         <td class="question" valign="top" width="5%">FD30.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Taking a 1 mile, brisk walk without stopping to rest
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD30None" <%= props.getProperty("FD30None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD30ALittle" <%= props.getProperty("FD30ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD30Some" <%= props.getProperty("FD30Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD30ALot" <%= props.getProperty("FD30ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD30Cannot" <%= props.getProperty("FD30Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD30None" <%= props.getProperty("FD30None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD30ALittle" <%= props.getProperty("FD30ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD30Some" <%= props.getProperty("FD30Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD30ALot" <%= props.getProperty("FD30ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD30Cannot" <%= props.getProperty("FD30Cannot", "") %>/></td>                  
                     </tr>
                     <tr>
                         <td class="question" valign="top" width="5%">FD32.</td>
-                        <td class="question" valign="top" colspan="5">
+                        <td class="question" valign="top">
                         Walking on a slippery surface outdoors
-                        </td>                    
-                    </tr>                    
-                    <tr bgcolor="white">
-                        <td width="5%"></td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD32None" <%= props.getProperty("FD32None", "") %>/> None</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD32ALittle" <%= props.getProperty("FD32ALittle", "") %>/> A little</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD32Some" <%= props.getProperty("FD32Some", "") %>/> Some</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD32ALot" <%= props.getProperty("FD32ALot", "") %>/> Quite a lot</td>
-                        <td width="19%"><input type="checkbox" class="checkbox" name="FD32Cannot" <%= props.getProperty("FD32Cannot", "") %>/> Cannot do</td>                  
+                        </td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD32None" <%= props.getProperty("FD32None", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD32ALittle" <%= props.getProperty("FD32ALittle", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD32Some" <%= props.getProperty("FD32Some", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD32ALot" <%= props.getProperty("FD32ALot", "") %>/></td>
+                        <td bgcolor="white" align="center"><input type="checkbox" class="checkbox" name="FD32Cannot" <%= props.getProperty("FD32Cannot", "") %>/></td>                  
                     </tr>                    
                 </table>    
             </td>
