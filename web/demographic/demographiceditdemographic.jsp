@@ -36,7 +36,7 @@
 	int nStrShowLen = 14;
 %>
 
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -302,14 +302,25 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formHin"/>: </b></td>
       <td align="left" nowrap> 
         <input type="text" name="hin" value="<%=rs.getString("hin")%>" size="15">
-        <b>Ver.</b> 
+        <b><bean:message key="demographic.demographiceditdemographic.formVer"/></b> 
         <input type="text" name="ver" value="<%=rs.getString("ver")%>" size="3">
       </td>
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:</b></td>
       <td align="left">
-        <input type="text" name="eff_date_year" size="4" maxlength="4" value="<%=MyDateFormat.getYearFromStandardDate(rs.getString("eff_date"))%>">
-        <input type="text" name="eff_date_month" size="2" maxlength="2" value="<%=MyDateFormat.getMonthFromStandardDate(rs.getString("eff_date"))%>">
-        <input type="text" name="eff_date_date" size="2" maxlength="2" value="<%=MyDateFormat.getDayFromStandardDate(rs.getString("eff_date"))%>">
+      <%
+         // Put 0 on the left on dates
+         DecimalFormat decF = new DecimalFormat();
+         // Year
+         decF.applyPattern("0000");
+         String effDateYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("eff_date")));
+         // Month and Day
+         decF.applyPattern("00");
+         String effDateMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("eff_date")));
+         String effDateDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("eff_date")));
+      %>
+        <input type="text" name="eff_date_year" size="4" maxlength="4" value="<%= effDateYear%>">
+        <input type="text" name="eff_date_month" size="2" maxlength="2" value="<%= effDateMonth%>">
+        <input type="text" name="eff_date_date" size="2" maxlength="2" value="<%= effDateDay%>">
       </td>
     </tr>
     <tr valign="top"> 
@@ -392,9 +403,17 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
       </td>
       <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.DateJoined"/>: </b></td>
       <td align="left">
-        <input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=MyDateFormat.getYearFromStandardDate(rs.getString("hc_renew_date"))%>">
-        <input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%=MyDateFormat.getMonthFromStandardDate(rs.getString("hc_renew_date"))%>">
-        <input type="text" name="hc_renew_date_date" size="2" maxlength="2" value="<%=MyDateFormat.getDayFromStandardDate(rs.getString("hc_renew_date"))%>">
+      <%
+         // Format year
+         decF.applyPattern("0000");
+         String hcRenewYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("hc_renew_date")));
+         decF.applyPattern("00");
+         String hcRenewMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("hc_renew_date")));
+         String hcRenewDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("hc_renew_date")));
+      %>
+        <input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%= hcRenewYear %>">
+        <input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%= hcRenewMonth %>">
+        <input type="text" name="hc_renew_date_date" size="2" maxlength="2" value="<%= hcRenewDay %>">
       </td>
     </tr>
     <tr valign="top"> 
@@ -410,15 +429,31 @@ if(rs.getString("phone")!=null && rs.getString("phone").length()==10){
     <tr valign="top"> 
       <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
       <td align="left" > 
-        <input type="text" name="date_joined_year" size="4" maxlength="4" value="<%=MyDateFormat.getYearFromStandardDate(rs.getString("date_joined"))%>">
-        <input type="text" name="date_joined_month" size="2" maxlength="2" value="<%=MyDateFormat.getMonthFromStandardDate(rs.getString("date_joined"))%>">
-        <input type="text" name="date_joined_date" size="2" maxlength="2" value="<%=MyDateFormat.getDayFromStandardDate(rs.getString("date_joined"))%>">
+      <%
+         // Format year
+         decF.applyPattern("0000");
+         String dateJoinedYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("date_joined")));
+         decF.applyPattern("00");
+         String dateJoinedMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("date_joined")));
+         String dateJoinedDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("date_joined")));
+      %>
+        <input type="text" name="date_joined_year" size="4" maxlength="4" value="<%= dateJoinedYear %>">
+        <input type="text" name="date_joined_month" size="2" maxlength="2" value="<%= dateJoinedMonth %>">
+        <input type="text" name="date_joined_date" size="2" maxlength="2" value="<%= dateJoinedDay %>">
       </td>
       <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formEndDate"/>: </b></td>
       <td align="left"> 
-        <input type="text" name="end_date_year" size="4" maxlength="4" value="<%=MyDateFormat.getYearFromStandardDate(rs.getString("end_date"))%>">
-        <input type="text" name="end_date_month" size="2" maxlength="2" value="<%=MyDateFormat.getMonthFromStandardDate(rs.getString("end_date"))%>">
-        <input type="text" name="end_date_date" size="2" maxlength="2" value="<%=MyDateFormat.getDayFromStandardDate(rs.getString("end_date"))%>">
+      <%
+         // Format year
+         decF.applyPattern("0000");
+         String endYear = decF.format(MyDateFormat.getYearFromStandardDate(rs.getString("end_date")));
+         decF.applyPattern("00");
+         String endMonth = decF.format(MyDateFormat.getMonthFromStandardDate(rs.getString("end_date")));
+         String endDay = decF.format(MyDateFormat.getDayFromStandardDate(rs.getString("end_date")));
+      %>
+        <input type="text" name="end_date_year" size="4" maxlength="4" value="<%= endYear %>">
+        <input type="text" name="end_date_month" size="2" maxlength="2" value="<%= endMonth %>">
+        <input type="text" name="end_date_date" size="2" maxlength="2" value="<%= endDay %>">
       </td>
     <tr valign="top"> 
       <td nowrap colspan="4">

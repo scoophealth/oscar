@@ -16,7 +16,8 @@
     </table>
 <%
   ResultSet rs = null;
-  
+
+
   //if action is good, then give me the result
     String[] param =new String[27];
 	  param[0]=request.getParameter("last_name");
@@ -80,7 +81,7 @@
       //self.close();
 </script>
 <%  
-    response.sendRedirect("search.htm");
+    response.sendRedirect("search.jsp");
   } else {
 %>
   <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.
