@@ -436,7 +436,7 @@ function showHideLayers() { //v3.0
               <html:text property="xml_endtime" size="12" maxlength="4" />
               </font></td>
             <td width="14%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">                                  
-              <a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&type=admission","380","300","0")'><bean:message key="billing.admissiondate"/></a> </font></td>
+              <a href="#" onClick='rs("billingcalendar","<rewrite:reWrite jspPage="billingCalendarPopup.jsp"/>?year=<%=year%>&month=<%=month%>&type=admission","380","300","0")'><bean:message key="billing.admissiondate"/></a> </font></td>
             <td width="29%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"> 
               <html:text property="xml_vdate" />
               </font></td>  
