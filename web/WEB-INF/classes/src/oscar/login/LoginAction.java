@@ -13,15 +13,16 @@ public final class LoginAction extends Action {
 
   public ActionForward perform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-
     String ip = request.getRemoteAddr();
     String where = "failure"; 
     //String userName, password, pin, propName;
+    LoginForm frm = (LoginForm) form;
     String   userName = ((LoginForm) form).getUsername();        
     String   password = ((LoginForm) form).getPassword();        
     String   pin = ((LoginForm) form).getPin();
-    String   propName = ((LoginForm) form).getPropname();
-    if(userName.equals("")) {
+    //String   propName = ((LoginForm) form).getPropname();
+    String propName = request.getContextPath().substring(1)+".properties";
+    if(userName.equals("")) {    
       return mapping.findForward(where);
     }
 
@@ -29,10 +30,9 @@ public final class LoginAction extends Action {
 
     //Main configuration file. This file must be saved on WEB-INF/classes at the webapp diretory.
     //The file name is defined on the page an its read as a parameter (propName).
-    String mainConfigFileName = servlet.getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+
-	    "classes"+pathSeparator+propName;
-
-    LoginCheckLogin cl = new LoginCheckLogin(mainConfigFileName);
+    //String mainConfigFileName = servlet.getServletContext().getRealPath("")+pathSeparator+"WEB-INF"+pathSeparator+
+    //	    "classes"+pathSeparator+propName;    
+    LoginCheckLogin cl = new LoginCheckLogin(propName);
     if(cl.isBlock(ip)) return mapping.findForward(where);  //go to block page
 
     String[] strAuth = cl.auth(userName, password, pin, ip) ;
