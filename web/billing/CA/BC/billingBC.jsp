@@ -109,7 +109,7 @@ function quickPickDiagnostic(diagnos){
 }
 
 function isNumeric(strString){
-        var validNums = "0123456789";
+        var validNums = "0123456789.";
         var strChar;
         var retval = true;
 
