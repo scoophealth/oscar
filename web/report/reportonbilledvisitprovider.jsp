@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%
@@ -68,7 +68,7 @@
       }
 
       String value = request.getParameter(temp);
-      String sql   = "insert into userRole(provider_no, role_name) values('" + temp.substring(4, temp.length()) + "', '" + 
+      String sql   = "insert into userRole(provider_no, role_name) values('" + temp.substring(4, temp.length()) + "', '" +
               value + "')";
 
       dbObj.updateDBRecord(sql);
@@ -82,7 +82,7 @@
       </title>
       <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
       <script language="JavaScript">
-        
+
                 <!--
 function setfocus() {
 	this.focus();
@@ -93,7 +93,7 @@ function submit(form) {
 }
 
 //-->
-        
+
       </script>
     </head>
     <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -153,7 +153,7 @@ function submit(form) {
       <form name="myform" action="reportonbilledvisitprovider.jsp" method="POST">
         <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
           <tr bgcolor="mediumaquamarine">
-            <th colspan="6" align="left">
+            <th colspan="7" align="left">
               New Provider-Role List
             </th>
             <td align="right">
@@ -161,6 +161,9 @@ function submit(form) {
             </td>
           </tr>
           <tr bgcolor="silver">
+            <th width="30%" nowrap>
+              ID
+            </th>
             <th width="30%" nowrap>
               <b>First Name</b>
             </th>
@@ -221,6 +224,9 @@ function submit(form) {
 %>
             <tr bgcolor="<%=i%2==0?"white":color%>">
               <td>
+                <%= ((Properties)vec.get(i)).getProperty("provider_no", "") %>
+              </td>
+              <td>
                 <%= ((Properties)vec.get(i)).getProperty("first_name", "") %>
               </td>
               <td>
@@ -256,7 +262,7 @@ function submit(form) {
           if (vec.size() > 0) {
 %>
             <tr bgcolor="A9A9A9">
-              <td colspan="7" align="right">
+              <td colspan="8" align="right">
                 <input type="submit" name="submit" value="Add Role(s)">
               </td>
             </tr>
@@ -268,13 +274,16 @@ function submit(form) {
       <hr>
       <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
         <tr bgcolor="mediumaquamarine">
-          <th colspan="4" align="left">
+          <th colspan="5" align="left">
             Confirmed Provider-Role List
           </th>
         </tr>
         <tr bgcolor="silver">
+          <th width="10%" nowrap>
+            ID
+          </th>
           <th width="30%" nowrap>
-            <b>Fisst Name</b>
+            <b>First Name</b>
           </th>
           <th width="30%" nowrap>
             <b>Last Name</b>
@@ -293,6 +302,9 @@ function submit(form) {
 %>
             <tr bgcolor="<%=k%2==0?"white":color%>">
               <form name="mySecform<%=i%>" action="reportonbilledvisitprovider.jsp" method="POST">
+                <td>
+                  <%= oldRoleList.get(i+3) %>
+                </td>
                 <td>
                   <%= oldRoleList.get(i) %>
                 </td>
