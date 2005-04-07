@@ -395,7 +395,7 @@ function newStatus() {
                     <tr><td>
                     <table width="100%" bgcolor="#CCCCFF">
                         <tr><td class="RowTop">
-                            <b>Record</b>
+                            <b>Record</b> (<%=rs.getString("demographic_no")%>)
                         </td></tr>
                         <tr><td>
                         <table width="100%" bgcolor="#EEEEFF">
@@ -626,7 +626,7 @@ function newStatus() {
                                 <select name="provider_no" style="width:200px">
                                   <option value="" ></option>
                         <%
-                          ResultSet rsdemo = apptMainBean.queryResults("search_provider");
+                          ResultSet rsdemo = apptMainBean.queryResults("search_provider_doc");
                           while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(rs.getString("provider_no"))?"selected":""%> >
