@@ -29,7 +29,7 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*"  %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <html>
@@ -61,15 +61,16 @@ function onExit() {
 </head>
 <body onLoad="setfocus()" bgcolor="#c4e9f6" bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 <form name="checklistedit" action="obarriskedit_99_12.jsp"  method="POST">
-<%
+<%    
   char sep = oscarVariables.getProperty("file_separator").toCharArray()[0];
   String str = null;
-  if(request.getParameter("submit")!=null && request.getParameter("submit").compareTo(" Save ")==0) {
-    FileWriter inf = new FileWriter(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerrisks_99_12.xml");
+  if(request.getParameter("submit")!=null && request.getParameter("submit").compareTo(" Save ")==0) {  
+    //FileWriter inf = new FileWriter(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerrisks_99_12.xml");
+    FileWriter inf = new FileWriter(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
     str = request.getParameter("checklist");
-	  str = SxmlMisc.replaceString(str," & "," &amp; ");
-  	str = SxmlMisc.replaceString(str," > "," &gt; ");
-  	str = SxmlMisc.replaceString(str," < "," &lt; ");
+	 str = SxmlMisc.replaceString(str," & "," &amp; ");
+  	 str = SxmlMisc.replaceString(str," > "," &gt; ");
+  	 str = SxmlMisc.replaceString(str," < "," &lt; ");
     inf.write(str);
     inf.close();
   }			
@@ -90,24 +91,28 @@ function onExit() {
       <td align=CENTER colspan="2"  ><font face="Times New Roman, Times, serif"> 
         <textarea name="checklist" cols="100" rows="38"  style="width:100%">
 <%
-//		try {
-			File file = new File(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerrisks_99_12.xml");
-			if(!file.isFile() || !file.canRead()) {
-				throw new IOException();
-			}
-			RandomAccessFile raf = new RandomAccessFile(file, "r");
-			String aline=""; //, temp="";
-			while (true) {
-				aline = raf.readLine(); 
-				if(aline!=null){
-//					aline="<pre>" + aline + "</pre>"  ;
+        boolean fileFound = true;
+        File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
+        if(!file.isFile() || !file.canRead()) {
+			   file = new File(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerrisks_99_12.xml");
+            if(!file.isFile() || !file.canRead()) {
+				   fileFound = false; //throw new IOException();
+			   }
+        }
+
+        if(fileFound){
+            RandomAccessFile raf = new RandomAccessFile(file, "r");
+            String aline=""; //, temp="";
+            while (true) {
+                aline = raf.readLine(); 
+                if(aline!=null){
                     out.println(aline);
-				}else {
-					break;
-				}
-			}
-			raf.close();
-//		} catch(IOException e) {}
+                }else {
+                    break;
+                }
+            }
+            raf.close();
+        }
 %>
 </textarea>
         </font></td>

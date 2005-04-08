@@ -18,7 +18,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -64,13 +64,14 @@ function onExit() {
   char sep = oscarVariables.getProperty("file_separator").toCharArray()[0];
   String str = null;
   if(request.getParameter("submit")!=null && request.getParameter("submit").compareTo(" Save ")==0) {
-    FileWriter inf = new FileWriter(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerchecklist_99_12.xml");
-    str = request.getParameter("checklist");
-	str = SxmlMisc.replaceString(str," & "," &amp; ");
-  	str = SxmlMisc.replaceString(str," > "," &gt; ");
-  	str = SxmlMisc.replaceString(str," < "," &lt; ");
-    inf.write(str);
-    inf.close();
+     //FileWriter inf = new FileWriter(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerchecklist_99_12.xml");
+     FileWriter inf = new FileWriter(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerchecklist_99_12.xml");
+     str = request.getParameter("checklist");
+	  str = SxmlMisc.replaceString(str," & "," &amp; ");
+  	  str = SxmlMisc.replaceString(str," > "," &gt; ");
+  	  str = SxmlMisc.replaceString(str," < "," &lt; ");
+     inf.write(str);
+     inf.close();
   }			
 %>
   <table border="0" cellspacing="0" cellpadding="0" width="100%" >
@@ -89,24 +90,28 @@ function onExit() {
       <td align=CENTER colspan="2"  ><font face="Times New Roman, Times, serif"> 
         <textarea name="checklist" cols="100" rows="38"  style="width:100%">
 <%
-//		try {
-			File file = new File(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerchecklist_99_12.xml");
-			if(!file.isFile() || !file.canRead()) {
-				throw new IOException();
+         boolean fileFound = true;         
+         File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerchecklist_99_12.xml");
+         if(!file.isFile() || !file.canRead()) {            
+			   file = new File(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"antenatal"+sep+"desantenatalplannerchecklist_99_12.xml");
+            if(!file.isFile() || !file.canRead()) {               
+				   fileFound = false; //throw new IOException();
+			   }
 			}
-			RandomAccessFile raf = new RandomAccessFile(file, "r");
-			String aline=""; //, temp="";
-			while (true) {
-				aline = raf.readLine(); 
-				if(aline!=null){
-//					aline="<pre>" + aline + "</pre>"  ;
-                    out.println(aline);
-				}else {
-					break;
-				}
-			}
-			raf.close();
-//		} catch(IOException e) {}
+         
+         if(fileFound){
+            RandomAccessFile raf = new RandomAccessFile(file, "r");
+            String aline=""; 
+            while (true) {
+               aline = raf.readLine(); 
+               if(aline!=null){
+                  out.println(aline);
+    				}else {
+        				break;
+            	}
+            }
+            raf.close();
+         }
 %>
 </textarea>
         </font></td>
