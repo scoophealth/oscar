@@ -52,7 +52,7 @@ public class EctSplitChart {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          String sql = "select eChartId, timeStamp from eChart where demographicNo= '"+demographicNo+"'  and subject = 'SPLIT CHART' order by timeStamp ";
          ResultSet rs = db.GetSQL(sql);
-         if(rs.next()) {
+         while(rs.next()) {
             String[] s = new String[2];
              s[0] = rs.getString("eChartId");            
              Timestamp timestamp = rs.getTimestamp("timeStamp");             
