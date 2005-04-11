@@ -22,9 +22,10 @@
   <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
   <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%
-  String            clinicview        = oscarVariables.getProperty("clinic_view", "");
+  boolean bHospitalBilling = true;
+  String            clinicview        = bHospitalBilling? oscarVariables.getProperty("clinic_hospital", "") : oscarVariables.getProperty("clinic_view", "");
   String            clinicNo          = oscarVariables.getProperty("clinic_no", "");
-  String            visitType         = "02"; //oscarVariables.getProperty("visit_type", "");
+  String            visitType         = bHospitalBilling? "02" : oscarVariables.getProperty("visit_type", "");
   String            appt_no           = request.getParameter("appointment_no");
   String            demoname          = request.getParameter("demographic_name");
   String            demo_no           = request.getParameter("demographic_no");
