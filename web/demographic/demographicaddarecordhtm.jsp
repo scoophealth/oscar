@@ -33,6 +33,8 @@
   if (curDay.length() < 2) curDay = "0"+curDay;
 
   ProvinceNames pNames = ProvinceNames.getInstance();
+  String prov= ((String ) props.getProperty("billregion","")).trim().toUpperCase();
+
 %>
 <!--
 /*
@@ -191,6 +193,16 @@ function formatPhoneNum() {
     if (document.adddemographic.phone2.value.length == 11 && document.adddemographic.phone2.value.charAt(3) == '-') {
         document.adddemographic.phone2.value = document.adddemographic.phone2.value.substring(0,3) + "-" + document.adddemographic.phone2.value.substring(4,7) + "-" + document.adddemographic.phone2.value.substring(7);
     }
+}
+function rs(n,u,w,h,x) {
+  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+  remote=window.open(u,n,args);
+}
+function referralScriptAttach2(elementName, name2) {
+     var d = elementName;
+     t0 = escape("document.forms[1].elements[\'"+d+"\'].value");
+     t1 = escape("document.forms[1].elements[\'"+name2+"\'].value");
+     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
 }
 
 </script>
@@ -561,6 +573,9 @@ function formatPhoneNum() {
       <td align="right" nowrap height="10"><b><bean:message key="demographic.demographicaddrecordhtm.formReferalDoctorN"/>:</b></td>
       <td align="left" height="10">
         <input type="text" name="r_doctor_ohip" maxlength="6">
+                					<% if("ON".equals(prov)) { %>
+									<a href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')">Search #</a>
+                					<% } %>
       </td>
     </tr>
     <tr valign="top">
