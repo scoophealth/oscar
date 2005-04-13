@@ -51,7 +51,7 @@
 	  }
 	  String	sql   = "select * from billingreferral where " + where + " order by " + orderBy + " limit " +strLimit1+"," +strLimit2;
 	  ResultSet rs = dbObj.searchDBRecord(sql);
-		System.out.println(sql);
+		// System.out.println(sql);
 	  while (rs.next()) {
 	  	prop = new Properties();
 	  	prop.setProperty("referral_no",rs.getString("referral_no"));
@@ -171,6 +171,10 @@
             <td class="blueText" nowrap>
               <input type="radio" name="search_mode" value="specialty">
               Specialty
+            </td>
+            <td class="blueText" nowrap>
+              <input type="radio" name="search_mode" value="referral_no">
+              Ref. no.
             </td>
             <td valign="middle" rowspan="2" align="left">
               <input type="text" name="keyword" value="" size="17" maxlength="100">
