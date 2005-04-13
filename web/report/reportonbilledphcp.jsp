@@ -984,7 +984,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
           </tr>
           <tr align="center" bgcolor="<%=tdTitleColor%>">
             <td>
-              Dx
+              Code
             </td>
             <td>
               Description
