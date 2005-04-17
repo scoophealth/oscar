@@ -392,6 +392,11 @@ public class FrmPDFServlet extends HttpServlet {
 
                             //draw the pic
                             cb.setLineWidth(1.5f);
+                            if (k % 2 == 0) {
+                                cb.setRGBColorStrokeF(0f, 0f, 255f);
+                            } else {
+                                cb.setRGBColorStrokeF(255f, 0f, 0f);
+                            }
                             for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
                                 tempName = new StringBuffer(e.nextElement().toString());
                                 tempValue = gProp.getProperty(tempName.toString(), "");

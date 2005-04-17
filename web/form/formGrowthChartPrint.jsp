@@ -67,27 +67,43 @@
 <body  onload='window.setTimeout("go()",1000);' >
 <form id="growth" name="growth" action="../form/createpdf"  method="post">
 <%
+	Properties prop = new Properties();
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		String temp = e.nextElement().toString();
 		if("submit".equals(temp) || "__cfgGraphicFile".equals(temp) ) continue;
-		String tempName = temp;
 		if(temp.matches("date_\\d+|age_\\d+|stature_\\d+|weight_\\d+|comment_\\d+|bmi_\\d+") ) {
-				//System.out.println(temp);
-			String[] str = temp.split("date_|age_|stature_|weight_|comment_|bmi_");
-			for(int i=0; i<str.length; i++) {
-				//System.out.println(temp + " : " + str[i]);
-			}
-			int nC = Integer.parseInt(str[1]);
-			if(nC<nS || nC>nE) continue;
-			else {
-				// set tempName = 1 - 7
-				nC = nC - ((n-1)*(nE-nS+1));
-				tempName = temp.substring(0, temp.indexOf("_")+1) + nC;
-				System.out.println(temp + " : " + tempName);
-			}
+			prop.setProperty(temp, request.getParameter(temp));
+			continue;
 		}
 %>
-	<input type="hidden" name="<%= tempName %>" value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>" />
+	<input type="hidden" name="<%= temp %>" value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>" />
+<%
+}
+%>
+<%
+	for (Enumeration e = prop.propertyNames() ; e.hasMoreElements() ;) {
+		String temp = e.nextElement().toString();
+		//System.out.println(temp);
+		String[] str = temp.split("date_|age_|stature_|weight_|comment_|bmi_");
+		int nC = Integer.parseInt(str[1]);
+		if(nC>=nS && nC<=nE) {
+			// swap: set tempName = 1 - 7
+			nC = nC - ((n-1)*(nE-nS+1));
+			String newName = temp.substring(0, temp.indexOf("_")+1) + nC;
+			String newValue = prop.getProperty(temp, "");
+			// 1-7 change to nS-nE
+			String baseName = temp;
+			String baseValue = prop.getProperty(newName, "");
+			prop.setProperty(newName,newValue);
+			prop.setProperty(baseName,baseValue);
+			//System.out.println(temp + " : " + tempName);
+		}
+	}
+
+	for (Enumeration e = prop.propertyNames() ; e.hasMoreElements() ;) {
+		String temp = e.nextElement().toString();
+%>
+	<input type="hidden" name="<%= temp %>" value="<%=StringEscapeUtils.escapeHtml(prop.getProperty(temp, ""))%>" />
 <%
 }
 %>
