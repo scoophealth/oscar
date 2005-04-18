@@ -55,10 +55,13 @@ if (request.getParameter("orderby") != null){
     session.setAttribute("orderby",orderby);
 }
 String orderby = (String) session.getAttribute("orderby");
- 
+
+String moreMessages="false";
+if (request.getParameter("moreMessages") != null){
+   moreMessages=request.getParameter("moreMessages");
+   }
+final int INITIAL_DISPLAY=20;
 %>
-
-
 
 <logic:notPresent name="msgSessionBean" scope="session">
     <logic:redirect href="index.jsp" />
@@ -238,24 +241,48 @@ function BackToOscar()
                                     &nbsp;
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=status" paramId="boxType" paramName="pageType">
-                                    <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
-                                    </html:link>
+                                      <% if (moreMessages.equals("true")){%>
+                                        <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=status&moreMessages=true"  paramId="boxType" paramName="pageType">
+                                        <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
+                                        </html:link>
+                                      <%}else{%>
+                                        <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=status&moreMessages=false"  paramId="boxType" paramName="pageType">
+                                        <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
+                                        </html:link>
+                                      <%}%>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from" paramId="boxType" paramName="pageType">
-                                    <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
-                                    </html:link>
+                                      <% if (moreMessages.equals("true")){%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from&moreMessages=true" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
+                                            </html:link>
+                                       <%}else{%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from&moreMessages=false" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
+                                            </html:link>
+                                       <%}%>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=subject" paramId="boxType" paramName="pageType">
-                                    <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
-                                    </html:link>
+                                        <% if (moreMessages.equals("true")){%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=subject&moreMessages=true" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
+                                            </html:link>
+                                        <%}else{%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=subject&moreMessages=false" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
+                                            </html:link>
+                                        <%}%>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                    <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=date" paramId="boxType" paramName="pageType">
-                                    <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
-                                    </html:link>
+                                        <% if (moreMessages.equals("true")){%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=date&moreMessages=true" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
+                                            </html:link>
+                                        <%}else{%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=date&moreMessages=false" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
+                                            </html:link>
+                                        <%}%>
                                     </th>                                    
                                 </tr>
                                 <% //java.util.Vector theMessages = new java.util.Vector() ;
@@ -263,7 +290,7 @@ function BackToOscar()
                                 switch(pageType){
                                     case 0:
 //                                        theMessages =  DisplayMessagesBeanId.getMessageid();
-                                        theMessages2 = DisplayMessagesBeanId.estInbox(orderby);
+                                        theMessages2 = DisplayMessagesBeanId.estInbox(orderby,moreMessages,INITIAL_DISPLAY);
                                         // System.out.println("normal messages");
                                     break;
                                     case 1:
@@ -278,8 +305,8 @@ function BackToOscar()
                                     break;
                                 }   //messageid
                                 %>
-
-                            <%for (int i = 0; i < theMessages2.size() ; i++) {
+                                <!--   for loop Control Initiliation variabe changed to nextMessage   -->
+                            <%for (int i = 0; i < theMessages2.size() ; i++) {  
                                         oscar.oscarMessenger.data.MsgDisplayMessage dm;
                                         dm = (oscar.oscarMessenger.data.MsgDisplayMessage) theMessages2.get(i);
                             %>
@@ -321,12 +348,29 @@ function BackToOscar()
                                     </td>
                                 </tr>
                             <%}%>
-                            </table>
-                            <%if (pageType == 0){%>
-                                        <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
-                            <%}else if (pageType == 2){%>
-                                        <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>">
-                            <%}%>
+                            </table>  
+                            <table width="80%">
+                                <tr>
+                                    <td>
+                                         <%if (pageType == 0){%>
+                                            <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
+                                             <%}else if (pageType == 2){%>
+                                            <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>">
+                                            <%}%>  
+                                    </td>
+                                    <%
+                                       if (moreMessages.equals("false") && pageType==0 && theMessages2.size()>=INITIAL_DISPLAY){
+                                    %>
+                                    <td width="60%"></td>
+                                    <td  align="left">
+                                        <html:link page="/oscarMessenger/DisplayMessages.jsp?moreMessages=true" paramId="boxType" paramName="pageType">
+                                        <bean:message key="oscarMessenger.DisplayMessages.msgAllMessage"/>
+                                        </html:link>
+                                    </td>
+                                    <%}%>
+                                </tr>
+                              </table>
+                                    
                          </html:form>
                         </td>
                     </tr>
