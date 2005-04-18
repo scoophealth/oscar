@@ -267,24 +267,28 @@ public class MsgDisplayMessagesBean {
      return estInbox(null);
   }
 //INBOX
-  public java.util.Vector estInbox(String orderby){
+  public java.util.Vector estInbox(String orderby,String moreMessages,int initialDisplay){
 
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
+    
 
 
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
-
+        String messageLimit="";
+        
+        if (moreMessages.equals("false"))
+        {messageLimit=" Limit "+initialDisplay;}
+        
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and ml.message = m.messageid order by "+getOrderBy(orderby));
+        +" and ml.message = m.messageid order by "+getOrderBy(orderby)+messageLimit);
                 
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
-
            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
            dm.status     = rs.getString("status");
            dm.messageId  = rs.getString("message");
@@ -315,6 +319,11 @@ public class MsgDisplayMessagesBean {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+  
+  public java.util.Vector estInbox(String orderby){
+     return estInbox(null);
+  }
+  //////////////////////////////////////////////////////////////////////////////////
   public java.util.Vector estDeletedInbox(){
      return estDeletedInbox(null); 
   }
