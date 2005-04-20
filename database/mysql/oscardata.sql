@@ -138,6 +138,10 @@ INSERT INTO ctl_frequency VALUES (13,'Q12H',2,2);
 INSERT INTO ctl_frequency VALUES (14,'QAM',1,1);
 INSERT INTO ctl_frequency VALUES (15,'QPM',1,1);
 INSERT INTO ctl_frequency VALUES (16,'QHS',1,1);
+INSERT INTO ctl_frequency VALUES (17,'Q1Week','1/7','1/7');
+INSERT INTO ctl_frequency VALUES (18,'Q2Week','1/14','1/14');
+INSERT INTO ctl_frequency VALUES (19,'Q1Month','1/30','1/30');
+INSERT INTO ctl_frequency VALUES (20,'Q3Month','1/90','1/90');
 
 --
 -- Dumping data for table 'ctl_provider'
