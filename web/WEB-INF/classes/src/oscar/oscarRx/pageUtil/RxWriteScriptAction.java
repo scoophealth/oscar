@@ -86,7 +86,7 @@ public final class RxWriteScriptAction extends Action {
                 rx.setCustomName(frm.getCustomName());
             }
             
-            rx.setRxDate(RxUtil.StringToDate(frm.getRxDate()));
+            rx.setRxDate(RxUtil.StringToDate(frm.getRxDate(),"yyyy-MM-dd"));
             
             rx.setTakeMin(frm.getTakeMinFloat());
             rx.setTakeMax(frm.getTakeMaxFloat());
@@ -100,6 +100,10 @@ public final class RxWriteScriptAction extends Action {
             rx.setSpecial(frm.getSpecial());
             rx.setAtcCode(frm.getAtcCode());
             rx.setRegionalIdentifier(frm.getRegionalIdentifier());
+            rx.setUnit(frm.getUnit());
+            rx.setMethod(frm.getMethod());
+            rx.setRoute(frm.getRoute());
+            
                      
             bean.setStashItem(bean.getStashIndex(), rx);
          
