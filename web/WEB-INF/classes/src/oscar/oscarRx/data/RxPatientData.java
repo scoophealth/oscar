@@ -1,46 +1,25 @@
 /*
  *
- 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. * 
  * This software is published under the GPL GNU General Public License.
- 
- * This program is free software; you can redistribute it and/or
- 
- * modify it under the terms of the GNU General Public License
- 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation; either version 2
- 
  * of the License, or (at your option) any later version. *
- 
- * This program is distributed in the hope that it will be useful,
- 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- 
- * along with this program; if not, write to the Free Software
- 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- 
- *
- 
- * <OSCAR TEAM>
- 
- *
- 
- * This software was written for the
- 
- * Department of Family Medicine
- 
- * McMaster Unviersity
- 
- * Hamilton
- 
- * Ontario, Canada
- 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM> 
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
  */
 
 package oscar.oscarRx.data;
@@ -112,6 +91,7 @@ public class RxPatientData {
             rs.getString("address"), rs.getString("city"),
             rs.getString("postal"),            
             rs.getString("phone"), rs.getString("hin"));            
+            System.out.println(rs.getString("first_name"));
          }         
          rs.close();         
          db.CloseConn();         
@@ -123,6 +103,36 @@ public class RxPatientData {
       return p;      
    }
    
+   
+   public Patient getPatient(String demographicNo) throws java.sql.SQLException {      
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);      
+      ResultSet rs;      
+      Patient p = null;      
+      try {         
+         rs = db.GetSQL(
+         "SELECT demographic_no, last_name, first_name, sex, year_of_birth, "         
+         + "month_of_birth, date_of_birth, address, city, postal, phone,hin "         
+         + "FROM demographic WHERE demographic_no = " + demographicNo);
+         
+         if (rs.next()) {            
+            p = new Patient(rs.getInt("demographic_no"), rs.getString("last_name"),            
+            rs.getString("first_name"), rs.getString("sex"),            
+            calcDate(rs.getString("year_of_birth"),
+            rs.getString("month_of_birth"),            
+            rs.getString("date_of_birth")),            
+            rs.getString("address"), rs.getString("city"),
+            rs.getString("postal"),            
+            rs.getString("phone"), rs.getString("hin"));            
+         }         
+         rs.close();         
+         db.CloseConn();         
+      }
+      catch (SQLException e) {         
+         System.out.println(e.getMessage());         
+      }
+      
+      return p;      
+   }
    private java.util.Date calcDate(String year, String month, String day) {      
       int iYear = Integer.parseInt(year);
       int iMonth = Integer.parseInt(month) - 1;      
@@ -185,14 +195,14 @@ public class RxPatientData {
          return this.demographicNo;         
       }
       
-      public String getSurname() {         
+      public String getSurname() {               
          return this.surname;         
       }
       
-      public String getFirstName() {         
+      public String getFirstName() {           
          return this.firstName;         
       }
-      
+            
       public String getSex() {         
          return this.sex;         
       }
@@ -233,7 +243,7 @@ public class RxPatientData {
             ResultSet rs;            
             Allergy allergy;
             
-            rs = db.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY DESCRIPTION");
+            rs = db.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived = '0' ORDER BY DESCRIPTION");
             
             while (rs.next()) {               
                allergy = new Allergy(rs.getInt("allergyid"), rs.getDate("entry_date"),               
@@ -270,7 +280,7 @@ public class RxPatientData {
          boolean b = false;
          try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
-            String sql = "DELETE FROM allergies WHERE allergyid = " + allergyId;            
+            String sql = "update allergies set archived = '1'  WHERE allergyid = '"+allergyId+"'";            
             b = db.RunSQL(sql);            
             db.CloseConn();                                  
          }catch (SQLException e) {            
@@ -376,7 +386,7 @@ public class RxPatientData {
             String sql;            
             if (this.getAllergyId() == 0) {               
                sql = "INSERT INTO allergies (demographic_no, entry_date, "               
-               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id) "               
+               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,age_of_onset,severity_of_reaction,onset_of_reaction) "               
                + "VALUES (" + Patient.this.getDemographicNo() + ", '"               
                + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', '"               
                + this.allergy.getDESCRIPTION() + "', "               
@@ -386,7 +396,10 @@ public class RxPatientData {
                + this.allergy.getAGCCS() + ", "               
                + this.allergy.getTYPECODE() + ", '"               
                + this.allergy.getReaction() + "', '"               
-               + this.allergy.getPickID() + "')";
+               + this.allergy.getPickID() + "', '" 
+               + this.allergy.getAgeOfOnset() + "', '"
+               + this.allergy.getSeverityOfReaction() + "', '"
+               + this.allergy.getOnSetOfReaction()+"')";
                
                b = db.RunSQL(sql);
                
@@ -408,7 +421,10 @@ public class RxPatientData {
                + "AGCCS = " + allergy.getAGCCS() + ", "
                + "TYPECODE = " + allergy.getTYPECODE() + ", "
                + "reaction = '" + allergy.getReaction() + "', "               
-               + "drugref_id = '" + allergy.getPickID() + "' "               
+               + "drugref_id = '" + allergy.getPickID() + "' " 
+               + "age_of_onset ='"+allergy.getAgeOfOnset()+"',"
+               + "severity_of_reaction = '"+allergy.getSeverityOfReaction()+"',"
+               + "onset_of_reaction = '"+allergy.getOnSetOfReaction()+"' "               
                + "WHERE allergyid = " + this.getAllergyId();
                
                b = db.RunSQL(sql);               
