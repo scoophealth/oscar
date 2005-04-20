@@ -33,6 +33,8 @@ package oscar.oscarRx.util;
 import java.util.*;
 import org.apache.xmlrpc.*;
 import java.text.*;
+import oscar.*;
+
 /**
  *
  * @author  Jay
@@ -45,7 +47,8 @@ public class RxDrugRef {
            //"http://192.168.42.3:8001";
     /** Creates a new instance of DrugRef */
     public RxDrugRef() {
-        server_url = System.getProperty("drugref_url");
+        server_url = OscarProperties.getInstance().getProperty("drugref_url");
+        //server_url = System.getProperty("drugref_url");
     }
     
     public RxDrugRef(String url){
@@ -309,6 +312,7 @@ public class RxDrugRef {
      private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
          Object object = null;
          try{
+            System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
          }catch (XmlRpcException exception) {
