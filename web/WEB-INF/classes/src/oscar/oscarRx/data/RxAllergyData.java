@@ -50,6 +50,9 @@ public class RxAllergyData {
         int AGCCS;
         int TYPECODE;
         String reaction;
+        String ageOfOnset = null;
+        String severityOfReaction = null;
+        String onSetOfReaction = null;
         
         public Allergy(){
         }
@@ -186,6 +189,55 @@ public class RxAllergyData {
             }
             return s;
         }
+        
+        /**
+         * Getter for property ageOfOnset.
+         * @return Value of property ageOfOnset.
+         */
+        public java.lang.String getAgeOfOnset() {
+           return ageOfOnset;
+        }
+        
+        /**
+         * Setter for property ageOfOnset.
+         * @param ageOfOnset New value of property ageOfOnset.
+         */
+        public void setAgeOfOnset(java.lang.String ageOfOnset) {
+           this.ageOfOnset = ageOfOnset;
+        }
+        
+        /**
+         * Getter for property severityOfReaction.
+         * @return Value of property severityOfReaction.
+         */
+        public java.lang.String getSeverityOfReaction() {
+           return severityOfReaction;
+        }
+        
+        /**
+         * Setter for property severityOfReaction.
+         * @param severityOfReaction New value of property severityOfReaction.
+         */
+        public void setSeverityOfReaction(java.lang.String severityOfReaction) {
+           this.severityOfReaction = severityOfReaction;
+        }
+        
+        /**
+         * Getter for property onSetOfReaction.
+         * @return Value of property onSetOfReaction.
+         */
+        public java.lang.String getOnSetOfReaction() {
+           return onSetOfReaction;
+        }
+        
+        /**
+         * Setter for property onSetOfReaction.
+         * @param onSetOfReaction New value of property onSetOfReaction.
+         */
+        public void setOnSetOfReaction(java.lang.String onSetOfReaction) {
+           this.onSetOfReaction = onSetOfReaction;
+        }
+        
     }
     
     public class Reaction {
