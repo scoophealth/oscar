@@ -30,6 +30,7 @@ import oscar.oscarProvider.data.*;
 
 import java.util.*;
 import java.sql.*;
+import org.apache.commons.lang.*;
 
 public class RxPrescriptionData {
     public Prescription getPrescription(int drugId) {
@@ -64,6 +65,9 @@ public class RxPrescriptionData {
                 prescription.setGenericName(rs.getString("GN"));
                 prescription.setAtcCode(rs.getString("ATC"));
                 prescription.setRegionalIdentifier(rs.getString("regional_Identifier"));
+                prescription.setUnit(rs.getString("unit"));
+                prescription.setMethod(rs.getString("method"));
+                prescription.setRoute(rs.getString("route"));
             }
             
             
@@ -103,6 +107,9 @@ public class RxPrescriptionData {
         prescription.setGenericName(favorite.getGN());
         prescription.setAtcCode(favorite.getAtcCode());
         prescription.setRegionalIdentifier(favorite.getRegionalIdentifier());
+        prescription.setUnit(favorite.getUnit());
+        prescription.setMethod(favorite.getMethod());
+        prescription.setRoute(favorite.getRoute());
         
         
         return prescription;
@@ -130,7 +137,9 @@ public class RxPrescriptionData {
         prescription.setGenericName(rePrescribe.getGenericName());
         prescription.setAtcCode(rePrescribe.getAtcCode());
         prescription.setRegionalIdentifier(rePrescribe.getRegionalIdentifier());
-        
+        prescription.setUnit(rePrescribe.getUnit());
+        prescription.setMethod(rePrescribe.getMethod());
+        prescription.setRoute(rePrescribe.getRoute());       
         return prescription;
     }
     //JAY CHANGED THIS FUNCTION on desc 3 2002.
@@ -175,6 +184,9 @@ public class RxPrescriptionData {
                 p.setGenericName(rs.getString("GN"));
                 p.setAtcCode(rs.getString("ATC"));
                 p.setRegionalIdentifier(rs.getString("regional_identifier"));
+                p.setUnit(rs.getString("unit"));
+                p.setMethod(rs.getString("method"));
+                p.setRoute(rs.getString("route"));
                 lst.add(p);
             }
             
@@ -228,7 +240,9 @@ public class RxPrescriptionData {
                 p.setGenericName(rs.getString("GN"));
                 p.setAtcCode(rs.getString("ATC"));
                 p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                
+                p.setUnit(rs.getString("unit"));
+                p.setMethod(rs.getString("method"));
+                p.setRoute(rs.getString("route"));
                 lst.add(p);
             }
             
@@ -243,6 +257,22 @@ public class RxPrescriptionData {
         
         return arr;
     }
+    
+    
+    public Vector getCurrentATCCodesByPatient(int demographicNo) {
+        Vector vec = new Vector();
+        Prescription[] p =  getPrescriptionsByPatientHideDeleted(demographicNo);
+        for( int i =0 ; i < p.length; i++){
+           if(p[i].isCurrent()){
+              System.out.println(p[i].getAtcCode()+" "+p[i].getBrandName());
+              if (!vec.contains(p[i].getAtcCode())){
+                 System.out.println("Actually Adding "+p[i].getAtcCode()+" "+p[i].getBrandName());
+                 vec.add(p[i].getAtcCode());
+              }
+           }
+        }
+        return vec;
+     }
     
     ///////////////////////
     
@@ -305,7 +335,9 @@ public class RxPrescriptionData {
                     p.setGenericName(rs.getString("GN"));
                     p.setAtcCode(rs.getString("ATC"));
                     p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                    
+                    p.setUnit(rs.getString("unit"));
+                    p.setMethod(rs.getString("method"));
+                    p.setRoute(rs.getString("route"));
                     lst.add(p);
                 }
             }
@@ -369,7 +401,9 @@ public class RxPrescriptionData {
                 p.setGenericName(rs.getString("GN"));
                 p.setAtcCode(rs.getString("ATC"));
                 p.setRegionalIdentifier(rs.getString("regional_identifier"));
-                
+                p.setUnit(rs.getString("unit"));
+                p.setMethod(rs.getString("method"));
+                p.setRoute(rs.getString("route"));
                 lst.add(p);
             }
             
@@ -405,7 +439,7 @@ public class RxPrescriptionData {
                 rs.getString("duration"), rs.getString("durunit"),
                 rs.getString("quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
-                rs.getInt("prn"), rs.getString("special"),rs.getString("GN"),rs.getString("ATC"),rs.getString("regional_identifier"));
+                rs.getInt("prn"), rs.getString("special"),rs.getString("GN"),rs.getString("ATC"),rs.getString("regional_identifier"),rs.getString("unit"),rs.getString("method"),rs.getString("route"));
                 
               
                 
@@ -441,7 +475,7 @@ public class RxPrescriptionData {
                 rs.getString("duration"), rs.getString("durunit"),
                 rs.getString("quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
-                rs.getInt("prn"), rs.getString("special"),rs.getString("GN"),rs.getString("ATC"),rs.getString("regional_identifier"));
+                rs.getInt("prn"), rs.getString("special"),rs.getString("GN"),rs.getString("ATC"),rs.getString("regional_identifier"),rs.getString("unit"),rs.getString("method"),rs.getString("route"));
             }
             
             rs.close();
@@ -474,7 +508,7 @@ public class RxPrescriptionData {
     
     
     /** This function is used to save a set of prescribed drugs to as one
-     * prescription.  This is for historical perposes
+     * prescription.  This is for historical purposes
      * @param bean This is the oscarRx session bean
      * @return This returns the insert id of the script to be included
      * the drugs table
@@ -539,8 +573,7 @@ public class RxPrescriptionData {
         //textView.append();
         
         System.out.println("date_prescribed " +date_prescribed+" date printed "+date_printed);
-        
-        
+                
         
         String sql =  " insert into prescription "
         +" (provider_no,demographic_no,date_prescribed,date_printed,textView) "
@@ -549,7 +582,7 @@ public class RxPrescriptionData {
         +"   '"+demographic_no+"', "
         +"   '"+date_prescribed+"', "
         +"   '"+date_printed+"', "
-        +"   '"+textView.toString()+"') ";
+        +"   '"+StringEscapeUtils.escapeSql(textView.toString())+"') ";
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                         
@@ -600,6 +633,9 @@ public class Prescription {
     boolean archived = false;  // ADDED BY JAY DEC 3 2002
     String atcCode = null;
     String regionalIdentifier = null;
+    String method = null;
+    String unit = null; 
+    String route = null;
     //RxDrugData.GCN gcn = null;
     
     public Prescription(int drugId, String providerNo, int demographicNo) {
@@ -1118,25 +1154,27 @@ public class Prescription {
                 
                 b = true;
                 
+                 
+                
                 // if it doesn't already exist add it.
                 if(this.getDrugId() == 0) {
                     sql = "INSERT INTO drugs (provider_no, demographic_no, "
                     + "rx_date, end_date, BN, GCN_SEQNO, customName, "
                     + "takemin, takemax, "
                     + "freqcode, duration, durunit, quantity, "
-                    + "repeat, nosubs, prn, special,GN,script_no,ATC,regional_identifier) "
+                    + "repeat, nosubs, prn, special,GN,script_no,ATC,regional_identifier,unit,method,route,create_date) "
                     + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '"
                     + RxUtil.DateToString(this.getRxDate()) + "', '"
                     + RxUtil.DateToString(this.getEndDate()) + "', '"
-                    + this.getBrandName() + "', " + this.getGCN_SEQNO()
-                    + ", '" + this.getCustomName() + "', "
+                    + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO()
+                    + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', "
                     + this.getTakeMin() + ", " + this.getTakeMax() + ", '"
                     + this.getFrequencyCode() + "', '" + this.getDuration() + "', '"
                     + this.getDurationUnit() + "', '" + this.getQuantity() + "', "
                     + this.getRepeat() + ", " + this.getNosubsInt() + ", "
                     + this.getPrnInt() + ", '"
                     + RxUtil.replace(this.getSpecial(), "'", "") + "','"+this.getGenericName()+"','"+scriptId+"', '"
-                    + this.getAtcCode() +"', '"+this.getRegionalIdentifier()+"')";
+                    + this.getAtcCode() +"', '"+this.getRegionalIdentifier()+"','"+this.getUnit()+"','"+this.getMethod()+"','"+this.getRoute()+"',now())";
                     
                      
                     
@@ -1156,8 +1194,7 @@ public class Prescription {
                     b = true;
                 }
                 
-            } else  // update the daterbase
-            {
+            } else { // update the daterbase          
                 sql = "UPDATE drugs SET "
                 + "provider_no = '" + this.getProviderNo() + "', "
                 + "demographic_no = " + this.getDemographicNo() + ", "
@@ -1177,7 +1214,10 @@ public class Prescription {
                 + "prn = " + this.getPrnInt() + ", "
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "', "
                 + "ATC = '" +this.atcCode+"', "
-                + "regional_identifier = '"+this.regionalIdentifier+"' "
+                + "regional_identifier = '"+this.regionalIdentifier+"', "
+                + "unit = '"+this.getUnit()+"', "
+                + "method = '"+this.getMethod()+"', "
+                + "route = '"+this.getRoute()+"' "
                 + "WHERE drugid = " + this.getDrugId();
                 
                 db.RunSQL(sql);
@@ -1205,7 +1245,7 @@ public class Prescription {
         this.getDurationUnit(), this.getQuantity(),
         this.getRepeat(), this.getNosubsInt(), this.getPrnInt(), 
         this.getSpecial(),this.getGenericName(),
-        this.getAtcCode(),this.getRegionalIdentifier());
+        this.getAtcCode(),this.getRegionalIdentifier(),this.getUnit(),this.getMethod(),this.getRoute());
         
         return fav.Save();
     }
@@ -1242,6 +1282,54 @@ public class Prescription {
         this.regionalIdentifier = regionalIdentifier;
     }
     
+    /**
+     * Getter for property method.
+     * @return Value of property method.
+     */
+    public java.lang.String getMethod() {
+       return method;
+    }
+    
+    /**
+     * Setter for property method.
+     * @param method New value of property method.
+     */
+    public void setMethod(java.lang.String method) {
+       this.method = method;
+    }
+    
+    /**
+     * Getter for property unit.
+     * @return Value of property unit.
+     */
+    public java.lang.String getUnit() {
+       return unit;
+    }
+    
+    /**
+     * Setter for property unit.
+     * @param unit New value of property unit.
+     */
+    public void setUnit(java.lang.String unit) {
+       this.unit = unit;
+    }
+    
+    /**
+     * Getter for property route.
+     * @return Value of property route.
+     */
+    public java.lang.String getRoute() {
+       return route;
+    }
+    
+    /**
+     * Setter for property route.
+     * @param route New value of property route.
+     */
+    public void setRoute(java.lang.String route) {
+       this.route = route;
+    }
+    
 }
 
 public class Favorite {
@@ -1264,12 +1352,15 @@ public class Favorite {
     String GN;
     String atcCode;
     String regionalIdentifier;
+    String unit;
+    String method;
+    String route;
     
     public Favorite(int favoriteId, String providerNo, String favoriteName,
     String BN, int GCN_SEQNO, String customName,
     float takeMin, float takeMax, String frequencyCode, String duration,
     String durationUnit, String quantity,
-    int repeat, int nosubs, int prn, String special,String GN,String atc,String regionalIdentifier) {
+    int repeat, int nosubs, int prn, String special,String GN,String atc,String regionalIdentifier,String unit,String method,String route) {
         this.favoriteId = favoriteId;
         this.providerNo = providerNo;
         this.favoriteName = favoriteName;
@@ -1289,6 +1380,9 @@ public class Favorite {
         this.GN =GN;
         this.atcCode = atc;
         this.regionalIdentifier= regionalIdentifier;
+        this.unit = unit;
+        this.method = method;
+        this.route = route;
     }
     
    
@@ -1490,7 +1584,7 @@ public class Favorite {
                     sql = "INSERT INTO favorites (provider_no, favoritename, "
                     + "BN, GCN_SEQNO, customName, takemin, takemax, "
                     + "freqcode, duration, durunit, quantity, "
-                    + "repeat, nosubs, prn, special,GN,ATC,regional_identifier) "
+                    + "repeat, nosubs, prn, special,GN,ATC,regional_identifier,unit,method,route) "
                     + "VALUES ('" + this.getProviderNo() + "', '" + this.getFavoriteName() + "', '"
                     + this.getBN() + "', " + this.getGCN_SEQNO() + ", '"
                     + this.getCustomName() + "', "
@@ -1502,7 +1596,10 @@ public class Favorite {
                     + RxUtil.replace(this.getSpecial(), "'", "") + "', '"
                     + this.getGN()+"', ' "
                     + this.getAtcCode()+"', '"
-                    + this.getRegionalIdentifier()+"')";
+                    + this.getRegionalIdentifier()+"', '"
+                    + this.getUnit()+"', '"
+                    + this.getMethod()+"', '"
+                    + this.getRoute()+"')"; 
                     
                     db.RunSQL(sql);
                     
@@ -1538,7 +1635,10 @@ public class Favorite {
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "', "
                 + "GN = '"+this.getGN()+"', '"
                 + "ATC = '"+this.getAtcCode()+"', '"
-                + "regional_identifier = '"+this.getRegionalIdentifier()+"' "
+                + "regional_identifier = '"+this.getRegionalIdentifier()+"', '"
+                + "unit = '"+this.getUnit()+"', '" 
+                + "method = '"+this.getMethod()+"', "
+                + "route = '"+this.getRoute()+"' "
                 + "WHERE favoriteid = " + this.getFavoriteId();
                 
                 db.RunSQL(sql);
@@ -1586,6 +1686,54 @@ public class Favorite {
      */
     public void setRegionalIdentifier(java.lang.String regionalIdentifier) {
         this.regionalIdentifier = regionalIdentifier;
+    }
+    
+    /**
+     * Getter for property unit.
+     * @return Value of property unit.
+     */
+    public java.lang.String getUnit() {
+       return unit;
+    }
+    
+    /**
+     * Setter for property unit.
+     * @param unit New value of property unit.
+     */
+    public void setUnit(java.lang.String unit) {
+       this.unit = unit;
+    }
+    
+    /**
+     * Getter for property method.
+     * @return Value of property method.
+     */
+    public java.lang.String getMethod() {
+       return method;
+    }
+    
+    /**
+     * Setter for property method.
+     * @param method New value of property method.
+     */
+    public void setMethod(java.lang.String method) {
+       this.method = method;
+    }
+    
+    /**
+     * Getter for property route.
+     * @return Value of property route.
+     */
+    public java.lang.String getRoute() {
+       return route;
+    }
+    
+    /**
+     * Setter for property route.
+     * @param route New value of property route.
+     */
+    public void setRoute(java.lang.String route) {
+       this.route = route;
     }
     
 }

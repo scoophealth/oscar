@@ -51,6 +51,9 @@ public final class RxWriteScriptForm extends ActionForm {
     String special = null;
     String atcCode = null;
     String regionalIdentifier = null;
+    String method = null;
+    String unit = null;
+    String route = null;
     
     
     public String getAction() {
@@ -301,6 +304,54 @@ public final class RxWriteScriptForm extends ActionForm {
      */
     public void setRegionalIdentifier(java.lang.String regionalIdentifier) {
         this.regionalIdentifier = regionalIdentifier;
+    }
+    
+    /**
+     * Getter for property method.
+     * @return Value of property method.
+     */
+    public java.lang.String getMethod() {
+       return method;
+    }
+    
+    /**
+     * Setter for property method.
+     * @param method New value of property method.
+     */
+    public void setMethod(java.lang.String method) {
+       this.method = method;
+    }
+    
+    /**
+     * Getter for property unit.
+     * @return Value of property unit.
+     */
+    public java.lang.String getUnit() {
+       return unit;
+    }
+    
+    /**
+     * Setter for property unit.
+     * @param unit New value of property unit.
+     */
+    public void setUnit(java.lang.String unit) {
+       this.unit = unit;
+    }
+    
+    /**
+     * Getter for property route.
+     * @return Value of property route.
+     */
+    public java.lang.String getRoute() {
+       return route;
+    }
+    
+    /**
+     * Setter for property route.
+     * @param route New value of property route.
+     */
+    public void setRoute(java.lang.String route) {
+       this.route = route;
     }
     
 }
