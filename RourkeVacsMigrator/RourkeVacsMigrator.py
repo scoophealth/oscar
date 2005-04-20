@@ -106,7 +106,7 @@ class RourkeVacsMigrator:
 		
 		try:
 			Class.forName(self.db_driver)
-			cs = self.db_uri+"/" + self.db_name + "/?user="+self.db_username+"&password="+self.db_password
+			cs = self.db_uri+"/" + self.db_name + "?user="+self.db_username+"&password="+self.db_password
 			print cs
 			return DriverManager.getConnection(cs)	
 		except:
