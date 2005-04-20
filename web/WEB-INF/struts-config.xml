@@ -355,7 +355,7 @@
 
 <!-- OscarBilling ON start-->
     <form-bean      name="BillingDocumentErrorReportUploadForm"
-                    type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadForm"/>    
+                    type="oscar.oscarBilling.ca.on.pageUtil.BillingDocumentErrorReportUploadForm"/>    
 <!-- OscarBilling ON stop -->    
 
 <!-- OscarSurveillance ON start -->
@@ -373,6 +373,10 @@
                     type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm"/>                        
 <!-- OscarWaitingList stop-->
     </form-beans>   
+    
+    
+    <!--form-bean      name="AddDemographicKeyValueForm"
+                    type="oscar.oscarDemographic.pageUtil.AddDemographicKeyValueForm"/-->
     
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -1738,11 +1742,18 @@
     </action>
     
     
+    <!--action    path="/demographic/AddDemographicKeyValue"  
+                type="oscar.oscarDemographic.pageUtil.AddDemographicKeyValueAction" 
+                name="AddDemographicKeyValueForm"
+                scope="request">    
+       <forward name="success" path="/demographic/demographicExt.jsp"/>
+     </action-->
+    
     <!-- oscarBilling BC end -->
 
     <!-- oscarBilling ON start -->
     <action     path="/oscarBilling/DocumentErrorReportUpload"
-                type="oscar.oscarBilling.pageUtil.BillingDocumentErrorReportUploadAction"  
+                type="oscar.oscarBilling.ca.on.pageUtil.BillingDocumentErrorReportUploadAction"  
                 name="BillingDocumentErrorReportUploadForm"              
                 scope="request"
                 input="/billing/CA/ON/billingOBECEA.jsp">                
@@ -1793,7 +1804,11 @@
     </action>          
     <!-- oscarWaitingList end -->
     <!--PDF Label Printing -->
-     <action path="/demographic/printDemoLabelAction" type="oscar.oscarDemographic.PrintDemoLabelAction" />    
+     <action    path="/demographic/printDemoLabelAction"    
+                type="oscar.oscarDemographic.PrintDemoLabelAction" />    
+     
+     
+          
 
   </action-mappings>
 
