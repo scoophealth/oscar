@@ -45,7 +45,7 @@ public class RxCodesData {
             rs = db.GetSQL(sql);
             
             while (rs.next()) {
-                lst.add(new FrequencyCode(rs.getInt("freqid"), rs.getString("freqcode"), rs.getInt("dailymin"), rs.getInt("dailymax")));
+                lst.add(new FrequencyCode(rs.getInt("freqid"), rs.getString("freqcode"), rs.getString("dailymin"), rs.getString("dailymax")));
             }
             
             rs.close();
@@ -102,16 +102,23 @@ public class RxCodesData {
         public class FrequencyCode {
             int freqId;
             String freqCode;
-            int dailyMin;
-            int dailyMax;
+            String dailyMin;
+            String dailyMax;
             
             public FrequencyCode(int freqId, String freqCode, int dailyMin, int dailyMax) {
                 this.freqId=freqId;
                 this.freqCode=freqCode;
-                this.dailyMin=dailyMin;
-                this.dailyMax=dailyMax;
+                this.dailyMin= Integer.toString(dailyMin);
+                this.dailyMax= Integer.toString(dailyMax);
             }
             
+            public FrequencyCode(int freqId, String freqCode, String dailyMin, String dailyMax) {
+                this.freqId=freqId;
+                this.freqCode=freqCode;
+                this.dailyMin= dailyMin;
+                this.dailyMax= dailyMax;
+            }
+                                    
             public int getFreqId() {
                 return this.freqId;
             }
@@ -120,11 +127,11 @@ public class RxCodesData {
                 return this.freqCode;
             }
             
-            public int getDailyMin() {
+            public String getDailyMin() {
                 return this.dailyMin;
             }
             
-            public int getDailyMax() {
+            public String getDailyMax() {
                 return this.dailyMax;
             }
         }
