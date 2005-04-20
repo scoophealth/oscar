@@ -35,6 +35,10 @@ CREATE TABLE allergies (
   TYPECODE tinyint(4) NOT NULL default '0',
   reaction text,
   drugref_id varchar(100) default NULL,
+  archived char(1) default '0',
+  age_of_onset char(4) default '0',
+  severity_of_reaction char(1) default '0',
+  onset_of_reaction char(1) default '0', 
   PRIMARY KEY  (allergyid)
 ) TYPE=MyISAM;
 
@@ -349,11 +353,13 @@ CREATE TABLE ctl_document (
 
 CREATE TABLE ctl_frequency (
   freqid tinyint(4) NOT NULL auto_increment,
-  freqcode char(6) NOT NULL default '',
-  dailymin tinyint(4) NOT NULL default '0',
-  dailymax tinyint(4) NOT NULL default '0',
+  freqcode varchar(8) NOT NULL default '',
+  dailymin varchar(5) NOT NULL default '0',
+  dailymax varchar(5) NOT NULL default '0',
   PRIMARY KEY  (freqid)
 ) TYPE=MyISAM;
+
+
 
 --
 -- Table structure for table `ctl_provider`
@@ -555,6 +561,10 @@ CREATE TABLE drugs (
   ATC varchar(20) default NULL,
   script_no int(10) default NULL,
   regional_identifier varchar(100) default NULL,
+  unit varchar(5) default 'tab',
+  method varchar(5) default 'Take',
+  route varchar(5) default 'PO',
+  create_date datetime,
   PRIMARY KEY  (drugid)
 ) TYPE=MyISAM;
 
@@ -746,6 +756,9 @@ CREATE TABLE favorites (
   GN varchar(255) default NULL,
   ATC varchar(255) default NULL,
   regional_identifier varchar(100) default NULL,
+  unit varchar(5) default 'tab',
+  method varchar(5) default 'Take',
+  route varchar(5) default 'PO',
   PRIMARY KEY  (favoriteid)
 ) TYPE=MyISAM;
 
