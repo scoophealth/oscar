@@ -150,4 +150,30 @@ public class RxSessionBean {
         }
         return false;
     }
+    
+    
+    public RxDrugData.Interaction[] getInteractions(){
+       RxDrugData.Interaction[] interactions = null;
+       RxPrescriptionData rxData = new RxPrescriptionData();
+       RxDrugData drugData = new RxDrugData();
+       Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
+       
+       RxPrescriptionData.Prescription rx;                
+       for(int i=0;i<this.getStashSize(); i++) {
+          rx = this.getStashItem(i);
+          atcCodes.add(rx.getAtcCode());
+       }
+       try{        
+          interactions = drugData.getInteractions(atcCodes);
+       }catch(Exception e){
+          e.printStackTrace();
+       }
+       System.out.println("interactions "+interactions.length);
+       for(int i =0 ; i < interactions.length;i++){
+          System.out.println(interactions[i].affectingatc+" "+interactions[i].effect+" "+interactions[i].affectedatc);
+       }
+       //interactions = 
+       Arrays.sort(interactions);
+       return interactions;
+    }
 }
