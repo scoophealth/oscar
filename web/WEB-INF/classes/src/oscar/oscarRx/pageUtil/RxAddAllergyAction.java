@@ -66,6 +66,10 @@ public final class RxAddAllergyAction extends Action {
             String name = request.getParameter("name");
             String type = request.getParameter("type");
             String description = request.getParameter("reactionDescription");
+            
+            String ageOfOnset = request.getParameter("ageOfOnset");
+            String severityOfReaction = request.getParameter("severityOfReaction");
+            String onSetOfReaction = request.getParameter("onSetOfReaction");
 
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
             RxAllergyData ald = new RxAllergyData();
@@ -74,6 +78,9 @@ public final class RxAddAllergyAction extends Action {
             allergy.setDESCRIPTION(name);
             allergy.setTYPECODE(Integer.parseInt(type));
             allergy.setReaction(description);
+            allergy.setAgeOfOnset(ageOfOnset);
+            allergy.setSeverityOfReaction(severityOfReaction);
+            allergy.setOnSetOfReaction(onSetOfReaction);
 
             patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);           
 

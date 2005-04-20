@@ -98,6 +98,42 @@ String allergyId = (String) request.getAttribute("allergyId");
                             <html:hidden property="type" value="<%=type%>"/>                      
                           </td>
                         </tr>
+                        
+                        <tr valign="center">
+                          
+                          <td colspan="2">
+                            Age Of Onset: <html:text property="ageOfOnset" size="4" maxlength="4"/>                            
+                          </td>
+                          
+                        </tr>
+                        
+                        <tr valign="center">
+                          
+                          <td colspan="2">
+                            Severity Of Reation : 
+                            <html:select property="severityOfReaction" >
+                                <html:option value="1">Mild</html:option>
+                                <html:option value="2">Moderate</html:option>
+                                <html:option value="3">Severe</html:option>
+                            </html:select>
+                          </td>
+                          
+                        </tr>
+                        
+                        <tr valign="center">
+                          
+                          <td colspan="2">
+                            Onset Of Reaction: 
+                            <html:select property="onSetOfReaction" >
+                                <html:option value="1">Immediate</html:option>
+                                <html:option value="2">Gradual</html:option>
+                                <html:option value="3">Slow</html:option>
+                            </html:select>
+                          </td>
+                          
+                        </tr>
+                        
+                        
                         <tr>
                           <td colspan="2">
                             <html:submit property="submit" value="Add Allergy" styleClass="ControlPushButton"/>
