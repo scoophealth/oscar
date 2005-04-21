@@ -67,6 +67,7 @@ int specialStringLen = 0;
     var freqMax;
     var orig = null;
     var first = true;
+    var warningArray = new Array ();
     
     var calcQtyflag = true;
 
@@ -135,6 +136,38 @@ int specialStringLen = 0;
             frm.submit();
         }
     }
+    
+    function changeDuration(){
+       var frm = document.forms.RxWriteScriptForm;
+       var freqId = frm.frequencyCode.selectedIndex;
+       
+       var dailyMin = freqMin[freqId];
+       
+       if (dailyMin < 1){
+          var minDays = 1/dailyMin;
+          var bySeven = minDays / 7;
+          var byThirty = minDays / 30;
+          var currentDur = frm.cmbDuration.value;
+          
+          if  (Math.floor(bySeven) == bySeven ){  //no remainder
+             frm.durationUnit.value = 'W';  
+             if (currentDur < bySeven){
+                frm.cmbDuration.value = bySeven;
+             }
+             //alert (bySeven);
+          }else {
+             if (Math.floor(byThirty) == byThirty ){  //no remainder
+                frm.durationUnit.value = 'M';  
+                if (currentDur < byThirty){
+                   frm.cmbDuration.value = byThirty;
+                }
+                //alert (byThirty);
+             }
+          }
+          
+       }
+       return true;
+    }
 
     function calcQty(){
         var frm = document.forms.RxWriteScriptForm;
@@ -170,17 +203,20 @@ int specialStringLen = 0;
                 break;
             }
         }
-
+                
         // calculate quantity
         var minQty = (takeMin * dailyMin * dur);
         var maxQty = (takeMax * dailyMax * dur);
-
+                
         if(isNaN(minQty) || isNaN(maxQty)){
             alert('The value entered is invalid.');
         }else{
+            
+            minQty = Math.ceil(minQty);
+            maxQty = Math.ceil(maxQty);
             frm.sugQtyMin.value = minQty;
             frm.sugQtyMax.value = maxQty;
-
+            frm.quantity.value = frm.sugQtyMax.value;
             setQuantity();
         }
 
@@ -192,7 +228,8 @@ int specialStringLen = 0;
             frm.txtRepeat.value = frm.cmbRepeat.value;
         }
 
-        frm.repeat.value = frm.txtRepeat.value;       
+        frm.repeat.value = frm.txtRepeat.value;  
+//alert ("q"+calcQtyflag);
         if (calcQtyflag){
         writeScriptDisplay();
         calcQtyflag=true;
@@ -206,9 +243,244 @@ int specialStringLen = 0;
         
         writeScriptDisplay();
     }
+    function regexDebug(regRet){
+       alert(regRet.input+"\n"+regRet.index+" " +(regRet.index+regRet[0].length)+" "+regRet[0]);
+    }
+    
+    function replaceScriptDisplay(){
+       var frm = document.forms.RxWriteScriptForm;       
+       var orig = frm.special.value;       
+       var nameRegExp = /.*\n/i;
+       var a = nameRegExp.exec(orig);
+       
+       clearWarning();
+       if (a){  //Find the title and shorten the string
+          //regexDebug(a);                    
+          origMinusName = orig.substring(a.index+a[0].length);
+          origMinusName = origMinusName.replace(/Q12H/,"OD");   //KLUDGE the 2 get picked up as the second digit
+          origMinusName = origMinusName.replace(/Q1-2H/,"OD");   //KLUDGE the 2 get picked up as the second digit
+          origMinusName = origMinusName.replace(/Q3-4H/,"OD");   //KLUDGE the 2 get picked up as the second digit
+          origMinusName = origMinusName.replace(/Q4-6H/,"OD");   //KLUDGE the 2 get picked up as the second digit
+          origMinusName = removePRNifNeeded(origMinusName);
+          origMinusName = removeNoSubsifNeeded(origMinusName);
+    
+          drugName = orig.substring(0,a.index+a[0].length);       
+          var beforeFirstDigit = "";
+          
+          //find first digit
+          var firstDigitRegExp = /[0-9][0-9,\/,-]*/;
+          var b = firstDigitRegExp.exec(origMinusName);
+          if (b) {                        
+             //regexDebug(b);                          
+             if(b.index == 0){  //frequency is at the start of the line
+                //TODO should I add method if it is not there??
+                addWarning(frm.method.options[frm.method.selectedIndex].text+ " Not Added");
+             }else{ // frequency is not at the start of the line words come before             
+               var beforeFirstDigit = origMinusName.substring(0,b.index);
+               var findMethodRegExp = /(Take|Apply|Rub well in)/;
+               var c = findMethodRegExp.exec(beforeFirstDigit);
+               if (c){                  
+                  //regexDebug(c);
+                  beforeFirstDigit = beforeFirstDigit.replace(/(Take|Apply|Rub well in)/,frm.method.options[frm.method.selectedIndex].text);  
+               }else{                                   
+                 addWarning("Could not replace word for "+frm.method.options[frm.method.selectedIndex].text);
+               }               
+             }             
+             var firstDigitStringLen = b.index+b[0].length;
+             
+             if(origMinusName.substring(b.index+b[0].length,b.index+b[0].length+1) == '.'){   //Another Kludge, \. does not seem to work correctly t get values 0.5                
+                firstDigitStringLen++;
+                var afterDot = /[0-9][0-9]*/;
+                var afterDotResult = afterDot.exec(origMinusName.substring(firstDigitStringLen));
+                if (afterDotResult){
+                  
+                  //regexDebug(afterDotResult);
+                  if(afterDotResult.index == 0){
+                     firstDigitStringLen = firstDigitStringLen + afterDotResult.index+afterDotResult[0].length;
+                  }
+                }                
+             }
+             
+             var afterFirstDigit = origMinusName.substring(firstDigitStringLen);
+             
+             //Find Next Digit
+             var secondDigitRegExp = /[^Q,-,0-9][0-9][0-9,\/,-]*/;   //This will ignore digits starting with Q and - need for frequencies like Q3-4H
+             var d = secondDigitRegExp.exec(afterFirstDigit);
+             if(d){
+                //regexDebug(d);
+                var betweenFirstAndSecondDigit = afterFirstDigit.substring(0,d.index+1);                
+                var afterSecondDigit = afterFirstDigit.substring(d.index+d[0].length);
+                                
+                //Replace units and frequency Unit  //TODO Pull this from Database
+                
+                var findUnitRegExp = /(Tabs|mL|Squirts|g|mg|µg|Drops)/;
+                var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
+                if (findU){
+                  //todo make it like !findU
+                }else{                   
+                   addWarning("Could not find place to put "+frm.unit.options[frm.unit.selectedIndex].text);
+                }
+                
+                var findUnitRegExp = /(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP)/;                
+                var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
+                if (findU){
+                  //todo make it like !findU
+                }else{                   
+                   addWarning("Could not find place to put "+frm.route.options[frm.route.selectedIndex].text);
+                }
+                                                
+                var findFreqRegExp = /(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1month|Q3month)/;
+                var findFreq = findFreqRegExp.exec(betweenFirstAndSecondDigit);
+                if (findFreq){
+                  //todo make it like !findFreq
+                }else{                   
+                   addWarning("Could not find place to put "+frm.frequencyCode.value);
+                }
+                
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|g|mg|µg|Drops)/,frm.unit.options[frm.unit.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP)/,frm.route.options[frm.route.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1month|Q3month)/,frm.frequencyCode.value);                                    
+                                                                
+                //Replace Days Weeks or Months
+                
+                afterSecondDigit = afterSecondDigit.replace(/(Days|Weeks|Months)/,getDurationUnit());
+                                
+                var findDurationRegExp = /(Days|Weeks|Months)/;
+                var e = findDurationRegExp.exec(afterSecondDigit);
+                if (e){
+                  //todo make it like !e
+                }else{                   
+                   addWarning("Could not find place to put "+getDurationUnit());
+                }
+                                                                   
+                //Replace Qty
+                var f = firstDigitRegExp.exec(afterSecondDigit);
 
+                if(f){
+                   //regexDebug(f)
+                   var betweenSecondDigitandQuantity = afterSecondDigit.substring(0,f.index);                   
+                   var afterQuantity = afterSecondDigit.substring(f.index+f[0].length);                   
+
+                   var g = firstDigitRegExp.exec(afterQuantity);
+                   if(g){
+                      //regexDebug(g);
+                      var betweenQtyandRepeat = afterQuantity.substring(0,g.index);
+                      var afterRepeat = afterQuantity.substring(g.index+g[0].length);
+                      var b4final =drugName+beforeFirstDigit+getTakeValue()+betweenFirstAndSecondDigit+getDurationValue()+betweenSecondDigitandQuantity+frm.quantity.value+betweenQtyandRepeat+frm.txtRepeat.value+afterRepeat;
+                      var newStr = drugName+beforeFirstDigit+getTakeValue()+betweenFirstAndSecondDigit+getPRN(b4final)+getDurationValue()+betweenSecondDigitandQuantity+frm.quantity.value+betweenQtyandRepeat+frm.txtRepeat.value+getNoSubs(b4final)+afterRepeat;
+                      
+                      frm.special.value = newStr;
+                      //alert(newStr);
+                   }else{
+                      addWarning("Could not find value to replace Repeat Value");
+                   }
+                }else{
+                   addWarning("Could not find value to replace Qty Value");
+                }                                                   
+             }else{ 
+                addWarning("Could not find value to replace Duration Value");
+             }             
+          }else{
+                addWarning("Could not find value frequency value");
+          }       
+       }else{
+         addWarning("Name of Drug could not be found");
+       }        
+       fillWarnings();
+    }
+    
+    function removePRNifNeeded(str){
+       var frm = document.forms.RxWriteScriptForm;
+       var retval = str;
+       if (frm.prn.checked == false){
+          retval = str.replace(/PRN/,"");
+       }
+       return retval;
+    }   
+    
+    function removeNoSubsifNeeded(str){
+       var frm = document.forms.RxWriteScriptForm;
+       var retval = str;
+       if (frm.nosubs.checked == false){
+          retval = str.replace(/No Subs/,"");
+       }
+       return retval;
+    }   
+    function getPRN(str){
+       var retval = "";
+       var frm = document.forms.RxWriteScriptForm;
+       if (frm.prn.checked){//is PRN CHECKED?
+          var prnFindRegExp = /PRN/; 
+          var p = prnFindRegExp.exec(str);
+          if(p){
+             //PRN found leave it
+          }else{
+             retval = "PRN ";
+          }
+       }
+       return retval;
+    }
+
+    function getNoSubs(str){
+       var retval = "";
+       var frm = document.forms.RxWriteScriptForm;
+       if (frm.nosubs.checked){//is PRN CHECKED?
+          var noSubFindRegExp = /No Subs/; 
+          var p = noSubFindRegExp.exec(str);
+          if(p){
+             //No Subs found leave it
+          }else{
+             retval = " No Subs ";
+          }
+       }
+       return retval;
+    }
+    
+    function getTakeValue(){
+       var frm = document.forms.RxWriteScriptForm;
+       var retval = "";
+       if(frm.take.value != 'Other'){
+          retval = frm.take.value;
+       }else{
+          retval = frm.takeOther.value;
+       }
+       return retval;
+    }
+    
+    function getDurationValue(){
+       var frm = document.forms.RxWriteScriptForm;
+       var retval = "";
+       if(frm.cmbDuration.value == 'Other'){
+          retval = frm.txtDuration.value;            
+       }else{            
+          retval = frm.cmbDuration.value;
+       }
+       return retval;
+    }
+    
+    function getDurationUnit(){
+       var frm = document.forms.RxWriteScriptForm;
+       var retval = "";
+       switch(frm.durationUnit.value){
+          case 'D':{
+             retval = "Days";
+             break;
+          }
+          case 'W':{
+             retval = "Weeks";
+             break;
+          }
+          case 'M':{
+             retval = "Months";
+             break;
+          }
+       }
+       return retval;
+    }
+    
     function writeScriptDisplay(){  
-
+  //      alert ("f"+first);
+    
         if (first == false){      
             
             var frm = document.forms.RxWriteScriptForm;
@@ -223,19 +495,26 @@ int specialStringLen = 0;
                 preStr = frm2.customName.value + "\n";
             }
 
+            preStr = preStr + frm2.method.options[frm2.method.selectedIndex].text +" ";            
+            
             if(frm2.take.value != 'Other'){
                 preStr = preStr+frm2.take.value;
             }else{
                 preStr = preStr+frm2.takeOther.value;
             }
+                                    
+            preStr = preStr +" "+ frm2.unit.options[frm2.unit.selectedIndex].text;            
+            
+            preStr = preStr +" "+ frm2.route.options[frm2.route.selectedIndex].text;            
+            
             preStr = preStr +" "+ frm2.frequencyCode.value+" ";
-
+                        
             if (frm2.prn.checked){
-                preStr = preStr +"PRN";
+                preStr = preStr +"PRN ";
             }
 
             /////////////////////
-            preStr = preStr + " ";
+            preStr = preStr + "for ";
             if(frm2.cmbDuration.value == 'Other'){
                 preStr = preStr + frm2.txtDuration.value;            
             }else{            
@@ -256,8 +535,11 @@ int specialStringLen = 0;
                     preStr = preStr + " Months";
                     break;
                 }
+            }            
+            
+            if ( "" == frm2.quantity.value ){              
+              frm2.quantity.value = "0";
             }
-
             /////////////////////
             preStr = preStr + "\n";
             preStr = preStr + "Qty:"+frm2.quantity.value+" Repeats:"+frm2.txtRepeat.value;   
@@ -267,9 +549,44 @@ int specialStringLen = 0;
 
             preStr = preStr +"\n";
             frm.special.value = preStr;
+            first = true;
+          }else{
+             replaceScriptDisplay();
           }
-          first = false;
+          //first = false;
         
+    }
+    
+    function clearWarning(){
+       warningArray = new Array(); 
+    }    
+    function addWarning(addit){
+       warningArray[warningArray.length] = addit;
+    }
+    
+    function fillWarnings(){
+     //warningDiv
+     // warningList
+     
+     var warningDiv  = document.getElementById("warningDiv");
+     var warningList = document.getElementById("warningList");
+     
+     while (warningList.hasChildNodes()){
+        warningList.removeChild(warningList.firstChild);
+     }                          
+     for(i=0;i<warningArray.length;i++){
+			var newText = document.createTextNode(warningArray[i]);
+			var newNode = document.createElement("li");
+			newNode.appendChild(newText);
+			warningList.appendChild(newNode);
+		}
+		
+		if(warningArray.length == 0){
+		   warningDiv.style.display = 'None';
+		}else{
+		   warningDiv.style.display = '';
+		}
+		
     }
     
 </script>
@@ -367,8 +684,14 @@ if(bean.getStashIndex() > -1){ //new way
     oscar.oscarRx.data.RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
     oscar.oscarRx.data.RxDrugData drugData = new oscar.oscarRx.data.RxDrugData();
     thisForm.setDemographicNo(bean.getDemographicNo());
-    thisForm.setRxDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate()));
+    
+    thisForm.setRxDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );    
+    
     thisForm.setEndDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getEndDate()));
+    
+    try{
+        System.out.println(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
+    }catch(Exception e){ e.printStackTrace(); }
 
     if(! rx.isCustom()){
         thisForm.setGenericName(rx.getGenericName());        
@@ -394,6 +717,10 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setSpecial(rx.getSpecial());
     thisForm.setAtcCode(rx.getAtcCode());
     thisForm.setRegionalIdentifier(rx.getRegionalIdentifier());
+    thisForm.setUnit(rx.getUnit());
+    thisForm.setMethod(rx.getMethod());
+    thisForm.setRoute(rx.getRoute());
+    System.out.println("route "+rx.getRoute());
 }
 
 boolean isCustom = thisForm.getGCN_SEQNO() == 0;
@@ -554,10 +881,10 @@ int i;
 
                             <tr>
                                 <td colspan=2>
-                                  &nbsp;
+                                  Start Date:
                                 </td>
                                 <td colspan=2>
-                                  &nbsp;                                   
+                                  <html:text property="rxDate" />
                                 </td>
                                 <!--<td >
                                   &nbsp;
@@ -588,9 +915,15 @@ int i;
 
                         <% } /* Custom */ %>
 
-                            <html:hidden property="rxDate" />
+                            
                             <tr>
-                                <td colspan=2>Take:</td>
+                                <td colspan=2>
+                                   <html:select property="method" style="width:90px" onchange="calcQty();">                                   
+                                        <html:option value="Take">Take</html:option>
+                                        <html:option value="Apply">Apply</html:option>
+                                        <html:option value="Rub">Rub well in</html:option>                                        
+                                    </html:select>
+                                </td>
                                 <td colspan=2>
                                     <select name="take" style="width:72px" onChange="javascript:takeChg();">
                                         <option value="1/4">1/4</option>
@@ -611,7 +944,28 @@ int i;
                                         <option value="Other">Other</option>
                                     </select>
                                     <input type=text name="takeOther" style="display:none" size="5" onChange="javascript:takeChg();" />
-                                    <html:select property="frequencyCode" style="width:72px" onchange="javascript:calcQty();">
+                                    <html:select property="unit" style="width:80px" onchange="calcQty();">
+                                        <html:option value="tab">Tabs</html:option>
+                                        <html:option value="mL">mL</html:option>
+                                        <html:option value="sqrt">Squirts</html:option>
+                                        <html:option value="g" >gm</html:option>
+                                        <html:option value="mg">mg</html:option>
+                                        <html:option value="micg">µg</html:option>
+                                        <html:option value="drop">Drops</html:option>                                        
+                                    </html:select>
+                                    
+                                    <html:select property="route" style="width:80px" onchange="calcQty();">
+                                        <html:option value="PO">PO</html:option>
+                                        <html:option value="SL">SL</html:option>
+                                        <html:option value="IM">IM</html:option>
+                                        <html:option value="SC">SC</html:option>
+                                        <html:option value="PATCH">PATCH</html:option>
+                                        <html:option value="TOP">TOP.</html:option>
+                                        <html:option value="INH">INH</html:option>                                        
+                                        <html:option value="SUPP">SUPP</html:option>                                        
+                                    </html:select>
+                                    
+                                    <html:select property="frequencyCode" style="width:80px" onchange="javascript:changeDuration();calcQty();">
                                         <%for(i=0; i<freq.length; i++){%>
                                             <html:option value="<%= freq[i].getFreqCode() %>">
                                                 <%= freq[i].getFreqCode() %>
@@ -665,7 +1019,7 @@ int i;
                                         <option value="Other">Other</option>
                                     </select>
                                     <input type=text name="txtDuration" size="4" onchange="javascript:calcQty();" style="display:none" />
-                                    <html:select property="durationUnit" style="width:72px" onchange="javascript:calcQty();">
+                                    <html:select property="durationUnit" style="width:80px" onchange="javascript:calcQty();">
                                         <html:option value="D">Days</html:option>
                                         <html:option value="W">Weeks</html:option>
                                         <html:option value="M">Months</html:option>
@@ -694,7 +1048,7 @@ int i;
                                     Quantity:
                                 </td>
                                 <td colspan=2 width=65%>
-                                    <html:text property="quantity" size="8" onchange="javascript:writeScriptDisplay();"  />
+                                    <html:text property="quantity" size="8" onchange="javascript:writeScriptDisplay();"   />
 
                                     <input type=button value="<<" onclick="javascript:useQtyMax();" />
                                     (Calculated:&nbsp;<span id="lblSugQty" style="font-weight:bold"></span>&nbsp;)
@@ -702,20 +1056,20 @@ int i;
                                     <input type=hidden name="sugQtyMax" />
                                     <script language="javascript">
                                         function setQuantity(){
-                                            if (frm.sugQtyMin.value != frm.sugQtyMax.value){
-                                                //document.all.namedItem()
-                                                document.getElementById('lblSugQty').innerText
-                                                    = frm.sugQtyMin.value + ' - ' + frm.sugQtyMax.value;
-                                            }else{
-                                                if(frm.sugQtyMin.value > 0){
-                                                    document.getElementById('lblSugQty').innerText
-                                                        = frm.sugQtyMin.value;
-                                                }
-                                            }
+                                            var sugQtyLbl = document.getElementById('lblSugQty');
+                                            while (sugQtyLbl.hasChildNodes()){
+                                                sugQtyLbl.removeChild(sugQtyLbl.firstChild);
+                                            }                          
+                                            var newSugQty = frm.sugQtyMin.value;
+                                            if (frm.sugQtyMin.value != frm.sugQtyMax.value){                                                                                
+                                                newSugQty = frm.sugQtyMin.value + ' - ' + frm.sugQtyMax.value;
+                                            }             
+                                            sugQtyLbl.appendChild(document.createTextNode(newSugQty));
                                         }
 
                                         setQuantity();
                                     </script>
+                                    
                                 </td>
                                 <!--<td>
                                     &nbsp;
@@ -769,9 +1123,16 @@ int i;
                                         <tr>
                                             <td valign=top>
                                                 <html:textarea property="special" cols="50" rows="5" />
+                                                <input type=button value="RD" title="Redraw"/>
+                                                <div id="warningDiv" style="display: none;">
+                                                   <ul id="warningList">
+                                                   <li>warning</li>
+                                                   </ul>
+                                                </div>
                                             </td>
                                             <td valign=center>
                                                 <input type=button name="cmdSpecial" value="<<" onclick="javascript:cmdSpecial_click();" />
+                                                
                                             </td>
                                             
                                         </tr>
@@ -790,18 +1151,29 @@ int i;
                         <input type=button class="ControlPushButton" style="width:55px"  onclick="javascript:submitForm('update');" value="Update" />
                         <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:submitForm('updateAddAnother');" value="Update and Get New Drug" />
                         <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:submitForm('updateAndPrint');" value="Update, Print and Save" />
-                           
-
-                        
+                        <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />
+                         <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:fillWarnings();" value="RunWarning" /
+                         <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /--> 
                         <br>
-                        <!-- peice Went Here 
-                        <div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+                        <!-- peice Went Here -->
+                        <%RxDrugData.Interaction[] interactions = (RxDrugData.Interaction[]) bean.getInteractions();                        
+                          if (interactions != null && interactions.length > 0){ 
+                              System.out.println("interactions.length "+interactions.length);
+                             for (int i = 0 ; i < interactions.length; i++){  %>
+                             <div style="background-color:<%=sigColor(interactions[i].significance)%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+                             <%=interactions[i].affectingdrug%> 	<%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%> &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%> &nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%>
+                             </div>
+                        <%   }
+                         }
+                        %>
+                        
+                        <!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
                         </div>
                         <div style="background-color:red;margin-right:100px;margin-left:20px;margin-top:1px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
-                        </div>
-                        -->
+                        </div>-->
+                        
                         <script language=javascript>
                             function submitPending(stashId, action){
                                 
@@ -909,7 +1281,7 @@ int i;
         <%if ( specialStringLen == 0 ){
                 out.write("first=false;"); 
           }else{  
-                out.write("calcQtyflag=false;"); 
+                //out.write("calcQtyflag=false;"); 
           }%>
 
         
@@ -922,3 +1294,59 @@ int i;
 </table>
 </body>
 </html:html>
+<%!
+
+    String effect(String s){
+		  Hashtable h = new Hashtable();
+        h.put("a","augments (no clinical effect)");
+        h.put("A","augments");
+        h.put("i","inhibts  (no clinical effect)");
+        h.put("I","inhibits");
+        h.put("n","has no effect on");
+        h.put("N","has no effect on");
+        h.put(" ","unknown effect on");
+        
+        String retval = (String) h.get(s);
+        if (retval == null) {retval = "unknown effect on";}
+        return retval;
+   }
+    
+	String significance(String s){
+       Hashtable h = new Hashtable();
+       h.put("1","minor");
+       h.put("2","moderate");
+       h.put("3","major");
+       h.put(" ","unknown");
+       
+       String retval = (String) h.get(s);
+        if (retval == null) {retval = "unknown";}
+        return retval;
+   }
+   
+   String evidence(String s){
+       Hashtable h = new Hashtable();
+       h.put("P","poor");
+       h.put("F","fair");
+       h.put("G","good");
+       h.put(" ","unknown");
+       
+       String retval = (String) h.get(s);
+        if (retval == null) {retval = "unknown";}
+        return retval;
+   }
+
+
+   String sigColor(String s){
+       Hashtable h = new Hashtable();
+       h.put("1","yellow");
+       h.put("2","orange");
+       h.put("3","red");
+       h.put(" ","greenyellow");
+       
+       String retval = (String) h.get(s);
+        if (retval == null) {retval = "greenyellow";}
+        return retval;
+   }
+    
+
+%>
