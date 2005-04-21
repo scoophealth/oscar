@@ -329,7 +329,7 @@ int specialStringLen = 0;
                    addWarning("Could not find place to put "+frm.route.options[frm.route.selectedIndex].text);
                 }
                                                 
-                var findFreqRegExp = /(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1month|Q3month)/;
+                var findFreqRegExp = /(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/;
                 var findFreq = findFreqRegExp.exec(betweenFirstAndSecondDigit);
                 if (findFreq){
                   //todo make it like !findFreq
@@ -339,7 +339,7 @@ int specialStringLen = 0;
                 
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|g|mg|µg|Drops)/,frm.unit.options[frm.unit.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP)/,frm.route.options[frm.route.selectedIndex].text);
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1month|Q3month)/,frm.frequencyCode.value);                                    
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);                                    
                                                                 
                 //Replace Days Weeks or Months
                 
