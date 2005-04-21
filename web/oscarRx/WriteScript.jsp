@@ -1123,7 +1123,7 @@ int i;
                                         <tr>
                                             <td valign=top>
                                                 <html:textarea property="special" cols="50" rows="5" />
-                                                <input type=button value="RD" title="Redraw"/>
+                                                <input type=button value="RD" title="Redraw" onclick="javascript:first = false; writeScriptDisplay();"/>
                                                 <div id="warningDiv" style="display: none;">
                                                    <ul id="warningList">
                                                    <li>warning</li>
