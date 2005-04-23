@@ -490,4 +490,23 @@ public class EfmDataOpt {
     }                   
     return temp;
   } 
+  
+  public String getProviderName(int provider_no){
+    String temp = new String(); 
+    try {
+      System.out.println("The Provider No. is:" + provider_no);
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select last_name, first_name from provider where provider_no ='"+ provider_no + "'") ;
+      if (rs.next()){
+        temp = rs.getString("last_name") + ", " + rs.getString("first_name");
+        System.out.println("the referral doctor is: " + temp);
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+      System.err.println("aq.select form_html: " + ex.getMessage());
+    }                   
+    return temp; 
+      
+  }
 }

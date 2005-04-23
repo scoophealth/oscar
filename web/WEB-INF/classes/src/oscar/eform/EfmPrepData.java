@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class EfmPrepData { 
   private String patient_name;
+  private String provider_name;
   private String today;
   private String label ;
   private String address;
@@ -59,6 +60,7 @@ public class EfmPrepData {
   private String ongoingConcerns ;
   private String reminders      ;
 
+  private int provider_no;
   private int demographic_no ;
   private int fid ;
   private String form_name ;
@@ -66,7 +68,8 @@ public class EfmPrepData {
   String [] value ;
   String [][] tagSymbol = new String[][] { {"input", ""}, {"textarea",">"}, {"checkbox",""}, {"form",""}   };
 
-  public EfmPrepData(int demographic_no1, int fid1, String form_name1) { 
+  public EfmPrepData(int provider_no1, int demographic_no1, int fid1, String form_name1) { 
+    provider_no = provider_no1;
     demographic_no = demographic_no1 ;
     form_name = form_name1 ;
     fid = fid1 ;
@@ -89,11 +92,12 @@ public class EfmPrepData {
     setClinicAddressLine();
     setClinicAddress();
     setEChartAcc();
+    setProviderName();
     createDemoAcc();
     
-    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=clinic_name","oscarDB=clinic_phone","oscarDB=clinic_fax","oscarDB=clinic_label","oscarDB=clinic_addressLine","oscarDB=clinic_address","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders", "oscarDB=age", "oscarDB=sex" };
+    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=clinic_name","oscarDB=clinic_phone","oscarDB=clinic_fax","oscarDB=clinic_label","oscarDB=clinic_addressLine","oscarDB=clinic_address","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders", "oscarDB=age", "oscarDB=sex" , "oscarDB=provider_name"};
     try {
-      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, clinic_name, clinic_phone, clinic_fax, clinic_label, clinic_addressLine, clinic_address, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders, age, sex };
+      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, clinic_name, clinic_phone, clinic_fax, clinic_label, clinic_addressLine, clinic_address, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders, age, sex, provider_name };
     } catch(Exception ex) {
       System.err.println(" : " + ex.getMessage());
     }
@@ -218,7 +222,7 @@ public class EfmPrepData {
   }
   public void setAge() {  
     age = " value=\"" + (new EfmDataOpt()).getAge(demographic_no) + "\"";
-    System.out.println("age: " + age);
+    //System.out.println("age: " + age);
   }
   public void setSex() {  
     sex = " value=\"" + (new EfmDataOpt()).getSex(demographic_no) + "\"";
@@ -235,6 +239,9 @@ public class EfmPrepData {
     reminders = temp[4]==null?"":temp[4]    ;
             System.out.println("xxxxxxxxxxxmeta is :"+socialFamilyHistory+"  |value is :"+ otherMedications );
 
+  }
+  public void setProviderName(){      
+      provider_name = " value=\"" + (new EfmDataOpt()).getProviderName(provider_no) + "\"";
   }
 
   public String[] getMeta() {  

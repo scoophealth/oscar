@@ -2,6 +2,7 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   int fid =new Integer(request.getParameter("fid")).intValue(); 
   int demographic_no = new Integer(request.getParameter("demographic_no")).intValue();
+  int provider_no =  new Integer((String) session.getValue("user")).intValue();
   String subject =  request.getParameter("subject") ; 
   String form_name = request.getParameter("form_name");
 %>  
@@ -49,8 +50,8 @@
 <%
   ResultSet rs = myFormBean.queryResults(fid, "search_formhtml");
   if (rs.next()){ 
-    String theStr = rs.getString("form_html");
-    EfmPrepData prepData = new EfmPrepData(demographic_no, fid, form_name) ;
+    String theStr = rs.getString("form_html");   
+    EfmPrepData prepData = new EfmPrepData(provider_no, demographic_no, fid, form_name) ;
 
 	out.clear();
     out.print(beanMakeForm.addContent(theStr, prepData.getMeta(), prepData.getValue(), prepData.getTagSymbol() ) );
