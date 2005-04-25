@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%
@@ -55,9 +55,19 @@
       String description = request.getParameter("description");
       String level1      = request.getParameter("level1");
       String level2      = request.getParameter("level2");
-      String sql         = "insert into dxphcpgroup(dxcode, level1, level2, description) values(" + dxcode + ", '" + 
-              StringEscapeUtils.escapeSql(level1.trim()) + "', '" + StringEscapeUtils.escapeSql(level2) + "', '" + 
+      String sql         = "insert into dxphcpgroup(dxcode, level1, level2, description) values(" + dxcode + ", '" +
+              StringEscapeUtils.escapeSql(level1.trim()) + "', '" + StringEscapeUtils.escapeSql(level2.trim()) + "', '" +
               StringEscapeUtils.escapeSql(description.trim()) + "')";
+
+      dbObj.updateDBRecord(sql);
+    } else {
+      String description = request.getParameter("description");
+      String level1      = request.getParameter("level1");
+      String level2      = request.getParameter("level2");
+      String sql         = "update dxphcpgroup set level1='" + StringEscapeUtils.escapeSql(level1.trim())
+      	+ "', level2='" + StringEscapeUtils.escapeSql(level2.trim())
+      	+ "', description='" + StringEscapeUtils.escapeSql(description.trim())
+      	+ "' where dxcode=" + dxcode ;
 
       dbObj.updateDBRecord(sql);
     }
@@ -70,7 +80,7 @@
       </title>
       <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
       <script language="JavaScript">
-        
+
                 <!--
 function setfocus() {
 	this.focus();
@@ -79,9 +89,15 @@ function setfocus() {
 function submit(form) {
 	form.submit();
 }
+function fillIn(dxcode, level1, level2, description) {
+	document.forms[0].dxcode.value=dxcode;
+	document.forms[0].level1.value=level1;
+	document.forms[0].level2.value=level2;
+	document.forms[0].description.value=description;
+}
 
 //-->
-        
+
       </script>
     </head>
     <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -127,7 +143,7 @@ function submit(form) {
 
         for (int i = 0; i < vec.size(); i++) {
           boolean bNewCat    = false;
-          String  curCatName = ((Properties)vec.get(i)).getProperty("level1", "").toUpperCase() + " - " + 
+          String  curCatName = ((Properties)vec.get(i)).getProperty("level1", "").toUpperCase() + " - " +
                   ((Properties)vec.get(i)).getProperty("level2", "");
 
           if (!curCatName.equals(catName)) {
@@ -153,7 +169,8 @@ function submit(form) {
           color = "#ccCCFF";
 %>
           <tr bgcolor="<%=color%>">
-            <td align="right">
+            <td align="right"
+            onClick="fillIn('<%= ((Properties)vec.get(i)).getProperty("dxcode", "") %>', '<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("level1", "")) %>','<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("level2", "")) %>','<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("description", "")) %>')">
               <%= ((Properties)vec.get(i)).getProperty("dxcode", "") %>
             </td>
             <td>

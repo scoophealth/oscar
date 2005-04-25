@@ -39,6 +39,7 @@
   String   endDate      = request.getParameter("endDate");
   String   providerNo   = null;
   String   providerName   = "";
+  int[] total = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0};
 
   String[] providerNoName = {"providerNoDoctor", "providerNoResident", "providerNoNP", "providerNoSW"};
   for(int i=0; i<providerNoName.length; i++) {
@@ -130,8 +131,8 @@ function onSub() {
           </th>
         </tr>
       </table>
-      <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
         <form name="myform" action="reportonbilledphcp.jsp" method="POST" onSubmit="return ( onSub());">
+      <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
           <tr bgcolor="lightsteelblue">
             <td>
               Code:
@@ -150,10 +151,10 @@ function onSub() {
             </td>
             <td nowrap>
               start
-              <input type="text" name="startDate" id="startDate" value="" size="10" readonly>
+              <input type="text" name="startDate" id="startDate" value="<%=startDate!=null?startDate:""%>" size="10" readonly>
               <img src="../images/cal.gif" id="startDate_cal">
               end
-              <input type="text" name="endDate" id="endDate" value="" size="10" readonly>
+              <input type="text" name="endDate" id="endDate" value="<%=endDate!=null?endDate:""%>" size="10" readonly>
               <img src="../images/cal.gif" id="endDate_cal">
             </td>
             <td>
@@ -223,8 +224,8 @@ function onSub() {
               <input type="submit" name="submit" value="Go">
             </td>
           </tr>
-        </form>
       </table>
+        </form>
 <%
 	out.flush();
       if (request.getParameter("submit") != null && providerNo!=null) {
@@ -943,7 +944,32 @@ for (int i = 0; i < vServiceCode.size(); i++) {
           <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i)), 20)%></td>
           <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i)), 21)%></td>
           </tr>
-<% } %>
+<%
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i)), 0);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i)), 1);
+
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "patSexF" + vServiceDesc.get(i)), 2);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "visSexF" + vServiceDesc.get(i)), 3);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "patSexM" + vServiceDesc.get(i)), 4);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "visSexM" + vServiceDesc.get(i)), 5);
+
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat0_1" + vServiceDesc.get(i)), 6);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis0_1" + vServiceDesc.get(i)), 7);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat2_11" + vServiceDesc.get(i)), 8);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis2_11" + vServiceDesc.get(i)), 9);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat12_20" + vServiceDesc.get(i)), 10);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis12_20" + vServiceDesc.get(i)), 11);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat21_34" + vServiceDesc.get(i)), 12);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis21_34" + vServiceDesc.get(i)), 13);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat35_50" + vServiceDesc.get(i)), 14);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis35_50" + vServiceDesc.get(i)), 15);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat51_64" + vServiceDesc.get(i)), 16);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis51_64" + vServiceDesc.get(i)), 17);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat65_70" + vServiceDesc.get(i)), 18);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis65_70" + vServiceDesc.get(i)), 19);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i)), 20);
+          total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i)), 21);
+	} %>
           <tr bgcolor="<%=tdTitleColor%>">
             <TH colspan="2" width="10%">
               <%=bDx?"Dx Code":"ServiceCode"%>
@@ -1057,11 +1083,17 @@ for (int i = 0; i < vServiceCode.size(); i++) {
             </td>
           </tr>
           <tr align="center">
-            <td colspan="2" align="right">Total:</td>
+            <td colspan="2" align="right">Sub. Total:</td>
             <% for(int i=0; i<total.length; i++) { %>
             <td><%=total[i]%></td>
             <% } %>
 		  </tr>
+          <!--tr align="center">
+            <td colspan="2" align="right">Total:</td>
+            < %for(int i=0; i<total1.length; i++) { %>
+            <td>< %=total1[i]%></td>
+            < % } %>
+		  </tr-->
         </table>
 <%
       }
@@ -1071,13 +1103,20 @@ Calendar.setup({ inputField : "startDate", ifFormat : "%Y/%m/%d", showsTime :fal
 Calendar.setup({ inputField : "endDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "endDate_cal", singleClick : true, step : 1 });
       </script>
     </body>
-<%! int[] total = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0};
+<%! int[] total1 = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0};
 %>
 <%! String getNumAndCalTotal(String str, int i) {
 	String ret = str;
 	int j = Integer.parseInt(str);
-	total[i] += j;
+	total1[i] += j;
 	return ret;
+}
+
+ int[] getNumAndCalTotal(int[] sTotal, String str, int i) {
+	//String ret = str;
+	int j = Integer.parseInt(str);
+	sTotal[i] += j;
+	return sTotal;
 }
 %>
   </html:html>
