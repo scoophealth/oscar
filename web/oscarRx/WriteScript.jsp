@@ -313,7 +313,7 @@ int specialStringLen = 0;
                                 
                 //Replace units and frequency Unit  //TODO Pull this from Database
                 
-                var findUnitRegExp = /(Tabs|mL|Squirts|g|mg|µg|Drops)/;
+                var findUnitRegExp = /(Tabs|mL|Squirts|g|mg|µg|Drops|Patch|Puffs)/;
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
@@ -337,8 +337,8 @@ int specialStringLen = 0;
                    addWarning("Could not find place to put "+frm.frequencyCode.value);
                 }
                 
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|g|mg|µg|Drops)/,frm.unit.options[frm.unit.selectedIndex].text);
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP)/,frm.route.options[frm.route.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|g|mg|µg|Drops|Patch|Puffs)/,frm.unit.options[frm.unit.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|TOP.|INH|SUPP)/,frm.route.options[frm.route.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);                                    
                                                                 
                 //Replace Days Weeks or Months
@@ -952,14 +952,15 @@ int i;
                                         <html:option value="mg">mg</html:option>
                                         <html:option value="micg">µg</html:option>
                                         <html:option value="drop">Drops</html:option>                                        
+                                        <html:option value="patc">Patch</html:option>
+                                        <html:option value="puff">Puffs</html:option>                                                                                
                                     </html:select>
                                     
                                     <html:select property="route" style="width:80px" onchange="calcQty();">
                                         <html:option value="PO">PO</html:option>
                                         <html:option value="SL">SL</html:option>
                                         <html:option value="IM">IM</html:option>
-                                        <html:option value="SC">SC</html:option>
-                                        <html:option value="PATCH">PATCH</html:option>
+                                        <html:option value="SC">SC</html:option>                                        
                                         <html:option value="TOP">TOP.</html:option>
                                         <html:option value="INH">INH</html:option>                                        
                                         <html:option value="SUPP">SUPP</html:option>                                        
