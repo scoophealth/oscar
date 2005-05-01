@@ -1014,7 +1014,9 @@ function faxNumSelect() {
 
        Physician
 
-       <% } else { %>
+       <% } else if(props.getProperty("isSpecialist", "").startsWith("true")) { %>
+       Doctor
+		<% } else { %>
 
        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFamilyDoc"/>
 
