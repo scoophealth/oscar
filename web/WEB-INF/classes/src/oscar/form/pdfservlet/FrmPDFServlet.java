@@ -30,6 +30,7 @@
 package oscar.form.pdfservlet;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Enumeration;
@@ -152,7 +153,6 @@ public class FrmPDFServlet extends HttpServlet {
 
         ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
         PdfWriter writer = null;
-        String propPath = "/" + "oscar/form/prop/";
 
         try {
             writer = PdfWriter.getInstance(document, baosPDF);
@@ -218,7 +218,15 @@ public class FrmPDFServlet extends HttpServlet {
             document.open();
 
             // create a reader for a certain document
-            PdfReader reader = new PdfReader(propPath + template);
+            String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + template;
+            PdfReader reader = null;
+            try {
+                reader = new PdfReader(propFilename);
+            } catch (Exception dex) {
+                System.out.println("change path to inside oscar from :" + propFilename);
+                reader = new PdfReader("/oscar/form/prop/" + template);
+            }
+
             // retrieve the total number of pages
             int n = reader.getNumberOfPages();
             // retrieve the size of the first page
@@ -428,21 +436,39 @@ public class FrmPDFServlet extends HttpServlet {
 
     protected Properties getCfgProp(String cfgFilename) {
         Properties ret = new Properties();
-        //ClassLoader cLoader = getClass().getClassLoader();
-        //System.out.println(getServletContext().getRealPath("/WEB-INF/classes/"+
-        // cfgFilename));
-        String propPath = "/WEB-INF/classes/" + "oscar/form/prop/";
+        String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + cfgFilename;
 
         try {
-            InputStream is = getServletContext().getResourceAsStream(propPath + cfgFilename);
+            System.out.println("1Can't find the prop file! " + propFilename);
+            InputStream is = new FileInputStream(propFilename); //getServletContext().getResourceAsStream(propFilename);
+            System.out.println("2Can't find the prop file! " + cfgFilename);
             if (is != null) {
+                System.out.println("3Can't find the prop file! " + cfgFilename);
                 ret.load(is);
                 is.close();
+            } else {
+                System.out.println("4Can't find the prop file! " + cfgFilename);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                String propPath = "/WEB-INF/classes/" + "oscar/form/prop/";
+                InputStream is = getServletContext().getResourceAsStream(propPath + cfgFilename);
+                if (is != null) {
+                    ret.load(is);
+                    is.close();
+                }
+            } catch (Exception ee) {
+                System.out.println("Can't find the prop file! " + cfgFilename);
+            }
         }
         return ret;
+    }
+
+    private String getProjectName() {
+        String propPath = "" + this.getClass().getClassLoader().getResource("/");
+        propPath = propPath.substring(0, propPath.lastIndexOf("/WEB-INF"));
+        String propFilename = propPath.substring(propPath.lastIndexOf("/") + 1);
+        return propFilename;
     }
 
 }
