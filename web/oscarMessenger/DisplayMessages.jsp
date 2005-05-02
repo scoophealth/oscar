@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 
 <%
 int pageType = 0;
@@ -39,9 +40,23 @@ if (boxType == null || boxType.equals("")){
     pageType = 1;
 }else if (boxType.equals("2")){
     pageType = 2;
+}else if (boxType.equals("3")){
+    pageType = 3;    
 }else{
     pageType = 0;
 }   //messageid
+
+String demographic_no = request.getParameter("demographic_no");
+String demographic_name = "";
+if ( demographic_no != null ) {
+    DemographicData demographic_data = new DemographicData();
+    DemographicData.Demographic demographic = demographic_data.getDemographic(demographic_no);
+
+
+    demographic_name = demographic.getLastName() + ", " + demographic.getFirstName();
+}
+
+
 
 pageContext.setAttribute("pageType",""+pageType);
 
@@ -159,6 +174,10 @@ function BackToOscar()
                             break;
                             case 2: %>
                                 <div class="DivContentTitle"><bean:message key="oscarMessenger.DisplayMessages.msgDeleted"/></div>
+                        <%      delStyle =  "messengerButtonsD";
+                            break;
+                            case 3: %>
+                                <div class="DivContentTitle">Messages related to <%=demographic_name%> </div> 
                         <%      delStyle =  "messengerButtonsD";
                             break;
                         }%>
@@ -302,6 +321,9 @@ function BackToOscar()
     ///                                    theMessages  = DisplayMessagesBeanId.getDelMessageid();
                                         theMessages2 = DisplayMessagesBeanId.estDeletedInbox(orderby);
                                         // System.out.println("deleted messages");
+                                    case 3:
+                                        theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderby,demographic_no);
+                                        // System.out.println("demographic messages");
                                     break;
                                 }   //messageid
                                 %>

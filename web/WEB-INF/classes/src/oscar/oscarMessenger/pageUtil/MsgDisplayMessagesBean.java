@@ -89,7 +89,7 @@ public class MsgDisplayMessagesBean {
 
     return this.messageid;
   }
-
+  
   public java.util.Vector getDelMessageid(){
     getDeletedMessageIDs();
     getInfo();
@@ -240,7 +240,7 @@ public class MsgDisplayMessagesBean {
   public String getOrderBy(String order){          
      String orderBy = null;
      if(order == null){        
-        orderBy="messageId desc";
+        orderBy="m.messageid desc";
      }else{
         String desc = "";
         if (order.charAt(0) == '!'){
@@ -257,7 +257,7 @@ public class MsgDisplayMessagesBean {
         if (orderBy == null){
            orderBy = "message";
         }
-        orderBy += desc + ", messageId desc";
+        orderBy += desc + ", m.messageid desc";
      }     
      return orderBy; 
   }
@@ -317,6 +317,56 @@ public class MsgDisplayMessagesBean {
 //
 //////////////////////////////////////////////=---------------------------------
 
+public java.util.Vector estDemographicInbox(){
+     return estDemographicInbox(null, null);
+  }
+//INBOX
+  public java.util.Vector estDemographicInbox(String orderby, String demographic_no){
+
+     String providerNo= this.getProviderNo();
+     java.util.Vector msg = new java.util.Vector();
+
+
+     try{
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        java.sql.ResultSet rs;
+
+        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m, msgDemoMap map"
+        +" where map.demographic_no = '"+ demographic_no+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" and m.messageid = map.messageID and ml.message=m.messageid order by "+getOrderBy(orderby));
+        System.out.println(sql);
+        rs = db.GetSQL(sql);
+
+        while (rs.next()) {
+
+           oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
+           dm.status     = rs.getString("status");
+           dm.messageId  = rs.getString("message");
+           dm.thesubject = rs.getString("thesubject");
+           dm.thedate    = rs.getString("thedate");
+           dm.sentby     = rs.getString("sentby");
+           String att    = rs.getString("attachment");
+              if (att == null || att.equals("null") ){
+                dm.attach = "0";
+              }else{
+                dm.attach = "1";
+              }
+           msg.add(dm);
+
+           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+
+        }
+
+       rs.close();
+       db.CloseConn();
+
+    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+
+    return msg;
+  }
+//
+//////////////////////////////////////////////=---------------------------------  
+  
 ////////////////////////////////////////////////////////////////////////////////
 //
   

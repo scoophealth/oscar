@@ -68,6 +68,9 @@ public class MsgDisplayMessagesAction extends Action {
                 request.getSession().setAttribute("msgSessionBean", bean);
                 // System.out.println(bean.getProviderNo());
                 // System.out.println(bean.getUserName());
+                if(request.getParameter("demographic_no")!=null){
+                    request.getSession().setAttribute("demographic_no", request.getParameter("demographic_no"));
+                }
             }//if
             else
             {
