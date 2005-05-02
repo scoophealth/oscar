@@ -28,6 +28,8 @@ import oscar.OscarProperties;
 import org.w3c.dom.*;
 import  oscar.oscarMessenger.util.*;
 
+import java.sql.ResultSet;
+
 public class MsgMessageData {
 
         boolean areRemotes = false;
@@ -534,6 +536,27 @@ public class MsgMessageData {
     }//for
 
         return stringBuffer.toString();
+  }
+  
+  public String getSubject(String msgID){
+      String subject=null;
+      try{            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "";                               
+            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
+            //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
+            sql = "select thesubject from messagetbl where messageid='"+msgID+"'";
+            
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.next()){
+                subject = rs.getString("thesubject");
+            }
+            db.CloseConn();
+        }
+        catch (java.sql.SQLException e){ 
+            subject="error: subject not found!";
+        }
+      return subject;
   }
 
 
