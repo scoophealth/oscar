@@ -1633,14 +1633,15 @@ public class Favorite {
                 + "nosubs = " + this.getNosubsInt() + ", "
                 + "prn = " + this.getPrnInt() + ", "
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "', "
-                + "GN = '"+this.getGN()+"', '"
-                + "ATC = '"+this.getAtcCode()+"', '"
-                + "regional_identifier = '"+this.getRegionalIdentifier()+"', '"
-                + "unit = '"+this.getUnit()+"', '" 
+                + "GN = '"+this.getGN()+"', "
+                + "ATC = '"+this.getAtcCode()+"', "
+                + "regional_identifier = '"+this.getRegionalIdentifier()+"', "
+                + "unit = '"+this.getUnit()+"', " 
                 + "method = '"+this.getMethod()+"', "
                 + "route = '"+this.getRoute()+"' "
                 + "WHERE favoriteid = " + this.getFavoriteId();
                 
+                System.out.println(sql);
                 db.RunSQL(sql);
                 
                 b = true;
