@@ -263,8 +263,13 @@ int specialStringLen = 0;
           origMinusName = origMinusName.replace(/Q4-6H/,"OD");   //KLUDGE the 2 get picked up as the second digit
           origMinusName = removePRNifNeeded(origMinusName);
           origMinusName = removeNoSubsifNeeded(origMinusName);
-    
-          drugName = orig.substring(0,a.index+a[0].length);       
+              
+          if ( frm.brandName){        
+             drugName = orig.substring(0,a.index+a[0].length);
+          }else{        
+             drugName = frm.customName.value + "\n";
+          }
+          
           var beforeFirstDigit = "";
           
           //find first digit
@@ -1157,7 +1162,8 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /--> 
                         <br>
                         <!-- peice Went Here -->
-                        <%RxDrugData.Interaction[] interactions = (RxDrugData.Interaction[]) bean.getInteractions();                        
+                        
+                        <%RxDrugData.Interaction[] interactions =  (RxDrugData.Interaction[]) bean.getInteractions();                                                  
                           if (interactions != null && interactions.length > 0){ 
                               System.out.println("interactions.length "+interactions.length);
                              for (int i = 0 ; i < interactions.length; i++){  %>
@@ -1165,8 +1171,9 @@ int i;
                              <%=interactions[i].affectingdrug%> 	<%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%> &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%> &nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%>
                              </div>
                         <%   }
-                         }
-                        %>
+                          }else{ %>
+                          <div>Drug to Drug Interaction Service not available</div>                          
+                        <%}%>  
                         
                         <!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
