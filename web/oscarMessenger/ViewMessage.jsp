@@ -49,6 +49,8 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 </logic:present>
 <%
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
+oscar.oscarMessenger.util.MsgDemoMap msgDemoMap = new oscar.oscarMessenger.util.MsgDemoMap();
+java.util.Vector demoVector = msgDemoMap.getDemoVector((String) request.getAttribute("viewMessageId"));
 %>
 
 <title>
@@ -107,28 +109,31 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 
-function popup(demographicNo, msgId, providerNo) { //open a new popup window
+function popup(linkMsgDemo, demographicNo, msgId, providerNo) { //open a new popup window
   var vheight = 700;
+  
   var vwidth = 980;  
-  //alert("popup is called and the demographicNo is: " + demographicNo);
-  if (demographicNo!=null){
-      //alert("demographicNo is not null!");
-      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
-      var page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo;
-      var popUp=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
-      if (popUp != null) {
-        if (popUp.opener == null) {
-          popUp.opener = self; 
-        }
-        popUp.focus();
+  if(linkMsgDemo==null){
+      //alert("popup is called and the demographicNo is: " + demographicNo);
+      if (demographicNo!=null){
+          //alert("demographicNo is not null!");
+          windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
+          var page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo;
+          var popUp=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
+          if (popUp != null) {
+            if (popUp.opener == null) {
+              popUp.opener = self; 
+            }
+            popUp.focus();
+          }
       }
-  }
+   }
 }
 </script>
 
 </head>
 
-<body onload="popup(<%=request.getParameter("demographic_no")%>,<%=request.getAttribute("viewMessageId")%>,<%=request.getAttribute("providerNo")%>);" class="BodyStyle" vlink="#0000FF" >
+<body onload="popup(<%=request.getParameter("linkMsgDemo")%>,<%=request.getParameter("demographic_no")%>,<%=request.getAttribute("viewMessageId")%>,<%=request.getAttribute("providerNo")%>);" class="BodyStyle" vlink="#0000FF" >
 <script type="text/javascript">
     //popup(<%=request.getParameter("demographic_no")%>,<%=request.getAttribute("viewMessageId")%>,<%=request.getAttribute("providerNo")%>);
 </script>
@@ -276,7 +281,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                     <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
                                         <td bgcolor="#EEEEFF" >                                        
                                             <bean:message key="oscarMessenger.ViewMessage.msgDemographicName"/>:
-                                            <input type="TEXT" name="keyword" size="15" value="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>">
+                                            <input type="TEXT" name="keyword" size="15" value="">
                                             <input class="ControlPushButton" type="submit" name="Submit" value="<bean:message key="oscarMessenger.ViewMessage.btnSearchAndWriteToEncounter"/>">
                                         </td>                                        
                                         <input type="hidden" name="orderby" value="last_name" >
@@ -289,10 +294,63 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                         <input type="hidden" name="displaymode" value="Search "> 
 
                                         <input type="hidden" name="dboperation" value="add_apptrecord">                                
-                                        <input type="hidden" name="provider_no" value="115">                                
+                                        <input type="hidden" name="provider_no" value="<%=(String) session.getValue("user")%>">                                
+                                        
                                         </form>                                        
                                     </td>
-                                </tr>                                    
+                                </tr>
+                                <tr>
+                                    <td bgcolor="#B8B8FF" ></td>
+                                    <td bgcolor="#B8B8FF" ><font style="font-weight:bold">Link this message to ...</font></td>
+                                </tr> 
+                                <tr>
+                                    <td bgcolor="#EEEEFF" ></td>
+                                    <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
+                                        <td bgcolor="#EEEEFF" >                                        
+                                            <bean:message key="oscarMessenger.ViewMessage.msgDemographicName"/>:
+                                            <input type="TEXT" name="keyword" size="15" value="">
+                                            <input class="ControlPushButton" type="submit" name="Submit" value="Link">
+                                        </td>                                        
+                                        <input type="hidden" name="orderby" value="last_name" >
+                                        <input type="hidden" name="search_mode" value="search_name" >
+                                        <input type="hidden" name="messageId" value="<%=request.getAttribute("viewMessageNo")%>" >
+                                        <input type="hidden" name="originalpage" value="../oscarMessenger/ViewMessage.do" >
+                                        <input type="hidden" name="limit1" value="0" >
+                                        <input type="hidden" name="limit2" value="5" >
+                                        <!--input type="hidden" name="displaymode" value="TicklerSearch" -->
+                                        <input type="hidden" name="displaymode" value="Search "> 
+
+                                        <input type="hidden" name="dboperation" value="add_apptrecord">                                
+                                        <input type="hidden" name="provider_no" value="<%=(String) session.getValue("user")%>">
+                                        <input type="hidden" name="linkMsgDemo" value="true">
+                                        </form>                                        
+                                    </td>                                    
+                                </tr>
+                                <tr>
+                                    <td bgcolor="#EEEEFF">
+                                    </td>
+                                    <td bgcolor="#EEEEFF" >
+                                        <font style="font-weight:bold">Demographic(s) linked to this message</font>
+                                    </td>
+                                </tr>
+                                <% if(demoVector!=null){
+                                    for(int i=0; i<demoVector.size(); i++){%>
+                                <tr>
+                                    <td bgcolor="#EEEEFF"></td>
+                                    <td bgcolor="#EEEEFF">        
+                                    <%=demoVector.elementAt(i)%>
+                                    </td>
+                                </tr>
+                                <%}
+                                }
+                                else{%>
+                                <tr>
+                                    <td bgcolor="#EEEEFF"></td>
+                                    <td bgcolor="#EEEEFF">
+                                    No demographic is linked to this message
+                                    </td>
+                                </tr>
+                                <%}%>                                
                             </table>
                         </td>                        
                     </tr>

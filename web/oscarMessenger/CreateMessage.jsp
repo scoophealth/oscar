@@ -50,6 +50,8 @@ String[] theProviders;
 theProviders = new String[] {};
 java.util.Vector locationVect = new java.util.Vector();
 oscar.oscarMessenger.data.MsgReplyMessageData reData = new oscar.oscarMessenger.data.MsgReplyMessageData();
+boolean bFirstDisp=true; //this is the first time to display the window
+if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
 
 
@@ -420,8 +422,34 @@ function BackToOscar()
 
                     <tr>
                         <td>
-                            <html:form action="/oscarMessenger/CreateMessage" onsubmit="return validatefields()">
-                                <table>
+                            <table>
+                                <tr>                                        
+                                    <th align="left" bgcolor="#DDDDFF" ><font style="font-weight:bold">Link this message to ...</font></th>
+                                    <th bgcolor="#DDDDFF" ></th>
+                                </tr> 
+                                <tr>
+                                  <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
+                                    <td bgcolor="#EEEEFF" >                                        
+                                        Demographic:
+                                        <input type="TEXT" name="keyword" size="15" value="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>">
+                                        <input class="ControlPushButton" type="submit" name="Submit" value="Link">
+                                    </td>                                        
+                                    <input type="hidden" name="orderby" value="last_name" >
+                                    <input type="hidden" name="search_mode" value="search_name" >
+                                    <input type="hidden" name="originalpage" value="../oscarMessenger/CreateMessage.do" >
+                                    <input type="hidden" name="limit1" value="0" >
+                                    <input type="hidden" name="limit2" value="5" >
+                                    <!--input type="hidden" name="displaymode" value="TicklerSearch" -->
+                                    <input type="hidden" name="displaymode" value="Search "> 
+
+                                    <input type="hidden" name="dboperation" value="add_apptrecord">                                
+                                    <input type="hidden" name="provider_no" value="<%=(String) session.getValue("user")%>">
+                                    <input type="hidden" name="linkMsgDemo" value="true">                                           
+                                  </form>
+                                    <td bgcolor="#EEEEFF" ></td>
+                                </tr>                                                                    
+                                <html:form action="/oscarMessenger/CreateMessage" onsubmit="return validatefields()">
+                                <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>" size="67"/>                                
                                     <tr>
                                         <th bgcolor="#DDDDFF" width="75">
                                             <bean:message key="oscarMessenger.CreateMessage.msgRecipients"/>
@@ -544,8 +572,8 @@ function BackToOscar()
                                                 %>
                                         </td>
                                     </tr>
-                                </table>
-                            </html:form>
+                                    </html:form>                                                                                                                                                                            
+                                </table>                            
                         </td>
                     </tr>
                     <tr>
@@ -555,6 +583,7 @@ function BackToOscar()
                             </script>
                         </td>
                     </tr>
+                    
                 </table>
             </td>
         </tr>

@@ -24,6 +24,8 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarMessenger.util.*;
+import oscar.util.*;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -60,22 +62,18 @@ public class MsgViewMessageAction extends Action {
             providerNo = bean.getProviderNo();
         else
             System.out.println("MsgSessionBean is null");
-
-        // System.out.println(request.getAttributeNames());
-        // System.out.println(request.getQueryString());
+        
         String messageNo = request.getParameter("messageID");        
+        String linkMsgDemo = request.getParameter("linkMsgDemo");           
+        String demographic_no = request.getParameter("demographic_no");      
         int  i = 1;
 
+        System.out.println("the value of linkMsgDemo is: " + linkMsgDemo);
         try{
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            java.sql.ResultSet rs;
-           //rs = db.GetSQL("select count * from messagelisttbl where message = \'"+messageNo+"\' and provider_no = \'"+providerNo+"\'");
-           //int count = rs.getInt(1);
-           //if (count == 0){
-           //     System.out.println("test from view action \n\n\n" );
-           //   return (mapping.findForward("noRights"));
-           //}else{
-           // System.out.println("theres a message  ");
+           
+              //print out message
               String sql = new String("Select * from messagetbl where messageid = \'"+messageNo+"\' ");
               rs = db.GetSQL(sql);
 
@@ -115,15 +113,28 @@ public class MsgViewMessageAction extends Action {
               if (i == 1){
                  db.RunSQL("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\' and status not like 'del'");
               }
-
+              
+              if (linkMsgDemo !=null && demographic_no!=null){
+                  if(linkMsgDemo.equalsIgnoreCase("true")){
+                      MsgDemoMap msgDemoMap = new MsgDemoMap();
+                      msgDemoMap.linkMsg2Demo(messageNo, demographic_no);
+                  }
+              }
+                  
 
           //}
          rs.close();
          db.CloseConn();
 
-        }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
-
-    return (mapping.findForward("success"));
+        }
+        catch (java.sql.SQLException e){ 
+            e.printStackTrace(System.out); 
+        }
+        
+        ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
+        actionforward.addParameter("linkMsgDemo", linkMsgDemo);
+                
+        return actionforward;
     }
 
 }
