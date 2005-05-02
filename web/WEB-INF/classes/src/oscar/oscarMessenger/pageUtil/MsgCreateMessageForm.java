@@ -35,6 +35,7 @@ public final class MsgCreateMessageForm extends ActionForm {
 
   private String[] provider;
   private String message,subject;
+  private String demographic_no;
 
   /**
    * The get method for the subject String
@@ -89,6 +90,22 @@ public final class MsgCreateMessageForm extends ActionForm {
     this.provider = prov;
   }
 
+  /**
+   * The get method for the demographic_no String
+   * @return String, this is the text of the demographic_no
+   */
+  public String getDemographic_no(){
+     return demographic_no;
+  }
+
+  /**
+   *The set method for the message String
+   * @param msg String, The text of a message
+   */
+  public void setDemographic_no(String demographic_no){
+     this.demographic_no = demographic_no;
+  }
+  
   /**
    * Used to reset everything to a null value
    * @param mapping
