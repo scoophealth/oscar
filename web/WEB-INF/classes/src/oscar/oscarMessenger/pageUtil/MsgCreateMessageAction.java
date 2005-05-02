@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarMessenger.util.*;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -67,7 +68,8 @@ public class MsgCreateMessageAction extends Action {
             String sentToWho    = null;
             String currLoco     = null;
             String messageId    = null;
-
+            String demographic_no = ((MsgCreateMessageForm)form).getDemographic_no();
+            
             java.util.ArrayList providerListing, localProviderListing, remoteProviderListing;
 
 
@@ -106,6 +108,12 @@ public class MsgCreateMessageAction extends Action {
 
                 remoteMessageData.start();
 
+            }
+            
+            //link msg and demogrpahic if both messageId and demographic_no are not null
+            if(messageId!=null && demographic_no!=null){
+                MsgDemoMap msgDemoMap = new MsgDemoMap();
+                msgDemoMap.linkMsg2Demo(messageId, demographic_no);
             }
 
 
