@@ -1163,7 +1163,7 @@ int i;
                         <br>
                         <!-- peice Went Here -->
                         
-                        <%RxDrugData.Interaction[] interactions =  (RxDrugData.Interaction[]) bean.getInteractions();                                                  
+                        <%RxDrugData.Interaction[] interactions =  (RxDrugData.Interaction[]) bean.getInteractions();
                           if (interactions != null && interactions.length > 0){ 
                               System.out.println("interactions.length "+interactions.length);
                              for (int i = 0 ; i < interactions.length; i++){  %>
@@ -1171,7 +1171,7 @@ int i;
                              <%=interactions[i].affectingdrug%> 	<%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%> &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%> &nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%>
                              </div>
                         <%   }
-                          }else{ %>
+                          }else if(interactions == null){ %>
                           <div>Drug to Drug Interaction Service not available</div>                          
                         <%}%>  
                         
