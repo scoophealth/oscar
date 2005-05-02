@@ -5247,6 +5247,18 @@ CREATE TABLE messagetbl (
   PRIMARY KEY  (messageid)
 ) TYPE=MyISAM;
 
+
+--
+-- Table structure for table `msgDemoMap`
+--
+
+CREATE TABLE msgDemoMap (
+  messageID mediumint(9),
+  demographic_no int(10),
+  PRIMARY KEY  (messageID, demographic_no)
+) TYPE=MyISAM;
+
+
 --
 -- Table structure for table `mygroup`
 --
