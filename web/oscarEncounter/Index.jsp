@@ -31,7 +31,7 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
 <%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*"%>
-<%@page import="oscar.oscarMDS.data.MDSResultsData"%>
+<%@page import="oscar.oscarMDS.data.MDSResultsData, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
   response.setHeader("Cache-Control","no-cache");
@@ -63,6 +63,10 @@
   labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
+  
+  MsgDemoMap msgDemoMap = new MsgDemoMap();
+  Vector msgVector = msgDemoMap.getMsgVector(demoNo);
+  MsgMessageData msgData = new MsgMessageData();
   
   EctSplitChart ectSplitChart = new EctSplitChart();
   Vector splitChart = ectSplitChart.getSplitCharts(demoNo);
@@ -526,6 +530,18 @@ function popupOscarComm(vheight,vwidth,varpage) {
   popup.focus();
 }
 
+function popUpMsg(vheight,vwidth,msgID) { 
+  var page = "../oscarMessenger/ViewMessage.do?messageID="+msgID;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+  var popup=window.open(page, "oscarMessenger", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self;
+    }
+  }
+  popup.focus();
+}
+
 function goToSearch() { 
         var x = window.confirm("<bean:message key="oscarEncounter.Index.goToSearchConfirm"/>");
         if(x)
@@ -784,8 +800,39 @@ border-right: 2px solid #cfcfcf;
                 <!-- <tr><td>&nbsp;</td></tr> -->
             </form>
             </table>
-
-
+            <table class="LeftTable">
+            <form name="msgForm">
+                <tr class="Header">
+                    <td style="font-weight:bold">
+                        oscarMessenger
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="msgSelect" class="ControlSelect" onchange="javascript:popUpMsg(600,800,document.msgForm.msgSelect.options[document.msgForm.msgSelect.selectedIndex].value)">
+                        <option value="null" selected>-Select Message-
+                         <%    
+                            String msgId;
+                            String msgSubject;
+                            for(int j=0; j<10 && j<msgVector.size(); j++) {
+                                msgId = (String) msgVector.elementAt(j);
+                                msgSubject = msgData.getSubject(msgId);                                
+                         %>
+                         <option value="<%=msgId%>"><%=msgSubject %></option>
+                         <% }%>                        
+                        </select>                        
+                    </td>                    
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href=# onClick='popupPage2("<rewrite:reWrite jspPage="../oscarMessenger/DisplayMessages.do"/>?orderby=date&boxType=3&demographic_no=<%=demoNo%>&providerNo=<%=provNo%>&userName=<%=providerName%>"); return false;' >
+					-All Messages-</a>
+                    </td>
+                </tr>
+                <!-- <tr><td>&nbsp;</td></tr> -->
+            </form>
+            </table>
             <table class="LeftTable">
             <form name="insertTemplateForm">
                 <tr class="Header">
