@@ -59,6 +59,7 @@
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 int specialStringLen = 0;
+String quan = "";
 %>
 
 <script language=javascript>
@@ -168,7 +169,47 @@ int specialStringLen = 0;
        }
        return true;
     }
+    
+    
+    function calculateDuration(durUnit,durValue){
+       var dur = 1;
+       switch(durUnit){
+            case 'D':{
+                dur = durValue;
+                break;
+            }
+            case 'W':{
+                dur = (durValue * 7);
+                break;
+            }
+            case 'M':{
+                dur = (durValue * 30);
+                break;
+            }
+        }
+        return dur;
+    }
 
+    function calcQuantity(){       
+        var frm = document.forms.RxWriteScriptForm;        
+        var takeMax = frm.takeMax.value;
+        
+        var dailyMax = freqMax[frm.frequencyCode.selectedIndex];
+        var dur = 1;
+               
+        // calculate duration units        
+        dur = calculateDuration(frm.durationUnit.value,frm.duration.value);
+                                        
+        var maxQty = (takeMax * dailyMax * dur);
+                
+        if(isNaN(maxQty)){
+            
+        }else{                        
+            maxQty = Math.ceil(maxQty);                        
+            return maxQty;
+        }
+    }
+    
     function calcQty(){
         var frm = document.forms.RxWriteScriptForm;
 
@@ -189,21 +230,8 @@ int specialStringLen = 0;
         frm.duration.value = frm.txtDuration.value;
 
         // calculate duration units
-        switch(frm.durationUnit.value){
-            case 'D':{
-                dur = frm.duration.value;
-                break;
-            }
-            case 'W':{
-                dur = (frm.duration.value * 7);
-                break;
-            }
-            case 'M':{
-                dur = (frm.duration.value * 30);
-                break;
-            }
-        }
-                
+        dur = calculateDuration(frm.durationUnit.value,frm.duration.value);
+                        
         // calculate quantity
         var minQty = (takeMin * dailyMin * dur);
         var maxQty = (takeMax * dailyMax * dur);
@@ -216,7 +244,9 @@ int specialStringLen = 0;
             maxQty = Math.ceil(maxQty);
             frm.sugQtyMin.value = minQty;
             frm.sugQtyMax.value = maxQty;
+            if (frm.autoQty.checked == true){
             frm.quantity.value = frm.sugQtyMax.value;
+            }
             setQuantity();
         }
 
@@ -230,9 +260,12 @@ int specialStringLen = 0;
 
         frm.repeat.value = frm.txtRepeat.value;  
 //alert ("q"+calcQtyflag);
-        if (calcQtyflag){
-        writeScriptDisplay();
-        calcQtyflag=true;
+    //alert(frm.autoQty.checked);
+        if (frm.autoQty.checked == true){
+           if (calcQtyflag){
+              writeScriptDisplay();
+              calcQtyflag=true;
+           }
         }
     }
 
@@ -281,15 +314,17 @@ int specialStringLen = 0;
                 //TODO should I add method if it is not there??
                 addWarning(frm.method.options[frm.method.selectedIndex].text+ " Not Added");
              }else{ // frequency is not at the start of the line words come before             
-               var beforeFirstDigit = origMinusName.substring(0,b.index);
-               var findMethodRegExp = /(Take|Apply|Rub well in)/;
-               var c = findMethodRegExp.exec(beforeFirstDigit);
-               if (c){                  
-                  //regexDebug(c);
-                  beforeFirstDigit = beforeFirstDigit.replace(/(Take|Apply|Rub well in)/,frm.method.options[frm.method.selectedIndex].text);  
-               }else{                                   
-                 addWarning("Could not replace word for "+frm.method.options[frm.method.selectedIndex].text);
-               }               
+                var beforeFirstDigit = origMinusName.substring(0,b.index);
+                var findMethodRegExp = /(Take|Apply|Rub well in)/;
+                var c = findMethodRegExp.exec(beforeFirstDigit);
+                if (c){                  
+                   //regexDebug(c);
+                   beforeFirstDigit = beforeFirstDigit.replace(/(Take|Apply|Rub well in)/,frm.method.options[frm.method.selectedIndex].text);  
+                }else{                                   
+                   if (frm.method.options[frm.method.selectedIndex].text != ""){
+                      addWarning("Could not replace word for "+frm.method.options[frm.method.selectedIndex].text);
+                   }
+                }               
              }             
              var firstDigitStringLen = b.index+b[0].length;
              
@@ -323,15 +358,19 @@ int specialStringLen = 0;
                 if (findU){
                   //todo make it like !findU
                 }else{                   
-                   addWarning("Could not find place to put "+frm.unit.options[frm.unit.selectedIndex].text);
+                   if (frm.unit.options[frm.unit.selectedIndex].text != ""){
+                      addWarning("Could not find place to put "+frm.unit.options[frm.unit.selectedIndex].text);
+                   }
                 }
                 
                 var findUnitRegExp = /(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP)/;                
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
-                }else{                   
-                   addWarning("Could not find place to put "+frm.route.options[frm.route.selectedIndex].text);
+                }else{
+                   if (frm.route.options[frm.route.selectedIndex].text != ""){
+                      addWarning("Could not find place to put "+frm.route.options[frm.route.selectedIndex].text);
+                   }
                 }
                                                 
                 var findFreqRegExp = /(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/;
@@ -373,7 +412,7 @@ int specialStringLen = 0;
                       var afterRepeat = afterQuantity.substring(g.index+g[0].length);
                       var b4final =drugName+beforeFirstDigit+getTakeValue()+betweenFirstAndSecondDigit+getDurationValue()+betweenSecondDigitandQuantity+frm.quantity.value+betweenQtyandRepeat+frm.txtRepeat.value+afterRepeat;
                       var newStr = drugName+beforeFirstDigit+getTakeValue()+betweenFirstAndSecondDigit+getPRN(b4final)+getDurationValue()+betweenSecondDigitandQuantity+frm.quantity.value+betweenQtyandRepeat+frm.txtRepeat.value+getNoSubs(b4final)+afterRepeat;
-                      
+                      //alert (betweenFirstAndSecondDigit);
                       frm.special.value = newStr;
                       //alert(newStr);
                    }else{
@@ -527,7 +566,7 @@ int specialStringLen = 0;
             }
 
             // calculate duration units
-            switch(frm2.durationUnit.value){
+            /*switch(frm2.durationUnit.value){
                 case 'D':{
                     preStr = preStr + " Days";
                     break;
@@ -540,7 +579,9 @@ int specialStringLen = 0;
                     preStr = preStr + " Months";
                     break;
                 }
-            }            
+            } 
+           */
+           preStr = preStr + getDurationUnit();
             
             if ( "" == frm2.quantity.value ){              
               frm2.quantity.value = "0";
@@ -710,12 +751,14 @@ if(bean.getStashIndex() > -1){ //new way
         thisForm.setCustomName(rx.getCustomName());
     }
 
+    quan = rx.getQuantity();
     thisForm.setTakeMin(rx.getTakeMinString());
     thisForm.setTakeMax(rx.getTakeMaxString());
     thisForm.setFrequencyCode(rx.getFrequencyCode());
     thisForm.setDuration(rx.getDuration());
     thisForm.setDurationUnit(rx.getDurationUnit());
     thisForm.setQuantity(rx.getQuantity());
+    
     thisForm.setRepeat(rx.getRepeat());
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
@@ -923,10 +966,11 @@ int i;
                             
                             <tr>
                                 <td colspan=2>
-                                   <html:select property="method" style="width:90px" onchange="calcQty();">                                   
+                                   <html:select property="method" style="width:90px" onchange="calcQty();">                                        
                                         <html:option value="Take">Take</html:option>
                                         <html:option value="Apply">Apply</html:option>
-                                        <html:option value="Rub">Rub well in</html:option>                                        
+                                        <html:option value="Rub">Rub well in</html:option>                 
+                                        <html:option value=""></html:option>
                                     </html:select>
                                 </td>
                                 <td colspan=2>
@@ -949,7 +993,7 @@ int i;
                                         <option value="Other">Other</option>
                                     </select>
                                     <input type=text name="takeOther" style="display:none" size="5" onChange="javascript:takeChg();" />
-                                    <html:select property="unit" style="width:80px" onchange="calcQty();">
+                                    <html:select property="unit" style="width:80px" onchange="calcQty();">                                        
                                         <html:option value="tab">Tabs</html:option>
                                         <html:option value="mL">mL</html:option>
                                         <html:option value="sqrt">Squirts</html:option>
@@ -958,17 +1002,19 @@ int i;
                                         <html:option value="micg">µg</html:option>
                                         <html:option value="drop">Drops</html:option>                                        
                                         <html:option value="patc">Patch</html:option>
-                                        <html:option value="puff">Puffs</html:option>                                                                                
+                                        <html:option value="puff">Puffs</html:option>                     
+                                        <html:option value=""></html:option>
                                     </html:select>
                                     
-                                    <html:select property="route" style="width:80px" onchange="calcQty();">
+                                    <html:select property="route" style="width:80px" onchange="calcQty();">                                        
                                         <html:option value="PO">PO</html:option>
                                         <html:option value="SL">SL</html:option>
                                         <html:option value="IM">IM</html:option>
                                         <html:option value="SC">SC</html:option>                                        
                                         <html:option value="TOP">TOP.</html:option>
                                         <html:option value="INH">INH</html:option>                                        
-                                        <html:option value="SUPP">SUPP</html:option>                                        
+                                        <html:option value="SUPP">SUPP</html:option>                       
+                                        <html:option value=""></html:option>
                                     </html:select>
                                     
                                     <html:select property="frequencyCode" style="width:80px" onchange="javascript:changeDuration();calcQty();">
@@ -1051,10 +1097,10 @@ int i;
 
                             <tr>
                                 <td colspan=2>
-                                    Quantity:
+                                    Quantity: auto<input type="checkbox" name="autoQty" />
                                 </td>
                                 <td colspan=2 width=65%>
-                                    <html:text property="quantity" size="8" onchange="javascript:writeScriptDisplay();"   />
+                                    <html:text property="quantity" size="8" onchange="javascript:writeScriptDisplay(); customQty(this.value);" onkeypress="customQty(this.value);" />
 
                                     <input type=button value="<<" onclick="javascript:useQtyMax();" />
                                     (Calculated:&nbsp;<span id="lblSugQty" style="font-weight:bold"></span>&nbsp;)
@@ -1129,7 +1175,7 @@ int i;
                                         <tr>
                                             <td valign=top>
                                                 <html:textarea property="special" cols="50" rows="5" />
-                                                <input type=button value="RD" title="Redraw" onclick="javascript:first = false; writeScriptDisplay();"/>
+                                                <input type=button value="RD" title="Redraw" onclick="javascript:first = false; writeScriptDisplay(); clearWarning(); fillWarnings();"/>
                                                 <div id="warningDiv" style="display: none;">
                                                    <ul id="warningList">
                                                    <li>warning</li>
@@ -1290,9 +1336,20 @@ int i;
                 out.write("first=false;"); 
           }else{  
                 //out.write("calcQtyflag=false;"); 
-          }%>
+          }
 
-        
+        if (quan == null || quan.equals("")){ quan = "null"; }
+        %>
+         
+         function customQty(quan) {           
+            if (calcQuantity() == quan || quan == null ){
+                document.forms.RxWriteScriptForm.autoQty.checked = true;
+            }else{
+                document.forms.RxWriteScriptForm.autoQty.checked = false;
+            }
+         }
+         
+         customQty(<%=quan%>);
           writeScriptDisplay();
         </script>
         
