@@ -321,6 +321,7 @@ function BackToOscar()
     ///                                    theMessages  = DisplayMessagesBeanId.getDelMessageid();
                                         theMessages2 = DisplayMessagesBeanId.estDeletedInbox(orderby);
                                         // System.out.println("deleted messages");
+                                    break;
                                     case 3:
                                         theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderby,demographic_no);
                                         // System.out.println("demographic messages");
