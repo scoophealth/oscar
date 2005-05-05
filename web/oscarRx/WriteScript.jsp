@@ -60,6 +60,7 @@
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 int specialStringLen = 0;
 String quan = "";
+boolean isCustom = true;
 %>
 
 <script language=javascript>
@@ -771,7 +772,7 @@ if(bean.getStashIndex() > -1){ //new way
     System.out.println("route "+rx.getRoute());
 }
 
-boolean isCustom = thisForm.getGCN_SEQNO() == 0;
+isCustom = thisForm.getGCN_SEQNO() == 0;
 int drugId = thisForm.getGCN_SEQNO();
 
 %>
@@ -927,18 +928,7 @@ int i;
                                 </td>-->
                             </tr>
 
-                            <tr>
-                                <td colspan=2>
-                                  Start Date:
-                                </td>
-                                <td colspan=2>
-                                  <html:text property="rxDate" />
-                                </td>
-                                <!--<td >
-                                  &nbsp;
-                                </td>-->
-                            </tr>
-
+                            
                         <% } else { /* Custom Drug Entry */%>
 
                             <tr>
@@ -962,6 +952,18 @@ int i;
                             </tr>
 
                         <% } /* Custom */ %>
+
+                            <tr>
+                                <td colspan=2>
+                                  Start Date:
+                                </td>
+                                <td colspan=2>
+                                  <html:text property="rxDate" />
+                                </td>
+                                <!--<td >
+                                  &nbsp;
+                                </td>-->
+                            </tr>
 
                             
                             <tr>
@@ -1208,18 +1210,22 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /--> 
                         <br>
                         <!-- peice Went Here -->
+                        <%if (!isCustom) {
+                             RxDrugData.Interaction[] interactions =  (RxDrugData.Interaction[]) bean.getInteractions();
+                             if (interactions != null && interactions.length > 0){ 
+                                System.out.println("interactions.length "+interactions.length);
+                                for (int i = 0 ; i < interactions.length; i++){  %>
+                                 <div style="background-color:<%=sigColor(interactions[i].significance)%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+                                 <%=interactions[i].affectingdrug%> 	<%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%> &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%> &nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%>
+                                 </div>
+                        <%      }
+                             
+                             }else if(interactions == null){ %>
+                                <div>Drug to Drug Interaction Service not available</div>                          
+                        <%   }                        
+                          }%>
+                          
                         
-                        <%RxDrugData.Interaction[] interactions =  (RxDrugData.Interaction[]) bean.getInteractions();
-                          if (interactions != null && interactions.length > 0){ 
-                              System.out.println("interactions.length "+interactions.length);
-                             for (int i = 0 ; i < interactions.length; i++){  %>
-                             <div style="background-color:<%=sigColor(interactions[i].significance)%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-                             <%=interactions[i].affectingdrug%> 	<%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%> &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%> &nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%>
-                             </div>
-                        <%   }
-                          }else if(interactions == null){ %>
-                          <div>Drug to Drug Interaction Service not available</div>                          
-                        <%}%>  
                         
                         <!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
