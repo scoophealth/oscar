@@ -509,8 +509,7 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select messageid as status,messageid as message, thedate,  thesubject, sentby, attachment from messagetbl where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"' order by "+getOrderBy(orderby));
-
+        String sql = new String("select messageid as status, messageid as message , thedate,  thesubject, sentby, attachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"' order by "+getOrderBy(orderby));                
 
         rs = db.GetSQL(sql);
 
