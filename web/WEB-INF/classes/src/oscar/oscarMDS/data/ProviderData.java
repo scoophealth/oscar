@@ -69,7 +69,30 @@ public class ProviderData {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ArrayList result = new ArrayList();
             
-            String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor'";
+            String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor' order by last_name , first_name";
+            ResultSet rs = db.GetSQL(sql);            
+            while ( rs.next() ) {
+                ArrayList provider = new ArrayList();
+                provider.add(rs.getString("provider_no"));
+                provider.add(rs.getString("first_name"));
+                provider.add(rs.getString("last_name"));
+                result.add(provider);
+            }
+            db.CloseConn();            
+            return result;
+        }catch(Exception e){
+            System.out.println("exception in ProviderData:"+e);
+            return null;
+        }        
+    }
+    
+    
+    public static ArrayList getProviderListWithLabNo () {
+        try {            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ArrayList result = new ArrayList();
+            
+            String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor'  and ohip_no != '' order by last_name , first_name";
             ResultSet rs = db.GetSQL(sql);            
             while ( rs.next() ) {
                 ArrayList provider = new ArrayList();
