@@ -123,6 +123,7 @@ public class RxSessionBean {
         }
         else {
             stash.add(item);
+            preloadInteractions();
             return this.getStashSize()-1;
         }
     }
@@ -151,21 +152,44 @@ public class RxSessionBean {
         return false;
     }
     
+    private void preloadInteractions(){
+       RxInteractionData interact = RxInteractionData.getInstance();
+       interact.preloadInteraction(this.getAtcCodes());
+    }
+    
+    public Vector getAtcCodes(){
+       RxPrescriptionData rxData = new RxPrescriptionData();                    
+       Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());      
+       RxPrescriptionData.Prescription rx;                
+       for(int i=0;i<this.getStashSize(); i++) {
+          rx = this.getStashItem(i);
+          atcCodes.add(rx.getAtcCode());
+       }
+       return atcCodes;
+    }
     
     public RxDrugData.Interaction[] getInteractions(){
        RxDrugData.Interaction[] interactions = null;
+       long start = System.currentTimeMillis();
+       long start2 = 0;
+       long end2 = 0;
        try{
+       start2 = System.currentTimeMillis();
           RxPrescriptionData rxData = new RxPrescriptionData();
           RxDrugData drugData = new RxDrugData();
+          RxInteractionData rxInteract =  RxInteractionData.getInstance();
           Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
 
+          System.out.println("atccode "+atcCodes.hashCode());
           RxPrescriptionData.Prescription rx;                
           for(int i=0;i<this.getStashSize(); i++) {
              rx = this.getStashItem(i);
              atcCodes.add(rx.getAtcCode());
           }
+          System.out.println("atccode 2"+atcCodes.hashCode());
           try{        
-             interactions = drugData.getInteractions(atcCodes);
+             interactions = rxInteract.getInteractions(atcCodes);
+             //interactions = drugData.getInteractions(atcCodes);
           }catch(Exception e){
              e.printStackTrace();
           }
@@ -175,7 +199,12 @@ public class RxSessionBean {
           }
           //interactions = 
           Arrays.sort(interactions);
+       end2 = System.currentTimeMillis() - start2;         
        }catch(Exception e2){}                 
+       long end = System.currentTimeMillis() - start;      
+       
+       
+       System.out.println("took "+end+ "milliseconds vs "+end2);
        return interactions;
     }
 }
