@@ -5,6 +5,7 @@
 <%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
+<%long start = System.currentTimeMillis();%>
 
 <!--  
 /*
@@ -1211,7 +1212,7 @@ int i;
                         <br>
                         <!-- peice Went Here -->
                         <%if (!isCustom) {
-                             RxDrugData.Interaction[] interactions =  (RxDrugData.Interaction[]) bean.getInteractions();
+                             RxDrugData.Interaction[] interactions = (RxDrugData.Interaction[]) bean.getInteractions();
                              if (interactions != null && interactions.length > 0){ 
                                 System.out.println("interactions.length "+interactions.length);
                                 for (int i = 0 ; i < interactions.length; i++){  %>
@@ -1365,6 +1366,8 @@ int i;
 </table>
 </body>
 </html:html>
+<%long end  = System.currentTimeMillis() -start; System.out.println("millis "+end);%>
+
 <%!
 
     String effect(String s){
