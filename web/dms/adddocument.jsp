@@ -105,6 +105,8 @@ function ScriptAttach() {
 function checkSel(sel){
   theForm = sel.form;
   theForm.docdesc.value = theForm.doctype.value;
+  theForm.docdesc.focus();
+  theForm.docdesc.select();
 }
 //-->
 </script>
