@@ -430,7 +430,7 @@ function controlFTExam(){
         document.forms[0].elements[ftUlId].checked= true;
         document.forms[0].elements[ftInId].checked= true;
         document.forms[0].elements[ftOtId].checked= true;
-        document.forms[0].elements[ftReId].checked= true;
+        //document.forms[0].elements[ftReId].checked= true;
         
         //alert("disable all foot exam checkboxes");
         document.forms[0].elements[ftNeId-1].disabled= true;
@@ -1388,24 +1388,7 @@ function clearAll(yRadio, nRadio){
                                                 <td class="dataEntryTable" rowspan="8" valign="top" align="center">
                                                     <textarea name="iComments" wrap="hard" cols="24" style="height:80"><logic:present name="iExComments"><%=request.getAttribute("iExComments")%></logic:present></textarea>
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="dataEntryTable"><%=request.getAttribute("iExDesc")%></td>   
-                                                <td class="dataEntryTable" align="center">
-                                                    <table cellpadding='0' cellspacing='0' border="0">         
-                                                    <tr><td class="eightyPercent" align="left"><%=request.getAttribute("iExLDDate")%></td></tr>
-                                                    <tr><td class="eightyPercent" align="right"><%=request.getAttribute("iExLastData")%></td></tr>
-                                                    </table>
-                                                </td>
-                                                <td class="dataEntryTable" align="center">
-                                                    <html:radio property="value(iExValue)" onclick="javascript:controlEyeExam();" value="yes"/>Yes
-                                                    <html:radio property="value(iExValue)" onclick="javascript:controlEyeExam();" value="no"/>No
-                                                    <a title="clear all" href="javascript:clearAll(eyeExId, eyeExId-1)">&nbsp <font style="text-decoration:underline; color:blue;">clr</font> </a>
-                                                </td>
-                                                <td class="dataEntryTable" rowspan="7" valign="top" align="center">&nbsp;</td>
-                                                    <html:hidden property="value(iExDate)" />
-                                                    <html:hidden property="value(iExComments)" />
-                                            </tr>
+                                            </tr>                                            
                                             <tr>
                                                 <td class="dataEntryTable"><%=request.getAttribute("iDiaDesc")%></td>
                                                 <td class="dataEntryTable" align="center">
@@ -1483,7 +1466,7 @@ function clearAll(yRadio, nRadio){
 
 
                                 <tr>                                            
-                                    <th class="title" widht="98%" colspan="2">
+                                    <th class="title" width="98%" colspan="2">
                                         <span id="labsLabel" style="display:none;"><a href="javascript: showHideItem('labs');" >Labs >> </a></span>
                                     </th>
                                 </tr>
