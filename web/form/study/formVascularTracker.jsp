@@ -24,16 +24,34 @@
  */
 --%>
 
+<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.oscarProvider.data.* " %>
 
 <%
 if(session.getAttribute("user") == null || !( ((String) session.getAttribute("userprofession")).equalsIgnoreCase("doctor") ))
     response.sendRedirect("../../logout.jsp");
 
+GregorianCalendar now=new GregorianCalendar();
+int curYear = now.get(Calendar.YEAR);
+int curMonth = (now.get(Calendar.MONTH)+1);
+int curDay = now.get(Calendar.DAY_OF_MONTH);
+
 //../form/SetupForm.do?formName=VTForm&demographic_no=10091&formId=0&provNo=999998
 String demo = request.getParameter("demographic_no") ;
 String study_no = request.getParameter("demographic_no"); 
 String prov_no = (String) session.getAttribute("user");
-String url = "../../form/SetupForm.do?formName=VTForm&demographic_no="+demo+"&study_no="+study_no+"&provNo="+prov_no+"&formId=0";
+
+oscar.oscarProvider.data.ProviderData pd = new oscar.oscarProvider.data.ProviderData(prov_no);
+//pd.getProviderName(prov_no);
+
+String userfirstname = pd.getFirst_name(); 
+String userlastname  = pd.getLast_name();
+
+
+String popupUrl = "../form/SetupForm.do?formName=VTForm&demographic_no="+demo+"&study_no="+study_no+"&provNo="+prov_no+"&formId=0";
+
+String url = "../../oscarEncounter/IncomingEncounter.do?providerNo="+prov_no+"&appointmentNo=&demographicNo="+demo+"&curProviderNo=&reason="+URLEncoder.encode("Vascular Study")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate=&startTime=&status=&popupUrl="+URLEncoder.encode(popupUrl);
+System.out.println("url "+url);
+
 System.out.println(url);
 response.sendRedirect(url );
 
