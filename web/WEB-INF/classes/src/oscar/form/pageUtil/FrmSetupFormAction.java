@@ -80,14 +80,18 @@ public final class FrmSetupFormAction extends Action {
         EctEChartBean chartBean = new EctEChartBean();        
         String formId = request.getParameter("formId");
         frm.setValue("formId", formId==null?"0":formId);
-        String demo = null;
+        String demo = request.getParameter("demographic_no");
         String providerNo = (String) session.getValue("user");
-        if (bean!=null){
+        if (demo == null || bean!=null){
             request.getSession().setAttribute("EctSessionBean", bean);
             demo = (String) bean.getDemographicNo();
-            chartBean.setEChartBean(demo);	        
+            
         }
         
+        if ( demo != null){
+           chartBean.setEChartBean(demo);	                   
+        }                
+                
         String ongoingConcern = chartBean.ongoingConcerns;
         String formName = (String) request.getParameter("formName");        
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
