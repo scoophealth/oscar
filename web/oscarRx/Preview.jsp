@@ -4,6 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="oscar.oscarProvider.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="oscar.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--
@@ -78,6 +79,10 @@ if (hasSig){
 }else{
    doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
 }
+
+doctorName = doctorName.replaceAll("\\d{6}","");
+doctorName = doctorName.replaceAll("\\-","");
+OscarProperties props = OscarProperties.getInstance();
 %>
 <html:form action="/form/formname">
 
@@ -126,7 +131,9 @@ if (hasSig){
                         <%= patient.getCity() %> <%= patient.getPostal() %><br>
                         <%= patient.getPhone() %><br>
                         <b>
+                        <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
                         <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
+						<% } %>
                       </b>
                     </td>
                     <td align=right valign=top><b>
