@@ -92,7 +92,7 @@ OscarProperties props = OscarProperties.getInstance();
         	<input type="image" src="img/rx.gif" border="0" value="submit" alt="[Submit]" name="submit"
  			title="Print in a half letter size paper" onclick="javascript:return onPrint();">
 			<input type="hidden" name="printPageSize" value="PageSize.A6"/>
-			<% 	String clinicTitle = provider.getClinicName() + "<br>" ;
+			<% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
 			 	clinicTitle += provider.getClinicAddress() + "<br>" ;
 			 	clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
 			%>
@@ -112,7 +112,7 @@ OscarProperties props = OscarProperties.getInstance();
         </td>
         <td valign=top height="100px">
             <b><%=doctorName %></b><br>
-            <%= provider.getClinicName() %><br>
+            <%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
             <%= provider.getClinicAddress() %><br>
             <%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <%= provider.getClinicPostal() %><br>
