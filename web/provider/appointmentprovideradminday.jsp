@@ -1,5 +1,6 @@
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
+<%@ taglib uri="/WEB-INF/lab-tag.tld" prefix="oscarlab" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -326,7 +327,9 @@ function goZoomView(s, n) {
          <% if (prov.equals("BC")){%>
          <a HREF="#" ONCLICK ="popupPage2('../lab/CA/BC/index.jsp');return false;" TITLE='View lab reports'><%=(new oscar.oscarLab.ca.bc.PathNet.PathNetInfo()).getLabTab(curUser_no)%></a>
          <%}else{%>
-         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'><bean:message key="global.lab"/></a>
+         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
+         <oscarlab:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscarlab:newLab>
+         </a></font></td>
          <%}%>
 <!-- oscarMessenger code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
