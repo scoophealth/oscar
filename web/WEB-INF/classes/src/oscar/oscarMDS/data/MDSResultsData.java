@@ -27,6 +27,7 @@ import oscar.oscarDB.*;
 import oscar.oscarMDS.data.ProviderData;
 import java.util.*;
 import java.sql.*;
+import oscar.oscarLab.ca.on.*;
 
 
 public class MDSResultsData {
@@ -42,6 +43,119 @@ public class MDSResultsData {
    public ArrayList requestingClient;
    public ArrayList discipline;
    public ArrayList reportStatus;
+   
+   
+   public ArrayList labResults;
+     
+   
+   public ArrayList populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+      if ( providerNo == null) { providerNo = ""; }
+      if ( patientFirstName == null) { patientFirstName = ""; }
+      if ( patientLastName == null) { patientLastName = ""; }
+      if ( patientHealthNumber == null) { patientHealthNumber = ""; }
+      if ( status == null ) { status = ""; }
+      
+      
+      labResults =  new ArrayList();
+      // select lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name), lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status from labPatientPhysicianInfo lpp;
+      String sql = "";
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         if ( demographicNo == null) {
+            // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+            // for the provider number if unable to find correct provider
+            
+            //sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, providerLabRouting.status "
+            //+" from labPatientPhysicianInfo lpp, providerLabRouting "
+            //+"where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
+            //"AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like  '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' "; //group by mdsMSH.segmentID";
+            
+            sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status, providerLabRouting.status "
+                 +" from labPatientPhysicianInfo lpp, providerLabRouting "
+                 +" where providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" 
+                 +" AND providerLabRouting.lab_type = 'CML' "
+                 +" AND lpp.patient_last_name like '"+patientLastName+"%' and lpp.patient_first_name like  '"+patientFirstName+"%' AND lpp.patient_health_num like '%"+patientHealthNumber+"%' and providerLabRouting.lab_no = lpp.id";
+         } else {
+                                   
+            sql = "select lpp.id, lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name) as patientName, lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status "
+            +" from labPatientPhysicianInfo lpp, patientLabRouting "
+            +" where patientLabRouting.lab_type = 'CML' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
+         }
+         
+         System.out.println("sql "+sql);
+         
+         ResultSet rs = db.GetSQL(sql);
+         while(rs.next()){
+            LabResultData lbData = new LabResultData(LabResultData.CML);
+            
+            lbData.labType = LabResultData.CML;
+            
+            lbData.segmentID = rs.getString("id");
+            
+            if (demographicNo == null && !providerNo.equals("0")) {
+               lbData.acknowledgedStatus = rs.getString("status");
+            } else {
+               lbData.acknowledgedStatus ="U";
+            }
+            
+            if (findCMLAdnormalResults(lbData.segmentID) > 0){
+               lbData.abn= true;
+            }
+            
+            lbData.healthNumber = rs.getString("patient_health_num");
+            lbData.patientName = rs.getString("patientName");
+            lbData.sex = rs.getString("patient_sex");
+            
+            
+            lbData.resultStatus = "0"; //TODO                        
+            // solve lbData.resultStatus.add(rs.getString("abnormalFlag"));
+            
+            lbData.dateTime = rs.getString("collection_date");
+            
+            //priority
+            lbData.priority = "----";
+            
+            lbData.requestingClient = rs.getString("doc_name");
+            lbData.reportStatus =  rs.getString("lab_status");
+            
+            //if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
+            //   discipline.add("Microbiology");
+            //} else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
+            //   discipline.add("Diagnostic Imaging");
+            //} else {
+               lbData.discipline = "Hem/Chem/Other";
+            //}
+            
+            labResults.add(lbData);
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in CMLPopulate:"+e);                  
+         e.printStackTrace();
+      }
+      
+      return labResults;
+   }
+   
+   public int findCMLAdnormalResults(String labId){
+      int count = 0;
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                  
+         String sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
+         
+         ResultSet rs = db.GetSQL(sql);
+         while(rs.next()){
+         count++;
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData:"+e);                  
+      }
+      return count;
+   }
    
    public void populateMDSResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
       
@@ -137,6 +251,103 @@ public class MDSResultsData {
       }
    }
    
+   
+   //////
+   
+   public ArrayList populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+      
+      if ( providerNo == null) { providerNo = ""; }
+      if ( patientFirstName == null) { patientFirstName = ""; }
+      if ( patientLastName == null) { patientLastName = ""; }
+      if ( patientHealthNumber == null) { patientHealthNumber = ""; }
+      if ( status == null ) { status = ""; }
+      
+      labResults = new ArrayList();            
+      String sql = "";
+      
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         if ( demographicNo == null) {
+            // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+            // for the provider number if unable to find correct provider
+            sql = "SELECT mdsMSH.segmentID, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
+            "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+            "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+            "FROM mdsMSH,mdsPID,providerLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
+            "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=providerLabRouting.lab_no " +
+            "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
+            "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
+            "AND providerLabRouting.lab_type = 'MDS' " +
+            "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
+            "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
+         } else {
+            sql = "SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
+            "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
+            "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
+            "FROM mdsMSH,mdsPID,patientLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
+            "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=patientLabRouting.lab_no " +
+            "AND patientLabRouting.lab_type = 'MDS' " +
+            "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
+            "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
+            "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
+         }
+         
+         ResultSet rs = db.GetSQL(sql);
+         while(rs.next()){
+            LabResultData lData = new LabResultData(LabResultData.MDS);
+            lData.segmentID = Integer.toString(rs.getInt("segmentID"));
+            
+            if (demographicNo == null && !providerNo.equals("0")) {
+               lData.acknowledgedStatus = rs.getString("status");
+            } else {
+               lData.acknowledgedStatus = "U";
+            }
+            
+            lData.healthNumber = rs.getString("healthNumber");
+            lData.patientName = beautifyName(rs.getString("patientName"));
+            lData.sex = rs.getString("sex");
+            lData.resultStatus = rs.getString("abnormalFlag");
+            lData.dateTime = rs.getString("dateTime");
+            
+            switch ( rs.getString("quantityTiming").charAt(0) ) {
+               case 'C' : lData.priority = "Critical"; break;
+               case 'S' : lData.priority = "Stat\\Urgent"; break;
+               case 'U' : lData.priority = "Unclaimed"; break;
+               case 'A' : if ( rs.getString("quantityTiming").startsWith("AL") ) {
+                  lData.priority = "Alert";
+               } else {
+                  lData.priority = "ASAP";
+               }
+               break;
+               default: lData.priority = "Routine"; break;
+            }
+            
+            lData.requestingClient = ProviderData.beautifyProviderName(rs.getString("refDoctor"));
+            lData.reportStatus = rs.getString("reportFormStatus");
+            
+            if ( !lData.resultStatus.equals("0") ){
+               lData.abn = true;
+            }
+            
+            if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
+               lData.discipline = "Microbiology";
+            } else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
+               lData.discipline = "Diagnostic Imaging";
+            } else {
+               lData.discipline = "Hem/Chem/Other";
+            }
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData:"+e);
+         e.printStackTrace();
+      }
+      return labResults;
+   }
+   //////
+   
+   
    private String beautifyName(String name) {
       try {
          return name.substring(0, name.indexOf("^")) + ", "
@@ -156,7 +367,7 @@ public class MDSResultsData {
          if ( db.queryExecuteUpdate(sql, new String[] { comment }) == 0 ) {
             // handles the case where it is
             sql = "update providerLabRouting set status='"+status+"', comment=? where provider_no='"+providerNo+"' and lab_no='"+labNo+"'";
-            db.queryExecute(sql, new String[] { comment });
+             db.queryExecute(sql, new String[] { comment });
          } else {
             sql = "delete from providerLabRouting where provider_no='0' and lab_no=?";
             db.queryExecute(sql, new String[] { Integer.toString(labNo) });
