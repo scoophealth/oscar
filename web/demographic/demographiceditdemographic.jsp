@@ -41,7 +41,7 @@
 	String userlastname = (String) session.getAttribute("userlastname");
 	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 	String str = null;
-	int nStrShowLen = 14;
+	int nStrShowLen = 20;
         String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 
         OscarProperties oscarProps = OscarProperties.getInstance();
@@ -390,9 +390,10 @@ function newStatus() {
                             <%@ include file="zdemographicfulltitlesearch.jsp" %>
                         </td>
                     </tr>
+                    <tr>
+                    <td>
                     <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeInEdit();">
                     <input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
-                    <tr><td>
                     <table width="100%" bgcolor="#CCCCFF">
                         <tr><td class="RowTop">
                             <b>Record</b> (<%=rs.getString("demographic_no")%>)
@@ -680,7 +681,52 @@ function newStatus() {
                             <tr valign="top">
                                   <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRefDoc"/>: </b></td>
                                   <td align="left" >
+                                  <% if(oscarProps.getProperty("isMRefDocSelectList", "").equals("true") ) {
+                                  		// drop down list
+									  String	sql   = "select * from billingreferral order by last_name, first_name" ;
+									  oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
+									  ResultSet rs1 = dbObj.searchDBRecord(sql);
+										// System.out.println(sql);
+									  Properties prop = null;
+									  Vector vecRef = new Vector();
+									  while (rs1.next()) {
+									  	prop = new Properties();
+									  	prop.setProperty("referral_no",rs1.getString("referral_no"));
+									  	prop.setProperty("last_name",rs1.getString("last_name"));
+									  	prop.setProperty("first_name",rs1.getString("first_name"));
+									  	//prop.setProperty("specialty",rs1.getString("specialty"));
+									  	//prop.setProperty("phone",rs1.getString("phone"));
+									  	vecRef.add(prop);
+                                      }
+                                  %>
+                                	<select name="r_doctor" onChange="changeRefDoc()" style="width:200px">
+                                  	<option value="" ></option>
+                                  	<% for(int k=0; k<vecRef.size(); k++) {
+                                  		prop= (Properties) vecRef.get(k);
+                                  	%>
+                          <option value="<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>" <%=prop.getProperty("referral_no").equals(rdohip)?"selected":""%> >
+                          <%=Misc.getShortStr( (prop.getProperty("last_name")+","+prop.getProperty("first_name")),"",nStrShowLen)%></option>
+ 	                      <% } %>         	</select>
+<script language="Javascript">
+<!--
+function changeRefDoc() {
+//alert(document.updatedelete.r_doctor.value);
+var refName = document.updatedelete.r_doctor.options[document.updatedelete.r_doctor.selectedIndex].value;
+var refNo = "";
+  	<% for(int k=0; k<vecRef.size(); k++) {
+  		prop= (Properties) vecRef.get(k);
+  	%>
+if(refName.indexOf("<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>")>=0) {
+  refNo = <%=prop.getProperty("referral_no", "")%>;
+}
+<% } %>
+document.updatedelete.r_doctor_ohip.value = refNo;
+}
+//-->
+</script>
+                                  <% } else {%>
                                     <input type="text" name="r_doctor" size="30" maxlength="40" value="<%=rd%>">
+                                  <% } %>
                                   </td>
                                   <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>: </b></td>
                                   <td align="left">
@@ -857,13 +903,14 @@ function newStatus() {
                               <input type="submit" value="<bean:message key="demographic.demographiceditdemographic.btnUpdate"/>">
                             </td>
                             <td width="40%" align='right' valign="top">
-                               <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="window.open('zdemographicswipe.jsp','', 'scrollbars=yes,resizable=yes,width=600,height=300, top=360, left=0')";>
-                               <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>" onclick="window.location='printDemoLabelAction.do?demographic_no=<%=rs.getString("demographic_no")%>'";>
-                               <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'";>
+                               <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="window.open('zdemographicswipe.jsp','', 'scrollbars=yes,resizable=yes,width=600,height=300, top=360, left=0')">
+                               <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>" onclick="window.location='printDemoLabelAction.do?demographic_no=<%=rs.getString("demographic_no")%>'">
+                               <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'">
                             </td>
                         </table>
-                    </tr>
                   </form>
+                  </td>
+                    </tr>
                 </table>
                 <%
                     }

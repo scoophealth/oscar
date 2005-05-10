@@ -32,6 +32,9 @@
   String curDay = Integer.toString(now.get(Calendar.DAY_OF_MONTH));
   if (curDay.length() < 2) curDay = "0"+curDay;
 
+  int nStrShowLen = 20;
+  OscarProperties oscarProps = OscarProperties.getInstance();
+
   ProvinceNames pNames = ProvinceNames.getInstance();
   String prov= ((String ) props.getProperty("billregion","")).trim().toUpperCase();
 
@@ -568,7 +571,50 @@ function referralScriptAttach2(elementName, name2) {
     <tr valign="top">
       <td align="right" height="10"><b><bean:message key="demographic.demographicaddrecordhtm.formReferalDoctor"/>:</b></td>
       <td align="left" height="10" >
-        <input type="text" name="r_doctor" maxlength="40">
+                                  <% if(oscarProps.getProperty("isMRefDocSelectList", "").equals("true") ) {
+                                  		// drop down list
+									  String	sql   = "select * from billingreferral order by last_name, first_name" ;
+									  oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
+									  ResultSet rs1 = dbObj.searchDBRecord(sql);
+										// System.out.println(sql);
+									  Properties prop = null;
+									  Vector vecRef = new Vector();
+									  while (rs1.next()) {
+									  	prop = new Properties();
+									  	prop.setProperty("referral_no",rs1.getString("referral_no"));
+									  	prop.setProperty("last_name",rs1.getString("last_name"));
+									  	prop.setProperty("first_name",rs1.getString("first_name"));
+									  	vecRef.add(prop);
+                                      }
+                                  %>
+                                	<select name="r_doctor" onChange="changeRefDoc()" style="width:200px">
+                                  	<option value="" ></option>
+                                  	<% for(int k=0; k<vecRef.size(); k++) {
+                                  		prop= (Properties) vecRef.get(k);
+                                  	%>
+                          <option value="<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>"  >
+                          <%=Misc.getShortStr( (prop.getProperty("last_name")+","+prop.getProperty("first_name")),"",nStrShowLen)%></option>
+ 	                      <% } %>         	</select>
+<script language="Javascript">
+<!--
+function changeRefDoc() {
+//alert(document.forms[1].r_doctor.value);
+var refName = document.forms[1].r_doctor.options[document.forms[1].r_doctor.selectedIndex].value;
+var refNo = "";
+  	<% for(int k=0; k<vecRef.size(); k++) {
+  		prop= (Properties) vecRef.get(k);
+  	%>
+if(refName.indexOf("<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>")>=0) {
+  refNo = <%=prop.getProperty("referral_no", "")%>;
+}
+<% } %>
+document.forms[1].r_doctor_ohip.value = refNo;
+}
+//-->
+</script>
+                                  <% } else {%>
+                                    <input type="text" name="r_doctor" size="30" maxlength="40" value="">
+                                  <% } %>
       </td>
       <td align="right" nowrap height="10"><b><bean:message key="demographic.demographicaddrecordhtm.formReferalDoctorN"/>:</b></td>
       <td align="left" height="10">
