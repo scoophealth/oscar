@@ -182,6 +182,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>">
                         <input type="hidden" name="status" value="A">
                         <input type="hidden" name="comment" value="">
+                        <input type="hidden" name="labType" value="MDS"/>
                         <% if ( request.getParameter("providerNo") != null && ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) ) { %>
                         <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
                         <% } %>
@@ -190,7 +191,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
-                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(pd.getPatientName())%>', 'searchPatientWindow')">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(pd.getPatientName())%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
                 </tr>
@@ -230,7 +231,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                                 <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                                                                     <a href="javascript:window.close()">
                                                                 <% } else { // we were called from lab module %>
-                                                                    <a href="javascript:popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
+                                                                    <a href="javascript:popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
                                                                 <% } %>
                                                                     <%=pd.getPatientName()%>
                                                                     </a>
@@ -742,7 +743,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
-                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
                     <td width="20%" valign="center" align="middle">
