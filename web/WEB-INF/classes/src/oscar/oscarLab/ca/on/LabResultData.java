@@ -49,6 +49,7 @@ public class LabResultData {
    public String reportStatus;   
    public boolean abn = false;
    public String labType; // ie CML or MDS
+   public boolean finalRes = true;
    
    public LabResultData() {
    }
@@ -62,6 +63,9 @@ public class LabResultData {
    }
    
    public boolean isAbnormal(){ return abn ; }
+   
+   
+   public boolean isFinal(){ return finalRes ;}
    
    public boolean isMDS(){
       boolean ret = false;
