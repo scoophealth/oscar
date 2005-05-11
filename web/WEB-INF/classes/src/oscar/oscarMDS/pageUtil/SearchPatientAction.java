@@ -30,7 +30,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
-import oscar.oscarMDS.data.MDSResultsData;
+import oscar.oscarLab.ca.on.*;
+
 
 public class SearchPatientAction extends Action {
    
@@ -43,10 +44,11 @@ public class SearchPatientAction extends Action {
       
       String labNo = request.getParameter("segmentID");
       String name = request.getParameter("name");
+      String labType = request.getParameter("labType");
       String newURL = "";
       
       try {
-         String demographicNo = MDSResultsData.searchPatient(labNo);
+         String demographicNo = CommonLabResultData.searchPatient(labNo,labType);
          if ( ! demographicNo.equals("0") ) {
             newURL = mapping.findForward("success").getPath();
             newURL = newURL + "?demographicNo="+demographicNo;
@@ -57,7 +59,7 @@ public class SearchPatientAction extends Action {
          System.out.println("exception in SearchPatientAction:"+e);
          newURL = mapping.findForward("failure").getPath();
       }
-      newURL = newURL + "&labNo="+labNo+"&keyword="+java.net.URLEncoder.encode(name);
+      newURL = newURL + "&labNo="+labNo+"&labType="+labType+"&keyword="+java.net.URLEncoder.encode(name);
       //System.out.println("url "+newURL);
       return new ActionForward(newURL);
    }
