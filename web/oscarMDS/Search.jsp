@@ -92,12 +92,23 @@ if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
                                 </td>
                                 <td>
                                     <select name="searchProviderNo" size="10">
+                                        <optgroup>
                                         <option value=""><bean:message key="oscarMDS.search.formPhysicianAll"/></option>
                                         <option value="0"><bean:message key="oscarMDS.search.formPhysicianUnclaimed"/></option>
+                                        </optgroup>
+                                        <OPTGROUP LABEL="Docs with labs">
+                                        <% ArrayList providers2 = ProviderData.getProviderListWithLabNo();
+                                               for (int i=0; i < providers2.size(); i++) { %>
+                                                   <option value="<%= (String) ((ArrayList) providers2.get(i)).get(0) %>"<%= ( ((String) ((ArrayList) providers2.get(i)).get(0)).equals(request.getParameter("providerNo")) ? " selected" : "" ) %>><%= (String) ((ArrayList) providers2.get(i)).get(1) %> <%= (String) ((ArrayList) providers2.get(i)).get(2) %></option>
+                                            <% } %>
+                                        </optgroup>
+                                                                                
+                                        <OPTGROUP LABEL="All Docs">
                                         <% ArrayList providers = ProviderData.getProviderList();
                                                for (int i=0; i < providers.size(); i++) { %>
                                                    <option value="<%= (String) ((ArrayList) providers.get(i)).get(0) %>"<%= ( ((String) ((ArrayList) providers.get(i)).get(0)).equals(request.getParameter("providerNo")) ? " selected" : "" ) %>><%= (String) ((ArrayList) providers.get(i)).get(1) %> <%= (String) ((ArrayList) providers.get(i)).get(2) %></option>
                                             <% } %>
+                                        </optgroup>
                                     </select>
                                     <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>">
                                 </td>
