@@ -1,13 +1,14 @@
 <%@ page language="java" %>
 <%@ page import="java.util.*" %>
-<%@ page import="oscar.oscarMDS.data.ProviderData" %>
+<%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 
-    oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
+    //oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
+    CommonLabResultData comLab = new CommonLabResultData();
     String providerNo = request.getParameter("providerNo");
     String searchProviderNo = request.getParameter("searchProviderNo");
     String ackStatus = request.getParameter("status");
@@ -16,7 +17,9 @@
     if ( ackStatus == null ) { ackStatus = "N"; } // default to only new lab reports
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
-    mDSData.populateMDSResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
+    //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
+        
+    ArrayList labs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
 %>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <style type="text/css">
@@ -186,13 +189,13 @@ function reportWindow(page) {
 
 function checkSelected() {
     aBoxIsChecked = false;    
-    if (this.reassignForm.flaggedLabs.length == undefined) {
-        if (this.reassignForm.flaggedLabs.checked == true) {
+    if (document.reassignForm.flaggedLabs.length == undefined) {
+        if (document.reassignForm.flaggedLabs.checked == true) {
             aBoxIsChecked = true;
         }
     } else {
-        for (i=0; i < this.reassignForm.flaggedLabs.length; i++) {
-            if (this.reassignForm.flaggedLabs[i].checked == true) {
+        for (i=0; i < document.reassignForm.flaggedLabs.length; i++) {
+            if (document.reassignForm.flaggedLabs[i].checked == true) {
                 aBoxIsChecked = true;
             }
         }
@@ -212,7 +215,7 @@ function checkSelected() {
             <tr oldclass="MainTableTopRow">
                 <td class="MainTableTopRowRightColumn" colspan="9" align="left">                       
                     <table width="100%">
-                        <tr> 
+                        <tr>                        
                             <td align="left" valign="center" width="30%">
                                 <input type="hidden" name="providerNo" value="<%= providerNo %>">
                                 <input type="hidden" name="searchProviderNo" value="<%= searchProviderNo %>">
@@ -228,11 +231,11 @@ function checkSelected() {
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
-                                <% if (demographicNo == null && mDSData.segmentID.size() > 0) { %>
+                                <% if (demographicNo == null && labs.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                 <% } %>
-                            </td>
+                            </td>                            
                             <td align="center" valign="center" width="40%" class="Nav">
                                 &nbsp;&nbsp;&nbsp;
                                 <% if (demographicNo == null) { %>
@@ -301,47 +304,58 @@ function checkSelected() {
                 startIndex = Integer.parseInt(request.getParameter("startIndex"));
             }
             int endIndex = startIndex+20;            
-            if ( mDSData.segmentID.size() < endIndex ) {
-                endIndex = mDSData.segmentID.size();
+            if ( labs.size() < endIndex ) {
+                endIndex = labs.size();
             }
 
+            System.out.println("pagenum :"+pageNum+ " startIndex "+startIndex+" endIndex "+endIndex +" total size "+labs.size());
             for (int i = startIndex; i < endIndex; i++) {
-                String segmentID        = (String) mDSData.segmentID.get(i);
-                String status           = (String) mDSData.acknowledgedStatus.get(i);
+                
+                
+                LabResultData result =  (LabResultData) labs.get(i);
+                
+                String segmentID        = (String) result.segmentID;
+                String status           = (String) result.acknowledgedStatus;
 
-                String resultStatus     = (String) mDSData.resultStatus.get(i); %>
+                String resultStatus     = (String) result.resultStatus; %>
 
-            <tr bgcolor="<%=(i % 2 == 0 ? "#e0e0ff" : "#ccccff" )%>" class="<%= (resultStatus.equals("0") ? "NormalRes" : "AbnormalRes") %>">
+            <tr bgcolor="<%=(i % 2 == 0 ? "#e0e0ff" : "#ccccff" )%>" class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
                 <td nowrap>
                     <input type="checkbox" name="flaggedLabs" value="<%=segmentID%>"> 
-                    <%= ((String) mDSData.healthNumber.get(i)).substring(1) %>
+                    <input type="hidden" name="labType<%=segmentID%><%=result.labType%>" value="<%=result.labType%>"/>
+                    <%= ((String) result.healthNumber)/*.substring(1)*/ %>
                 </td>
                 <td nowrap>                                    
-                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) mDSData.patientName.get(i)%></a>
+                    <% if ( result.isMDS() ){ %>
+                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
+                    <% }else{ %>
+                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
+                    <% } %>
                 </td>
                 <td nowrap>
-                    <center><%= (String) mDSData.sex.get(i) %></center>
+                    <center><%= (String) result.sex %></center>
                 </td>
                 <td nowrap>
-                    <%= (resultStatus.equals("0") ? "" : "Abnormal") %>
+                    <%= (result.isAbnormal() ? "Abnormal" : "" ) %>
                 </td>
                 <td nowrap>
-                    <%= (String) mDSData.dateTime.get(i)%>
+                    <%= (String) result.dateTime%>
                 </td>
                 <td nowrap>
-                    <%= (String) mDSData.priority.get(i)%>
+                    <%= (String) result.priority%>
                 </td>
                 <td nowrap>
-                    <%= (String) mDSData.requestingClient.get(i)%>
+                    <%= (String) result.requestingClient%>
                 </td>
                 <td nowrap>
-                    <%= (String) mDSData.discipline.get(i)%>
+                    <%= (String) result.discipline%>
                 </td>
                 <td nowrap>                                    
-                    <%= ( ((String) mDSData.reportStatus.get(i)).equals("0") ? "Partial" : "Final" ) %>
+                    <%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
                 </td>
             </tr>
          <% } 
+         
             if ( endIndex == 0 ) { %>
             <tr>
                 <td colspan="9" align="center">
@@ -361,21 +375,21 @@ function checkSelected() {
                                 <% if (request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                             
-                                <% if (demographicNo == null && mDSData.segmentID.size() > 0) { %>
+                                <% if (demographicNo == null && labs.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                 <% } %>
                             </td>
                             <td align="center" valign="middle" width="40%">
                                 <div class="Nav">
-                                <% if ( pageNum > 1 || mDSData.segmentID.size() > endIndex ) {
+                                <% if ( pageNum > 1 || labs.size() > endIndex ) {
                                     if ( pageNum > 1 ) { %>
                                         <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>">< <bean:message key="oscarMDS.index.msgPrevious"/></a>
                                  <% } else { %>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                  <% } %>
                                        [<%= pageNum %>] 
-                                 <% if ( mDSData.segmentID.size() > endIndex ) { %>
+                                 <% if ( labs.size() > endIndex ) { %>
                                         <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message key="oscarMDS.index.msgNext"/> ></a>
                                  
                                  <% } else { %>
