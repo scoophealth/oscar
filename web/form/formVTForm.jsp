@@ -1466,7 +1466,7 @@ function clearAll(yRadio, nRadio){
 
 
                                 <tr>                                            
-                                    <th class="title" width="98%" colspan="2">
+                                    <th class="title"  colspan="2">
                                         <span id="labsLabel" style="display:none;"><a href="javascript: showHideItem('labs');" >Labs >> </a></span>
                                     </th>
                                 </tr>
