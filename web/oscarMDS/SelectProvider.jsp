@@ -46,21 +46,23 @@ select       { width: 300px; }
 <script language='JavaScript'>
 
 function doStuff() {
+    
     allSelected = "";
-    if ( this.providerSelectForm.selectedProviders.selectedIndex == -1 ) {
+    if ( document.providerSelectForm.selectedProviders.selectedIndex == -1 ) {
         alert ("Please select at least one provider");
     } else {
-        for (i=0; i < this.providerSelectForm.selectedProviders.options.length; i++) {
-            if (this.providerSelectForm.selectedProviders.options[i].selected) {
+        for (i=0; i < document.providerSelectForm.selectedProviders.options.length; i++) {
+            if (document.providerSelectForm.selectedProviders.options[i].selected) {
                 if (allSelected != "") {
                     allSelected = allSelected + ",";
                 }
-                allSelected = allSelected + this.providerSelectForm.selectedProviders.options[i].value;
+                allSelected = allSelected + document.providerSelectForm.selectedProviders.options[i].value;
             }
         }
-        opener.reassignForm.selectedProviders.value = allSelected;
-        opener.reassignForm.submit();
-        window.close();
+        self.close();
+        self.opener.document.reassignForm.selectedProviders.value = allSelected;
+        self.opener.document.reassignForm.submit();
+        
     }
 }
 
