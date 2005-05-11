@@ -25,11 +25,13 @@ package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
+import oscar.oscarLab.ca.on.*;
 import oscar.oscarMDS.data.MDSResultsData;
 
 public class ReportReassignAction extends Action {
@@ -49,11 +51,31 @@ public class ReportReassignAction extends Action {
       
       String[] flaggedLabs = request.getParameterValues("flaggedLabs");
       String selectedProviders = request.getParameter("selectedProviders");
+      String labType = request.getParameter("labType");
+      Hashtable htable = new Hashtable();
+      String[] labTypes = CommonLabResultData.getLabTypes();
+      ArrayList listFlaggedLabs = new ArrayList();
+      
+      if(flaggedLabs != null && labTypes != null){
+         for (int i = 0; i < flaggedLabs.length; i++){            
+            for (int j = 0; j < labTypes.length; j++){
+               String s =  request.getParameter("labType"+flaggedLabs[i]+labTypes[j]);
+               
+               if (s != null){  //This means that the lab was of this type.
+                  String[] la =  new String[] {flaggedLabs[i],labTypes[j]};                  
+                  listFlaggedLabs.add(la);
+                  j = labTypes.length;
+                  
+               }
+               
+            }
+         }
+      }
       
       String newURL = "";
       
       try {
-         MDSResultsData.updateLabRouting(flaggedLabs, selectedProviders);
+         CommonLabResultData.updateLabRouting(listFlaggedLabs, selectedProviders);
          newURL = mapping.findForward("success").getPath();
          newURL = newURL + "?providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status;
          if (request.getParameter("lname") != null) { newURL = newURL + "&lname="+request.getParameter("lname"); }
