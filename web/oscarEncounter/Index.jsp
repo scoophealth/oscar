@@ -31,7 +31,8 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
 <%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*"%>
-<%@page import="oscar.oscarMDS.data.MDSResultsData, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
+<%@page import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
+
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
   response.setHeader("Cache-Control","no-cache");
@@ -59,8 +60,13 @@
   String providerName = bean.userName;
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-  MDSResultsData labResults =  new MDSResultsData();    
-  labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
+  
+  CommonLabResultData comLab = new CommonLabResultData();
+  ArrayList labs = comLab.populateLabResultsData("",demoNo, "", "","","U");
+  
+  //MDSResultsData labResults =  new MDSResultsData();    
+  //labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
+  
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
   
@@ -562,8 +568,15 @@ function goToSearch() {
 function loader(){
     window.focus();
     var tmp;
+    
     document.encForm.enTextarea.focus();
     document.encForm.enTextarea.value = document.encForm.enTextarea.value + "";
+    document.encForm.enTextarea.scrollTop = document.encForm.enTextarea.scrollHeight;
+    
+    <%String popUrl = request.getParameter("popupUrl"); 
+      if (popUrl != null){           %>
+      window.setTimeout("popupPageK('<%=popUrl%>')", 2);  
+    <%}%>
     
     //tmp = document.encForm.enTextarea.value; // these two lines cause the enTextarea to scroll to the bottom (only works in IE)
     //document.encForm.enTextarea.value = tmp; // another option is to use window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  (also only works in IE)
@@ -898,8 +911,14 @@ border-right: 2px solid #cfcfcf;
                         <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a><br>
                         <select name="selectCurrentForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View <%=patientName%>\'s lab results'; return true;">
                             <option value="null" selected>-lab results-</option>
-                            <% for(int j=0; j<labResults.segmentID.size(); j++) { %>                                
-                                <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=(String)labResults.segmentID.get(j)%>&status=<%=(String)labResults.reportStatus.get(j)%>"><%=((String)labResults.dateTime.get(j)).substring(0,10)%> <%=(String)labResults.discipline.get(j)%></option>
+                            <% 
+                                for(int j=0; j<labs.size(); j++) { 
+                                    LabResultData result =  (LabResultData) labs.get(j); 
+                                    if ( result.isMDS() ){ %>                    
+                                        <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>&status=<%=result.reportStatus%>"><%=result.dateTime%> <%=result.discipline%></option>
+                                    <% }else{ %>
+                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.dateTime%> <%=result.discipline%></option>
+                                    <% } %>                                                                
                             <% } %>
                         </select>
                  </td>
