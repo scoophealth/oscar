@@ -85,7 +85,8 @@ function checkTypeIn() {
 
    <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
 	   <form method="post" name="titlesearch" action="PatientSearch.jsp" onSubmit="return checkTypeIn();">
-         <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
+         <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>"/>
+         <input type="hidden" name="labType" value="<%=request.getParameter("labType")%>"/>
 	      <%--@ include file="zdemographictitlesearch.htm"--%>
       <tr valign="top">
          <td rowspan="2" ALIGN="right" valign="middle"> 
@@ -166,6 +167,7 @@ function checkTypeIn() {
       <table width="100%" border="1"  cellpadding="0" cellspacing="1" bgcolor="#ffffff"> 
 	      <form method="post" name="addform" action="PatientMatch.do" >
             <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
+            <input type="hidden" name="labType" value="<%=request.getParameter("labType")%>"/>
          <tr bgcolor="#339999">
             <TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgPatientId"/></b></TH>
             <TH align="center" width="20%"><b><bean:message key="oscarMDS.segmentDisplay.patientSearch.msgLastName"/></b></TH>
@@ -312,6 +314,7 @@ function next() {
 
 <form method="post" name="nextform" action="../demographic/demographiccontrol.jsp" >
 <input type="hidden" name="labNo" value="<%=request.getParameter("labNo")%>">
+<input type="hidden" name="labType" value="<%=request.getParameter("labType")%>"/>
 <%
   if(nLastPage>=0) {
 %>
