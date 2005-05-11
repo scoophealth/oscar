@@ -118,6 +118,13 @@ public class MDSResultsData {
             lbData.requestingClient = rs.getString("doc_name");
             lbData.reportStatus =  rs.getString("lab_status");
             
+            if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
+               lbData.finalRes = true;
+            }else{
+               lbData.finalRes = false;
+            }
+            
+            
             //if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
             //   discipline.add("Microbiology");
             //} else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
@@ -324,6 +331,13 @@ public class MDSResultsData {
             
             lData.requestingClient = ProviderData.beautifyProviderName(rs.getString("refDoctor"));
             lData.reportStatus = rs.getString("reportFormStatus");
+            
+            if (lData.reportStatus != null && lData.reportStatus.equals("0")){    
+               lData.finalRes = false;
+            }else{
+               lData.finalRes = true;
+            }
+            
             
             if ( !lData.resultStatus.equals("0") ){
                lData.abn = true;
