@@ -30,7 +30,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
-import oscar.oscarMDS.data.MDSResultsData;
+import oscar.oscarLab.ca.on.*;
+
 
 public class PatientMatchAction extends Action {
    
@@ -45,13 +46,13 @@ public class PatientMatchAction extends Action {
       
       String demographicNo = request.getParameter("demographicNo");
       String labNo = request.getParameter("labNo");
+      String labType = request.getParameter("labType");
       
       String newURL = "";
       
-      // System.out.println("In ReportReassignAction: labNo is: "+labNo+"  demographicNo is: "+demographicNo);
-      
+      // System.out.println("In ReportReassignAction: labNo is: "+labNo+"  demographicNo is: "+demographicNo);      
       try {
-         MDSResultsData.updatePatientLabRouting(labNo, demographicNo);
+         CommonLabResultData.updatePatientLabRouting(labNo, demographicNo,labType);
          newURL = mapping.findForward("success").getPath();
          newURL = newURL + "?demographicNo="+demographicNo;
       } catch (Exception e) {

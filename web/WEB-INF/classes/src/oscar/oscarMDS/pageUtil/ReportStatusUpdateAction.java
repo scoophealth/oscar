@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarMDS.pageUtil;
 
@@ -30,36 +30,37 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
-import oscar.oscarMDS.data.MDSResultsData;
+//import oscar.oscarMDS.data.MDSResultsData;
 import java.util.Properties;
+import oscar.*;
+import oscar.oscarLab.ca.on.*;
 
-public class ReportStatusUpdateAction extends Action
-{
-
-    public ReportStatusUpdateAction()
-    {
-    }
-
-    public ActionForward execute(ActionMapping mapping, 
-                                 ActionForm form, 
-                                 HttpServletRequest request, 
-                                 HttpServletResponse response)
-        throws ServletException, IOException
-    {        
-        // System.out.println("inside ReportStatusUpdateAction");
-        
-        int labNo = Integer.parseInt(request.getParameter("segmentID"));
-        int providerNo = Integer.parseInt(request.getParameter("providerNo"));
-        char status = request.getParameter("status").charAt(0);
-        String comment = request.getParameter("comment");
-        Properties props = (Properties) request.getSession().getAttribute("oscarVariables");
-        
-        try {
-            MDSResultsData.updateReportStatus(props, labNo, providerNo, status, comment);
-            return mapping.findForward("success");
-        } catch (Exception e) {
-            System.out.println("exception in ReportStatusUpdateAction:"+e);
-            return mapping.findForward("failure");
-        }
-    }
+public class ReportStatusUpdateAction extends Action {
+   
+   public ReportStatusUpdateAction() {
+   }
+   
+   public ActionForward execute(ActionMapping mapping,
+   ActionForm form,
+   HttpServletRequest request,
+   HttpServletResponse response)
+   throws ServletException, IOException {
+      // System.out.println("inside ReportStatusUpdateAction");
+      
+      int labNo = Integer.parseInt(request.getParameter("segmentID"));
+      int providerNo = Integer.parseInt(request.getParameter("providerNo"));
+      char status = request.getParameter("status").charAt(0);
+      String comment = request.getParameter("comment");
+      String lab_type = request.getParameter("labType");
+      Properties props = OscarProperties.getInstance();
+      
+      try {
+         CommonLabResultData.updateReportStatus(props, labNo, providerNo, status, comment,lab_type);
+         //MDSResultsData.updateReportStatus(props, labNo, providerNo, status, comment);
+         return mapping.findForward("success");
+      } catch (Exception e) {
+         System.out.println("exception in ReportStatusUpdateAction:"+e);
+         return mapping.findForward("failure");
+      }
+   }
 }
