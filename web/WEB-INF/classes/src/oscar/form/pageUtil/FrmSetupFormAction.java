@@ -357,6 +357,10 @@ public final class FrmSetupFormAction extends Action {
             e.printStackTrace();
             return null;
         }                
+        catch(Exception e){
+           e.printStackTrace();
+           return null;
+        }
     }
     
     private String getMostRecentRecord(String demographicNo){
