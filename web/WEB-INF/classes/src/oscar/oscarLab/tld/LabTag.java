@@ -55,7 +55,7 @@ public class LabTag extends TagSupport {
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                numNewLabs = (rs.getInt(1));
-               System.out.println("Labs" +numNewLabs);
+               //System.out.println("Labs" +numNewLabs);
             }
 
             rs.close();
