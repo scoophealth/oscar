@@ -213,7 +213,7 @@ Vascular Tracker (Draft)
         
         return ret;
     }
-
+var pageWindow = null;
 function popupDecisionSupport(){
     var varpage = "<%=request.getAttribute("decisionSupportURL")%>";
     var vheight = 760;
@@ -223,12 +223,22 @@ function popupDecisionSupport(){
     if(varpage!="null"){
         windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=680";
         var popup=window.open(varpage, "DecisionSupport", windowprops);  
+        pageWindow = popup;
         popup.focus();
     }
     /*else{
         alert("Miles server is not avaiable!");
     }*/
     
+ }
+ 
+ function closeDSWindow(){
+    if( pageWindow != null ){
+       if ( !pageWindow.closed ) {
+          pageWindow.close();
+       }
+    }
+ 
  }
    
  
@@ -677,7 +687,7 @@ function clearAll(yRadio, nRadio){
 }
 
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport(); initialize();">
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus();window.resizeTo(680,760); popupDecisionSupport(); initialize();" onunload="closeDSWindow();" >
 <!--  -->
     
     <html:form action="/form/SubmitForm" >    
