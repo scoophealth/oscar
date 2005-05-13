@@ -430,6 +430,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 <td bgcolor="#FFCC00" width="200" height="22" valign="bottom">
                                     <div class="Title2">
                                         <%=""/*gResults.groupName*/%>
+                                        
                                     </div>
                                 </td>
                                 <td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>
@@ -446,11 +447,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formReferenceRange"/></td>
                                 <td width="10%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formUnits"/></td>
                                 <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>                                
-                            </tr>
-                        
-                 
-                        
-                 
+                            </tr>                                                                                  
                         <%  int linenum = 0;
                             if (list != null){ 
                                 System.out.println("list . size "+list.size());
@@ -475,32 +472,15 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             } %>
            
                        </table>
-           
-        
-        
-            
-    
-
+                                           
             <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                 <tr>
-                    <td align="left" width="40%">
-                        <% if ( request.getParameter("providerNo") != null /*&& ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) */) { %>
-                        <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
-                        <% } %>
+                    <td align="left" >
+                    
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
-                        <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
-                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
-                        <% } else { // we were called from lab module %>
-                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
-                        <% } %>
-                    </td>
-                    <td width="20%" valign="center" align="middle">
-                        <span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEnd"/></i></span>
-                    </td>
-                    <td width="40%">
-                        &nbsp;
-                    </td>
+                    
+                    </td>                    
                 </tr>
             </table>
         </td>
