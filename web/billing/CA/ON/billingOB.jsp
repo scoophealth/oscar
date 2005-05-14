@@ -154,6 +154,33 @@ function checkData() {
 //    } else if(document.forms[0].xml_billtype.options[document.forms[0].xml_billtype.selectedIndex].value == "NOB | Do Not Bill"){
 //    	alert("The billing type is 'do not bill'.");
 //        b = false;
+	} else if (!document.forms[0].xml_referral.checked){
+		//if ref. no check
+		for (i=0;i<document.forms[0].length;i++){
+			var cd = document.forms[0].elements[i];
+			if(cd.value=="checked" && cd.checked) {
+				//alert(cd.value);
+				var na = cd.name;
+				na = na.substring(4);
+				//alert(na); A265A, A266A, A565A, A815A, A665A
+				if(na=="A265A" || na=="A266A" || na=="A565A" || na=="A815A" || na=="A665A" || na=="A001A") {
+					alert("You may forget to check referral box!");
+				} else if(na=="C265A" || na=="C266A" || na=="C565A" || na=="C815A" || na=="C665A" ) {
+					alert("You may forget to check referral box!");
+				} else if(na.substring(0,1)=="W" ) {
+					alert("You may forget to check referral box!");
+				}
+			} else if(cd.name=="xml_other1" || cd.name=="xml_other2" || cd.name=="xml_other3" ) {
+				var na = cd.value;
+				if(na=="A265A" || na=="A266A" || na=="A565A" || na=="A815A" || na=="A665A" || na=="A001A") {
+					alert("You may forget to check referral box!");
+				} else if(na=="C265A" || na=="C266A" || na=="C565A" || na=="C815A" || na=="C665A" ) {
+					alert("You may forget to check referral box!");
+				} else if(na.substring(0,1)=="W" ) {
+					alert("You may forget to check referral box!");
+				}
+			}
+		}
 	}
     return b;
 }
