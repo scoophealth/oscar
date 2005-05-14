@@ -458,8 +458,14 @@ function referralScriptAttach2(elementName, name2) {
      var d = elementName;
      t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
      t1 = escape("document.forms[0].elements[\'"+name2+"\'].value");
-     rs('att',('searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
-     //awnd.focus();
+     awnd=rs('att',('searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
+     awnd.focus();
+}
+function dxScriptAttach(name2) {
+	f0 = escape(document.forms[0].dxCode.value);
+    f1 = escape("document.forms[0].elements[\'"+name2+"\'].value");
+	awnd=rs('att','billingDigSearch.jsp?name='+f0 + '&search=&name2='+f1,600,600,1);
+	awnd.focus();
 }
 
 //-->
@@ -571,7 +577,7 @@ ctlCount = 0;
               <td valign="top">
               	<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td>
 	                <a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a><br>
-	                <input type="text" name="dxCode" size="5" maxlength="5" value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>">
+	                <input type="text" name="dxCode" size="5" maxlength="5" onDblClick="dxScriptAttach('dxCode')" value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>">
 	                </td><td>
 	                Cal.% mode<br>
 					<select name="rulePerc" >
