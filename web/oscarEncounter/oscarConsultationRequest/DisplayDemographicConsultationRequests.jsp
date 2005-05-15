@@ -214,7 +214,9 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                                    <% } %>
                                     </td>
                                     <td class="stat<%=status%>">
+                                    <a href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?requestId=<%=id%>')">                                    
                                     <%=patient%>
+                                    </a>
                                     </td>
                                     <td class="stat<%=status%>">
                                     <%=provide%>
