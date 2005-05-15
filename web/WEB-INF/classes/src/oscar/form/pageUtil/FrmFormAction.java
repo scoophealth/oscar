@@ -263,14 +263,15 @@ public class FrmFormAction extends Action {
         
         System.out.println("submit value: " + submit);
         if(submit.equalsIgnoreCase("exit")){
-            String toEChart = "[" + timeStamp + ".: Vascular Tracker] \n\n" 
-                                + "Subjective: \n \t" + (String) frm.getValue("subjective") + "\n"
-                                + "Objective: \n \t" + (String) frm.getValue("objective") + "\n"
-                                + "Assessment: \n \t" + (String) frm.getValue("assessment") + "\n"
-                                + "Plan: \n \t" + (String) frm.getValue("plan") + "\n"
-                                + "Diagnosis: \n \t" + (String) frm.getValue("diagnosisVT") + "\n\n"
-                                + "[end of Vascular Tracker] \n";
-            request.setAttribute("diagnosisVT", org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(toEChart));
+            String toEChart = "[" + timeStamp + ".: Vascular Tracker] \n\n" ;
+//                                + "Subjective: \n \t" + (String) frm.getValue("subjective") + "\n"
+//                                + "Objective: \n \t" + (String) frm.getValue("objective") + "\n"
+//                                + "Assessment: \n \t" + (String) frm.getValue("assessment") + "\n"
+//                                + "Plan: \n \t" + (String) frm.getValue("plan") + "\n"
+//                                + "Diagnosis: \n \t" + (String) frm.getValue("diagnosisVT") + "\n\n"
+//                                + "[end of Vascular Tracker] \n";
+            //request.setAttribute("diagnosisVT", org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(toEChart));
+            request.setAttribute("diagnosisVT", "");
             return (new ActionForward("/form/formSaveAndExit.jsp"));
         }
         EctFormData fData = new EctFormData();
