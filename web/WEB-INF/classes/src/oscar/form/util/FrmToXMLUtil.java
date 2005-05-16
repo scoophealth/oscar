@@ -212,7 +212,12 @@ public class FrmToXMLUtil{
             RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();            
             for(int i=0; i<prescribedDrugs.length; i++){                
                 SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug drug = visit.addNewSitePatientVisitDrug();                
-                drug.setDrugCod("ATC_"+prescribedDrugs[i].getAtcCode().trim());
+                String atccode = prescribedDrugs[i].getAtcCode().trim();
+                if (atccode == null || atccode.equalsIgnoreCase("null") || atccode.equals("")){
+                   drug.setDrugCod("NAM_"+prescribedDrugs[i].getDrugName());
+                }else{
+                   drug.setDrugCod("ATC_"+prescribedDrugs[i].getAtcCode().trim());
+                }
                 SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug.TxtDrugName drugName = drug.addNewTxtDrugName();                
                 drugName.setSignedHow(how);
                 drugName.setSignedWho(who);
