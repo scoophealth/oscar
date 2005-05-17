@@ -101,6 +101,9 @@ function CodeAttach(File2) {
 
 <h3><font face="Arial, Helvetica, sans-serif"></font></h3>
 <form name="codesearch" method=POST action="billingDigSearch.jsp">
+<%if(request.getParameter("name2")!=null) {%>
+<input type="hidden" name="name2" value="<%=request.getParameter("name2")%>">
+<%}%>
 <p><font face="Arial, Helvetica, sans-serif" size="2"><b><bean:message key="billing.billingDigSearch.msgRefine"/></b><br><bean:message key="billing.billingDigSearch.msgCodeRange"/>:
 <select name="coderange">
 <option value="0" selected>000-099</option>
