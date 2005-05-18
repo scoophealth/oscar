@@ -154,7 +154,7 @@ function checkData() {
 //    } else if(document.forms[0].xml_billtype.options[document.forms[0].xml_billtype.selectedIndex].value == "NOB | Do Not Bill"){
 //    	alert("The billing type is 'do not bill'.");
 //        b = false;
-	} else if (!document.forms[0].xml_referral.checked){
+	} <%if(oscarVariables.getProperty("isSpecialist", "").equals("true")) {%>else if (!document.forms[0].xml_referral.checked){
 		//if ref. no check
 		for (i=0;i<document.forms[0].length;i++){
 			var cd = document.forms[0].elements[i];
@@ -181,7 +181,7 @@ function checkData() {
 				}
 			}
 		}
-	}
+	}<%}%>
     return b;
 }
 
