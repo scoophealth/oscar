@@ -276,7 +276,13 @@ public class FrmToXMLUtil{
          Method setValueMethod = cls.getMethod("setValue",new Class[] {int.class});
          if(value.equalsIgnoreCase(""))
              value="0";
-         Integer integer = new Integer(value);
+         Integer integer = null;
+         try{
+            integer = new Integer(value);
+         }catch (NumberFormatException nfe) {
+            integer = new Integer(""+Math.round( Double.parseDouble(value) ));
+         }
+         
          setValueMethod.invoke(obj, new Object[] {integer}); 
          i = 2;
       }catch (NoSuchMethodException noSuchMethod1){}
