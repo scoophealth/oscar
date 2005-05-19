@@ -156,7 +156,13 @@ function popupPage2(varpage, windowname) {
     var page = "" + varpage;
     windowprops = "height=700,width=1000,location=no,"
     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
-    window.open(page, windowname, windowprops);
+    var popup = window.open(page, windowname, windowprops);
+    if (popup != null) {
+       if (popup.opener == null) {
+          popup.opener = self;
+       }
+       popup.focus();
+    }
 }
 
 <!--oscarMessenger code block-->
@@ -168,6 +174,7 @@ function popupOscarRx(vheight,vwidth,varpage) {
     if (popup.opener == null) {
       popup.opener = self;
     }
+    popup.focus();
   }
 }
 
