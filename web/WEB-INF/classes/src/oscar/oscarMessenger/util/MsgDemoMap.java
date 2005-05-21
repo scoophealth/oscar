@@ -31,7 +31,7 @@ public class MsgDemoMap {
      */
     public void linkMsg2Demo(String msgId, String demographic_no){
         
-        System.out.println("input msgId: " + msgId + "  input demographic_no: " + demographic_no);
+        //System.out.println("input msgId: " + msgId + "  input demographic_no: " + demographic_no);
        
         //both msgId + demographic_no is the the primary key
         //if the combination of both msgId and demographic_no value exsit in the table, new data will not be added
@@ -75,7 +75,7 @@ public class MsgDemoMap {
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
-            sql = "select messageID from msgDemoMap where demographic_no='"+demographic_no+"'";
+            sql = "select map.messageID from msgDemoMap map, messagetbl m where m.messageid=map.messageID and demographic_no='"+demographic_no+"' order by m.thedate desc";
             
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
@@ -87,5 +87,24 @@ public class MsgDemoMap {
             msgVector = null;
         }
         return msgVector;
+    }
+    
+    public void unlinkMsg (String demographic_no, String messageID){
+        Vector msgVector= new Vector();
+        try{          
+            System.out.println("input msgId: " + messageID + "  input demographic_no: " + demographic_no);
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "";                               
+            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
+            //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
+            sql = "delete from msgDemoMap where demographic_no='"+demographic_no+"' and messageID='"+messageID+"'";
+            
+            db.RunSQL(sql);
+            
+            db.CloseConn();
+        }
+        catch (java.sql.SQLException e){ 
+            msgVector = null;
+        }
     }
 }
