@@ -30,6 +30,7 @@ import oscar.util.*;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Vector;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -63,12 +64,22 @@ public class MsgViewMessageAction extends Action {
         else
             System.out.println("MsgSessionBean is null");
         
-        String messageNo = request.getParameter("messageID");        
+        String messageNo = request.getParameter("messageID");  
+        String messagePosition = request.getParameter("messagePosition");
         String linkMsgDemo = request.getParameter("linkMsgDemo");           
-        String demographic_no = request.getParameter("demographic_no");      
+        String demographic_no = request.getParameter("demographic_no");   
+        String orderBy = request.getParameter("orderBy");
+        String msgCount = request.getParameter("msgCount");
+        String from = request.getParameter("from")==null?"oscarMessenger":request.getParameter("from");
+        
+        if(msgCount==null){
+            MsgDisplayMessagesBean DisplayMessagesBeanId = new MsgDisplayMessagesBean();
+            Vector theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderBy,demographic_no);
+            msgCount = Integer.toString(theMessages2.size());
+        }
+        
         int  i = 1;
 
-        System.out.println("the value of linkMsgDemo is: " + linkMsgDemo);
         try{
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            java.sql.ResultSet rs;
@@ -104,7 +115,13 @@ public class MsgViewMessageAction extends Action {
                  request.setAttribute("viewMessageId",messageNo);                 
                  // not from query
                  request.setAttribute("viewMessageNo",messageNo);
-                 request.setAttribute("providerNo",providerNo);                 
+                 request.setAttribute("viewMessagePosition",messagePosition);
+                 request.setAttribute("providerNo",providerNo); 
+                 if(orderBy!=null){
+                     request.setAttribute("orderBy", orderBy);
+                 }
+                                  
+                 System.out.println("viewMessagePosition: " + messagePosition + "IsLastMsg: " + request.getAttribute("viewMessageIsLastMsg"));
               }
               else{
                  i=0; // somethin wrong no message there
@@ -118,6 +135,7 @@ public class MsgViewMessageAction extends Action {
                   if(linkMsgDemo.equalsIgnoreCase("true")){
                       MsgDemoMap msgDemoMap = new MsgDemoMap();
                       msgDemoMap.linkMsg2Demo(messageNo, demographic_no);
+                      
                   }
               }
                   
@@ -132,7 +150,14 @@ public class MsgViewMessageAction extends Action {
         }
         
         ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
-        actionforward.addParameter("linkMsgDemo", linkMsgDemo);
+        if(from.equalsIgnoreCase("encounter")){
+            actionforward = new ParameterActionForward(mapping.findForward("viewFromEncounter"));
+            actionforward.addParameter("demographic_no", demographic_no);
+            actionforward.addParameter("msgCount", msgCount);
+        }
+        else{            
+            actionforward.addParameter("linkMsgDemo", linkMsgDemo);
+        }
                 
         return actionforward;
     }
