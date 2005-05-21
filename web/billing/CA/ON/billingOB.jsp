@@ -185,6 +185,17 @@ function checkData() {
     return b;
 }
 
+function onDblClickServiceCode(item) {
+	//alert(item.id);
+	if(document.forms[0].xml_other1.value=="") {
+		document.forms[0].xml_other1.value = item.id.substring(3);
+	} else if(document.forms[0].xml_other2.value=="") {
+		document.forms[0].xml_other2.value = item.id.substring(3);
+	} else if(document.forms[0].xml_other3.value=="") {
+		document.forms[0].xml_other3.value = item.id.substring(3);
+	}
+}
+
 //-->
 </script>
 
@@ -510,7 +521,7 @@ while(rslocal.next()){
 		<tr bgcolor=<%=CountService%2==0?"#FFFFFF":"#EEEEFF"%>>
 			<td width="15%"  nowrap>
 			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
-			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b> &nbsp;</td>
+			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+CountService).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b> &nbsp;</td>
 			<td width="71%"><font size="1" ><%=serviceDesc%>
 			<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
 			</font></td>
@@ -571,7 +582,7 @@ while(rslocal.next()){
 		<tr bgcolor=<%=CountService%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
 			<td width="15%" nowrap>
 			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
-			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>&nbsp;</td>
+			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+CountService).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>&nbsp;</td>
 			<td width="71%"><font size="1" ><%=serviceDesc%></font>
 
 			<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
@@ -636,7 +647,7 @@ while(rslocal.next()){
 		<tr bgcolor=<%=CountService%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
 			<td width="15%" nowrap><b></b>
 			<input type="checkbox" name="xml_<%=serviceCode%>" value="checked"  <%=bNew?"":"datafld='xml_"+serviceCode+ "'"%>>
-			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>&nbsp;</td>
+			<b><font size="1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+CountService).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>&nbsp;</td>
 			<td width="71%"><font size="1" ><%=serviceDesc%></font>
 
 			<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">

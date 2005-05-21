@@ -355,6 +355,8 @@ function showHideLayers() { //v3.0
     }
     function checkAllDates() {
 	    document.forms[0].serviceDate0.value = document.forms[0].serviceDate0.value.toUpperCase();
+	    document.forms[0].serviceDate1.value = document.forms[0].serviceDate1.value.toUpperCase();
+	    document.forms[0].serviceDate2.value = document.forms[0].serviceDate2.value.toUpperCase();
         var b = true;
         if(document.forms[0].billDate.value.length<1){
         	alert("No billing date!");
@@ -729,7 +731,7 @@ ctlCount = 0;
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
 				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=i+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
 				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;">
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
@@ -771,7 +773,7 @@ ctlCount = 0;
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
 				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=i+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
 				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;" />
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
@@ -814,7 +816,7 @@ ctlCount = 0;
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
 				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=i+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
 				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;" />
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
