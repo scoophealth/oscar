@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarMessenger.util.*;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -58,6 +59,11 @@ public class MsgDisplayMessagesAction extends Action {
             // Setup variables
             ActionErrors errors = new ActionErrors();
             oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;
+            String[] messageNo = ((MsgDisplayMessagesForm)form).getMessageNo();
+            String providerNo;
+            
+            //Initialize forward location
+            String findForward = "success";
 
             if(request.getParameter("providerNo")!=null & request.getParameter("userName")!=null)
             {
@@ -66,20 +72,18 @@ public class MsgDisplayMessagesAction extends Action {
                 bean.setProviderNo(request.getParameter("providerNo"));
                 bean.setUserName(request.getParameter("userName"));
                 request.getSession().setAttribute("msgSessionBean", bean);
-                // System.out.println(bean.getProviderNo());
-                // System.out.println(bean.getUserName());
-                if(request.getParameter("demographic_no")!=null){
-                    request.getSession().setAttribute("demographic_no", request.getParameter("demographic_no"));
-                }
+                                
             }//if
             else
             {
                 bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
             }//else
-            String providerNo= bean.getProviderNo();
-            String[] messageNo = ((MsgDisplayMessagesForm)form).getMessageNo();
+            
+            
             //This will go through the array of message Numbers and set them
             //to del.which stands for deleted. but you prolly could have figured that out
+            
+            providerNo= bean.getProviderNo();
             for (int i =0 ; i < messageNo.length ; i++){
               try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -89,7 +93,9 @@ public class MsgDisplayMessagesAction extends Action {
                 db.CloseConn();
               }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
             }//for
-    return (mapping.findForward("success"));
+           
+            //System.out.println("findFoward: " + findForward);
+    return (mapping.findForward(findForward));
     }
 
 }

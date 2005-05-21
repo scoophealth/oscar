@@ -33,6 +33,7 @@ public class MsgDisplayMessagesBean {
 
   private String providerNo;
   private java.util.Vector messageid;
+  private java.util.Vector messagePosition;
   private java.util.Vector status;
   private java.util.Vector date;
   private java.util.Vector sentby;
@@ -217,6 +218,10 @@ public class MsgDisplayMessagesBean {
 
      messageid = new java.util.Vector();
      status  = new java.util.Vector();
+     messagePosition = new java.util.Vector();
+     
+     int index = 0;
+     
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
@@ -225,9 +230,10 @@ public class MsgDisplayMessagesBean {
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
-           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           messagePosition.add(Integer.toString(index));
            messageid.add( rs.getString("message")  );
            status.add( rs.getString("status")  );
+           index++;
         }
 
        rs.close();
@@ -325,7 +331,7 @@ public java.util.Vector estDemographicInbox(){
 
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
-
+     int index = 0;
 
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -342,18 +348,25 @@ public java.util.Vector estDemographicInbox(){
            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
            dm.status     = rs.getString("status");
            dm.messageId  = rs.getString("message");
+           dm.messagePosition  = Integer.toString(index);
            dm.thesubject = rs.getString("thesubject");
            dm.thedate    = rs.getString("thedate");
            dm.sentby     = rs.getString("sentby");
+           
            String att    = rs.getString("attachment");
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
                 dm.attach = "1";
               }
+           
+           if(rs.isLast()){
+               dm.isLastMsg = true;
+           }
+           
            msg.add(dm);
 
-           // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
+           index++;
 
         }
 
