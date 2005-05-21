@@ -72,7 +72,7 @@
   
   MsgDemoMap msgDemoMap = new MsgDemoMap();
   Vector msgVector = msgDemoMap.getMsgVector(demoNo);
-  MsgMessageData msgData = new MsgMessageData();
+  MsgMessageData msgData;
   
   EctSplitChart ectSplitChart = new EctSplitChart();
   Vector splitChart = ectSplitChart.getSplitCharts(demoNo);
@@ -536,10 +536,11 @@ function popupOscarComm(vheight,vwidth,varpage) {
   popup.focus();
 }
 
-function popUpMsg(vheight,vwidth,msgID) { 
-  var page = "../oscarMessenger/ViewMessage.do?messageID="+msgID;
+function popUpMsg(vheight,vwidth,msgPosition) { 
+
+  var page = "<%=request.getContextPath()%>/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=<%=demoNo%>&messagePosition="+msgPosition;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(page, "oscarMessenger", windowprops);
+  var popup=window.open(page, "<bean:message key="global.oscarRx"/>", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -822,16 +823,19 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <select name="msgSelect" class="ControlSelect" onchange="javascript:popUpMsg(600,800,document.msgForm.msgSelect.options[document.msgForm.msgSelect.selectedIndex].value)">
+                        <select name="msgSelect" class="ControlSelect" onchange="javascript:popUpMsg(600,900,document.msgForm.msgSelect.options[document.msgForm.msgSelect.selectedIndex].value)">
                         <option value="null" selected>-Select Message-
                          <%    
                             String msgId;
                             String msgSubject;
+                            String msgDate;
                             for(int j=0; j<10 && j<msgVector.size(); j++) {
                                 msgId = (String) msgVector.elementAt(j);
-                                msgSubject = msgData.getSubject(msgId);                                
+                                msgData = new MsgMessageData(msgId);
+                                msgSubject = msgData.getSubject();
+                                msgDate = msgData.getDate();
                          %>
-                         <option value="<%=msgId%>"><%=msgSubject %></option>
+                         <option value="<%=j%>"><%=msgSubject + " - " + msgDate %></option>
                          <% }%>                        
                         </select>                        
                     </td>                    
@@ -839,7 +843,7 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <a href=# onClick='popupPage2("<rewrite:reWrite jspPage="../oscarMessenger/DisplayMessages.do"/>?orderby=date&boxType=3&demographic_no=<%=demoNo%>&providerNo=<%=provNo%>&userName=<%=providerName%>"); return false;' >
+                        <a href=# onClick='popupOscarRx(600,900,"<rewrite:reWrite jspPage="../oscarMessenger/DisplayDemographicMessages.do"/>?orderby=date&boxType=3&demographic_no=<%=demoNo%>&providerNo=<%=provNo%>&userName=<%=providerName%>"); return false;' >
 					-All Messages-</a>
                     </td>
                 </tr>
