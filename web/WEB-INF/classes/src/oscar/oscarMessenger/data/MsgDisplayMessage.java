@@ -27,6 +27,8 @@ package oscar.oscarMessenger.data;
 
 public class MsgDisplayMessage {
     public String messageId  = null;
+    public String messagePosition  = null;
+    public boolean isLastMsg = false;
     public String status     = null;
     public String thesubject = null;
     public String thedate    = null;
