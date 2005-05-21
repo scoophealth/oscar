@@ -46,6 +46,8 @@
                     type="oscar.oscarMessenger.pageUtil.MsgCreateMessageForm"/>
     <form-bean      name="msgDisplayMessagesForm"
                     type="oscar.oscarMessenger.pageUtil.MsgDisplayMessagesForm"/>
+    <form-bean      name="msgDisplayDemographicMessagesForm"
+                    type="oscar.oscarMessenger.pageUtil.MsgDisplayDemographicMessagesForm"/>
     <form-bean      name="msgViewMessageForm"
                     type="oscar.oscarMessenger.pageUtil.MsgViewMessageForm"/>
     <form-bean      name="msgHandleMessagesForm"
@@ -425,6 +427,15 @@
               scope="request"
               input="/oscarMessenger/DisplayMessages.jsp">
               <forward name="success" path="/oscarMessenger/DisplayMessages.jsp"/>
+              <forward name="demoMsg" path="/oscarMessenger/DisplayDemographicMessages.jsp"/>
+    </action>
+    
+    <action   path="/oscarMessenger/DisplayDemographicMessages"
+              type="oscar.oscarMessenger.pageUtil.MsgDisplayDemographicMessagesAction"
+              name="msgDisplayDemographicMessagesForm"
+              scope="request"
+              input="/oscarMessenger/DisplayDemographicMessages.jsp">
+              <forward name="demoMsg" path="/oscarMessenger/DisplayDemographicMessages.jsp"/>
     </action>
 
     <!--NEW START-->
@@ -444,8 +455,15 @@
               input="/oscarMessenger/DisplayMessages.jsp">
               <forward name="noRights" path="/oscarMessenger/DisplayMessages.jsp"/>
               <forward name="success" path="/oscarMessenger/ViewMessage.jsp"/>
+              <forward name="viewFromEncounter" path="/oscarMessenger/ViewMessageFromEncounter.jsp"/>
     </action>
-
+    <action   path="/oscarMessenger/ViewMessageByPosition"
+              type="oscar.oscarMessenger.pageUtil.MsgViewMessageByPositionAction"              
+              scope="request"
+              input="/oscarMessenger/DisplayDemographicMessages.jsp">
+              <forward name="success" path="/oscarMessenger/ViewMessage.do"/>
+    </action>
+MsgViewMessageByPositionAction
     <action   path="/oscarMessenger/HandleMessages"
               type="oscar.oscarMessenger.pageUtil.MsgHandleMessagesAction"
               name="msgHandleMessagesForm"
