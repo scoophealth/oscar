@@ -15,10 +15,9 @@
   <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
   <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
   <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-  <%@ page errorPage="errorpage.jsp"import="java.util.*,java.math.*,java.net.*,
-                                            java.sql.*, oscar.util.*, oscar.*" %>
+  <%@ page errorPage="errorpage.jsp"import="java.util.*,java.net.*,
+                                            java.sql.*, oscar.*" %>
   <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
-  <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
   <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
   <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%
@@ -302,12 +301,13 @@
 //System.out.println(" * ******************************" + sql);
 
 %>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
 <head>
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE">
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8">
-  <title>OscarBilling - shortcut</title>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE"/>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8"/>
+  <title>HospitalBilling</title>
   <!-- calendar stylesheet -->
   <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
   <!-- main calendar program -->
@@ -317,9 +317,8 @@
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
   <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
-</head>
 
-  <script language="JavaScript">
+  <script type="text/javascript" language="JavaScript">
 
             <!--
 function setfocus() {
@@ -355,6 +354,7 @@ function showHideLayers() { //v3.0
         return ret;
     }
     function checkAllDates() {
+	    document.forms[0].serviceDate0.value = document.forms[0].serviceDate0.value.toUpperCase();
         var b = true;
         if(document.forms[0].billDate.value.length<1){
         	alert("No billing date!");
@@ -381,7 +381,7 @@ function showHideLayers() { //v3.0
         } else if(document.forms[0].xml_provider.value=="000000"){
         	alert("Please select a provider.");
             b = false;
-        } else if(document.forms[0].xml_visittype.options[2].selected && document.forms[0].xml_vdate.value==""){
+        } else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")){
         	alert("Need an admission date.");
             b = false;
         }
@@ -468,15 +468,28 @@ function dxScriptAttach(name2) {
 	awnd.focus();
 }
 
+function onDblClickServiceCode(item) {
+	//alert(item.id);
+	if(document.forms[0].serviceDate0.value=="") {
+		document.forms[0].serviceDate0.value = item.id.substring(3);
+	} else if(document.forms[0].serviceDate1.value=="") {
+		document.forms[0].serviceDate1.value = item.id.substring(3);
+	} else if(document.forms[0].serviceDate2.value=="") {
+		document.forms[0].serviceDate2.value = item.id.substring(3);
+	}
+}
+
 //-->
 
   </script>
+</head>
+
   <body onload="setfocus();" topmargin="0" >
 <div id="Layer1" style="position:absolute; left:360px; top:165px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr bgcolor="#393764">
 		<td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif" color="#000000"><b>Billing Form</b></font></td>
-		<td width="3%" bgcolor="#FFCC00" height="7"><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">X</a></b></font></td>
+		<td width="3%" bgcolor="#FFCC00" height="7"><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">X</a></b></td>
 	</tr>
 
 <%
@@ -491,7 +504,7 @@ int ctlCount = 0;
 	if(ctlcode.equals(ctlBillForm)) currentFormName = ctlcodename;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
-		<td colspan="2"><b><font size="-2" color="#7A388D"><a href="billingShortcutPg1.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
+		<td colspan="2"><b><font size="-2" color="#7A388D"><a href="billingShortcutPg1.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
 	</tr>
 <%
 }
@@ -527,8 +540,8 @@ ctlCount = 0;
 </div>
 
 
+  <form method="post" name="titlesearch" action="billingShortcutPg2.jsp" onsubmit="return onNext();">
   <table border="0" cellpadding="0" cellspacing="2" width="100%" bgcolor="#CCCCFF">
-    <form method="post" name="titlesearch" action="billingShortcutPg2.jsp" onsubmit="return onNext();">
       <tr>
         <td>
           <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -627,7 +640,7 @@ ctlCount = 0;
 
 				<td width="30%"><b>Visit Type</b></td>
 				<td width="20%">
-				<select name="xml_visittype" datafld='xml_visittype'>
+				<select name="xml_visittype">
 					<option value="00| Clinic Visit" <%=visitType.startsWith("00")?"selected":""%>>00 | Clinic Visit</option>
 					<option value="01| Outpatient Visit" <%=visitType.startsWith("01")?"selected":""%>>01 | Outpatient Visit</option>
 					<option value="02| Hospital Visit" <%=visitType.startsWith("02")?"selected":""%>>02 | Hospital Visit</option>
@@ -640,7 +653,7 @@ ctlCount = 0;
 				<td width="30%"><b>Billing Type</b></td>
 				<td width="20%">
 				<% String srtBillType = request.getParameter("xml_billtype")!=null? request.getParameter("xml_billtype"):""; %>
-				<select name="xml_billtype" datafld='xml_billtype' >
+				<select name="xml_billtype" >
 					<option value="ODP | Bill OHIP" <%=srtBillType.startsWith("ODP")?"selected" : ""%> >Bill OHIP</option>
 					<option value="PAT | Bill Patient" <%=srtBillType.startsWith("PAT")?"selected" : ""%>>Bill Patient</option>
 					<option value="WCB | Worker's Compensation Board" <%=srtBillType.startsWith("WCB")?"selected" : ""%>>WSIB</option>
@@ -716,18 +729,17 @@ ctlCount = 0;
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
 				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:20px;">
+				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=i+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;">
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
-				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
+				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />
 				</font></td>
 				<td align="right">
 				<font size="-1" ><%=serviceDisp%></font>
 
-				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
-				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
-				</font>
+				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
+				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
 				</td>
 			</tr>
 			<% } %>
@@ -758,19 +770,18 @@ ctlCount = 0;
 			%>
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:20px;">
+				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
+				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=i+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;" />
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
-				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
+				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />
 				</font></td>
 				<td align="right">
 				<font size="-1" ><%=serviceDisp%></font>
 
-				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
-				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
-				</font>
+				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
+				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
 				</td>
 			</tr>
 			<% } %>
@@ -802,19 +813,18 @@ ctlCount = 0;
 			%>
 			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
 				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><%=serviceCode%></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:20px;">
+				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
+				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=i+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;" />
 				</td>
 				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
-				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>">
+				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />
 				</font></td>
 				<td align="right">
 				<font size="-1" ><%=serviceDisp%></font>
 
-				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>">
-				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>">
-				</font>
+				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
+				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
 				</td>
 			</tr>
 			<% } %>
@@ -830,28 +840,28 @@ ctlCount = 0;
         </td>
       </tr>
 
-	<input type="hidden" name="clinic_no" value="<%=clinicNo%>">
-	<input type="hidden" name="demographic_no" value="<%=demo_no%>">
-	<input type="hidden" name="appointment_no" value="<%=appt_no%>">
+	<input type="hidden" name="clinic_no" value="<%=clinicNo%>" />
+	<input type="hidden" name="demographic_no" value="<%=demo_no%>" />
+	<input type="hidden" name="appointment_no" value="<%=appt_no%>" />
 
-	<input type="hidden" name="ohip_version" value="V03G">
-	<input type="hidden" name="hin" value="<%=demoHIN%>">
+	<input type="hidden" name="ohip_version" value="V03G" />
+	<input type="hidden" name="hin" value="<%=demoHIN%>" />
 
-	<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
+	<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>" />
 
-	<input type="hidden" name="demographic_dob" value="<%=demoDOB%>">
+	<input type="hidden" name="demographic_dob" value="<%=demoDOB%>" />
 
-	<input type="hidden" name="apptProvider_no" value="<%=request.getParameter("apptProvider_no")%>">
-	<input type="hidden" name="asstProvider_no" value="<%=request.getParameter("asstProvider_no")%>">
+	<input type="hidden" name="apptProvider_no" value="<%=request.getParameter("apptProvider_no")%>" />
+	<input type="hidden" name="asstProvider_no" value="<%=request.getParameter("asstProvider_no")%>" />
 
-	<input type="hidden" name="demographic_name" value="<%=demoname%>">
-	<input type="hidden" name="providerview" value="<%=providerview%>">
-	<input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>">
-	<input type="hidden" name="assgProvider_no" value="<%=assgProvider_no%>">
-	<input type="hidden" name="billForm" value="<%=ctlBillForm%>">
-    </form>
+	<input type="hidden" name="demographic_name" value="<%=demoname%>" />
+	<input type="hidden" name="providerview" value="<%=providerview%>" />
+	<input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>" />
+	<input type="hidden" name="assgProvider_no" value="<%=assgProvider_no%>" />
+	<input type="hidden" name="billForm" value="<%=ctlBillForm%>" />
 
   </table>
+  </form>
 
 
   <br>
