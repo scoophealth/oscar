@@ -33,6 +33,7 @@ public class MsgSessionBean
     private String userName   = null;
     private String attach     = null;
     private String messageId  = null;
+    private String demographic_no   = null;
 
     public String getProviderNo()
     {
@@ -91,6 +92,17 @@ public class MsgSessionBean
         this.messageId = str;
     }
 
+    public String getDemographic_no (){
+        if ( this.demographic_no == null){
+            this.demographic_no = new String();
+        }
+        return this.demographic_no ;
+    }
+
+    public void setDemographic_no (String str){
+        this.demographic_no = str;
+    }
+    
     public void nullMessageId(){
         this.messageId = null;
     }
