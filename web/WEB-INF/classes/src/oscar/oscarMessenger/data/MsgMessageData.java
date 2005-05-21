@@ -32,12 +32,36 @@ import java.sql.ResultSet;
 
 public class MsgMessageData {
 
-        boolean areRemotes = false;
-        boolean areLocals = false;
-        java.util.ArrayList providerArrayList = null;
-        String currentLocationId = null;
+    boolean areRemotes = false;
+    boolean areLocals = false;
+    java.util.ArrayList providerArrayList = null;
+    String currentLocationId = null;
 
+    private String messageSubject;
+    private String messageDate;
 
+    public MsgMessageData(){        
+    }
+
+    public MsgMessageData(String msgID){
+        try{            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "";                               
+            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
+            //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
+            sql = "select thesubject, thedate from messagetbl where messageid='"+msgID+"'";
+            
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.next()){
+                this.messageSubject = rs.getString("thesubject");
+                this.messageDate = rs.getString("thedate");
+            }
+            db.CloseConn();
+        }
+        catch (java.sql.SQLException e){ 
+            System.out.println("Message data not found");
+        }
+    }
     public String getCurrentLocationId(){
         if (currentLocationId == null){
             try{
@@ -559,5 +583,11 @@ public class MsgMessageData {
       return subject;
   }
 
+  public String getSubject(){
+      return this.messageSubject;
+  }
+  public String getDate(){         
+      return this.messageDate;
+  }
 
 }
