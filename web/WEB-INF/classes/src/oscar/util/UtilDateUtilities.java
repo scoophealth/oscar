@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.util;
 
+import java.text.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -148,4 +149,8 @@ public class UtilDateUtilities {
 //    private static String dateTimePattern = "yyyy-MM-dd HH:mm:ss"; timeStampPattern = "yyyyMMddHHmmss";
     private static Locale defaultLocale=Locale.CANADA;
 
+    public static String getToday(String datePattern){
+       Format formatter = new SimpleDateFormat(datePattern);
+       return formatter.format(Today());       
+    }
 }
