@@ -31,6 +31,7 @@
 package oscar.oscarProvider.data;
 
 import java.sql.*;
+import java.util.*;
 import oscar.oscarDB.*;
 
 /**
@@ -414,5 +415,56 @@ public class ProviderData {
    public void setProvider_activity(java.lang.String provider_activity) {
       this.provider_activity = provider_activity;
    }
+
+   //TODO: Add a cache of providers
+   public static ArrayList getProviderList (boolean inactive) {
+        try {            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ArrayList result = new ArrayList();
+            String active = " and status = '1' ";
+            if (inactive){
+               active = "";
+            }
+            
+            String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor' "+active+" order by last_name , first_name";
+            ResultSet rs = db.GetSQL(sql);            
+            while ( rs.next() ) {
+                Hashtable provider = new Hashtable();
+                provider.put("providerNo",rs.getString("provider_no"));
+                provider.put("firstName",rs.getString("first_name"));
+                provider.put("lastName",rs.getString("last_name"));
+                result.add(provider);
+            }
+            db.CloseConn();            
+            return result;
+        }catch(Exception e){
+            System.out.println("exception in ProviderData:"+e);
+            return null;
+        }        
+    }
+   
+   public static ArrayList getProviderList () {
+      return getProviderList (false); 
+   }
+   
+              
+    public static String getProviderName(String providerNo) {
+           try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            
+                                    
+            String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
+            ResultSet rs = db.GetSQL(sql);            
+            db.CloseConn();            
+            if ( rs.next() ) {            
+                return ( rs.getString("first_name") + " " + rs.getString("last_name") );            
+            } else {                            
+                return "";
+            }
+        }catch(Exception e){
+            System.out.println("exception in ProviderData:"+e);
+            return null;
+        }        
+    }
    
 }
