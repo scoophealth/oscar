@@ -46,22 +46,27 @@
 	String formClass = "LabReq";
 	String formLink = "formlabreq.jsp";
 
-    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
-    int formId = Integer.parseInt(request.getParameter("formId"));
+   boolean readOnly = false;
+   int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
+   int formId = Integer.parseInt(request.getParameter("formId"));
 	int provNo = Integer.parseInt((String) session.getAttribute("user"));
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-    java.util.Properties props = rec.getFormRecord(demoNo, formId);
+   java.util.Properties props = rec.getFormRecord(demoNo, formId);
 
 	props = ((FrmLabReqRecord) rec).getFormCustRecord(props, provNo);
-        OscarProperties oscarProps = OscarProperties.getInstance();
+   OscarProperties oscarProps = OscarProperties.getInstance();
 
-    if (request.getParameter("labType") != null){
-        if (formId == 0 ){
-           String labPreSet = request.getParameter("labType");
-           props = FrmLabReqPreSet.set(labPreSet,props);
+   if (request.getParameter("labType") != null){
+      if (formId == 0 ){
+         String labPreSet = request.getParameter("labType");
+         props = FrmLabReqPreSet.set(labPreSet,props);
            //System.out.println(props.toString());
-        }
-    }
+      }
+   }
+   
+   if (request.getParameter("readOnly") != null){
+      readOnly = true;    
+   }
 
 
 %>
@@ -271,8 +276,10 @@ var maxYear=3100;
 <table class="Head" class="hidePrint">
     <tr>
         <td nowrap="true">
+            <% if(!readOnly){ %>
             <input type="submit" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <% } %>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
         </td>
@@ -883,8 +890,10 @@ var maxYear=3100;
 <table class="Head" class="hidePrint">
     <tr>
         <td nowrap="true">
+            <% if(!readOnly){ %>
             <input type="submit" value="Save" onclick="javascript:return onSave();" />
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
+            <% } %>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
         </td>
