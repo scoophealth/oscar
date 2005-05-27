@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -28,12 +28,15 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="myTempBean" class="oscar.ScheduleTemplateBean" scope="page" />
 <% //save or delete the settings
   int rowsAffected = 0;
+  int STEP = request.getParameter("step")!=null&&!request.getParameter("step").equals("")?Integer.parseInt(request.getParameter("step")):15;
+  //System.out.println("step:"+STEP);
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 || request.getParameter("dboperation").equals("Delete") ) ) {
     String pre = request.getParameter("providerid").equals("Public")&&!request.getParameter("name").startsWith("P:")?"P:":"" ;
     String[] param1 =new String[4];
@@ -45,10 +48,10 @@
     param2[0]=request.getParameter("providerid");
     param2[1]= request.getParameter("name");
     rowsAffected = scheduleMainBean.queryExecuteUpdate(param2,"delete_scheduletemplate");
-    if(request.getParameter("dboperation")!=null && request.getParameter("dboperation").equals(" Save ") ) 
+    if(request.getParameter("dboperation")!=null && request.getParameter("dboperation").equals(" Save ") )
       rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"add_scheduletemplate");
   }
-  
+
 %>
 
 <html:html locale="true">
@@ -84,21 +87,29 @@ function checkInput() {
 	  return true;
 	}
 }
+function changeGroup(s) {
+	var newGroupNo = s.options[s.selectedIndex].value;
+	newGroupNo = s.options[s.selectedIndex].value;
+	self.location.href = "scheduleedittemplate.jsp?providerid=<%=request.getParameter("providerid")%>&providername=<%=StringEscapeUtils.escapeJavaScript(request.getParameter("providername"))%>&step=" + newGroupNo);
+	history.back();
+	document.location.reload();
+}
 //-->
 </script>
 </head>
 <body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
   <table border="0" width="100%">
-    <tr> 
+    <tr>
       <td width="50" bgcolor="#009966">&nbsp;</td>
       <td align="center">
-	  
+
+  <form name="addtemplatecode1" method="post" action="scheduleedittemplate.jsp">
         <table width="100%" border="0" cellspacing="0" cellpadding="5">
-<form name="addtemplatecode1" method="post" action="scheduleedittemplate.jsp">
-<input type="hidden" name="dboperation" value="">
-          <tr bgcolor="#CCFFCC"> 
-            <td nowrap> 
+		<input type="hidden" name="dboperation" value="">
+		<input type="hidden" name="step" value="">
+          <tr bgcolor="#CCFFCC">
+            <td nowrap>
               <p><bean:message key="schedule.scheduleedittemplate.formProvider"/>: <%=request.getParameter("providername")%></p>
             </td>
             <td align='right'>
@@ -111,13 +122,13 @@ function checkInput() {
    param[1]=request.getParameter("name");
    if(bEdit) {
      rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplatesingle");
-     while (rsdemo.next()) { 
+     while (rsdemo.next()) {
        myTempBean.setScheduleTemplateBean(rsdemo.getString("provider_no"),rsdemo.getString("name"),rsdemo.getString("summary"),rsdemo.getString("timecode") );
        //System.out.println(":"+rsdemo.getString("timecode").length()+rsdemo.getString("timecode")+"|");
      }
    }
    rsdemo = scheduleMainBean.queryResults(param[0], "search_scheduletemplate");
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
 	%>
         <option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
   <%
@@ -128,18 +139,28 @@ function checkInput() {
                 <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
             <td align='right'><input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnEdit"/>' onclick="document.forms['addtemplatecode1'].dboperation.value=' Edit '; document.forms['addtemplatecode1'].submit();"></td>
           </tr>
-</form>  			
         </table>
+  </form>
 
+  <form name="addtemplatecode2" method="post" action="scheduleedittemplate.jsp">
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="95%">
   			<tr>
-        	  <td width="50%" align="center" >&nbsp; </td>
-  			</tr>
+        	  <td width="50%" align="right" >&nbsp;
+      			<select name="step1" onChange="changeGroup(this)" >
+      			<% for(int i=5; i<35; i+=5) {
+      			if(i==25) continue;%>
+				<option value="<%=i%>" <%=STEP==i? "selected":""%>> <%=i%></option>
+      			<% }	%>
+				</select>
+                <input type="hidden" name="providerid" value="<%=request.getParameter("providerid")%>">
+                <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
+            <input type="button" value='Go' onclick="document.forms['addtemplatecode1'].step.value=document.forms[1].step1.options[document.forms[1].step1.selectedIndex].value; document.forms['addtemplatecode1'].submit();"></td>
+  			</td></tr>
 		</table>
-
-          <table width="95%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
+  </form>
 <form name="addtemplatecode" method="post" action="scheduleedittemplate.jsp">
-            <tr bgcolor="#FOFOFO" align="center"> 
+          <table width="95%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
+            <tr bgcolor="#FOFOFO" align="center">
               <td colspan=3><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="schedule.scheduleedittemplate.msgMainLabel"/></font></td>
             </tr>
             <tr bgcolor='ivory'>
@@ -160,7 +181,7 @@ function checkInput() {
              <td colspan='3' align='center'>
              <table>
              <%
-             int cols=4, rows=6, step=bEdit?myTempBean.getStep():15;
+             int cols=4, rows=6, step=bEdit?myTempBean.getStep():STEP;
 
              int icols=60/step, n=0;
              for(int i=0; i<rows; i++) {
@@ -170,7 +191,7 @@ function checkInput() {
                <td bgcolor='silver'><%=(n<10?"0":"")+n+":00"%></td>
              <%   for(int k=0; k<icols; k++) { %>
                <td><input type="text" name="timecode<%=i*(cols*icols)+j*icols+k%>" size="1" maxlength="1" <%=bEdit?("value='"+myTempBean.getTimecodeCharAt(i*(cols*icols)+j*icols+k)+"'"):"value=''"%> ></td>
-             <%   } 
+             <%   }
                 n++;
                 }%>
                </tr>
@@ -179,12 +200,12 @@ function checkInput() {
              </td>
             </tr>
           </table>
-            
-            
+
+
           <table width="100%" border="0" cellspacing="0" cellpadding="2"  bgcolor="silver" >
           <tr bgcolor="#FOFOFO">
             <td><input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnDelete"/>' onclick="document.forms['addtemplatecode'].dboperation.value='Delete'; document.forms['addtemplatecode'].submit();"></td>
-			<td align="right"> 
+			<td align="right">
                 <input type="hidden" name="providerid" value="<%=request.getParameter("providerid")%>">
                 <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
                 <input type="hidden" name="dboperation" value="">
@@ -192,13 +213,12 @@ function checkInput() {
                 <input type="button" name="Button" value='<bean:message key="global.btnExit"/>' onclick="window.close()">
             </td>
           </tr>
-</form>
         </table>
+</form>
 
       </td>
     </tr>
   </table>
 
-</form>
 </body>
 </html:html>
