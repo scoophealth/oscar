@@ -716,8 +716,8 @@ var refNo = "";
   	<% for(int k=0; k<vecRef.size(); k++) {
   		prop= (Properties) vecRef.get(k);
   	%>
-if(refName.indexOf("<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>")>=0) {
-  refNo = <%=prop.getProperty("referral_no", "")%>;
+if(refName=="<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>") {
+  refNo = '<%=prop.getProperty("referral_no", "")%>';
 }
 <% } %>
 document.updatedelete.r_doctor_ohip.value = refNo;
