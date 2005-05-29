@@ -24,6 +24,11 @@
  */
 --%>
 
+<%@ page import="java.lang.*"%>
+
+<%
+        boolean fromMessenger = request.getParameter("fromMessenger") == null ? false : (request.getParameter("fromMessenger")).equalsIgnoreCase("true")?true:false;            
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
@@ -49,7 +54,8 @@ function searchAll() {
          } 
          if (keyWord == null) {
              keyWord = "";
-         } %>
+         }
+     %>
      <tr>
         <td>
              <table bgcolor="white" width="100%">
@@ -70,6 +76,7 @@ function searchAll() {
                                         <INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
                                         <INPUT TYPE="hidden" NAME="displaymode" VALUE="Search" >
                                         <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
+                                        <INPUT TYPE="hidden" NAME="fromMessenger" VALUE="<%=fromMessenger%>">
                                         <INPUT TYPE="SUBMIT" VALUE="<bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />" SIZE="17" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">				
                                         &nbsp;&nbsp;&nbsp;
                                         <INPUT TYPE="button" onclick="searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>" VALUE="<bean:message key="demographic.search.Inactive"/>">
