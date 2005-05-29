@@ -122,6 +122,7 @@
      {"Demographic ID" , "adddemographictoeditappt.jsp"},
      {"Add Record & Back to Appointment" , "adddemographicbacktoappt.jsp"},
      {"Update Record & Back to Appointment" , "updatedemographicbacktoappt.jsp"},
+     {"linkMsg2Demo" , "../oscarMessenger/msgSearchDemo.jsp"},             
    };
    apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
