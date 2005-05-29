@@ -29,7 +29,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="org.w3c.dom.*" %>
-<%@ page import="oscar.oscarMessenger.util.Msgxml"%>
+<%@ page import="oscar.oscarMessenger.util.Msgxml" %>
+<%@ page language="java" import="oscar.oscarDemographic.data.*" %>
 
 <logic:notPresent name="msgSessionBean" scope="session">
     <logic:redirect href="index.jsp" />
@@ -52,6 +53,9 @@ java.util.Vector locationVect = new java.util.Vector();
 oscar.oscarMessenger.data.MsgReplyMessageData reData = new oscar.oscarMessenger.data.MsgReplyMessageData();
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
+
+String demographic_no = (String) request.getAttribute("demographic_no");
+
 %>
 
 
@@ -312,6 +316,7 @@ border-right: 2px solid #cfcfcf;
             }
         }
     }
+    
 </script>
 
 
@@ -352,6 +357,23 @@ function BackToOscar()
        window.close();
 }
 //-->
+</script>
+
+<script type="text/javascript">
+
+function popupSearchDemo(keyword){ // open a new popup window
+    var vheight = 700;
+    var vwidth = 980;  
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
+    var page = 'msgSearchDemo.jsp?keyword=' +keyword +'&firstSearch='+true;
+    var popUp=window.open(page, "msgSearchDemo", windowprops);
+    if (popUp != null) {
+        if (popUp.opener == null) {
+          popUp.opener = self; 
+        }
+        popUp.focus();
+    }
+}
 </script>
 
 </head>
@@ -423,33 +445,10 @@ function BackToOscar()
                     <tr>
                         <td>
                             <table>
-                                <tr>                                        
-                                    <th align="left" bgcolor="#DDDDFF" ><font style="font-weight:bold">Link this message to ...</font></th>
-                                    <th bgcolor="#DDDDFF" ></th>
-                                </tr> 
-                                <tr>
-                                  <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
-                                    <td bgcolor="#EEEEFF" >                                        
-                                        Demographic:
-                                        <input type="TEXT" name="keyword" size="15" value="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>">
-                                        <input class="ControlPushButton" type="submit" name="Submit" value="Link">
-                                    </td>                                        
-                                    <input type="hidden" name="orderby" value="last_name" >
-                                    <input type="hidden" name="search_mode" value="search_name" >
-                                    <input type="hidden" name="originalpage" value="../oscarMessenger/CreateMessage.do" >
-                                    <input type="hidden" name="limit1" value="0" >
-                                    <input type="hidden" name="limit2" value="5" >
-                                    <!--input type="hidden" name="displaymode" value="TicklerSearch" -->
-                                    <input type="hidden" name="displaymode" value="Search "> 
-
-                                    <input type="hidden" name="dboperation" value="add_apptrecord">                                
-                                    <input type="hidden" name="provider_no" value="<%=(String) session.getValue("user")%>">
-                                    <input type="hidden" name="linkMsgDemo" value="true">                                           
-                                  </form>
-                                    <td bgcolor="#EEEEFF" ></td>
-                                </tr>                                                                    
+                             
+                                                                                                   
                                 <html:form action="/oscarMessenger/CreateMessage" onsubmit="return validatefields()">
-                                <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>" size="67"/>                                
+                              
                                     <tr>
                                         <th bgcolor="#DDDDFF" width="75">
                                             <bean:message key="oscarMessenger.CreateMessage.msgRecipients"/>
@@ -572,6 +571,51 @@ function BackToOscar()
                                                 %>
                                         </td>
                                     </tr>
+                                    
+                                    <tr>
+                                        <td bgcolor="#B8B8FF" ></td>
+                                        <td bgcolor="#B8B8FF" ><font style="font-weight:bold">Link this message to ...</font></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td bgcolor="#EEEEFF" ></td>             
+                                        <td bgcolor="#EEEEFF" >
+                                            <input type="text" name="keyword" size="30" />
+                                            <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>  
+                                            <input type="button" class="ControlPushButton" name="searchDemo" value="Search Demographic" onclick="popupSearchDemo(document.forms[0].keyword.value)" />
+
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="#B8B8FF" ></td>
+                                        <td bgcolor="#B8B8FF" ><font style="font-weight:bold">Selected Demographic</font></td>
+                                    </tr>
+
+                                   <%
+
+                                    
+                                    DemographicData demoData = new  DemographicData();
+                                    DemographicData.Demographic demo =  demoData.getDemographic(demographic_no);
+                                    String demoName = "";
+                                    if ( demo != null ) {
+                                        demoName = demo.getLastName()+", "+demo.getFirstName();
+
+                                    } %> 
+                                    <tr>
+                                        <td bgcolor="#EEEEFF" ></td>             
+                                        <td bgcolor="#EEEEFF" >
+                                            <input type="text" name="selectedDemo" size="20" readonly style="background:#EEEEFF;border:none" value="none"/>
+                                            <script>
+                                                if ( "<%=demoName%>" != "null" && "<%=demoName%>" != "") {
+                                                    document.forms[0].selectedDemo.value = "<%=demoName%>"
+                                                    document.forms[0].demographic_no.value = "<%=demographic_no%>"
+                                                }
+                                            </script>
+                                               <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
+                                        </td>
+
+                                    </tr> 
                                     </html:form>                                                                                                                                                                            
                                 </table>                            
                         </td>
