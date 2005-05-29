@@ -113,7 +113,7 @@ function popup(demographicNo, msgId, providerNo, action) { //open a new popup wi
   var vheight = 700;
   var vwidth = 980;  
   
-  if (demographicNo!=null){
+  if (demographicNo!=null &&  demographicNo!="" ){
       //alert("demographicNo is not null!");
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
       var page = "";
@@ -327,35 +327,22 @@ function popupSearchDemo(keyword){ // open a new popup window
                                 } %> 
                                 <tr>
                                     <td bgcolor="#EEEEFF" ></td>             
-                                    <td bgcolor="#EEEEFF" ><input type="text" name="selectedDemo" size="30" readonly style="background:#EEEEFF;border:none" /></td>
+                                    <td bgcolor="#EEEEFF" >
+                                        <input type="text" name="selectedDemo" size="20" readonly style="background:#EEEEFF;border:none" value="none"/>
                                         <script>
-                                            document.forms[0].selectedDemo.value = "<%=demoName%>"
-                                            document.forms[0].demographic_no.value = "<%=demographic_no%>"
+                                            if ( "<%=demoName%>" != "null" && "<%=demoName%>" != "") {
+                                                document.forms[0].selectedDemo.value = "<%=demoName%>"
+                                                document.forms[0].demographic_no.value = "<%=demographic_no%>"
+                                            }
                                         </script>
+                                           <input type="button" class="ControlPushButton" name="linkDemo" value="Link to demographic" onclick="popup(document.forms[0].demographic_no.value,'<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','linkToDemographic')" />
+                                           <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to encounter" onclick="popup(document.forms[0].demographic_no.value,'<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />
+                                           <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
                                     </td>
-                                    
+                                                                        
                                 </tr> 
                                                       
-                                <tr>
-                                    <td bgcolor="#EEEEFF" ></td>
-                              
-                                    <td bgcolor="#EEEEFF" >
-                                        <table>
-                                        <tr>
-                                            <td>
-                                                <input type="button" class="ControlPushButton" name="linkDemo" value="Link to Demographic" onclick="popup(document.forms[0].demographic_no.value,'<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','linkToDemographic')" />
-
-                                            </td>
-                                            <td>
-                                                <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to Encounter" onclick="popup(document.forms[0].demographic_no.value,'<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />
-                                            </td>
-                                            
-                                        </tr>
-                                        </table>
-                                    
-                                    </td>
-                                </tr> 
-                          
+                            
                                 <tr>
                                     <td bgcolor="#EEEEFF">
                                     </td>
