@@ -155,7 +155,7 @@ public class MsgViewMessageAction extends Action {
             actionforward.addParameter("demographic_no", demographic_no);
             actionforward.addParameter("msgCount", msgCount);
         }
-        else{            
+        else{          
             actionforward.addParameter("linkMsgDemo", linkMsgDemo);
         }
                 
