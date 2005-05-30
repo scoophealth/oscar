@@ -35,59 +35,70 @@ import org.apache.struts.action.ActionForward;
 
 public final class MsgHandleMessagesForm extends ActionForm {
 
-String reply;
-String replyAll;
-String delete;
-String forward;
-String messageNo;
+    String reply;
+    String replyAll;
+    String delete;
+    String forward;
+    String messageNo;
+    String demographic_no;
 
-public String getForward (){
-    if ( this.forward == null){
-        this.forward = new String();
+    public String getForward (){
+        if ( this.forward == null){
+            this.forward = new String();
+        }
+        return this.forward ;
     }
-    return this.forward ;
+
+    public void setForward (String str){
+        this.forward = str;
+    }
+
+    public void setMessageNo(String messageNo){
+      this.messageNo = messageNo;
+    }
+
+    public String getMessageNo(){
+      return messageNo != null ? messageNo : "";
+    }
+
+    public void setReply(String reply){
+      this.reply = reply;
+      this.replyAll = "";
+      this.delete = "";
+    }
+
+    public String getReply(){
+      return reply != null ? reply : "" ;
+    }
+
+    public void setReplyAll(String replyAll){
+      this.replyAll = replyAll;
+      this.reply = "";
+      this.delete = "";
+    }
+
+    public String getReplyAll(){
+      return replyAll != null ? replyAll : "" ;
+    }
+
+    public void setDelete(String delete){
+      this.delete = delete;
+      this.reply = "";
+      this.replyAll = "";
+    }
+
+    public String getDelete(){
+      return delete != null ? delete : "" ;
+    }
+    public String getDemographic_no(){
+            return demographic_no;
+        }
+
+    public void setDemographic_no(String demographic_no){
+        this.demographic_no = demographic_no;
+    }
+
 }
 
-public void setForward (String str){
-    this.forward = str;
-}
 
-public void setMessageNo(String messageNo){
-  this.messageNo = messageNo;
-}
-
-public String getMessageNo(){
-  return messageNo != null ? messageNo : "";
-}
-
-public void setReply(String reply){
-  this.reply = reply;
-  this.replyAll = "";
-  this.delete = "";
-}
-
-public String getReply(){
-  return reply != null ? reply : "" ;
-}
-
-public void setReplyAll(String replyAll){
-  this.replyAll = replyAll;
-  this.reply = "";
-  this.delete = "";
-}
-
-public String getReplyAll(){
-  return replyAll != null ? replyAll : "" ;
-}
-
-public void setDelete(String delete){
-  this.delete = delete;
-  this.reply = "";
-  this.replyAll = "";
-}
-
-public String getDelete(){
-  return delete != null ? delete : "" ;
-}
-
-}
+    

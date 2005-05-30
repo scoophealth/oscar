@@ -56,6 +56,7 @@ public  class MsgHandleMessagesAction extends Action {
         String providerNo = bean.getProviderNo();
         MsgHandleMessagesForm frm = (MsgHandleMessagesForm) form;
         String messageNo = frm.getMessageNo();
+        String demographicNo = frm.getDemographic_no();
         String sentbyNo ;
         String sentByLocation;
         String reply = frm.getReply();
@@ -70,15 +71,20 @@ public  class MsgHandleMessagesAction extends Action {
         HttpSession session = request.getSession(true);
         java.util.Enumeration ty = session.getAttributeNames();
 
+        //Set Demographic_no attribute if there's any
+        if(demographicNo != null){
+            request.setAttribute("demographic_no", demographicNo);
+        }
+        
 	/*
 	 * This is a little fix:
 	 * 
 	 * Look the parameter != null and set it correctly
 	 */
 
-	java.util.Enumeration enum = request.getParameterNames();
-	while (enum.hasMoreElements()){
-	    String param = ((String) enum.nextElement());
+	java.util.Enumeration enumeration = request.getParameterNames();
+	while (enumeration.hasMoreElements()){
+	    String param = ((String) enumeration.nextElement());
 	    if (param.equals("delete")) {
 		delete = "Delete";
 	    } else if (param.equals("reply")) {
