@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="org.w3c.dom.*" %>
 <%@ page import="oscar.oscarMessenger.util.Msgxml" %>
-<%@ page language="java" import="oscar.oscarDemographic.data.*" %>
+<%@ page import="oscar.oscarDemographic.data.*" %>
 
 <logic:notPresent name="msgSessionBean" scope="session">
     <logic:redirect href="index.jsp" />
