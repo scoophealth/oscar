@@ -588,8 +588,8 @@ function popupSearchDemo(keyword){ // open a new popup window
 
                                     </tr>
                                     <tr>
-                                        <td bgcolor="#B8B8FF" ></td>
-                                        <td bgcolor="#B8B8FF" ><font style="font-weight:bold">Selected Demographic</font></td>
+                                        <td bgcolor="#EEEEFF" ></td>
+                                        <td bgcolor="#EEEEFF" ><font style="font-weight:bold">Selected Demographic</font></td>
                                     </tr>
 
                                    <%
