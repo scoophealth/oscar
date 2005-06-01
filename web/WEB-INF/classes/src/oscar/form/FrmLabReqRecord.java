@@ -109,7 +109,7 @@ public class FrmLabReqRecord extends FrmRecord {
                 if (rs.next()) {
                     String num = rs.getString("ohip_no");
                     props.setProperty("reqProvName", rs.getString("provName"));
-                    props.setProperty("practitionerNo", "0000-" + num + "-00");
+                    //props.setProperty("practitionerNo", "0000-" + num + "-00");
                 }
                 rs.close();
 
@@ -119,9 +119,9 @@ public class FrmLabReqRecord extends FrmRecord {
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
-                    //String num = rs.getString("ohip_no");
+                    String num = rs.getString("ohip_no");
                     props.setProperty("provName", rs.getString("provName"));
-                    //props.setProperty("practitionerNo", "0000-"+num+"-00");
+                    props.setProperty("practitionerNo", "0000-"+num+"-00");
                 }
                 rs.close();
             }
