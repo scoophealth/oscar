@@ -681,7 +681,8 @@ ctlCount = 0;
               <tr>
 				<td><b>Admission Date</b></td>
 				<td >
-				<input type="text" name="xml_vdate" id="xml_vdate" value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate%>" size='10' maxlength='10' readonly>
+				<!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
+				<input type="text" name="xml_vdate" id="xml_vdate" value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):""%>" size='10' maxlength='10' >
               	<img src="../../../images/cal.gif" id="xml_vdate_cal">
 				</td>
 				<td colspan="2">
