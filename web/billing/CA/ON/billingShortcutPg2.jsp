@@ -218,7 +218,7 @@
     	BigDecimal unit = new BigDecimal(Double.parseDouble((String)vecServiceCodeUnit.get(i))).setScale(2, BigDecimal.ROUND_HALF_UP);
     	bdTotal = bdTotal.add(price.multiply(unit).setScale(2, BigDecimal.ROUND_HALF_UP));
     	if(i==rulePercLabelNum) bdPercBase = bdTotal;
-System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
+//System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
 		msg += "<tr bgcolor='#EEEEFF'><td align='right' width='20%'>" + vecServiceCode.get(i) + " ("+Math.round(unit.floatValue())+")</td><td align='right'>" + (i==0?"":" + ") + price + " x " + unit + " = " + bdTotal + "</td></tr>";
 	}
 	if(vecServiceCodePerc.size()>1) {
@@ -229,13 +229,13 @@ System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
 		// calculate perc
 		BigDecimal perc = new BigDecimal(Double.parseDouble((String)vecServiceCodePerc.get(1))).setScale(2, BigDecimal.ROUND_HALF_UP);
 		bdPerc = bdPercBase.multiply(perc).setScale(2, BigDecimal.ROUND_HALF_UP);
-System.out.println("Percentage :" + bdPercBase + " x " + perc + " = " + bdPerc);
+//System.out.println("Percentage :" + bdPercBase + " x " + perc + " = " + bdPerc);
 		msg += "<tr bgcolor='#EEEEFF'><td align='right'>"+vecServiceCodePerc.get(0)+" (1)</td><td align='right'>Percentage : " + bdPercBase + " x " + perc + " = " + bdPerc + "</td></tr>";
 		// adjust perc by min/max
 		if(bLimit) {
 			bdPerc = bdPerc.min(new BigDecimal(Double.parseDouble(maxFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
 			bdPerc = bdPerc.max(new BigDecimal(Double.parseDouble(minFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
-System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
+//System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
 		msg += "<tr bgcolor='ivory'><td align='right' colspan='2'>Adjust to (" + minFee + ", " + maxFee + "): </td><td align='right'>" + bdPerc + "</td></tr>";
 		}
     	bdTotal = bdTotal.add(bdPerc);
@@ -312,11 +312,15 @@ System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
 			}
 
 			for (int i=0; i<vecServiceCode.size(); i++){ //recordCount
+				BigDecimal bdEachPrice = new BigDecimal(Double.parseDouble((String)vecServiceCodePrice.get(i))).setScale(2, BigDecimal.ROUND_HALF_UP);
+		    	BigDecimal bdEachUnit = new BigDecimal(Double.parseDouble((String)vecServiceCodeUnit.get(i))).setScale(2, BigDecimal.ROUND_HALF_UP);
+		    	BigDecimal bdEachTotal = bdEachPrice.multiply(bdEachUnit).setScale(2, BigDecimal.ROUND_HALF_UP);
+
 				String[] param2 = new String[8];
 				param2[0] = "" + nBillNo; // billNo;
 				param2[1] = (String)vecServiceCode.get(i);//billrec[i]; //request.getParameter("billrec"+i);
 				param2[2] = (String)vecServiceCodeDesc.get(i);//billrecdesc[i]; //request.getParameter("billrecdesc"+i);
-				param2[3] = ((String)vecServiceCodePrice.get(i)).replaceAll("\\.", "");//pricerec[i]; //request.getParameter("pricerec"+i);
+				param2[3] = (""+bdEachTotal).replaceAll("\\.", "");//pricerec[i]; //request.getParameter("pricerec"+i);
 				param2[4] = request.getParameter("dxCode"); //request.getParameter("diagcode");
 				param2[5] = tempDate[k]; //request.getParameter("appointment_date");
 				param2[6] = request.getParameter("xml_billtype").substring(0,1); //request.getParameter("billtype");
