@@ -326,7 +326,7 @@ for (int i = 1; i < 12; i++) {
 }
 %> 
 	</select>
-	<input type="text" name="everyUnit" size="10" value="<%="day"%>" readonly>
+	<input type="text" name="everyUnit" id="everyUnit" size="10" value="<%="day"%>" readonly>
 	</td>
 </tr><tr>
 	<td></td>
