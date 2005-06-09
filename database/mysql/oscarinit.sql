@@ -5856,6 +5856,18 @@ CREATE TABLE surveyData (
   PRIMARY KEY  (`surveyDataId`)
 ) ;
 
+CREATE TABLE `log` (
+  `dateTime` timestamp,
+  `provider_no` varchar(10) NOT NULL default '',
+  `action` varchar(20) default NULL,
+  `content` varchar(80) NOT NULL default '',
+  `contentId` varchar(10) default NULL,
+  PRIMARY KEY  (`dateTime`, `provider_no`),
+  INDEX `action` (`action`),
+  INDEX `content` (`content`),
+  INDEX `contentId` (`contentId`)
+) ;
+
 create index surveyId_index on surveyData (surveyId(5));
 create index demographic_no_index on surveyData (demographic_no);
 create index provider_no_index on surveyData (provider_no(6));
