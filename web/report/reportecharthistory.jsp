@@ -10,13 +10,13 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,oscar.oscarProvider.data.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
 //{"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ? offset ?" }, 
-{"search_ect","select eChartId, timeStamp, subject, encounter from eChart where demographicNo=? order by timeStamp desc limit ? offset ?" }, 
+{"search_ect","select eChartId, providerNo, timeStamp, subject, encounter from eChart where demographicNo=? order by timeStamp desc limit ? offset ?" }, 
 //{"search_splitectsize","select encounter from eChart where demographicNo=? and timeStamp > ? order by timeStamp limit 1" }, 
   };
   daySheetBean.doConfigure(dbParams,dbQueries);
@@ -85,9 +85,10 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 </tr></table>
 <table width="100%" border="0" bgcolor="#ffffff" cellspacing="1" cellpadding="2" > 
 <tr bgcolor="#CCCCFF" align="center">
-<TH width="25%"><b><bean:message key="oscarEncounter.echartHistory.apptDate"/></b></TH>
-<TH width="65%"><b><bean:message key="oscarEncounter.echartHistory.reason"/></b></TH>
+<TH ><b><bean:message key="oscarEncounter.echartHistory.apptDate"/></b></TH>
+<TH width="50%"><b><bean:message key="oscarEncounter.echartHistory.reason"/></b></TH>
 <!--TH width="10%"><b>Size</b></TH-->
+<th>Provider</th>
 </tr>
 <%
   ResultSet rsdemo = null ;
@@ -130,6 +131,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       <td align="center"><a href="../oscarEncounter/echarthistoryprint.jsp?echartid=<%=rsdemo.getString("eChartId")%>&demographic_no=<%=demographic_no%>"><%=datetime%></a></td>
       <td><%=rsdemo.getString("subject")!=null?rsdemo.getString("subject"):""%></td>
       <!--td align="center"><%--=ectsize + "KB" --%></td-->
+      <td><%=ProviderData.getProviderName(rsdemo.getString("providerNo"))%></td>
 </tr>
 <%
   }
