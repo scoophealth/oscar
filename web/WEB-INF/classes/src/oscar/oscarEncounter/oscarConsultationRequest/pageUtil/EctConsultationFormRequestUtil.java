@@ -186,6 +186,7 @@ public class EctConsultationFormRequestUtil {
 
     boolean verdict = true;
 
+    getSpecailistsName(id);
     try {
 
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -320,21 +321,21 @@ public class EctConsultationFormRequestUtil {
         specFax = rs.getString("fax");
 
         specAddr = rs.getString("address");
+        
+        specEmail = rs.getString("email");
+        System.out.println("getting Null"+specEmail+"<");
 
         if (specPhone == null || specPhone.equals("null")) {
-
           specPhone = new String();
-
         }
         if (specFax == null || specFax.equals("null")) {
-
           specFax = new String();
-
         }
         if (specAddr == null || specAddr.equals("null")) {
-
           specAddr = new String();
-
+        }        
+        if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
+          specEmail = new String();
         }
       }
 
@@ -353,6 +354,30 @@ public class EctConsultationFormRequestUtil {
 
   }
 
+  public String getSpecailistsEmail(String id) {
+     System.out.println("in Get SPECAILISTS EMAIL \n\n"+id);
+    String retval = new String();
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      String sql = "select email from professionalSpecialists where specId  = '"+id+"'";
+      ResultSet rs = db.GetSQL(sql);
+      if (rs.next()) {
+         specEmail = rs.getString("email");
+         System.out.println("meial"+specEmail+"<");
+         if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
+            specEmail = new String();
+         }
+         retval = specEmail;
+      }
+      rs.close();
+      db.CloseConn();
+    }catch (SQLException e) {
+       System.out.println(e.getMessage());
+    }
+    return retval;
+  }
+  
+  
   public String getProviderName(String id) {
 
     String retval = new String();
@@ -548,6 +573,8 @@ public class EctConsultationFormRequestUtil {
   public String specFax;
 
   public String specAddr;
+  
+  public String specEmail;
 
   public Vector teamVec;
 
