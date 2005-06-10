@@ -65,7 +65,7 @@ public class LogWorker extends Thread {
       try {
          db.updateDBRecord(sql, provider_no);
       } catch (SQLException e) {
-         _logger.equals("failed to insert into logging table providerNo"+provider_no+", action "+action+", content "+content+" contentId "+contentId); 
+         _logger.error("failed to insert into logging table providerNo"+provider_no+", action "+action+", content "+content+" contentId "+contentId); 
       }
    }
    
