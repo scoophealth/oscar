@@ -57,7 +57,7 @@ public class TeleplanCorrectionActionWCB extends org.apache.struts.action.Action
          
          //bean.queryExecuteUpdate(data.getDemographic(), sql_demographic);
          bean.queryExecuteUpdate(data.getBillingForStatus(), sql_billingmaster);
-         bean.queryExecuteUpdate(data.getBilling(), sql_biling);
+         bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
          bean.queryExecuteUpdate(data.getWcb(this.GetFeeItemAmount(data.getW_feeitem(), data.getW_extrafeeitem())), sql_wcb);
          
          String providerNo = data.getProviderNo();
