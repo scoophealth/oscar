@@ -53,6 +53,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
 
 <%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*" %>
 
@@ -69,7 +70,6 @@
     reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil ();
 
     reqFrm.estRequestFromId((String)request.getAttribute("reqId"));
-
 
 
     reqFrm.specPhone = request.getParameter("phone");
@@ -142,263 +142,265 @@
 
 %>
 
-<head>
+    <head>
 
-<html:base/>
+    <html:base/>
 
-<style type="text/css" media="print">
+    <style type="text/css" media="print">
 
-.header {
+        .header {
 
-    display:none;
+        display:none;
 
-}
+        }
 
-.header INPUT {
+        .header INPUT {
 
-    display:none;
+        display:none;
 
-}
+        }
 
 
 
-.header A {
+        .header A {
 
-    display:none;
+        display:none;
 
-}
+        }
 
 
 
-</style>
+    </style>
 
 
 
-<style type="text/css">
+    <style type="text/css">
 
 
 
-.Header{
+        .Header{
 
-    background-color:#BBBBBB;
+        background-color:#BBBBBB;
 
-    padding-top:5px;
+        padding-top:5px;
 
-    padding-bottom:5px;
+        padding-bottom:5px;
 
-    width: 450pt;
+        width: 450pt;
 
-    font-size:12pt;
+        font-size:12pt;
 
-}
+        }
 
 
 
-.Header INPUT{
+        .Header INPUT{
 
-    width: 100px;
+        width: 100px;
 
-}
+        }
 
 
 
-.Header A{
+        .Header A{
 
-    font-size: 12pt;
+        font-size: 12pt;
 
-}
+        }
 
 
 
-table.patientInfo{
+        table.patientInfo{
 
-border: 1pt solid #888888;
+        border: 1pt solid #888888;
 
-}
+        }
 
 
 
-table.leftPatient{
+        table.leftPatient{
 
-border-left: 1pt solid #AAAAAA;
+        border-left: 1pt solid #AAAAAA;
 
-}
+        }
 
 
 
-table.printTable{
+        table.printTable{
 
-width: 450pt;
+        width: 450pt;
 
-border: 1pt solid #888888;
+        border: 1pt solid #888888;
 
-font-size: 10pt;
+        font-size: 10pt;
 
-font-family: arial, verdana, tahoma, helvetica, sans serif;
+        font-family: arial, verdana, tahoma, helvetica, sans serif;
 
-}
+        }
 
-td.subTitles{
+        td.subTitles{
 
-font-size:12pt;
+        font-size:12pt;
 
-font-family: arial, verdana, tahoma, helvetica, sans serif;
+        font-family: arial, verdana, tahoma, helvetica, sans serif;
 
-}
+        }
 
 
 
-td.fillLine{
+        td.fillLine{
 
-border-bottom: 1pt solid #444444;
+        border-bottom: 1pt solid #444444;
 
-font-size:10pt;
+        font-size:10pt;
 
-font-family: arial, verdana, tahoma, helvetica, sans serif;
+        font-family: arial, verdana, tahoma, helvetica, sans serif;
 
-}
+        }
 
-pre.text{
+        pre.text{
 
-font-size:10pt;
+        font-size:10pt;
 
-font-family: arial, verdana, tahoma, helvetica, sans serif;
+        font-family: arial, verdana, tahoma, helvetica, sans serif;
 
-}
+        }
 
-td.title4{
+        td.title4{
 
-font-size:10pt;
+        font-size:10pt;
 
-font-family: arial, verdana, tahoma, helvetica, sans serif;
+        font-family: arial, verdana, tahoma, helvetica, sans serif;
 
 
 
 
 
-}
+        }
 
-td.address{
+        td.address{
 
-font-size:8pt;
+        font-size:8pt;
 
-font-family: arial, verdana, tahoma, helvetica, sans serif;
+        font-family: arial, verdana, tahoma, helvetica, sans serif;
 
 
 
-}
+        }
 
 
 
-</style>
+    </style>
 
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-var flag = 1;
+    var flag = 1;
 
-function PrintWindow()
+    function PrintWindow()
 
-{
+    {
 
-       window.print();
+    window.print();
 
-}
+    }
 
 
 
-function CloseWindow()
+    function CloseWindow()
 
-{
+    {
 
-       window.close();
+    window.close();
 
-}
+    }
 
 
 
-function flipFaxFooter(){
+    function flipFaxFooter(){
 
 
 
-      if (flag == 1 ){
+    if (flag == 1 ){
 
-      document.getElementById("faxFooter").innerHTML="<hr><bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFaxFooterMessage"/>";
+    document.getElementById("faxFooter").innerHTML="<hr><bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFaxFooterMessage"/>";
 
-      flag = 0;
+    flag = 0;
 
-      }else{
+    }else{
 
-      document.getElementById("faxFooter").innerHTML="";
+    document.getElementById("faxFooter").innerHTML="";
 
-      flag = 1;
+    flag = 1;
 
-      }
+    }
 
-}
+    }
 
 
 
-function phoneNumSelect() {
+    function phoneNumSelect() {
 
     document.getElementById("clinicPhone").innerHTML="Tel: "+document.getElementById("sendersPhone").value;
 
-}
+    }
 
 
 
-function faxNumSelect() {
+    function faxNumSelect() {
 
     document.getElementById("clinicFax").innerHTML="Fax: "+document.getElementById("sendersFax").value;
 
-}
+    }
 
 
 
-</script>
+    </script>
 
-<title>
+    <title>
 
-<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.title"/>
+    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.title"/>
 
-</title>
+    </title>
 
-</head>
+    </head>
 
-<body>
+    <body>
 
-<table class="header" >
+        <table class="header" >
 
-    <tr>
+            <tr>
 
-	<td align="center">
+            <td align="center">
+                <oscarProp:oscarPropertiesCheck property="EMAIL_REFERRAL" value="yes">
+                <a href="mailto:<%=reqFrm.getSpecailistsEmail(reqFrm.specialist)%>?subject=Consultation%20Request&body=<%=formatEmail(reqFrm)%>">mail</a>                
+                </oscarProp:oscarPropertiesCheck>
+                <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFaxFooter"/>" onclick="javascript :flipFaxFooter();"/>
 
-            <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFaxFooter"/>" onclick="javascript :flipFaxFooter();"/>
-
-        </td>
-
-
-
-	<td align="center">
-
-            <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
-
-        </td>
+            </td>
 
 
 
-        <td align="center">
+            <td align="center">
 
-            <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
+                <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
 
-        </td>
+            </td>
 
-        <td align="center">
 
-            P
 
-            <select name="sendersPhone" id="sendersPhone" onChange="phoneNumSelect()">
+            <td align="center">
+
+                <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
+
+            </td>
+
+            <td align="center">
+
+                P
+
+                <select name="sendersPhone" id="sendersPhone" onChange="phoneNumSelect()">
 
             <%  for (int i =0; i < vecPhones.size();i++){
 
@@ -406,19 +408,19 @@ function faxNumSelect() {
 
             %>
 
-            <option value="<%=te%>"><%=te%></option>
+                    <option value="<%=te%>"><%=te%></option>
 
             <%  }%>
 
-            </select>
+                </select>
 
-        </td>
+            </td>
 
-        <td align="center">
+            <td align="center">
 
-            F
+                F
 
-            <select name="sendersFax" id="sendersFax" onChange="faxNumSelect()">
+                <select name="sendersFax" id="sendersFax" onChange="faxNumSelect()">
 
             <%  for (int i =0; i < vecFaxes.size();i++){
 
@@ -426,147 +428,53 @@ function faxNumSelect() {
 
             %>
 
-            <option value="<%=te%>"><%=te%></option>
+                    <option value="<%=te%>"><%=te%></option>
 
             <%  }%>
 
-            </select>
+                </select>
 
-        </td>
-
-    </tr>
-
-</table>
-
-<table class="printTable" name="headerTable">
-
-<!--header-->
-
-<tr>
-
-    <td>
-
-       <table name="innerTable" border="0">
-
-            <tr>
-
-                <td rowspan=3>
-
-                    &nbsp;&nbsp;  <%-- blank column for spacing --%>
-
-                </td>
-
-                <td rowspan=3>
-
-                    <%=props.getProperty("faxLogo", "").equals("")?"":"<img src=\""+props.getProperty("faxLogo", "")+"\">"%>
-
-                </td>
-
-                <td rowspan=3>
-
-                    &nbsp;&nbsp;  <%-- blank column for spacing --%>
-
-                </td>
-
-
-
-                <td colspan="2" class="title4">
-
-                    <b><%=clinic.getClinicName()%></b>
-
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td colspan="2" class="address">
-
-                <%=clinic.getClinicAddress()%>, <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%>  <%=clinic.getClinicPostal()%>
-
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td class="address" id="clinicPhone">
-
-                    Tel: <%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%>
-
-                </td>
-
-                <td class="address" id="clinicFax">
-
-                    Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%>
-
-                </td>
+            </td>
 
             </tr>
 
         </table>
 
-    </td>
+        <table class="printTable" name="headerTable">
 
-</tr>
-
-<tr>
-
-    <td align="center">
-
-       <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgConsReq"/>
-
-       <br>
-
-       <font size="-1">
-
-           <b>
-
-               <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart1"/>
-
-               <%=reqFrm.getClinicName()%>
-
-               <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart2"/>
-
-           </b>
-
-       </font>
-
-    </td>
-
-</tr>
-
-
-
-<tr>
-
-    <td>
-
-        <table border=0 align="center" width="100%" cellspacing="0" class="patientInfo">
+            <!--header-->
 
             <tr>
 
-                <td valign="top" align="left">
+                <td>
 
-                    <table border=0  >
+                    <table name="innerTable" border="0">
 
                         <tr>
 
-                            <td class="subTitles">
+                            <td rowspan=3>
 
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgDate"/>:
+                                &nbsp;&nbsp;  <%-- blank column for spacing --%>
 
                             </td>
 
-                            <td class="fillLine">
-				<%
-                                	if(reqFrm.pwb.equals("1")){
-                                %>
-                                  	<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.pwb"/>
-                                <%}else{
-                                %>
-                                <%=reqFrm.referalDate%>
-                                <%}%>
+                            <td rowspan=3>
+
+                    <%=props.getProperty("faxLogo", "").equals("")?"":"<img src=\""+props.getProperty("faxLogo", "")+"\">"%>
+
+                            </td>
+
+                            <td rowspan=3>
+
+                                &nbsp;&nbsp;  <%-- blank column for spacing --%>
+
+                            </td>
+
+
+
+                            <td colspan="2" class="title4">
+
+                                <b><%=clinic.getClinicName()%></b>
 
                             </td>
 
@@ -574,27 +482,9 @@ function faxNumSelect() {
 
                         <tr>
 
-                            <td class="subTitles">
+                            <td colspan="2" class="address">
 
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgStatus"/>:
-
-                            </td>
-
-                            <td class="fillLine">
-
-			    <% if (reqFrm.urgency.equals("1")) { %>
-
-			    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgUrgent"/>
-
-			    <%  }else if(reqFrm.urgency.equals("2")){ %>
-
-			    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgNUrgent"/>
-
-			    <%    }else if (reqFrm.urgency.equals("3")){ %>
-
-			    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgReturn"/>
-
-			    <% } %>
+                <%=clinic.getClinicAddress()%>, <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%>  <%=clinic.getClinicPostal()%>
 
                             </td>
 
@@ -602,191 +492,303 @@ function faxNumSelect() {
 
                         <tr>
 
-                            <td class="subTitles">
+                            <td class="address" id="clinicPhone">
 
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgService"/>:
-
-                            </td>
-
-                            <td class="fillLine">
-
-                                <%=reqFrm.getServiceName(reqFrm.service) %>
+                                Tel: <%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%>
 
                             </td>
 
-                        </tr>
+                            <td class="address" id="clinicFax">
 
-                        <tr>
-
-                            <td class="subTitles">
-
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgConsultant"/>:
-
-                            </td>
-
-                            <td class="fillLine">
-
-                                <%=reqFrm.getSpecailistsName(reqFrm.specialist) %>
+                                Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%>
 
                             </td>
 
                         </tr>
-
-
-
-                        <tr>
-
-                            <td class="subTitles">
-
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPhone"/>:
-
-                            </td>
-
-                            <td class="fillLine">
-
-                                <%=reqFrm.specPhone%>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td class="subTitles">
-
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFax"/>:
-
-                            </td>
-
-                            <td class="fillLine">
-
-                                <%=reqFrm.specFax%>
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td class="subTitles" >
-
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAddr"/>:
-
-                            </td>
-
-
-
-                            <td class="fillLine" >
-
-                                <%=reqFrm.specAddr%>
-
-                            </td>
-
-                        </tr>
-
-
-
-
-
-
 
                     </table>
 
                 </td>
 
-                <td valign="top">
+            </tr>
 
-                    <table border=0 class="leftPatient">
+            <tr>
+
+                <td align="center">
+
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgConsReq"/>
+
+                    <br>
+
+                    <font size="-1">
+
+                        <b>
+
+                        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart1"/>
+
+               <%=reqFrm.getClinicName()%>
+
+                        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart2"/>
+
+                        </b>
+
+                    </font>
+
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+
+                <td>
+
+                    <table border=0 align="center" width="100%" cellspacing="0" class="patientInfo">
 
                         <tr>
 
-                            <td class="subTitles">
+                            <td valign="top" align="left">
 
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPat"/>:
+                                <table border=0  >
+
+                                    <tr>
+
+                                        <td class="subTitles">
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgDate"/>:
+
+                                        </td>
+
+                                        <td class="fillLine">
+				<%
+                                	if(reqFrm.pwb.equals("1")){
+                                %>
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.pwb"/>
+                                <%}else{
+                                %>
+                                <%=reqFrm.referalDate%>
+                                <%}%>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td class="subTitles">
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgStatus"/>:
+
+                                        </td>
+
+                                        <td class="fillLine">
+
+			    <% if (reqFrm.urgency.equals("1")) { %>
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgUrgent"/>
+
+			    <%  }else if(reqFrm.urgency.equals("2")){ %>
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgNUrgent"/>
+
+			    <%    }else if (reqFrm.urgency.equals("3")){ %>
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgReturn"/>
+
+			    <% } %>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td class="subTitles">
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgService"/>:
+
+                                        </td>
+
+                                        <td class="fillLine">
+
+                                <%=reqFrm.getServiceName(reqFrm.service) %>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td class="subTitles">
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgConsultant"/>:
+
+                                        </td>
+
+                                        <td class="fillLine">
+
+                                <%=reqFrm.getSpecailistsName(reqFrm.specialist) %>
+
+                                        </td>
+
+                                    </tr>
+
+
+
+                                    <tr>
+
+                                        <td class="subTitles">
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPhone"/>:
+
+                                        </td>
+
+                                        <td class="fillLine">
+
+                                <%=reqFrm.specPhone%>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td class="subTitles">
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFax"/>:
+
+                                        </td>
+
+                                        <td class="fillLine">
+
+                                <%=reqFrm.specFax%>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td class="subTitles" >
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAddr"/>:
+
+                                        </td>
+
+
+
+                                        <td class="fillLine" >
+
+                                <%=reqFrm.specAddr%>
+
+                                        </td>
+
+                                    </tr>
+
+
+
+
+
+
+
+                                </table>
 
                             </td>
 
-                            <td class="fillLine">
+                            <td valign="top">
+
+                                <table border=0 class="leftPatient">
+
+                                    <tr>
+
+                                        <td class="subTitles">
+
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPat"/>:
+
+                                        </td>
+
+                                        <td class="fillLine">
 
                             <%=reqFrm.patientName %>
 
-                            </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
+                                    <tr>
 
-                            <td class="subTitles">
+                                        <td class="subTitles">
 
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAddr"/>:
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAddr"/>:
 
-                            </td>
+                                        </td>
 
-                            <td class="fillLine">
+                                        <td class="fillLine">
 
                                 <%=reqFrm.patientAddress %>
 
-                            </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
+                                    <tr>
 
-                            <td class="subTitles">
+                                        <td class="subTitles">
 
-                               <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPhone"/>
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPhone"/>
 
-                            </td>
+                                        </td>
 
-                            <td class="fillLine">
+                                        <td class="fillLine">
 
                                 <%=reqFrm.patientPhone %>
 
-                            </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
+                                    <tr>
 
-                            <td class="subTitles">
+                                        <td class="subTitles">
 
-                               <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgBirth"/>:
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgBirth"/>:
 
-                            </td>
+                                        </td>
 
-                            <td class="fillLine">
+                                        <td class="fillLine">
 
                                 <%=reqFrm.patientDOB %>  (d/m/y)
 
-                            </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
+                                    <tr>
 
-                            <td class="subTitles">
+                                        <td class="subTitles">
 
-                               <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCard"/>
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCard"/>
 
-                            </td>
+                                        </td>
 
-                            <td class="fillLine">
+                                        <td class="fillLine">
 
                              <%=reqFrm.patientHealthNum %>&nbsp;<%=reqFrm.patientHealthCardVersionCode%>&nbsp;<%=reqFrm.patientHealthCardType%>
 
-                            </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
+                                    <tr>
 
-                            <td class="subTitles">
+                                        <td class="subTitles">
 
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgappDate"/>:
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgappDate"/>:
 
-                            </td>
+                                        </td>
 
-                            <td class="fillLine">
+                                        <td class="fillLine">
 
                             <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
 
@@ -794,25 +796,25 @@ function faxNumSelect() {
 
                             <%}else{%>
 
-				&nbsp;
+                                            &nbsp;
 
 			    <%}%>
 
-			    </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
+                                    <tr>
 
-                            <td class="subTitles">
+                                        <td class="subTitles">
 
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgTime"/>:
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgTime"/>:
 
-                            </td>
+                                        </td>
 
 
 
-                            <td class="fillLine">
+                                        <td class="fillLine">
 
                             <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
 
@@ -820,25 +822,31 @@ function faxNumSelect() {
 
                             <%}else{%>
 
-				&nbsp;
+                                            &nbsp;
 
 		            <%}%>
 
-                            </td>
+                                        </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
+                                    <tr>
 
-                            <td class="subTitles">
+                                        <td class="subTitles">
 
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgChart"/>
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgChart"/>
 
-                            </td>
+                                        </td>
 
-                            <td class="fillLine">
+                                        <td class="fillLine">
 
                                 <%=reqFrm.patientChartNo%>
+
+                                        </td>
+
+                                    </tr>
+
+                                </table>
 
                             </td>
 
@@ -850,79 +858,73 @@ function faxNumSelect() {
 
             </tr>
 
-        </table>
-
-    </td>
-
-</tr>
 
 
 
 
+            <tr>
 
-<tr>
+                <td class="subTitles">
 
-    <td class="subTitles">
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgReason"/>:
 
-        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgReason"/>:
+                </td>
 
-    </td>
+            </tr>
 
-</tr>
+            <tr>
 
-<tr>
-
-    <td class="fillLine">
+                <td class="fillLine">
 
         <%=reqFrm.reasonForConsultation %>
 
-       &nbsp;<br>
+                    &nbsp;<br>
 
-    </td>
+                </td>
 
-</tr>
+            </tr>
 
 
 
-<tr>
+            <tr>
 
-    <td class="subTitles">
+                <td class="subTitles">
 
-        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgClinicalInfom"/>:
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgClinicalInfom"/>:
 
-    </td>
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-    <td class="fillLine">
+                <td class="fillLine">
 
         <%=divy(reqFrm.clinicalInformation) %>
 
-       &nbsp;<br>
+                    &nbsp;<br>
 
-    </td>
+                </td>
 
-</tr>
-
-
+            </tr>
 
 
 
-<tr>
 
-    <td class="subTitles">
 
-        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgSigProb"/>:
+            <tr>
 
-    </td>
+                <td class="subTitles">
 
-</tr>
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgSigProb"/>:
 
-<tr>
+                </td>
 
-    <td class="fillLine">
+            </tr>
+
+            <tr>
+
+                <td class="fillLine">
 
 
 
@@ -930,117 +932,117 @@ function faxNumSelect() {
 
 
 
-       &nbsp;<br>
+                    &nbsp;<br>
 
-    </td>
+                </td>
 
-</tr>
-
-
+            </tr>
 
 
 
 
 
-<tr>
 
-    <td class="subTitles">
 
-        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCurrMed"/>
+            <tr>
 
-    </td>
+                <td class="subTitles">
 
-</tr>
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCurrMed"/>
 
-<tr>
+                </td>
 
-    <td class="fillLine">
+            </tr>
+
+            <tr>
+
+                <td class="fillLine">
 
         <%=divy(reqFrm.currentMedications) %>
 
 
 
-       &nbsp;<br>
+                    &nbsp;<br>
 
-    </td>
+                </td>
 
-</tr>
+            </tr>
 
 
 
-<tr>
+            <tr>
 
-    <td class="subTitles">
+                <td class="subTitles">
 
-        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAllergies"/>
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAllergies"/>
 
-    </td>
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-    <td class="fillLine">
+                <td class="fillLine">
 
         <%=divy(reqFrm.allergies) %>
 
-       &nbsp;<br>
+                    &nbsp;<br>
 
-    </td>
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-    <td class="subTitles">
+                <td class="subTitles">
 
-    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAssociated"/> : <%=reqFrm.getProviderName(reqFrm.providerNo) %>
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAssociated"/> : <%=reqFrm.getProviderName(reqFrm.providerNo) %>
 
-       &nbsp;<br>
+                    &nbsp;<br>
 
-    </td>
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-    <td class="subTitles">
+            <td class="subTitles">
 
-    <%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
+                <%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
 
-     should really be rewritten more elegantly at some later point in time. --%>
+                should really be rewritten more elegantly at some later point in time. --%>
 
        <% if (props.getProperty("clinic_no", "").startsWith("1022")) { %>
 
-       Physician
+                Physician
 
        <% } else if(props.getProperty("isSpecialist", "").startsWith("true")) { %>
-       Doctor
+                Doctor
 		<% } else { %>
 
-       <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFamilyDoc"/>
+                <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFamilyDoc"/>
 
        <% } %>
 
-        : <%=reqFrm.getFamilyDoctor() %>
+                : <%=reqFrm.getFamilyDoctor() %>
 
-       &nbsp;<br>
+                &nbsp;<br>
 
-    </td>
+            </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-    <td id="faxFooter">
+                <td id="faxFooter">
 
-    </td>
+                </td>
 
-</tr>
+            </tr>
 
-</table>
+        </table>
 
-</body>
+    </body>
 
 </html:html>
 
@@ -1094,7 +1096,50 @@ return stringBuffer.toString();
 
 }
 
-
-
+public String formatEmail(oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm){
+   String Urgency = ""; 
+   if (reqFrm.urgency.equals("1")) {
+      Urgency = "Urgent";
+   }else if(reqFrm.urgency.equals("2")){
+      Urgency = "Non-Urgent";
+   }else if (reqFrm.urgency.equals("3")){ 
+      Urgency = "Return";
+   }
+    
+   String s = "";
+   s +="<b>Date:</b>"+reqFrm.referalDate+"<br/>";
+   s +="<b>Status:</b>"+Urgency+"<br/>";
+   s +="<b>Service:</b>"+reqFrm.getServiceName(reqFrm.service)+"<br/>";
+   
+   s +="<b>Specailist:</b>"+reqFrm.getSpecailistsName(reqFrm.specialist) +" <b>Phone:</b>"+reqFrm.specPhone+" <b>Fax:</b> "+reqFrm.specFax+"<br/>";
+   s +="<b>Address:</b> "+reqFrm.specAddr+"<br/><br/><br/>";
+   
+   s +="<b>Patient Info</b><br/>";
+   s +="<b>Name:</b>"+reqFrm.patientName+"<br/>";
+   s +="<b>DOB:</b>"+reqFrm.patientDOB+"<br/>";
+   s +="<b>HIN:</b>"+reqFrm.patientHealthNum+" "+reqFrm.patientHealthCardVersionCode+" <b>HIN Type:</b>"+reqFrm.patientHealthCardType+"<br/>";
+   s +="<b>Phone:</b>"+reqFrm.patientPhone+"<br/>";
+   s +="<b>Address:</b>"+reqFrm.patientAddress+"<br/><br/><br/>";
+   
+   
+   s += "<b>Reason For Consultation</b> <br/> ";
+   s += divy(reqFrm.reasonForConsultation);
+   s += "<br/><br/>";
+   s += "<b>Pertinent Clinical Information</b><br/> ";
+   s += divy(reqFrm.clinicalInformation);
+   s += "<br/><br/>";
+   s += "<b>Significant Concurrent Problems</b><br/> ";
+   s += divy(reqFrm.concurrentProblems);
+   s += "<br/><br/>";
+   s += "<b>Current Medications</b><br/> ";
+   s += divy(reqFrm.currentMedications);
+   s += "<br/><br/>";   
+   s += "<b>Allergies</b><br/> ";
+   s += divy(reqFrm.allergies);
+   s += "<br/><br/>";   
+   s += "<b>Associated with:</b> "+reqFrm.getProviderName(reqFrm.providerNo)+"<br/> ";
+   s += "<b>Family Doctor:</b> "+reqFrm.getFamilyDoctor() ;   
+   s = s.replaceAll("\"","&quot;");
+   return s;
+}
 %>
-
