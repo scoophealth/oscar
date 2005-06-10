@@ -1,5 +1,5 @@
 <%@ page language="java" errorPage="../provider/errorpage.jsp" %>
-<%@ page import="java.util.*,oscar.oscarLab.ca.on.*" %>
+<%@ page import="java.util.*,oscar.oscarLab.ca.on.*,oscar.oscarDemographic.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -16,6 +16,10 @@ String demographicNo = request.getParameter("demo");
 String testName = request.getParameter("testName");
 
 String highlight = "#E0E0FF";
+
+DemographicData dData = new DemographicData();
+
+DemographicData.Demographic demographic =  dData.getDemographic(demographicNo);
 
 CommonLabTestValues comVal =  new CommonLabTestValues();
 ArrayList list = null;
@@ -194,12 +198,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <div class="Field2">
                              <bean:message key="oscarMDS.segmentDisplay.formDetailResults"/> 
                         </div>
-                    </td>
-                    <td width="33%" align="middle" class="Cell">
-                        <div class="Field2">
-                            <bean:message key="oscarMDS.segmentDisplay.formResultsInfo"/>
-                        </div>
-                    </td>
+                    </td>                    
                 </tr>
                 <tr>
                     <td bgcolor="white" valign="top">
@@ -209,20 +208,18 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                     <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top">
                                         <tr>
                                             <td valign="top" align="left">
-                                                <table valign="top" border="0" cellpadding="3" cellspacing="0" width="100%">
+                                                <table valign="top" border="0" cellpadding="3" cellspacing="0" width="50%">
                                                     <tr>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData">
                                                                 <strong><bean:message key="oscarMDS.segmentDisplay.formPatientName"/>: </strong>
+                                                                <%=demographic.getLastName()%>, <%=demographic.getFirstName()%>                                                                     
                                                             </div>
+                                                            
                                                         </td>
                                                         <td colspan="2" nowrap>
-                                                            <div class="FieldData" nowrap="nowrap">
-                                                                
-                                                                    <a href="javascript:window.close()">
-                                                                    close
-                                                                    <%=""/*lab.pLastName*/%>, <%=""/*lab.pFirstName*/%> 
-                                                                    </a>
+                                                            <div class="FieldData" nowrap="nowrap">                                                                                                                                 
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formSex"/>: </strong><%=demographic.getSex()%>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -230,90 +227,21 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData">
                                                                 <strong><bean:message key="oscarMDS.segmentDisplay.formDateBirth"/>: </strong>
+                                                                <%=demographic.getDob("-")%>
                                                             </div>
                                                         </td>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData" nowrap="nowrap">
-                                                                <%=""/*lab.pDOB*/%>
+                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formAge"/>: </strong><%=demographic.getAge()%>                                                                    
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td colspan="2" nowrap>
-                                                            <div class="FieldData">
-                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formAge"/>: </strong><%=""/*lab.getAge()*/%>                                                                
-                                                            </div>
-                                                        </td>
-                                                        <td colspan="2" nowrap>
-                                                            <div class="FieldData">
-                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formSex"/>: </strong><%=""/*lab.pSex*/%>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2" nowrap>
-                                                            <div class="FieldData">                                                                
-                                                                               <bean:message key="oscarMDS.segmentDisplay.formHealthNumber"/>                                                                                                                                
-                                                                </strong>
-                                                            </div>
-                                                        </td>
-                                                        <td colspan="2" nowrap>
-                                                            <div class="FieldData" nowrap="nowrap">
-                                                                <%=""/*lab.pHealthNum%>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    
+                                                    
                                                 </table>
                                             </td>
                                             <td width="33%" valign="top">
-                                                <table valign="top" border="0" cellpadding="3" cellspacing="0" width="100%">
-                                                    <tr>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData">
-                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formHomePhone"/>: </strong>
-                                                            </div>
-                                                        </td>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData" nowrap="nowrap">
-                                                                <%=""/*lab.pPhone*/%>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData">
-                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formWorkPhone"/>: </strong>
-                                                            </div>
-                                                        </td>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData" nowrap="nowrap">
-                                                                &nbsp;
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData" nowrap="nowrap">
-                                                            </div>
-                                                        </td>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData" nowrap="nowrap">
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData">
-                                                                <strong><bean:message key="oscarMDS.segmentDisplay.formPatientLocation"/>: </strong>
-                                                            </div>
-                                                        </td>
-                                                        <td nowrap>
-                                                            <div align="left" class="FieldData" nowrap="nowrap">
-                                                                <%=""/*not sure on what goes here*/%>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                                
                                             </td>
                                         </tr>
                                     </table>
@@ -321,88 +249,9 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             </tr>
                         </table>
                     </td>
-                    <td bgcolor="white" valign="top">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="1">
-                            <tr>
-                                <td>
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formDateService"/>:</strong>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="FieldData" nowrap="nowrap">
-                                        <%=""/* lab.serviceDate */%>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formReportStatus"/>:</strong>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="FieldData" nowrap="nowrap">
-                                        <%=""/* lab.status */%>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td nowrap>
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formClientRefer"/>:</strong>
-                                    </div>
-                                </td>
-                                <td nowrap>
-                                    <div class="FieldData" nowrap="nowrap">
-                                        <%=""/* lab.docNum*/%>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formAccession"/>:</strong>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="FieldData" nowrap="nowrap">
-                                        <%= ""/*lab.accessionNum*/%>                                        
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
+                    
                 </tr>
-                <tr>
-                    <td bgcolor="white" colspan="2">
-                        <table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC">
-                            <tr>
-                                <td bgcolor="white">
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formRequestingClient"/>: </strong>
-                                            <%= ""/*lab.docName*/%>
-                                    </div>
-                                </td>
-                                <td bgcolor="white">
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formReportToClient"/>: </strong>
-                                            <%= ""/*mDSSegmentData.providers.admittingDoctor not sure*/%>
-                                    </div>
-                                </td>
-                                <td bgcolor="white" align="right">
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formCCClient"/>: </strong>
-                                            <%="" /* mDSSegmentData.providers.consultingDoctor*/ %>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                
                 <tr>
                     <td align="center" bgcolor="white" colspan="2">
                         <table width="100%" height="20" border="0" cellpadding="0" cellspacing="0">
@@ -410,7 +259,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 <td align="center" bgcolor="white">
                                     <div class="FieldData">
                                         <center>
-                                            
+                                  
                                         </center>
                                     </div>
                                 </td>
@@ -427,6 +276,9 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 <td colspan="4" height="7">&nbsp;</td>
                             </tr>
                             <tr>
+                                <td colspan="4" height="7">&nbsp;</td>
+                            </tr>
+                            <!--tr>
                                 <td bgcolor="#FFCC00" width="200" height="22" valign="bottom">
                                     <div class="Title2">
                                         <%=""/*gResults.groupName*/%>
@@ -436,7 +288,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 <td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>
                                 <td width="9">&nbsp;</td>
                                 <td width="*">&nbsp;</td>
-                            </tr>
+                            </tr-->
                         </table>
                         
                         <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
