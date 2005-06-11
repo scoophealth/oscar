@@ -22493,10 +22493,7 @@ INSERT INTO teleplan_adj_codes VALUES (68,'90','Travelling Expenses');
 INSERT INTO teleplan_adj_codes VALUES (69,'91','Travelling Time');
 INSERT INTO teleplan_adj_codes VALUES (70,'39','');
 
--
---
--- data for table `teleplan_refusal_code`
---
+
 
 INSERT INTO teleplan_refusal_code VALUES (1,'*A','OUR RECORDS INDICATE PATIENT DECEASED. PLEASE CONTACT MSP.');
 INSERT INTO teleplan_refusal_code VALUES (2,'*B','PATIENT\'S ELIGIBILITY WITH MSP IS IN QUESTION. PLEASE HAVE PATIENT CONTACT MSP.');
