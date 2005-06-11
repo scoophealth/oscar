@@ -1,52 +1,53 @@
-<%      
+<%
   if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
--->   
+-->
 
  <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" />
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <%@ include file="dbBilling.jsp" %>
 
-<%  
+<%
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
+
   String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
   String amtbilled="", amtpaid="", balancefwd="", chequeamt="", newbalance="", raNo="";
   String paymentdate="" , payable="";
-    
+	String payeeNo = "";
+
 %>
-  
+
 
 <html>
 <head>
@@ -54,7 +55,7 @@
 <html:base/>
 <link rel="stylesheet" href="../../../billing/billing.css" >
 <title>Billing Reconcilliation</title>
-       
+
 <script language="JavaScript">
 <!--
     var remote=null;
@@ -77,7 +78,7 @@
         awnd.focus();
     }
 
-    function checkReconcile(url){    
+    function checkReconcile(url){
         if(confirm("You are about to reconcile the file, are you sure?")) {
             location.href=url;
         }else{
@@ -93,8 +94,8 @@
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
    <tr bgcolor="#486ebd">
       <th align='LEFT'>
-		   <input type='button' name='print' value='Print' onClick='window.print()'> 
-      </th> 
+		   <input type='button' name='print' value='Print' onClick='window.print()'>
+      </th>
       <th align='CENTER'  >
          <font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing Reconcilliation </font>
       </th>
@@ -103,10 +104,10 @@
       </th>
    </tr>
 </table>
- 
+
 <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
    <form>
-     <tr>      
+     <tr>
         <td width="5%" height="16">Payment Date </td>
         <td width="10%" height="16" align="right">Payable </td>
         <td width="10%" height="16" align="right">Amount Billed</td>
@@ -117,26 +118,28 @@
         <td width="20%" height="16">Action</td>
         <td width="5%" height="16">Status</td>
      </tr>
-   
-  <%	
+
+  <%
     ResultSet rsdemo;
     rsdemo = null;
     String[] param5 =new String[1];
     param5[0] = "D";
     rsdemo = apptMainBean.queryResults(param5, "search_all_tahd");
-    while (rsdemo.next()) {   
+    while (rsdemo.next()) {
         raNo  = rsdemo.getString("s21_id");
         paymentdate = rsdemo.getString("t_payment");
         payable = rsdemo.getString("t_payeename");
         amtbilled= rsdemo.getString("t_amtbilled");
+		payeeNo= rsdemo.getString("t_payeeno");
         amtpaid = rsdemo.getString("t_amtpaid");
         balancefwd = rsdemo.getString("t_balancefwd");
         chequeamt= rsdemo.getString("t_cheque");
         newbalance = rsdemo.getString("t_newbalance");
+        System.out.println(raNo+ " " + amtbilled);
         //total = rsdemo.getString("totalamount");
-   %> 
-		     
-     <tr> 
+   %>
+
+     <tr>
         <td ><%=paymentdate%>  </td>
         <td align="right"><%=payable%> </td>
         <td align="right"><%=moneyFormat(amtbilled)%></td>
@@ -144,7 +147,7 @@
         <td align="right"><%=moneyFormat(balancefwd)%></td>
         <td align="right"><%=moneyFormat(chequeamt)%></td>
         <td align="right"><%=moneyFormat(newbalance)%></td>
-        <td >&nbsp;&nbsp;<a href="genTAS01.jsp?rano=<%=raNo%>&proNo=" target="_blank">Billed</a> | <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a> | <a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a></td>
+        <td >&nbsp;&nbsp;Billed( <a href="createBillingReportAction.do?docFormat=pdf&repType=REP_MSPREM&rano=<%=raNo%>&selPayee=<%=payeeNo%>" target="_blank">PDF</a>|<a href="createBillingReportAction.do?docFormat=csv&repType=REP_MSPREM&rano=<%=raNo%>&selPayee=<%=payeeNo%>" target="_blank">CSV</a>) | <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a> |Summary ( <a href="createBillingReportAction.do?docFormat=pdf&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo=" target="_blank">PDF</a>|<a href="createBillingReportAction.do?docFormat=csv&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo=" target="_blank">CSV</a>)</td>
         <td ><%=rsdemo.getString("status")%></td>
      </tr>
      <tr>
@@ -157,13 +160,13 @@
 </body>
 </html>
 <%!
-    String moneyFormat(String str){       
+    String moneyFormat(String str){
         String moneyStr = "0.00";
-        try{             
+        try{
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
-        }catch (Exception moneyException) { 
-            moneyException.printStackTrace(); 
-            moneyStr = str; 
+        }catch (Exception moneyException) {
+            moneyException.printStackTrace();
+            moneyStr = str;
         }
     return moneyStr;
     }
