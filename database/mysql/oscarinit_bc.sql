@@ -4,6 +4,16 @@
 ---------------------------------------------------------
 -- Server version	4.0.14-standard
 
+
+--
+-- Table structure for table `billing_payment_type`
+--
+
+CREATE TABLE billing_payment_type (
+  id int(11) NOT NULL auto_increment,
+  payment_type varchar(25) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
 --
 -- Table structure for table 'billinglocation'
 --
@@ -14,6 +24,8 @@ CREATE TABLE billinglocation (
   billinglocation_desc varchar(200) default '',
   region varchar(5) default ''
 ) TYPE=MyISAM;
+
+
 
 --
 -- Table structure for table 'billingmaster'
@@ -79,6 +91,7 @@ CREATE TABLE billingmaster (
   oin_address3 varchar(25) default '',
   oin_address4 varchar(25) default '',
   oin_postalcode varchar(6) default '',
+  paymentMethod int(11) default '0',
   PRIMARY KEY  (billingmaster_no)
 ) TYPE=MyISAM;
 
@@ -2001,6 +2014,31 @@ CREATE TABLE `hl7_pid` (
 create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
 create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
 create index  billingmaster_billing_no on billingmaster (billing_no);
+
+--
+-- Table structure for table `teleplan_adj_codes`
+--
+
+CREATE TABLE teleplan_adj_codes (
+  id int(11) NOT NULL auto_increment,
+  adj_code varchar(100) NOT NULL default '',
+  adj_desc varchar(100) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `teleplan_refusal_code`
+--
+
+CREATE TABLE teleplan_refusal_code (
+  id int(11) NOT NULL auto_increment,
+  code char(2) NOT NULL default '',
+  description varchar(200) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+
+
 
 
 
