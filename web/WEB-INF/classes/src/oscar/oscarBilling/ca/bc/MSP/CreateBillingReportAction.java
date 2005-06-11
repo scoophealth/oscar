@@ -1,0 +1,288 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ * AUTHOR: Joel Legris
+ * DATE: May 13, 2005
+ * DESCRIPTION:
+ * This action class is responsible for receiveing input parameters from the
+ Billing Reports Generation Screen. <p>The reports can be generated using the following
+ criteria:</p>
+ Payee: The person designated to receive a payment from BC MSP
+ Practitioner: The Person responsible for providing the clinical service
+ Insurer: The Organization responsible for providing medical coverage
+ Start Date/End Date - Date range of the generated report records
+ Account: The account that the billing transaction was performed under
+
+ */
+
+package oscar.oscarBilling.ca.bc.MSP;
+
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import org.apache.struts.action.*;
+import oscar.*;
+import oscar.entities.*;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile.*;
+
+/**
+ *
+ * <p>Title: CreateBillingReportAction</p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2005</p>
+ * <p>Company: </p>
+ * @author Joel Legris
+ * @version 1.0
+ */
+public class CreateBillingReportAction
+    extends OscarAction {
+
+  private HashMap reportCfg = new HashMap();
+  private OscarDocumentCreator osc = new OscarDocumentCreator();
+  private boolean showICBC;
+  private boolean showMSP;
+  private boolean showPriv;
+  private boolean showWCB;
+
+  public CreateBillingReportAction() {
+    this.cfgReports();
+
+  }
+
+  /**
+   * Performs Report Generation Logic based on the supplied parameters form the submitted form
+   * @param actionMapping ActionMapping
+   * @param actionForm ActionForm
+   * @param httpServletRequest HttpServletRequest
+   * @param httpServletResponse HttpServletResponse
+   * @return ActionForward
+   */
+  public ActionForward execute(ActionMapping actionMapping,
+                               ActionForm actionForm,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+    request.getSession().getServletContext().getServletContextName();
+    if (!System.getProperties().containsKey("jasper.reports.compile.class.path")) {
+      String classpath = (String) getServlet().getServletContext().
+          getAttribute("org.apache.catalina.jsp_classpath");
+      System.setProperty("jasper.reports.compile.class.path", classpath);
+    }
+
+    CreateBillingReportActionForm frm = (CreateBillingReportActionForm)
+        actionForm;
+
+    //get form field data
+    String docFmt = frm.getDocFormat();
+    String repType = frm.getRepType();
+    String account = frm.getSelAccount();
+    String payee = frm.getSelPayee();
+    String provider = frm.getSelProv();
+    String startDate = frm.getXml_vdate();
+    String endDate = frm.getXml_appointment_date();
+    String repDef = docFmt + "_" + this.reportCfg.get(repType);
+    showICBC = new Boolean(frm.getShowICBC()).booleanValue();
+    showMSP = new Boolean(frm.getShowMSP()).booleanValue();
+    showPriv = new Boolean(frm.getShowPRIV()).booleanValue();
+    showWCB = new Boolean(frm.getShowWCB()).booleanValue();
+    String insurers = createInsurerList();
+
+    //Map of insurer types to be used in bill search criteria
+    HashMap reportParams = new HashMap();
+    reportParams.put("startDate", startDate);
+    reportParams.put("endDate", endDate);
+    reportParams.put("insurers", insurers);
+    ServletOutputStream outputStream = this.getServletOstream(response);
+    MSPReconcile msp = new MSPReconcile();
+    BillSearch billSearch = null;
+
+    //open corresponding Jasper Report Definition
+    FileInputStream reportInstream = osc.getDocumentStream(System.getProperty(
+        "user.home") +
+        "/reports/" +
+        repDef
+        );
+
+    //COnfigure Reponse Header
+    cfgHeader(response, repType, docFmt);
+    //select appropriate report retrieval method
+    if (repType.equals(msp.REP_ACCOUNT_REC) || repType.equals(msp.REP_INVOICE) ||
+        repType.equals(msp.REP_WO)) {
+
+      billSearch = msp.getBillsByType(account, payee, provider, startDate,
+                                      endDate,
+                                      !showWCB, !showMSP, !showPriv,
+                                      !showICBC, repType);
+      String billCnt = String.valueOf(msp.getDistinctFieldCount(
+          billSearch.
+          list, "billing_no"));
+      String demNoCnt = String.valueOf(msp.getDistinctFieldCount(billSearch.
+          list,
+          "demoNo"));
+      if (repType.equals(msp.REP_ACCOUNT_REC)) {
+        reportParams.put("amtSubmitted", msp.getTotalPaidByStatus(billSearch.
+            list, msp.SUBMITTED));
+      }
+      else if (repType.equals(msp.REP_WO)) {
+        oscar.entities.Provider payeeProv = msp.getProvider(payee);
+        oscar.entities.Provider provProv = msp.getProvider(provider);
+        reportParams.put("provider",
+                         provider.equals("all") ? "ALL" : payeeProv.getFullName());
+        reportParams.put("payee",
+                         payee.equals("all") ? "ALL" : provProv.getFullName());
+      }
+
+      oscar.entities.Provider acctProv = msp.getProvider(account);
+      reportParams.put("billCnt", billCnt);
+      reportParams.put("demNoCnt", demNoCnt);
+      reportParams.put("account",
+                       account.equals("all") ? "ALL" :
+                       acctProv.getFullName());
+
+      //Fill document with report parameter data
+      osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
+                             billSearch.list);
+
+    }
+    else if (repType.equals(msp.REP_MSPREM)) {
+      oscar.entities.Provider payeeProv = msp.getProviderByOHIP(payee);
+      reportParams.put("payee", payeeProv.getFullName());
+      reportParams.put("payeeno", payee);
+      osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
+                             msp.getMSPRemittanceQuery(payee));
+    }
+
+    else if (repType.equals(msp.REP_MSPREMSUM)) {
+      String s21id = request.getParameter("rano");
+
+      S21 s21 = msp.getS21Record(s21id);
+
+      oscar.entities.Provider payeeProv = msp.getProvider(provider);
+      //set parameters for payee of provider
+      reportParams.put("provider",
+                       payeeProv.equals("all") ? "ALL" : payeeProv.getInitials());
+      reportParams.put("providerNo", payeeProv.getProviderNo());
+      //set parameters for S21 report header
+      reportParams.put("payeeName", s21.getPayeeName());
+      reportParams.put("amtBilled", s21.getAmtBilled());
+      reportParams.put("amtPaid", s21.getAmtPaid());
+      reportParams.put("cheque", s21.getCheque());
+      reportParams.put("s21id", s21id);
+      reportParams.put("paymentDate", s21.getPaymentDate());
+      reportParams.put("payeeNo", s21.getPayeeNo());
+      osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
+                             this.getDBConnection(request));
+
+    }
+
+    else if (repType.equals(msp.REP_PAYREF)) {
+      billSearch = msp.getMSPPayments(account, payee, provider, startDate, endDate,
+                                   !showWCB, !showMSP, !showPriv, !showICBC,
+                                   "");
+      oscar.entities.Provider payeeProv = msp.getProvider(payee);
+      oscar.entities.Provider acctProv = msp.getProvider(account);
+      oscar.entities.Provider provProv = msp.getProvider(payee);
+
+      reportParams.put("account",
+                       account.equals("all") ? "ALL" :
+                       acctProv.getFullName());
+
+      reportParams.put("provider",
+                       provider.equals("all") ? "ALL" :
+                       payeeProv.getInitials());
+      reportParams.put("payee",
+                       payee.equals("all") ? "ALL" : provProv.getInitials());
+      reportParams.put("startDate", startDate);
+      reportParams.put("endDate", endDate);
+
+      //Fill document with report parameter data
+      osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
+                             billSearch.list);
+
+    }
+
+    else if (repType.equals(msp.REP_REJ)) {
+      billSearch = msp.getBillsByType(account, payee, provider, startDate,
+                                      endDate,
+                                      !showWCB, !showMSP, !showPriv,
+                                      !showICBC,
+                                      repType);
+      oscar.entities.Provider payProv = msp.getProvider(payee);
+      reportParams.put("account",
+                       account.equals("all") ? "ALL" :
+                       payProv.getFullName());
+      //Fill document with report parameter data
+      osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
+                             billSearch.list);
+    }
+
+    return actionMapping.findForward(this.target);
+  }
+
+  /**
+   * A convenience method that returns a concatenated list of insurer types
+   * to be passed into a report
+   * @return String
+   */
+  private String createInsurerList() {
+    String insurers = "";
+
+    if (showICBC && showMSP && showPriv && showWCB) {
+      insurers = "ALL";
+    }
+    else {
+      if (showICBC) {
+        insurers += "ICBC,";
+      }
+      if (showMSP) {
+        insurers += "MSP,";
+      }
+      if (showPriv) {
+        insurers += "Private,";
+      }
+      if (showWCB) {
+        insurers += "WCB,";
+      }
+    }
+    return insurers;
+  }
+
+  /**
+   * Configures document association settings. Associates a selected report with
+   * a specific jasper report definition
+   */
+  public void cfgReports() {
+    this.reportCfg.put(MSPReconcile.REP_INVOICE, "rep_invoice.xml");
+    this.reportCfg.put(MSPReconcile.REP_PAYREF, "rep_payref.xml");
+    this.reportCfg.put(MSPReconcile.REP_ACCOUNT_REC, "rep_account_rec.xml");
+    this.reportCfg.put(MSPReconcile.REP_REJ, "rep_rej.xml");
+    this.reportCfg.put(MSPReconcile.REP_WO, "rep_wo.xml");
+    this.reportCfg.put(MSPReconcile.REP_MSPREM, "rep_msprem.xml");
+    this.reportCfg.put(MSPReconcile.REP_MSPREMSUM, "rep_mspremsum.xml");
+  }
+
+
+
+
+
+}
