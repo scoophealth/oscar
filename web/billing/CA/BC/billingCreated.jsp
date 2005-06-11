@@ -1,37 +1,37 @@
-<%      
+<%
   if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 
 
 
- 
+
 
 
 <%@ page language="java" contentType="text/html" %>
@@ -61,9 +61,9 @@ BillingFormData billform = new BillingFormData();
 <style type="text/css">
 	<!--
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
-	
+
 	-->
-</style>  
+</style>
 <script language="JavaScript">
 <!--
 
@@ -71,7 +71,7 @@ function setfocus() {
 		  //document.serviceform.xml_diagnostic_code.focus();
 		  //document.serviceform.xml_diagnostic_code.select();
 		}
-		
+
 function RecordAttachments(Files, File0, File1, File2) {
   window.document.serviceform.elements["File0Data"].value = File0;
   window.document.serviceform.elements["File1Data"].value = File1;
@@ -101,9 +101,9 @@ function ScriptAttach() {
   t2 = escape(document.serviceform.xml_diagnostic_detail3.value);
   awnd=rs('att','/billingDigSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
-  
-  
- 
+
+
+
 }
 
 
@@ -133,7 +133,7 @@ function ResearchScriptAttach() {
 function ResearchScriptAttach() {
   t0 = escape(document.serviceform.xml_referral1.value);
   t1 = escape(document.serviceform.xml_referral2.value);
-  
+
   awnd=rs('att','billingReferralCodeSearch.jsp?name='+t0 + '&name1=' + t1 +  '&search=',600,600,1);
   awnd.focus();
 }
@@ -179,23 +179,23 @@ function showHideLayers() { //v3.0
 
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
+  <tr bgcolor="#000000">
     <td height="40" width="10%"> </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.bc.title"/></font></font></b></font> 
+    <td width="90%" align="left">
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.bc.title"/></font></font></b></font>
       </p>
     </td>
   </tr>
 </table>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-    <tr> 
-      <td valign="top" height="221"> 
+    <tr>
+      <td valign="top" height="221">
         <table width="107%" border="0" cellspacing="2" cellpadding="2">
-        <tr bgcolor="#EAEAFF"> 
+        <tr bgcolor="#EAEAFF">
           <td colspan="6">Patient Information</td>
         </tr>
-        <tr> 
+        <tr>
           <td width="12%" height="16">Patient Name:</td>
           <td width="12%"><%=bean.getPatientName()%>&nbsp;</td>
           <td width="16%">Patient PHN:</td>
@@ -228,12 +228,12 @@ function showHideLayers() { //v3.0
           <td>&nbsp;</td>
         </tr>
       </table>
-        
+
       <table width="107%" border="0" cellspacing="2" cellpadding="2">
-        <tr bgcolor="#EAEAFF"> 
+        <tr bgcolor="#EAEAFF">
           <td colspan="6">Billing Information</td>
         </tr>
-        <tr> 
+        <tr>
           <td width="12%" height="16">Billing Type:</td>
           <td width="12%"><%=bean.getBillingType()%></td>
           <td width="16%">Service Location:</td>
@@ -241,15 +241,15 @@ function showHideLayers() { //v3.0
           <td width="19%">Clarification Code:</td>
           <td width="24%"><%=bean.getVisitLocation()%></td>
         </tr>
-        <tr> 
-          <td height="16" nowrap>Service Date: <%=bean.getServiceDate()%> </td>          
+        <tr>
+          <td height="16" nowrap>Service Date: <%=bean.getServiceDate()%> </td>
           <td>Service To Date: <%=bean.getService_to_date()%></td>
           <td>After Hours: <%=getAHDisplay(bean.getAfterHours())%></td>
           <td>Time Call: <%=bean.getTimeCall()%></td>
           <td>StartTime: <%=bean.getStartTime()%></td>
-          <td>EndTime: <%=bean.getEndTime()%></td>          
+          <td>EndTime: <%=bean.getEndTime()%></td>
         </tr>
-        <tr> 
+        <tr>
           <td height="16">Billing Provider:</td>
           <td><%=billform.getProviderName(bean.getBillingProvider())%></td>
           <td>Appointment Provider:</td>
@@ -257,28 +257,28 @@ function showHideLayers() { //v3.0
           <td>Creator:</td>
           <td><%=billform.getProviderName(bean.getCreator())%></td>
         </tr>
-        <tr>           
-          <td height="16"><%=getReferralString(bean.getReferType1())%> <%=bean.getReferral1()%></td>                    
+        <tr>
+          <td height="16"><%=getReferralString(bean.getReferType1())%> <%=bean.getReferral1()%></td>
           <td><%=getReferralString(bean.getReferType2())%><%=bean.getReferral2()%></td>
-          
+
           <td>&nbsp;</td>
           <td>Dependent: <%=bean.getDependent()%></td>
-                    
+
           <td>Sub Code: <%=bean.getSubmissionCode()%></td>
-          <td>Alt Payment: <%=bean.getEncounter()%></td>
+          <td>Payment Method: <%=bean.getPaymentTypeName()%></td>
         </tr>
         <tr>
           <td>Short Note:</td>
           <td colspan="4"><%=bean.getShortClaimNote()%></td>
           <td>ICBC claim #:<%=bean.getIcbc_claim_no()%></td>
         </tr>
-      </table>      
+      </table>
       <div align="left"></div>
-        
+
       <table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
-        <tr> 
+        <tr>
           <td valign="top"> <table width="100%" border="0" cellspacing="1" cellpadding="1">
-              <tr bgcolor="#EAEAFF"> 
+              <tr bgcolor="#EAEAFF">
                 <td><bean:message key="billing.service.code"/></td>
                 <td><bean:message key="billing.service.desc"/></td>
                 <td><bean:message key="billing.service.unit"/></td>
@@ -286,7 +286,7 @@ function showHideLayers() { //v3.0
                 <td><bean:message key="billing.service.total"/></td>
               </tr>
               <% for (int i=0; i < billItem.size(); i++){ %>
-              <tr> 
+              <tr>
                 <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()%></td>
                 <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDescription()%></td>
                 <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getUnit()%></td>
@@ -294,14 +294,14 @@ function showHideLayers() { //v3.0
                 <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDispLineTotal()%></td>
               </tr>
               <% } %>
-              <tr> 
+              <tr>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td><%=bean.getGrandtotal()%></td>
               </tr>
-              <tr> 
+              <tr>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -310,13 +310,13 @@ function showHideLayers() { //v3.0
               </tr>
             </table>
             <table width="100%" border="0" cellspacing="1" cellpadding="1">
-              <tr bgcolor="#EAEAFF"> 
+              <tr bgcolor="#EAEAFF">
                 <td width="10%" height="14"><bean:message key="billing.diagnostic.code"/></td>
                 <td width="39%"><bean:message key="billing.diagnostic.desc"/></td>
                 <td width="37%">&nbsp;</td>
                 <td width="14%">&nbsp;</td>
               </tr>
-              <tr> 
+              <tr>
                 <td><%=bean.getDx1()%></td>
                 <td><%=billform.getDiagDesc(bean.getDx1(), bean.getBillRegion())%></td>
                 <td>&nbsp;</td>
@@ -335,11 +335,11 @@ function showHideLayers() { //v3.0
                 <td>&nbsp;</td>
               </tr>
               <tr bgcolor="#F6F6F6"><td colspan="4">notes</td></tr>
-              <tr><td colspan="4"><%= bean.getNotes() %>&nbsp;</td></tr>              
-              
+              <tr><td colspan="4"><%= bean.getNotes() %>&nbsp;</td></tr>
+
               <tr bgcolor="#F6F6F6"><td colspan="4">Internal Notes</td></tr>
-              <tr><td colspan="4"><%= bean.getMessageNotes() %>&nbsp;</td></tr>              
-              
+              <tr><td colspan="4"><%= bean.getMessageNotes() %>&nbsp;</td></tr>
+
             </table>
             <table width="100%" border="0">
               <tr>
@@ -351,14 +351,14 @@ function showHideLayers() { //v3.0
                <%}%>
               	</td>
               </tr>
-                <td align="right" colspan="4">  
+                <td align="right" colspan="4">
                   <html:form action="/billing/CA/BC/SaveBilling" >
                     <input type="submit" name="submit" value="Save & Print Receipt" />
                     <% if (request.getAttribute("GOBACKWCB") != null && request.getAttribute("GOBACKWCB").equals("true")){%>
                     <input type="button" name="Submit3" value="Go Back" onClick="location.href='formwcb.jsp'"/>
                     <%}else{%>
 	                 <input type="button" name="Submit3" value="Go Back" onClick="location.href='billingBC.jsp?loadFromSession=yes'"/>
-	                 <%}%>	                 
+	                 <%}%>
 	                 <input type="submit" name="submit" value="Another Bill" />
                     <input type="submit" name="submit" value="Save Bill"/>
                     <input type="button" name="Submit2" value="Cancel" onClick="window.close();" />
@@ -368,8 +368,8 @@ function showHideLayers() { //v3.0
             </table>
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tr> 
-                <td align="right"> 
+              <tr>
+                <td align="right">
                 </td>
               </tr>
             </table></td>
