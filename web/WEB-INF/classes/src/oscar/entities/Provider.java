@@ -29,24 +29,24 @@ package oscar.entities;
  *
  */
 public class Provider {
-  private String providerNo;
-  private String lastName;
-  private String firstName;
-  private String providerType;
-  private String specialty;
-  private String team;
-  private String sex;
-  private String dob;
-  private String address;
-  private String phone;
-  private String workPhone;
-  private String ohipNo;
-  private String rmaNo;
-  private String billingNo;
-  private String hsoNo;
-  private String status;
-  private String comments;
-  private String providerActivity;
+  private String providerNo = "";
+  private String lastName= "";
+  private String firstName= "";
+  private String providerType= "";
+  private String specialty= "";
+  private String team= "";
+  private String sex= "";
+  private String dob= "";
+  private String address= "";
+  private String phone= "";
+  private String workPhone= "";
+  private String ohipNo= "";
+  private String rmaNo= "";
+  private String billingNo= "";
+  private String hsoNo= "";
+  private String status= "";
+  private String comments= "";
+  private String providerActivity= "";
 
   /**
    * Class constructor with no arguments.
@@ -387,6 +387,43 @@ public class Provider {
    */
   public void setProviderActivity(String providerActivity) {
     this.providerActivity = providerActivity;
+  }
+
+  /**
+   * getFullName
+   *
+   * @return String
+   */
+  public String getFullName() {
+    return this.firstName + " " + this.lastName;
+  }
+
+  /**
+   * getInitials
+   *
+   * @return Object
+   */
+  public String getInitials() {
+    String firstInit = "";
+    String lastInit = "";
+    if (this.firstName != null && this.firstName.length() > 0) {
+      if (this.firstName.length() > 1) {
+        firstInit = firstName.substring(0, 1);
+      }
+      else {
+        firstInit = firstName;
+      }
+    }
+    if (this.lastName != null && this.lastName.length() > 0) {
+      if (this.lastName.length() > 1) {
+        lastInit = lastName.substring(0, 1);
+      }
+      else {
+        lastInit = lastName;
+      }
+    }
+
+    return firstInit + lastInit;
   }
 
 }
