@@ -302,6 +302,9 @@ show tables;
 5 Exit the MySql Command prompt by entering quit
 quit;
 
+Installing Billing Jasper Report
+1) Copy Report directory to the home directory of the user account that OSCAR runs under
+
 Configuring OSCAR Properties Files
 
 
