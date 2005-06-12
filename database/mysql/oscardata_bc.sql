@@ -23193,3 +23193,13 @@ INSERT INTO teleplan_refusal_code VALUES (695,'6A','HOSPITAL DAY RATE $75.00');
 INSERT INTO teleplan_refusal_code VALUES (696,'7A','PAYMENT MADE PER INFORMATION GIVEN');
 INSERT INTO teleplan_refusal_code VALUES (697,'8A','CDN $ PAID - REMIT TO DR/HOSP.');
 INSERT INTO teleplan_refusal_code VALUES (698,'9A','REMIT PAYMENT TO DOCTOR OR FACILITY');
+
+
+INSERT INTO billing_payment_type (id, payment_type) VALUES (1,'CASH');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (2,'CHEQUE');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (3,'VISA');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (4,'MASTERCARD');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (5,'AMEX');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (6,'ELECTRONIC');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (7,'DEBIT');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (8,'OTHER');
