@@ -254,7 +254,7 @@
     <action path="/oscarMessenger/ViewMessageByPosition" type="oscar.oscarMessenger.pageUtil.MsgViewMessageByPositionAction" scope="request" input="/oscarMessenger/DisplayDemographicMessages.jsp">
       <forward name="success" path="/oscarMessenger/ViewMessage.do"/>
     </action>
-    MsgViewMessageByPositionAction
+   
     <action path="/oscarMessenger/HandleMessages" type="oscar.oscarMessenger.pageUtil.MsgHandleMessagesAction" name="msgHandleMessagesForm" scope="request" input="/oscarMessenger/DisplayMessages.jsp">
       <forward name="success" path="/oscarMessenger/DisplayMessages.jsp"/>
       <forward name="reply" path="/oscarMessenger/CreateMessage.jsp"/>
