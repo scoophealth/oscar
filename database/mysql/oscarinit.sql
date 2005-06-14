@@ -5293,9 +5293,14 @@ CREATE TABLE oscarcommlocations (
 CREATE TABLE patientLabRouting (
   demographic_no int(10) NOT NULL default '0',
   lab_no int(10) NOT NULL default '0',
-  PRIMARY KEY  (lab_no),
-  KEY demographic (demographic_no)
+  lab_type char(3) NOT NULL default 'MDS',
+  PRIMARY KEY  (lab_no,lab_type,demographic_no),
+  KEY demographic (demographic_no),
+  KEY lab_type_index (lab_type),
+  KEY lab_no_index (lab_no),
+  KEY all_index (lab_type,lab_no,demographic_no)
 ) TYPE=MyISAM;
+
 
 --
 -- Table structure for table `preference`
@@ -5409,14 +5414,17 @@ CREATE TABLE providerExt (
 -- Table structure for table `providerLabRouting`
 --
 
-CREATE TABLE providerLabRouting (
+
+ CREATE TABLE providerLabRouting (
   provider_no varchar(6) NOT NULL default '',
   lab_no int(10) NOT NULL default '0',
   status char(1) default '',
   comment varchar(255) default '',
   timestamp timestamp(14) NOT NULL,
+  lab_type char(3) default 'MDS',
   PRIMARY KEY  (provider_no,lab_no)
 ) TYPE=MyISAM;
+
 
 --
 -- Table structure for table quickList
