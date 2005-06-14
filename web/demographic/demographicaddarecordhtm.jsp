@@ -208,6 +208,141 @@ function referralScriptAttach2(elementName, name2) {
      rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
 }
 
+function checkName() {
+	var typeInOK = false;
+	if(document.adddemographic.last_name.value!="" && document.adddemographic.first_name.value!="" && document.adddemographic.last_name.value!=" " && document.adddemographic.first_name.value!=" ") {
+	    typeInOK = true;
+	} else {
+		alert ("You must type in the following fields: Last Name, First Name.");
+    }
+	return typeInOK;
+}
+
+function checkDob() {
+	var typeInOK = false;
+	var yyyy = document.adddemographic.year_of_birth.value;
+	var selectBox = document.adddemographic.month_of_birth;
+	var mm = selectBox.options[selectBox.selectedIndex].value
+	selectBox = document.adddemographic.date_of_birth;
+	var dd = selectBox.options[selectBox.selectedIndex].value
+
+	if(checkTypeNum(yyyy) && checkTypeNum(mm) && checkTypeNum(dd) ){
+        var check_date = new Date(yyyy,mm,dd);
+		var now = new Date();
+		var year=now.getFullYear();
+		var month=now.getMonth()+1;
+		var date=now.getDate();
+		//alert(yyyy + " | " + mm + " | " + dd + " " + year + " " + month + " " +date);
+
+		var young = new Date(year,month,date);
+		var old = new Date(1900,01,01);
+		//alert(check_date.getTime() + " | " + young.getTime() + " | " + old.getTime());
+		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
+		    typeInOK = true;
+		}
+	}
+
+	if (!typeInOK) alert ("You must type in the right DOB.");
+	return typeInOK;
+}
+
+function checkHin() {
+	var typeInOK = false;
+	var hin = document.adddemographic.hin.value;
+	var hcType = document.adddemographic.hc_type.value;
+	//alert(hcType);
+	//check OHIP, no others
+	if(hcType="ON") {
+		//alert(hin.length + " | " + hin.charAt(1));
+		if(checkTypeNum(hin) && hin.length==10) {
+		    typeInOK = mod10Check(hin);
+		}
+	}
+
+	//don't check
+	if(hcType!="ON" || hin.length==0) typeInOK = true;
+
+	if (!typeInOK) alert ("You must type in the right HIN.");
+	return typeInOK;
+}
+	function mod10Check(hinNum) {
+		var typeInOK = false;
+		var hChar = new Array();
+		var sum = 0;
+		for (i=0; i<hinNum.length; i++) {
+			hChar[i] = hinNum.charAt(i);
+		}
+
+		for (i=0; i<hinNum.length; i=i+2) {
+			hChar[i] = mod10CheckCalDig(hChar[i]);
+		}
+
+		for (i=0; i<hinNum.length-1; i++) {
+			sum = eval(sum*1 + hChar[i]*1);
+		}
+
+		var calDigit = 10-(""+sum).charAt((""+sum).length-1) ;
+		if (hChar[hinNum.length-1] == ( (""+calDigit).charAt((""+calDigit).length-1) )) typeInOK = true;
+
+		return typeInOK;
+	}
+	function mod10CheckCalDig(dig) {
+		var ret = dig*2 + "";
+		if (ret.length==2) ret = eval(ret.charAt(0)*1+ret.charAt(1)*1);
+
+		return ret;
+	}
+
+function checkAllDate() {
+	var typeInOK = false;
+	typeInOK = checkDateYMD( document.adddemographic.date_joined_year.value , document.adddemographic.date_joined_month.value , document.adddemographic.date_joined_date.value , "Date Joined" );
+	if (!typeInOK) { return false; }
+
+	typeInOK = checkDateYMD( document.adddemographic.end_date_year.value , document.adddemographic.end_date_month.value , document.adddemographic.end_date_date.value , "End Date" );
+	if (!typeInOK) { return false; }
+
+	typeInOK = checkDateYMD( document.adddemographic.hc_renew_date_year.value , document.adddemographic.hc_renew_date_month.value , document.adddemographic.hc_renew_date_date.value , "PCN Date" );
+	if (!typeInOK) { return false; }
+
+	typeInOK = checkDateYMD( document.adddemographic.eff_date_year.value , document.adddemographic.eff_date_month.value , document.adddemographic.eff_date_date.value , "EFF Date" );
+	if (!typeInOK) { return false; }
+
+	return typeInOK;
+}
+	function checkDateYMD(yy, mm, dd, fieldName) {
+		var typeInOK = false;
+		if((yy.length==0) && (mm.length==0) && (dd.length==0) ){
+			typeInOK = true;
+		} else if(checkTypeNum(yy) && checkTypeNum(mm) && checkTypeNum(dd) ){
+			if (checkDateYear(yy) && checkDateMonth(mm) && checkDateDate(dd)) {
+				typeInOK = true;
+			}
+		}
+		if (!typeInOK) { alert ("You must type in the right '" + fieldName + "'."); return false; }
+		return typeInOK;
+	}
+
+	function checkDateYear(y) {
+		if (y>1900 && y<2045) return true;
+		return false;
+	}
+	function checkDateMonth(y) {
+		if (y>=1 && y<=12) return true;
+		return false;
+	}
+	function checkDateDate(y) {
+		if (y>=1 && y<=31) return true;
+		return false;
+	}
+
+function checkFormTypeIn() {
+	if ( !checkName() ) return false;
+	if ( !checkDob() ) return false;
+	if ( !checkHin() ) return false;
+	if ( !checkAllDate() ) return false;
+	return true;
+}
+
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -226,7 +361,7 @@ function referralScriptAttach2(elementName, name2) {
 </td></tr>
 <tr><td>
 <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
-  <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkTypeInAdd()">
+  <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkFormTypeIn()">
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">
