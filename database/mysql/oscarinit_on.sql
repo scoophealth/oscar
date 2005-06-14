@@ -79,3 +79,59 @@ CREATE TABLE formGrowthChart(
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
 
+--
+--Tables used in CML Lab Module
+--
+create table labReportInformation(
+  id  int(10) NOT NULL auto_increment primary key,
+  location_id  varchar(10),
+  print_date varchar(10),
+  print_time varchar(10),
+  total_BType varchar(5),
+  total_CType varchar(5),
+  total_DType  varchar(5)
+);
+   
+create table labPatientPhysicianInfo(
+  id int(10) NOT NULL auto_increment primary key,
+  labReportInfo_id int(10),
+  accession_num varchar(64) , 
+  physician_account_num varchar(30) , 
+  service_date varchar(10),
+  patient_first_name varchar(100),
+  patient_last_name varchar(100),
+  patient_sex char(1), 
+  patient_health_num varchar(20), 
+  patient_dob varchar(15),
+  lab_status char(1),
+  doc_num varchar(50),
+  doc_name varchar(100),
+  doc_addr1 varchar(100),
+  doc_addr2 varchar(100),
+  doc_addr3 varchar(100),
+  doc_postal varchar(15),
+  doc_route varchar(50),
+  comment1 text,
+  comment2 text,
+  patient_phone varchar(20),
+  doc_phone varchar(20),
+  collection_date varchar(12)
+);
+
+create table labTestResults(
+  id int(10) NOT NULL auto_increment primary key,
+  labPatientPhysicianInfo_id int(10),
+  line_type char (1),
+  title varchar(255),
+  notUsed1 varchar(255),
+  notUsed2 varchar(255),
+  test_name varchar(255),
+  abn char(1),             
+  minimum varchar(65),     
+  maximum varchar(65),     
+  units varchar(65),       
+  result varchar(65),
+  description text,      
+  location_id  varchar(10),  
+  last char(1)
+); 
