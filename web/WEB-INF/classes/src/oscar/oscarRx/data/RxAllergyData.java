@@ -198,6 +198,14 @@ public class RxAllergyData {
            return ageOfOnset;
         }
         
+        
+   
+    
+   
+                        
+       
+        
+        
         /**
          * Setter for property ageOfOnset.
          * @param ageOfOnset New value of property ageOfOnset.
@@ -213,6 +221,19 @@ public class RxAllergyData {
         public java.lang.String getSeverityOfReaction() {
            return severityOfReaction;
         }
+   
+        //TODO: NEEDS I18N
+        public String getSeverityOfReactionDesc(){           
+            String s = getSeverityOfReaction();
+            Hashtable h = new Hashtable();
+               h.put("1","Mild");
+               h.put("2","Moderate");
+               h.put("3","Severe");              
+            String retval = (String) h.get(s);
+            if (retval == null) {retval = "Unknown";}
+            return retval;
+        }
+        
         
         /**
          * Setter for property severityOfReaction.
@@ -229,6 +250,18 @@ public class RxAllergyData {
         public java.lang.String getOnSetOfReaction() {
            return onSetOfReaction;
         }
+        
+        public String getOnSetOfReactionDesc(){
+            String s = getOnSetOfReaction();
+            Hashtable h = new Hashtable();
+               h.put("1","Immediate");
+               h.put("2","Gradual");
+               h.put("3","Slow");       
+            String retval = (String) h.get(s);
+            if (retval == null) {retval = "Unknown";}
+            return retval;
+         }
+        
         
         /**
          * Setter for property onSetOfReaction.
