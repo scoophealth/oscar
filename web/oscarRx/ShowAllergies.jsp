@@ -122,13 +122,16 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                     <table border=0>
                     <tr>
                        <td width="100%" >
-                            <div class="Step1Text"  >
+                            <div class="Step1Text"  style="width:800px;">
                             <table width="100%" cellpadding="3" >
                                 <thead>
                                     <td>&nbsp;</td>
                                     <td><b>Entry Date</b></td>
                                     <td><b>Description</b></td>
-                                    <td><b>Allergy Type</b></td>
+                                    <td><b>Allergy Type</b></td>                                    
+                                    <td><b>Severity</b></td>
+                                    <td><b>Onset of Reaction</b></td>
+                                    <td><b>Reaction</b></td>
                                 </thead>
                                 <logic:iterate id="allergy" type="oscar.oscarRx.data.RxPatientData.Patient.Allergy" name="patient" property="allergies">
                                 <tr>
@@ -145,7 +148,17 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                     </td>
                                     <td>
                                         <bean:write name="allergy" property="allergy.typeDesc" />
+                                    </td>                                    
+                                    <td>
+                                        <bean:write name="allergy" property="allergy.severityOfReactionDesc" />
                                     </td>
+                                    <td>
+                                        <bean:write name="allergy" property="allergy.onSetOfReactionDesc" />
+                                    </td>
+                                    <td>
+                                        <bean:write name="allergy" property="allergy.reaction" />
+                                    </td>
+                                        
                                 </tr>
                                 
                                 </logic:iterate>
