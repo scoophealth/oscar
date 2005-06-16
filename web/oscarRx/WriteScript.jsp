@@ -1211,6 +1211,16 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /--> 
                         <br>
                         <!-- peice Went Here -->
+                        <%oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
+                          if (allerg != null && allerg.length > 0){ 
+                            for (int i = 0 ; i < allerg.length; i++){  %>                                                           
+                                 <div style="background-color:<%=severityOfReactionColor(allerg[i].getAllergy().getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+                                 <b>Allergy:</b> <%= allerg[i].getAllergy().getDESCRIPTION() %> <b>Reaction:</b> <%= allerg[i].getAllergy().getReaction() %> <b>Severity:</b> <%=severityOfReaction(allerg[i].getAllergy().getSeverityOfReaction())%> <b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getAllergy().getOnSetOfReaction())%>   
+                                 </div>
+                        <%  }
+                          }%>   
+                        
+                        
                         <%if (!isCustom) {
                              RxDrugData.Interaction[] interactions = (RxDrugData.Interaction[]) bean.getInteractions();
                              if (interactions != null && interactions.length > 0){ 
@@ -1422,5 +1432,37 @@ int i;
         return retval;
    }
     
-
+   String severityOfReaction(String s){
+       Hashtable h = new Hashtable();
+       h.put("1","Mild");
+       h.put("2","Moderate");
+       h.put("3","Severe");
+       
+       String retval = (String) h.get(s);
+       if (retval == null) {retval = "Unknown";}
+       return retval;
+   }
+    
+   String severityOfReactionColor(String s){
+       Hashtable h = new Hashtable();
+       h.put("1","yellow");
+       h.put("2","orange");
+       h.put("3","red");
+       
+       String retval = (String) h.get(s);
+       if (retval == null) {retval = "red";}
+       return retval;
+   }
+                        
+   String onSetOfReaction(String s){
+       Hashtable h = new Hashtable();
+       h.put("1","Immediate");
+       h.put("2","Gradual");
+       h.put("3","Slow");
+       
+       String retval = (String) h.get(s);
+       if (retval == null) {retval = "Unknown";}
+       return retval;
+   }
 %>
+
