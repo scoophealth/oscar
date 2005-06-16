@@ -472,6 +472,47 @@ public class RxDrugData {
      };
      
      
+     public oscar.oscarRx.data.RxPatientData.Patient.Allergy[] getAllergyWarnings(String atcCode,oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg) throws Exception{
+        Vector vec = new Vector();
+        for (int i =0; i < allerg.length; i++){
+           Hashtable h = new Hashtable();           
+           h.put("id",""+i); 
+           h.put("description",allerg[i].getAllergy().getDESCRIPTION());  
+           h.put("type",""+allerg[i].getAllergy().getTYPECODE());
+           vec.add(h);
+        }
+        RxDrugRef d = new RxDrugRef();
+        Vector res = d.getAlergyWarnings(atcCode, vec);
+        
+        oscar.oscarRx.data.RxPatientData.Patient.Allergy[] actualAllergies = {};
+        ArrayList li = new ArrayList();
+        if(res != null ){             
+           Hashtable hashObject  = (Hashtable) res.get(0);
+           if (hashObject != null){
+              Vector alli = (Vector) hashObject.get("warnings");
+              for (int k = 0; k < alli.size(); k++){
+                 String str = (String) alli.get(k);
+                 int id = Integer.parseInt(str);
+                 li.add(allerg[id]);
+                 System.out.println(str);
+              }
+              
+           }
+        }                            
+        actualAllergies  =  (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) li.toArray(actualAllergies);
+        
+//        if (actualAllergies != null){
+//           for (int i =0; i < actualAllergies.length; i++){
+//              System.out.println(i+" "+actualAllergies[i].getAllergy().getDESCRIPTION()+" "+actualAllergies[i].getAllergy().getTYPECODE());              
+//           }
+//        }else{
+//           System.out.println("ACTUAL ALLERGIES == NULL");
+//        }
+        
+        return actualAllergies;
+     }
+     
+     
      public Interaction[] getInteractions(Vector atcCodes) throws Exception{
         Interaction[] arr = {};
         ArrayList lst = new ArrayList();
