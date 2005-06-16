@@ -710,4 +710,12 @@ public class RxDrugRef {
          
          return vec;
      }
+       
+    public Vector getAlergyWarnings(String drugs,Vector allergies)throws Exception{
+         Vector params = new Vector();
+         params.addElement(drugs);
+         params.addElement(allergies);
+         Vector vec = (Vector) callWebserviceLite("get_allergy_warnings",params);             
+         return vec;		         
+     }	   
 }
