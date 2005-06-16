@@ -251,6 +251,11 @@ public class RxPatientData {
                rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"),               
                rs.getInt("AGCSP"), rs.getInt("AGCCS"),
                rs.getInt("TYPECODE"));
+                              
+               allergy.getAllergy().setReaction(rs.getString("reaction"));
+               allergy.getAllergy().setAgeOfOnset(rs.getString("age_of_onset"));
+               allergy.getAllergy().setSeverityOfReaction(rs.getString("severity_of_reaction"));
+               allergy.getAllergy().setOnSetOfReaction(rs.getString("onset_of_reaction"));
                
                lst.add(allergy);               
             }            
