@@ -326,7 +326,7 @@
 						<subreportParameterExpression><![CDATA[$F{t_practitionerno}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.io.File"><![CDATA[new File(System.getProperty("user.home") +"/reports/reps23.jasper")]]></subreportExpression>
+					<subreportExpression  class="java.io.File"><![CDATA[new File(System.getProperty("user.home") +"/reports/repS23.jasper")]]></subreportExpression>
 				</subreport>
 			</band>
 		</detail>
