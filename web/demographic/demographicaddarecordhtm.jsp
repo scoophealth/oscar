@@ -240,6 +240,7 @@ function checkDob() {
 		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
 		    typeInOK = true;
 		}
+		if (yyyy="0000") typeInOK = false;
 	}
 
 	if (!typeInOK) alert ("You must type in the right DOB.");
