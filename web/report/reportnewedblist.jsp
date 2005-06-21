@@ -50,6 +50,7 @@
 {"select_backwardscompatible", "(select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ?) union " +
                                "(select demographic_no, edb as c_finalEDB, patient_name as c_pName, age as pg1_age, gravida as c_gravida, term as c_term, phone as pg1_homePhone, provider_no from edbrept where edb >= ? and edb <= ?) order by c_finalEDB desc limit ? offset ?"  },
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
+{"select_patientStatus", "select patient_status from demographic where demographic_no = ?"  },
   };
   reportMainBean.doConfigure(dbParams,dbQueries);
 %>
@@ -137,6 +138,13 @@ cal.add(Calendar.YEAR, 1);
     if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
     if (demoProp.containsKey(rs.getString("demographic_no")) ) continue;
     else demoProp.setProperty(rs.getString("demographic_no"), "1");
+
+    // filter the "IN" patient from the list
+	ResultSet rs1=reportMainBean.queryResults(rs.getString("demographic_no"), "select_patientStatus");
+	if (rs1.next()) {
+		if(rs1.getString("patient_status").equals("IN")) continue;
+	}
+
     bodd=bodd?false:true; //for the color of rows
     nItems++;
 %>
