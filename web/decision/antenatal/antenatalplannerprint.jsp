@@ -31,7 +31,7 @@
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" errorPage="../../appointment/errorpage.jsp" %>
 <jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
@@ -105,8 +105,18 @@ function onExit() {
     </planner>
   </xml> 
 <%
+
+
+    String riskFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml";
+    
+    File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
+    if(file.isFile() || file.canRead()) {
+        riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml";
+    }
+
+
     //set the riskdata bean from xml file
-    Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml"); //risk_55
+    Properties savedar1risk1 = risks.getRiskName(riskFilePath); //risk_55    
   	StringBuffer tt; 
 
     for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
@@ -158,7 +168,15 @@ else {
 		  }
     }
   
-  out.println(checklist.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerchecklist_99_12.xml"), riskDataBean));
+    String checkListFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerchecklist_99_12.xml";
+
+    File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerchecklist_99_12.xml");
+    if(file.isFile() || file.canRead()) {
+        checkListFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerchecklist_99_12.xml";
+    }
+
+  out.println(checklist.doStuff(new String(checkListFilePath), riskDataBean));
+
 }
 %>    
 
