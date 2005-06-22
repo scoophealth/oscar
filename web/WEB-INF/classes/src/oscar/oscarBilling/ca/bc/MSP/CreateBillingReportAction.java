@@ -88,6 +88,9 @@ public class CreateBillingReportAction
           getAttribute("org.apache.catalina.jsp_classpath");
       System.setProperty("jasper.reports.compile.class.path", classpath);
     }
+    if (!System.getProperties().containsKey("java.awt.headless")) {
+      System.setProperty("java.awt.headless", "true");
+    }
 
     CreateBillingReportActionForm frm = (CreateBillingReportActionForm)
         actionForm;
@@ -196,9 +199,10 @@ public class CreateBillingReportAction
     }
 
     else if (repType.equals(msp.REP_PAYREF)) {
-      billSearch = msp.getMSPPayments(account, payee, provider, startDate, endDate,
-                                   !showWCB, !showMSP, !showPriv, !showICBC,
-                                   "");
+      billSearch = msp.getMSPPayments(account, payee, provider, startDate,
+                                      endDate,
+                                      !showWCB, !showMSP, !showPriv, !showICBC,
+                                      "");
       oscar.entities.Provider payeeProv = msp.getProvider(payee);
       oscar.entities.Provider acctProv = msp.getProvider(account);
       oscar.entities.Provider provProv = msp.getProvider(payee);
@@ -280,9 +284,5 @@ public class CreateBillingReportAction
     this.reportCfg.put(MSPReconcile.REP_MSPREM, "rep_msprem.xml");
     this.reportCfg.put(MSPReconcile.REP_MSPREMSUM, "rep_mspremsum.xml");
   }
-
-
-
-
 
 }
