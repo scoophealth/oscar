@@ -178,15 +178,13 @@ public class StringUtils {
   * @param str String
   * @return boolean
   */
- public static boolean isNumeric(String str){
+ public static boolean isNumeric(String str){   
    boolean ret = false;
    try{
      Double d = new Double(str);
      ret = true;
-   }catch(NumberFormatException e){
-   }finally{
-     return ret;
-   }
+   }catch(NumberFormatException e){}
+   return ret;   
  }
 
 
