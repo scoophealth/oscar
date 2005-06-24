@@ -25,13 +25,117 @@ package oscar.oscarDemographic.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.*;
+import java.util.*;
 import java.util.Date;
 import oscar.oscarDB.DBHandler;
 //import oscar.oscarMessenger.util.*;
 
 import oscar.util.*;
 public class DemographicData {     
+   
+   
+    public Date getDemographicDOB(String demographicNo){
+       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+       Date date = null;
         
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT year_of_birth,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo +"'";                                        
+            rs = db.GetSQL(sql);            
+            if (rs.next()) {                      
+               try{
+                date = (Date)formatter.parse(rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth"));
+               }catch(Exception eg){}
+            }
+            
+            rs.close();
+            db.CloseConn();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
+       return date;
+    }
+     
+    public String getNameAgeString(String demographicNo){
+       String nameage = "";
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo +"'";                                        
+            rs = db.GetSQL(sql);            
+            if (rs.next()) {                                                                    
+               String age =  UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")));
+               if (age == null ){age = "" ;}               
+               nameage = rs.getString("last_name")+", "+rs.getString("first_name")+" "+rs.getString("sex")+" "+age;
+            }
+            
+            rs.close();
+            db.CloseConn();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
+       return nameage;
+    }
+    
+    public String[] getNameAgeSexArray(String demographicNo){
+       String[] nameage = null;
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo +"'";                                        
+            rs = db.GetSQL(sql);            
+            if (rs.next()) {                                                                    
+               String age =  UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")));
+               if (age == null ){age = "" ;}               
+               nameage = new String[] { rs.getString("last_name"),rs.getString("first_name"),rs.getString("sex"),age };
+            }
+            
+            rs.close();
+            db.CloseConn();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
+       return nameage;
+    }
+    
+    
+    public String getDemographicSex(String demographicNo){
+       String retval = "";        
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT sex FROM demographic WHERE demographic_no = '" + demographicNo +"'";                                        
+            rs = db.GetSQL(sql);            
+            if (rs.next()) {                      
+               try{
+                retval = rs.getString("sex");
+               }catch(Exception eg){}
+            }
+            
+            rs.close();
+            db.CloseConn();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
+       return retval;
+    }
+    
+    public Demographic getSubstituteDecisionMaker(String DemographicNo) {        
+       Demographic demographic = null;
+       DemographicRelationship dr = new DemographicRelationship();
+       String demoNo = dr.getSDM(DemographicNo);
+       if (demoNo != null){
+          demographic = getDemographic(demoNo);
+       }
+       return demographic;
+    }
+    
     public Demographic getDemographic(String DemographicNo) {        
         Demographic demographic = null;
         
@@ -255,6 +359,27 @@ public class DemographicData {
            return (String.valueOf(oscar.util.UtilDateUtilities.calcAge(year_of_birth,month_of_birth,date_of_birth)));            
         }
         
+        public String getAgeAsOf(Date asofDate) {
+           return UtilDateUtilities.calcAgeAtDate(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth), asofDate);            
+        }
+        
+        public int getAgeInMonths(){            
+           return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),Calendar.getInstance().getTime());
+        }
+        
+        public int getAgeInMonthsAsOf(Date asofDate){            
+           return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),asofDate);
+        }
+        
+        
+        public int getAgeInYears(){            
+           return UtilDateUtilities.getNumYears(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),Calendar.getInstance().getTime());
+        }
+        
+        public int getAgeInYearsAsOf(Date asofDate){            
+           return UtilDateUtilities.getNumYears(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),asofDate);
+        }
+                         
         public String getDob() {
            return addZero(year_of_birth,4)+addZero(month_of_birth,2)+addZero(date_of_birth,2);
         }
@@ -423,4 +548,3 @@ public class DemographicData {
     
            
 }
-
