@@ -23,7 +23,7 @@
 	<import value="net.sf.jasperreports.engine.data.*" />
 	<parameter name="s21id" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="providerNo" isForPrompting="false" class="java.lang.String"/>
-	<queryString><![CDATA[select t_payment,t_payeeno,t_payeename,t_amtbilled * .01 as 't_amtbilled' ,t_amtpaid * .01 as 't_amtpaid' ,t_cheque  * .01 as 't_cheque' from teleplanS21 where status <> 'D' and s21_id order by t_payment desc]]></queryString>
+	<queryString><![CDATA[select t_payment,t_payeeno,t_payeename,t_amtbilled * .01 as 't_amtbilled' ,t_amtpaid * .01 as 't_amtpaid' ,t_cheque  * .01 as 't_cheque' from teleplanS21 where status <> 'D' and s21_id = $P{s21id} order by t_payment desc]]></queryString>
 	<field name="t_payment" class="java.lang.String"/>
 	<field name="t_payeeno" class="java.lang.String"/>
 	<field name="t_payeename" class="java.lang.String"/>
@@ -136,7 +136,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("yyyymmdd").parse($F{t_payment})]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("yyyyMMdd").parse($F{t_payment})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

@@ -385,7 +385,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="366"
+						x="371"
 						y="4"
 						width="38"
 						height="12"
@@ -582,7 +582,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("yyyymmdd").parse($F{t_payment})]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("yyyyMMdd").parse($F{t_payment})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -879,7 +879,7 @@ S04 = In hold process]]></text>
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="52"  isSplitAllowed="true" >
+			<band height="63"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Transparent"
