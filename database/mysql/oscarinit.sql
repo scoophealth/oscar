@@ -5870,6 +5870,7 @@ CREATE TABLE `log` (
   `action` varchar(20) default NULL,
   `content` varchar(80) NOT NULL default '',
   `contentId` varchar(10) default NULL,
+  `ip` varchar(30) default NULL,
   PRIMARY KEY  (`dateTime`, `provider_no`),
   INDEX `action` (`action`),
   INDEX `content` (`content`),
