@@ -1,8 +1,8 @@
 package oscar.entities;
 
-import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
-import java.util.Enumeration;
-import oscar.util.UtilDateUtilities;
+import java.util.*;
+
+import oscar.util.*;
 
 /**
  * <p>Title: </p>
@@ -68,7 +68,9 @@ public class MSPBill {
   public java.util.Hashtable explanations;
   public String accountNo;
   public String paymentMethod;
-  private String paymentMethodName;
+  public String paymentMethodName;
+  public Date serviceDateDate;
+  public String rejectionDate;
   public MSPBill() {
 
     ut = new UtilDateUtilities();
@@ -525,8 +527,32 @@ public class MSPBill {
     return paymentMethodName;
   }
 
+  public String getRejectionDate() {
+    return rejectionDate;
+  }
+
+  public Date getServiceDateDate() {
+    return serviceDateDate;
+  }
+
+  public String getPayeeNo() {
+    return payeeNo;
+  }
+
   public void setPaymentMethodName(String paymentMethodName) {
     this.paymentMethodName = paymentMethodName;
+  }
+
+  public void setRejectionDate(String rejectionDate) {
+    this.rejectionDate = rejectionDate;
+  }
+
+  public void setServiceDateDate(Date serviceDateDate) {
+    this.serviceDateDate = serviceDateDate;
+  }
+
+  public void setPayeeNo(String payeeNo) {
+    this.payeeNo = payeeNo;
   }
 
 }
