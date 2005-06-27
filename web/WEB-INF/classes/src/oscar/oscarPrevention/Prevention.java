@@ -1,0 +1,324 @@
+/*
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version. *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ * 
+ *  Jason Gallagher
+ * 
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada   Creates a new instance of Prevention
+ *
+ *
+ *
+ * Prevention.java
+ *
+ * Created on May 23, 2005, 8:59 AM
+ */
+
+package oscar.oscarPrevention;
+
+import java.text.*;
+import java.util.*;
+
+/**
+ *
+ * @author Jay Gallagher
+ */
+public class Prevention {
+      
+   String sex;
+   String name= null;  // Not really needed but handy for testing
+   Hashtable preventionTypes = new Hashtable();
+   Date DOB = null;
+         
+   ArrayList messageList = new ArrayList();
+   ArrayList reminder = new ArrayList();
+   
+   int ageInMonths = -1;
+   
+   public Prevention() {
+   }
+   
+   public Prevention(String nam,String se,Date birthdate) {      
+      name = nam;
+      sex = se;
+      DOB = birthdate;
+   }
+    
+   public Prevention(String se,Date birthdate) {            
+      sex = se;
+      DOB = birthdate;
+   }
+   
+   public Prevention(String demographicNo) {
+            
+   }
+          
+   public void setSex(String s){ sex = s; }   
+   public String getSex(){ return sex; }
+   public java.lang.String getName() { return name; }
+   public void setName(java.lang.String name) { this.name = name; }
+   
+   public void addWarning(String warn){
+      messageList.add(warn);
+   }      
+   public ArrayList getWarnings(){
+      return messageList;
+   }
+   
+   public void addReminder(String warn){
+      reminder.add(warn);
+   }      
+   public ArrayList getReminder(){
+      return reminder;
+   }
+   
+   public boolean isMale(){
+      boolean retval = false;
+      if (sex != null && sex.equals("M")){
+         retval = true;
+      }
+      return retval;
+   }
+   
+   public boolean isFemale(){
+      boolean retval = false;
+      if (sex != null && sex.equals("F")){
+         retval = true;
+      }
+      return retval;
+   }
+   
+   public void addPreventionItem(PreventionItem pItem,String prevName){
+      if (preventionTypes.containsKey(prevName)){
+         Vector v = (Vector) preventionTypes.get(prevName);
+         v.add(pItem);
+      }else{
+         Vector v = new Vector();
+         v.add(pItem);
+         preventionTypes.put(prevName,v);
+      }      
+   }
+   
+   public int getAgeInMonths(Date DOB){            
+      return getNumMonths(DOB,Calendar.getInstance().getTime());
+   }
+   
+   public int getAgeInMonths(){   
+      if (ageInMonths == -1){
+      ageInMonths = getAgeInMonths(DOB);
+      }
+      return ageInMonths;
+   }
+   
+   public int getAgeInYears(){ 
+      return getNumYears(DOB,Calendar.getInstance().getTime());
+   }
+           
+   public boolean isTodayinDateRange(String startDate,String endDate){
+      boolean inRange = false;
+      Calendar calendar = Calendar.getInstance();
+      Date today = calendar.getTime();
+      try {    
+         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+         Date startd = (Date)formatter.parse(startDate);   
+         Date endd = (Date)formatter.parse(endDate);   
+        
+         if (today.after(startd) && today.before(endd)){
+            inRange = true;
+         }
+      } catch (ParseException e) {
+      }
+      return inRange;
+   }
+         
+   public boolean isLastPreventionWithinRange(String preventionType, String startDate, String endDate){
+      boolean withinRange = false;
+      Date lastdate = getLastPreventionDate(preventionType);
+      try {    
+         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+         Date startd = (Date)formatter.parse(startDate);   
+         Date endd = (Date)formatter.parse(endDate);   
+        
+         if (lastdate.after(startd) && lastdate.before(endd)){
+            withinRange = true;
+         }
+      } catch (ParseException e) {
+      }
+      return withinRange;
+   }
+   
+////
+   public Date getLastPreventionDate(String preventionType){
+      //Still needs to be implemented
+      Date lastDate = null;
+      Vector vec = (Vector) preventionTypes.get(preventionType);      
+      if (vec != null){
+       PreventionItem p = (PreventionItem)  vec.get(vec.size()-1);  // Get date from return object
+       lastDate = p.getDatePreformed();
+       System.out.println("getting last date preformed of a "+preventionType+" :"+lastDate.toString());
+      }
+      
+      return lastDate; // 
+   }
+   
+   public boolean isNextDateSet(String preventionType){      
+      boolean isSet = true;
+      Date nextDate = getNextPreventionDate(preventionType);
+      System.out.println("IS SET WHAT DOES IT HAVE "+nextDate);      
+      if ( nextDate == null ){
+         isSet = false;
+      }      
+      return isSet;
+   }
+   
+   public boolean isPassedNextDate(String preventionType){      
+      boolean isPassed = true;
+      Date nextDate = getNextPreventionDate(preventionType);
+      System.out.println(nextDate);
+      if (nextDate != null){
+         Calendar cal = Calendar.getInstance();
+         if (!cal.getTime().after(nextDate)){
+            isPassed = false;
+         }         
+      }
+      return isPassed;
+   }
+   
+   public Date getNextPreventionDate(String preventionType){      
+      Date nextDate = null;
+      Vector vec = (Vector) preventionTypes.get(preventionType);      
+      if (vec != null){
+       PreventionItem p = (PreventionItem)  vec.get(vec.size()-1);  // Get date from return object
+       nextDate = p.getNextDate();
+       System.out.println("getting next date preformed of a "+preventionType+" :"+nextDate);
+      }      
+      return nextDate; // 
+   }
+   
+   public boolean isPreventionNever(String preventionType){
+      boolean ispreventionnever = false;
+      Vector vec = (Vector) preventionTypes.get(preventionType);      
+      if (vec != null){
+       PreventionItem p = (PreventionItem)  vec.get(vec.size()-1);  // Get date from return object
+       ispreventionnever = p.getNeverVal();       
+       System.out.println("getting never of a "+preventionType+" :"+ispreventionnever);
+      }      
+      return ispreventionnever; // 
+   }
+   
+   
+   
+   
+   
+   
+   
+   public int getHowManyMonthsSinceLast(String preventionType){
+      int retval = -1;
+      try{
+         retval = getNumMonths(getLastPreventionDate(preventionType),Calendar.getInstance().getTime());      
+      }catch(Exception e){
+         System.out.println("Probably no record of this prevention");
+         System.out.println(e.getMessage());
+         retval = -1;
+      }            
+      return retval;
+   }
+   public int getHowManyDaysSinceLast(String preventionType){
+      return getNumDays(getLastPreventionDate(preventionType),Calendar.getInstance().getTime());      
+   }
+   public int getNumberOfPreventionType(String preventionType){
+      int retval = 0;
+      Vector vec = (Vector) preventionTypes.get(preventionType);      
+      if (vec != null){         
+         retval = vec.size();
+      }
+      return retval;
+   }
+   
+   
+   public int getAgeInMonthsLastPreventionTypeGiven(String preventionType){
+      return getNumMonths(DOB,getLastPreventionDate(preventionType));         
+   }
+   
+   private int getNumMonths(Date dStart, Date dEnd) {
+        int i = 0;
+        System.out.println("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dStart);
+        while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {
+            calendar.add(Calendar.MONTH, 1);
+            i++;
+        }
+        i--;
+        if (i < 0) { i = 0; }
+        return i;
+   }
+   
+   private int getNumMonths(Calendar dStart,Calendar dEnd) {        
+        return getNumMonths(dStart.getTime(),dEnd.getTime());
+    }
+    
+   private int getNumYears(Date dStart, Date dEnd) {
+        int i = 0;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dStart);
+        while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {
+            calendar.add(Calendar.MONTH, 12);
+            i++;
+        }
+        i--;
+        if (i < 0) { i = 0; }
+        return i;
+   }
+   
+   private int getNumDays(Date dStart, Date dEnd) {        
+        long diffDays = -1;
+        try{
+        long timeDiff = dStart.getTime() - dEnd.getTime();        
+        diffDays = timeDiff/(24*60*60*1000);                
+        }catch(Exception e){}
+        return new Long(diffDays).intValue();
+   }
+   
+   public static void main(String[] args) throws Exception{
+      Calendar date1 = new GregorianCalendar(1980, Calendar.JANUARY, 31);
+      Date d1 = date1.getTime();
+      Calendar date2= new GregorianCalendar(1980, Calendar.MARCH, 1);
+      Date d2 = date2.getTime();
+      Prevention p = new Prevention();
+      System.out.println(p.getNumMonths(date1,date2));
+      
+   }
+   
+   /**
+    * Getter for property DOB.
+    * @return Value of property DOB.
+    */
+   public java.util.Date getDOB() {
+      return DOB;
+   }
+   
+   /**
+    * Setter for property DOB.
+    * @param DOB New value of property DOB.
+    */
+   public void setDOB(java.util.Date DOB) {
+      this.DOB = DOB;
+   }
+   
+}
+
+
