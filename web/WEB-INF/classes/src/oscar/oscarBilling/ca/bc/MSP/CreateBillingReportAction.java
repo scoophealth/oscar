@@ -1,3 +1,4 @@
+
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -171,10 +172,10 @@ public class CreateBillingReportAction
       oscar.entities.Provider payeeProv = msp.getProviderByOHIP(payee);
       reportParams.put("payee", payeeProv.getFullName());
       reportParams.put("payeeno", payee);
+      String s21id = request.getParameter("rano");
       osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
-                             msp.getMSPRemittanceQuery(payee));
+                             msp.getMSPRemittanceQuery(payee,s21id));
     }
-
     else if (repType.equals(msp.REP_MSPREMSUM)) {
       String s21id = request.getParameter("rano");
 
@@ -231,6 +232,12 @@ public class CreateBillingReportAction
                                       !showWCB, !showMSP, !showPriv,
                                       !showICBC,
                                       repType);
+
+
+      for (Iterator iter = billSearch.list.iterator(); iter.hasNext(); ) {
+        MSPBill item = (MSPBill) iter.next();
+        System.err.println(item.rejectionDate);
+      }
       oscar.entities.Provider payProv = msp.getProvider(payee);
       reportParams.put("account",
                        account.equals("all") ? "ALL" :
