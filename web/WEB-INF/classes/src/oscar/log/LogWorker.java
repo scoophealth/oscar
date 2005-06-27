@@ -19,7 +19,7 @@
  * McMaster University
  * Hamilton
  * Ontario, Canada   Creates a new instance of RxInteractionWorker
- * 
+ *
  *
  * LogWorker.java
  *
@@ -28,7 +28,6 @@
 
 package oscar.log;
 
-import java.util.*;
 import java.sql.SQLException;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -37,36 +36,38 @@ import org.apache.log4j.Logger;
 import oscar.login.DBHelp;
 
 /**
- *
  * @author Jay Gallagher
  */
 public class LogWorker extends Thread {
-   private static final Logger _logger = Logger.getLogger(LogWorker.class);
-   
-   String provider_no = null;
-   String action = null;
-   String content = null;
-   String contentId = null;
-   
-   public LogWorker() {
-   }
-   
-   public LogWorker(String provider_no, String action, String content, String contentId)  {
-      this.provider_no = provider_no;
-      this.action = action;
-      this.content = content;
-      this.contentId = contentId;
-   }
-               
-   public void run() {
-      DBHelp db = new DBHelp();
-      String sql = "insert into log (provider_no,action,content,contentId) values('" + provider_no;
-      sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "')";
-      try {
-         db.updateDBRecord(sql, provider_no);
-      } catch (SQLException e) {
-         _logger.error("failed to insert into logging table providerNo"+provider_no+", action "+action+", content "+content+" contentId "+contentId); 
-      }
-   }
-   
+    private static final Logger _logger = Logger.getLogger(LogWorker.class);
+
+    String provider_no = null;
+    String action = null;
+    String content = null;
+    String contentId = null;
+    String ip = null;
+
+    public LogWorker() {
+    }
+
+    public LogWorker(String provider_no, String action, String content, String contentId, String ip) {
+        this.provider_no = provider_no;
+        this.action = action;
+        this.content = content;
+        this.contentId = contentId;
+        this.ip = ip;
+    }
+
+    public void run() {
+        DBHelp db = new DBHelp();
+        String sql = "insert into log (provider_no,action,content,contentId) values('" + provider_no;
+        sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "')";
+        try {
+            db.updateDBRecord(sql, provider_no);
+        } catch (SQLException e) {
+            _logger.error("failed to insert into logging table providerNo" + provider_no + ", action " + action
+                    + ", content " + content + ", contentId " + contentId + ", ip " + ip);
+        }
+    }
+
 }

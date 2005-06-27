@@ -18,20 +18,15 @@
  */
 package oscar.log;
 
-import java.sql.SQLException;
-
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
-
-import oscar.login.DBHelp;
 
 /**
  * @author yilee18
  */
 public class LogAction {
-    private static final Logger _logger = Logger.getLogger(LogAction.class);    
-    public static void addLog(String provider_no, String action, String content, String contentId) {
-       LogWorker logWorker = new LogWorker(provider_no,action,content,contentId);
+    private static final Logger _logger = Logger.getLogger(LogAction.class);
+    public static void addLog(String provider_no, String action, String content, String contentId, String ip) {
+       LogWorker logWorker = new LogWorker(provider_no,action,content,contentId, ip);
        logWorker.start();
-    }    
+    }
 }
