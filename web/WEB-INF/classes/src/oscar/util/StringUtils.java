@@ -179,7 +179,7 @@ public class StringUtils {
    * @return boolean
    */
   public static boolean isNumeric(String str) {
-    return str == null ? false :
+    return (str == null||str.equals("")) ? false :
         org.apache.commons.lang.StringUtils.isNumeric(str);
   }
 
