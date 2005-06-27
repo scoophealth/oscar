@@ -130,16 +130,52 @@ public class MSPReconcile {
     return statusDesc;
   }
 
-  public Properties currentC12Records() {
-    Properties p = new Properties();
+  private HashMap getRejectionDetails() {
+    HashMap map = new HashMap();
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7  from teleplanC12 where status != 'E'";
+      String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7,t_payment  from teleplanC12,teleplanS21 where teleplanC12.s21_id = teleplanS21.s21_id and teleplanC12.status != 'E'";
       ResultSet rs = db.GetSQL(sql);
       while (rs.next()) {
         try {
           int i = Integer.parseInt(rs.getString("t_officefolioclaimno")); // this kludge rids leading zeros
-          String exp[] = new String[7];
+          Vector exp = new Vector();
+          exp.add(rs.getString("t_exp1"));
+          exp.add(rs.getString("t_exp2"));
+          exp.add(rs.getString("t_exp3"));
+          exp.add(rs.getString("t_exp4"));
+          exp.add(rs.getString("t_exp5"));
+          exp.add(rs.getString("t_exp6"));
+          exp.add(rs.getString("t_exp7"));
+          exp.add(rs.getString("t_payment"));
+          String s = Integer.toString(i);
+          map.put(s, exp);
+        }
+        catch (NumberFormatException intEx) {
+          System.out.println("Had trouble Parsing int from " +
+                             rs.getString("t_officeno"));
+        }
+      }
+      rs.close();
+      db.CloseConn();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return map;
+
+  }
+
+  public Properties currentC12Records() {
+    Properties p = new Properties();
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7  from teleplanC12 where teleplanC12.status != 'E'";
+      ResultSet rs = db.GetSQL(sql);
+      while (rs.next()) {
+        try {
+          int i = Integer.parseInt(rs.getString("t_officefolioclaimno")); // this kludge rids leading zeros
+          String exp[] = new String[8];
           exp[0] = rs.getString("t_exp1");
           exp[1] = rs.getString("t_exp2");
           exp[2] = rs.getString("t_exp3");
@@ -147,6 +183,7 @@ public class MSPReconcile {
           exp[4] = rs.getString("t_exp5");
           exp[5] = rs.getString("t_exp6");
           exp[6] = rs.getString("t_exp7");
+          exp[7] = rs.getString("t_payment");
           String def = createCorrectionsString(exp);
           String s = Integer.toString(i);
           p.put(s, def);
@@ -432,7 +469,7 @@ public class MSPReconcile {
                                    String demoNo,
                                    boolean excludeWCB, boolean excludeMSP,
                                    boolean excludePrivate, boolean exludeICBC) {
-
+    System.out.println(new java.util.Date() + ":MSPReconcile.getBillingData");
     BillSearch billSearch = new BillSearch();
 
     String providerQuery = "";
@@ -906,8 +943,9 @@ public class MSPReconcile {
                                                 boolean excludePrivate,
                                                 boolean exludeICBC,
                                                 String status) {
+    System.out.println("MSPReconcile.getBillsByType");
     BillSearch billSearch = new BillSearch();
-    Properties prop = null;
+    HashMap rejDetails = null;
     String criteriaQry = createCriteriaString(account, payeeNo, providerNo,
                                               startDate,
                                               endDate, excludeWCB, excludeMSP,
@@ -915,7 +953,7 @@ public class MSPReconcile {
                                               status);
     String p = "select provider.first_name,provider.last_name,b.billingtype, b.update_date, bm.billingmaster_no,b.billing_no, "
         + " b.demographic_name,b.demographic_no,bm.billing_unit,bm.billing_code,bm.bill_amount,bm.billingstatus,bm.mva_claim_code,bm.service_location,"
-        + " bm.phn,bm.service_end_time,service_start_time,bm.service_to_day,bm.service_date,bm.oin_sex_code,b.dob,dx_code1,b.provider_no,apptProvider_no,update_date "
+        + " bm.phn,bm.service_end_time,service_start_time,bm.service_to_day,bm.service_date,bm.oin_sex_code,b.dob,dx_code1,b.provider_no,apptProvider_no "
         + " from demographic,provider,billing as b,billingmaster as bm "
         + " where bm.billing_no=b.billing_no "
         + " and b.provider_no = provider.provider_no "
@@ -924,7 +962,7 @@ public class MSPReconcile {
         + " order by billingstatus";
 
     if (status.equals(REP_REJ)) {
-      prop = this.currentC12Records();
+      rejDetails = this.getRejectionDetails();
     }
 
     System.out.println(p);
@@ -985,9 +1023,13 @@ public class MSPReconcile {
          * @todo Clean up this section
          */
         if (status.equals(REP_REJ)) {
-          if (prop.containsKey(b.billMasterNo)) {
-            b.expString = prop.getProperty(b.billMasterNo);
-            String exps[] = prop.getProperty(b.billMasterNo).split(" ");
+          if (rejDetails.containsKey(b.billMasterNo)) {
+            Vector dets = (Vector) rejDetails.get(b.billMasterNo);
+            String[] exps = new String[7];
+            for (int i = 0; i < exps.length; i++) {
+              exps[i] = (String)dets.get(i);
+            }
+            b.expString = this.createCorrectionsString(exps);
             Hashtable explCodes = new Hashtable();
             for (int i = 0; i < exps.length; i++) {
               String code = exps[i];
@@ -995,6 +1037,7 @@ public class MSPReconcile {
               explCodes.put(code, desc);
             }
             b.explanations = explCodes;
+            b.rejectionDate = (String)dets.get(7);
           }
 
           ResultSet rsDemo = db.GetSQL(
@@ -1119,6 +1162,7 @@ public class MSPReconcile {
         b.payeeName = this.getProvider(b.payeeNo).getInitials();
         b.provName = this.getProvider(b.apptDoctorNo).getInitials();
         b.type = new Double(b.amount).doubleValue() > 0 ? "PMT" : "RFD";
+        System.out.println("type=" + b.type);
 
         billSearch.justBillingMaster.add(b.billMasterNo);
         billSearch.list.add(b);
@@ -1342,7 +1386,9 @@ public class MSPReconcile {
    * @param payeeNo String
    * @return ResultSet
    */
-  public ResultSet getMSPRemittanceQuery(String payeeNo) {
+  public ResultSet getMSPRemittanceQuery(String payeeNo, String s21Id) {
+    System.out.println(new java.util.Date() +
+                       ":MSPReconcile.getMSPRemittanceQuery(payeeNo, s21Id)");
     String qry = "SELECT billing_code,provider.first_name,provider.last_name,t_practitionerno,t_s00type,t_servicedate,t_payment," +
         "t_datacenter,billing.demographic_name,billing.demographic_no,teleplanS00.t_paidamt * .01 as 't_paidamt',t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_dataseq " +
         " from teleplanS00,billing,billingmaster,provider " +
@@ -1350,6 +1396,7 @@ public class MSPReconcile {
         " and billingmaster.billing_no = billing.billing_no " +
         " and provider.ohip_no= teleplanS00.t_practitionerno " +
         " and teleplanS00.t_payeeno = " + payeeNo;
+
     System.err.println(qry);
     DBHandler db = null;
     ResultSet rs = null;
@@ -1370,15 +1417,20 @@ public class MSPReconcile {
    * @return String
    */
   public oscar.entities.Provider getProvider(String providerNo) {
+    System.out.println(new java.util.Date() +
+                       ":MSPReconcile.getProvider(providerNo)");
     System.err.println("PROV: " + providerNo);
-    providerNo = oscar.util.StringUtils.isNumeric(providerNo) ? providerNo :
-        "-1";
+
+    if(!oscar.util.StringUtils.isNumeric(providerNo)){
+      providerNo = "-1";
+    }
     DBHandler db = null;
     ResultSet rs = null;
     oscar.entities.Provider prov = new oscar.entities.Provider();
     String qry =
         "select first_name,last_name from provider where provider_no = " +
         providerNo;
+    System.out.println("PROVIDER QRY:" + qry);
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       rs = db.GetSQL(qry);
@@ -1404,6 +1456,7 @@ public class MSPReconcile {
    * @return String
    */
   public ArrayList getAllProviders() {
+    System.out.println(new java.util.Date() + ":MSPReconcile.getAllProviders()");
     ArrayList list = new ArrayList();
     DBHandler db = null;
     ResultSet rs = null;
@@ -1432,7 +1485,8 @@ public class MSPReconcile {
   }
 
   public S21 getS21Record(String s21id) {
-
+    System.out.println(new java.util.Date() +
+                       ":MSPReconcile.getS21Record(s21id)");
     String qry = "select t_payment,t_payeeno,t_payeename,t_amtbilled,t_amtpaid,t_cheque from teleplanS21 where status <> 'D' and s21_id = " +
         s21id + " order by t_payment desc";
     DBHandler db = null;
@@ -1466,7 +1520,8 @@ public class MSPReconcile {
    * @return Provider
    */
   public oscar.entities.Provider getProviderByOHIP(String providerNo) {
-    System.err.println("PROV: " + providerNo);
+    System.out.println(new java.util.Date() +
+                       ":MSPReconcile.getProviderByOHIP(providerNo)");
     providerNo = oscar.util.StringUtils.isNumeric(providerNo) ? providerNo :
         "-1";
     DBHandler db = null;
