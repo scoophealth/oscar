@@ -172,21 +172,15 @@ public class StringUtils {
 
     return id;
   }
+
   /**
-  * Returns true if the provided string is a numeral
-  * @todo Use a regex or find a suitable non-hackish way to do this!
-  * @param str String
-  * @return boolean
-  */
- public static boolean isNumeric(String str){   
-   boolean ret = false;
-   try{
-     Double d = new Double(str);
-     ret = true;
-   }catch(NumberFormatException e){}
-   return ret;   
- }
-
-
+   * Returns true if the provided string is a numeral
+   * @param str String
+   * @return boolean
+   */
+  public static boolean isNumeric(String str) {
+    return str == null ? false :
+        org.apache.commons.lang.StringUtils.isNumeric(str);
+  }
 
 }
