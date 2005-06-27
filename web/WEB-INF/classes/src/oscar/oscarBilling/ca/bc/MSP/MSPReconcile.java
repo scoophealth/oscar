@@ -1393,6 +1393,7 @@ public class MSPReconcile {
         "t_datacenter,billing.demographic_name,billing.demographic_no,teleplanS00.t_paidamt * .01 as 't_paidamt',t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_dataseq " +
         " from teleplanS00,billing,billingmaster,provider " +
         " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
+        " and teleplanS00.s21_id = " + s21Id +
         " and billingmaster.billing_no = billing.billing_no " +
         " and provider.ohip_no= teleplanS00.t_practitionerno " +
         " and teleplanS00.t_payeeno = " + payeeNo;
