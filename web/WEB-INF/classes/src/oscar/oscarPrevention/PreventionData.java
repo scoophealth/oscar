@@ -53,7 +53,8 @@ public class PreventionData {
       next_date date,
       never char(1) default '0',
       deleted char(1) default '0',
-      refused char(1) default '0'
+      refused char(1) default '0',
+      creator varchar(6) default NULL
   )
       
   need to add next_date
