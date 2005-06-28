@@ -5877,6 +5877,47 @@ CREATE TABLE `log` (
   INDEX `contentId` (`contentId`)
 ) ;
 
+CREATE TABLE preventions (
+  id int(10) NOT NULL auto_increment,
+  demographic_no int(10) NOT NULL default '0',
+  creation_date datetime default NULL,
+  prevention_date date default NULL,
+  provider_no varchar(6) NOT NULL default '',
+  provider_name varchar(255) default NULL,
+  prevention_type varchar(20) default NULL,
+  deleted char(1) default '0',
+  refused char(1) default '0',
+  next_date date default NULL,
+  never char(1) default '0',
+  creator int(10) default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE preventionsExt (
+  id int(10) NOT NULL auto_increment,
+  prevention_id int(10) default NULL,
+  keyval varchar(20) default NULL,
+  val text,
+  PRIMARY KEY  (`id`)
+);
+
+create index preventions_demographic_no on preventions (demographic_no);
+create index preventions_provider_no on preventions (provider_no(6));
+create index preventions_prevention_type on preventions (prevention_type(10));
+create index preventions_refused on preventions (refused);
+create index preventions_deleted on preventions (deleted);
+create index preventions_never on preventions (never);
+create index preventions_creation_date on preventions (creation_date);
+create index preventions_next_date on preventions (next_date);
+
+
+
+
+create index preventionsExt_prevention_id on preventionsExt (prevention_id);
+create index preventionsExt_keyval on preventionsExt (keyval(10));
+
+
+
 create index surveyId_index on surveyData (surveyId(5));
 create index demographic_no_index on surveyData (demographic_no);
 create index provider_no_index on surveyData (provider_no(6));
