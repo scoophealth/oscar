@@ -5,6 +5,7 @@
 
 
  <%    
+ //select * from tickler where status = 'A' and service_date <= now() and task_assigned_to  = '999998' limit 1;
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no;
@@ -15,6 +16,7 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
+  String assignedTo = request.getParameter("assignedTo")==null?"all":request.getParameter("assignedTo") ;  
 %>
 
 <%@ include file="dbTicker.jsp" %>
@@ -344,14 +346,15 @@ var beginD = "0001-01-01"
     </tr>
     <tr> 
     
-        <td colspan="2"> 
+        <td colspan="3"> 
         <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formMoveTo"/> </b> 
         <select name="ticklerview">
         <option value="A" <%=ticklerview.equals("A")?"selected":""%>><bean:message key="tickler.ticklerMain.formActive"/></option>
         <option value="C" <%=ticklerview.equals("C")?"selected":""%>><bean:message key="tickler.ticklerMain.formCompleted"/></option>
         <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>
         </select>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formSelectProvider"/> </b></font> <select name="providerview">
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formSelectProvider"/> </b></font> 
+        <select name="providerview">
         <option value="%" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
         <%  String proFirst="";
             String proLast="";
@@ -377,12 +380,33 @@ var beginD = "0001-01-01"
    
         %>
           </select>   
+          
+          
+          <!-- -->
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Assigned To </b></font> 
+        <select name="assignedTo">
+        <option value="%" <%=assignedTo.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
+        <%  
+            rslocal = null;
+            rslocal = apptMainBean.queryResults("%", "search_provider_all");
+            while(rslocal.next()){
+                proFirst = rslocal.getString("first_name");
+                proLast = rslocal.getString("last_name");
+                proOHIP = rslocal.getString("provider_no");
+        %> 
+        <option value="<%=proOHIP%>" <%=assignedTo.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
+        <%}%>
+          </select>   
+          
+          
    
-      </td>
-      <td width="40%"> <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
+      <!--/td>
+      <td --> 
+        <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
         <input type="hidden" name="Submit" value="">
         <input type="button" value="<bean:message key="tickler.ticklerMain.btnCreateReport"/>" class="mbttn" onclick="document.forms['serviceform'].Submit.value='Create Report'; document.forms['serviceform'].submit();">
-        </font></td>
+        </font>
+        </td>
     </tr>
 
   </form>
@@ -416,13 +440,16 @@ var beginD = "0001-01-01"
     if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
 
     ResultSet rs=null ;    
-    String[] param =new String[4];
+    String[] param =new String[5];
     boolean bodd=false;
     param[0] = ticklerview;
 
     param[1] = dateBegin;
     param[2] = dateEnd;
     param[3] = request.getParameter("providerview")==null?"%": request.getParameter("providerview");
+    param[4] = request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo");
+   System.out.println(request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo"));
+    
     rs = apptMainBean.queryResults(param, "search_tickler");
     while (rs.next()) {
        nItems = nItems +1;
