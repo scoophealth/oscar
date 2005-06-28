@@ -284,7 +284,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
                 String proLast="";
                 String proOHIP="";
 
-                ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
+                ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_all");
                 while(rslocal.next()){
                     proFirst = rslocal.getString("first_name");
                     proLast = rslocal.getString("last_name");
