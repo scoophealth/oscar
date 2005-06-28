@@ -37,6 +37,7 @@
   
   String [][] dbQueries=new String[][] {
     {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
+    {"search_provider_all", "select * from provider where provider_no like ?  and status = '1' order by last_name"},
 	{"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
      {"search_provider_details", "select * from provider where provider_no=?"},
@@ -46,7 +47,7 @@
     {"save_document","insert into document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status) values(?,?,?,?,?,?,?)"},
      {"save_tickler","insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) values(?,?,?,?,?,?,?,?)"},
          {"update_tickler","update tickler set status=? where tickler_no=?"},
-     {"search_tickler","select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and d.provider_no like ? order by t.service_date desc"},
+     {"search_tickler","select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and d.provider_no like ? and t.task_assigned_to like ? order by t.service_date desc"},
      {"search_tickler_bydemo","select t.tickler_no, d.demographic_no,d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no)  where t.demographic_no=d.demographic_no and t.status=? and t.service_date >=? and t.service_date<=? and t.demographic_no like ? order by t.service_date desc"},
    
     {"save_ctl_document","insert into ctl_document values(?,?,?,?)"},
