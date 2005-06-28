@@ -1,0 +1,589 @@
+<?xml version="1.0"?>
+<rule-set name="Prevention"
+          xmlns="http://drools.org/rules"
+          xmlns:java="http://drools.org/semantics/java">
+
+    <rule name="DTaP-IPV 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 2</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 72</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 0</java:condition>
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+        
+                
+        <java:consequence>              
+              System.out.println("DTaP-IPV 1");
+              prev.addWarning("Needs First Booster");
+        </java:consequence>
+    </rule>
+
+    <rule name="DTaP-IPV 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 4</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt;= 72</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 1</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 2</java:condition>
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+        <java:condition>prev.isNextDateSet("DTaP-IPV")</java:condition>
+        
+        <java:consequence>              
+              System.out.println("DTaP-IPV 2");
+              prev.addWarning("Needs Second Booster");
+        </java:consequence>
+    </rule>
+    
+    <rule name="DTaP-IPV 2.1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.isPassedNextDate("DTaP-IPV")</java:condition>        
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 1</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 2</java:condition>
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+                
+        <java:consequence>              
+              System.out.println("DTaP-IPV 2");
+              prev.addWarning("Needs Second Booster");
+        </java:consequence>
+    </rule>
+
+
+
+    <rule name="DTaP-IPV 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 6</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 72</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 2</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 2</java:condition>                
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+
+        <java:consequence>              
+              System.out.println("DTaP-IPV 3");
+              prev.addWarning("Needs Third Booster");
+        </java:consequence>
+    </rule>
+
+    <rule name="DTaP-IPV 3.1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.isPassedNextDate("DTaP-IPV")</java:condition>        
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 2</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 2</java:condition>
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+                
+        <java:consequence>              
+              System.out.println("DTaP-IPV 2.1");
+              prev.addWarning("Needs Third Booster");
+        </java:consequence>
+    </rule>
+
+
+
+    <rule name="DTaP-IPV 4">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 72</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 3</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 12</java:condition>                                
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+        <java:consequence>              
+              System.out.println("DTaP-IPV 4");
+              prev.addWarning("Needs Fourth Booster");
+        </java:consequence>
+    </rule>
+
+        <rule name="DTaP-IPV 4.1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.isPassedNextDate("DTaP-IPV")</java:condition>        
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 2</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 2</java:condition>
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+                
+        <java:consequence>              
+              System.out.println("DTaP-IPV 2.1");
+              prev.addWarning("Needs Third Booster");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="DTaP-IPV 5">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 48</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 72</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 4</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 1</java:condition>                
+        <java:condition>prev.getAgeInMonthsLastPreventionTypeGiven("DTaP-IPV") &lt;= 48</java:condition>                                
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+        <java:consequence>              
+              System.out.println("DTaP-IPV 3");
+              prev.addWarning("Needs Third Booster");
+        </java:consequence>
+    </rule>
+    <rule name="DTaP-IPV 6">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 168</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 192</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 4</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 1</java:condition>                
+        <java:condition>prev.getAgeInMonthsLastPreventionTypeGiven("DTaP-IPV") &lt;= 48</java:condition>                                
+        <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
+        <java:consequence>              
+              System.out.println("DTaP-IPV 3");
+              prev.addWarning("Needs Third Booster");
+        </java:consequence>
+    </rule>
+    <rule name="Hib 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 2</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
+        <java:consequence>              
+              System.out.println("Hib 1");
+              prev.addWarning("Needs first Hib");
+        </java:consequence>
+    </rule>
+    <rule name="Hib 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 4</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 1 </java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Hib") &gt;= 2</java:condition>                        
+        <java:consequence>              
+              System.out.println("Hib 2");
+              prev.addWarning("Needs second Hib");
+        </java:consequence>
+    </rule>
+    <rule name="Hib 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 6</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 2 </java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Hib") &gt;= 2</java:condition>                        
+        <java:consequence>              
+              System.out.println("Hib 3");
+              prev.addWarning("Needs third Hib");
+        </java:consequence>
+    </rule>
+    <rule name="Hib 4">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
+        <java:consequence>              
+              System.out.println("Hib 3");
+              prev.addWarning("Needs first Hib");
+        </java:consequence>
+    </rule>
+    <rule name="Hib 5">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 1 </java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Hib") &gt;= 2</java:condition>                        
+        <java:consequence>              
+              System.out.println("Hib 5");
+              prev.addWarning("Needs second Hib");
+        </java:consequence>
+    </rule>
+    <rule name="Hib 6">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 24</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 60</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
+        <java:consequence>              
+              System.out.println("Hib 6");
+              prev.addWarning("Needs second Hib");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="Pneu-C 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 2</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 0</java:condition>
+                
+        <java:consequence>              
+              System.out.println("Pneu-C 1");
+              prev.addWarning("Needs First Pneu-C");
+        </java:consequence>
+    </rule>
+    <rule name="Pneu-C 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 4</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 1</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 2</java:condition>                                        
+        <java:consequence>              
+              System.out.println("Pneu-C 2");
+              prev.addWarning("Needs Second Pneu-C");
+        </java:consequence>
+    </rule>
+    <rule name="Pneu-C 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 6</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 2</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 2</java:condition>                                        
+        <java:consequence>              
+              System.out.println("Pneu-C 3");
+              prev.addWarning("Needs Third Pneu-C");
+        </java:consequence>
+    </rule>
+    <rule name="Pneu-C 4">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 15</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 3</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 6</java:condition>                                        
+        <java:consequence>              
+              System.out.println("Pneu-C 4");
+              prev.addWarning("Needs Fourth Pneu-C");
+        </java:consequence>
+    </rule>
+    <rule name="Pneu-C 5">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 0</java:condition>        
+        <java:consequence>              
+              System.out.println("Pneu-C 4");
+              prev.addWarning("Needs First Pneu-C");
+        </java:consequence>
+    </rule>
+    <rule name="Pneu-C 6">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 14</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 1</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 2</java:condition>                                        
+        <java:consequence>              
+              System.out.println("Pneu-C 4");
+              prev.addWarning("Needs Second Pneu-C");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="MMR 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>        
+        <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>        
+        <java:consequence>              
+              System.out.println("Pneu-C 4");
+              prev.addWarning("Needs First MMR");
+        </java:consequence>
+    </rule>
+    <rule name="MMR 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 14</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 24</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MMR") == 1</java:condition>  
+        <java:condition>prev.getHowManyMonthsSinceLast("MMR") &gt;= 2</java:condition>                                        
+        <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 28</java:condition>
+        <java:consequence>              
+              System.out.println("Pneu-C 4");
+              prev.addWarning("Needs Second MMR");
+        </java:consequence>
+    </rule>
+
+    <rule name="MMR 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 14</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 18</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MMR") == 1</java:condition>  
+        <java:condition>prev.getHowManyMonthsSinceLast("MMR") &gt;= 2</java:condition>                                        
+        <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 0</java:condition>
+        <java:consequence>              
+              System.out.println("Pneu-C 4");
+              prev.addWarning("Needs Second MMR");
+        </java:consequence>
+    </rule>
+
+    <rule name="MenC-C 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 24</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MenC-C") == 0</java:condition>                  
+        <java:consequence>              
+              System.out.println("Pneu-C 4");
+              prev.addWarning("Needs MenC-C");
+        </java:consequence>
+    </rule>
+
+    <rule name="MenC-C 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 12</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 13</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MenC-C") == 0</java:condition>                  
+        <java:consequence>              
+              System.out.println("MenC-C 2");
+              prev.addWarning("Needs MenC-C");
+        </java:consequence>
+    </rule>
+
+    <rule name="MenC-C 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 15</java:condition>
+        <java:condition>prev.getAgeInYears() &lt;= 19 </java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MenC-C") == 0</java:condition>                  
+        <java:consequence>              
+              System.out.println("MenC-C 3");
+              prev.addWarning("Needs MenC-C");
+        </java:consequence>
+    </rule>
+
+    <rule name="VZ 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 15</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt;= 24 </java:condition>
+        <java:condition>prev.getNumberOfPreventionType("VZ") == 0</java:condition>
+        <java:condition>prev.getHowManyDaysSinceLast("MMR") &gt;= 28</java:condition>
+        <java:consequence>              
+              System.out.println("VZ 1");
+              prev.addWarning("Needs VZ");
+        </java:consequence>
+    </rule>
+
+    <rule name="VZ 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInMonths() &gt;= 15</java:condition>
+        <java:condition>prev.getAgeInMonths() &lt;= 24 </java:condition>
+        <java:condition>prev.getNumberOfPreventionType("VZ") == 0</java:condition>
+        <java:condition>prev.getHowManyDaysSinceLast("MMR") == 0</java:condition>
+        <java:consequence>              
+              System.out.println("VZ 2");
+              prev.addWarning("Needs VZ");
+        </java:consequence>
+    </rule>
+
+    <rule name="VZ 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 4</java:condition>
+        <java:condition>prev.getAgeInYears() &lt;= 6 </java:condition>
+        <java:condition>prev.getNumberOfPreventionType("VZ") == 0</java:condition> 
+        <java:condition>prev.getHowManyDaysSinceLast("MMR") &gt;= 28</java:condition>
+        <java:consequence>              
+              System.out.println("VZ 3");
+              prev.addWarning("Needs VZ");
+        </java:consequence>
+    </rule>
+
+    <rule name="VZ 4">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 4</java:condition>
+        <java:condition>prev.getAgeInYears() &lt;= 6 </java:condition>
+        <java:condition>prev.getNumberOfPreventionType("VZ") == 0</java:condition> 
+        <java:condition>prev.getHowManyDaysSinceLast("MMR") == 0</java:condition>
+        <java:consequence>              
+              System.out.println("VZ 4");
+              prev.addWarning("Needs VZ");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="dTap 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getNumberOfPreventionType("dTap") == 0</java:condition> 
+        <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 120</java:condition>
+        <java:consequence>              
+              System.out.println("dTap 1");
+              prev.addWarning("Needs Booster");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="Td 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getNumberOfPreventionType("Td") == 0</java:condition> 
+        <java:condition>prev.getHowManyMonthsSinceLast("dTaP") &gt;= 120</java:condition>
+        <java:consequence>              
+              System.out.println("Td 1");
+              prev.addWarning("Needs Booster");
+        </java:consequence>
+    </rule>
+
+    <rule name="Td 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getNumberOfPreventionType("Td") &gt;= 1</java:condition> 
+        <java:condition>prev.getHowManyMonthsSinceLast("Td") &gt;= 120</java:condition>
+        <java:consequence>              
+              System.out.println("Td 2");
+              prev.addWarning("Needs Booster");
+        </java:consequence>
+    </rule>
+
+    <rule name="Flu 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>       
+        <java:condition>prev.isTodayinDateRange("2005-10-01","2006-01-29")</java:condition> 
+        <java:condition>prev.isLastPreventionWithinRange("Flu","2005-10-01","2006-01-29")</java:condition> 
+        <java:consequence>              
+              System.out.println("Flu 1");
+              prev.addWarning("Needs Flu Shot ");
+        </java:consequence>
+    </rule>
+
+    <rule name="PAP 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt;= 22</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &lt;= 24</java:condition>        
+        <java:condition>!prev.isPreventionNever("PAP")</java:condition>
+        <java:condition>!prev.isNextDateSet("PAP")</java:condition>        
+        <java:consequence>              
+              System.out.println("PAP 1");
+              prev.addReminder("PAP is coming due for this patient");
+        </java:consequence>
+    </rule>
+
+    <rule name="PAP 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt; 24</java:condition>        
+        <java:condition>!prev.isPreventionNever("PAP")</java:condition>
+        <java:condition>!prev.isNextDateSet("PAP")</java:condition>        
+        <java:consequence>              
+              System.out.println("PAP 2");
+              prev.addWarning("PAP is overdue for this patient");
+        </java:consequence>
+    </rule>
+
+    <rule name="PAP 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") == -1</java:condition>                
+        <java:consequence>              
+              System.out.println("PAP 3");
+              prev.addWarning("No PAP records can be found for this patient");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="PAP 4">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>        
+        <java:condition>prev.isFemale()</java:condition>                
+        <java:condition>prev.isNextDateSet("PAP")</java:condition>        
+        <java:condition>prev.isPassedNextDate("PAP")</java:condition>        
+        <java:consequence>              
+              System.out.println("PAP 3");
+              prev.addWarning("PAP is overdue for this patient");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="PAP debug">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>             
+        
+        <java:consequence>              
+              System.out.println("PAP debug");
+              prev.addReminder("Last PAP was done "+prev.getHowManyMonthsSinceLast("PAP")+" month(s) ago");
+        </java:consequence>
+    </rule>
+
+  </rule-set>
+
+<!--
+
+    <vaccine key="DTaP-IPV">                      the key would match the prevention type stored in the database     
+    <routine ageBetween="0m-12m">
+     <warning age="2m"  grace="0"/>           warning is probably not the best word  but the idea is that at each element there would be a warning on the top of the screen in the prevention module
+     <warning age="4m"  grace="0"/>
+     <warning age="6m"  grace="0"/>
+     <warning age="18m"  grace="0"/>
+     <warning ageBetween="4y-6y"  grace="2m"/>
+    </routine>
+    <routine ageBetween="12m-7y" >
+     <warning age="asap" grace="0"/>
+     <warning age="+2m" grace="0"/>
+     <warning age="+2m"  grace="0"/>
+     <warning age="+12m"  grace="0"/>
+     <warning age="4y-6y"  grace="2m"/>
+    </routine>    
+
+-->
+
