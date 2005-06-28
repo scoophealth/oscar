@@ -1,0 +1,311 @@
+/**
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version. *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ * 
+ *  Jason Gallagher
+ * 
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada   Creates a new instance of PreventionDisplayConfig    
+ *
+ * PreventionDisplayConfig.java
+ *
+ * Created on May 25, 2005, 9:06 AM
+ */
+
+package oscar.oscarPrevention;
+
+import java.util.*;
+import oscar.oscarDemographic.data.*;
+
+/**
+ *
+ * @author Jay Gallagher
+ */
+public class PreventionDisplayConfig {
+   Hashtable prevHash = null;
+   ArrayList prevList = null;
+   
+   Hashtable configHash = null;
+   ArrayList configList = null;
+  
+   
+   
+   public PreventionDisplayConfig() {
+   }
+   
+   public ArrayList getPreventions(){
+      if ( prevList == null ){
+         loadPreventions();
+      }
+      return prevList;
+   }
+   
+   
+   public Hashtable getPrevention(String s){
+      if ( prevHash == null ){
+         loadPreventions();
+      }
+      System.out.println("getting "+s);
+      return (Hashtable) prevHash.get(s);
+   }
+   
+   
+   
+   
+   public void loadPreventions(){
+      prevList = new ArrayList();
+      prevHash = new Hashtable();
+      
+      Hashtable a = new Hashtable();
+         a.put("desc","DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus");
+         a.put("name","DTaP-IPV");
+         a.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV");  
+         a.put("layout","injection");
+      prevList.add(a);
+      prevHash.put("DTaP-IPV", a);
+  
+      Hashtable a1 = new Hashtable();
+         a1.put("desc","Hib=haemophilus influenzae type B for children under 5 years of age");
+         a1.put("name","Hib");
+         a1.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Hib");  
+         a1.put("layout","injection");
+      prevList.add(a1);
+      prevHash.put("Hib", a1);
+  
+      Hashtable a2 = new Hashtable();
+         a2.put("desc","Pneu-C=pneumococcal 7-valent conjugate");
+         a2.put("name","Pneu-C");
+         a2.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC");  
+         a2.put("layout","injection");
+      prevList.add(a2);
+      prevHash.put("Pneu-C", a2);
+  
+      Hashtable a3 = new Hashtable();
+         a3.put("desc","MMR=measles, mumps and rubella");
+         a3.put("name","MMR");
+         a3.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MMR");  
+         a3.put("layout","injection");
+      prevList.add(a3);
+      prevHash.put("MMR", a3);
+  
+      Hashtable a4 = new Hashtable();
+         a4.put("desc","MenC-C=meningocococcal C conjugate");
+         a4.put("name","MenC-C");
+         a4.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MenC");  
+         a4.put("layout","injection");
+      prevList.add(a4);
+      prevHash.put("MenC-C", a4);
+   
+      Hashtable a5 = new Hashtable();
+         a5.put("desc","VZ=varicella zoster");
+         a5.put("name","VZ");
+         a5.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Var");  
+         a5.put("layout","injection");
+     prevList.add(a5);
+     prevHash.put("VZ", a5);
+          
+     Hashtable a6 = new Hashtable();
+         a6.put("desc","Hep B=Hepatitis B");
+         a6.put("name","HepB");
+         a6.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#HepB");  
+         a6.put("layout","injection");
+     prevList.add(a6);
+     prevHash.put("HepB", a6);
+  
+     Hashtable a7 = new Hashtable();
+         a7.put("desc","dTap=diphtheria, tatanus and acellular pertussis adult/adolescent formulation");
+         a7.put("name","dTap");
+         a7.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap");  
+         a7.put("layout","injection");
+     prevList.add(a7);
+     prevHash.put("dTap", a7);   
+     
+     Hashtable a8 = new Hashtable();
+         a8.put("desc","Td=tetanus and diphtheria adult type formulation");
+         a8.put("name","Td");
+         a8.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap");  
+         a8.put("layout","injection");
+     prevList.add(a8);
+     prevHash.put("Td", a8);
+        
+     Hashtable a9 = new Hashtable();
+         a9.put("desc","Flu=influenza vaccine");
+         a9.put("name","Flu");
+         a9.put("link","http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Flu");  
+         a9.put("layout","injection");
+     prevList.add(a9);
+     prevHash.put("Flu", a9);
+     
+     Hashtable a10 = new Hashtable();
+         a10.put("desc","PAP=");
+         a10.put("name","PAP");
+         a10.put("link","");  
+         a10.put("layout","PAPMAM");
+     prevList.add(a10);
+     prevHash.put("PAP", a10);
+     
+     Hashtable a11 = new Hashtable();
+         a11.put("desc","Mammorgram");
+         a11.put("name","MAM");
+         a11.put("link","");  
+         a11.put("layout","PAPMAM");
+     prevList.add(a11);
+     prevHash.put("MAM", a11);
+     
+     
+   }
+   
+   public ArrayList getConfigurationSets(){
+      System.out.println("returning config sets");
+      if (configList  == null){
+         loadConfigurationSets();
+      }
+      System.out.println("returning config sets"+configList);
+      return configList;
+   }      
+   
+   public void loadConfigurationSets(){
+      System.out.println("Loading config sets");
+      getPreventions();
+      configHash = new Hashtable();
+      configList = new ArrayList();
+      
+      Hashtable a1 = new Hashtable();
+         a1.put("title","Childhood Immunization");
+         a1.put("effective","(Ontario February 2005)");
+         a1.put("minAge","0");
+         a1.put("maxAge","7");         
+         a1.put("prevList",new String[] { "DTaP-IPV","Hib","Pneu-C","MMR","MenC-C", "VZ","HepB","dTap","Td","Flu"});
+      
+      configList.add(a1);
+      configHash.put("Childhood Immunization", a1);  //maybe change this to a seperate id
+      
+      
+      Hashtable a2 = new Hashtable();
+         a2.put("title","Women's Preventitive Care");
+         a2.put("effective","(Ontario February 2005)");
+         a2.put("minAge","20");
+         a2.put("maxAge","65");
+         a2.put("sex","F");
+         a2.put("prevList",new String[] { "PAP","MAM","Flu","Td"});
+      
+      configList.add(a2);
+      configHash.put("Women's Preventitive Care", a2);  //maybe change this to a seperate id
+      
+      Hashtable a3 = new Hashtable();
+         a3.put("title","Over 65 Preventitive Care");
+         a3.put("effective","(Ontario February 2005)");
+         a3.put("minAge","65");                  
+         a3.put("prevList",new String[] { "Flu","Td"});
+      
+      configList.add(a3);
+      configHash.put("Over 65 Preventitive Care", a3);  //maybe change this to a seperate id
+                                 
+   }
+   
+   public String getDisplay(Hashtable setHash, String Demographic_no){
+      String display = "style=\"display:none\"";
+      DemographicData dData  = new DemographicData();      
+      System.out.println("demoage "+Demographic_no);
+      DemographicData.Demographic demograph = dData.getDemographic(Demographic_no);      
+      try{
+         String minAgeStr =  (String) setHash.get("minAge") ;
+         String maxAgeStr =  (String) setHash.get("maxAge") ;
+         String sex = (String) setHash.get("sex");            
+         int demoAge  = demograph.getAgeInYears();
+         String demoSex = demograph.getSex();
+         boolean inAgeGroup = true;
+         System.out.println("min age "+minAgeStr+" max age "+maxAgeStr+" sex "+sex+" demoAge "+demoAge+ " demoSex "+demoSex);
+         if ( minAgeStr != null && maxAgeStr != null){  //between ages
+            System.out.println("HERE1");
+            int minAge = Integer.parseInt(minAgeStr);
+            int maxAge = Integer.parseInt(maxAgeStr);
+            if ( minAge <= demoAge && maxAge >= demoAge){
+               display = "";
+            }else{
+               inAgeGroup = false;
+            }
+         }else if (minAgeStr != null ){  //older than
+            System.out.println("HERE2");
+            int minAge = Integer.parseInt(minAgeStr);            
+            if ( minAge <= demoAge ){
+               display = "";
+            }else{
+               inAgeGroup = false;
+            }
+         }else if (maxAgeStr != null ){  //younger than            
+            System.out.println("HERE3");
+            int maxAge = Integer.parseInt(maxAgeStr);
+            if ( maxAge >= demoAge){
+               display = "";
+            }else{
+               inAgeGroup = false;
+            }
+         }// else?  neither defined should the default be to display it or not?
+         
+         if (sex != null && inAgeGroup){
+            System.out.println("HERE4");
+            if (sex.equals(demoSex)){
+               display = "";
+            }else{
+               display = "style=\"display:none\"";
+            }
+         }                  
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+      return display;            
+   }
+   
+   /*
+   <div class="immSet">
+                     <div>
+                     <h2>Childhood Immunization <span style="font-size:smaller">(Ontario February 2005)</span></h2>
+                     </div>
+                     <div style="border: thin solid grey;">                        
+                        <% for (int i = 0; i < prevList.size() ; i++) {
+                           Hashtable h = (Hashtable) prevList.get(i); %>
+                        <div style="postion:relative; margin-top:5px;float:left;clear:left;"> 
+                            <div style="position:relative; float:left; border: thin solid blue ;min-width:100px;">
+                               <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
+                               <a href="<%=h.get("link")%>">ref</a>
+                               <div>
+                                 &nbsp;<a href="javascript: function myFunction() {return false; }"  onClick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&demographic_no=<%=demographic_no%>','addPreventionData')">.add</a>
+                               </div>
+                            </div>
+                            <%ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no);  
+                              System.out.println("alist "+alist.size());
+                            for (int k = 0; k < alist.size(); k++){
+                                Hashtable hdata = (Hashtable) alist.get(k);
+                            %>                            
+                            <div style="float:left; border: thin solid red ; margin-left:3px;" onClick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&demographic_no=<%=demographic_no%>','addPreventionData')" >
+                                <div>Age: <%=hdata.get("age")%></div>
+                                <div><%=refused(hdata.get("refused"))%>: <%=hdata.get("prevention_date")%></div>                                
+                            </div>
+                           <%}%>
+                        </div>
+                        
+                        
+                        <%}%>
+                        
+        
+        
+                     </div>
+                  </div><!--immSet-->
+   
+   */
+   
+}
