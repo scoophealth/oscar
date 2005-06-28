@@ -47,14 +47,17 @@
    <attribute>
      <name>property</name>
      <required>true</required>
-     <rtexprvalue>true</rtexprvalue>
-     <type>String</type>            
+     <rtexprvalue>true</rtexprvalue>     
    </attribute>
    <attribute>
      <name>value</name>
      <required>true</required>
-     <rtexprvalue>true</rtexprvalue>
-     <type>String</type>            
+     <rtexprvalue>true</rtexprvalue>     
+   </attribute>
+   <attribute>
+     <name>defaultVal</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>     
    </attribute>
 </tag>
 
