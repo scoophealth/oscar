@@ -29,12 +29,15 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+
 
 <%@page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
+  
   response.setHeader("Cache-Control","no-cache");
   //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
   //it dumps you out to an erros page.
@@ -740,11 +743,23 @@ border-right: 2px solid #cfcfcf;
                             <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>                        
                         <% } %>
                         <a href=# onClick="popupOscarCon(700,960,'<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a><br>
+                        
+                        <oscar:oscarPropertiesCheck property="IMMUNIZATION" value="yes" defaultVal="true">
                         <% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(demoNo)) { %>
                             <a style="color:red" href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message key="global.immunizations"/></a><br>
                         <% } else {%>
                             <a href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message key="global.immunizations"/></a><br>
                         <% } %>
+                        </oscar:oscarPropertiesCheck>                            
+                        
+                        <oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
+                            <a href="javascript:popUpImmunizations(700,960,'../oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>')">
+                            <oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a>
+                            <br>
+                        </oscar:oscarPropertiesCheck>                            
+                            
+                            
+                            
                         <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
                         	<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')"><bean:message key="global.oscarComm"/></a><br> 
                         <% } else {%>
