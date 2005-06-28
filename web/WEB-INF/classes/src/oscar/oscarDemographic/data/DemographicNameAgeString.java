@@ -40,6 +40,10 @@ public class DemographicNameAgeString {
    static Hashtable hashtable = new Hashtable();
    
 
+   /**
+    * Used to obtain an instance of DemographicNameAgeString
+    * @return Returns instance of DemographicNameAgeString
+    */   
    public static DemographicNameAgeString getInstance() {
       return demographicNameAgeString;
    }
@@ -48,6 +52,14 @@ public class DemographicNameAgeString {
    }
    
    
+   /**
+    * Used to get a String containing Name Age Sex ie "Gallagher, Jay M 25 years"
+    *
+    * Value is buffered in a hashtable so that it is only retrieved from the database once.
+    * @param demoNo Demographic Number
+    * @return returns a String containing name age sex ie "Last, First M 2 weeks"
+    *
+    */   
    public String getNameAgeString(String demoNo){
       //System.out.println("get name age for "+demoNo);
       String retval = "";      
@@ -68,6 +80,10 @@ public class DemographicNameAgeString {
       return  retval;
    }
    
+   /**
+    * Removes demographic number from hashtable. Used if you update the demographic information
+    * @param demoNo Demoraphic Number
+    */   
    public static void resetDemographic(String demoNo){
       if(hashtable.containsKey(demoNo)){
          hashtable.remove(demoNo);
@@ -78,6 +94,15 @@ public class DemographicNameAgeString {
       return s[0]+", "+s[1]+" "+s[2]+" "+s[3];
    }
                                     
+   /**
+    * Used to get a Hashtable containing  lastName, firstName, sex, age
+    * @param demoNo Demographic Number
+    * @return Hashtable with these fields:
+    *   "lastName"
+    *   "firstName"
+    *   "sex"
+    *   "age"
+    */   
    public Hashtable getNameAgeSexHashtable(String demoNo){
       Hashtable h = null;      
       //System.out.println("get name age for "+demoNo);
