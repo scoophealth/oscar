@@ -40,6 +40,7 @@ public class OscarPropertiesCheck extends TagSupport {
 
     protected String value = null;
     protected String property = null;
+    protected String defaultVal = null;
     
     public String getValue() {
         return (this.value);
@@ -71,7 +72,12 @@ public class OscarPropertiesCheck extends TagSupport {
             if (oscarVal.equals(val)){
                 conditionMet = true;
             }
-        }catch(Exception invalidProp){ }
+            
+        }catch(Exception invalidProp){             
+            if (defaultVal != null && defaultVal.equalsIgnoreCase("true")){
+               conditionMet = true;
+            }
+        }
                
         if (conditionMet)
             return (EVAL_BODY_INCLUDE);
@@ -93,7 +99,21 @@ public class OscarPropertiesCheck extends TagSupport {
         property = null;        
     }
 
+    /**
+     * Getter for property defaultVal.
+     * @return Value of property defaultVal.
+     */
+    public java.lang.String getDefaultVal() {
+       return defaultVal;
+    }    
 
+    /**
+     * Setter for property defaultVal.
+     * @param defaultVal New value of property defaultVal.
+     */
+    public void setDefaultVal(java.lang.String defaultVal) {
+       this.defaultVal = defaultVal;
+    }    
 
 
 }
