@@ -206,6 +206,10 @@
     <!-- OscarWaitingList start-->
     <form-bean name="WLWaitingListForm" type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm"/>
     <!-- OscarWaitingList stop-->
+    
+    <!-- preventions -->
+    <form-bean name="PreventionReportForm" type="oscar.oscarPrevention.pageUtil.PreventionReportForm"/>
+    
   </form-beans>
   <!--
     form-bean      name="AddDemographicKeyValueForm"
@@ -894,6 +898,24 @@
     <action path="/demographic/printDemoLabelAction" type="oscar.oscarDemographic.PrintDemoLabelAction"/>
     <!--Billing Account Reports-->
     <action name="createBillingReportActionForm" path="/billing/CA/BC/createBillingReportAction" scope="request" type="oscar.oscarBilling.ca.bc.MSP.CreateBillingReportAction" validate="false"/>
+    
+    
+    <!--Preventions-->
+    <action    path="/oscarPrevention/AddPrevention" type="oscar.oscarPrevention.pageUtil.AddPreventionAction" name="FrmForm" scope="request" input="/oscarPrevention/AddPreventionData.jsp">
+       <forward name="success" path="/oscarPrevention/close.jsp"/>
+    </action>                          
+     
+    <action    path="/oscarPrevention/PreventionReport" type="oscar.oscarPrevention.pageUtil.PreventionReportAction" name="PreventionReportForm" scope="request" input="/oscarPrevention/PreventionReporting.jsp">
+       <forward name="success" path="/oscarPrevention/PreventionReporting.jsp"/>
+    </action>                       
+    <!--Preventions- End-->   
+    
+    <!-- Demographic Relations -->
+    <action    path="/demographic/AddRelation" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction" name="FrmForm" scope="request" input="/demographic/AddAlternateContact.jsp">
+       <forward name="success" path="/demographic/AddAlternateContact.jsp"/>
+    </action>                           
+    <!-- Demographic Relations End-->
+    
   </action-mappings>
   <!--message-resources parameter="oscarResources"/-->
 </struts-config>
