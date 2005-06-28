@@ -42,8 +42,8 @@
 
 <tag>
    <name>oscarPropertiesCheck</name>
-   <tag-class>oscar.util.OscarPropertiesCheck</tag-class>
-   <body-content>JSP</body-content>       
+   <tagclass>oscar.util.OscarPropertiesCheck</tagclass>
+   <bodycontent>JSP</bodycontent>       
    <attribute>
      <name>property</name>
      <required>true</required>
