@@ -20,4 +20,5 @@ public class LogConst {
     public static final String CON_DEMOGRAPHIC = "demographic";
     public static final String CON_ROLE = "role";
     public static final String CON_PRIVILEGE = "privilege";
+    public static final String CON_FORM = "form";
 }
