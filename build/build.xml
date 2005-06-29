@@ -36,6 +36,7 @@
   <property name="webapp" location="../web" />
   <property name="jspbasedir" location="${catalina}/webapps/oscar" />
   <property name="mdsfiledir" location="../mdsFileManagement" />
+  <property name="cmlfiledir" location="../CMLFileManagement" />
   
   <property name="src_document" location="../oscar_document" />
   <property name="root_document" location="${build}/document" />
@@ -106,7 +107,7 @@
 	 srcdir="${src_web}"
      excludes="oscar/oscarMessenger/data/MsgRemoteMessageData.java"
      destdir="${classes_web}"
-	 deprecation="off"
+	 deprecation="on"
 	 debug="on">
    <classpath>
       <pathelement path="${classes_web}/"/>
@@ -121,6 +122,9 @@
   </copy>
   <copy todir="${classes_web}/oscar/form/prop">
    <fileset dir="${webapp}/WEB-INF/classes/src/oscar/form/prop" includes="*" />
+  </copy>
+  <copy todir="${classes_web}/oscar/oscarPrevention/">
+   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarPrevention/" includes="*.drl" />
   </copy>
  </target>
 
@@ -306,6 +310,54 @@
    </classpath> -->
   </javac>  
  </target>
+ 
+ <target name="mds-jar" depends="mdsfile">
+        
+        <jar destfile="${build}/mds-${now}.jar">
+             
+             <fileset dir="${mdsfiledir}">
+                
+             </fileset>
+               <!-- <include name="${classes_web}/oscar/oscarDB/**"/>                
+                    <include name="${classes_web}/oscar/util/**"/>                
+                    <include name="${classes_web}/oscar/Misc.class"/>                -->
+            <!--</fileset>-->
+            <manifest>
+                <attribute name="Built-By" value="oscarmcmaster"/>
+            </manifest>
+        </jar>
+</target>
+
+<target name="cmlfile" depends="init">
+  <javac 
+	 srcdir="${cmlfiledir}"     
+         destdir="${cmlfiledir}"
+	 deprecation="on"
+	 debug="on">
+   <!-- <classpath>
+      <pathelement path="${classes_web}/"/>
+      <path refid="classpath.path"/>
+   </classpath> -->
+  </javac>  
+ </target>
+ 
+ <target name="cml-jar" depends="cmlfile">
+        
+        <jar destfile="${build}/cml-${now}.jar">
+             
+             <fileset dir="${cmlfiledir}">
+                
+             </fileset>
+               <!-- <include name="${classes_web}/oscar/oscarDB/**"/>                
+                    <include name="${classes_web}/oscar/util/**"/>                
+                    <include name="${classes_web}/oscar/Misc.class"/>                -->
+            <!--</fileset>-->
+            <manifest>
+                <attribute name="Built-By" value="oscarmcmaster"/>
+            </manifest>
+        </jar>
+</target>
+
 
  <taskdef file="tomcatTasks.properties">
     <classpath>
