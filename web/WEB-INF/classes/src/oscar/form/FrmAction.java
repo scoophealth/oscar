@@ -28,6 +28,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
+
 public final class FrmAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -77,6 +80,9 @@ public final class FrmAction extends Action {
 
             props.setProperty("provider_no", (String) request.getSession().getAttribute("user"));
             newID = rec.saveFormRecord(props);
+            String ip = request.getRemoteAddr();
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, request
+                    .getParameter("form_class"), "" + newID, ip);
 
             String strAction = rec.findActionValue(request.getParameter("submit"));
             ActionForward af = mapping.findForward(strAction);
