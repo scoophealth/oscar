@@ -332,6 +332,40 @@ public class EfmDataOpt {
     }                   
     return temp;
   }
+   
+  public String getPhone(int demographic_no){
+    String temp = "";
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no);
+      
+      if (rs.next()){
+        temp = rs.getString("phone");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }
+    return temp;
+  }
+  
+  public String getPhone2(int demographic_no){
+    String temp = "";
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no);
+      
+      if (rs.next()){
+        temp = rs.getString("phone2");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }
+    return temp;
+  }
   
   public String getClinicName(){
     String temp = ""; 
