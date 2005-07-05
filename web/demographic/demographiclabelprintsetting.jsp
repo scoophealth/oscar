@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -32,6 +32,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+  "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@ include file="../admin/dbconnection.jsp" %>
 <%//operation available to the client - dboperation
@@ -50,8 +53,7 @@
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
-<script language="JavaScript">
-<!--
+<script  type="text/javascript">
 function setfocus() {
   this.focus();
 }
@@ -68,8 +70,40 @@ function checkTotal() {
   if(total>7) return false;
   return true;
 }
-//-->
-</script>
+
+function ClipBoard1(spanId) {
+	document.getElementById("text1").innerText = document.getElementById(spanId).innerText;
+	//alert("cl ip");
+	Copied = document.getElementById("text1").createTextRange();
+	//alert("clip");
+	Copied.execCommand("RemoveFormat");
+	Copied.execCommand("Copy");
+}
+function ClipBoard2() {
+	document.getElementById("text1").innerText = document.getElementById("copytext").innerText;
+	//alert("cl ip");
+	Copied = document.getElementById("text1").createTextRange();
+	//alert("clip");
+	Copied.execCommand("RemoveFormat");
+	Copied.execCommand("Copy");
+}
+function ClipBoard3() {
+	document.getElementById("text1").innerText = document.getElementById("copytext").innerText;
+	//alert("cl ip");
+	Copied = document.getElementById("text1").createTextRange();
+	//alert("clip");
+	Copied.execCommand("RemoveFormat");
+	Copied.execCommand("Copy");
+}
+function ClipBoard4() {
+	document.getElementById("text1").innerText = document.getElementById("copytext").innerText;
+	//alert("cl ip");
+	Copied = document.getElementById("text1").createTextRange();
+	//alert("clip");
+	Copied.execCommand("RemoveFormat");
+	Copied.execCommand("Copy");
+}
+</SCRIPT>
 </head>
 <body  background="../images/gray_bg.jpg" bgcolor="white" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
@@ -90,7 +124,7 @@ function checkTotal() {
   while (rs.next()) {
     providername = rs.getString("last_name") +","+ rs.getString("first_name");
   }
- 
+
   rs = apptMainBean.queryResults(param, "search_detail");
   if(rs==null) {
 %><bean:message key="demographic.demographiclabelprintsetting.msgFailed"/><%
@@ -101,7 +135,7 @@ function checkTotal() {
       dob_month = Integer.parseInt(rs.getString("month_of_birth"));
       dob_date = Integer.parseInt(rs.getString("date_of_birth"));
       if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
-      
+
       first_name = Misc.JSEscape(rs.getString("first_name"));
       last_name = Misc.JSEscape(rs.getString("last_name"));
       chart_no = rs.getString("chart_no");
@@ -113,7 +147,7 @@ function checkTotal() {
       phone2 = rs.getString("phone2");
       dob=dob_year+"/"+dob_month+"/"+dob_date;
       sex = rs.getString("sex");
-      hin = "HN "+ rs.getString("hc_type") +" "+rs.getString("hin")+ " " +rs.getString("ver");      
+      hin = "HN "+ rs.getString("hc_type") +" "+rs.getString("hin")+ " " +rs.getString("ver");
     }
   }
   phone2 = phone2.equals("")?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
@@ -121,10 +155,14 @@ function checkTotal() {
   String label2 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "  &nbsp;" +chart_no+ "</b><br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br>Home: " +phone+ "<br>" +dob+ " " +sex+ "<br>" +hin+ "<br>Bus:" +phone2+ "Dr."+  providername+ "<br></font>";
   String label3 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +last_name+ ", " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";
 */
-%> 
+%>
 
-<table border="0" cellpadding="1" cellspacing="0" width="100%">
   <form method="post" name="labelprint" action="demographicprintdemographic.jsp">
+<table border="0" cellpadding="1" cellspacing="0" width="100%">
+    <tr bgcolor="gold" align="center">
+      <td><bean:message key="demographic.demographiclabelprintsetting.msgLabel"/></td>
+      <td><bean:message key="demographic.demographiclabelprintsetting.msgNumeberOfLabel"/>
+      <td><bean:message key="demographic.demographiclabelprintsetting.msgLocation"/>
     <input type="hidden" name="address" value="<%=address%>" >
     <input type="hidden" name="chart_no" value="<%=chart_no%>" >
     <input type="hidden" name="city" value="<%=city%>">
@@ -138,31 +176,30 @@ function checkTotal() {
     <input type="hidden" name="providername" value="<%=providername%>">
     <input type="hidden" name="province" value="<%=province%>">
     <input type="hidden" name="sex" value="<%=sex%>">
-    <tr bgcolor="gold" align="center"> 
-      <td><bean:message key="demographic.demographiclabelprintsetting.msgLabel"/></td>
-      <td><bean:message key="demographic.demographiclabelprintsetting.msgNumeberOfLabel"/>
-      <td><bean:message key="demographic.demographiclabelprintsetting.msgLocation"/></td>
+	  </td>
     </tr>
-    <tr> 
+    <tr>
       <td align="center"><br>
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-          <tr> 
+          <tr>
             <%--<td><%=label1%></td>--%>
             <td>
-             <font face="Courier New, Courier, mono" size="2"><b><%=last_name%>,&nbsp;<%=first_name%></b><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=hin%><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=dob%>&nbsp;<%=sex%><br><br><b><%=last_name%>,&nbsp;<%=first_name%></b><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=hin%><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=dob%>&nbsp;<%=sex%><br></font>
+             <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext1">
+			 <b><%=last_name%>,&nbsp;<%=first_name%></b><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=hin%><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=dob%>&nbsp;<%=sex%><br><br><b><%=last_name%>,&nbsp;<%=first_name%></b><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=hin%><br>&nbsp;&nbsp;&nbsp;&nbsp;<%=dob%>&nbsp;<%=sex%><br></span></font>
             </td>
           </tr>
         </table>
       </td>
       <td align="center" bgcolor="#CCCCCC"> <a href="#" onClick="onNewPatient()"><bean:message key="demographic.demographiclabelprintsetting.btnNewPatientLabel"/></a><br>
+		<input type="button" onClick="ClipBoard1('copytext1');" value="Copy to Clipboard" />
         <input type="checkbox" name="label1checkbox" value="checked" >
         <input type="text" name="label1no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.1no","1") %>"/>
       </td>
-      <td bgcolor="#999999" rowspan="3" valign="middle" align="right"> 
+      <td bgcolor="#999999" rowspan="3" valign="middle" align="right">
         <p><bean:message key="demographic.demographiclabelprintsetting.formLeft"/>:
           <input type="text" name="left" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.left","200") %>"/>
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
-        <p><bean:message key="demographic.demographiclabelprintsetting.formTop"/>: 
+        <p><bean:message key="demographic.demographiclabelprintsetting.formTop"/>:
           <input type="text" name="top" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.top","0")%>"/>
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
         <p><bean:message key="demographic.demographiclabelprintsetting.formHeight"/>:
@@ -173,51 +210,74 @@ function checkTotal() {
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
       </td>
     </tr>
-    <tr> 
+    <tr>
       <td align="center"><br>
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-          <tr> 
+          <tr>
             <%--<td><%=label2%></td>--%>
             <td>
-            <font face="Courier New, Courier, mono" size="2"><b><%=last_name%>,&nbsp;<%=first_name%>&nbsp;<%=chart_no%></b><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br><bean:message key="demographic.demographiclabelprintsetting.msgHome"/>:&nbsp;<%=phone%><br><%=dob%>&nbsp;<%=sex%><br><%=hin%><br><bean:message key="demographic.demographiclabelprintsetting.msgBus"/>:<%=phone2%>&nbsp;<bean:message key="demographic.demographiclabelprintsetting.msgDr"/>&nbsp;<%=providername%><br></font>
+            <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext2">
+			<b><%=last_name%>,&nbsp;<%=first_name%>&nbsp;<%=chart_no%></b><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br><bean:message key="demographic.demographiclabelprintsetting.msgHome"/>:&nbsp;<%=phone%><br><%=dob%>&nbsp;<%=sex%><br><%=hin%><br><bean:message key="demographic.demographiclabelprintsetting.msgBus"/>:<%=phone2%>&nbsp;<bean:message key="demographic.demographiclabelprintsetting.msgDr"/>&nbsp;<%=providername%><br></span></font>
             </td>
           </tr>
         </table>
       </td>
-      <td align="center" bgcolor="#CCCCCC"> 
+      <td align="center" bgcolor="#CCCCCC">
+		<input type="button" onClick="ClipBoard1('copytext2');" value="Copy to Clipboard" />
         <input type="checkbox" name="label2checkbox" value="checked" checked>
         <input type="text" name="label2no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.2no","1") %>">
       </td>
     </tr>
-    <tr> 
+    <tr>
       <td align="center"><br>
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-          <tr> 
+          <tr>
 <%--            <td><%=label3%></td>
 --%>
             <td>
-            <font face="Courier New, Courier, mono" size="2"><%=last_name%>,&nbsp;<%=first_name%><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br></font>
+            <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext3">
+			<%=last_name%>,&nbsp;<%=first_name%><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br></span></font>
             </td>
           </tr>
         </table>
         <br>
       </td>
-      <td align="center" bgcolor="#CCCCCC"> 
+      <td align="center" bgcolor="#CCCCCC">
+		<input type="button" onClick="ClipBoard1('copytext3');" value="Copy to Clipboard" />
         <input type="checkbox" name="label3checkbox" value="checked" >
         <input type="text" name="label3no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.3no","1") %>">
       </td>
     </tr>
-    <tr bgcolor="#486ebd"> 
-      <td align="center" colspan="3"> 
-        <input type="submit" name="Submit" value="<bean:message key='demographic.demographiclabelprintsetting.btnPrintPreviewPrint'/>">
+    <tr>
+      <td align="center"><br>
+        <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+          <tr>
+            <td>
+            <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext4"> <%=first_name%>&nbsp;<%=last_name%><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br></span></font>
+            </td>
+          </tr>
+        </table>
+        <br>
+      </td>
+      <td align="center" bgcolor="#CCCCCC">
+		<TEXTAREA ID="text1" STYLE="display:none;">
+		</TEXTAREA>
+		<input type="button" onClick="ClipBoard1('copytext4');" value="Copy to Clipboard" />
+        <input type="checkbox" name="label3checkbox" value="checked" >
+        <input type="text" name="label4no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.4no","1") %>">
+      </td>
+    </tr>
+    <tr bgcolor="#486ebd">
+      <td align="center" colspan="3">
+		<input type="submit" name="Submit" value="<bean:message key='demographic.demographiclabelprintsetting.btnPrintPreviewPrint'/>">
         <input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);">
       </td>
     </tr>
 <%--    <input type="hidden" name="label1" value='<%=label1%>'>
     <input type="hidden" name="label2" value='<%=label2%>'>
     <input type="hidden" name="label3" value='<%=label3%>'>--%>
-  </form>
 </table>
+  </form>
 
 </body>
 </html:html>
