@@ -115,6 +115,7 @@ String allergyId = (String) request.getAttribute("allergyId");
                                 <html:option value="1">Mild</html:option>
                                 <html:option value="2">Moderate</html:option>
                                 <html:option value="3">Severe</html:option>
+                                <html:option value="4">Unknown</html:option>
                             </html:select>
                           </td>
                           
@@ -128,6 +129,7 @@ String allergyId = (String) request.getAttribute("allergyId");
                                 <html:option value="1">Immediate</html:option>
                                 <html:option value="2">Gradual</html:option>
                                 <html:option value="3">Slow</html:option>
+                                <html:option value="4">Unknown</html:option>
                             </html:select>
                           </td>
                           
