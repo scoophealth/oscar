@@ -257,7 +257,7 @@ function checkHin() {
 	var hcType = document.adddemographic.hc_type.value;
 	//alert(hcType);
 	//check OHIP, no others
-	if(hcType="ON") {
+	if(hcType=="ON") {
 		//alert(hin.length + " | " + hin.charAt(1));
 		if(checkTypeNum(hin) && hin.length==10) {
 		    typeInOK = mod10Check(hin);
