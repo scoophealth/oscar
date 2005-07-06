@@ -447,7 +447,8 @@ public class EfmDataOpt {
       ResultSet rs = db.GetSQL("select * from clinic") ;
 
       if (rs.next()){
-        temp = rs.getString("clinic_address");
+        temp = rs.getString("clinic_address") + ", " + rs.getString("clinic_city")
+                + ", " + rs.getString("clinic_province") + ", " + rs.getString("clinic_postal");
         rs.close();
       }
       db.CloseConn();
