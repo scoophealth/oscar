@@ -447,6 +447,23 @@ public class EfmDataOpt {
       ResultSet rs = db.GetSQL("select * from clinic") ;
 
       if (rs.next()){
+        temp = rs.getString("clinic_address");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   
+   public String getClinicAddressLineFull(){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from clinic") ;
+
+      if (rs.next()){
         temp = rs.getString("clinic_address") + ", " + rs.getString("clinic_city")
                 + ", " + rs.getString("clinic_province") + ", " + rs.getString("clinic_postal");
         rs.close();
