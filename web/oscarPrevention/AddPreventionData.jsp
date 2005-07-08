@@ -307,7 +307,7 @@ clear: left;
                    </fieldset>
                    <fieldset >
                       <legend >Comments</legend>                   
-                      <textarea name="comments" ></textarea>                   
+                      <textarea name="comments" ><%=str(((String)extraData.get("comments")),"")%></textarea>                   
                    </fieldset>                   
                </div>
                <script type="text/javascript">
