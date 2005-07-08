@@ -235,7 +235,7 @@ function checkDob() {
 		//alert(yyyy + " | " + mm + " | " + dd + " " + year + " " + month + " " +date);
 
 		var young = new Date(year,month,date);
-		var old = new Date(1900,01,01);
+		var old = new Date(1800,01,01);
 		//alert(check_date.getTime() + " | " + young.getTime() + " | " + old.getTime());
 		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
 		    typeInOK = true;
