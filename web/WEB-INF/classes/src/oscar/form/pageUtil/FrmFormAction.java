@@ -271,7 +271,7 @@ public class FrmFormAction extends Action {
 //                                + "Diagnosis: \n \t" + (String) frm.getValue("diagnosisVT") + "\n\n"
 //                                + "[end of Vascular Tracker] \n";
             //request.setAttribute("diagnosisVT", org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(toEChart));
-            request.setAttribute("diagnosisVT", "");
+            request.setAttribute("diagnosisVT", "See Vascular Tracker Template");
             return (new ActionForward("/form/formSaveAndExit.jsp"));
         }
         EctFormData fData = new EctFormData();
