@@ -1270,3 +1270,62 @@ INSERT INTO validations(name, regularExp) VALUES ("Yes/No","YES|yes|Yes|Y|NO|no|
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 5', 5, 1, 1);
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 4', 4, 1, 1);
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 3', 3, 1, 1);
+
+insert into `secRole` values(1, 'receptionist');
+insert into `secRole` values(2, 'doctor');
+insert into `secRole` values(3, 'admin');
+
+insert into `secRole` values(4, 'locum');
+insert into `secRole` values(5, 'nurse');
+
+insert into `secUserRole` values('999998', 'doctor');
+insert into `secUserRole` values('999998', 'admin');
+insert into `secUserRole` values('999997', 'receptionist');
+
+insert into `secPrivilege` values(1, '*', 'All rights.');
+insert into `secPrivilege` values(\N, 'r', 'Read');
+insert into `secPrivilege` values(\N, 'w', 'Write');
+insert into `secPrivilege` values(\N, 'd', 'Delete');
+insert into `secPrivilege` values(\N, 'o', 'No rights.');
+insert into `secPrivilege` values(\N, 'or', 'Only Read');
+insert into `secPrivilege` values(\N, 'ow', 'Only Write');
+insert into `secPrivilege` values(\N, 'od', 'Only Delete');
+
+insert into `secObjectName` values('_appointment');
+insert into `secObjectName` values('_admin');
+insert into `secObjectName` values('_eChart');
+insert into `secObjectName` values('_demographic');
+insert into `secObjectName` values('_appointment.doctorLink');
+insert into `secObjectName` values('_eChart.verifyButton');
+insert into `secObjectName` values('_billing');
+insert into `secObjectName` values('_tasks');
+
+insert into `secObjPrivilege` values('receptionist', '_appointment', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('receptionist', '_demographic', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('receptionist', '_billing', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_appointment', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_eChart', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_appointment.doctorLink', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_eChart.verifyButton', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_demographic', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_billing', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_tasks', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('admin', '_admin', '|*|', 0, '999998');
+
+-- for role locum
+insert into `secObjPrivilege` values('locum', '_appointment', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('locum', '_eChart', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('locum', '_appointment.doctorLink', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('locum', '_eChart.verifyButton', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('locum', '_demographic', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('locum', '_billing', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('locum', '_tasks', '|*|', 0, '999998');
+-- for role nurse
+insert into `secObjPrivilege` values('nurse', '_appointment', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('nurse', '_eChart', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('nurse', '_appointment.doctorLink', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('nurse', '_demographic', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('nurse', '_billing', '|*|', 0, '999998');
+insert into `secObjPrivilege` values('nurse', '_tasks', '|*|', 0, '999998');
+
+
