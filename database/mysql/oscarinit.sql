@@ -5869,7 +5869,7 @@ CREATE TABLE `log` (
   `provider_no` varchar(10) NOT NULL default '',
   `action` varchar(20) default NULL,
   `content` varchar(80) NOT NULL default '',
-  `contentId` varchar(10) default NULL,
+  `contentId` varchar(80) default NULL,
   `ip` varchar(30) default NULL,
   PRIMARY KEY  (`dateTime`, `provider_no`),
   INDEX `action` (`action`),
@@ -5900,6 +5900,41 @@ CREATE TABLE preventionsExt (
   val text,
   PRIMARY KEY  (`id`)
 );
+
+CREATE TABLE `secRole` (
+  `role_no` int(3) NOT NULL auto_increment,
+  `role_name` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`role_no`),
+  UNIQUE KEY `role_name` (`role_name`)
+) 
+
+CREATE TABLE `secUserRole` (
+  `provider_no` varchar(6) NOT NULL default '',
+  `role_name` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`provider_no`, `role_name`)
+) 
+
+CREATE TABLE `secPrivilege` (
+  `id` int(2) NOT NULL auto_increment,
+  `privilege` varchar(5) NOT NULL default '0',
+  `description` varchar(80) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `privilege` (`privilege`)
+) 
+
+CREATE TABLE `secObjPrivilege` (
+  `roleUserGroup` varchar(30) NOT NULL default '',
+  `objectName` varchar(100) NOT NULL default '',
+  `privilege` varchar(100) NOT NULL default '|0|',
+  `priority` int(2) default '0',
+  `provider_no` varchar(6) default NULL,
+  PRIMARY KEY  (`roleUserGroup`, `objectName`)
+) 
+
+CREATE TABLE `secObjectName` (
+  `objectName` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`objectName`)
+) 
 
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
