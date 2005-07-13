@@ -500,6 +500,15 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <bean:message key="admin.admin.misc"/>
         </th>
       </tr>
+      
+      <tr bgcolor="#EEEEFF">
+        <td>
+          <a href="#" ONCLICK="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">
+            Demographic Export <!-- I18N --> 
+          </a>
+        </td>
+      </tr>
+      
       <tr bgcolor="#EEEEFF">
         <td>
           <a href="#" ONCLICK="popupPage(550,800,'updatedemographicprovider.jsp');return false;">
