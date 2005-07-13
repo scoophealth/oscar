@@ -418,6 +418,27 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
+        <td width="300"><a href="../oscarReport/demographicSetEdit.jsp" target="_blank">Demographic Set Edit</a></td>                
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    
+    
+    
+    <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
+        <td width="300"><a href="../oscarPrevention/PreventionReporting.jsp" target="_blank">Prevention Report i18n</a></td>                
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
         <td width="300"><a href=# onClick="popupPage(600,750,'demographicstudyreport.jsp')" ><bean:message key="report.reportindex.btnDemographicStudyList"/></a></td>
         <td></td>
         <td></td>
