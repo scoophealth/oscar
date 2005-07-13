@@ -48,6 +48,7 @@ public class RxPrescriptionData {
                 prescription = new Prescription(drugId,
                 rs.getString("provider_no"), rs.getInt("demographic_no"));
                 prescription.setRxDate(rs.getDate("rx_date"));
+                prescription.setRxCreatedDate(rs.getDate("create_date"));
                 prescription.setEndDate(rs.getDate("end_date"));
                 prescription.setBrandName(rs.getString("BN"));
                 prescription.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
@@ -166,6 +167,7 @@ public class RxPrescriptionData {
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
+                p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
                 p.setBrandName(rs.getString("BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
@@ -223,6 +225,7 @@ public class RxPrescriptionData {
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
+                p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
                 p.setBrandName(rs.getString("BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
@@ -318,6 +321,7 @@ public class RxPrescriptionData {
                 if(b) {
                     p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
                     p.setRxDate(rs.getDate("rx_date"));
+                    p.setRxCreatedDate(rs.getDate("create_date"));
                     p.setEndDate(rs.getDate("end_date"));
                     p.setBrandName(rs.getString("BN"));
                     p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
@@ -383,6 +387,7 @@ public class RxPrescriptionData {
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
                 p.setRxDate(rs.getDate("rx_date"));
+                p.setRxCreatedDate(rs.getDate("create_date"));
                 p.setEndDate(rs.getDate("end_date"));
                 p.setBrandName(rs.getString("BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
@@ -612,6 +617,7 @@ public class Prescription {
     String providerNo;
     int demographicNo;
     java.util.Date rxDate = null;
+    java.util.Date rxCreatedDate = null;
     java.util.Date endDate = null;
     
     String BN = null;       //regular
@@ -976,6 +982,25 @@ public class Prescription {
         return ret;
     }
     
+    
+    public String getDosageDisplay(){
+       String ret = "";
+       if(this.getTakeMin() != this.getTakeMax()){
+          ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
+       }else{
+          ret += this.getTakeMinString();
+       }            
+       return ret;
+    }
+    
+    public String getFreqDisplay(){
+       String ret = this.getFrequencyCode();            
+       if(this.getPrn()){
+          ret += " PRN ";
+       }
+       return ret;
+    }
+    
     public String getRxDisplay(){
         try{
             String ret;
@@ -1328,6 +1353,22 @@ public class Prescription {
      */
     public void setRoute(java.lang.String route) {
        this.route = route;
+    }
+    
+    /**
+     * Getter for property rxCreatedDate.
+     * @return Value of property rxCreatedDate.
+     */
+    public java.util.Date getRxCreatedDate() {
+       return rxCreatedDate;
+    }
+    
+    /**
+     * Setter for property rxCreatedDate.
+     * @param rxCreatedDate New value of property rxCreatedDate.
+     */
+    public void setRxCreatedDate(java.util.Date rxCreatedDate) {
+       this.rxCreatedDate = rxCreatedDate;
     }
     
 }
