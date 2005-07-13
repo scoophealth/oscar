@@ -5891,7 +5891,7 @@ CREATE TABLE preventions (
   never char(1) default '0',
   creator int(10) default NULL,
   PRIMARY KEY  (`id`)
-);
+) ;
 
 CREATE TABLE preventionsExt (
   id int(10) NOT NULL auto_increment,
@@ -5899,20 +5899,20 @@ CREATE TABLE preventionsExt (
   keyval varchar(20) default NULL,
   val text,
   PRIMARY KEY  (`id`)
-);
+) ;
 
 CREATE TABLE `secRole` (
   `role_no` int(3) NOT NULL auto_increment,
   `role_name` varchar(30) NOT NULL default '',
   PRIMARY KEY  (`role_no`),
   UNIQUE KEY `role_name` (`role_name`)
-) 
+) ;
 
 CREATE TABLE `secUserRole` (
   `provider_no` varchar(6) NOT NULL default '',
   `role_name` varchar(30) NOT NULL default '',
   PRIMARY KEY  (`provider_no`, `role_name`)
-) 
+) ;
 
 CREATE TABLE `secPrivilege` (
   `id` int(2) NOT NULL auto_increment,
@@ -5920,7 +5920,7 @@ CREATE TABLE `secPrivilege` (
   `description` varchar(80) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `privilege` (`privilege`)
-) 
+) ;
 
 CREATE TABLE `secObjPrivilege` (
   `roleUserGroup` varchar(30) NOT NULL default '',
@@ -5929,12 +5929,12 @@ CREATE TABLE `secObjPrivilege` (
   `priority` int(2) default '0',
   `provider_no` varchar(6) default NULL,
   PRIMARY KEY  (`roleUserGroup`, `objectName`)
-) 
+) ;
 
 CREATE TABLE `secObjectName` (
   `objectName` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`objectName`)
-) 
+) ;
 
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
