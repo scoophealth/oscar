@@ -169,6 +169,16 @@ width: 90px;
 br{
 clear: left;
 }
+
+table.ele {
+   
+   border-collapse:collapse;
+}
+
+table.ele td{
+    border:1px solid grey;
+    padding:2px;
+}
 </style>
 </head>
 
@@ -240,20 +250,20 @@ clear: left;
                   Date asDate = (Date) request.getAttribute("asDate");
                   if (asDate == null){ asDate = Calendar.getInstance().getTime(); }
                   if (list != null ){ %>
-              <table border=1 width="80%" style="font-size:medium;">
+              <table class="ele" width="80%">
                        <tr>
                           <td>DemoNo</td>
                           <td>Age as of <br/><%=UtilDateUtilities.DateToString(asDate)%></td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
+                          <td>Sex</td>
+                          <td>Lastname, Firstname</td>
                           <%if (type != null ){ %>
                           <td>Guardian</td>
-                          <%}%>                          
+                          <%}%>
                           <td>&nbsp;</td>
                           <td>Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
                           <td>Up to date or due: <%=done%> = <%=percentage %> %</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
+                          <td>Since Last Procedure Date</td>
+                          <td>Last Procedure Date</td>
                           
                        </tr>
                        <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
