@@ -1,0 +1,305 @@
+package oscar.oscarReport.data;
+import oscar.oscarReport.pageUtil.*;
+import oscar.oscarDB.DBHandler;
+import java.sql.*;
+import oscar.util.*;
+
+public class RptDemographicQueryBuilder {
+
+
+    int theWhereFlag;
+    int theFirstFlag;
+    StringBuffer stringBuffer = null;
+
+    public void whereClause(){
+        if (stringBuffer != null){
+            if (theWhereFlag == 0){
+            stringBuffer.append(" where ");
+            theWhereFlag = 1;
+            }
+        }
+    }
+
+    public void firstClause(){
+        if (theFirstFlag != 0){
+                stringBuffer.append(" and ");
+                theFirstFlag = 1 ;
+           }
+    }
+
+    public RptDemographicQueryBuilder() {
+    }
+
+    public java.util.ArrayList buildQuery(RptDemographicReportForm frm){
+
+
+        String[] select = frm.getSelect();
+        stringBuffer =  new StringBuffer("select " );
+
+        String ageStyle         = frm.getAgeStyle();
+        String yearStyle        = frm.getAge();
+        String startYear        = frm.getStartYear();
+        String endYear          = frm.getEndYear();
+        String[] rosterStatus   = frm.getRosterStatus();
+        String[] patientStatus  = frm.getPatientStatus();
+        String[] providers      = frm.getProviderNo();
+
+        String firstName        = frm.getFirstName();
+        String lastName         = frm.getLastName();
+        String sex              = frm.getSex();
+        String queryName        = frm.getQueryName();
+
+        String orderBy          = frm.getOrderBy();
+        String limit            = frm.getResultNum();
+        
+        String asofDate         = frm.getAsofDate();
+        
+        if (UtilDateUtilities.getDateFromString(asofDate,"yyyy-MM-dd") == null){
+           asofDate = "CURRENT_DATE";
+        }else{
+           asofDate = "'"+asofDate+"'";
+        }
+        
+       
+
+        RptDemographicColumnNames demoCols = new RptDemographicColumnNames();
+
+        oscar.oscarMessenger.util.MsgStringQuote s = new oscar.oscarMessenger.util.MsgStringQuote();
+        if (firstName != null ){
+            firstName = firstName.trim();
+        }
+
+        if (lastName != null ){
+            lastName = lastName.trim();
+        }
+
+        if (sex != null){
+            sex = sex.trim();
+        }
+
+        theWhereFlag = 0;
+        theFirstFlag = 0;
+
+
+
+        for (int i = 0; i < select.length ; i++){
+            if (i == (select.length - 1)){
+                stringBuffer.append(" "+select[i]+" ");
+            }else{
+                stringBuffer.append(" "+select[i]+", ");
+            }
+
+        }
+
+        stringBuffer.append(" from demographic ");
+        int yStyle= 0;
+        try{
+            yStyle = Integer.parseInt(yearStyle);
+        }catch (Exception e){}
+
+       // value="0"> nothing specified
+       // value="1">born before
+       // value="2">born after
+       // value="3">born in
+       // value="4">born between
+
+        /*switch (yStyle){
+            case 1:
+                whereClause();
+                stringBuffer.append(" ( year_of_birth < "+startYear+"  )");
+                theFirstFlag = 1;
+                break;
+            case 2:
+                whereClause();
+                stringBuffer.append(" ( year_of_birth > "+startYear+"  )");
+                theFirstFlag = 1;
+                break;
+            case 3:
+                whereClause();
+                stringBuffer.append(" ( year_of_birth = "+startYear+"  )");
+                theFirstFlag = 1;
+                break;
+            case 4:
+                whereClause();
+                stringBuffer.append(" ( year_of_birth > "+startYear+" and year_of_birth < "+endYear+" ) ");
+                theFirstFlag = 1;
+                break;
+        }*/
+       // value="0"> nothing specified
+       // value="1">born before
+       // value="2">born after
+       // value="3">born in
+       // value="4">born between
+
+
+        switch (yStyle){
+            case 1:
+                whereClause();
+                if (ageStyle.equals("1")){
+                   stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+startYear+" ) ");
+                }else{
+                   stringBuffer.append(" ( YEAR("+asofDate+") - year_of_birth < "+startYear+"  ) ");
+                }
+                theFirstFlag = 1;
+                break;
+            case 2:
+                whereClause();
+                if (ageStyle.equals("1")){
+                   stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" ) ");
+                }else{
+                   stringBuffer.append(" ( YEAR("+asofDate+") - year_of_birth > "+startYear+"  ) ");
+                }
+                theFirstFlag = 1;
+                break;
+            case 3:
+                whereClause();
+                if (ageStyle.equals("1")){
+                  stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) =  "+startYear+" ) ");
+                }else{
+                  stringBuffer.append(" ( YEAR("+asofDate+") - year_of_birth = "+startYear+"  ) ");
+                }
+                theFirstFlag = 1;
+                break;
+            case 4:
+                whereClause();
+                if (ageStyle.equals("1")){
+                  stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" and ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
+                }else{
+                  stringBuffer.append(" ( YEAR("+asofDate+") - year_of_birth > "+startYear+"  and YEAR("+asofDate+") - year_of_birth < "+endYear+"  ) ");
+                }
+                theFirstFlag = 1;
+                break;
+        }
+
+
+
+        if ( rosterStatus != null ){
+            whereClause();
+            firstClause();
+            stringBuffer.append(" ( ");
+            for (int i = 0; i < rosterStatus.length ; i++){
+                theFirstFlag = 1;
+                if (i == (rosterStatus.length - 1)){
+                    stringBuffer.append(" roster_status = '"+rosterStatus[i]+"' )");
+                }else{
+                    stringBuffer.append(" roster_status = '"+rosterStatus[i]+"' or  ");
+                }
+            }
+        }
+
+        if ( patientStatus != null ){
+            whereClause();
+            firstClause();
+            stringBuffer.append(" ( ");
+            for (int i = 0; i < patientStatus.length ; i++){
+                theFirstFlag = 1;
+                if (i == (patientStatus.length - 1)){
+                    stringBuffer.append(" patient_status = '"+patientStatus[i]+"' )");
+                }else{
+                    stringBuffer.append(" patient_status '"+patientStatus[i]+"' or  ");
+                }
+            }
+        }
+
+
+        if ( providers != null ){
+            whereClause();
+            firstClause();
+            stringBuffer.append(" ( ");
+            for (int i = 0; i < providers.length ; i++){
+                theFirstFlag = 1;
+                if (i == (providers.length - 1)){
+                    stringBuffer.append(" provider_no = '"+providers[i]+"' )");
+                }else{
+                    stringBuffer.append(" provider_no '"+providers[i]+"' or  ");
+                }
+            }
+        }
+
+        if (lastName != null && lastName.length() != 0 ){
+            System.out.println("last name = "+lastName+"<size = "+lastName.length());
+            whereClause();
+            firstClause();
+            theFirstFlag = 1;
+            stringBuffer.append(" ( ");
+            stringBuffer.append(" last_name like '"+s.q(lastName)+"%'");
+            stringBuffer.append(" ) ");
+        }
+
+        if (firstName != null && firstName.length() != 0 ){
+            whereClause();
+            firstClause();
+            theFirstFlag = 1;
+            stringBuffer.append(" ( ");
+            stringBuffer.append(" first_name like '"+s.q(firstName)+"%'");
+            stringBuffer.append(" ) ");
+        }
+
+       yStyle = 0;
+       try{
+            yStyle = Integer.parseInt(sex);
+       }catch (Exception e){}
+       switch (yStyle){
+            case 1:
+                whereClause();
+                firstClause();
+                stringBuffer.append(" ( sex =  'F'  )");
+                theFirstFlag = 1;
+                break;
+            case 2:
+                whereClause();
+                firstClause();
+                stringBuffer.append(" ( sex = 'M' )");
+                theFirstFlag = 1;
+                break;
+
+       }
+
+
+       if (orderBy != null && orderBy.length() != 0 ){
+            if (!orderBy.equals("0")){
+                stringBuffer.append(" order by "+ demoCols.getColumnName(orderBy)+" ");
+            }
+       }
+
+       if (limit != null && limit.length() != 0 ){
+            if (!limit.equals("0")){
+                try{
+                    Integer.parseInt(limit);
+                    stringBuffer.append(" limit "+limit+" ");
+                }
+                catch(Exception u){System.out.println("limit was not numeric >"+limit+"<");}
+            }
+       }
+
+
+
+        System.out.println("SEARCH SQL STATEMENT \n"+stringBuffer.toString());
+        java.util.ArrayList searchedArray = new java.util.ArrayList();
+        try{
+              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              java.sql.ResultSet rs;
+              rs = db.GetSQL(stringBuffer.toString());
+
+              while (rs.next()) {
+
+                java.util.ArrayList tempArr  = new java.util.ArrayList();
+                for (int i = 0; i < select.length ; i++){
+                   tempArr.add( rs.getString(select[i]) );
+                }
+                searchedArray.add(tempArr);
+
+              }
+
+
+
+              rs.close();
+              db.CloseConn();
+        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+
+
+    return searchedArray;
+    }
+
+
+}
