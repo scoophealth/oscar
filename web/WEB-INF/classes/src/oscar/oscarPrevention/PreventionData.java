@@ -169,6 +169,11 @@ public class PreventionData {
       deletePreventionData( id);
       insertPreventionData(creator,demoNo, date, providerNo, providerName, preventionType,refused,nextDate,neverWarn,list);
    }
+   
+   public ArrayList getPreventionData(String demoNo){
+      return getPreventionData("%",demoNo);
+   }
+   
    public ArrayList getPreventionData(String preventionType,String demoNo){
       ArrayList list = new ArrayList();
       
@@ -178,13 +183,14 @@ public class PreventionData {
       try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "Select * from preventions where  demographic_no = '"+demoNo+"' and prevention_type = '"+preventionType+"' and deleted != 1 order by prevention_date" ;            
+            String sql = "Select * from preventions where  demographic_no = '"+demoNo+"' and prevention_type like '"+preventionType+"' and deleted != 1 order by prevention_date" ;            
             System.out.println(sql);            
             rs = db.GetSQL(sql);
             while (rs.next()){
                Hashtable h = new Hashtable();
-               h.put("id", rs.getString("id"));
+               h.put("id", rs.getString("id"));               
                h.put("refused",rs.getString("refused"));
+               h.put("type",rs.getString("prevention_type"));
                System.out.println("id set to "+rs.getString("id"));
                h.put("prevention_date",rs.getString("prevention_date"));
                java.util.Date date = null;
