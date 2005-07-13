@@ -23,6 +23,7 @@
  */
 package oscar.oscarDemographic.data;
 
+import java.sql.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.*;
@@ -58,7 +59,87 @@ public class DemographicData {
         } 
        return date;
     }
-     
+
+    
+    ////
+    public int numDemographicsWithHIN(String hin){
+       int num = 0; 
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT count(*) as c FROM demographic WHERE hin = '" + hin +"'";                                        
+            rs = db.GetSQL(sql);            
+            if (rs.next()) {                      
+               num = rs.getInt("c");               
+            }            
+            rs.close();
+            db.CloseConn();            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
+       return num;
+    }
+    
+    public boolean isUniqueHin(String hin){
+       return numDemographicsWithHIN(hin) == 0;
+    }
+    
+    public ArrayList getDemographicWithHIN(String hin) {        
+       ArrayList list = new ArrayList();
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT demographic_no FROM demographic WHERE hin = '" + hin +"'";                                        
+            //System.out.println("sql "+sql);
+            rs = db.GetSQL(sql);            
+            while (rs.next()) {                      
+               String demoNo =  rs.getString("demographic_no");
+               //System.out.println("same hin as "+demoNo);
+               list.add(getDemographic(demoNo));              
+            }            
+            rs.close();
+            db.CloseConn();            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
+       return list;       
+    }
+    ////
+    
+    
+    
+    
+    public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String dob) {        
+       Date bDate = UtilDateUtilities.StringToDate(dob,"yyyy-MM-dd");
+       String year_of_birth = UtilDateUtilities.DateToString(bDate,"yyyy");
+       String month_of_birth = UtilDateUtilities.DateToString(bDate,"MM");
+       String date_of_birth = UtilDateUtilities.DateToString(bDate,"dd");
+       //System.out.println("lastname "+lastname+" firstname "+firstname+" year_of_birth "+year_of_birth+" month "+month_of_birth+" date "+date_of_birth);
+       return getDemographicWithLastFirstDOB(lastname,firstname,year_of_birth,month_of_birth,date_of_birth); 
+    }
+       
+    public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth,String month_of_birth,String date_of_birth  ) {           
+       ArrayList list = new ArrayList();                          
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT demographic_no FROM demographic "
+            +" WHERE last_name like '" + lastname + "%' and first_name like '" + lastname +"%'  and year_of_birth = '"+year_of_birth+"' and month_of_birth = '"+month_of_birth+"' and date_of_birth = '"+date_of_birth+"'";                                        
+            rs = db.GetSQL(sql);            
+            while (rs.next()) {                      
+               String demoNo =  rs.getString("demographic_no");
+               //System.out.println("looks to be the same  as "+demoNo);
+               list.add(getDemographic(demoNo));              
+            }            
+            rs.close();
+            db.CloseConn();            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
+       return list;       
+    }
+    
+    
     public String getNameAgeString(String demographicNo){
        String nameage = "";
        try {
@@ -403,6 +484,15 @@ public class DemographicData {
         public String getHIN() {
             return hin + ver;
         }
+        
+        public String getJustHIN(){
+            return hin;
+        }
+        
+        public String getVersionCode(){
+            return ver;
+        }
+        
         public String getRosterStatus() {
             return roster_status;
         }
@@ -545,6 +635,167 @@ public class DemographicData {
             }
         }        
     }
+    
+    
+    
+    
+    ////////////////
+    String add_record_string ="insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" ;                                      
+    public DemographicAddResult   addDemographic(String last_name,     String  first_name,   String  address,    String  city,         String  province,
+                           String  postal,       String  phone,        String  phone2,     String  year_of_birth,String  month_of_birth,
+                           String  date_of_birth,String  hin,          String  ver,        String  roster_status,String  patient_status,
+                           String  date_joined,  String  chart_no,     String  provider_no,String  sex,          String  end_date,
+                           String  eff_date,     String  pcn_indicator,String  hc_type,    String  hc_renew_date,String  family_doctor,
+                           String  email,        String pin){
+        
+        boolean duplicateRecord = false;
+        DemographicAddResult ret = new DemographicAddResult();
+                        
+                              //  "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" },
+        
+        if (end_date != null && end_date.equals("")){
+           end_date = "0001-01-01";
+        }
+        if (eff_date != null && eff_date.equals("")){
+           eff_date = "0001-01-01";
+        }
+        if (hc_renew_date != null && hc_renew_date.equals("")){
+           hc_renew_date = "0001-01-01";
+        }
+            
+        
+        ArrayList demos = new ArrayList();
+        if (hin != null &&  !hin.trim().equals("")){
+           demos = getDemographicWithHIN(hin) ;
+        }
+        
+        //System.out.println("demos "+demos.size());
+        
+        if ( demos.size() == 0){  //Unique HIN
+           demos = null;
+           demos  = getDemographicWithLastFirstDOB(last_name, first_name ,year_of_birth,month_of_birth,date_of_birth);
+           if ( demos.size() != 0){  
+              duplicateRecord = true;
+              ret.addWarning("Patient "+last_name+", "+first_name+" DOB ("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+") exists in database. Record not added");              
+           }   
+        }else{  // Duplicate HIN
+           for ( int i = 0; i < demos.size(); i++){
+              Demographic d = (Demographic) demos.get(i);              
+              if (last_name.equalsIgnoreCase(d.getLastName()) && first_name.equalsIgnoreCase(d.getFirstName()) && year_of_birth.equals(d.getYearOfBirth()) && month_of_birth.equals(d.getMonthOfBirth()) && date_of_birth.equals(d.getDateOfBirth()) ){
+                 //DUP don't add
+                 //System.out.println("NOT ADDING becuase of dup with same hin");
+                 duplicateRecord = true;
+                 ret.addWarning("Patient "+last_name+", "+first_name+" DOB ("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+") exists in database. Record not added");
+              }else{//add without HIN
+                 //System.out.println("ADDING without him because of same hin");
+                 ret.addWarning("Patient "+last_name+", "+first_name+" DOB ("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+") was added without a HIN because it is already in use");                 
+                 hin = "";
+              }             
+           }
+        }
+        
+        demos =null;
+                                        
+        if (!duplicateRecord){
+           try{
+               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+               Connection conn = db.GetConnection();
+
+               PreparedStatement add_record = conn.prepareStatement(add_record_string);
+               add_record.setString(1,last_name);
+               add_record.setString(2,first_name); 
+               add_record.setString(3,address);
+               add_record.setString(4,city);
+               add_record.setString(5,province);
+               add_record.setString(6,postal);
+               add_record.setString(7,phone);
+               add_record.setString(8,phone2);
+               add_record.setString(9,"");
+               add_record.setString(10,"");
+               add_record.setString(11,year_of_birth);
+               add_record.setString(12,month_of_birth);
+               add_record.setString(13,date_of_birth);
+               add_record.setString(14,hin);
+               add_record.setString(15,ver);
+               add_record.setString(16,roster_status);
+               add_record.setString(17,patient_status);
+               add_record.setString(18,date_joined);
+               add_record.setString(19,chart_no);
+               add_record.setString(20,provider_no);
+               add_record.setString(21,sex);
+               add_record.setString(22,end_date);
+               add_record.setString(23,eff_date);
+               add_record.setString(24,pcn_indicator);
+               add_record.setString(25,hc_type);
+               add_record.setString(26,hc_renew_date);
+               add_record.setString(27,family_doctor);
+             
+               String outString = add_record.toString();
+               int firstmark = outString.indexOf(':');
+               //System.out.println(add_record.toString().substring(firstmark+1)+";");
+
+               add_record.executeUpdate();
+               //conn.createStatement().execute(sql
+               ResultSet rs = add_record.getGeneratedKeys();
+               if(rs.next()){
+                  ret.setAdded(true);
+                  ret.setId(""+ rs.getInt(1));
+               }
+               add_record.close();
+               rs.close();
+               db.CloseConn();
+           }catch(Exception e){
+            System.out.println("LOG ADD RECORD "+chart_no);
+            e.printStackTrace();   
+            ret = null;
+           }
+        }else{
+           System.out.println("NOT ADDED");
+        }
+        
+        return ret;
+    }
+    
+    public class DemographicAddResult{
+       ArrayList warnings =null;
+       boolean added = false;
+       String id = null;
+       
+       public void addWarning(String str){
+          //System.out.println("Adding warning "+str);
+          if (warnings == null){
+             warnings = new ArrayList();
+          }
+          warnings.add(str);
+       }       
+       public String[] getWarnings(){
+          String[] s = {};
+          if (warnings != null){
+            s = (String[]) warnings.toArray(s);
+          }
+          return s;
+       }
+       public ArrayList getWarningsCollection(){
+          if ( warnings == null){warnings = new ArrayList();}
+          return warnings;
+       }
+       
+       public String getId(){
+          return id;
+       }
+       public void setId(String id){
+          this.id = id;
+       }
+       public boolean wasAdded(){
+          return added;
+       }
+       public void setAdded(boolean b){
+          added = b;
+       }
+    }
+    
+    
+    ////////////////
     
            
 }
