@@ -5682,6 +5682,11 @@ CREATE TABLE security (
   UNIQUE user_name (user_name)
 ) TYPE=MyISAM;
 
+alter table `security` add b_RemoteLockSet boolean default '1' after pin;
+alter table `security` add b_LocalLockSet boolean default '0' after pin;
+alter table `security` add date_ExpireDate date default '2100-01-01' after pin;
+alter table `security` add b_ExpireSet boolean default '0' after pin;
+
 --
 -- Table structure for table `serviceSpecialists`
 --
