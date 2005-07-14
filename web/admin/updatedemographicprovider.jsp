@@ -1,32 +1,40 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>" >
+<%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
 
 <%
-  if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin")) response.sendRedirect("../logout.jsp");
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
+  //if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin")) response.sendRedirect("../logout.jsp");
+  //String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="updatedpBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -34,35 +42,35 @@
 <jsp:useBean id="novector" class="java.util.Vector" scope="page" />
 <%@ include file="../admin/dbconnection.jsp" %>
 <% // table demographiccust: cust1 = nurse   cust2 = resident   cust4 = midwife
-  
+
   String [][] dbQueries = new String[1][1];
   String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
-  
+
   if (strDbType.trim().equalsIgnoreCase("mysql")) {;
-  		dbQueries=new String[][] { 
-		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " }, 
-		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " }, 
-		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " }, 
-		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
-		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
-		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " }, 
-		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " }, 
-		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " }, 
+  		dbQueries=new String[][] {
+		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " },
+		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " },
+		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " },
+		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " },
+		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
+		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
+		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
+		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
+		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " },
+		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " },
 		  };
   }else if (strDbType.trim().equalsIgnoreCase("postgresql"))  {
-  		dbQueries=new String[][] { 
-		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " }, 
-		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " }, 
-		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " }, 
-		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " }, 
-		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " }, 
-		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
-		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " }, 
-		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " }, 
-		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " }, 
-		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " }, 
+  		dbQueries=new String[][] {
+		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " },
+		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " },
+		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " },
+		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " },
+		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
+		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
+		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
+		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
+		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " },
+		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " },
 		  };
   }
   String[][] responseTargets=new String[][] {  };
@@ -99,7 +107,7 @@ function setregexp2() {
 <%
   ResultSet rsgroup =null;
   rsgroup = updatedpBean.queryResults("search_provider");
- 	while (rsgroup.next()) { 
+ 	while (rsgroup.next()) {
  	  namevector.add(rsgroup.getString("provider_no"));
  	  namevector.add(rsgroup.getString("last_name")+", "+rsgroup.getString("first_name"));
  	}
@@ -119,7 +127,7 @@ function setregexp2() {
     }
     int nosize = novector.size();
     int rowsAffected = 0;
-    if(nosize != 0) { 
+    if(nosize != 0) {
       String [] param = new String[nosize+2] ;
       param[0] = request.getParameter("newcust2") ;
       param[1] = request.getParameter("oldcust2") ;
@@ -133,10 +141,10 @@ function setregexp2() {
  	  }
       }
       String instrdemo = sbtemp.toString();
-      dbQueries[0][1] = dbQueries[0][1] + "("+ instrdemo +")" ; 
-      // System.out.println( dbQueries[0][1] );    
+      dbQueries[0][1] = dbQueries[0][1] + "("+ instrdemo +")" ;
+      // System.out.println( dbQueries[0][1] );
       updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
-      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_residentmultiple");    
+      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_residentmultiple");
     } %>
     <%=rowsAffected %> <bean:message key="admin.updatedemographicprovider.msgRecords"/> <br>
 <%}
@@ -144,16 +152,16 @@ function setregexp2() {
   if(request.getParameter("update")!=null && request.getParameter("update").equals(" Submit ") ) {
     String [] param1 = new String[2] ;
     param1[0] = request.getParameter("oldcust1") ;
-    param1[1] = request.getParameter("regexp") ;    
+    param1[1] = request.getParameter("regexp") ;
     rsgroup = updatedpBean.queryResults(param1, "select_demoname1");
 
-    while (rsgroup.next()) { 
+    while (rsgroup.next()) {
  	    novector.add(rsgroup.getString("demographic_no"));
     }
     int nosize = novector.size();
     int rowsAffected = 0;
 
-    if(nosize != 0) { 
+    if(nosize != 0) {
       String [] param = new String[nosize+2] ;
       param[0] = request.getParameter("newcust1") ;
       param[1] = request.getParameter("oldcust1") ;
@@ -168,8 +176,8 @@ function setregexp2() {
  	  }
       }
       String instrdemo = sbtemp.toString();
-      dbQueries[1][1] += "("+ instrdemo +")" ; 
-      // System.out.println( dbQueries[1][1] );    
+      dbQueries[1][1] += "("+ instrdemo +")" ;
+      // System.out.println( dbQueries[1][1] );
       updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_nursemultiple");
     } %>
@@ -179,16 +187,16 @@ function setregexp2() {
   if(request.getParameter("update")!=null && request.getParameter("update").equals("UpdateMidwife") ) {
     String [] param1 = new String[2] ;
     param1[0] = request.getParameter("oldcust4") ;
-    param1[1] = request.getParameter("regexp") ;    
+    param1[1] = request.getParameter("regexp") ;
     rsgroup = updatedpBean.queryResults(param1, "select_demoname2");
 
-    while (rsgroup.next()) { 
+    while (rsgroup.next()) {
  	    novector.add(rsgroup.getString("demographic_no"));
     }
     int nosize = novector.size();
     int rowsAffected = 0;
 
-    if(nosize != 0) { 
+    if(nosize != 0) {
       String [] param = new String[nosize+2] ;
       param[0] = request.getParameter("newcust4") ;
       param[1] = request.getParameter("oldcust4") ;
@@ -203,8 +211,8 @@ function setregexp2() {
  	  }
       }
       String instrdemo = sbtemp.toString();
-      dbQueries[2][1] += "("+ instrdemo +")" ; 
-      // System.out.println( dbQueries[2][1] );    
+      dbQueries[2][1] += "("+ instrdemo +")" ;
+      // System.out.println( dbQueries[2][1] );
       updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_midwifemultiple");
     } %>
