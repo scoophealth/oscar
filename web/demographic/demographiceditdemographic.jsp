@@ -24,6 +24,20 @@
  * Ontario, Canada
  */
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String demographic$ = request.getParameter("demographic_no") ;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>" >
+<% response.sendRedirect("../noRights.html"); %>
+</security:oscarSec>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="<%="_demographic$"+demographic$%>" rights="o" reverse="<%=false%>" >
+You have no rights to access the data!
+<% response.sendRedirect("../noRights.html"); %>
+</security:oscarSec>
 
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -906,7 +920,11 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                             </td>
                             <td  width="30%" align='center' valign="top">
                               <input type="hidden" name="displaymode" value="Update Record" >
+<!-- security code block -->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="w">
                               <input type="submit" value="<bean:message key="demographic.demographiceditdemographic.btnUpdate"/>">
+	</security:oscarSec>
+<!-- security code block -->
                             </td>
                             <td width="40%" align='right' valign="top">
                                <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="window.open('zdemographicswipe.jsp','', 'scrollbars=yes,resizable=yes,width=600,height=300, top=360, left=0')">
