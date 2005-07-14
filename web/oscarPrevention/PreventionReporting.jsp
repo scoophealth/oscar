@@ -252,6 +252,14 @@ table.ele td{
                   if (list != null ){ %>
               <table class="ele" width="80%">
                        <tr>
+                       <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
+                       <td colspan="2">Up to date or due: <%=done%> = <%=percentage %> %</td>
+                       <%if (type != null ){ %>
+                          <td>&nbsp;</td>
+                          <%}%>
+                       <td colspan="5">&nbsp;</td>
+                       </tr>
+                       <tr>
                           <td>DemoNo</td>
                           <td>Age as of <br/><%=UtilDateUtilities.DateToString(asDate)%></td>
                           <td>Sex</td>
@@ -259,9 +267,9 @@ table.ele td{
                           <%if (type != null ){ %>
                           <td>Guardian</td>
                           <%}%>
-                          <td>&nbsp;</td>
-                          <td>Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
-                          <td>Up to date or due: <%=done%> = <%=percentage %> %</td>
+                          <td>&nbsp;</td>                          
+                          <td>Address</td>
+                          <td>Status</td>
                           <td>Since Last Procedure Date</td>
                           <td>Last Procedure Date</td>
                           
