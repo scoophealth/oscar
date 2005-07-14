@@ -263,7 +263,8 @@ table.ele td{
                           <td>DemoNo</td>
                           <td>Age as of <br/><%=UtilDateUtilities.DateToString(asDate)%></td>
                           <td>Sex</td>
-                          <td>Lastname, Firstname</td>
+                          <td>Lastname</td>
+                          <td>Firstname</td>
                           <%if (type != null ){ %>
                           <td>Guardian</td>
                           <%}%>
@@ -290,7 +291,8 @@ table.ele td{
                           <%if (type == null ){ %>
                           <td><%=demo.getAgeAsOf(asDate)%></td>
                           <td><%=h.get("sex")%></td>
-                          <td><%=h.get("lastName")%>, <%=h.get("firstName")%></td>
+                          <td><%=h.get("lastName")%></td>
+                          <td><%=h.get("firstName")%></td>
                           <td><%=demo.getPhone()%> </td>
                           <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
