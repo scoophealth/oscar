@@ -253,7 +253,7 @@ table.ele td{
               <table class="ele" width="80%">
                        <tr>
                        <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
-                       <td colspan="2">Up to date or due: <%=done%> = <%=percentage %> %</td>
+                       <td colspan="3">Up to date or due: <%=done%> = <%=percentage %> %</td>
                        <%if (type != null ){ %>
                           <td>&nbsp;</td>
                           <%}%>
@@ -303,7 +303,8 @@ table.ele td{
                               DemographicData.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo);%>                                                                 
                           <td><%=demo.getAgeAsOf(asDate)%></td>
                           <td><%=h.get("sex")%></td>
-                          <td><%=h.get("lastName")%>, <%=h.get("firstName")%></td>                          
+                          <td><%=h.get("lastName")%></td>
+                          <td><%=h.get("firstName")%></td>                          
                           
                           <td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%> <%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
