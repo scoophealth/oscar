@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>1.2</jsp-version>
+    <short-name>oscarSecuritytag</short-name>
+    <uri>/oscarSecuritytag</uri>
+    <display-name>oscarSecuritytag</display-name>
+    <small-icon></small-icon>
+    <large-icon></large-icon>
+    <description>A security tag library template.</description>
+
+    <tag>
+        <name>oscarSec</name>
+        <tag-class>oscar.login.tld.SecurityTag</tag-class>
+        <body-content>JSP</body-content>
+
+        <attribute>
+            <name>roleName</name>
+                <required>true</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>
+        </attribute>
+        <attribute>
+            <name>objectName</name>
+                <required>true</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>
+        </attribute>
+        <attribute>
+            <name>rights</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>
+        </attribute>
+        <attribute>
+            <name>reverse</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>boolean</type>
+        </attribute>
+    </tag>
+</taglib>
