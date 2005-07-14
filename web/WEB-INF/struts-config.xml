@@ -210,6 +210,13 @@
     <!-- preventions -->
     <form-bean name="PreventionReportForm" type="oscar.oscarPrevention.pageUtil.PreventionReportForm"/>
     
+    
+    <form-bean name="ImportDemographicDataForm" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataForm"/>
+    <form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm"/>
+    
+    <form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm"/>
+        
+    
   </form-beans>
   <!--
     form-bean      name="AddDemographicKeyValueForm"
@@ -390,7 +397,7 @@
     </action>
     <action path="/form/xmlUpload" type="oscar.form.pageUtil.FrmXmlUploadAction" name="FrmXmlUploadForm" scope="request" input="/form/formXmlUpload.jsp">
       <forward name="success" path="/form/formXmlUpload.jsp"/>
-    </action>
+    </action>    
     <!-- new form -->
     <action path="/form/formname" type="oscar.form.FrmAction" name="FrmForm" scope="request" input="/form/forwardname.jsp">
       <forward name="exit" path="/oscarEncounter/close.jsp"/>
@@ -686,6 +693,9 @@
       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp"/>
       <forward name="failure" path="/oscar_sfhc/JAYREPORTS/DemographicReport.jsp"/>
     </action>
+    <action   path="/report/CreateDemographicSet" type="oscar.oscarReport.pageUtil.RptCreateDemographicSetAction" name="FrmForm" scope="request" input="/oscarReport/ReportDemographicReport.jsp">
+       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp"/>            
+    </action>
     <action path="/oscarReport/obec" type="oscar.oscarReport.pageUtil.ObecAction" name="ObecForm" scope="request" input="/oscarReport/obec.jsp">
       <forward name="success" path="/oscarReport/obec.jsp"/>
     </action>
@@ -913,7 +923,23 @@
     <!-- Demographic Relations -->
     <action    path="/demographic/AddRelation" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction" name="FrmForm" scope="request" input="/demographic/AddAlternateContact.jsp">
        <forward name="success" path="/demographic/AddAlternateContact.jsp"/>
+    </action>
+    <action path="/form/importUpload" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction" name="ImportDemographicDataForm" scope="request" input="/demographic/demographicImport.jsp">
+      <forward name="success" path="/demographic/demographicImport.jsp"/>
     </action>                           
+    
+    <action path="/demographic/DemographicExport" type="oscar.oscarDemographic.pageUtil.DemographicExportAction" name="DemographicExportForm" scope="request" input="/demographic/demographicExport.jsp">
+      <forward name="success" path="/demographic/demographicExport.jsp"/>
+    </action>                           
+    
+    <action path="/report/DemographicSetEdit" type="oscar.oscarReport.pageUtil.DemographicSetEditAction" name="DemographicSetEditForm" scope="request" input="/report/demographicSetEdit.jsp">
+      <forward name="success" path="/report/demographicSetEdit.jsp"/>
+    </action>                           
+    
+    <action path="/report/SetEligibility" type="oscar.oscarReport.pageUtil.DemographicSetEligibilityAction" name="FrmForm" scope="request" input="/report/demographicSetEdit.jsp">
+      <forward name="success" path="/report/demographicSetEdit.jsp"/>
+    </action>                           
+    
     <!-- Demographic Relations End-->
     
   </action-mappings>
