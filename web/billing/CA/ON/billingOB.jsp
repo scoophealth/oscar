@@ -1,3 +1,12 @@
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>" >
+<%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
+
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
