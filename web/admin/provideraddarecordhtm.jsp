@@ -2,7 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%
-  if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
+  if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String curProvider_no,userfirstname,userlastname;
   curProvider_no = (String) session.getAttribute("user");
@@ -13,29 +13,29 @@
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -57,8 +57,8 @@ function onsub() {
      document.searchprovider.provider_type.value==""  ) {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
-  } else {    
-    return true;      
+  } else {
+    return true;
   }
 }
 function upCaseCtrl(ctrl) {
@@ -71,28 +71,28 @@ function upCaseCtrl(ctrl) {
 <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
+      <tr bgcolor="#486ebd">
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.provideraddrecordhtm.description"/></font></th>
       </tr>
    </table>
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
-      <tr> 
+      <tr>
         <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/><font color="red">:</font> </td>
         <td>
           <input type="text" name="provider_no" maxlength="6">
         </td>
       </tr>
-      <tr> 
-        <td> 
+      <tr>
+        <td>
           <div align="right"><bean:message key="admin.provider.formLastName"/><font color="red">:</font> </div>
         </td>
         <td>
           <input type="text" name="last_name">
         </td>
       </tr>
-      <tr> 
-        <td> 
+      <tr>
+        <td>
           <div align="right"><bean:message key="admin.provider.formFirstName"/><font color="red">:</font> </div>
         </td>
         <td>
@@ -103,7 +103,7 @@ function upCaseCtrl(ctrl) {
         <td align="right"><font size="-2"><bean:message key="admin.provider.formType"/></font><font color="red">:</font>        </td>
         <td>
           <!--input type="text" name="provider_type" -->
-          <% if (vLocale.getCountry().equals("BR")) { %>  
+          <% if (vLocale.getCountry().equals("BR")) { %>
           <select name="provider_type">
             <option value="receptionist"><bean:message key="admin.provider.formType.optionReceptionist"/></option>
             <option value="doctor"><bean:message key="admin.provider.formType.optionDoctor"/></option>
@@ -125,37 +125,37 @@ function upCaseCtrl(ctrl) {
           <% } %>
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
         <td>
           <input type="text" name="specialty"  onBlur="upCaseCtrl(this)">
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formTeam"/>: </td>
         <td>
           <input type="text" name="team" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formSex"/>: </td>
-        <td> 
+        <td>
           <input type="text" name="sex" maxlength="1"  onBlur="upCaseCtrl(this)">
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formDOB"/>(<font size="-1"><i><bean:message key="admin.provideraddrecordhtm.dateFormat"/></i></font>): </td>
-        <td> 
+        <td>
           <input type="text" name="dob" value="0001-01-01" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>
         <td>
           <input type="text" name="address" size="40">
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
         <td>
           <input type="text" name="phone" >
@@ -167,67 +167,67 @@ function upCaseCtrl(ctrl) {
           <input type="text" name="workphone" value="">
         </td>
       </tr>
-  <tr> 
+  <tr>
     <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>
           <input type="text" name="xml_p_pager" value="">
         </td>
   </tr>
-  <tr> 
+  <tr>
     <td align="right"><bean:message key="admin.provider.formCell"/>: </td>
     <td>
           <input type="text" name="xml_p_cell" value="">
         </td>
   </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formOtherPhone"/>: </td> 
+  <tr>
+    <td align="right"><bean:message key="admin.provider.formOtherPhone"/>: </td>
     <td>
           <input type="text" name="xml_p_phone2" value="">
-        </td> 
+        </td>
   </tr>
-  <tr> 
+  <tr>
     <td align="right"><bean:message key="admin.provider.formFax"/>: </td>
     <td>
           <input type="text" name="xml_p_fax" value="">
         </td>
   </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formOhipNo"/>: </td>
         <td>
           <input type="text" name="ohip_no" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formRmaNo"/>: </td>
         <td>
           <input type="text" name="rma_no" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formBillingNo"/>: </td>
         <td>
           <input type="text" name="billing_no" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formHsoNo"/>: </td>
         <td>
           <input type="text" name="hso_no" >
         </td>
-      </tr>      
-      <tr> 
+      </tr>
+      <tr>
         <td align="right"><bean:message key="admin.provider.formSpecialtyCode"/>: </td>
         <td>
           <input type="text" name="xml_p_specialty_code" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formBillingGroupNo"/>: </td>
         <td>
           <input type="text" name="xml_p_billinggroup_no" >
         </td>
       </tr>
-       <% if (vLocale.getCountry().equals("BR")) { %>  
+       <% if (vLocale.getCountry().equals("BR")) { %>
       <tr>
         <td align="right"><bean:message key="admin.provider.formProviderActivity"/>: </td>
         <td>
@@ -237,27 +237,27 @@ function upCaseCtrl(ctrl) {
       <% } else { %>
           <input type="hidden" name="provider_activity" value="">
       <% }  %>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
         <td>
           <input type="text" name="xml_p_slpusername" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formSlpPassword"/>: </td>
         <td>
           <input type="text" name="xml_p_slppassword" >
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
         <td>
           <input type="text" name="status" value='1'>
         </td>
       </tr>
-      <tr> 
+      <tr>
         <td colspan="2">
-          <div align="center"> 
+          <div align="center">
             <%-- not quite sure why we need both dboperation and displaymode set to the same thing, but
                  that's the way I found it so that's the way I'll leave it... --%>
             <input type="hidden" name="dboperation" value="provider_add_record">
@@ -268,7 +268,7 @@ function upCaseCtrl(ctrl) {
       </tr>
     </form>
   </table>
-  
+
   <p></p>
   <hr width="100%" color="orange">
   <table border="0" cellspacing="0" cellpadding="0" width="100%">

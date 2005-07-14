@@ -1,30 +1,41 @@
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>" >
+<%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.login.*" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -39,6 +50,7 @@
   </tr>
 </table>
 <%
+String curUser_no = (String)session.getAttribute("user");
   String[] param =new String[18];
   param[0]=request.getParameter("provider_no");
   param[1]=request.getParameter("last_name");
@@ -59,18 +71,41 @@
   param[16]=SxmlMisc.createXmlDataString(request,"xml_p");
   param[17]=request.getParameter("provider_activity");
 
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
+DBHelp dbObj = new DBHelp();
+String	sql   = "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity) values (";
+sql += "'" + param[0] + "',";
+sql += "'" + StringEscapeUtils.escapeSql(param[1]) + "',";
+sql += "'" + StringEscapeUtils.escapeSql(param[2]) + "',";
+sql += "'" + StringEscapeUtils.escapeSql(param[3]) + "',";
+sql += "'" + param[4] + "',";
+sql += "'" + param[5] + "',";
+sql += "'" + param[6] + "',";
+sql += "'" + param[7] + "',";
+sql += "'" + param[8] + "',";
+sql += "'" + param[9] + "',";
+sql += "'" + param[10] + "',";
+sql += "'" + param[11] + "',";
+sql += "'" + param[12] + "',";
+sql += "'" + param[13] + "',";
+sql += "'" + param[14] + "',";
+sql += "'" + param[15] + "',";
+sql += "'" + param[16] + "',";
+sql += "'" + param[17] + "')";
+//System.out.println(sql);
+if(dbObj.updateDBRecord(sql, curUser_no)) {
+
+//  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
+//  if (rowsAffected ==1) {
 %>
   <h1><bean:message key="admin.provideraddrecord.msgAdditionSuccess"/>
   </h1>
-<%  
+<%
   } else {
 %>
   <h1><bean:message key="admin.provideraddrecord.msgAdditionFailure"/></title>
-<%  
+<%
   }
-  apptMainBean.closePstmtConn();
+  //apptMainBean.closePstmtConn();
 %>
 <%@ include file="footer2htm.jsp" %>
 </center>
