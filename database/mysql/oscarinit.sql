@@ -5936,6 +5936,15 @@ CREATE TABLE `secObjectName` (
   PRIMARY KEY  (`objectName`)
 ) ;
 
+
+CREATE TABLE `demographicSets` (
+  `demographic_no` int(10) default NULL,
+  `set_name` varchar(20) default NULL,
+  `eligibility` char(1) default NULL
+); 
+
+
+
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
 create index preventions_prevention_type on preventions (prevention_type(10));
