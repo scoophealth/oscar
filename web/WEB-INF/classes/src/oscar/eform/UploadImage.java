@@ -100,7 +100,13 @@ public class UploadImage extends GenericServlet {
                     String s4 = new String(abyte1);
                     if(s4.length() > 2 && s4.indexOf("filename") != -1) {
 // this is the saving file name, I can use it' original name, or  I can use a temp name for all
-                         s4 = s1 + s4.substring(s4.lastIndexOf(92) + 1, s4.lastIndexOf(34));
+                         int lastEquals = s4.lastIndexOf('=');
+                         if (s4.indexOf(92, lastEquals) != -1) {
+                            s4 = s1 + s4.substring(s4.lastIndexOf(92) + 1, s4.lastIndexOf(34));
+                         }
+                         else {
+                            s4 = s1 + s4.substring(lastEquals + 2, s4.lastIndexOf(34));
+                         }
                     //s4 = s1 + "temp.jsp";
                         FileOutputStream fileoutputstream = new FileOutputStream(new File(s4));
                         bufferedoutputstream = new BufferedOutputStream(fileoutputstream, 2048);
