@@ -117,7 +117,7 @@
       <tr>
         <td  align="right" nowrap>Expiry Date:</td>
         <td>
-          <input type="checkbox" name="b_ExpireSet" value="1" <%= rs.getInt("b_ExpireSet")==0?"":"checked" %>">
+          <input type="checkbox" name="b_ExpireSet" value="1" <%= rs.getInt("b_ExpireSet")==0?"":"checked" %> >
           Date:
           <input type="text" name="date_ExpireDate" id="date_ExpireDate" value="<%= rs.getString("date_ExpireDate")==null?"":rs.getString("date_ExpireDate") %>" size="10" readonly />
 		  <img src="../images/cal.gif" id="date_ExpireDate_cal"/>
@@ -126,9 +126,9 @@
       <tr>
         <td  align="right" nowrap>Pin(remote) Enable:</td>
         <td>
-          <input type="checkbox" name="b_RemoteLockSet" value="1" <%= rs.getInt("b_RemoteLockSet")==0?"":"checked" %>">
+          <input type="checkbox" name="b_RemoteLockSet" value="1" <%= rs.getInt("b_RemoteLockSet")==0?"":"checked" %> >
           Pin(local) Enable:
-          <input type="checkbox" name="b_LocalLockSet" value="1" <%= rs.getInt("b_LocalLockSet")==0?"":"checked" %>">
+          <input type="checkbox" name="b_LocalLockSet" value="1" <%= rs.getInt("b_LocalLockSet")==0?"":"checked" %> >
         </td>
       </tr>
 <!-- new security -->
