@@ -191,7 +191,7 @@ div.preventionProcedure{
 div.preventionProcedure p {
     font-size: 0.8em;
     font-family: verdana,tahoma,sans-serif;
-    background: #F0F0E7;
+    background: #F0F0E7;    
     margin:0;
     padding: 1px 2px;
     /*line-height: 1.3;*/
@@ -326,7 +326,7 @@ div.recommendations li{
                                 Hashtable hdata = (Hashtable) alist.get(k);
                             %>                            
                             <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
-                                <p>Age: <%=hdata.get("age")%> <br/>
+                                <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                 <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
                                 </p>
                             </div>
@@ -358,6 +358,15 @@ String refused(Object re){
         if (re != null && re.equals("1")){
            ret = "Refused";
         }
+        }
+        return ret;
+    }
+String r(Object re){ 
+        String ret = "";
+        if (re instanceof java.lang.String){                
+           if (re != null && re.equals("1")){
+           ret = "style=\"background: #FFDDDD;\"";
+           }
         }
         return ret;
     }
