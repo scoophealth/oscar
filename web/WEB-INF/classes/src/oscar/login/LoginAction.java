@@ -75,7 +75,7 @@ public final class LoginAction extends Action {
             return (new ActionForward(newURL));
         }
 
-        if (strAuth != null) { //login successfully
+        if (strAuth != null && strAuth.length != 1) { //login successfully
             //invalidate the existing sesson
             HttpSession session = request.getSession(false);
             if (session != null) {
@@ -121,7 +121,13 @@ public final class LoginAction extends Action {
             } else if (viewType.equalsIgnoreCase("admin")) { // go to admin view
                 where = "admin";
             }
-
+        // expired password
+        } else if (strAuth != null && strAuth.length == 1 && strAuth[0].equals("expired")) {
+            LogAction.addLog(userName, "expired", LogConst.CON_LOGIN, "", ip);
+            cl.updateLoginList(ip);
+            String newURL = mapping.findForward("error").getPath();
+            newURL = newURL + "?errormsg=Your password is expired. Please contact your administrator.";
+            return (new ActionForward(newURL));
         } else { // go to normal directory
             //request.setAttribute("login", "failed");
             LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);

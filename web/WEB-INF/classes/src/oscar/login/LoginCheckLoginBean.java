@@ -76,7 +76,7 @@ public class LoginCheckLoginBean {
 
         // check if it is expired
         if (secBean.getB_ExpireSet().intValue() == 1 && secBean.getDate_ExpireDate().before(UtilDateUtilities.now())) {
-            return cleanNullObj(LOG_PRE + "Expired: " + username);
+            return cleanNullObjExpire(LOG_PRE + "Expired: " + username);
         }
 
         StringBuffer sbTemp = new StringBuffer();
@@ -114,6 +114,15 @@ public class LoginCheckLoginBean {
         if (DBHandler.isInit())
             DBHandler.init(null, null, null, null, null);
         return null;
+    }
+
+    private String[] cleanNullObjExpire(String errorMsg) {
+        _logger.info(errorMsg);
+        userpassword = null;
+        password = null;
+        if (DBHandler.isInit())
+            DBHandler.init(null, null, null, null, null);
+        return new String[] { "expired" };
     }
 
     private LoginSecurityBean getUserID() {
