@@ -29,7 +29,7 @@
     response.sendRedirect("../logout.htm");
   String curProvider_no;
   curProvider_no = (String) session.getAttribute("user");
-  
+  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); 
   //display the main provider page
   //includeing the provider name and a month calendar
   String strLimit1="0";
@@ -39,6 +39,7 @@
 %> 
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %> 
 <html>
@@ -131,7 +132,12 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 %>
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td width="5%" align="center" height="25"><a href=# onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a></td>
+      <td width="5%" align="center" height="25">
+        <a href=# onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a>
+        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r">
+        <a href=# onClick="popupPage(600,800, 'billingCorrection.jsp?billing_no=<%=rs.getString("billing_no")%>')">edit</a>
+        </security:oscarSec>
+      </td>
       <td align="left" width="25%" height="25"><%=rs.getString("billing_date")%> &nbsp; &nbsp; &nbsp; &nbsp; <%=rs.getString("billing_time")%></td>
       <td align="center" width="10%" height="25"><%=billType%></td>
       <td align="center" width="15%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
