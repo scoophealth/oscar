@@ -362,7 +362,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <a HREF="#" ONCLICK ="popupPage2('../lab/CA/BC/index.jsp');return false;" TITLE='View lab reports'><%=(new oscar.oscarLab.ca.bc.PathNet.PathNetInfo()).getLabTab(curUser_no)%></a>
          <%}else{%>
          <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
-         <oscarlab:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscarlab:newLab>
+         <oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
          </a></font></td>
          <%}%>
 		</security:oscarSec>
@@ -370,7 +370,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!-- oscarMessenger code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
-         <oscarmessage:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
+         <oscar:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
 <!--/oscarMessenger code block -->
 <!-- oscarEcounter/consultationRequest.jsp code block -->
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
