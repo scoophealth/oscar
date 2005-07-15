@@ -1222,10 +1222,9 @@ INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F');
 -- Dumping data for table 'security'
 --
 
-INSERT INTO security VALUES (127,'oscarrep','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999999','1117');
-INSERT INTO security VALUES (128,'oscardoc','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999998','1117');
-INSERT INTO security VALUES (129,'oscaradmin','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999997','1117');
-
+INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (127,'oscarrep','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999999','1117');
+INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (128,'oscardoc','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999998','1117');
+INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (129,'oscaradmin','-51-282443-97-5-9410489-60-1021-45-127-12435464-32','999997','1117');
 --
 -- Dumping data for table 'serviceSpecialists'
 --
