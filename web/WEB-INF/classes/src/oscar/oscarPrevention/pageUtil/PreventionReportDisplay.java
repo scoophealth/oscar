@@ -42,6 +42,7 @@ public class PreventionReportDisplay implements Comparable{
    public String state = null;
    public String numMonths = null;
    public String color = null;   
+   public String numShots = null;
    public PreventionReportDisplay() {
    }
    
