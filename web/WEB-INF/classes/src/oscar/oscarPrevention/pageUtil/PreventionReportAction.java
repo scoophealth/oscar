@@ -437,24 +437,31 @@ public class PreventionReportAction extends Action {
                 prd.state = "Ineligible"; 
                 prd.numMonths = "------";
                 prd.color = "grey";
+                prd.numShots = "--";
              }else if (totalImmunizations == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
                 prd.state = "No Info";                
                 prd.numMonths = "------";
                 prd.color = "Magenta";
+                prd.numShots = "--";
              }else{
                 
                 boolean refused = false;                                
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 
-                
-                
+                Date lastDate = null;
+                String prevDateStr = "";
                 
                 if(prevs1.size() > 0){
                    Hashtable hDtap = (Hashtable) prevs1.get(prevs1.size()-1);   
                    if ( hDtap.get("refused") != null && ((String) hDtap.get("refused")).equals("1")){
                       refused = true;
-                   }                
+                   }                                   
+                   prevDateStr = (String) hDtap.get("prevention_date");                   
+                   try{
+                      lastDate = (java.util.Date)formatter.parse(prevDateStr);
+                   }catch (Exception e){}
                 }
                 
                 if(prevs2.size() > 0){
@@ -462,6 +469,23 @@ public class PreventionReportAction extends Action {
                    if ( hHib.get("refused") != null && ((String) hHib.get("refused")).equals("1")){
                       refused = true;
                    }
+                   
+                   String hibDateStr = (String) hHib.get("prevention_date");
+                   Date prevDate = null;
+                   try{
+                      prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                      if (prevDate.after(lastDate)){
+                         lastDate = prevDate;
+                         prevDateStr = hibDateStr;
+                      }
+                   }catch (Exception e){}
+                   
+                }
+                
+                String numMonths = "------";
+                if ( lastDate != null){
+                   int num = UtilDateUtilities.getNumMonths(lastDate,asofDate);
+                   numMonths = ""+num+" months";
                 }
                 
                 if(prevs4.size() > 0){
@@ -469,35 +493,49 @@ public class PreventionReportAction extends Action {
                    if ( hMMR.get("refused") != null && ((String) hMMR.get("refused")).equals("1")){
                       refused = true;
                    }
+                   
+                   String mmrDateStr = (String) hMMR.get("prevention_date");
+                   Date prevDate = null;
+                   try{
+                      prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                      if (prevDate.after(lastDate)){
+                         //lastDate = prevDate;
+                         prevDateStr = mmrDateStr;
+                      }
+                   }catch (Exception e){}
                 }
                 
                 
                 //outcomes                        
                 if (!refused && totalImmunizations < 9 && ageInMonths >= 18 && ageInMonths <= 23){ // less < 9 
                    prd.rank = 2;
-                   prd.lastDate = "";
+                   prd.lastDate = prevDateStr;
                    prd.state = "due";
-                   prd.numMonths = ""+totalImmunizations;
+                   prd.numMonths = numMonths;
+                   prd.numShots = ""+totalImmunizations;
                    prd.color = "yellow"; //FF00FF
                    
                 } else if (!refused && totalImmunizations < 9 && ageInMonths > 23 ){ // overdue
                    prd.rank = 2;
-                   prd.lastDate = "";                
+                   prd.lastDate = prevDateStr;                
                    prd.state = "Overdue";
-                   prd.numMonths = ""+totalImmunizations ;
+                   prd.numMonths = numMonths;
+                   prd.numShots = ""+totalImmunizations;
                    prd.color = "red"; //FF00FF
                    
                 } else if (refused){  // recorded and refused
                    prd.rank = 3;
                    prd.lastDate = "-----";
                    prd.state = "Refused";
-                   prd.numMonths = ""+totalImmunizations ;
+                   prd.numMonths = numMonths;
+                   prd.numShots = ""+totalImmunizations;
                    prd.color = "orange"; //FF9933
                 } else if (totalImmunizations == recommTotal  ){  // recorded done
                    prd.rank = 4;
-                   prd.lastDate = "";
+                   prd.lastDate = prevDateStr;
                    prd.state = "Up to date";
-                   prd.numMonths = ""+totalImmunizations ;
+                   prd.numMonths = numMonths;
+                   prd.numShots = ""+totalImmunizations;
                    prd.color = "green";
                    done++;
                 }
