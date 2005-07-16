@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
+import org.apache.commons.lang.*;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.*;
 import org.apache.commons.validator.*;
@@ -76,7 +77,15 @@ public class EctMeasurementsAction extends Action {
         MsgStringQuote str = new MsgStringQuote();       
         
         List messages = new LinkedList();
-        String textOnEncounter = "**********************************************************************************\\n";        
+        
+        Properties p = (Properties) session.getAttribute("providerBean");
+        String by = "";
+        if (p != null ){
+           by = p.getProperty(providerNo,"");
+        }
+        
+        String textOnEncounter = "**"+StringUtils.rightPad(by,80,'*')+"\\n";
+         
         boolean valid = true;
         try
             {
