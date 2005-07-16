@@ -255,9 +255,10 @@ table.ele td{
                        <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
                        <td colspan="3">Up to date or due: <%=done%> = <%=percentage %> %</td>
                        <%if (type != null ){ %>
-                          <td>&nbsp;</td>
-                          <%}%>
-                       <td colspan="5">&nbsp;</td>
+                       <td colspan=7">&nbsp;</td>                          
+                       <%}else{%>
+                       <td colspan="6">&nbsp;</td>
+                       <%}%>
                        </tr>
                        <tr>
                           <td>DemoNo</td>
@@ -271,6 +272,9 @@ table.ele td{
                           <td>&nbsp;</td>                          
                           <td>Address</td>
                           <td>Status</td>
+                          <%if (type != null ){ %>
+                          <td>Shot #</td>
+                          <%}%>
                           <td>Since Last Procedure Date</td>
                           <td>Last Procedure Date</td>
                           
@@ -310,6 +314,7 @@ table.ele td{
                           <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
+                          <td bgcolor="<%=dis.color%>"><%=dis.numShots%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
                           <%}%>
