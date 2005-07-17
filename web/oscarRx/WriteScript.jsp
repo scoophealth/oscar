@@ -62,6 +62,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 int specialStringLen = 0;
 String quan = "";
 boolean isCustom = true;
+String atcCode = null;
 %>
 
 <script language=javascript>
@@ -770,6 +771,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setUnit(rx.getUnit());
     thisForm.setMethod(rx.getMethod());
     thisForm.setRoute(rx.getRoute());
+    atcCode= rx.getAtcCode();
     System.out.println("route "+rx.getRoute());
 }
 
@@ -798,6 +800,7 @@ Prn:            <%= String.valueOf(thisForm.getPrn()) %><br>
 Special:        <%= thisForm.getSpecial() %><br>
 ATC:            <%= thisForm.getAtcCode() %>
 regional ident  <%= thisForm.getRegionalIdentifier() %>
+
 
 
 -->
@@ -1211,7 +1214,8 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /--> 
                         <br>
                         <!-- peice Went Here -->
-                        <%oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
+                        <%//oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
+                          oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
                           if (allerg != null && allerg.length > 0){ 
                             for (int i = 0 ; i < allerg.length; i++){  %>                                                           
                                  <div style="background-color:<%=severityOfReactionColor(allerg[i].getAllergy().getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
