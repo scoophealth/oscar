@@ -32,8 +32,10 @@ public class MsgSessionBean
     private String providerNo = null;
     private String userName   = null;
     private String attach     = null;
+    private byte[] pdfAttach     = null;
     private String messageId  = null;
     private String demographic_no   = null;
+    private int pdfCount = 0;
 
     public String getProviderNo()
     {
@@ -76,6 +78,55 @@ public class MsgSessionBean
     public void setAttachment (String str){
         this.attach = str;
     }
+    
+    public void setPDFAttachment( byte[] binStr){
+        this.pdfAttach = binStr;
+    }
+    
+    public byte[] getPDFAttachment(){
+        return this.pdfAttach;
+    }
+    
+    public void setAppendPDFAttachment ( byte[] binStr){
+
+        byte[] tempBinStr = new byte[ getPDFStartTag().getBytes().length +  binStr.length + getPDFEndTag().getBytes().length ];
+
+        if ( this.getPDFAttachment() == null ) {
+            
+            int i=0, j=0;
+            for( i=0; i< getPDFStartTag().getBytes().length; i ++){
+                tempBinStr[i] = getPDFStartTag().getBytes()[i];    
+                j++;
+            }
+                
+            for( i=0; i< binStr.length; i ++){
+                tempBinStr[j] = binStr[i];    
+                j++;
+            }
+            
+            for( i=0; i< getPDFEndTag().getBytes().length; i ++){
+                tempBinStr[j] = getPDFEndTag().getBytes()[i];    
+                j++;
+            }
+            
+            this.setPDFAttachment(tempBinStr );
+            
+        }
+        else {
+            String currentAtt = this.getAttachment();
+            //this.setPDFAttachment(currentAtt + " " + getPDFStartTag() + pdfStr + getPDFEndTag() );
+        }
+        pdfCount ++ ;
+    }
+
+    public String getPDFStartTag( ) {
+        return "<PDF><FILE_ID>" + pdfCount + "</FILE_ID><CONTENT>";    
+    }
+    
+    public String getPDFEndTag( ) {
+        return "</CONTENT></PDF>";
+    }
+    
 
     public void nullAttachment(){
         this.attach = null;
