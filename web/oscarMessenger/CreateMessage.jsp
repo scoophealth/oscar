@@ -374,6 +374,20 @@ function popupSearchDemo(keyword){ // open a new popup window
         popUp.focus();
     }
 }
+
+function popupAttachDemo(demographic){ // open a new popup window
+    var vheight = 700;
+    var vwidth = 980;  
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
+    var page = 'attachmentFrameset.jsp?demographic_no=' +demographic;
+    var popUp=window.open(page, "msgAttachDemo", windowprops);
+    if (popUp != null) {
+        if (popUp.opener == null) {
+          popUp.opener = self; 
+        }
+        popUp.focus();
+    }
+}
 </script>
 
 </head>
@@ -385,6 +399,7 @@ function popupSearchDemo(keyword){ // open a new popup window
 
 
 <body class="BodyStyle" vlink="#0000FF" >
+
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -583,6 +598,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                             <input type="text" name="keyword" size="30" />
                                             <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>  
                                             <input type="button" class="ControlPushButton" name="searchDemo" value="Search Demographic" onclick="popupSearchDemo(document.forms[0].keyword.value)" />
+                                            
 
                                         </td>
 
@@ -613,6 +629,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                                 }
                                             </script>
                                                <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
+                                                <input type="button" class="ControlPushButton" name="attachDemo" value="Attach Demographic" onclick="popupAttachDemo(document.forms[0].demographic_no.value)" style="display:none" />                                               
                                         </td>
 
                                     </tr> 
