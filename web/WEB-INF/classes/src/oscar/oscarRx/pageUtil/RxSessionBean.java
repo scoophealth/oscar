@@ -33,6 +33,9 @@ public class RxSessionBean {
     
     private ArrayList stash = new ArrayList();
     private int stashIndex = -1;
+    private Hashtable allergyWarnings = new Hashtable();
+    private Hashtable workingAllergyWarnings = new Hashtable();
+    
     
     
     
@@ -124,6 +127,7 @@ public class RxSessionBean {
         else {
             stash.add(item);
             preloadInteractions();
+            preloadAllergyWarnings(item.getAtcCode());
             return this.getStashSize()-1;
         }
     }
@@ -156,6 +160,74 @@ public class RxSessionBean {
        RxInteractionData interact = RxInteractionData.getInstance();
        interact.preloadInteraction(this.getAtcCodes());
     }
+
+    public void clearAllergyWarnings(){
+       allergyWarnings =null;
+       allergyWarnings = new Hashtable();
+    }    
+    
+    
+    private void preloadAllergyWarnings(String atccode){
+       try{
+         oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
+         RxAllergyWarningWorker worker = new RxAllergyWarningWorker(this,atccode,allergies);
+         addToWorkingAllergyWarnings(atccode,worker);       
+         worker.start();         
+       }catch( Exception e ){e.printStackTrace();}
+    }
+    
+    public void addAllergyWarnings(String atc,oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergy){
+       allergyWarnings.put(atc, allergy);
+    }
+    
+    public void addToWorkingAllergyWarnings(String atc,RxAllergyWarningWorker worker){
+       workingAllergyWarnings.put(atc,worker);
+    }
+    public void removeFromWorkingAllergyWarnings(String atc){
+       workingAllergyWarnings.remove(atc);
+    }
+    
+    
+    public oscar.oscarRx.data.RxPatientData.Patient.Allergy[] getAllergyWarnings(String atccode){
+      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;      
+      if (allergyWarnings.containsKey(atccode) ){
+         System.out.println("Allergy has Already been searched!");
+         allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
+      }else if(workingAllergyWarnings.contains(atccode) ){
+         System.out.println("Allergy has Already been searched but not finished !");
+         RxAllergyWarningWorker worker = (RxAllergyWarningWorker) workingAllergyWarnings.get(atccode);
+         if (worker != null){
+             try {
+                worker.join();
+                System.out.println("Allergy has Already been searched now finished!");
+                // Finished
+             } catch (InterruptedException e) {
+                // Thread was interrupted
+                System.out.println("Already been searched PROBLEM!");
+                e.printStackTrace();
+             }
+            
+             
+         }
+         allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
+      
+      }else{
+         System.out.println("NEW ATC CODE for allergy");
+         try{                                
+            RxDrugData drugData = new RxDrugData();
+            oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
+            allergies = drugData.getAllergyWarnings(atccode,allAllergies);                 
+                if (allergies != null){                   
+                   addAllergyWarnings(atccode,allergies);            
+                }
+         }catch(Exception e){
+             e.printStackTrace();
+         }         
+      }
+      return allergies;
+   }
+    
+    
     
     public Vector getAtcCodes(){
        RxPrescriptionData rxData = new RxPrescriptionData();                    
