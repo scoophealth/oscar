@@ -1,0 +1,22 @@
+<%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="oscar.util.*"%>
+
+<html>
+<head>
+<%
+String demographic_no = (String) request.getParameter("demographic_no");
+
+%>
+
+<title>OSCAR attachment</title>
+
+<frameset rows="300,0">
+    <frame name="main" src="generatePreviewPDF.jsp?demographic_no=<%=demographic_no%>" noresize scrolling=auto marginheight=5 marginwidth=5>
+    <frame name="srcFrame" src="">
+</frameset>
+
+</html>
