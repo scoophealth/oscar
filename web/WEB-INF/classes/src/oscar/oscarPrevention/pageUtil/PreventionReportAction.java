@@ -461,9 +461,8 @@ public class PreventionReportAction extends Action {
                    prevDateStr = (String) hDtap.get("prevention_date");                   
                    try{
                       lastDate = (java.util.Date)formatter.parse(prevDateStr);
-                   }catch (Exception e){}
-                }
-                
+                   }catch (Exception e){e.printStackTrace();}
+                }                
                 if(prevs2.size() > 0){
                    Hashtable hHib  = (Hashtable) prevs2.get(prevs2.size()-1);                
                    if ( hHib.get("refused") != null && ((String) hHib.get("refused")).equals("1")){
@@ -473,21 +472,14 @@ public class PreventionReportAction extends Action {
                    String hibDateStr = (String) hHib.get("prevention_date");
                    Date prevDate = null;
                    try{
-                      prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                      prevDate = (java.util.Date)formatter.parse(hibDateStr);
                       if (prevDate.after(lastDate)){
                          lastDate = prevDate;
                          prevDateStr = hibDateStr;
                       }
-                   }catch (Exception e){}
+                   }catch (Exception e){e.printStackTrace();}
                    
-                }
-                
-                String numMonths = "------";
-                if ( lastDate != null){
-                   int num = UtilDateUtilities.getNumMonths(lastDate,asofDate);
-                   numMonths = ""+num+" months";
-                }
-                
+                }                                                
                 if(prevs4.size() > 0){
                    Hashtable hMMR  = (Hashtable) prevs4.get(prevs4.size()-1);
                    if ( hMMR.get("refused") != null && ((String) hMMR.get("refused")).equals("1")){
@@ -497,14 +489,19 @@ public class PreventionReportAction extends Action {
                    String mmrDateStr = (String) hMMR.get("prevention_date");
                    Date prevDate = null;
                    try{
-                      prevDate = (java.util.Date)formatter.parse(prevDateStr);
+                      prevDate = (java.util.Date)formatter.parse(mmrDateStr);
                       if (prevDate.after(lastDate)){
-                         //lastDate = prevDate;
+                         lastDate = prevDate;
                          prevDateStr = mmrDateStr;
                       }
-                   }catch (Exception e){}
+                   }catch (Exception e){e.printStackTrace();}
                 }
                 
+                String numMonths = "------";
+                if ( lastDate != null){
+                   int num = UtilDateUtilities.getNumMonths(lastDate,asofDate);
+                   numMonths = ""+num+" months";
+                }
                 
                 //outcomes                        
                 if (!refused && totalImmunizations < 9 && ageInMonths >= 18 && ageInMonths <= 23){ // less < 9 
@@ -530,7 +527,7 @@ public class PreventionReportAction extends Action {
                    prd.numMonths = numMonths;
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "orange"; //FF9933
-                } else if (totalImmunizations == recommTotal  ){  // recorded done
+                } else if (totalImmunizations >= recommTotal  ){  // recorded done
                    prd.rank = 4;
                    prd.lastDate = prevDateStr;
                    prd.state = "Up to date";
@@ -538,7 +535,12 @@ public class PreventionReportAction extends Action {
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "green";
                    done++;
+                }else{
+                   prd.state = "ERROR";
+                   
                 }
+                
+                
              }
              
              returnReport.add(prd);
