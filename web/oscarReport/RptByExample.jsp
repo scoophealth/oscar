@@ -218,10 +218,11 @@ function showHideLayers() { //v6.0
                    </tr>
                    <tr>
                         <td>
-                            <html:select property="selectedRecentSearch" style="width:660" onchange="write2TextArea();return false;">
+                            <html:select property="selectedRecentSearch" style="width:660">
                                 <html:option value="My favorites" disabled="true"/>
                                 <html:options collection="favorites" labelProperty="queryName" property="query" />
                             </html:select>
+                            <input type="button" value="Load Query" onClick="write2TextArea(); return false;">
                         </td>                        
                    </tr>
                    <tr>
