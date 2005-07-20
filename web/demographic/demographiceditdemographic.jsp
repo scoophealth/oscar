@@ -150,15 +150,98 @@ function checkTypeIn() {
   }
 }
 
-function checkTypeInEdit() {
-  var typeInOK = false;
-    if(document.updatedelete.last_name.value!="" && document.updatedelete.first_name.value!="" && document.updatedelete.sex.value!="") {
-      if(checkTypeNum(document.updatedelete.year_of_birth.value) && checkTypeNum(document.updatedelete.month_of_birth.value) && checkTypeNum(document.updatedelete.date_of_birth.value) ){
+function checkName() {
+	var typeInOK = false;
+	if(document.updatedelete.last_name.value!="" && document.updatedelete.first_name.value!="" && document.updatedelete.last_name.value!=" " && document.updatedelete.first_name.value!=" ") {
 	    typeInOK = true;
-      }
+	} else {
+		alert ("You must type in the following fields: Last Name, First Name.");
     }
-  if(!typeInOK) alert ("<bean:message key="demographic.demographicaddrecordhtm.msgMissingFields"/>");
-  return typeInOK;
+	return typeInOK;
+}
+function checkDob() {
+	var typeInOK = false;
+	var yyyy = document.updatedelete.year_of_birth.value;
+	var mm = document.updatedelete.month_of_birth.value;
+	var dd = document.updatedelete.date_of_birth.value;
+
+	if(checkTypeNum(yyyy) && checkTypeNum(mm) && checkTypeNum(dd) ){
+        var check_date = new Date(yyyy,mm,dd);
+		var now = new Date();
+		var year=now.getFullYear();
+		var month=now.getMonth()+1;
+		var date=now.getDate();
+		//alert(yyyy + " | " + mm + " | " + dd + " " + year + " " + month + " " +date);
+
+		var young = new Date(year,month,date);
+		var old = new Date(1800,01,01);
+		//alert(check_date.getTime() + " | " + young.getTime() + " | " + old.getTime());
+		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
+		    typeInOK = true;
+		}
+		if ( yyyy == "0000"){ 
+        typeInOK = false;
+      }
+	}
+
+	if (!typeInOK){
+      alert ("You must type in the right DOB.");
+   }
+	return typeInOK;
+}
+function checkHin() {
+	var typeInOK = false;
+	var hin = document.updatedelete.hin.value;
+	var province = document.updatedelete.province.value;
+	//alert(hin);
+	//check OHIP, no others
+	if(province=="ON") {
+		//alert(hin.length + " | " + hin.charAt(1));
+		if(checkTypeNum(hin) && hin.length==10) {
+		    typeInOK = mod10Check(hin);
+		}
+	}
+
+	//don't check
+	if(province!="ON" || hin.length==0) typeInOK = true;
+
+	if (!typeInOK) alert ("You must type in the right HIN.");
+	return typeInOK;
+}
+	function mod10Check(hinNum) {
+		var typeInOK = false;
+		var hChar = new Array();
+		var sum = 0;
+		for (i=0; i<hinNum.length; i++) {
+			hChar[i] = hinNum.charAt(i);
+		}
+
+		for (i=0; i<hinNum.length; i=i+2) {
+			hChar[i] = mod10CheckCalDig(hChar[i]);
+		}
+
+		for (i=0; i<hinNum.length-1; i++) {
+			sum = eval(sum*1 + hChar[i]*1);
+		}
+
+		var calDigit = 10-(""+sum).charAt((""+sum).length-1) ;
+		if (hChar[hinNum.length-1] == ( (""+calDigit).charAt((""+calDigit).length-1) )) typeInOK = true;
+
+		return typeInOK;
+	}
+	function mod10CheckCalDig(dig) {
+		var ret = dig*2 + "";
+		if (ret.length==2) ret = eval(ret.charAt(0)*1+ret.charAt(1)*1);
+
+		return ret;
+	}
+
+function checkTypeInEdit() {
+  if ( !checkName() ) return false;
+  if ( !checkDob() ) return false;
+  if ( !checkHin() ) return false;
+  //if ( !checkAllDate() ) return false;
+  return(true);
 }
 
 function checkTypeNum(typeIn) {
