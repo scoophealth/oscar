@@ -162,7 +162,7 @@
           <div align="right"><bean:message key="admin.securityrecord.formPIN"/>: </div>
         </td>
         <td>
-          <input type="text" name="pin">
+          <input type="password" name="pin">
           <font size="-1">more than 3 digits<!-- bean:message key="admin.securityaddarecord.onlyInternet"/--></font> </td>
       </tr>
       <tr>
