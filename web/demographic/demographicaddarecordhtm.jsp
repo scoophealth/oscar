@@ -254,10 +254,10 @@ function checkDob() {
 function checkHin() {
 	var typeInOK = false;
 	var hin = document.adddemographic.hin.value;
-	var hcType = document.adddemographic.hc_type.value;
-	//alert(hcType);
+	var province = document.adddemographic.province.value;
+	//alert(province);
 	//check OHIP, no others
-	if(hcType=="ON") {
+	if(province=="ON") {
 		//alert(hin.length + " | " + hin.charAt(1));
 		if(checkTypeNum(hin) && hin.length==10) {
 		    typeInOK = mod10Check(hin);
@@ -265,7 +265,7 @@ function checkHin() {
 	}
 
 	//don't check
-	if(hcType!="ON" || hin.length==0) typeInOK = true;
+	if(province!="ON" || hin.length==0) typeInOK = true;
 
 	if (!typeInOK) alert ("You must type in the right HIN.");
 	return typeInOK;
