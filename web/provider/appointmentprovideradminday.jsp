@@ -723,8 +723,8 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
 <!--<a href=# onClick="popupPage(700,980,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
             |e</a>-->
 <% } %>
-<!-- doctor code block -->
-<% if(bShowDocLink) { %>
+<!-- billing code block -->
+	  <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 
             <%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%>
             <%= bShortcutForm2?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName2+"&demographic_no="+demographic_no+"\")' title='form'>|"+formName2Short+"</a>" : ""%>
@@ -742,8 +742,8 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
     <a href=# onClick='onUnbilled("../billing/CA/<%=prov%>/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=rs.getString("appointment_no")%>");return false;' title="<bean:message key="global.billing"/>">|-<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>
 <% } %>
 <!--/security:oscarSec-->
-<% } %>
-<!-- doctor code block -->
+	  </security:oscarSec>
+<!-- billing code block -->
 
     <% if (vLocale.getCountry().equals("BR")) {%>
     <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr');return false;"
