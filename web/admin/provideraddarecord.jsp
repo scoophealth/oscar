@@ -11,6 +11,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.login.*" %>
+<%@ page import="oscar.log.*" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--
@@ -93,6 +94,13 @@ sql += "'" + param[16] + "',";
 sql += "'" + param[17] + "')";
 //System.out.println(sql);
 if(dbObj.updateDBRecord(sql, curUser_no)) {
+	int id = 0;
+	String ip = request.getRemoteAddr();
+    sql = "SELECT LAST_INSERT_ID()";
+    ResultSet rs = dbObj.searchDBRecord(sql);
+    if (rs.next())
+        id = rs.getInt(1);
+	LogAction.addLog(curUser_no, "add", "adminAddUser", ""+id, ip);
 
 //  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
 //  if (rowsAffected ==1) {
