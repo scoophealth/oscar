@@ -1,4 +1,5 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.log.*" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -54,6 +55,7 @@
     </table>
 
 <%
+String curUser_no = (String)session.getAttribute("user");
   //if action is good, then give me the result
 	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
@@ -187,6 +189,7 @@
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
+  
     //find the demo_no and add democust record for alert
     String[] param1 =new String[7];
 	  param1[0]=request.getParameter("last_name");
@@ -209,6 +212,10 @@
 	    param2[5]="<unotes>"+request.getParameter("content")+"</unotes>";
 	    System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
+
+		// add log
+		String ip = request.getRemoteAddr();
+		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip);
 
         //add to waiting list if the waiting_list parameter in the property file is set to true
 

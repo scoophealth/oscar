@@ -94,13 +94,9 @@ sql += "'" + param[16] + "',";
 sql += "'" + param[17] + "')";
 //System.out.println(sql);
 if(dbObj.updateDBRecord(sql, curUser_no)) {
-	int id = 0;
+	String proId = param[0];
 	String ip = request.getRemoteAddr();
-    sql = "SELECT LAST_INSERT_ID()";
-    ResultSet rs = dbObj.searchDBRecord(sql);
-    if (rs.next())
-        id = rs.getInt(1);
-	LogAction.addLog(curUser_no, "add", "adminAddUser", ""+id, ip);
+	LogAction.addLog(curUser_no, "add", "adminAddUser", proId, ip);
 
 //  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
 //  if (rowsAffected ==1) {
