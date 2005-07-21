@@ -58,7 +58,11 @@ public final class LoginAction extends Action {
 
         if (cl.isBlock(ip, userName)) {
             _logger.info(LOG_PRE + " Blocked: " + userName);
-            return mapping.findForward(where); //go to block page
+            //return mapping.findForward(where); //go to block page
+            // change to block page
+            String newURL = mapping.findForward("error").getPath();
+            newURL = newURL + "?errormsg=Your account is locked. Please contact your administrator to unlock.";
+            return (new ActionForward(newURL));
         }
 
         String[] strAuth;

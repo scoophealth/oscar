@@ -46,7 +46,7 @@ public final class LoginInfoBean {
 
     public LoginInfoBean(GregorianCalendar starttime1, int maxtimes1, int maxduration1) {
         starttime = starttime1;
-        maxtimes = maxtimes1;
+        maxtimes = maxtimes1-1;
         maxduration = maxduration1;
     }
 
