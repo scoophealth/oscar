@@ -102,7 +102,7 @@
     {"search_waiting_list", "select * from waitingListName order by name"},
     {"search_demo_waiting_list", "select * from waitingList where demographic_no=? AND listID=?"},
     {"search_future_appt", "select a.demographic_no, a.appointment_date from appointment a where a.appointment_date >= now() AND a.demographic_no=?"},
-    {"search_hindob", "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
+    {"search_hin", "select demographic_no from demographic where hin=?"},
    };
 
    //associate each operation with an output JSP file -- displaymode

@@ -57,7 +57,7 @@
 <%
 String curUser_no = (String)session.getAttribute("user");
   //if action is good, then give me the result
-	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
+	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
 	  String year, month, day;
     String[] param =new String[27];
@@ -168,18 +168,15 @@ String curUser_no = (String)session.getAttribute("user");
       <% return;
     }
 
-    // add checking dob/hin duplicated record, if there is a HIN number
+    // add checking hin duplicated record, if there is a HIN number
     if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5) {
   		//oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
 		//String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
-		String[] paramNameHin =new String[4];
-		paramNameHin[0]=request.getParameter("hin").trim();
-		paramNameHin[1]=param[10].trim();
-		paramNameHin[2]=param[11].trim();
-		paramNameHin[3]=param[12].trim();
-	    ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hindob");
+		String paramNameHin =new String();
+		paramNameHin=request.getParameter("hin").trim();
+	    ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
 	    if(rsHin.next()) {  %>
-	      ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord"/></font>***<br>
+	      ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
 	      <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
       <% return;
 	    }

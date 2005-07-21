@@ -149,7 +149,18 @@
 	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros,"add_record_ptbr");
 	    }
 	}
-    
+    if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5) {
+            //oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
+            //String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
+            String paramNameHin =new String();
+            paramNameHin=request.getParameter("hin").trim();
+        ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
+        if(rsHin.next()) {  %>
+          ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
+          <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
+    <% return;
+        }
+    }
     //add to waiting list if the waiting_list parameter in the property file is set to true
    
     WaitingList wL = WaitingList.getInstance();
