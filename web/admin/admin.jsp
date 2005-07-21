@@ -206,7 +206,11 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <a href="securitysearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchLogin"/></a><br>
           <a href=# onClick ="popupPage(300,600,'providerAddRole.jsp');return false;">Add A Role</a><br>
           <a href=# onClick ="popupPage(500,700,'providerRole.jsp');return false;">Assign Role to Provider</a></br>
-          <a href=# onClick ="popupPage(500,800,'providerPrivilege.jsp');return false;">Assign Role/Rights to Object</a>
+          <a href=# onClick ="popupPage(500,800,'providerPrivilege.jsp');return false;">Assign Role/Rights to Object</a></br>
+          <a href=# onClick ="popupPage(500,800,'logReport.jsp?keyword=admin');return false;">Security Log Report</a>
+		  <% if (oscarVariables.getProperty("login_lock", "").trim().equals("true")){ %>
+          	</br><a href=# onClick ="popupPage(500,800,'unLock.jsp');return false;">Unlock Account</a>
+		  <% } %>
         </p>
       </td>
     </tr>
