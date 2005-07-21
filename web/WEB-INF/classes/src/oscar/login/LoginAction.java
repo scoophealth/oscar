@@ -56,7 +56,7 @@ public final class LoginAction extends Action {
             return (new ActionForward(newURL));
         }
 
-        if (cl.isBlock(ip)) {
+        if (cl.isBlock(ip, userName)) {
             _logger.info(LOG_PRE + " Blocked: " + userName);
             return mapping.findForward(where); //go to block page
         }
@@ -123,15 +123,14 @@ public final class LoginAction extends Action {
             }
         // expired password
         } else if (strAuth != null && strAuth.length == 1 && strAuth[0].equals("expired")) {
-            LogAction.addLog(userName, "expired", LogConst.CON_LOGIN, "", ip);
-            cl.updateLoginList(ip);
+            cl.updateLoginList(ip, userName);
             String newURL = mapping.findForward("error").getPath();
-            newURL = newURL + "?errormsg=Your password is expired. Please contact your administrator.";
+            newURL = newURL + "?errormsg=Your account is expired. Please contact your administrator.";
             return (new ActionForward(newURL));
         } else { // go to normal directory
             //request.setAttribute("login", "failed");
-            LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);
-            cl.updateLoginList(ip);
+            //LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);
+            cl.updateLoginList(ip, userName);
             return mapping.findForward(where);
         }
         return mapping.findForward(where);

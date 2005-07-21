@@ -21,6 +21,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -109,6 +111,7 @@ public class LoginCheckLoginBean {
 
     private String[] cleanNullObj(String errorMsg) {
         _logger.info(errorMsg);
+        LogAction.addLog(username, "failed", LogConst.CON_LOGIN, "", ip);
         userpassword = null;
         password = null;
         if (DBHandler.isInit())
@@ -118,6 +121,7 @@ public class LoginCheckLoginBean {
 
     private String[] cleanNullObjExpire(String errorMsg) {
         _logger.info(errorMsg);
+        LogAction.addLog(username, "expired", LogConst.CON_LOGIN, "", ip);
         userpassword = null;
         password = null;
         if (DBHandler.isInit())
