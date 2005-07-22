@@ -127,6 +127,7 @@ function onSub() {
 <%
                 }
 %>
+                  <option value="*">All</option>
               </select>
             </td>
             <td nowrap>
@@ -154,6 +155,7 @@ function onSub() {
 	out.flush();
 	//String startDate = "";
 	//String endDate = "";
+	boolean bAll = false;
 	Vector vec = new Vector();
 	String providerNo = "";
 	if (request.getParameter("submit") != null) {
@@ -166,6 +168,11 @@ function onSub() {
 	  String eDate = request.getParameter("endDate");
       sql = "select * from log where provider_no='" + providerNo + "' and dateTime <= '";
       sql += eDate + "' and dateTime >= '" + sDate + "' and content like '" + content + "' order by dateTime desc ";
+      if("*".equals(providerNo)) {
+		  bAll = true;
+	      sql = "select * from log where dateTime <= '";
+	      sql += eDate + "' and dateTime >= '" + sDate + "' and content like '" + content + "' order by dateTime desc ";
+      }
       System.out.println("sql:" + sql);
       rs = dbObj.searchDBRecord(sql);
       while (rs.next()) {
@@ -175,6 +182,7 @@ function onSub() {
         prop.setProperty("content", rs.getString("content"));
         prop.setProperty("contentId", rs.getString("contentId"));
         prop.setProperty("ip", rs.getString("ip"));
+        prop.setProperty("provider_no", rs.getString("provider_no"));
         vec.add(prop);
       }
 
@@ -214,7 +222,7 @@ function onSub() {
             <TH width="10%">
               Action
             </TH>
-            <TH width="20%">
+            <TH width="10%">
               Content
             </TH>
             <TH width="20%">
@@ -223,6 +231,9 @@ function onSub() {
             <TH >
               IP
             </TH>
+<% if(bAll) { %>            
+            <TH>Provider</TH>
+<% } %>             
           </tr>
 <%
 String catName = "";
@@ -239,6 +250,9 @@ for (int i = 0; i < vec.size(); i++) {
           <td><%=prop.getProperty("content")%></td>
           <td><%=prop.getProperty("contentId")%></td>
           <td><%=prop.getProperty("ip")%></td>
+<% if(bAll) { %>            
+          <td><%=propName.getProperty(prop.getProperty("provider_no"))%></td>
+<% } %>             
         </tr>
 <% } %>
    <script type="text/javascript">
