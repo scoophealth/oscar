@@ -294,7 +294,7 @@ clear: left;
                                            Hashtable h = (Hashtable) providers.get(i);%>
                                         <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                                       <%}%>                    
-                                      <option value="-1" >Other</option>
+                                      <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
                                   </select>                                      
                          </div>
                    </fieldset>                                                                            
