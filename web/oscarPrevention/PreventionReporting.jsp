@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*"%>
+<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -36,13 +36,14 @@
   DemographicSets  ds = new DemographicSets();
   ArrayList sets = ds.getDemographicSets();
 
-  
+  String preventionText = "";
   
 %>
 
 <html:html locale="true">
 
 <head>
+<html:base/>
 <title>
 oscarPrevention I18n
 </title>
@@ -242,7 +243,8 @@ table.ele td{
                </html:form>
                
                <div>
-                <%String type = (String) request.getAttribute("ReportType");
+                <%ArrayList overDueList = new ArrayList();
+                  String type = (String) request.getAttribute("ReportType");
                   String ineligible = (String) request.getAttribute("inEligible");
                   String done = (String) request.getAttribute("up2date");
                   String percentage = (String) request.getAttribute("precent");
@@ -286,7 +288,11 @@ table.ele td{
                          for (int i = 0; i < list.size(); i++){
                             PreventionReportDisplay dis = (PreventionReportDisplay) list.get(i);
                             Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);
-                            DemographicData.Demographic demo = demoData.getDemographic(dis.demographicNo);%>
+                            DemographicData.Demographic demo = demoData.getDemographic(dis.demographicNo);
+                            if (dis.state != null && dis.state.equals("Overdue")){
+                               overDueList.add(dis.demographicNo);
+                            }
+                            %>
                        <tr>
                           <td>
                               <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&displaymode=edit&dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>                              
@@ -323,6 +329,20 @@ table.ele td{
                       <%}%>
                     </table>   
                   
+                  <%}%>
+                  
+                  <% if ( overDueList.size() > 0 ) { 
+                        String queryStr = "";
+                        for (int i = 0; i < overDueList.size(); i++){
+                            String demo = (String) overDueList.get(i);
+                            if (i == 0){
+                              queryStr += "demo="+demo;
+                            }else{
+                              queryStr += "&demo="+demo;  
+                            }
+                        }
+                        %>                        
+                        <a target="_blank" href="../tickler/AddTickler.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
                   <%}%>
                </div>
             </td>
