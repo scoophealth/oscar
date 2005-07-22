@@ -9,6 +9,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
 if(session.getAttribute("user") == null ) //|| !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
@@ -303,7 +304,10 @@ function popUpBillStatus(vheight,vwidth,varpage) {
               <a HREF="#" ONCLICK ="popupPage(600,750,'../report/reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a><br/>
            <% } %>
               <a href="#" onclick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a><br/>
-              <a href="#" onclick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a>
+              <a href="#" onclick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a><br/>
+              <oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
+              <a href="#" onclick="popupPage(600,900, 'oscarLogging.jsp')">Server Logging</a>
+              </oscar:oscarPropertiesCheck>
           </td>
       </tr>
 
