@@ -76,7 +76,7 @@ public class PreventionReportAction extends Action {
        double done= 0;
        
        PreventionData pd = new PreventionData();       
-       
+              
        if ( prevention == null){
           //Not sure what to do          
        }else if (prevention.equals("PAP")){
@@ -425,8 +425,8 @@ public class PreventionReportAction extends Action {
              DemographicData dd = new DemographicData();
              DemographicData.Demographic demoData = dd.getDemographic(demo);
              // This a kludge to get by conformance testing in ontario -- needs to be done in a smarter way
-             int totalImmunizations = numDtap + numHib + numMMR ;
-             int recommTotal = 9;
+             int totalImmunizations = numDtap + /*numHib +*/ numMMR ;
+             int recommTotal = 5; //9;NOT SURE HOW HIB WORKS
              int ageInMonths = demoData.getAgeInMonthsAsOf(asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
@@ -463,7 +463,7 @@ public class PreventionReportAction extends Action {
                       lastDate = (java.util.Date)formatter.parse(prevDateStr);
                    }catch (Exception e){e.printStackTrace();}
                 }                
-                if(prevs2.size() > 0){
+                /*if(prevs2.size() > 0){
                    Hashtable hHib  = (Hashtable) prevs2.get(prevs2.size()-1);                
                    if ( hHib.get("refused") != null && ((String) hHib.get("refused")).equals("1")){
                       refused = true;
@@ -479,7 +479,8 @@ public class PreventionReportAction extends Action {
                       }
                    }catch (Exception e){e.printStackTrace();}
                    
-                }                                                
+                } 
+                 */                                               
                 if(prevs4.size() > 0){
                    Hashtable hMMR  = (Hashtable) prevs4.get(prevs4.size()-1);
                    if ( hMMR.get("refused") != null && ((String) hMMR.get("refused")).equals("1")){
@@ -504,7 +505,7 @@ public class PreventionReportAction extends Action {
                 }
                 
                 //outcomes                        
-                if (!refused && totalImmunizations < 9 && ageInMonths >= 18 && ageInMonths <= 23){ // less < 9 
+                if (!refused && totalImmunizations < recommTotal && ageInMonths >= 18 && ageInMonths <= 23){ // less < 9 
                    prd.rank = 2;
                    prd.lastDate = prevDateStr;
                    prd.state = "due";
@@ -512,7 +513,7 @@ public class PreventionReportAction extends Action {
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "yellow"; //FF00FF
                    
-                } else if (!refused && totalImmunizations < 9 && ageInMonths > 23 ){ // overdue
+                } else if (!refused && totalImmunizations < recommTotal && ageInMonths > 23 ){ // overdue
                    prd.rank = 2;
                    prd.lastDate = prevDateStr;                
                    prd.state = "Overdue";
@@ -536,8 +537,11 @@ public class PreventionReportAction extends Action {
                    prd.color = "green";
                    done++;
                 }else{
-                   prd.state = "ERROR";
-                   
+                   prd.state = "------";
+                   prd.lastDate = prevDateStr;                   
+                   prd.numMonths = numMonths;
+                   prd.numShots = ""+totalImmunizations;
+                   prd.color = "white";
                 }
                 
                 
@@ -565,6 +569,9 @@ public class PreventionReportAction extends Action {
           
           /////
        }
+       
+       request.setAttribute("prevType",prevention);
+       System.out.println("setting prevention type to "+prevention);
        
        return (mapping.findForward("success"));
    }   
