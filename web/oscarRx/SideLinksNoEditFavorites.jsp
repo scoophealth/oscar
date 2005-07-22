@@ -42,8 +42,9 @@
             <a title="<%= allergies[j].getAllergy().getDESCRIPTION() %> - <%= allergies[j].getAllergy().getReaction() %>">
                 <%=allergies[j].getAllergy().getShortDesc(13,8,"...")%>                                                            
             </a>
+            </p>
         <%}%>
-              
+        </p>      
         
         <p class="PropSheetLevel1CurrentItem">Favorites</p>
         <p class="PropSheetMenuItemLevel1">
@@ -59,7 +60,8 @@
                     <%= favorites[j].getFavoriteName() %>
               <%}%>
             </a>
-            
+            </p>
        <%}%>
+       </p>
         </div>
     </td>
