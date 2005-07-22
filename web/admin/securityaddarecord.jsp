@@ -83,6 +83,9 @@
       } else if(document.forms[0].password.value != document.forms[0].conPassword.value) {
         alert('You have not confirmed your password. Please input your password again.');
         return false;
+      } else if(document.forms[0].pin.value != document.forms[0].conPin.value) {
+        alert('You have not confirmed your pin. Please input your pin again.');
+        return false;
       } else return true;
       // do nothing at the moment
       // check input data in the future
@@ -162,8 +165,9 @@
           <div align="right"><bean:message key="admin.securityrecord.formPIN"/>: </div>
         </td>
         <td>
-          <input type="password" name="pin">
-          <font size="-1">more than 3 digits<!-- bean:message key="admin.securityaddarecord.onlyInternet"/--></font> </td>
+          <input type="password" name="pin" size="10" />
+          <font size="-1">more than 3 digits<!-- bean:message key="admin.securityaddarecord.onlyInternet"/--></font> 
+          Confirm:<input type="password" name="conPin" size="10" /></td>
       </tr>
       <tr>
         <td colspan="2">
