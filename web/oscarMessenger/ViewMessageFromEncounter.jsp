@@ -269,7 +269,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
                                         <textarea name="Message" wrap="hard" readonly="true" rows="18" cols="60"><%= request.getAttribute("viewMessageMessage") %></textarea><br>
-                                        <input onclick="javascript:popup(<%=demographic_no%>, <%=messageId%>, <%=provider_no%>);" class="ControlPushButton" type="button" name="writeToEncounter" value="Write To Encounter">
+                                        
                                     </td>
                                     </html:form>
                                 </tr>
@@ -291,7 +291,10 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                         <tr>
                                             <td bgcolor="#EEEEFF"></td>
                                             <td bgcolor="#EEEEFF">        
-                                            <%=(String)demoMap.get(demoID)%>                                           
+                                            <%=(String)demoMap.get(demoID)%>     
+                                            <% if ( demoID.equals(demographic_no ) ) { %> 
+                                            <input onclick="javascript:popup(<%=demographic_no%>, <%=messageId%>, <%=provider_no%>);" class="ControlPushButton" type="button" name="writeToEncounter" value="Write To Encounter">
+                                            <% } %>
                                             </td>
                                         </tr>
                                         <%}
