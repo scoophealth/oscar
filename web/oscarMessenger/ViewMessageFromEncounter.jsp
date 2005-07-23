@@ -30,7 +30,7 @@ String providerview = request.getParameter("providerview")==null?"all":request.g
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
-<%@ page language="java" %>
+<%@ page language="java" import="java.util.Enumeration" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -51,7 +51,7 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
 
 oscar.oscarMessenger.util.MsgDemoMap msgDemoMap = new oscar.oscarMessenger.util.MsgDemoMap();
-java.util.Vector demoVector = msgDemoMap.getDemoVector((String) request.getAttribute("viewMessageId"));
+java.util.Hashtable demoMap = msgDemoMap.getDemoMap((String) request.getAttribute("viewMessageId"));
 
 String sPrevMsg = (String) request.getAttribute("viewMessagePosition");
 String sNextMsg = (String) request.getAttribute("viewMessagePosition");
@@ -284,16 +284,18 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                         <font style="font-weight:bold">Demographic(s) linked to this message</font>
                                     </td>
                                 </tr>
-                                <% if(demoVector!=null){
-                                    for(int i=0; i<demoVector.size(); i++){%>
-                                <tr>
-                                    <td bgcolor="#EEEEFF"></td>
-                                    <td bgcolor="#EEEEFF">        
-                                    <%=demoVector.elementAt(i)%>
-                                    </td>
-                                </tr>
-                                <%}
-                                }
+                                <% if(demoMap !=null){ %>
+                                             
+                                        <% for (Enumeration e=demoMap.keys(); e.hasMoreElements(); ) { 
+                                            String demoID = (String)e.nextElement(); %>
+                                        <tr>
+                                            <td bgcolor="#EEEEFF"></td>
+                                            <td bgcolor="#EEEEFF">        
+                                            <%=(String)demoMap.get(demoID)%>                                           
+                                            </td>
+                                        </tr>
+                                        <%}
+                                    }
                                 else{%>
                                 <tr>
                                     <td bgcolor="#EEEEFF"></td>

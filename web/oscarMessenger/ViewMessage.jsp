@@ -30,7 +30,7 @@ String providerview = request.getParameter("providerview")==null?"all":request.g
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
-<%@ page language="java" import="oscar.oscarDemographic.data.*" %>
+<%@ page language="java" import="oscar.oscarDemographic.data.*, java.util.Enumeration" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -50,7 +50,7 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 <%
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
 oscar.oscarMessenger.util.MsgDemoMap msgDemoMap = new oscar.oscarMessenger.util.MsgDemoMap();
-java.util.Vector demoVector = msgDemoMap.getDemoVector((String) request.getAttribute("viewMessageId"));
+java.util.Hashtable demoMap = msgDemoMap.getDemoMap((String) request.getAttribute("viewMessageId"));
 %>
 
 <title>
@@ -267,6 +267,23 @@ function popupSearchDemo(keyword){ // open a new popup window
                                     <%
                                     }
                                 %>
+                                <%  
+                                    String pdfAttach = (String) request.getAttribute("viewMessagePDFAttach");
+                                    if ( pdfAttach != null && pdfAttach.equals("1") ){
+                                    %>
+                                    <tr>
+                                        <td bgcolor="#DDDDFF">
+                                            <bean:message key="oscarMessenger.ViewMessage.msgAttachments"/>:
+                                        </td>
+                                        <td bgcolor="#B8B8FF">
+                                            <a href="javascript:popupViewAttach(700,960,'ViewPDFAttach.do?attachId=<%=id%>')">
+                                            <bean:message key="oscarMessenger.ViewMessage.btnAttach"/>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <%
+                                    }
+                                %>
                                         
                                 <tr>
                                     
@@ -328,7 +345,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                 <tr>
                                     <td bgcolor="#EEEEFF" ></td>             
                                     <td bgcolor="#EEEEFF" >
-                                        <input type="text" name="selectedDemo" size="20" readonly style="background:#EEEEFF;border:none" value="none"/>
+                                        <input type="text" name="selectedDemo" size="30" readonly style="background:#EEEEFF;border:none" value="none"/>
                                         <script>
                                             if ( "<%=demoName%>" != "null" && "<%=demoName%>" != "") {
                                                 document.forms[0].selectedDemo.value = "<%=demoName%>"
@@ -336,7 +353,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                             }
                                         </script>
                                            <input type="button" class="ControlPushButton" name="linkDemo" value="Link to demographic" onclick="popup(document.forms[0].demographic_no.value,'<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','linkToDemographic')" />
-                                           <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to encounter" onclick="popup(document.forms[0].demographic_no.value,'<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />
+                                        
                                            <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
                                     </td>
                                                                         
@@ -350,16 +367,21 @@ function popupSearchDemo(keyword){ // open a new popup window
                                         <font style="font-weight:bold">Demographic(s) linked to this message</font>
                                     </td>
                                 </tr>
-                                <% if(demoVector!=null){
-                                    for(int i=0; i<demoVector.size(); i++){%>
-                                <tr>
-                                    <td bgcolor="#EEEEFF"></td>
-                                    <td bgcolor="#EEEEFF">        
-                                    <%=demoVector.elementAt(i)%>
-                                    </td>
-                                </tr>
-                                <%}
-                                }
+                                
+   
+                                <% if(demoMap !=null){ %>
+                                             
+                                        <% for (Enumeration e=demoMap.keys(); e.hasMoreElements(); ) { 
+                                            String demoID = (String)e.nextElement(); %>
+                                        <tr>
+                                            <td bgcolor="#EEEEFF"></td>
+                                            <td bgcolor="#EEEEFF">        
+                                            <input type="text" size="30" readonly style="background:#EEEEFF;border:none" value="<%=(String)demoMap.get(demoID)%>"/>
+                                            <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to encounter" onclick="popup( '<%=demoID%>','<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />                                            
+                                            </td>
+                                        </tr>
+                                        <%}
+                                    }
                                 else{%>
                                 <tr>
                                     <td bgcolor="#EEEEFF"></td>
