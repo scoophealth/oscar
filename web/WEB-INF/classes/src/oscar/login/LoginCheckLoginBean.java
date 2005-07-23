@@ -111,7 +111,7 @@ public class LoginCheckLoginBean {
 
     private String[] cleanNullObj(String errorMsg) {
         _logger.info(errorMsg);
-        LogAction.addLog(username, "failed", LogConst.CON_LOGIN, "", ip);
+        LogAction.addALog("", "failed", LogConst.CON_LOGIN, username, ip);
         userpassword = null;
         password = null;
         if (DBHandler.isInit())
@@ -121,7 +121,7 @@ public class LoginCheckLoginBean {
 
     private String[] cleanNullObjExpire(String errorMsg) {
         _logger.info(errorMsg);
-        LogAction.addLog(username, "expired", LogConst.CON_LOGIN, "", ip);
+        LogAction.addALog("", "expired", LogConst.CON_LOGIN, username, ip);
         userpassword = null;
         password = null;
         if (DBHandler.isInit())

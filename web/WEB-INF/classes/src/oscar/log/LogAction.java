@@ -18,15 +18,35 @@
  */
 package oscar.log;
 
+import java.sql.SQLException;
+
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+
+import oscar.login.DBHelp;
 
 /**
  * @author yilee18
  */
 public class LogAction {
     private static final Logger _logger = Logger.getLogger(LogAction.class);
+
     public static void addLog(String provider_no, String action, String content, String contentId, String ip) {
-       LogWorker logWorker = new LogWorker(provider_no,action,content,contentId, ip);
-       logWorker.start();
+        LogWorker logWorker = new LogWorker(provider_no, action, content, contentId, ip);
+        logWorker.start();
+    }
+
+    public static boolean addALog(String provider_no, String action, String content, String contentId, String ip) {
+        boolean ret = false;
+        DBHelp db = new DBHelp();
+        String sql = "insert into log (provider_no,action,content,contentId, ip) values('" + provider_no;
+        sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "')";
+        try {
+            ret = db.updateDBRecord(sql, provider_no);
+        } catch (SQLException e) {
+            _logger.error("failed to insert into logging table providerNo" + provider_no + ", action " + action
+                    + ", content " + content + ", contentId " + contentId + ", ip " + ip);
+        }
+        return ret;
     }
 }
