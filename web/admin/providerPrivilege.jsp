@@ -380,7 +380,9 @@ System.out.println(roleUser);
           <th>Priority</th>
           </tr>
       <form name="myform2" action="providerPrivilege.jsp" method="POST">
-<%		for (int i = 0; i <= vecObjectId.size(); i++) {%>
+<%		for (int i = 0; i <= vecObjectId.size(); i++) {
+			if( i!=vecObjectId.size() && ((String)vecObjectId.get(i)).indexOf("$")>=0 ) { continue; }
+%>
             <tr bgcolor="<%=bgColor%>">
               <td>
 <%			if(i==0) { %>
@@ -396,6 +398,7 @@ System.out.println(roleUser);
 <%					for (int j = 0; j < vecProviderNo.size(); j++) {%>
                       <option value="<%=vecProviderNo.get(j)%>" > <%= vecProviderName.get(j) %> </option>
 <%                  }%>
+                    <option value="_principal" > _principal </option>
                   </select>
 <%			}%>
               </td>
