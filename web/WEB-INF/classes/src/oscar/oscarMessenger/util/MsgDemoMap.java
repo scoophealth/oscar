@@ -9,6 +9,7 @@ package oscar.oscarMessenger.util;
 import oscar.oscarDB.DBHandler;
 
 import java.sql.ResultSet;
+import java.util.Hashtable;
 import java.util.Vector;
 /**
  *
@@ -47,25 +48,25 @@ public class MsgDemoMap {
         }
     }
     
-    public Vector getDemoVector(String msgId){
-        Vector demoVector= new Vector();
+    public Hashtable getDemoMap (String msgId){
+        Hashtable demoMap = new Hashtable();
         try{            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "";                               
-            sql = "select d.last_name, d.first_name from msgDemoMap m, demographic d where messageID ='"+msgId + 
+            sql = "select d.last_name, d.first_name, d.demographic_no from msgDemoMap m, demographic d where messageID ='"+msgId + 
                   "' and d.demographic_no = m.demographic_no order by d.last_name, d.first_name";
                                 
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                demoVector.add(rs.getString("last_name")+", "+rs.getString("first_name"));
+                demoMap.put(rs.getString("d.demographic_no"), rs.getString("last_name")+", "+rs.getString("first_name") );
             }
             db.CloseConn();
         }
         catch (java.sql.SQLException e){ 
-            demoVector = null;
-        }
+            demoMap = null;
+        }  
         
-        return demoVector;
+        return demoMap;
     }
     
     public Vector getMsgVector(String demographic_no){
@@ -108,3 +109,4 @@ public class MsgDemoMap {
         }
     }
 }
+
