@@ -26,7 +26,7 @@
   <%@ page errorPage="../errorpage.jsp" %>
   <%@ page import="java.util.*" %>
   <%@ page import="java.sql.*" %>
-  <%@ page import="oscar.oscarBilling.data.BillingONDataHelp" %>
+  <%@ page import="oscar.login.*" %>
   <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
   <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%
@@ -50,7 +50,7 @@ String curUser_no = (String)session.getAttribute("user");
 %>
 
 <%
-  BillingONDataHelp dbObj = new BillingONDataHelp();
+  DBHelp dbObj = new DBHelp();
   Properties propName = new   Properties();
   // select provider list
   sql   = "select * from provider p order by p.first_name, p.last_name ";
@@ -139,7 +139,7 @@ function onSub() {
               <img src="../images/cal.gif" id="endDate_cal">
             </td>
             <td nowrap>
-              
+
               <select name="content">
                 <option value="admin">Admin</option>
                 <option value="login">Log in</option>
@@ -231,9 +231,9 @@ function onSub() {
             <TH >
               IP
             </TH>
-<% if(bAll) { %>            
+<% if(bAll) { %>
             <TH>Provider</TH>
-<% } %>             
+<% } %>
           </tr>
 <%
 String catName = "";
@@ -250,9 +250,9 @@ for (int i = 0; i < vec.size(); i++) {
           <td><%=prop.getProperty("content")%></td>
           <td><%=prop.getProperty("contentId")%></td>
           <td><%=prop.getProperty("ip")%></td>
-<% if(bAll) { %>            
+<% if(bAll) { %>
           <td><%=propName.getProperty(prop.getProperty("provider_no"))%></td>
-<% } %>             
+<% } %>
         </tr>
 <% } %>
    <script type="text/javascript">
