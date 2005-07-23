@@ -41,8 +41,8 @@
   </title>
 </head>
 <body>
-  <h2>OSCAR has encountered the following fatal error:</h2>
-  <hr>
+  <!--h2>OSCAR has encountered the following fatal error:</h2>
+  <hr-->
   <p><%=errormsg%>
   <p>Please correct and try again.
 </body>
