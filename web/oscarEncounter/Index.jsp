@@ -28,6 +28,8 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic$ = request.getParameter("demographicNo") ;
+    boolean bPrincipalControl = false;
+    boolean bPrincipalDisplay = false;
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=true%>" >
 "You have no right to access this page!"
@@ -37,6 +39,15 @@
 <security:oscarSec roleName="<%=roleName$%>" objectName="<%="_eChart$"+demographic$%>" rights="o" reverse="<%=false%>" >
 You have no rights to access the data!
 <% response.sendRedirect("../noRights.html"); %>
+</security:oscarSec>
+
+<%-- only principal has the save rights --%>
+<security:oscarSec roleName="<%="_principal"%>" objectName="<%="_eChart"%>" rights="ow" reverse="<%=false%>" >
+<% 	bPrincipalControl = true;
+	if(EctPatientData.getProviderNo(demographic$).equals((String) session.getAttribute("user")) ) {
+		bPrincipalDisplay = true;
+	}
+%>
 </security:oscarSec>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -1269,11 +1280,13 @@ border-right: 2px solid #cfcfcf;
 
 <!-- security code block -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="w">
+					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
 	</security:oscarSec>
+					<% } %>
 	</security:oscarSec>
 <!-- security code block -->
                                     <input type="button" style="height:20px" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
