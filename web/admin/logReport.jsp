@@ -251,7 +251,7 @@ for (int i = 0; i < vec.size(); i++) {
           <td><%=prop.getProperty("contentId")%></td>
           <td><%=prop.getProperty("ip")%></td>
 <% if(bAll) { %>
-          <td><%=propName.getProperty(prop.getProperty("provider_no"))%></td>
+          <td><%=propName.getProperty(prop.getProperty("provider_no"), "")%></td>
 <% } %>
         </tr>
 <% } %>
