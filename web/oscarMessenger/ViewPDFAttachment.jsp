@@ -46,9 +46,9 @@
 <head>
 
 <%
-    String attch = (String) request.getAttribute("Attachment");
+    String pdfAttch = (String) request.getAttribute("PDFAttachment");
     
-    session.setAttribute("Attachment",attch);
+    session.setAttribute("PDFAttachment", pdfAttch);
 %>
 
 <title>
@@ -84,19 +84,19 @@ Document Transfer
 
             </td>
             
-            <html:form action="/oscarMessenger/ViewPDF">
+            <html:form action="/oscarMessenger/ViewPDFFile">
                 <td class="MainTableBottomRowRightColumn">
                     
-                    <% Vector attVector = Doc2PDF.getXMLTagValue(attch, "FILE_ID" ); %>
+                    <% Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "TITLE" ); %>
                     
                     <% for ( int i = 0 ; i < attVector.size(); i++) { %>
                             
 
-                            <input type=submit onclick=" document.forms[0].file_id.value = <%=i%>" value="<%=i%>" /> <br/>
+                            <%=(String) attVector.get(i)%> <input type=submit onclick=" document.forms[0].file_id.value = <%=i%>" value="Download" /> <br/>
                             
                     <% }  %>
-                    <html:text property="file_id"/> 
-                    <html:hidden property="attachment" value="<%=attch%>" />
+                    <html:hidden property="file_id"/> 
+                    <html:hidden property="attachment" value="<%=pdfAttch%>" />
                 </td>
             </html:form>
         </tr>

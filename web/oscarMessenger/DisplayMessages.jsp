@@ -337,21 +337,16 @@ function BackToOscar()
                                     <td bgcolor="#EEEEFF" width="75">
                                     <%if (pageType != 1){%>
                                         <html:checkbox property="messageNo" value="<%=dm.messageId %>" />
-                                        <% String atta = dm.attach;
-                                            if (atta.equals("1")){
-                                            %><img src="img/clip4.JPG"><%
-                                            }
-                                         %>
-                                    <%}else{
-                                            String atta = dm.attach;
-                                            if (atta.equals("1")){
-                                            %><img src="img/clip4.JPG"><%
-                                            }
+                                     <% } %>
+                                    &nbsp;
+                                    <% 
+                                       String atta = dm.attach;
+                                       String pdfAtta = dm.pdfAttach; 
+                                       if (atta.equals("1") || pdfAtta.equals("1") ){ %>
+                                            <img src="img/clip4.JPG">
+                                    <% } %>
 
 
-                                    %>
-                                        &nbsp;
-                                    <%}%>
                                     </td>
                                     <td bgcolor="#EEEEFF">
                                     <% String key = "oscarMessenger.DisplayMessages.msgStatus"+dm.status.substring(0,1).toUpperCase()+dm.status.substring(1); %>

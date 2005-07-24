@@ -32,10 +32,11 @@ public class MsgSessionBean
     private String providerNo = null;
     private String userName   = null;
     private String attach     = null;
-    private byte[] pdfAttach     = null;
+    private String pdfAttach  = null;
     private String messageId  = null;
     private String demographic_no   = null;
-    private int pdfCount = 0;
+    private int totalAttachmentCount = 0;
+    private int currentAttachmentCount = 0;
 
     public String getProviderNo()
     {
@@ -79,59 +80,69 @@ public class MsgSessionBean
         this.attach = str;
     }
     
-    public void setPDFAttachment( byte[] binStr){
+    public void setPDFAttachment( String binStr){
         this.pdfAttach = binStr;
     }
     
-    public byte[] getPDFAttachment(){
+    public String getPDFAttachment(){
         return this.pdfAttach;
     }
     
-    public void setAppendPDFAttachment ( byte[] binStr){
-
-        byte[] tempBinStr = new byte[ getPDFStartTag().getBytes().length +  binStr.length + getPDFEndTag().getBytes().length ];
+    public void setAppendPDFAttachment ( String binStr, String pdfTitle){
 
         if ( this.getPDFAttachment() == null ) {
-            
-            int i=0, j=0;
-            for( i=0; i< getPDFStartTag().getBytes().length; i ++){
-                tempBinStr[i] = getPDFStartTag().getBytes()[i];    
-                j++;
-            }
-                
-            for( i=0; i< binStr.length; i ++){
-                tempBinStr[j] = binStr[i];    
-                j++;
-            }
-            
-            for( i=0; i< getPDFEndTag().getBytes().length; i ++){
-                tempBinStr[j] = getPDFEndTag().getBytes()[i];    
-                j++;
-            }
-            
-            this.setPDFAttachment(tempBinStr );
+
+            this.setPDFAttachment( getPDFStartTag() + getContentTag( binStr)  + getPDFTitleTag(pdfTitle) + getPDFEndTag( ));
             
         }
         else {
-            String currentAtt = this.getAttachment();
-            //this.setPDFAttachment(currentAtt + " " + getPDFStartTag() + pdfStr + getPDFEndTag() );
+            String currentAtt = this.getPDFAttachment();
+            this.setPDFAttachment(currentAtt + " " + getPDFStartTag() +  getContentTag( binStr)  + getPDFTitleTag(pdfTitle) + getPDFEndTag( ));
         }
-        pdfCount ++ ;
+        setCurrentAttachmentCount( getCurrentAttachmentCount()+1 ) ;
     }
 
     public String getPDFStartTag( ) {
-        return "<PDF><FILE_ID>" + pdfCount + "</FILE_ID><CONTENT>";    
+        return "<PDF><FILE_ID>" + currentAttachmentCount + "</FILE_ID>";    
     }
     
+    public String getPDFTitleTag( String pdfTitle){
+        return "<TITLE>" + pdfTitle + "</TITLE>";    
+    }
+    
+    public String getContentTag(String binStr ) {
+        return "<CONTENT>" + binStr + "</CONTENT>";
+    }    
     public String getPDFEndTag( ) {
-        return "</CONTENT></PDF>";
+        return "</PDF>";
     }
     
 
     public void nullAttachment(){
         this.attach = null;
+        this.pdfAttach = null;
+        this.totalAttachmentCount = 0;
+        this.currentAttachmentCount = 0;
+    }
+    
+    public int getTotalAttachmentCount ( ){
+        return this.totalAttachmentCount;
     }
 
+    public void setTotalAttachmentCount ( int totalAttachment){
+        this.totalAttachmentCount = totalAttachment;
+    }
+    
+    public int getCurrentAttachmentCount(){
+        return this.currentAttachmentCount;
+    }
+
+    public void setCurrentAttachmentCount( int  currentAttachmentCount){
+        this.currentAttachmentCount = currentAttachmentCount;
+    }
+        
+    
+    
     public String getMessageId (){
         if ( this.messageId == null){
             this.messageId = new String();

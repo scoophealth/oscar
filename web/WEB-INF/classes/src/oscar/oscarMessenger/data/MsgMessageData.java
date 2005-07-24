@@ -265,7 +265,7 @@ public class MsgMessageData {
     //insert all the provider ids that will get the message along with the
     //message id plus a status of new
     //messageId = messageData.sendMessage(message,       subject,       userName,       sentToWho,       userNo,              providerListing );
-    public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,java.util.ArrayList providers,String attach ){
+    public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,java.util.ArrayList providers,String attach, String pdfAttach ){
         // System.out.println("message "+message+" subject "+subject+" userName "+userName+" sentToWho "+sentToWho+" userNo "+userNo);
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
       String messageid=null;
@@ -277,7 +277,12 @@ public class MsgMessageData {
                 attach = str.q(attach);
             }
 
-         String sql = new String("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo,sentByLocation,attachment)"
+            if (pdfAttach != null){
+                pdfAttach = str.q(pdfAttach);
+            }
+
+
+         String sql = new String("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo,sentByLocation,attachment, pdfattachment)"
                        +" values (now(),now(),'"
                        +str.q(message)+"','"
                        +str.q(subject)+"','"
@@ -285,7 +290,8 @@ public class MsgMessageData {
                        +sentToWho+"','"
                        +userNo+"','"
                        +getCurrentLocationId()+"','"
-                       +attach+"')");
+                       +attach+"','"
+                       +pdfAttach+"')");
          // System.out.println("here2 "+sql);
          db.RunSQL(sql);
          // System.out.println("here3");

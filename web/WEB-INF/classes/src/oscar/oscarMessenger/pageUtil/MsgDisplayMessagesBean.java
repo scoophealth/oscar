@@ -288,7 +288,7 @@ public class MsgDisplayMessagesBean {
         if (moreMessages.equals("false"))
         {messageLimit=" Limit "+initialDisplay;}
         
-        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and ml.message = m.messageid order by "+getOrderBy(orderby)+messageLimit);
                 
@@ -302,11 +302,18 @@ public class MsgDisplayMessagesBean {
            dm.thedate    = rs.getString("thedate");
            dm.sentby     = rs.getString("sentby");
            String att    = rs.getString("attachment");
+           String pdfAtt    = rs.getString("pdfattachment");           
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
                 dm.attach = "1";
               }
+              if ( pdfAtt == null || pdfAtt.equals("null") ){
+                dm.pdfAttach = "0";
+              }else{
+                dm.pdfAttach = "1";
+              }
+           
            msg.add(dm);
 
            // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
@@ -337,7 +344,7 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m, msgDemoMap map"
+        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m, msgDemoMap map"
         +" where map.demographic_no = '"+ demographic_no+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and m.messageid = map.messageID and ml.message=m.messageid order by "+getOrderBy(orderby));
         System.out.println(sql);
@@ -354,11 +361,18 @@ public java.util.Vector estDemographicInbox(){
            dm.sentby     = rs.getString("sentby");
            
            String att    = rs.getString("attachment");
+           String pdfAtt    = rs.getString("pdfattachment");
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
                 dm.attach = "1";
               }
+              if (pdfAtt == null || pdfAtt.equals("null") ){
+                dm.pdfAttach = "0";
+              }else{
+                dm.pdfAttach = "1";
+              }
+
            
            if(rs.isLast()){
                dm.isLastMsg = true;
@@ -401,7 +415,7 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and ml.message = m.messageid order by "+getOrderBy(orderby));
                 
@@ -416,11 +430,18 @@ public java.util.Vector estDemographicInbox(){
            dm.thedate    = rs.getString("thedate");
            dm.sentby     = rs.getString("sentby");
            String att    = rs.getString("attachment");
+           String pdfAtt    = rs.getString("pdfattachment");
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
                 dm.attach = "1";
               }
+              if (pdfAtt == null || pdfAtt.equals("null") ){
+                dm.pdfAttach = "0";
+              }else{
+                dm.pdfAttach = "1";
+              }
+           
            msg.add(dm);
 
            // System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));
@@ -522,7 +543,7 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select messageid as status, messageid as message , thedate,  thesubject, sentby, attachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"' order by "+getOrderBy(orderby));                
+        String sql = new String("select messageid as status, messageid as message , thedate,  thesubject, sentby, attachment, pdfattachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"' order by "+getOrderBy(orderby));                
 
         rs = db.GetSQL(sql);
 
@@ -535,11 +556,18 @@ public java.util.Vector estDemographicInbox(){
            dm.thedate    = rs.getString("thedate");
            dm.sentby     = rs.getString("sentby");
            String att    = rs.getString("attachment");
+           String pdfAtt    = rs.getString("pdfattachment");           
               if (att == null || att.equals("null") ){
                 dm.attach = "0";
               }else{
                 dm.attach = "1";
               }
+              if (pdfAtt == null || pdfAtt.equals("null") ){
+                dm.pdfAttach = "0";
+              }else{
+                dm.pdfAttach = "1";
+              }
+           
            msg.add(dm);
 
            //System.out.println("message "+rs.getString("message")+" status "+rs.getString("status"));

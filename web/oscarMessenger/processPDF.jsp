@@ -12,6 +12,8 @@
 <%
 String demographic_no = (String) request.getParameter("demographic_no");
 String uri = (String) request.getParameter("uri");
+String pdfTitle = (String) request.getParameter("pdfTitle");
+
 %>
 
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -47,18 +49,19 @@ String uri = (String) request.getParameter("uri");
         
         <html:form action="/oscarMessenger/ProcessDoc2PDF">
 
-        Attaching selected Demographic <%=demographic_no%>
+        Attaching <%=demographic_no%> <%=pdfTitle%>
 
             <textarea name="srcText" rows="5" cols="80"></textarea>
             <html:hidden property="isPreview" value="false" />
             <html:submit property="ok"/>
+            <html:hidden property="pdfTitle" value="<%=pdfTitle%>" />
 
         </html:form>
         
         <script>
             SetBottomURL('<%=uri%>' + "&demographic_no=" + '<%=demographic_no%> ' );
-            setTimeout("GetBottomSRC()", 1000);      
-            setTimeout("document.forms[0].submit()", 1000);     
+            setTimeout("GetBottomSRC()", 5000); 
+            setTimeout("document.forms[0].submit()", 5000);     
             this.close();
             parent.window.focus();
             

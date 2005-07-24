@@ -10,14 +10,15 @@
 <%
 String demographic_no = (String) request.getParameter("demographic_no");
 String uri = (String) request.getParameter("uri");
+String pdfTitle = (String) request.getParameter("pdfTitle");
 
 %>
 
 <title>OSCAR attachment <%=uri%> </title>
 
-<frameset rows="100,100">
-    <frame name="attMain" src="processPDF.jsp?demographic_no=<%=demographic_no%>&uri=<%=uri%>" noresize scrolling=auto marginheight=5 marginwidth=5>
-    <frame name="attFrame" src="<%=uri%>&demographic_no=<%=demographic_no%>">
+<frameset rows="400,0">
+    <frame name="attMain" src="processPDF.jsp?demographic_no=<%=demographic_no%>&pdfTitle=<%=pdfTitle%>&uri=<%=uri%>" noresize scrolling=auto marginheight=5 marginwidth=5>
+    <frame name="attFrame" src="">
 </frameset>
 
 </html>

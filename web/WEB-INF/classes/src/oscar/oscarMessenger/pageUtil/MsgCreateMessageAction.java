@@ -61,6 +61,7 @@ public class MsgCreateMessageAction extends Action {
                 String userNo   = bean.getProviderNo();
                 String userName = bean.getUserName();
                 String att      = bean.getAttachment();
+                String pdfAtt      = bean.getPDFAttachment();
                 bean.nullAttachment();
             String message      = ((MsgCreateMessageForm)form).getMessage();
             String[] providers  = ((MsgCreateMessageForm)form).getProvider();
@@ -98,7 +99,7 @@ public class MsgCreateMessageAction extends Action {
                 sentToWho = sentToWho+" "+messageData.getRemoteNames(remoteProviderListing);
             }
 
-            messageId = messageData.sendMessage2(message,subject,userName,sentToWho,userNo,providerListing,att);
+            messageId = messageData.sendMessage2(message,subject,userName,sentToWho,userNo,providerListing,att, pdfAtt);
 
             // System.out.println("messages id = "+messageId);
 

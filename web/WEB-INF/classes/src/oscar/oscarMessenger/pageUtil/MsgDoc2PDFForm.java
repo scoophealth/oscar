@@ -36,7 +36,9 @@ public final class MsgDoc2PDFForm extends ActionForm {
     boolean isPreview;
     String jsessionid;
     String[] uriArray;
-   
+    String attachmentNumber = null;
+    String pdfTitle;
+    
     public String getSrcText(){
         return srcText;
     }
@@ -62,6 +64,14 @@ public final class MsgDoc2PDFForm extends ActionForm {
         this.jsessionid = jsessionid;
     }
     
+    public String getPdfTitle(){
+        return pdfTitle;
+    }
+    
+    public void setPdfTitle(String pdfTitle ){
+        this.pdfTitle = pdfTitle;
+    }    
+    
     public String[] getUriArray(){
         return uriArray;
     }
@@ -70,4 +80,11 @@ public final class MsgDoc2PDFForm extends ActionForm {
         this.uriArray = uriArray;
     }    
     
+    public void setAttachmentNumber(String attachmentNumber ){
+        this.attachmentNumber =  attachmentNumber;
+    }
+    
+    public String getAttachmentNumber(){
+        return attachmentNumber;
+    }    
 }

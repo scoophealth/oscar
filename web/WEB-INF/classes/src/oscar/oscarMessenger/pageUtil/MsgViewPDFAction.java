@@ -57,12 +57,12 @@ public class MsgViewPDFAction extends Action {
         
         try  {
             
-            String attachment = ( String) request.getSession().getAttribute("Attachment");
+            String pdfAttachment = ( String) request.getSession().getAttribute("PDFAttachment");
             String id  = frm.getFile_id();
             int fileID = Integer.parseInt(id );
             
-            if ( attachment != null && attachment.length() != 0) {
-                Vector attVector = Doc2PDF.getXMLTagValue(attachment, "CONTENT" );
+            if ( pdfAttachment != null && pdfAttachment.length() != 0) {
+                Vector attVector = Doc2PDF.getXMLTagValue(pdfAttachment, "CONTENT" );
                 String pdfFile = ( String) attVector.elementAt(fileID);
                 Doc2PDF.PrintPDFFromBin ( response, pdfFile );
             }

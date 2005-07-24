@@ -224,6 +224,6 @@ public  class MsgRemoteMessageData extends Thread{
 
         String st = null;
         MsgMessageData messageData = new MsgMessageData();
-        messageData.sendMessage2(stringBuffer.toString(),"Transmission Failed :"+subject,"Mailer Daemon", sentby,"",aList,st);
+        messageData.sendMessage2(stringBuffer.toString(),"Transmission Failed :"+subject,"Mailer Daemon", sentby,"",aList,st, "");
         }
 }

@@ -377,8 +377,8 @@ function popupSearchDemo(keyword){ // open a new popup window
 
 function popupAttachDemo(demographic){ // open a new popup window
     var vheight = 700;
-    var vwidth = 980;  
-    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    
+    var vwidth = 800;  
+    windowprops = "height="+vheight+",width="+vwidth+",location=0,scrollbars=1,menubar=0,toolbar=1,resizable=1,screenX=0,screenY=0,top=0,left=0";    
     var page = 'attachmentFrameset.jsp?demographic_no=' +demographic;
     var popUp=window.open(page, "msgAttachDemo", windowprops);
     if (popUp != null) {
@@ -578,7 +578,8 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                 <html:textarea name="msgCreateMessageForm" property="message" cols="60" rows="18" />
                                                 <%
                                                 String att = bean.getAttachment();
-                                                if (att != null){ %>
+                                                String pdfAtt = bean.getPDFAttachment();
+                                                if (att != null || pdfAtt != null){ %>
                                                     <br><bean:message key="oscarMessenger.CreateMessage.msgAttachments"/>
 
                                                 <% }
@@ -629,7 +630,7 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                 }
                                             </script>
                                                <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
-                                                <input type="button" class="ControlPushButton" name="attachDemo" value="Attach Demographic" onclick="popupAttachDemo(document.forms[0].demographic_no.value)" style="display:none" />                                               
+                                               <input type="button" class="ControlPushButton" name="attachDemo" value="Attach Demographic" onclick="popupAttachDemo(document.forms[0].demographic_no.value)" style="display:none" />                                               
                                         </td>
 
                                     </tr> 

@@ -89,7 +89,7 @@ public class MsgViewMessageAction extends Action {
               rs = db.GetSQL(sql);
 
               if (rs.next()) {
-                 String attach;
+                 String attach, pdfAttach;
                  String message = (rs.getString("themessage"));
                  String subject = (rs.getString("thesubject"));
                  String sentby  = (rs.getString("sentby"));
@@ -97,13 +97,23 @@ public class MsgViewMessageAction extends Action {
                  String thetime = (rs.getString("theime"));
                  String thedate = (rs.getString("thedate"));
                  String att     = rs.getString("attachment");
+                 String pdfAtt     = rs.getString("pdfattachment");
                  // System.out.println("attach "+att);
                  if (att == null || att.equals("null") ){
                     attach ="0";
                  }else{
                     attach ="1";
                  }
+
+
+                 if (pdfAtt == null || pdfAtt.equals("null") ){
+                    pdfAttach ="0";
+                 }else{
+                    pdfAttach ="1";
+                 }
+
                  // System.out.println("the message "+message+" "+subject);
+                 
 
                  request.setAttribute("viewMessageMessage",message);
                  request.setAttribute("viewMessageSubject",subject);
@@ -112,6 +122,7 @@ public class MsgViewMessageAction extends Action {
                  request.setAttribute("viewMessageTime",thetime);
                  request.setAttribute("viewMessageDate",thedate);
                  request.setAttribute("viewMessageAttach",attach);
+                 request.setAttribute("viewMessagePDFAttach",pdfAttach);
                  request.setAttribute("viewMessageId",messageNo);                 
                  // not from query
                  request.setAttribute("viewMessageNo",messageNo);

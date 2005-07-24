@@ -1,7 +1,9 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ page language="java" %>
-<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, oscar.oscarEncounter.data.*, oscar.oscarEncounter.pageUtil.EctSessionBean "%>
+<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, 
+                oscar.oscarEncounter.data.*, oscar.oscarEncounter.pageUtil.EctSessionBean, oscar.oscarRx.pageUtil.RxSessionBean,
+                oscar.oscarRx.data.RxPatientData"%>
 <%@  page import=" java.util.*, org.w3c.dom.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -64,27 +66,39 @@ request.getSession().setAttribute("EctSessionBean",bean);
     function ProcessPDF(demographic){
     
         var uriArray = document.forms[0].uriArray;
+        var pdfTitleArray = document.forms[0].pdfTitle;
+        document.forms[0].isPreview.value = false;
 
-        var vheight = 10;
+        var vheight = 100;
         var vwidth = 10;  
+        j= 0;
         windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=0,left=0";            
         for( i = 0; i < uriArray.length ; i ++ ) {
  
             if ( uriArray[i].checked ) {
-               var page = 'processAttFrameset.jsp?demographic_no=' +demographic + '&uri=' + uriArray[i].value;
+               j++;
+               
+               var page = 'processAttFrameset.jsp?demographic_no=' +demographic + '&pdfTitle=' + pdfTitleArray[i].value + '&uri=' + uriArray[i].value; 
                var popUp=window.open(page, "msgAttachDemo" + i, windowprops);     
+               document.forms[0].attachmentNumber.value = j;
+               
+               setTimeout("j = j", 1000);          
             }
         }
         
-        setTimeout("top.opener.location.reload()", 3000);          
-        setTimeout(" top.window.close()", 3000);          
+        document.forms[0].submit();
+        //setTimeout("top.opener.location.reload()", 1500* i);          
+        //setTimeout(" top.window.close()", 1500 * i);          
        
     }
     
     
 
     </script>
-    <body>
+
+    
+
+<body>
         <%-- <jsp:useBean id="beanInstanceName" scope="session" class="beanPackage.BeanClassName" /> --%>
         <%-- <jsp:getProperty name="beanInstanceName"  property="propertyName" /> --%>
             
@@ -94,6 +108,25 @@ request.getSession().setAttribute("EctSessionBean",bean);
         Selected Demographic <%=demographic_no%>
 
         <table border="1" cellpadding="1" cellspacing="1">
+                <tr>
+        <td colspan="3">
+            Demographic information
+        </td>
+        </tr>       
+        <tr>
+            <td>
+                <% String currentURI = "../demographic/demographiccontrol.jsp?demographic_no=" + demographic_no +"&displaymode=edit&dboperation=search_detail";  %>
+                <html:checkbox property="uriArray" value="<%=currentURI%>" />
+                <input type=checkbox name="pdfTitle" value='Demographic information' style="display:none" />
+
+            </td>
+            <td>       
+                Information
+            </td>
+            <td>       
+                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
+            </td>
+        </tr>        
         <tr>
         <td colspan="3">
             Encounters:
@@ -111,23 +144,81 @@ request.getSession().setAttribute("EctSessionBean",bean);
 
         %>
         <tr>
-        <td>
-            <% String currentURI = "../oscarEncounter/echarthistoryprint.jsp?echartid=" + rsdemo.getString("eChartId") + "&demographic_no=" + demographic_no;  %>
-            <html:checkbox property="uriArray" value="<%=currentURI%>" />
+            <td>
+                <% currentURI = "../oscarEncounter/echarthistoryprint.jsp?echartid=" + rsdemo.getString("eChartId") + "&demographic_no=" + demographic_no;  %>
+                <html:checkbox property="uriArray" value="<%=currentURI%>" />
+                <input type=checkbox name="pdfTitle" value='Encounter: <%=rsdemo.getString("timeStamp")%>' style="display:none" />
 
-        </td>
-        <td>       
-            <a href=# onclick=SetBottomURL('../oscarEncounter/echarthistoryprint.jsp?echartid=<%=rsdemo.getString("eChartId")%>&demographic_no=<%=demographic_no%>')><%=rsdemo.getString("timeStamp")%></a> 
-        </td>
-        <td>       
-            <a href=# onclick=PreviewPDF('../oscarEncounter/echarthistoryprint.jsp?echartid=<%=rsdemo.getString("eChartId")%>&demographic_no=<%=demographic_no%>') >Preview</a>
-        </td>
+            </td>
+            <td>       
+               <%=rsdemo.getString("timeStamp")%>
+            </td>
+            <td>       
+                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
+            </td>
         </tr>
                
         <%
           }
           daySheetBean.closePstmtConn();
-        %>   
+        %>  
+ 
+        <tr>
+            <td colspan="3">
+                Prescriptions
+            </td>
+        </tr>       
+        <tr>
+            <td>
+            <%
+                // Setup bean
+                RxSessionBean Rxbean;
+
+                if( request.getSession().getAttribute("RxSessionBean")!=null) {
+                    Rxbean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+                }
+                else {
+                    Rxbean = new RxSessionBean();
+                }
+
+                request.getSession().setAttribute("RxSessionBean", Rxbean);
+                
+                RxPatientData rx = null;
+                RxPatientData.Patient patient = null;
+                try {
+                    rx = new RxPatientData();
+                    patient = rx.getPatient(demographic_no);
+                }
+                catch (java.sql.SQLException ex) {
+                    throw new ServletException(ex);
+                }
+
+                if(patient!=null) {
+                    request.getSession().setAttribute("Patient", patient);
+                }
+
+                Rxbean.setProviderNo((String) request.getSession().getAttribute("user"));              
+                Rxbean.setDemographicNo(Integer.parseInt(demographic_no));
+                                    
+            %>
+            
+                <% currentURI = "../oscarRx/PrintDrugProfile.jsp?demographic_no=" + demographic_no;  %>
+            
+                <html:checkbox property="uriArray" value="<%=currentURI%>" />
+                <input type=checkbox name="pdfTitle" value='Current prescriptions' style="display:none" />
+
+            </td>
+            <td>       
+                Current prescriptions
+            </td>
+            <td>       
+                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
+            </td>
+        </tr>
+
+
+
+        
         <!--
         <tr>
         <td colspan="2">       
@@ -143,21 +234,20 @@ request.getSession().setAttribute("EctSessionBean",bean);
         -->   
         
         <tr>
-        <td colspan="3">
-            <textarea name="srcText" rows="5" cols="80"></textarea>
-                <input type="button" name="getsrc" value="getsrc" onclick="GetBottomSRC()" />
-                <input type="button" name="process" value="process" onclick="ProcessPDF('<%=demographic_no%>')" />
-            <br />            
-        </td>
+            <td colspan="3">
+                <textarea name="srcText" rows="5" cols="80" /></textarea>
+                <input type="button" name="process" value="Attach PDFs" onclick="ProcessPDF('<%=demographic_no%>')" />
+                <br />            
+            </td>
         </tr>
             
         <tr>
-        <td colspan="3">          
-            <html:hidden property="isPreview" />
-            <html:hidden property="jsessionid" value="<%=request.getRequestedSessionId().toString()%>" />
-            <html:submit property="ok" onclick="document.forms[0].isPreview.value = false;" />
-            
-        </td>
+            <td colspan="3">          
+                <html:hidden property="isPreview" />
+                <html:hidden property="attachmentNumber" />
+                <html:hidden property="jsessionid" value="" />
+
+            </td>
         </tr>
 
          </table>

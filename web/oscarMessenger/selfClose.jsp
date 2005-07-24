@@ -2,7 +2,7 @@
 
     
     <body>
-    HAHA
+    
         <script>
             top.window.close();
         </script>

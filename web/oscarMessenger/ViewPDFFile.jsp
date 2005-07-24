@@ -40,12 +40,13 @@
     </logic:equal>
 </logic:present>
 <%
-    String attch = (String) request.getAttribute("Attachment");
+    String pdfAttch = (String) request.getAttribute("PDFAttachment");
     String id  = request.getParameter("id");
     
-    System.out.println( "Get integer " + attch ) ;
-    Vector attVector = Doc2PDF.getXMLTagValue(attch, "CONTENT" );
-    //String pdfFile = attVector.get( Integer.parseInt(id ) );
-    //Doc2PDF.PrintPDFFromBin ( response, pdfFile );
-
+    System.out.println( "Get integer " + pdfAttch ) ;
+    /*
+    Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "CONTENT" );
+    String pdfFile = attVector.get( Integer.parseInt(id ) );
+    Doc2PDF.PrintPDFFromBin ( response, pdfFile );
+*/
 %>
