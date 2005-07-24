@@ -5243,6 +5243,7 @@ CREATE TABLE messagetbl (
   sentbyNo varchar(6) default NULL,
   sentByLocation int(10) default NULL,
   attachment text,
+  pdfattachment blob,
   actionstatus char(2) default NULL,
   PRIMARY KEY  (messageid)
 ) TYPE=MyISAM;
