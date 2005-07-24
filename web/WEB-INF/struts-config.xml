@@ -42,14 +42,21 @@
     <form-bean name="msgDisplayDemographicMessagesForm" type="oscar.oscarMessenger.pageUtil.MsgDisplayDemographicMessagesForm"/>
     <form-bean name="msgViewMessageForm" type="oscar.oscarMessenger.pageUtil.MsgViewMessageForm"/>
     <form-bean name="msgHandleMessagesForm" type="oscar.oscarMessenger.pageUtil.MsgHandleMessagesForm"/>
+    <form-bean name="msgViewPDFForm" type="oscar.oscarMessenger.pageUtil.MsgViewPDFForm"/>
+    
     <!---Admin Stuff-->
     <form-bean name="msgMessengerAdminForm" type="oscar.oscarMessenger.config.pageUtil.MsgMessengerAdminForm"/>
     <form-bean name="msgMessengerCreateGroupForm" type="oscar.oscarMessenger.config.pageUtil.MsgMessengerCreateGroupForm"/>
     <!--Attachment -->
     <form-bean name="msgViewAttachmentForm" type="oscar.oscarMessenger.pageUtil.MsgViewAttachmentForm"/>
+    <form-bean name="msgViewPDFAttachmentForm" type="oscar.oscarMessenger.pageUtil.MsgViewPDFAttachmentForm"/>
     <form-bean name="msgDemographicSearchForm" type="oscar.oscarMessenger.pageUtil.MsgDemographicSearchForm"/>
     <form-bean name="msgProceedForm" type="oscar.oscarMessenger.pageUtil.MsgProceedForm"/>
     <form-bean name="msgClearMessageForm" type="oscar.oscarMessenger.pageUtil.ClearMessageForm"/>
+    <form-bean name="msgDoc2PDFForm" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFForm"/>
+    <form-bean name="msgAttachPDFForm" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFForm"/>    
+    
+
     <!-- oscarRx form bean -->
     <form-bean name="RxChoosePatientForm" type="oscar.oscarRx.pageUtil.RxChoosePatientForm"/>
     <form-bean name="RxSearchDrugForm" type="oscar.oscarRx.pageUtil.RxSearchDrugForm"/>
@@ -257,6 +264,8 @@
       <forward name="success" path="/oscarMessenger/DisplayMessages.jsp"/>
     </action>
     <!--NEW END-->
+    
+    
     <action path="/oscarMessenger/ViewMessage" type="oscar.oscarMessenger.pageUtil.MsgViewMessageAction" name="msgViewMessageForm" scope="request" input="/oscarMessenger/DisplayMessages.jsp">
       <forward name="noRights" path="/oscarMessenger/DisplayMessages.jsp"/>
       <forward name="success" path="/oscarMessenger/ViewMessage.jsp"/>
@@ -265,7 +274,22 @@
     <action path="/oscarMessenger/ViewMessageByPosition" type="oscar.oscarMessenger.pageUtil.MsgViewMessageByPositionAction" scope="request" input="/oscarMessenger/DisplayDemographicMessages.jsp">
       <forward name="success" path="/oscarMessenger/ViewMessage.do"/>
     </action>
+
+   <!--
+   <action path="/oscarMessenger/Doc2PDF" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFAction" name="msgDoc2PDFForm" scope="request" input="/oscarMessenger/generatePreviewPDF.jsp">
+       <forward name="success" path="/oscarMessenger/CreateMessage.jsp"/>
+   </action>
+   -->
    
+   <action path="/oscarMessenger/Doc2PDF" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFAction" name="msgAttachPDFForm" scope="request" input="/oscarMessenger/generatePreviewPDF.jsp">
+       <forward name="success" path="/oscarMessenger/selfCloseAndRefreshOpener.jsp"/>
+   </action>
+   
+   <action path="/oscarMessenger/ProcessDoc2PDF" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFAction" name="msgDoc2PDFForm" scope="request" input="/oscarMessenger/processPDF.jsp">
+       <forward name="success" path="/oscarMessenger/selfClose.jsp"/>
+   </action>   
+
+
     <action path="/oscarMessenger/HandleMessages" type="oscar.oscarMessenger.pageUtil.MsgHandleMessagesAction" name="msgHandleMessagesForm" scope="request" input="/oscarMessenger/DisplayMessages.jsp">
       <forward name="success" path="/oscarMessenger/DisplayMessages.jsp"/>
       <forward name="reply" path="/oscarMessenger/CreateMessage.jsp"/>
@@ -280,6 +304,15 @@
     <action path="/oscarMessenger/ViewAttach" type="oscar.oscarMessenger.pageUtil.MsgViewAttachmentAction" name="msgViewAttachmentForm" scope="request" input="/oscarMessenger/ViewMessage.jsp">
       <forward name="success" path="/oscarMessenger/ViewAttachment.jsp"/>
     </action>
+    
+    <action path="/oscarMessenger/ViewPDFAttach" type="oscar.oscarMessenger.pageUtil.MsgViewPDFAttachmentAction" name="msgViewPDFAttachmentForm" scope="request" input="/oscarMessenger/ViewMessage.jsp">
+      <forward name="success" path="/oscarMessenger/ViewPDFAttachment.jsp"/>
+    </action>
+    
+    <action path="/oscarMessenger/ViewPDFFile" type="oscar.oscarMessenger.pageUtil.MsgViewPDFAction" name="msgViewPDFForm" scope="request" input="/oscarMessenger/ViewPDFAttachment.jsp">
+      <forward name="success" path="/oscarMessenger/ViewPDFFile.jsp"/>
+    </action>    
+        
     <action path="/oscarMessenger/SearchDemographic" type="oscar.oscarMessenger.pageUtil.MsgDemographicSearchAction" name="msgDemographicSearchForm" scope="request" input="/oscarMessenger/Transfer/DemographicSearch.jsp">
       <forward name="success" path="/oscarMessenger/Transfer/DemographicSearch.jsp"/>
     </action>
@@ -292,6 +325,8 @@
     <action path="/oscarMessenger/WriteToEncounter" type="oscar.oscarMessenger.pageUtil.MsgWriteToEncounterAction" name="" scope="request" input="/oscarMessenger/ViewMessage.jsp">
       <forward name="success" path="/oscarEncounter/IncomingEncounter.do"/>
     </action>
+
+
     <!-- Edit oscarRx -->
     <action path="/oscarRx/choosePatient" type="oscar.oscarRx.pageUtil.RxChoosePatientAction" name="RxChoosePatientForm" scope="request">
       <forward name="success" path="/oscarRx/SearchDrug.jsp"/>
