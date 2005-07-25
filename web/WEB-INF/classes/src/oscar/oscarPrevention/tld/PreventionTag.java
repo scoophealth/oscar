@@ -61,15 +61,20 @@ public class PreventionTag extends TagSupport {
         }
 	ArrayList warnings = p.getWarnings();      
 	ArrayList recomendations = p.getReminder();
+        StringBuffer sb = new StringBuffer();
         if (warnings != null){
            numWarnings = warnings.size();
+           for (int i = 0; i < warnings.size(); i++){
+              sb.append((String) warnings.get(i));
+              sb.append("\n");
+           }
            //System.out.println("the number of warnings "+numWarnings);           
         }
-        
+        String title = sb.toString();
         try{
             JspWriter out = super.pageContext.getOut();            
             if(numWarnings > 0)
-                out.print("<span style=\"color:red;\">  ");
+                out.print("<span style=\"color:red;\" title=\""+title+"\">  ");
             else
                 out.print("<span>  ");
         } catch(Exception eWriter) {
