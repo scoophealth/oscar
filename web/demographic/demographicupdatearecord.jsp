@@ -155,10 +155,14 @@
             String paramNameHin =new String();
             paramNameHin=request.getParameter("hin").trim();
         ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
-        if(rsHin.next()) {  %>
-          ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
-          <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
-    <% return;
+        while (rsHin.next()) { 
+            %> <%= rsHin.getString("demographic_no") %> <%
+            if (!(rsHin.getString("demographic_no").equals(request.getParameter("demographic_no")))) { %>
+                ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
+                <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
+          
+                <% return;
+            }
         }
     }
     //add to waiting list if the waiting_list parameter in the property file is set to true
