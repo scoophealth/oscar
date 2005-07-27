@@ -58,8 +58,10 @@
         return true;
     }
 </script>
+<html:html>
 
-<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus()">
+
 <html:errors/>
 
 <table class="Header" style="width:7in">
