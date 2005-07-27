@@ -45,13 +45,18 @@
   BillingONDataHelp dbObj = new BillingONDataHelp();
   if (request.getParameter("submit") != null && request.getParameter("submit").equals("Save")) {
     // check the input data
+    // if input the perc code,
+    String valuePara = request.getParameter("value");
+    if(request.getParameter("percentage").length()>0 && valuePara.trim().equals("") ) {
+    	valuePara = ".00";
+    }
 
     if(request.getParameter("action").startsWith("edit")) {
       	// update the service code
 		String serviceCode = request.getParameter("service_code");
 		if(serviceCode.equals(request.getParameter("action").substring("edit".length()))) {
 			String	sql   = "update billingservice set description='" + StringEscapeUtils.escapeSql(request.getParameter("description")) + "', ";
-			sql += " value='" + request.getParameter("value") + "', ";
+			sql += " value='" + valuePara + "', ";
 			sql += " percentage='" + request.getParameter("percentage") + "', ";
 			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "' ";
 			sql += "where service_code='" + serviceCode + "'";
@@ -102,7 +107,7 @@
 			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date) values ('', '";
 			sql += serviceCode + "', '";
 			sql += request.getParameter("description") + "', '";
-			sql += request.getParameter("value") + "', '";
+			sql += valuePara + "', '";
 			sql += request.getParameter("percentage") + "', '";
 			sql += request.getParameter("billingservice_date") + "' )";
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
