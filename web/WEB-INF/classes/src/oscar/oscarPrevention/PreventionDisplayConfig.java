@@ -207,8 +207,8 @@ public class PreventionDisplayConfig {
                                                         // a seperate id
 
         Hashtable a2 = new Hashtable();
-        a2.put("title", "Women's Preventitive Care");
-        a2.put("effective", "(Ontario February 2005)");
+        a2.put("title", "Women's Preventive Care");
+        a2.put("effective", "");
         a2.put("minAge", "20");
         a2.put("maxAge", "65");
         a2.put("sex", "F");
@@ -219,8 +219,8 @@ public class PreventionDisplayConfig {
                                                             // to a seperate id
 
         Hashtable a3 = new Hashtable();
-        a3.put("title", "Over 65 Preventitive Care");
-        a3.put("effective", "(Ontario February 2005)");
+        a3.put("title", "Over 65 Preventive Care");
+        a3.put("effective", "");
         a3.put("minAge", "65");
         a3.put("prevList", new String[] { "Flu", "Td" });
 
@@ -230,7 +230,7 @@ public class PreventionDisplayConfig {
 
         Hashtable a4 = new Hashtable();
         a4.put("title", "Other");
-        a4.put("effective", "(Ontario February 2005)");
+        a4.put("effective", "");
         a4.put("minAge", "0");
         a4.put("prevList", new String[] { "OtherA", "OtherB" });
 
