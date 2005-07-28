@@ -380,21 +380,29 @@ public class EfmDataOpt {
   }
   
   public String getGuardianName(int demographic_no) {
-      DemographicData demoData = new DemographicData();
-      DemographicData.Demographic guardian = demoData.getSubstituteDecisionMaker("" + demographic_no);
-      String temp = "";
-      temp = guardian.getLastName() + ", " + guardian.getFirstName();
-      return(temp);
+      try {
+          DemographicData demoData = new DemographicData();
+          DemographicData.Demographic guardian = demoData.getSubstituteDecisionMaker("" + demographic_no);
+          String temp = "";
+          temp = guardian.getLastName() + ", " + guardian.getFirstName();
+          return(temp);
+      } catch (Exception e) {
+          return("");
+      }
   }
   
   public String getGuardianNameAddress(int demographic_no) {
-      DemographicData demoData = new DemographicData();
-      DemographicData.Demographic guardian = demoData.getSubstituteDecisionMaker("" + demographic_no);
-      String temp = "";
-      temp = guardian.getLastName() + ", " + guardian.getFirstName() + "\n"
-           + guardian.getAddress() + "\n"
-           + guardian.getCity() + ", " + guardian.getProvince() + ", " + guardian.getPostal();
-      return(temp);
+      try {
+          DemographicData demoData = new DemographicData();
+          DemographicData.Demographic guardian = demoData.getSubstituteDecisionMaker("" + demographic_no);
+          String temp = "";
+          temp = guardian.getLastName() + ", " + guardian.getFirstName() + "\n"
+               + guardian.getAddress() + "\n"
+               + guardian.getCity() + ", " + guardian.getProvince() + ", " + guardian.getPostal();
+          return(temp);
+      } catch (Exception e) {
+          return("");
+      }
   }
   
   public String getNameAddress(int demographic_no){
