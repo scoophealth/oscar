@@ -28,10 +28,18 @@
 
 package oscar.eform;
 
-import java.io.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
+import java.io.DataInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ResourceBundle;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Class UploadServlet is a servlet to upload the text/html file to the database
@@ -50,7 +58,7 @@ public class UploadServlet extends HttpServlet{
   public void doPost(HttpServletRequest request,HttpServletResponse response){
     HttpSession session = request.getSession(false);
     if (session == null) return;
-    if (session.getAttribute("user") == null || !((String) session.getAttribute("userprofession")).equalsIgnoreCase("admin") ) return;
+    if (session.getAttribute("user") == null || !((String) session.getAttribute("userrole")).equalsIgnoreCase("admin") ) return;
 
     ServletOutputStream out=null;
     DataInputStream in=null;
