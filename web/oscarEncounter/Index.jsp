@@ -1275,6 +1275,9 @@ border-right: 2px solid #cfcfcf;
 									<% } %>
 								</td>
                                 <td style="text-align:right" nowrap>
+                                <oscar:oscarPropertiesCheck property="CPP" value="yes">
+                                <input type="button" style="height:20px;" class="ControlPushButton" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterCPP.jsp');"/>
+                                </oscar:oscarPropertiesCheck>
 				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterPrint.jsp');"/>
 				    <input type="hidden"  name="btnPressed" value="">
 
