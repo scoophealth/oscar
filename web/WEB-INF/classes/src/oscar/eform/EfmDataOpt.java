@@ -26,8 +26,11 @@ package oscar.eform ;
 import java.sql.*;
 import java.util.* ;
 import oscar.oscarDB.* ;
+import oscar.oscarPrevention.*;
 import oscar.util.* ;
 import oscar.* ;
+import java.text.*;
+import oscar.oscarDemographic.data.*;
 //import bean.* ;
 
 public class EfmDataOpt {
@@ -278,6 +281,120 @@ public class EfmDataOpt {
        System.err.println("aq.executeQuery: " + ex.getMessage());
     }                   
     return temp;
+  }
+  
+  public String getFHNcontact(int demographic_no) {
+    Properties ap = OscarProperties.getInstance();
+    String FHNperson = ap.getProperty("FHN_CONTACT_PERSON", "");
+    System.out.println(FHNperson);
+    return(FHNperson);
+  }
+  
+  public String getLastPapDate(int demographic_no) {
+    Hashtable curPap = new Hashtable();
+    String date = "";
+    PreventionData prev = new PreventionData();
+    ArrayList papData = prev.getPreventionData("PAP", "" +demographic_no);
+    for (int i=0; i<papData.size(); i++) {
+        curPap = (Hashtable)papData.get(i);
+        String refused = (String)curPap.get("refused");
+            if (!(refused.equals("1"))) {
+                date = (String)curPap.get("prevention_date");
+                i = papData.size();
+            }
+    }
+    return(date);
+  }
+  
+  public String getLastMamDate(int demographic_no) { 
+    Hashtable curPap = new Hashtable();
+    String date = "";
+    PreventionData prev = new PreventionData();
+    ArrayList papData = prev.getPreventionData("MAM", "" + demographic_no);
+    for (int i=0; i<papData.size(); i++) {
+        curPap = (Hashtable)papData.get(i);
+        String refused = (String)curPap.get("refused");
+            if (!(refused.equals("1"))) {
+                date = (String)curPap.get("prevention_date");
+                i = papData.size();
+            }
+    }
+    return(date);
+  }
+  
+  public String getLastImmDate(int demographic_no) {
+      //search   prevention_date prevention_type  deleted   refused
+      PreventionData pd = new PreventionData();
+      ArrayList  prevs1 = pd.getPreventionData("DTaP-IPV", "" + demographic_no);
+      ArrayList  prevs2 = pd.getPreventionData("MMR", "" + demographic_no);
+      String refused = "";
+      Hashtable curRec = new Hashtable();
+      String prevDateStr = "";
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+      
+      //--------DT Date retrieval
+      java.util.Date DTDate = null;
+      for (int i=0; i<prevs1.size(); i++) {
+          curRec = (Hashtable)prevs1.get(i);
+          refused = (String)curRec.get("refused");
+          if (!(refused.equals("1"))) {
+              prevDateStr = (String) curRec.get("prevention_date");
+              try{
+                  DTDate = (java.util.Date)formatter.parse(prevDateStr);
+              } catch (Exception e){
+                  e.printStackTrace();
+              }
+          }
+      }
+      //------MMR Date retrieval
+      java.util.Date MMRDate = null;
+      for (int i=0; i<prevs2.size(); i++) {
+          curRec = (Hashtable)prevs2.get(i);
+          refused = (String)curRec.get("refused");
+          if (!(refused.equals("1"))) {
+              prevDateStr = (String) curRec.get("prevention_date");
+              try {
+                  MMRDate = (java.util.Date)formatter.parse(prevDateStr);
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+          }
+      }
+      //------Date comparrison
+      String returnDate;
+      if ((MMRDate == null) && (DTDate == null)) {
+          return("");
+      }
+      else if (MMRDate == null) {
+          returnDate = UtilDateUtilities.DateToString(DTDate, "yyyy-MM-dd");
+          return(returnDate);
+      }
+      else if ((DTDate != null) && (DTDate.after(MMRDate))) {
+          returnDate = UtilDateUtilities.DateToString(DTDate, "yyyy-MM-dd");
+          return(returnDate);
+      }
+      else {
+          returnDate = UtilDateUtilities.DateToString(MMRDate, "yyyy-MM-dd");
+          return(returnDate);
+      }
+  }
+  
+  public String getGuardianName(int demographic_no) {
+      DemographicData demoData = new DemographicData();
+      DemographicData.Demographic guardian = demoData.getSubstituteDecisionMaker("" + demographic_no);
+      String temp = "";
+      temp = guardian.getLastName() + ", " + guardian.getFirstName();
+      return(temp);
+  }
+  
+  public String getGuardianNameAddress(int demographic_no) {
+      DemographicData demoData = new DemographicData();
+      DemographicData.Demographic guardian = demoData.getSubstituteDecisionMaker("" + demographic_no);
+      String temp = "";
+      temp = guardian.getLastName() + ", " + guardian.getFirstName() + "\n"
+           + guardian.getAddress() + "\n"
+           + guardian.getCity() + ", " + guardian.getProvince() + ", " + guardian.getPostal();
+      return(temp);
   }
   
   public String getNameAddress(int demographic_no){
@@ -561,4 +678,9 @@ public class EfmDataOpt {
     return temp; 
       
   }
+  /*private String firstUpperCase(String str) {
+      char fchar = str.toUpperCase().charAt(0);
+      String str2 = str.toLowerCase().substring(1);
+      return(fchar + str2);
+  }*/
 }
