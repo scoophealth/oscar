@@ -1298,6 +1298,7 @@ insert into `secObjectName` values('_appointment.doctorLink');
 insert into `secObjectName` values('_eChart.verifyButton');
 insert into `secObjectName` values('_billing');
 insert into `secObjectName` values('_tasks');
+insert into `secObjectName` values('_formMentalHealth');
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', '|*|', 0, '999998');
