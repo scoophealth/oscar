@@ -24,12 +24,11 @@
 	<parameter name="s21id" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="providerNo" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[select t_ajc,teleplan_adj_codes.adj_desc,t_aji, t_calcmethod,t_rpercent,t_opercent,t_gamount *.01 as 't_gamount',t_ramount *.01 as 't_ramount',t_oamount *.01 as 't_oamount',t_balancefwd *.01 as 't_balancefwd',t_adjmade *.01 as 't_adjmade',t_adjoutstanding *.01 as 't_adjoutstanding'
-FROM teleplan_adj_codes,teleplanS23 
+FROM teleplanS23 LEFT OUTER JOIN teleplan_adj_codes ON t_ajc = teleplan_adj_codes.adj_code
 where s21_id=$P{s21id}
 and t_s23type ='S23'
- and t_aji = $P{providerNo}
-and t_ajc = teleplan_adj_codes.adj_code
- order by s23_id]]></queryString>
+and t_aji = $P{providerNo}
+order by s23_id]]></queryString>
 	<field name="t_ajc" class="java.lang.String"/>
 	<field name="adj_desc" class="java.lang.String"/>
 	<field name="t_aji" class="java.lang.String"/>
@@ -325,12 +324,12 @@ and t_ajc = teleplan_adj_codes.adj_code
 		</columnHeader>
 		<detail>
 			<band height="14"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="0"
 						y="0"
-						width="81"
+						width="63"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -345,7 +344,7 @@ and t_ajc = teleplan_adj_codes.adj_code
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial Narrow" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{adj_desc} + "(" + $F{t_ajc} + ")"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{adj_desc}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -544,6 +543,28 @@ and t_ajc = teleplan_adj_codes.adj_code
 						<font fontName="Arial Narrow" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format(new Double($F{t_adjoutstanding}))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="63"
+						y="0"
+						width="19"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-1"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial Narrow" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["(" + $F{t_ajc} + ")"]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
