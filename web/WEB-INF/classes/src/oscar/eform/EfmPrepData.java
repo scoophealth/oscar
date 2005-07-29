@@ -75,7 +75,7 @@ public class EfmPrepData {
   private String form_name ;
   String [] meta ;
   String [] value ;
-  String [][] tagSymbol = new String[][] { {"input", ""}, {"textarea",">"}, {"checkbox",""}, {"form",""}   };
+  String [][] tagSymbol = new String[][] { {"input", ""}, {"textarea",">"}, {"checkbox",""}, {"form",""}, {"hidden", ""} };
 
   public EfmPrepData(int provider_no1, int demographic_no1, int fid1, String form_name1) { 
     provider_no = provider_no1;
@@ -125,7 +125,7 @@ public class EfmPrepData {
     String temp = null;
     ArrayList metaTemp = new ArrayList() ;
     ArrayList valueTemp = new ArrayList() ;
-    String[] tagElm = new String[] { "type = text", "textarea","type = checkbox" };
+    String[] tagElm = new String[] { "type = text", "textarea","type = checkbox", "type = hidden" };
     int i = 0;
 
 	  for (Enumeration e = req.getParameterNames() ; e.hasMoreElements() ;) {
@@ -134,7 +134,9 @@ public class EfmPrepData {
 		  if(elmTag!=null ) {
         metaTemp.add(i, temp) ;
         if(elmTag.indexOf("textarea") < 0 && elmTag.indexOf("text") >= 0) valueTemp.add(i, " value=\""+req.getParameter(temp)+"\"" ) ;
+        else if (elmTag.indexOf("textarea") < 0 && elmTag.indexOf("hidden") >= 0) valueTemp.add(i, " value=\""+req.getParameter(temp)+"\"" );
         else if(elmTag.indexOf("checkbox") >= 0 ) valueTemp.add(i, " checked" ) ; 
+   
         else valueTemp.add(i, req.getParameter(temp) ) ;
         i++;
       }
