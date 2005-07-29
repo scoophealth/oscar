@@ -379,6 +379,22 @@ public class EfmDataOpt {
       }
   }
   
+ public String getLastFluDate(int demographic_no) { 
+    Hashtable curPap = new Hashtable();
+    String date = "";
+    PreventionData prev = new PreventionData();
+    ArrayList fluData = prev.getPreventionData("Flu", "" + demographic_no);
+    for (int i=0; i<fluData.size(); i++) {
+        curPap = (Hashtable)fluData.get(i);
+        String refused = (String)curPap.get("refused");
+            if (!(refused.equals("1"))) {
+                date = (String)curPap.get("prevention_date");
+                i = fluData.size();
+            }
+    }
+    return(date);
+  }
+  
   public String getGuardianName(int demographic_no) {
       try {
           DemographicData demoData = new DemographicData();

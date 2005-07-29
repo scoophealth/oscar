@@ -60,6 +60,7 @@ public class EfmPrepData {
   private String lastPapDate;
   private String lastMamDate;
   private String lastImmDate;
+  private String lastFluDate;
   private String guardian_name;
   private String guardian_NameAddress;
   
@@ -100,6 +101,7 @@ public class EfmPrepData {
     setLastPapDate();
     setLastMamDate();
     setLastImmDate();
+    setLastFluDate();
     setGuardianName();
     setGuardianNameAddress();
     setClinicName();
@@ -113,9 +115,9 @@ public class EfmPrepData {
     setProviderName();
     createDemoAcc();
     
-    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=phone","oscarDB=phone2","oscarDB=clinic_name","oscarDB=clinic_phone","oscarDB=clinic_fax","oscarDB=clinic_label","oscarDB=clinic_addressLine","oscarDB=clinic_addressLineFull","oscarDB=clinic_address","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders", "oscarDB=age", "oscarDB=sex", "oscarDB=FHNcontact", "oscarDB=LastPapDate", "oscarDB=LastMamDate", "oscarDB=LastImmDate", "oscarDB=guardian_name", "oscarDB=guardian_NameAddress", "oscarDB=provider_name"};
+    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=phone","oscarDB=phone2","oscarDB=clinic_name","oscarDB=clinic_phone","oscarDB=clinic_fax","oscarDB=clinic_label","oscarDB=clinic_addressLine","oscarDB=clinic_addressLineFull","oscarDB=clinic_address","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders", "oscarDB=age", "oscarDB=sex", "oscarDB=FHNcontact", "oscarDB=LastPapDate", "oscarDB=LastMamDate", "oscarDB=LastImmDate", "oscarDB=LastFluDate", "oscarDB=guardian_name", "oscarDB=guardian_NameAddress", "oscarDB=provider_name"};
     try {
-      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, phone, phone2, clinic_name, clinic_phone, clinic_fax, clinic_label, clinic_addressLine, clinic_addressLineFull, clinic_address, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders, age, sex, FHNcontact, lastPapDate, lastMamDate, lastImmDate, guardian_name, guardian_NameAddress, provider_name };
+      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, phone, phone2, clinic_name, clinic_phone, clinic_fax, clinic_label, clinic_addressLine, clinic_addressLineFull, clinic_address, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders, age, sex, FHNcontact, lastPapDate, lastMamDate, lastImmDate, lastFluDate, guardian_name, guardian_NameAddress, provider_name };
     } catch(Exception ex) {
       System.err.println(" : " + ex.getMessage());
     }
@@ -267,6 +269,9 @@ public class EfmPrepData {
   }
   public void setLastImmDate() {
     lastImmDate = " value=\"" + (new EfmDataOpt()).getLastImmDate(demographic_no) + "\"";
+  }
+  public void setLastFluDate() {
+    lastFluDate = " value=\"" + (new EfmDataOpt()).getLastFluDate(demographic_no) + "\"";
   }
   public void setGuardianName() {
     guardian_name = " value=\"" + (new EfmDataOpt()).getGuardianName(demographic_no) + "\"";
