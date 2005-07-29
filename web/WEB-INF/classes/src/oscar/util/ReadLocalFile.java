@@ -25,6 +25,7 @@
 package oscar.util;
 
 import java.io.*;
+import javax.servlet.jsp.*;
 
 public class ReadLocalFile {
     public static String getStringFromFile(String fileName) {
@@ -39,5 +40,18 @@ public class ReadLocalFile {
         } catch (IOException e) {
         }
         return(fileStr.toString());
+    }
+    public static void writeStreamFromFile(String fileName, javax.servlet.jsp.JspWriter outWriter) {
+        String lineStr = "";
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(fileName));
+            while ((lineStr = in.readLine()) != null) {
+                outWriter.write(lineStr + "\n");
+                outWriter.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //return outWriter;
     }
 }
