@@ -58,10 +58,10 @@ public class UploadServlet extends HttpServlet {
         if (session == null)
             return;
         if (session.getAttribute("user") == null
-                || !((String) session.getAttribute("userrole")).equalsIgnoreCase("admin")
-                || !((String) session.getAttribute("userrole")).startsWith("admin,")
-                || !((String) session.getAttribute("userrole")).endsWith(",admin")
-                || !(((String) session.getAttribute("userrole")).indexOf(",admin,") > 0))
+                || !(((String) session.getAttribute("userrole")).equalsIgnoreCase("admin")
+                        || ((String) session.getAttribute("userrole")).startsWith("admin,")
+                        || ((String) session.getAttribute("userrole")).endsWith(",admin") || (((String) session
+                        .getAttribute("userrole")).indexOf(",admin,") > 0)))
             return;
 
         ServletOutputStream out = null;
