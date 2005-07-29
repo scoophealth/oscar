@@ -25,6 +25,10 @@
 -->
 <%@page import="oscar.util.*, oscar.*, java.util.*"%>
 
+<%@ page language="java" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
@@ -157,7 +161,7 @@
 							
                         </td>
                         <td style="text-align:right">
-                            <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><%--<bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>--%>
+                            <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><<bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                         </td>
                     </tr>
                 </table>
@@ -171,8 +175,13 @@
             <% 
             String reportDate = request.getParameter("reportDate");
             String reportType = request.getParameter("reportType");
+            boolean runReport;
             if (reportDate == null) {
                 reportDate = UtilDateUtilities.getToday("yyyy-MM-dd");
+                runReport = false;
+            }
+            else {
+                runReport = true;
             }
             if (reportType == null) {
                 reportType = "general";
@@ -182,6 +191,7 @@
             <table border="0">
             <tr><td>Enter Date to view report for (yyyy-mm-dd)</td>
             <td><input type="text" id="reportDate" name="reportDate" size="10" value="<%= reportDate %>">
+            <%--<html:text property="reportDate" size="9" styleId="reportDate" />--%>
             <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
             </tr>
             <tr><td>Enter Report to view:</td>
@@ -194,7 +204,7 @@
         </form>
         <br><hr>
                            <%
-            if ((reportDate != null) && (reportType != null)) {
+            if (runReport) {
                 Properties pr = OscarProperties.getInstance();
                 String path = pr.getProperty("LOGGING_PATH");
                 String suffix = reportDate.replaceAll("-", "");
@@ -202,19 +212,13 @@
                 String contentString = "";
                 if (reportType.equals("general")) { 
                     fileName = path + "report" + suffix + ".html";
-                    contentString = ReadLocalFile.getStringFromFile(fileName);
+                    ReadLocalFile.writeStreamFromFile(fileName, out);
                 }
                 else if (reportType.equals("mysql")) {
                     fileName = path + "reportmysql" + suffix + ".html";
-                    contentString = ReadLocalFile.getStringFromFile(fileName);
+                    ReadLocalFile.writeStreamFromFile(fileName, out);
                 }
-                if (contentString.equals("")) {%>
-                    <center>No report for that date</center>
-                <% } 
-                else { %>
-                    <%= contentString %>
-                <% } %>
-            <% } %>
+             } %>
 
                
         </td>
