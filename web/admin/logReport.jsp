@@ -118,16 +118,19 @@ function onSub() {
             <td>
               Provider:
               <select name="providerNo">
+                  <option value="*">All</option>
 <%
                 for (int i = 0; i < vecProvider.size(); i++) {
+                    String prov = ((Properties)vecProvider.get(i)).getProperty("providerNo", "");
+                    String selected = request.getParameter("providerNo");
 %>
-                  <option value="<%=((Properties)vecProvider.get(i)).getProperty("providerNo", "")  %>">
+                  <option value="<%=prov %>"
+                    <% if ((selected != null) && (selected.equals(prov))) { %> selected<% } %>>
                   <%= ((Properties)vecProvider.get(i)).getProperty("name", "") %>
                   </option>
 <%
                 }
 %>
-                  <option value="*">All</option>
               </select>
             </td>
             <td nowrap>
@@ -245,11 +248,11 @@ for (int i = 0; i < vec.size(); i++) {
     color = i%2==0?tdInterlColor:"white";
 %>
 		<tr bgcolor="<%=color %>" align="center">
-          <td><%=prop.getProperty("dateTime")%></td>
-          <td><%=prop.getProperty("action")%></td>
-          <td><%=prop.getProperty("content")%></td>
-          <td><%=prop.getProperty("contentId")%></td>
-          <td><%=prop.getProperty("ip")%></td>
+          <td><%=prop.getProperty("dateTime")%>&nbsp;</td>
+          <td><%=prop.getProperty("action")%>&nbsp;</td>
+          <td><%=prop.getProperty("content")%>&nbsp;</td>
+          <td><%=prop.getProperty("contentId")%>&nbsp;</td>
+          <td><%=prop.getProperty("ip")%>&nbsp;</td>
 <% if(bAll) { %>
           <td><%=propName.getProperty(prop.getProperty("provider_no"), "")%></td>
 <% } %>
