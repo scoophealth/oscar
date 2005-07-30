@@ -80,7 +80,22 @@
 	  param[25]=request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date");
 	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
-
+     if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5) {
+            //oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
+            //String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
+            String paramNameHin =new String();
+            paramNameHin=request.getParameter("hin").trim();
+        ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
+        while (rsHin.next()) { 
+           
+            if (!(rsHin.getString("demographic_no").equals(request.getParameter("demographic_no")))) { %>
+                ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
+                <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
+          
+                <% return;
+            }
+        }
+    }
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, intparam,  request.getParameter("dboperation"));
   if (rowsAffected ==1) {
     //find the democust record for update
@@ -149,22 +164,6 @@
 	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros,"add_record_ptbr");
 	    }
 	}
-    if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5) {
-            //oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
-            //String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
-            String paramNameHin =new String();
-            paramNameHin=request.getParameter("hin").trim();
-        ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
-        while (rsHin.next()) { 
-            %> <%= rsHin.getString("demographic_no") %> <%
-            if (!(rsHin.getString("demographic_no").equals(request.getParameter("demographic_no")))) { %>
-                ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
-                <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
-          
-                <% return;
-            }
-        }
-    }
     //add to waiting list if the waiting_list parameter in the property file is set to true
    
     WaitingList wL = WaitingList.getInstance();
