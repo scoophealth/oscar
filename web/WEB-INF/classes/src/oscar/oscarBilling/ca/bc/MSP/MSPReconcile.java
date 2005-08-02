@@ -175,7 +175,7 @@ public class MSPReconcile {
       while (rs.next()) {
         try {
           int i = Integer.parseInt(rs.getString("t_officefolioclaimno")); // this kludge rids leading zeros
-          String exp[] = new String[8];
+          String exp[] = new String[7];
           exp[0] = rs.getString("t_exp1");
           exp[1] = rs.getString("t_exp2");
           exp[2] = rs.getString("t_exp3");
@@ -183,7 +183,6 @@ public class MSPReconcile {
           exp[4] = rs.getString("t_exp5");
           exp[5] = rs.getString("t_exp6");
           exp[6] = rs.getString("t_exp7");
-          exp[7] = rs.getString("t_payment");
           String def = createCorrectionsString(exp);
           String s = Integer.toString(i);
           p.put(s, def);
