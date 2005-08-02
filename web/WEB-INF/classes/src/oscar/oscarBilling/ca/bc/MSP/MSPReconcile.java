@@ -168,9 +168,11 @@ public class MSPReconcile {
 
   public Properties currentC12Records() {
     Properties p = new Properties();
+    String debugC12Records = "";
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7  from teleplanC12 where teleplanC12.status != 'E'";
+      debugC12Records = sql + "\n";
       ResultSet rs = db.GetSQL(sql);
       while (rs.next()) {
         try {
@@ -198,6 +200,9 @@ public class MSPReconcile {
     catch (Exception e) {
       e.printStackTrace();
     }
+    String hasC12Records = "hasC12Records" + String.valueOf(p.isEmpty());
+    debugC12Records +=hasC12Records ;
+    System.out.println("debugC12Records=" + debugC12Records);
     return p;
   }
 
@@ -294,9 +299,11 @@ public class MSPReconcile {
           db.CloseConn();
         }
         catch (Exception e) {
+          System.out.println("Through an error in getCurrentErrorMessages:" + e.getMessage());
           e.printStackTrace();
         }
       }
+      System.out.println("errorsProps=" + errorsProps.isEmpty());
       return errorsProps;
     }
   }
