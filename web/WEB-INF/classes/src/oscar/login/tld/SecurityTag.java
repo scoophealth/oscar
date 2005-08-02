@@ -22,7 +22,8 @@ public class SecurityTag implements Tag {
     private String objectName;
     private String rights = "r";
     private boolean reverse = false;
-    private Vector roleInObj = new Vector();
+
+    //private Vector roleInObj = new Vector();
 
     public void setPageContext(PageContext arg0) {
         this.pageContext = arg0;
@@ -42,12 +43,13 @@ public class SecurityTag implements Tag {
          * try { JspWriter out = pageContext.getOut(); out.print("goooooooo"); } catch (Exception e) { }
          */
         int ret = 0;
-        if (checkPrivilege(roleName, getPrivilegeProp(objectName)))
+        if (checkPrivilege(roleName, (Properties) getPrivilegeProp(objectName).get(0), (Vector) getPrivilegeProp(
+                objectName).get(1)))
             ret = EVAL_BODY_INCLUDE;
         else
             ret = SKIP_BODY;
 
-        System.out.println("reverse: " + reverse);
+        //System.out.println("reverse: " + reverse);
         if (reverse) {
             if (ret == EVAL_BODY_INCLUDE)
                 ret = SKIP_BODY;
@@ -61,7 +63,8 @@ public class SecurityTag implements Tag {
         return EVAL_PAGE;
     }
 
-    private Properties getPrivilegeProp(String objName) {
+    private Vector getPrivilegeProp(String objName) {
+        Vector ret = new Vector();
         Properties prop = new Properties();
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -69,16 +72,20 @@ public class SecurityTag implements Tag {
             String sql = new String("select roleUserGroup,privilege from secObjPrivilege where objectName = '"
                     + objName + "' order by priority desc");
             rs = db.GetSQL(sql);
+            Vector roleInObj = new Vector();
             while (rs.next()) {
                 prop.setProperty(rs.getString("roleUserGroup"), rs.getString("privilege"));
                 roleInObj.add(rs.getString("roleUserGroup"));
             }
+            ret.add(prop);
+            ret.add(roleInObj);
+            //System.out.println(roleInObj);
             rs.close();
             db.CloseConn();
         } catch (java.sql.SQLException e) {
             e.printStackTrace(System.out);
         }
-        return prop;
+        return ret;
     }
 
     private Properties getVecRole(String roleName) {
@@ -101,7 +108,7 @@ public class SecurityTag implements Tag {
         return vec;
     }
 
-    private boolean checkPrivilege(String roleName, Properties propPrivilege) {
+    private boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {
         boolean ret = false;
         Properties propRoleName = getVecRole(roleName);
         for (int i = 0; i < roleInObj.size(); i++) {
@@ -114,9 +121,10 @@ public class SecurityTag implements Tag {
 
             boolean[] check = { false, false };
             for (int j = 0; j < vecPrivilName.size(); j++) {
-                System.out.println("role: " + singleRoleName + " privilege:" + vecPrivilName.get(j));
+                //System.out.println("role: " + singleRoleName + " privilege:" +
+                // vecPrivilName.get(j));
                 check = checkRights((String) vecPrivilName.get(j), rights);
-                System.out.println("check: " + check);
+                //System.out.println("check: " + check);
                 if (check[0]) { // get the rights, stop comparing
                     return true;
                 }
