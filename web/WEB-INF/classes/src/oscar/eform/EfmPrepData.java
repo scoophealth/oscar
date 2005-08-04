@@ -31,15 +31,21 @@ import javax.servlet.http.HttpServletRequest;
 
 public class EfmPrepData { 
   private String patient_name;
+  private String patient_nameL;
+  private String patient_nameF;
   private String provider_name;
   private String today;
   private String label ;
   private String address;
   private String addressLine;
+  private String addressProvince;
   private String doctor;
   private String DOB;
+  private String DOBc;
   private String Email;
   private String HIN;
+  private String HINc;
+  private String HINversion;
   private String phone;
   private String phone2;
   private String clinic_name;
@@ -84,15 +90,21 @@ public class EfmPrepData {
     form_name = form_name1 ;
     fid = fid1 ;
     setPatientName();
+    setPatient_nameL();
+    setPatient_nameF();
     setToday();
     setLabel();
     setAddress();
     setAddressLine();
+    setAddressProvince();
     setDoctor();
     setDOB();
+    setDOBc();
     setNameAddress();
     setEmail();
     setHIN();
+    setHINc();
+    setHINversion();
     setPhone();
     setPhone2();
     setAge();
@@ -115,9 +127,9 @@ public class EfmPrepData {
     setProviderName();
     createDemoAcc();
     
-    meta = new String[] {"oscarDB=patient_name","action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=doctor","oscarDB=DOB","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=phone","oscarDB=phone2","oscarDB=clinic_name","oscarDB=clinic_phone","oscarDB=clinic_fax","oscarDB=clinic_label","oscarDB=clinic_addressLine","oscarDB=clinic_addressLineFull","oscarDB=clinic_address","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders", "oscarDB=age", "oscarDB=sex", "oscarDB=FHNcontact", "oscarDB=LastPapDate", "oscarDB=LastMamDate", "oscarDB=LastImmDate", "oscarDB=LastFluDate", "oscarDB=guardian_name", "oscarDB=guardian_NameAddress", "oscarDB=provider_name"};
+    meta = new String[] {"oscarDB=patient_name", "oscarDB=patient_nameL", "oscarDB=patient_nameF", "action=","oscarDB=today","oscarDB=label","oscarDB=address","oscarDB=addressLine","oscarDB=province","oscarDB=doctor","oscarDB=DOB","oscarDB=DOBc","oscarDB=NameAddress","oscarDB=Email","oscarDB=HIN","oscarDB=HINc","oscarDB=HINversion","oscarDB=phone","oscarDB=phone2","oscarDB=clinic_name","oscarDB=clinic_phone","oscarDB=clinic_fax","oscarDB=clinic_label","oscarDB=clinic_addressLine","oscarDB=clinic_addressLineFull","oscarDB=clinic_address","oscarDB=Problem_List","oscarDB=Medication","oscarDB=Family_Social_History","oscarDB=Alert","oscarDB=Social_Family_History","oscarDB=Other_Medications_History","oscarDB=Medical_History","oscarDB=OngoingConcerns","oscarDB=Reminders", "oscarDB=age", "oscarDB=sex", "oscarDB=FHNcontact", "oscarDB=LastPapDate", "oscarDB=LastMamDate", "oscarDB=LastImmDate", "oscarDB=LastFluDate", "oscarDB=guardian_name", "oscarDB=guardian_NameAddress", "oscarDB=provider_name"};
     try {
-      value = new String[] {patient_name," \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, doctor, DOB, NameAddress, Email, HIN, phone, phone2, clinic_name, clinic_phone, clinic_fax, clinic_label, clinic_addressLine, clinic_addressLineFull, clinic_address, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders, age, sex, FHNcontact, lastPapDate, lastMamDate, lastImmDate, lastFluDate, guardian_name, guardian_NameAddress, provider_name };
+      value = new String[] {patient_name, patient_nameL, patient_nameF, " \"savemyform.jsp?demographic_no="+demographic_no+"&fid="+fid+"&form_name="+URLEncoder.encode(form_name,"UTF-8")+"\"", today, label, address, addressLine, addressProvince, doctor, DOB, DOBc, NameAddress, Email, HIN, HINc, HINversion, phone, phone2, clinic_name, clinic_phone, clinic_fax, clinic_label, clinic_addressLine, clinic_addressLineFull, clinic_address, Problem_List, Medication, Family_Social_History,Alert,socialFamilyHistory ,otherMedications ,medicalHistory ,ongoingConcerns ,reminders, age, sex, FHNcontact, lastPapDate, lastMamDate, lastImmDate, lastFluDate, guardian_name, guardian_NameAddress, provider_name };
     } catch(Exception ex) {
       System.err.println(" : " + ex.getMessage());
     }
@@ -196,7 +208,13 @@ public class EfmPrepData {
    
     return bParam;
   }
-
+  
+  public void setPatient_nameL() {
+    patient_nameL = " value=\"" + (new EfmDataOpt()).getPatientNameL(demographic_no) + "\"";
+  }
+  public void setPatient_nameF() {
+    patient_nameF = " value=\"" + (new EfmDataOpt()).getPatientNameF(demographic_no) + "\"";
+  }
   public void setAddress() {  
     address = (new EfmDataOpt()).getAddress(demographic_no);
   }
@@ -209,14 +227,26 @@ public class EfmPrepData {
   public void setDOB() {  
     DOB = " value=\"" + (new EfmDataOpt()).getDOB(demographic_no) + " (d/m/y)\"";
   }
+  public void setDOBc() {
+    DOBc = " value=\"" + (new EfmDataOpt()).getDOBc(demographic_no) + "\"";
+  }
   public void setNameAddress() {  
     NameAddress = (new EfmDataOpt()).getNameAddress(demographic_no);
+  }
+  public void setAddressProvince() {
+    addressProvince = " value=\"" + (new EfmDataOpt()).getAddressProvince(demographic_no) + "\"";
   }
   public void setEmail() {
     Email = " value=\"" + (new EfmDataOpt()).getEmail(demographic_no) + "\"";
    }
   public void setHIN() {
     HIN = " value=\"" + (new EfmDataOpt()).getHIN(demographic_no) + "\"";
+  }
+  public void setHINc() {
+    HINc = " value=\"" + (new EfmDataOpt()).getHINc(demographic_no) + "\"";
+  }
+  public void setHINversion() {
+    HINversion = " value=\"" + (new EfmDataOpt()).getHINversion(demographic_no) + "\"";
   }
   public void setPhone() {
     phone = " value=\"" + (new EfmDataOpt()).getPhone(demographic_no) + "\"";

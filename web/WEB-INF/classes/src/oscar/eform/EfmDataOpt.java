@@ -162,6 +162,37 @@ public class EfmDataOpt {
     }                   
     return temp;
   }
+  
+  public String getPatientNameL(int demographic_no) {
+    String temp = "";
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select last_name from demographic where demographic_no = " + demographic_no);
+      if (rs.next()) {
+        temp = rs.getString("last_name");
+      }
+      db.CloseConn();
+    } catch (Exception ex) {
+        System.err.println("aq.executeQuery: " + ex.getMessage());
+    }
+    return temp;
+  }
+  
+  public String getPatientNameF(int demographic_no) {
+    String temp = "";
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select first_name from demographic where demographic_no = " + demographic_no);
+      if (rs.next()) {
+        temp = rs.getString("first_name");
+      }
+      db.CloseConn();
+    } catch (Exception ex) {
+        System.err.println("aq.executeQuery: " + ex.getMessage());
+    }
+    return temp;
+  }
+  
   public String getAddress(int demographic_no){
     String temp = ""; 
     try {
@@ -180,6 +211,23 @@ public class EfmDataOpt {
     }                   
     return temp;
   }
+  
+  public String getAddressProvince(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select province from demographic where demographic_no = "+ demographic_no) ;
+      if (rs.next()){
+        temp = rs.getString("province");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
   public String getAddressLine(int demographic_no){
     String temp = ""; 
     try {
@@ -240,6 +288,22 @@ public class EfmDataOpt {
 
       if (rs.next()){
         temp = rs.getString("date_of_birth") + "/"+ rs.getString("month_of_birth") + "/"+ rs.getString("year_of_birth");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   public String getDOBc(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("year_of_birth") + "/"+ rs.getString("month_of_birth") + "/"+ rs.getString("date_of_birth");
         rs.close();
       }
       db.CloseConn();
@@ -465,6 +529,40 @@ public class EfmDataOpt {
 
       if (rs.next()){
         temp = rs.getString("hin") + "  " + rs.getString("ver") ;
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+   
+  public String getHINc(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("hin");
+        rs.close();
+      }
+      db.CloseConn();
+    } catch(Exception ex) {
+       System.err.println("aq.executeQuery: " + ex.getMessage());
+    }                   
+    return temp;
+  }
+  
+  public String getHINversion(int demographic_no){
+    String temp = ""; 
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL("select * from demographic where demographic_no = "+ demographic_no) ;
+
+      if (rs.next()){
+        temp = rs.getString("ver");
         rs.close();
       }
       db.CloseConn();
