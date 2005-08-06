@@ -156,23 +156,28 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 String proFirst="";
 String proLast="";
 String proOHIP="";
-String specialty_code; 
-String billinggroup_no;
+Vector vecOHIP = new Vector();
+Vector vecProviderName = new Vector();
+String specialty_code; String billinggroup_no;
 int Count = 0;
 ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_dt");
 while(rslocal.next()){
 	proFirst = rslocal.getString("first_name");
 	proLast = rslocal.getString("last_name");
 	proOHIP = rslocal.getString("ohip_no"); 
-	billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
-	specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
-%>
-		<option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
-
-<% 
+	//billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
+	//specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
+	vecOHIP.add(proOHIP);
+	vecProviderName.add(proLast + ", " + proFirst);
 }
 rslocal.close();
 apptMainBean.closePstmtConn();
+for(int i=0; i<vecOHIP.size(); i++) {
+	proOHIP = (String)vecOHIP.get(i);
+%>
+		<option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":(vecOHIP.size()==1?"selected":"")%>><%=(String)vecProviderName.get(i)%></option>
+<% 
+}
 %>
 
 	</select>
