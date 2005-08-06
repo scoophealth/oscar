@@ -389,16 +389,23 @@ if( !bNew ) { //the old billing form
 <%
 // Retrieving Provider
 String proFirst="", proLast="", proOHIP="";
+Vector vecOHIP = new Vector();
+Vector vecProviderName = new Vector();
 rslocal = apptMainBean.queryResults("%", "search_provider_dt_checkstatus");
 while(rslocal.next()){
 	proFirst = rslocal.getString("first_name");
 	proLast = rslocal.getString("last_name");
 	proOHIP = rslocal.getString("provider_no");
-%>
-			<option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><b><%=proLast%>, <%=proFirst%></b></option>
-<%
+	vecOHIP.add(proOHIP);
+	vecProviderName.add(proLast + ", " + proFirst);
 }
 rslocal.close();
+for(int i=0; i<vecOHIP.size(); i++) {
+	proOHIP = (String)vecOHIP.get(i);
+%>
+			<option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":(vecOHIP.size()==1?"selected":"")%>><b><%=(String)vecProviderName.get(i)%></b></option>
+<%
+}
 %>
 		</select></font></td>
 	</tr><tr>
