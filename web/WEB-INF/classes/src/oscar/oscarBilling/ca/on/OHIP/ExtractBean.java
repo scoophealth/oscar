@@ -385,6 +385,8 @@ public class ExtractBean extends Object implements Serializable {
                     serviceCode = rs2.getString("service_code");
                     fee = rs2.getString("billing_amount");
                     diagcode = rs2.getString("diagnostic_code");
+                    // changed the following line for the no need of diagcode 
+                    diagcode = ":::".equals(diagcode)? "   " : diagcode; 
                     //appt = rs2.getDate("appointment_date").toString();
                     billingUnit = rs2.getString("billingunit");
                     count = 6 - fee.length();
