@@ -365,6 +365,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
                             otherdbcode1.compareTo("P031A")==0 || otherdbcode1.compareTo("Z552A")==0 || 
                             otherdbcode1.compareTo("P022A")==0 || otherdbcode1.compareTo("P023A")==0 || 
                             otherdbcode1.compareTo("P030A")==0 ||
+                            otherdbcode1.compareTo("K005A")==0 ||
                             otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") || 
                             (otherdbcode1.endsWith("B") && !otherdbcode1.endsWith("C988B") && !otherdbcode1.endsWith("C998B") && !otherdbcode1.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee);
@@ -432,11 +433,11 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 			sotherBuffer.insert(f,"");
 			otherstr2 = sotherBuffer.toString();
 
-			if (otherdbcode1.compareTo("A001A")==0 || otherdbcode1.compareTo("A003A")==0 || 
-                            otherdbcode1.compareTo("A004A")==0 || otherdbcode1.compareTo("A007A")==0 || 
-                            otherdbcode1.compareTo("A008A")==0 || otherdbcode1.compareTo("A888A")==0 || 
-                            otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || 
-                            otherdbcode1.compareTo("P028A")==0 || otherdbcode2.compareTo("Z776A")==0 || 
+			if (otherdbcode2.compareTo("A001A")==0 || otherdbcode2.compareTo("A003A")==0 || 
+                            otherdbcode2.compareTo("A004A")==0 || otherdbcode2.compareTo("A007A")==0 || 
+                            otherdbcode2.compareTo("A008A")==0 || otherdbcode2.compareTo("A888A")==0 || 
+                            otherdbcode2.compareTo("Z777A")==0 || otherdbcode2.compareTo("P029A")==0 || 
+                            otherdbcode2.compareTo("P028A")==0 || otherdbcode2.compareTo("Z776A")==0 || 
                             otherdbcode2.compareTo("P042A")==0 || otherdbcode2.compareTo("S768A")==0 || 
                             otherdbcode2.compareTo("S756A")==0 || otherdbcode2.compareTo("S757A")==0 || 
                             otherdbcode2.compareTo("S784A")==0 || otherdbcode2.compareTo("S745A")==0 || 
@@ -447,6 +448,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
                             otherdbcode2.compareTo("P031A")==0 || otherdbcode2.compareTo("Z552A")==0 || 
                             otherdbcode2.compareTo("P022A")==0 || otherdbcode2.compareTo("P023A")==0 || 
                             otherdbcode2.compareTo("P030A")==0 ||
+                            otherdbcode2.compareTo("K005A")==0 ||
                             otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") || 
                             (otherdbcode2.endsWith("B") && !otherdbcode2.endsWith("C988B") && !otherdbcode2.endsWith("C998B") && !otherdbcode2.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee02);
@@ -513,11 +515,11 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 			sotherBuffer.insert(f,"");
 			otherstr3 = sotherBuffer.toString();
 
-			if (otherdbcode1.compareTo("A001A")==0 || otherdbcode1.compareTo("A003A")==0 || 
-                            otherdbcode1.compareTo("A004A")==0 || otherdbcode1.compareTo("A007A")==0 || 
-                            otherdbcode1.compareTo("A008A")==0 || otherdbcode1.compareTo("A888A")==0 || 
-                            otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || 
-                            otherdbcode1.compareTo("P028A")==0 || otherdbcode3.compareTo("Z776A")==0 || 
+			if (otherdbcode3.compareTo("A001A")==0 || otherdbcode3.compareTo("A003A")==0 || 
+                            otherdbcode3.compareTo("A004A")==0 || otherdbcode3.compareTo("A007A")==0 || 
+                            otherdbcode3.compareTo("A008A")==0 || otherdbcode3.compareTo("A888A")==0 || 
+                            otherdbcode3.compareTo("Z777A")==0 || otherdbcode3.compareTo("P029A")==0 || 
+                            otherdbcode3.compareTo("P028A")==0 || otherdbcode3.compareTo("Z776A")==0 || 
                             otherdbcode3.compareTo("P042A")==0 || otherdbcode3.compareTo("S768A")==0 || 
                             otherdbcode3.compareTo("S756A")==0 || otherdbcode3.compareTo("S757A")==0 || 
                             otherdbcode3.compareTo("S784A")==0 || otherdbcode3.compareTo("S745A")==0 || 
@@ -528,6 +530,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
                             otherdbcode3.compareTo("P031A")==0 || otherdbcode3.compareTo("Z552A")==0 || 
                             otherdbcode3.compareTo("P022A")==0 || otherdbcode3.compareTo("P023A")==0 || 
                             otherdbcode3.compareTo("P030A")==0 ||
+                            otherdbcode3.compareTo("K005A")==0 ||
                             otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") || 
                             (otherdbcode3.endsWith("B") && !otherdbcode3.endsWith("C988B") && !otherdbcode3.endsWith("C998B") && !otherdbcode3.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee03);
@@ -624,6 +627,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
                             scode.compareTo("P031A")==0 || scode.compareTo("Z552A")==0 || 
                             scode.compareTo("P022A")==0 || scode.compareTo("P023A")==0 || 
                             scode.compareTo("P030A")==0 ||
+                            scode.compareTo("K005A")==0 ||
                             scode.compareTo("Z716A")==0 || scode.startsWith("S") || 
                             (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(bdFee);
