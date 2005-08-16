@@ -79,8 +79,8 @@ public class DemographicExt {
       try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-                                    
-            String sql = "select value from demographicExt where demographic_no = ? and key_val = ? order by id desc  limit 1)";
+            //System.out.println("demo"+demo)                        
+            String sql = "select value from demographicExt where demographic_no = ? and key_val = ? order by id desc  limit 1";
             
             Connection conn = db.GetConnection();
             
@@ -90,7 +90,7 @@ public class DemographicExt {
             rs = pstmt.executeQuery();
             
             if(rs.next()){
-               rs.getString("value");
+               retval = rs.getString("value");
             }
                                       
             pstmt.close();                                     
