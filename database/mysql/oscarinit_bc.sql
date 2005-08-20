@@ -2038,9 +2038,39 @@ CREATE TABLE teleplan_refusal_code (
 ) TYPE=MyISAM;
 
 
+--
+-- Table structure for table `ctl_billingservice_age_rules`
+--
+
+CREATE TABLE ctl_billingservice_age_rules (
+  id int(11) NOT NULL auto_increment,
+  minAge int(11) NOT NULL default '0',
+  maxAge int(11) NOT NULL default '0',
+  service_code varchar(10) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `ctl_billingservice_sex_rules`
+--
+
+CREATE TABLE ctl_billingservice_sex_rules (
+  id int(11) NOT NULL auto_increment,
+  gender char(1) NOT NULL default '',
+  service_code varchar(10) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
 
 
+--
+-- Table structure for table `ctl_servicecodes_dxcodes`
+--
 
-
+CREATE TABLE ctl_servicecodes_dxcodes (
+  id int(10) unsigned NOT NULL auto_increment,
+  service_code varchar(10) NOT NULL default '0',
+  dxcode varchar(10) NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=InnoDB;
 
 
