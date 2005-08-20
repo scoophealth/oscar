@@ -43,7 +43,7 @@
     <form-bean name="msgViewMessageForm" type="oscar.oscarMessenger.pageUtil.MsgViewMessageForm"/>
     <form-bean name="msgHandleMessagesForm" type="oscar.oscarMessenger.pageUtil.MsgHandleMessagesForm"/>
     <form-bean name="msgViewPDFForm" type="oscar.oscarMessenger.pageUtil.MsgViewPDFForm"/>
-    
+
     <!---Admin Stuff-->
     <form-bean name="msgMessengerAdminForm" type="oscar.oscarMessenger.config.pageUtil.MsgMessengerAdminForm"/>
     <form-bean name="msgMessengerCreateGroupForm" type="oscar.oscarMessenger.config.pageUtil.MsgMessengerCreateGroupForm"/>
@@ -54,8 +54,8 @@
     <form-bean name="msgProceedForm" type="oscar.oscarMessenger.pageUtil.MsgProceedForm"/>
     <form-bean name="msgClearMessageForm" type="oscar.oscarMessenger.pageUtil.ClearMessageForm"/>
     <form-bean name="msgDoc2PDFForm" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFForm"/>
-    <form-bean name="msgAttachPDFForm" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFForm"/>    
-    
+    <form-bean name="msgAttachPDFForm" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFForm"/>
+
 
     <!-- oscarRx form bean -->
     <form-bean name="RxChoosePatientForm" type="oscar.oscarRx.pageUtil.RxChoosePatientForm"/>
@@ -213,17 +213,17 @@
     <!-- OscarWaitingList start-->
     <form-bean name="WLWaitingListForm" type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm"/>
     <!-- OscarWaitingList stop-->
-    
+
     <!-- preventions -->
     <form-bean name="PreventionReportForm" type="oscar.oscarPrevention.pageUtil.PreventionReportForm"/>
-    
-    
+
+
     <form-bean name="ImportDemographicDataForm" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataForm"/>
     <form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm"/>
-    
+
     <form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm"/>
-        
-    
+
+
   </form-beans>
   <!--
     form-bean      name="AddDemographicKeyValueForm"
@@ -264,8 +264,8 @@
       <forward name="success" path="/oscarMessenger/DisplayMessages.jsp"/>
     </action>
     <!--NEW END-->
-    
-    
+
+
     <action path="/oscarMessenger/ViewMessage" type="oscar.oscarMessenger.pageUtil.MsgViewMessageAction" name="msgViewMessageForm" scope="request" input="/oscarMessenger/DisplayMessages.jsp">
       <forward name="noRights" path="/oscarMessenger/DisplayMessages.jsp"/>
       <forward name="success" path="/oscarMessenger/ViewMessage.jsp"/>
@@ -280,14 +280,14 @@
        <forward name="success" path="/oscarMessenger/CreateMessage.jsp"/>
    </action>
    -->
-   
+
    <action path="/oscarMessenger/Doc2PDF" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFAction" name="msgAttachPDFForm" scope="request" input="/oscarMessenger/generatePreviewPDF.jsp">
        <forward name="success" path="/oscarMessenger/selfCloseAndRefreshOpener.jsp"/>
    </action>
-   
+
    <action path="/oscarMessenger/ProcessDoc2PDF" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFAction" name="msgDoc2PDFForm" scope="request" input="/oscarMessenger/processPDF.jsp">
        <forward name="success" path="/oscarMessenger/selfClose.jsp"/>
-   </action>   
+   </action>
 
 
     <action path="/oscarMessenger/HandleMessages" type="oscar.oscarMessenger.pageUtil.MsgHandleMessagesAction" name="msgHandleMessagesForm" scope="request" input="/oscarMessenger/DisplayMessages.jsp">
@@ -304,15 +304,15 @@
     <action path="/oscarMessenger/ViewAttach" type="oscar.oscarMessenger.pageUtil.MsgViewAttachmentAction" name="msgViewAttachmentForm" scope="request" input="/oscarMessenger/ViewMessage.jsp">
       <forward name="success" path="/oscarMessenger/ViewAttachment.jsp"/>
     </action>
-    
+
     <action path="/oscarMessenger/ViewPDFAttach" type="oscar.oscarMessenger.pageUtil.MsgViewPDFAttachmentAction" name="msgViewPDFAttachmentForm" scope="request" input="/oscarMessenger/ViewMessage.jsp">
       <forward name="success" path="/oscarMessenger/ViewPDFAttachment.jsp"/>
     </action>
-    
+
     <action path="/oscarMessenger/ViewPDFFile" type="oscar.oscarMessenger.pageUtil.MsgViewPDFAction" name="msgViewPDFForm" scope="request" input="/oscarMessenger/ViewPDFAttachment.jsp">
       <forward name="success" path="/oscarMessenger/ViewPDFFile.jsp"/>
-    </action>    
-        
+    </action>
+
     <action path="/oscarMessenger/SearchDemographic" type="oscar.oscarMessenger.pageUtil.MsgDemographicSearchAction" name="msgDemographicSearchForm" scope="request" input="/oscarMessenger/Transfer/DemographicSearch.jsp">
       <forward name="success" path="/oscarMessenger/Transfer/DemographicSearch.jsp"/>
     </action>
@@ -432,7 +432,7 @@
     </action>
     <action path="/form/xmlUpload" type="oscar.form.pageUtil.FrmXmlUploadAction" name="FrmXmlUploadForm" scope="request" input="/form/formXmlUpload.jsp">
       <forward name="success" path="/form/formXmlUpload.jsp"/>
-    </action>    
+    </action>
     <!-- new form -->
     <action path="/form/formname" type="oscar.form.FrmAction" name="FrmForm" scope="request" input="/form/forwardname.jsp">
       <forward name="exit" path="/oscarEncounter/close.jsp"/>
@@ -729,7 +729,7 @@
       <forward name="failure" path="/oscar_sfhc/JAYREPORTS/DemographicReport.jsp"/>
     </action>
     <action   path="/report/CreateDemographicSet" type="oscar.oscarReport.pageUtil.RptCreateDemographicSetAction" name="FrmForm" scope="request" input="/oscarReport/ReportDemographicReport.jsp">
-       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp"/>            
+       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp"/>
     </action>
     <action path="/oscarReport/obec" type="oscar.oscarReport.pageUtil.ObecAction" name="ObecForm" scope="request" input="/oscarReport/obec.jsp">
       <forward name="success" path="/oscarReport/obec.jsp"/>
@@ -943,41 +943,41 @@
     <action path="/demographic/printDemoLabelAction" type="oscar.oscarDemographic.PrintDemoLabelAction"/>
     <!--Billing Account Reports-->
     <action name="createBillingReportActionForm" path="/billing/CA/BC/createBillingReportAction" scope="request" type="oscar.oscarBilling.ca.bc.MSP.CreateBillingReportAction" validate="false"/>
-    
-    
+
+
     <!--Preventions-->
     <action    path="/oscarPrevention/AddPrevention" type="oscar.oscarPrevention.pageUtil.AddPreventionAction" name="FrmForm" scope="request" input="/oscarPrevention/AddPreventionData.jsp">
        <forward name="success" path="/oscarPrevention/close.jsp"/>
-    </action>                          
-     
+    </action>
+
     <action    path="/oscarPrevention/PreventionReport" type="oscar.oscarPrevention.pageUtil.PreventionReportAction" name="PreventionReportForm" scope="request" input="/oscarPrevention/PreventionReporting.jsp">
        <forward name="success" path="/oscarPrevention/PreventionReporting.jsp"/>
-    </action>                       
-    <!--Preventions- End-->   
-    
+    </action>
+    <!--Preventions- End-->
+
     <!-- Demographic Relations -->
     <action    path="/demographic/AddRelation" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction" name="FrmForm" scope="request" input="/demographic/AddAlternateContact.jsp">
        <forward name="success" path="/demographic/AddAlternateContact.jsp"/>
     </action>
     <action path="/form/importUpload" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction" name="ImportDemographicDataForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/demographic/demographicImport.jsp"/>
-    </action>                           
-    
+    </action>
+
     <action path="/demographic/DemographicExport" type="oscar.oscarDemographic.pageUtil.DemographicExportAction" name="DemographicExportForm" scope="request" input="/demographic/demographicExport.jsp">
       <forward name="success" path="/demographic/demographicExport.jsp"/>
-    </action>                           
-    
+    </action>
+
     <action path="/report/DemographicSetEdit" type="oscar.oscarReport.pageUtil.DemographicSetEditAction" name="DemographicSetEditForm" scope="request" input="/report/demographicSetEdit.jsp">
       <forward name="success" path="/report/demographicSetEdit.jsp"/>
-    </action>                           
-    
+    </action>
+
     <action path="/report/SetEligibility" type="oscar.oscarReport.pageUtil.DemographicSetEligibilityAction" name="FrmForm" scope="request" input="/report/demographicSetEdit.jsp">
       <forward name="success" path="/report/demographicSetEdit.jsp"/>
-    </action>                           
-    
+    </action>
+
     <!-- Demographic Relations End-->
-    
-    <! -- Diagnostic code association -->
+
+    <!-- Diagnostic code association -->
       <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/associateCodesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.AssociateCodesAction">
           <forward name="success" path="/billing/CA/BC/showServiceCodeAssocs.do" />
         </action>
@@ -993,7 +993,7 @@
         <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/saveAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SaveAssocAction">
           <forward name="success" path="/billing/CA/BC/showServiceCodeAssocs.do" />
     </action>
-    <! -- Diagnostic code association ends -->
+    <!-- Diagnostic code association ends -->
   </action-mappings>
   <!--message-resources parameter="oscarResources"/-->
 </struts-config>
