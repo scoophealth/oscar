@@ -41,6 +41,20 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ page import="oscar.oscarDemographic.data.*" %>
 <%@ page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*" %>
+<%!
+  public void fillDxcodeList(BillingFormData.BillingService[] servicelist, Hashtable dxcodeList) {
+    System.err.println("The Length: " + servicelist.length);
+    for (int i = 0; i < servicelist.length; i++) {
+      BillingAssociationPersistence per = new BillingAssociationPersistence();
+      ServiceCodeAssociation assoc = per.getServiceCodeAssocByCode(servicelist[i].getServiceCode());
+      List dxcodes = assoc.getDxCodes();
+      if (!dxcodes.isEmpty()) {
+        dxcodeList.put(servicelist[i].getServiceCode(), (String) dxcodes.get(0));
+        System.err.println(servicelist[i].getServiceCode() + " " + (String) dxcodes.get(0));
+      }
+    }
+  }
+%>
 <%
 
  int year = 0;//Integer.parseInt(request.getParameter("year"));
@@ -57,10 +71,11 @@ String color = "", colorflag ="";
 BillingSessionBean bean = (BillingSessionBean)pageContext.findAttribute("billingSessionBean");
 oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
 oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic lgc = new oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic();
 BillingFormData billform = new BillingFormData();
-BillingFormData.BillingService[] billlist1 = billform.getServiceList("Group1", bean.getBillForm(), bean.getBillRegion());
-BillingFormData.BillingService[] billlist2 = billform.getServiceList("Group2", bean.getBillForm(), bean.getBillRegion());
-BillingFormData.BillingService[] billlist3 = billform.getServiceList("Group3", bean.getBillForm(), bean.getBillRegion());
+BillingFormData.BillingService[] billlist1 = lgc.filterServiceCodeList(billform.getServiceList("Group1", bean.getBillForm(), bean.getBillRegion()), demo);
+BillingFormData.BillingService[] billlist2 = lgc.filterServiceCodeList(billform.getServiceList("Group2", bean.getBillForm(), bean.getBillRegion()), demo);
+BillingFormData.BillingService[] billlist3 = lgc.filterServiceCodeList(billform.getServiceList("Group3", bean.getBillForm(), bean.getBillRegion()), demo);
 String group1Header = billform.getServiceGroupName("Group1",bean.getBillForm());
 String group2Header = billform.getServiceGroupName("Group2",bean.getBillForm());
 String group3Header = billform.getServiceGroupName("Group3",bean.getBillForm());
@@ -70,18 +85,24 @@ BillingFormData.BillingVisit[] billvisit = billform.getVisitType(bean.getBillReg
 BillingFormData.Location[] billlocation = billform.getLocationList(bean.getBillRegion());
 BillingFormData.Diagnostic[] diaglist = billform.getDiagnosticList( bean.getBillForm(), bean.getBillRegion());
 BillingFormData.BillingForm[] billformlist = billform.getFormList();
+Hashtable dxcodeList = new Hashtable();
+fillDxcodeList(billlist1, dxcodeList);
+fillDxcodeList(billlist2, dxcodeList);
+fillDxcodeList(billlist3, dxcodeList);
 
-
-
-
+  String frmType = request.getParameter("billType");
+  if(frmType != null && frmType.equals("PRIV")){
+   billform.setPrivateFees(billlist1);
+   billform.setPrivateFees(billlist2);
+   billform.setPrivateFees(billlist3);
+    System.out.println("request.getParameter(billForm)=" + request.getParameter("billType"));
+  }
 
 if (request.getParameter("loadFromSession") == null ){
    System.out.println("RemovingAttribute from Session");
    request.getSession().removeAttribute("BillingCreateBillingForm");
 }
 %>
-
-
 
 <html>
 <head>
@@ -99,6 +120,89 @@ if (request.getParameter("loadFromSession") == null ){
 </style>
 <script language="JavaScript">
 
+//create dxcode java script array
+var dxcodes = new Array();
+<%
+Enumeration e = dxcodeList.keys();
+int index = 0;
+while(e.hasMoreElements()){
+  String key = (String)e.nextElement();
+  String value = (String)dxcodeList.get(key);
+  out.print("var row" + index + " = new Array(2);\n");
+  out.print("row" + index + "[0]=" + key + "; ");
+  out.print("row" + index + "[1]=" + value + ";\n");
+  out.print("dxcodes[" + index + "]=row" + index + ";\n");
+  //out.print("dxcodes[" + index + "][" + index + "]=" + key +"; " +  "dxcodes[" + index + "][" + index+1 + "]=" + value +";");
+  index++;
+}
+%>
+
+
+function codeEntered(svcCode){
+	myform = document.forms[0];
+	return((myform.xml_other1.value == svcCode)||(myform.xml_other2.value == svcCode)||(myform.xml_other3.value == svcCode))
+}
+function addSvcCode(svcCode) {
+    myform = document.forms[0];
+    for (var i = 0; i < myform.service.length; i++) {
+      if (myform.service[i].value == svcCode) {
+        if (myform.service[i].checked) {
+          if (myform.xml_other1.value == "") {
+            myform.xml_other1.value = svcCode;
+            myform.xml_diagnostic_detail1.value = getAssocDxCode(svcCode);
+          }
+          else if (myform.xml_other2.value == "") {
+            myform.xml_other2.value = svcCode;
+            myform.xml_diagnostic_detail2.value = getAssocDxCode(svcCode);
+          }
+          else if (myform.xml_other3.value == "") {
+            myform.xml_other3.value = svcCode;
+            myform.xml_diagnostic_detail3.value = getAssocDxCode(svcCode);
+          }
+          else {
+            alert("There are already three service codes entered");
+            myform.service[i].checked = false;
+            return;
+          }
+        }
+        else {
+          if (myform.xml_other1.value == svcCode) {
+            myform.xml_other1.value = "";
+            myform.xml_diagnostic_detail1.value = "";
+          }
+          else if (myform.xml_other2.value == svcCode) {
+            myform.xml_other2.value = "";
+            myform.xml_diagnostic_detail2.value = "";
+          }
+          else if (myform.xml_other3.value == svcCode) {
+            myform.xml_other3.value = "";
+            myform.xml_diagnostic_detail3.value = "";
+          }
+        }return;
+      }
+    }
+  }
+function getAssocDxCode(svcCode){
+  var dxcode = ""
+  for (var i = 0; i < dxcodes.length; i++) {
+    var row = dxcodes[i];
+
+    if(row[0] == svcCode){
+      return row[1];
+    }
+  }
+  return dxcode;
+}
+function checkSelectedCodes(){
+	myform = document.forms[0];
+    for (var i = 0; i < myform.service.length; i++) {
+		 if (myform.service[i].checked) {
+		 	if(!codeEntered(myform.service[i].value)){
+				myform.service[i].checked = false;
+			}
+		 }
+	}
+}
 
 
 
@@ -124,10 +228,10 @@ function CheckType(){
 
 
 }
-
+/*
 function gotoPrivate(){
    if (document.BillingCreateBillingForm.xml_billtype.value == "PRIV"){
-      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRI&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=PRIV";
+      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRIV&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=PRIV";
       //document.location.href = "../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRI&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=PRIV";
    }
    if (document.BillingCreateBillingForm.xml_billtype.value == "MSP"){
@@ -135,7 +239,15 @@ function gotoPrivate(){
 
    }
 }
-
+*/
+function gotoPrivate(){
+   if (document.BillingCreateBillingForm.xml_billtype.value == "PRIV"){
+      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRIV&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=PRIV";
+  }
+   if (document.BillingCreateBillingForm.xml_billtype.value == "MSP"){
+      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=OscarProperties.getInstance().getProperty("default_view")%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=MSP";
+   }
+}
 
 function correspondenceNote(){
 	if (document.BillingCreateBillingForm.correspondenceCode.value == "0" ){
@@ -390,7 +502,7 @@ function showHideLayers() { //v3.0
      %>
             <tr bgcolor=<%=color%>>
                <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
-                  <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
+                  <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=<%=bean.getBillForm()%>" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
                   </font></b>
                </td>
             </tr>
@@ -399,7 +511,7 @@ function showHideLayers() { //v3.0
 
      </table>
 </div>
-
+ <h3> <html:errors /> </h1>
 <html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();" >
 
         <%
@@ -639,36 +751,21 @@ function showHideLayers() { //v3.0
           <tr>
             <td valign="top" width="33%">
               <table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
-
                 <tr bgcolor="#CCCCFF">
-                  <td width="25%"><b></b>
-                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><%=group1Header%>
-                      </font></b></font></div>
-                  </td>
-                  <td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="billing.service.desc"/></font></b></td>
-                  <td width="14%">
-                    <div align="right"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">$
-                      <bean:message key="billing.service.fee"/></font></b></div>
-                  </td>
+                  <td width="25%"><b> </b>
+                      <div align="left"> <font face="Verdana, Arial, Helvetica, sans-serif"> <b> <font size="1" color="#000000"><%=group1Header%> </font> </b> </font> </div></td>
+                  <td width="61%" bgcolor="#CCCCFF"><b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> <bean:message key="billing.service.desc"/> </font> </b> </td>
+                  <td width="14%"><div align="right"> <b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> $ <bean:message key="billing.service.fee"/> </font> </b> </div></td>
                 </tr>
-                   <% for (int i=0; i< billlist1.length; i++){                    %>
-                     <tr bgcolor=<%=i%2==0?"#EEEEFF":"white"%>>
-                                <td width="25%" height="14"><b></b> <font face="Verdana, Arial, Helvetica, sans-serif">
-                                   <html:multibox property="service" value="<%=billlist1[i].getServiceCode()%>"/>
-                                   <font size="1"><%=billlist1[i].getServiceCode()%></font></font></td>
-                                <td width="61%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getDescription()%></font>                              </font>
-                              </td>
-                                <td width="14%" height="14">
-                                  <div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getPrice()%></font>
-                               </div>
-                                </td>
+                <%for (int i = 0; i < billlist1.length; i++) {              %>
+                <tr bgcolor>
+                  <%String svcCall = "addSvcCode('" + billlist1[i].getServiceCode() + "')";                %>
+                  <td width="25%" height="14"><b> </b> <font face="Verdana, Arial, Helvetica, sans-serif"> <html:multibox property="service" value="<%=billlist1[i].getServiceCode()%>" onclick="<%=svcCall%>"/> <font size="1"><%=billlist1[i].getServiceCode()%> </font> </font> </td>
+                  <td width="61%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getDescription()%> </font> </td>
+                  <td width="14%" height="14"><div align="right"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getPrice()%> </font> </div></td>
                 </tr>
-                    <%}%>
-
-
-
-
-               </table>
+                <%}              %>
+              </table>
               <table width="100%" border="0" cellpadding="2" cellspacing="2" bgcolor="#CC0000">
                 <tr>
 
@@ -703,7 +800,7 @@ function showHideLayers() { //v3.0
                           <td>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                              <html:text property="xml_refer2" size="40" />
-								     </font>
+					        </font>
                           </td>
                           <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                              <html:select property="refertype2">
@@ -720,7 +817,7 @@ function showHideLayers() { //v3.0
                           </td>
                        </tr>
                     </table>
-                        </td>
+                  </td>
                         <td width="9%">
                           <!--
                           <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
@@ -756,38 +853,27 @@ function showHideLayers() { //v3.0
                             </tr>
                           </table> -->
                         </td>
-                      </tr>
-                    </table>
+                </tr>
+              </table>
               <p>&nbsp;</p>
             </td>
 
             <td valign="top" width="31%">
               <table width="100%" border="1" cellspacing="0" cellpadding="0">
                 <tr bgcolor="#CCCCFF">
-                  <td width="21%"><b></b>
-                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><%=group2Header%></font></b></font></div>
-                  </td>
-                  <td width="60%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="billing.service.desc"/></font></b></td>
-                  <td width="19%">
-                    <div align="right"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">$
-                      <bean:message key="billing.service.fee"/></font></b></div>
-                  </td>
+                  <td width="21%"><b> </b>
+                      <div align="left"> <font face="Verdana, Arial, Helvetica, sans-serif"> <b> <font size="1" color="#000000"><%=group2Header%> </font> </b> </font> </div></td>
+                  <td width="60%" bgcolor="#CCCCFF"><b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> <bean:message key="billing.service.desc"/> </font> </b> </td>
+                  <td width="19%"><div align="right"> <b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> $ <bean:message key="billing.service.fee"/> </font> </b> </div></td>
                 </tr>
-
-                 <% for (int i=0; i< billlist2.length; i++){	                         %>
-	      		                         <tr bgcolor=<%=i%2==0?"#EEEEFF":"white"%>>
-	      				                    <td width="21%" height="14"><b></b> <font face="Verdana, Arial, Helvetica, sans-serif">
-	      				                   <html:multibox property="service" value="<%=billlist2[i].getServiceCode()%>"/>
-	      				                      <font size="1"><%=billlist2[i].getServiceCode()%></font></font></td>
-	      				                    <td width="60%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getDescription()%></font>                              </font>
-	      				                  </td>
-	      				                    <td width="19%" height="14">
-	      				                      <div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getPrice()%></font>
-	      				                   </div>
-	      				                    </td>
-	                      </tr>
-	                          <%}%>
-
+                <%for (int i = 0; i < billlist2.length; i++) {              %>
+                <tr bgcolor>
+                  <%String svcCall = "addSvcCode('" + billlist2[i].getServiceCode() + "')";                %>
+                  <td width="21%" height="14"><b> </b> <font face="Verdana, Arial, Helvetica, sans-serif"> <html:multibox property="service" value="<%=billlist2[i].getServiceCode()%>" onclick="<%=svcCall%>"/> <font size="1"><%=billlist2[i].getServiceCode()%> </font> </font> </td>
+                  <td width="60%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getDescription()%> </font> </td>
+                  <td width="19%" height="14"><div align="right"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getPrice()%> </font> </div></td>
+                </tr>
+                <%}              %>
               </table>
               <table width="100%" height="105" border="0" cellpadding="2" cellspacing="2" bgcolor="#999900">
                 <tr>
@@ -800,7 +886,7 @@ function showHideLayers() { //v3.0
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text  property="xml_other1" size="40"/>
+                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
@@ -809,7 +895,7 @@ function showHideLayers() { //v3.0
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other2" size="40" />
+                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" />
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
@@ -818,7 +904,7 @@ function showHideLayers() { //v3.0
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other3" size="40" />
+                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" />
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
@@ -829,8 +915,8 @@ function showHideLayers() { //v3.0
                               <td colspan="2"><a href="javascript:OtherScriptAttach()"><img src="../../../images/search_code.jpg" border="0"></a>
                               </td>
                             </tr>
-                          </table>
-                        </td>
+                    </table>
+                  </td>
                         <td width="9%">
                           <!--
                           <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
@@ -866,35 +952,25 @@ function showHideLayers() { //v3.0
                             </tr>
                           </table> -->
                         </td>
-                      </tr>
-                    </table></td>
+                </tr>
+            </table></td>
             <td valign="top" width="36%">
 
               <table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
-
                 <tr bgcolor="#CCCCFF">
-                  <td width="25%"><b></b>
-                    <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="1" color="#000000"><%=group3Header%></font></b></font></div>
-                  </td>
-                  <td width="61%" bgcolor="#CCCCFF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"><bean:message key="billing.service.desc"/></font></b></td>
-                  <td width="14%">
-                    <div align="right"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">$<bean:message key="billing.service.fee"/></font></b></div>
-                  </td>
+                  <td width="25%"><b> </b>
+                      <div align="left"> <font face="Verdana, Arial, Helvetica, sans-serif"> <b> <font size="1" color="#000000"><%=group3Header%> </font> </b> </font> </div></td>
+                  <td width="61%" bgcolor="#CCCCFF"><b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> <bean:message key="billing.service.desc"/> </font> </b> </td>
+                  <td width="14%"><div align="right"> <b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> $ <bean:message key="billing.service.fee"/> </font> </b> </div></td>
                 </tr>
-                   <% for (int i=0; i< billlist3.length; i++){             %>
-				                         <tr bgcolor=<%=i%2==0?"#EEEEFF":"white"%>>
-						                    <td width="25%" height="14"><b></b> <font face="Verdana, Arial, Helvetica, sans-serif">
-						                   <html:multibox property="service" value="<%=billlist3[i].getServiceCode()%>"/>
-						                      <font size="1"><%=billlist3[i].getServiceCode()%></font></font></td>
-						                    <td width="61%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getDescription()%></font>                              </font>
-						                  </td>
-						                    <td width="14%" height="14">
-						                      <div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getPrice()%></font>
-						                   </div>
-						                    </td>
-		                </tr>
-		                    <%}%>
-
+                <%for (int i = 0; i < billlist3.length; i++) {              %>
+                <tr bgcolor>
+                  <%String svcCall = "addSvcCode('" + billlist3[i].getServiceCode() + "')";                %>
+                  <td width="25%" height="14"><b> </b> <font face="Verdana, Arial, Helvetica, sans-serif"> <html:multibox property="service" value="<%=billlist3[i].getServiceCode()%>" onclick="<%=svcCall%>"/> <font size="1"><%=billlist3[i].getServiceCode()%> </font> </font> </td>
+                  <td width="61%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getDescription()%> </font> </td>
+                  <td width="14%" height="14"><div align="right"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getPrice()%> </font> </div></td>
+                </tr>
+                <%}              %>
               </table>
               <table width="100%" border="0" cellpadding="2" cellspacing="2" bgcolor="#CCCCFF">
                 <tr>
@@ -967,8 +1043,8 @@ function showHideLayers() { //v3.0
                             </tr>
                           </table> -->
                         </td>
-                      </tr>
-                    </table>
+                </tr>
+              </table>
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td colspan="2" >
