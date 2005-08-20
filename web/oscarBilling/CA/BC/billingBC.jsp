@@ -207,6 +207,33 @@ function ResearchScriptAttach() {
 function POP(n,h,v) {
   window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
 }
+/**
+var serviceCodes = []
+function populateSvcCodeValue(svccode){
+    var services = document.forms[0].service;
+	for(var i = 0; i < services.length; i++){
+		if(services[i].value == svccode){
+			if(services[i].checked){
+				if(document.forms[0].xml_other1.value == ""){
+					document.forms[0].xml_other1.value = svccode
+				}
+				else if(document.forms[0].xml_other2.value != svccode){
+					document.forms[0].xml_other2.value = svccode
+				}
+				else if(document.forms[0].xml_other3.value != svccode){
+					document.forms[0].xml_other3.value = svccode
+				}
+			}
+			else{
+			
+			}
+		}
+	}
+	if svccode is selected:
+		if svccode list not contains code
+			populate available textfield search codes and 
+        else:
+        	find text field with code and delete values from text*/
 //-->
 </SCRIPT>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
