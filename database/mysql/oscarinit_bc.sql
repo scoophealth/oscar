@@ -2044,8 +2044,8 @@ CREATE TABLE teleplan_refusal_code (
 
 CREATE TABLE ctl_billingservice_age_rules (
   id int(11) NOT NULL auto_increment,
-  minAge int(11) NOT NULL default '0',
-  maxAge int(11) NOT NULL default '0',
+  minAge int(3) NOT NULL default '0',
+  maxAge int(3) NOT NULL default '0',
   service_code varchar(10) NOT NULL default '',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
