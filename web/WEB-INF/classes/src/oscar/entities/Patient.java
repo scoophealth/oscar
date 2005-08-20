@@ -44,6 +44,7 @@ public class Patient {
   private String id;
   private int providerNo;
   private String chartNo;
+  private String demographicNo;
   public Patient() {
   }
 
@@ -205,8 +206,16 @@ public class Patient {
     return chartNo;
   }
 
+  public String getDemographicNo() {
+    return demographicNo;
+  }
+
   public void setChartNo(String chartNo) {
     this.chartNo = chartNo;
+  }
+
+  public void setDemographicNo(String demographicNo) {
+    this.demographicNo = demographicNo;
   }
 
   public String getBirthDay(){
