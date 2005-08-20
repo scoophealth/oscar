@@ -23,55 +23,27 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionForm;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.Action;
 
-public final class BillingForm
-    extends ActionForm {
+public class EditServiceCodeAssocAction
+    extends Action {
+  public ActionForward execute(ActionMapping actionMapping,
+                               ActionForm actionForm,
+                               HttpServletRequest request,
+                               HttpServletResponse servletResponse) {
+    BillingCreateBillingForm frm = (BillingCreateBillingForm)actionForm;
+    String svcCode = request.getParameter("svcCode") != null ? request.getParameter("svcCode") : "";
+    request.setAttribute("mode","edit");
+    frm.setMode("edit");
+    BillingAssociationPersistence per = new BillingAssociationPersistence();
+    ServiceCodeAssociation assoc = per.getServiceCodeAssocByCode(svcCode);
+    frm.setServiceCodeAssociation(assoc);
+    return actionMapping.findForward("success");
 
-  String requestId;
-  String xml_location;
-  String xml_provider;
-  String xml_visittype;
-  private String xml_billtype;
-
-  public String getRequestId() {
-    return requestId;
   }
-
-  public void setRequestId(String id) {
-    this.requestId = id;
-  }
-
-  public void setXml_location(String id) {
-    this.xml_location = id;
-  }
-
-  public String getXml_location() {
-    return xml_location;
-  }
-
-  public void setXml_provider(String id) {
-    this.xml_provider = id;
-  }
-
-  public String getXml_provider() {
-    return xml_provider;
-  }
-
-  public void setXml_visittype(String id) {
-    this.xml_visittype = id;
-  }
-
-  public void setXml_billtype(String xml_billtype) {
-    this.xml_billtype = xml_billtype;
-  }
-
-  public String getXml_visittype() {
-    return xml_visittype;
-  }
-
-  public String getXml_billtype() {
-    return xml_billtype;
-  }
-
 }

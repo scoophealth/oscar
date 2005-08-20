@@ -22,139 +22,196 @@
  * Ontario, Canada
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
-import oscar.oscarDB.DBHandler;
 
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
-import oscar.entities.PaymentType;
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-public class BillingCreateBillingAction extends Action {
+import org.apache.struts.action.*;
+import oscar.entities.*;
+import oscar.oscarBilling.ca.bc.MSP.*;
+import oscar.oscarDemographic.data.*;
+import oscar.oscarDemographic.data.DemographicData.*;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
+import oscar.oscarBilling.ca.bc.data.BillingFormData;
 
+public class BillingCreateBillingAction
+    extends Action {
+  private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
+  public ActionForward execute(ActionMapping mapping,
+                               ActionForm form,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException,
+      ServletException {
+    ActionErrors errors = new ActionErrors();
+    BillingBillingManager bmanager = new BillingBillingManager();
+    BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
 
-    public ActionForward execute(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException, ServletException {
+    /**
+     * This service list is not necessary
+     */
+    String[] service = new String[0];//frm.getService();
+    String other_service1 = frm.getXml_other1();
+    String other_service2 = frm.getXml_other2();
+    String other_service3 = frm.getXml_other3();
+    String other_service1_unit = frm.getXml_other1_unit();
+    String other_service2_unit = frm.getXml_other2_unit();
+    String other_service3_unit = frm.getXml_other3_unit();
 
-        if(request.getSession().getAttribute("user") == null  ){
-            return (mapping.findForward("Logout"));
-        }
+    BillingSessionBean bean = (BillingSessionBean) request.getSession().
+        getAttribute("billingSessionBean");
+    Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
 
-        oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean;
-        bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
+    ArrayList billItem = bmanager.getDups2(service, other_service1,
+                                           other_service2, other_service3,
+                                           other_service1_unit,
+                                           other_service2_unit,
+                                           other_service3_unit);
 
-        BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
-        String patientNo   = bean.getPatientNo();
-        String patientName = bean.getPatientName();
-        String apptNo     = bean.getApptNo();
-
-        String[] service  = frm.getService();
-        String other_service1 = frm.getXml_other1();
-        String other_service2 = frm.getXml_other2();
-        String other_service3 = frm.getXml_other3();
-        String other_service1_unit = frm.getXml_other1_unit();
-        String other_service2_unit = frm.getXml_other2_unit();
-        String other_service3_unit = frm.getXml_other3_unit();
-        oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager bmanager;
-        bmanager = new BillingBillingManager();
-        ArrayList billItem = bmanager.getDups2(service, other_service1, other_service2, other_service3,other_service1_unit, other_service2_unit, other_service3_unit);
-        System.out.println("Calling getGrandTotal");
-
-        bean.setGrandtotal(bmanager.getGrandTotal(billItem));
-        System.out.println("GrandTotal" +bmanager.getGrandTotal(billItem));
-        oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-
-        oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
-        bean.setPatientLastName(demo.getLastName());
-        bean.setPatientFirstName(demo.getFirstName());
-        bean.setPatientDoB(demo.getDob());
-        bean.setPatientAddress1(demo.getAddress());
-        bean.setPatientAddress2(demo.getCity());
-        bean.setPatientPostal(demo.getPostal());
-        bean.setPatientSex(demo.getSex());
-        bean.setPatientPHN(demo.getHIN());
-        bean.setPatientHCType(demo.getHCType());
-        bean.setPatientAge(demo.getAge());
-        bean.setBillingType(frm.getXml_billtype());
-        oscar.oscarBilling.ca.bc.data.BillingFormData billform = new oscar.oscarBilling.ca.bc.data.BillingFormData();
-        String payMeth = ((BillingCreateBillingForm) form).getXml_encounter();
-
-        ArrayList lst = billform.getPaymentTypes();
-        for (int i = 0; i < lst.size(); i++) {
-          PaymentType tp = (PaymentType)lst.get(i);
-          if(tp.getId().equals(payMeth)){
-            bean.setPaymentTypeName(tp.getPaymentType());
-            break;
-          }
-
-        }
-
-        bean.setPaymentType(payMeth);
-        bean.setEncounter(payMeth.equals("6")?"O":"E");
-        bean.setVisitType(frm.getXml_visittype());
-        bean.setVisitLocation(frm.getXml_location());
-        bean.setServiceDate(frm.getXml_appointment_date());
-        bean.setStartTime(frm.getXml_starttime());
-        bean.setEndTime(frm.getXml_endtime());
-        bean.setAdmissionDate(frm.getXml_vdate());
-        bean.setBillingProvider(frm.getXml_provider());
-
-
-
-        bean.setBillingPracNo(billform.getPracNo(frm.getXml_provider()));
-        bean.setBillingGroupNo(billform.getGroupNo(frm.getXml_provider()));
-
-
-
-        bean.setDx1(frm.getXml_diagnostic_detail1());
-        bean.setDx2(frm.getXml_diagnostic_detail2());
-        bean.setDx3(frm.getXml_diagnostic_detail3());
-        bean.setReferral1(frm.getXml_refer1());
-        bean.setReferral2(frm.getXml_refer2());
-        bean.setReferType1(frm.getRefertype1());
-        bean.setReferType2(frm.getRefertype2());
-        bean.setBillItem(billItem);
-
-        bean.setCorrespondenceCode(frm.getCorrespondenceCode());
-        bean.setNotes(frm.getNotes());
-        bean.setDependent(frm.getDependent());
-        bean.setAfterHours(frm.getAfterHours());
-        bean.setTimeCall(frm.getTimeCall());
-        bean.setSubmissionCode(frm.getSubmissionCode());
-        bean.setShortClaimNote(frm.getShortClaimNote());
-        bean.setService_to_date(frm.getService_to_date());
-	bean.setIcbc_claim_no(frm.getIcbc_claim_no());
-        bean.setMessageNotes(frm.getMessageNotes());
-        bean.setMva_claim_code(frm.getMva_claim_code());
-
-        bean.setFacilityNum(frm.getFacilityNum());
-        bean.setFacilitySubNum(frm.getFacilitySubNum());
-
-        if (frm.getXml_billtype().equalsIgnoreCase("WCB")){
-           WCBForm wcbForm = new WCBForm();
-           wcbForm.Set(bean);
-           request.getSession().putValue("WCBForm", wcbForm);
-           return (mapping.findForward("WCB"));
-        }
-        //      System.out.println("Service count : "+ billItem.size());
-
-
-        return mapping.findForward("success");
+    validateServiceCodeList(billItem, demo, errors);
+    validate00120(errors, demo, billItem);
+    if (!errors.isEmpty()) {
+        //We want this alert to show up regardless
+      verifyLast13050(errors,demo);
+      this.saveErrors(request, errors);
+      return mapping.getInputForward();
     }
 
+    //We want this alert to show up regardless
+    verifyLast13050(errors,demo);
+    this.saveErrors(request, errors);
+    BillingFormData billform = new BillingFormData();
+    String payMeth = ( (BillingCreateBillingForm) form).getXml_encounter();
+
+    ArrayList lst = billform.getPaymentTypes();
+    for (int i = 0; i < lst.size(); i++) {
+      PaymentType tp = (PaymentType) lst.get(i);
+      if (tp.getId().equals(payMeth)) {
+        bean.setPaymentTypeName(tp.getPaymentType());
+        break;
+      }
+
+    }
+
+    bean.setGrandtotal(bmanager.getGrandTotal(billItem));
+    bean.setPatientLastName(demo.getLastName());
+    bean.setPatientFirstName(demo.getFirstName());
+    bean.setPatientDoB(demo.getDob());
+    bean.setPatientAddress1(demo.getAddress());
+    bean.setPatientAddress2(demo.getCity());
+    bean.setPatientPostal(demo.getPostal());
+    bean.setPatientSex(demo.getSex());
+    bean.setPatientPHN(demo.getHIN());
+    bean.setPatientHCType(demo.getHCType());
+    bean.setPatientAge(demo.getAge());
+    bean.setBillingType(frm.getXml_billtype());
+    bean.setPaymentType(payMeth);
+    bean.setEncounter(payMeth.equals("6") ? "O" : "E");
+    bean.setVisitType(frm.getXml_visittype());
+    bean.setVisitLocation(frm.getXml_location());
+    bean.setServiceDate(frm.getXml_appointment_date());
+    bean.setStartTime(frm.getXml_starttime());
+    bean.setEndTime(frm.getXml_endtime());
+    bean.setAdmissionDate(frm.getXml_vdate());
+    bean.setBillingProvider(frm.getXml_provider());
+    bean.setBillingPracNo(billform.getPracNo(frm.getXml_provider()));
+    bean.setBillingGroupNo(billform.getGroupNo(frm.getXml_provider()));
+    bean.setDx1(frm.getXml_diagnostic_detail1());
+    bean.setDx2(frm.getXml_diagnostic_detail2());
+    bean.setDx3(frm.getXml_diagnostic_detail3());
+    bean.setReferral1(frm.getXml_refer1());
+    bean.setReferral2(frm.getXml_refer2());
+    bean.setReferType1(frm.getRefertype1());
+    bean.setReferType2(frm.getRefertype2());
+    bean.setBillItem(billItem);
+    bean.setCorrespondenceCode(frm.getCorrespondenceCode());
+    bean.setNotes(frm.getNotes());
+    bean.setDependent(frm.getDependent());
+    bean.setAfterHours(frm.getAfterHours());
+    bean.setTimeCall(frm.getTimeCall());
+    bean.setSubmissionCode(frm.getSubmissionCode());
+    bean.setShortClaimNote(frm.getShortClaimNote());
+    bean.setService_to_date(frm.getService_to_date());
+    bean.setIcbc_claim_no(frm.getIcbc_claim_no());
+    bean.setMessageNotes(frm.getMessageNotes());
+    bean.setMva_claim_code(frm.getMva_claim_code());
+
+    bean.setFacilityNum(frm.getFacilityNum());
+    bean.setFacilitySubNum(frm.getFacilitySubNum());
+
+
+    if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
+      WCBForm wcbForm = new WCBForm();
+      wcbForm.Set(bean);
+      request.getSession().putValue("WCBForm", wcbForm);
+      return (mapping.findForward("WCB"));
+    }
+    //      System.out.println("Service count : "+ billItem.size());
+    return mapping.findForward("success");
+  }
+
+  /**
+   * Validates a String array of service codes and adds and ActionError
+   * to the ActionErrors object, for any of the codes that don't validate
+   * successfully
+   * @param service String[]
+   * @param demo Demographic
+   * @param errors ActionErrors
+   */
+  private void validateServiceCodeList(ArrayList billItems, Demographic demo,
+                                       ActionErrors errors) {
+    for (int i = 0; i < billItems.size(); i++) {
+      BillingItem item = (BillingItem) billItems.get(i);
+      AgeValidator age = (AgeValidator) vldt.getAgeValidator(item.getServiceCode(), demo);
+      SexValidator sex = (SexValidator) vldt.getSexValidator(item.
+          getServiceCode(), demo);
+      if (!age.isValid()) {
+        errors.add("",
+                   new org.apache.struts.action.ActionError(
+                       "oscar.billing.CA.BC.billingBC.error.invalidAge",
+                       item.getServiceCode(), String.valueOf(demo.getAgeInYears()),
+                       age.getDescription()));
+      }
+      if (!sex.isValid()) {
+        errors.add("",
+                   new org.apache.struts.action.ActionError(
+                       "oscar.billing.CA.BC.billingBC.error.invalidSex",
+                       item.getServiceCode(), demo.getSex(), sex.getGender()));
+      }
+    }
+  }
+
+  private void validate00120(ActionErrors errors, Demographic demo,
+                             ArrayList billItem) {
+    for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
+      BillingItem item = (BillingItem) iter.next();
+      if (item.getServiceCode().equals("00120")) {
+        if (!vldt.hasMore00120Codes(demo.getDemographicNo())) {
+          errors.add("",
+                     new ActionError(
+                         "oscar.billing.CA.BC.billingBC.error.noMore00120"));
+        }
+        break;
+      }
+    }
+
+  }
+
+  private void verifyLast13050(ActionErrors errors, Demographic demo) {
+    int last13050 = vldt.daysSinceLast13050(demo.getDemographicNo());
+    if (last13050 > 365) {
+      errors.add("",
+                 new ActionError(
+                     "oscar.billing.CA.BC.billingBC.error.last13050",
+                     String.valueOf(last13050)));
+    }
+    else if(last13050 == -1){
+      errors.add("",
+                 new ActionError(
+                     "oscar.billing.CA.BC.billingBC.error.neverBilled13050"));
+    }
+
+
+  }
 }

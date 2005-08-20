@@ -1,0 +1,257 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+package oscar.oscarBilling.ca.bc.pageUtil;
+
+import java.sql.*;
+import java.util.*;
+
+import oscar.oscarDB.*;
+
+/**
+ *
+ * <p>Title: BillingAssociationPersistence</p>
+ *
+ * <p>Description:Responsible for performing database CRUD operations on service code/dxcode associations </p>
+ * <p>Involved Database Tables: ctl_servicecodes_dxcodes
+ * <p>Copyright: Copyright (c) 2005</p>
+ *
+ * <p>Company: </p>
+ *
+ * @author Joel Legris for Mcmaster University
+ * @version 1.0
+ */
+public class BillingAssociationPersistence {
+  public BillingAssociationPersistence() {
+
+  }
+
+  /**
+   * Saves a ServiceCodeAssociation object to the database
+   * @param assoc ServiceCodeAssociation
+   * @return boolean
+   */
+  public void saveServiceCodeAssociation(ServiceCodeAssociation assoc,
+                                         String mode) {
+    if (mode.equals("edit")) {
+      this.deleteServiceCodeAssoc(assoc.getServiceCode());
+    }
+    List dxcodes = assoc.getDxCodes();
+    for (Iterator iter = dxcodes.iterator(); iter.hasNext(); ) {
+      String item = (String) iter.next();
+      if (!item.equals("")) {
+        this.newServiceCodeAssoc(assoc.getServiceCode(),
+                                 item);
+      }
+    }
+  }
+
+  /**
+   * A new service code association is save to the database
+   * @param svc String
+   * @param dx String
+   * @return boolean
+   */
+  private boolean newServiceCodeAssoc(String svc, String dx) {
+    boolean ret = false;
+    String qry =
+        "insert into ctl_servicecodes_dxcodes(service_code,dxcode) values('" +
+        svc + "','" + dx + "')";
+    DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      ret = db.RunSQL(qry);
+
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+
+    }
+    finally {
+      try {
+        db.CloseConn();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    return ret;
+  }
+
+  /**
+   * Deletes a service code association from the database
+   * @param id String
+   * @return boolean
+   */
+  public boolean deleteServiceCodeAssoc(String svcCode) {
+    boolean ret = false;
+    String qry = "delete from ctl_servicecodes_dxcodes where service_code = '" +
+        svcCode + "'";
+    DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      ret = db.RunSQL(qry);
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+
+    }
+    finally {
+      try {
+        db.CloseConn();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    return ret;
+
+  }
+
+  /**
+   * Retrieves a list of ServiceCodeAssociation objects
+   * @return List
+   */
+  public List getServiceCodeAssocs() {
+    ArrayList list = new ArrayList();
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      String qry = "select * from ctl_servicecodes_dxcodes";
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(qry);
+      String curSvcCode = "";
+      ServiceCodeAssociation assoc = new ServiceCodeAssociation();
+      //create the first object to establish an initial reference service code
+      while (rs.next()) {
+
+        String svcCode = rs.getString(2);
+        String dxcode = rs.getString(3);
+        if (!svcCode.equals(curSvcCode)) {
+          assoc = new ServiceCodeAssociation();
+          assoc.addDXCode(dxcode);
+          assoc.setServiceCode(svcCode);
+          list.add(assoc);
+        }
+        else {
+          assoc.addDXCode(dxcode);
+        }
+        curSvcCode = svcCode;
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+
+    }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    return list;
+  }
+
+  /**
+   * Returns true if the provided service code is already associated
+   * @param code String
+   * @return boolean
+   */
+  public boolean assocExists(String code) {
+    String qry =
+        "select * from ctl_servicecodes_dxcodes where service_code = '" +
+        code + "'";
+    return recordExists(qry);
+  }
+
+  /**
+   * Returns true if the provided dxcode exists in the database
+   * @param code String
+   * @return boolean
+   */
+  public boolean dxcodeExists(String code) {
+    String qry =
+        "select diagnostic_code from diagnosticcode where diagnostic_code = '" +
+        code + "'";
+    return recordExists(qry);
+  }
+
+  /**
+   * Returns true if the provided service code exists in the database
+   * @param code String
+   * @return boolean
+   */
+  public boolean serviceCodeExists(String code) {
+    String qry =
+        "select service_code from billingservice where service_code = '" + code +
+        "'";
+    return recordExists(qry);
+  }
+
+  //
+  public boolean recordExists(String qry) {
+    boolean ret = false;
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL(qry);
+      if (rs.next()) {
+        ret = true;
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+
+    }
+    return ret;
+  }
+
+  /**
+   * getServiceCodeAssocByCode
+   *
+   * @param svcCode String
+   */
+  public ServiceCodeAssociation getServiceCodeAssocByCode(String svcCode) {
+    ServiceCodeAssociation assoc = new ServiceCodeAssociation();
+    try {
+      String qry =
+          "select * from ctl_servicecodes_dxcodes where service_code = '" +
+          svcCode + "'";
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL(qry);
+
+      while (rs.next()) {
+        String code = rs.getString(2);
+        String dxcode = rs.getString(3);
+        assoc.addDXCode(dxcode);
+        assoc.setServiceCode(svcCode);
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    return assoc;
+  }
+}
