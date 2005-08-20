@@ -95,9 +95,9 @@
             </td>
           </tr>
 		   <tr  bgcolor="CCCCFF">
-            <th><bean:message key="oscar.billing.CA.BC.billingBC.manageSVCDXAssoc.svc"/>Service Code</th>
-            <th><bean:message key="oscar.billing.CA.BC.billingBC.manageSVCDXAssoc.dx"/>Diagnostic Codes</th>
-            <th><bean:message key="oscar.billing.CA.BC.billingBC.manageSVCDXAssoc.options"/>Options</th>
+            <th><bean:message key="oscar.billing.CA.BC.billingBC.manageSVCDXAssoc.svc"/></th>
+            <th><bean:message key="oscar.billing.CA.BC.billingBC.manageSVCDXAssoc.dx"/></th>
+            <th><bean:message key="oscar.billing.CA.BC.billingBC.manageSVCDXAssoc.options"/></th>
           </tr>
         <%
           ArrayList lst = (ArrayList) request.getAttribute("assocs");
