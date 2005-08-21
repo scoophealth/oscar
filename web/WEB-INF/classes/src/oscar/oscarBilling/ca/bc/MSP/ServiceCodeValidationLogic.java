@@ -246,4 +246,35 @@ public class ServiceCodeValidationLogic {
     return ret;
 
   }
+
+  /**
+   * Returns the date of the last time that Service Code 13050 was billed
+   *
+   * @param demoNo String
+   * @return String
+   */
+  public String getDateofLast13050(String demoNo) {
+    String ret = "";
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      String qry =
+          "select service_date " +
+          "from billingmaster " +
+          "where demographic_no = '" + demoNo + "' " +
+          "and billing_code = '13050'" +
+          " and billingstatus != 'D'";
+      rs = db.GetSQL(qry);
+      if (rs.next()) {
+        ret = rs.getString(1);
+      }
+      db.CloseConn();
+      rs.close();
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    return ret;
+  }
 }
