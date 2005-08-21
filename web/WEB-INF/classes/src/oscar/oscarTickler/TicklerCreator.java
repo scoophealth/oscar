@@ -85,9 +85,9 @@ public class TicklerCreator {
    * @return boolean
    */
   private boolean ticklerExists(String demoNo, String message) {
-
     String sql = "select * from tickler where demographic_no = " + demoNo +
-        " and message = '" + message + "'";
+        " and message = '" + message + "'" +
+        " and status = 'A'";
     DBHandler db = null;
     ResultSet rs = null;
     try {
