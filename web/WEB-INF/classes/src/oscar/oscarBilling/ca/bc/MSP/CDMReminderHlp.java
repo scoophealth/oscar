@@ -29,6 +29,9 @@ import java.util.*;
 
 import oscar.oscarDB.*;
 import oscar.oscarTickler.*;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.*;
 
 public class CDMReminderHlp {
   public CDMReminderHlp() {
@@ -48,7 +51,20 @@ public class CDMReminderHlp {
       ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
       int daysPast = lgc.daysSinceLast13050(demoNo);
       if (daysPast > 365) {
-        String message = "SERVICE CODE: 13050 Reminder - " + String.valueOf(daysPast) + " DAYS HAVE PASSED SINCE  LAST BILLED";
+        String oldfmt = lgc.getDateofLast13050(demoNo);
+        String newfmt = "";
+        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+
+        try {
+         java.util.Date newDate = formatter.parse(oldfmt);
+          formatter = new SimpleDateFormat("dd-MMM-yy");
+          newfmt = formatter.format(newDate);
+        }
+        catch (ParseException ex) {
+          ex.printStackTrace();
+        }
+
+        String message = "SERVICE CODE: 13050 Reminder - Last Billed On: " + newfmt;
         crt.createTickler(demoNo, provNo, message);
       }
       else if (daysPast < 0) {
