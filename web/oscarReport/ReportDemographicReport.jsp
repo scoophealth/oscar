@@ -3,20 +3,22 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import ="oscar.oscarReport.data.RptSearchData"%>
+<%@ page import ="oscar.oscarReport.data.RptSearchData,java.util.*"%>
+
+
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 
 <%
-
-                    oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();
-                    java.util.ArrayList rosterArray;
-                    java.util.ArrayList patientArray;
-                    java.util.ArrayList providerArray;
-                    java.util.ArrayList queryArray;
-                    rosterArray   = searchData.getRosterTypes();
-                    patientArray  = searchData.getPatientTypes();
-                    providerArray = searchData.getProvidersWithDemographics();
-                    queryArray    = searchData.getQueryTypes();
+    oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();
+    java.util.ArrayList rosterArray;
+    java.util.ArrayList patientArray;
+    java.util.ArrayList providerArray;
+    java.util.ArrayList queryArray;
+    rosterArray   = searchData.getRosterTypes();
+    patientArray  = searchData.getPatientTypes();
+    providerArray = searchData.getProvidersWithDemographics();
+    queryArray    = searchData.getQueryTypes();
 %>
 
 <html:html>
@@ -33,6 +35,9 @@ Demographic Report tool
 
 <style type="text/css" media="print">
 .MainTable {
+    display:none;
+}
+.hiddenInPrint{
     display:none;
 }
 //.header INPUT {
@@ -108,7 +113,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
 
 <table border=1>
 <tr>
-    <td>
+    <td>    
     <table>
         <tr>
             <th colspan="2">
@@ -330,14 +335,10 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
 <input type="submit" value="Run Query"  name="query"/>
 
     </td>
-    <td>
+    <td valign=top>
 
         <table border=1>
-            <tr>
-                <td colspan="4">
-                    &nbsp;
-                </td>
-            </tr>
+            
             <tr>
                 <th colspan="4">
                     Where
@@ -433,7 +434,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                 <td>
                     Provider No
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                      <table border=1>
                         <tr>
 
@@ -441,7 +442,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                     <%
                     for (int i =0 ; i < providerArray.size(); i++){
                     String pro = (String) providerArray.get(i);%>
-                    <td> <%=pro%><br>
+                    <td> <%=providerBean.getProperty(pro,"")%><br>
                     <html:multibox property="providerNo" value="<%=pro%>"/>
                     </td>
                     <%}
@@ -452,16 +453,13 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                         </tr>
                     </table>
 
-                </td>
-                <td colspan='2'>
-                &nbsp;
-                </td>
+                </td>                
             </tr>
         <tr>
                 <td>
                     Patient Status
                 </td>
-                <td >
+                <td  colspan="3">                
                     <table border=1>
                         <tr>
 
@@ -478,11 +476,8 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
 
 
                         </tr>
-                    </table>
-                </td>
-                <td colspan='2'>
-                &nbsp;
-                </td>
+                    </table>                    
+                </td>                
             </tr>
             <tr>
                 <td>
@@ -578,10 +573,12 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
         <% boolean includesDemo = false;
            System.out.println("checking select array "+ selectArray[0]);
            if (selectArray[0].equals("demographic_no")){ 
-              includesDemo = true; %>        
+              includesDemo = true; %>      
+              <div class="hiddenInPrint">
               Set Name:<input type="text" name="setName"/>
               <input type="submit" value="Save Patient Set"/>
               <input type="hidden" name="size" value="<%=searchList.size()%>"/>
+              </div>
         <% } %>
         
         <table border=1>
