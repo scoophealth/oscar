@@ -143,6 +143,11 @@ function checkTypeNum(typeIn) {
 
 function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = false;
+  
+  if (dob.value.indexOf('%b610054') == 0 && dob.value.length > 18){     
+     document.titlesearch.keyword.value = dob.value.substring(8,18);
+     document.titlesearch.search_mode[4].checked = true;                  
+  }
 
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
@@ -248,7 +253,21 @@ function checkDob() {
 	if (!typeInOK){
       alert ("You must type in the right DOB.");
    }
+   
+   if (!isValidDate(dd,mm,yyyy)){
+      alert ("DOB Date is an incorrect date");
+      typeInOK = false;
+   }
+   
 	return typeInOK;
+}
+
+
+function isValidDate(day,month,year){
+   month = ( month - 1 );
+   dteDate=new Date(year,month,day);
+//alert(dteDate);
+   return ((day==dteDate.getDate()) && (month==dteDate.getMonth()) && (year==dteDate.getFullYear()));
 }
 
 function checkHin() {
@@ -497,10 +516,12 @@ function checkFormTypeIn() {
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPhoneHome"/>: </b> </td>
       <td align="left" >
         <input type="text" name="phone" onBlur="formatPhoneNum()" value="<%=props.getProperty("phoneprefix", "905-")%>">
+        Ext:<input type="text" name="hPhoneExt" value=""  size="4" />
       </td>
-      <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPhoneWork"/>:</b> </td>
+      <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPhoneWork"/>:</b> </td>      
       <td  align="left">
         <input type="text" name="phone2" onBlur="formatPhoneNum()" value="">
+        Ext:<input type="text" name="wPhoneExt" value=""  style="display:inline" size="4" />
       </td>
     </tr>
     <tr valign="top">
@@ -637,11 +658,11 @@ function checkFormTypeIn() {
           </select>
         <% }%>
       </td>
-      <td>
-          &nbsp;
+      <td align="right">    
+         <b>Language:</b>          
       </td>
-      <td>
-          &nbsp;
+      <td>        
+         <input type="text" name="language" value="" onBlur="upCaseCtrl(this)" size="19" />          
       </td>
     </tr>
     <tr valign="top">
