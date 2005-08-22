@@ -1,5 +1,5 @@
 <%@ page language="java" errorPage="../provider/errorpage.jsp" %>
-<%@ page import="java.util.*, oscar.oscarMDS.data.*" %>
+<%@ page import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -13,6 +13,9 @@ if ( request.getParameter("searchProviderNo") == null || request.getParameter("s
     ackStatus = "U";
 } */
 mDSSegmentData.populateMDSSegmentData(request.getParameter("segmentID"));
+
+CommonLabResultData clrd = new CommonLabResultData();
+ String demoNo = clrd.getDemographicNo(request.getParameter("segmentID"),"MDS");
 
 PatientData.Patient pd = new PatientData().getPatient(request.getParameter("segmentID"));
 String AbnFlag = "";
@@ -231,7 +234,8 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                                 <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                                                                     <a href="javascript:window.close()">
                                                                 <% } else { // we were called from lab module %>
-                                                                    <a href="javascript:popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
+                                                                
+                                                                    <a href="javascript:popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(pd.getPatientName() )%>', 'searchPatientWindow')">
                                                                 <% } %>
                                                                     <%=pd.getPatientName()%>
                                                                     </a>
@@ -578,7 +582,8 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                        boolean lineContinued = false; %>
 
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Corrected")?"CorrectedRes":AbnFlag.compareTo("HI")==0?"AbnormalRes":AbnFlag.compareTo("LO")==0?"HiLoRes":"NormalRes"%>">
-                                            <td valign="top" align="right"><%=thisResult.name %></td>
+                                            <!--td valign="top" align="right"><%=thisResult.name %></td-->
+                                            <td valign="top" align="left"><a href="../lab/CA/ON/labValues.jsp?testName=<%=thisResult.name%>&demo=<%=demoNo%>&labType=MDS"><%=thisResult.name %></a></td>                                         
                                          <% if ( thisResult.observationValue.equals("") && thisResult.notes != null ) {
                                                 lineContinued = true;
                                             } else { %>
@@ -671,7 +676,8 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                        boolean lineContinued = false; %>
 
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=thisResult.resultStatus.startsWith("Corrected")?"CorrectedRes":AbnFlag.startsWith("HI", AbnFlag.indexOf("~") + 1)?"AbnormalRes":AbnFlag.startsWith("LO", AbnFlag.indexOf("~") + 1)?"HiLoRes":"NormalRes"%>">
-                                            <td valign="top" align="left"><%=thisResult.name %></td>
+                                            <!--td valign="top" align="left"><%=thisResult.name %></td-->
+                                            <td valign="top" align="left"><a href="../lab/CA/ON/labValues.jsp?testName=<%=thisResult.name%>&demo=<%=demoNo%>&labType=MDS"><%=thisResult.name %></a></td>
                                          <% if ( thisResult.observationValue.equals("") && thisResult.notes != null ) {
                                                 lineContinued = true;
                                             } else { %>
@@ -743,7 +749,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
-                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>', 'searchPatientWindow')">
+                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(pd.getPatientName() )%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
                     <td width="20%" valign="center" align="middle">
