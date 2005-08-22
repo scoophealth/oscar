@@ -49,6 +49,7 @@ public class MDSResultsData {
      
    
    public ArrayList populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+      //System.out.println("populateCMLResultsData getting called now");
       if ( providerNo == null) { providerNo = ""; }
       if ( patientFirstName == null) { patientFirstName = ""; }
       if ( patientLastName == null) { patientLastName = ""; }
@@ -82,7 +83,7 @@ public class MDSResultsData {
             +" where patientLabRouting.lab_type = 'CML' and lpp.id = patientLabRouting.lab_no and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
          }
          
-         System.out.println("sql "+sql);
+         
          
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
@@ -262,7 +263,7 @@ public class MDSResultsData {
    //////
    
    public ArrayList populateMDSResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-      
+      //System.out.println("populateMDSResultsData2 top");
       if ( providerNo == null) { providerNo = ""; }
       if ( patientFirstName == null) { patientFirstName = ""; }
       if ( patientLastName == null) { patientLastName = ""; }
@@ -274,6 +275,7 @@ public class MDSResultsData {
       
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         //System.out.println("populateMDSResultsData2 demo"+demographicNo);
          if ( demographicNo == null) {
             // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
             // for the provider number if unable to find correct provider
@@ -299,6 +301,7 @@ public class MDSResultsData {
             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
          }
          
+         //System.out.println("sql "+sql);
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
             LabResultData lData = new LabResultData(LabResultData.MDS);
@@ -350,6 +353,7 @@ public class MDSResultsData {
             } else {
                lData.discipline = "Hem/Chem/Other";
             }
+            labResults.add(lData); 
          }
          rs.close();
          db.CloseConn();
