@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
+import oscar.log.*;
 
 
 public final class RxAddAllergyAction extends Action {
@@ -82,7 +83,10 @@ public final class RxAddAllergyAction extends Action {
             allergy.setSeverityOfReaction(severityOfReaction);
             allergy.setOnSetOfReaction(onSetOfReaction);
 
-            patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);           
+            patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);      
+            
+            String ip = request.getRemoteAddr();
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, ""+patient.getDemographicNo(), ip);
 
             return (mapping.findForward("success"));
     }

@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
+import oscar.log.*;
 
 
 public final class RxDeleteRxAction extends Action {
@@ -61,6 +62,7 @@ public final class RxDeleteRxAction extends Action {
         
         oscar.oscarRx.pageUtil.RxSessionBean bean =
         (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+                
         if(bean==null) {
             response.sendRedirect("error.html");
             return null;
@@ -92,6 +94,9 @@ public final class RxDeleteRxAction extends Action {
             e.printStackTrace(System.out);
         }
         
+                
+        String ip = request.getRemoteAddr();
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, ""+bean.getDemographicNo(), ip);
         return (mapping.findForward("success"));
     }
 }
