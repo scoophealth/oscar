@@ -52,6 +52,7 @@ public class ImportDemographicDataAction extends Action {
         FormFile importFile = frm.getImportFile();
         ArrayList warnings = new ArrayList();
         String filename = "";
+        String proNo = (String) request.getSession().getAttribute("user");
         
         try {  
          InputStream is = importFile.getInputStream();
@@ -68,6 +69,8 @@ public class ImportDemographicDataAction extends Action {
          Element demographicRecord = doc.getRootElement();         
          
          List demographicData = demographicRecord.getChildren("DemographicData");
+         
+         DemographicExt dExt = new DemographicExt();
          //System.out.println("how many elements: "+demographicData.size());
          for (int i = 0; i < demographicData.size(); i++){
             
@@ -100,7 +103,7 @@ public class ImportDemographicDataAction extends Action {
                if (telType != null && telType.equalsIgnoreCase("home")){
                   homePhone = tele.getAttributeValue("number");
                   homeExt   = tele.getAttributeValue("extension");
-               } else if (telType != null && telType.equalsIgnoreCase("home")){
+               } else if (telType != null && telType.equalsIgnoreCase("work")){
                   workPhone = tele.getAttributeValue("number");
                   workExt   = tele.getAttributeValue("extension");
                }
@@ -124,6 +127,21 @@ public class ImportDemographicDataAction extends Action {
                               date_of_birth, hin, versionCode, "" /*roster_status*/,"" /*patient_status*/,
                               "" /*date_joined*/, "" /*chart_no*/, "" /*provider_no*/ , sex, "" /*end_date*/,
                               "" /*eff_date*/, "" /*pcn_indicator*/ , "" /*hc_type*/, "" /*hc_renew_date*/ ,"" /*family_doctor*/,""/*email*/,"" /*pin*/);                              
+            
+
+            
+            if (!"".equals(homeExt)){
+               dExt.addKey(proNo,demoRes.getId(),"hPhoneExt",homeExt,"");
+            }
+            
+            if (!"".equals(workExt)){
+               dExt.addKey(proNo,demoRes.getId(),"wPhoneExt",workExt,"");        
+            }
+            
+            
+       
+       
+           
             
             bDate = null;
             year_of_birth = null;
