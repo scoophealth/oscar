@@ -40,6 +40,7 @@ You have no rights to access the data!
 </security:oscarSec>
 
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="../appointment/errorpage.jsp" %>
+<%@page  import="oscar.oscarDemographic.data.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -61,7 +62,9 @@ You have no rights to access the data!
         OscarProperties oscarProps = OscarProperties.getInstance();
 
         ProvinceNames pNames = ProvinceNames.getInstance();
-
+   DemographicExt ext = new DemographicExt();
+   ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
+   Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);    
 %>
 
 
@@ -72,8 +75,9 @@ You have no rights to access the data!
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 
 function rs(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=360,left=30";
@@ -109,6 +113,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
+
+
 function popupEChart(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
@@ -132,6 +138,11 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
 
 function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = false;
+  
+  if (dob.value.indexOf('%b610054') == 0 && dob.value.length > 18){
+     document.titlesearch.keyword.value = dob.value.substring(8,18);
+     document.titlesearch.search_mode[4].checked = true;             
+  }
 
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
@@ -183,12 +194,30 @@ function checkDob() {
         typeInOK = false;
       }
 	}
+	
+	
 
 	if (!typeInOK){
       alert ("You must type in the right DOB.");
    }
+   
+   if (!isValidDate(dd,mm,yyyy)){
+      alert ("DOB Date is an incorrect date");
+      typeInOK = false;
+   }
+   //alert( isValidDate(dd,mm,yyyy) );
+   
 	return typeInOK;
 }
+
+function isValidDate(day,month,year){
+   month = ( month - 1 );
+   dteDate=new Date(year,month,day);
+   //alert(dteDate);
+   return ((day==dteDate.getDate()) && (month==dteDate.getMonth()) && (year==dteDate.getFullYear()));
+}
+
+
 function checkHin() {
 	var typeInOK = false;
 	var hin = document.updatedelete.hin.value;
@@ -309,6 +338,84 @@ function newStatus() {
 }
 
 </script>
+<script language="JavaScript">
+function showHideDetail(){
+    showHideItem('editDemographic');
+    showHideItem('viewDemographics2');
+    showHideItem('updateButton');
+    showHideItem('swipeButton');
+}
+
+function showHideItem(id){ 
+    if(document.getElementById(id).style.display == 'none')
+        document.getElementById(id).style.display = 'inline'; 
+    else
+        document.getElementById(id).style.display = 'none'; 
+}
+
+function showItem(id){
+        document.getElementById(id).style.display = 'inline'; 
+}
+
+function hideItem(id){
+        document.getElementById(id).style.display = 'none'; 
+}
+
+
+
+</script>
+
+<style type="text/css">
+div.demographicSection{
+   //width:49%;
+   width:100%;
+   margin-top: 2px;
+   margin-left:3px;
+   border-top: 1px solid #ccccff;
+   border-bottom: 1px solid #ccccff;
+   border-left: 1px solid #ccccff;
+   border-right: 1px solid #ccccff;
+   float: left;
+}
+
+div.demographicSection h3 {  
+   background-color: #ccccff;    
+   font-size: 8pt;
+   font-variant:small-caps;
+   font:bold;
+   margin-top:0px;
+   padding-top:0px;
+   margin-bottom:0px;
+   padding-bottom:0px;
+}
+
+div.demographicSection ul{        
+       
+       list-style:none;
+       list-style-type:none; 
+       list-style-position:outside;       
+       padding-left:1px;
+       margin-left:1px;    
+       margin-top:0px;
+       padding-top:1px;
+       margin-bottom:0px;
+       padding-bottom:0px;	
+}
+
+
+div.demographicSection li {
+padding-right: 15px;
+white-space: nowrap;
+}
+
+
+div.demographicWrapper {
+  background-color: #eeeeff;    
+  margin-top: 5px;
+  margin-left:1px;
+  margin-right:1px;
+}
+</style>
 
 </head>
 <body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();" topmargin="0" leftmargin="0" rightmargin="0">
@@ -375,7 +482,7 @@ function newStatus() {
                         %>
                         <%=rs.getString("last_name")%>, <%=rs.getString("first_name")%> <%=rs.getString("sex")%> <%=age%> years
                         </td>
-                    </tr>
+                    </tr>  
                 </table>
             </td>
         </tr>
@@ -485,7 +592,7 @@ function newStatus() {
                 </td></tr>
             </table>
             </td>
-            <td class="MainTableRightColumn">
+            <td class="MainTableRightColumn" valign="top">
                 <table border=0 cellspacing=4 width="100%">
                     <tr>
                         <td colspan="4">
@@ -497,12 +604,176 @@ function newStatus() {
                     <td>
                     <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeInEdit();">
                     <input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
-                    <table width="100%" bgcolor="#CCCCFF">
+                    <tr><td>
+                    <table width="100%" bgcolor="#CCCCFF" cellspacing="1" cellpadding="1">
                         <tr><td class="RowTop">
-                            <b>Record</b> (<%=rs.getString("demographic_no")%>)
+                            <b>Record</b> (<%=rs.getString("demographic_no")%>) <a href="javascript: showHideDetail();">Edit</a>                            
                         </td></tr>
-                        <tr><td>
-                        <table width="100%" bgcolor="#EEEEFF">
+                        <tr><td bgcolor="#eeeeff">
+                                                                                          
+                        
+                       <!---new-->
+                       <div style="background-color: #EEEEFF;" id="viewDemographics2">
+                          <div class="demographicWrapper" style="background-color: #EEEEFF;" >
+                             <div style="width:49%;float:left;">
+                                    <div class="demographicSection" style="margin-top: 2px;">
+                                        <h3>&nbsp;Demographics</h3>
+                                        <div style="background-color: #EEEEFF;" >
+                                        <ul>                                
+                                            <li>
+                                                <bean:message key="demographic.demographiceditdemographic.formLastName"/>: <b><%=rs.getString("last_name")%></b>                                        
+                                                <bean:message key="demographic.demographiceditdemographic.formFirstName"/>: <b> <%=rs.getString("first_name")%></b>
+                                            </li>
+                                            <li>
+                                                Age:<b><%=age%></b> &nbsp;
+                                                <bean:message key="demographic.demographiceditdemographic.formDOB"/>:<b>(<%=rs.getString("year_of_birth")%>-<%=rs.getString("month_of_birth")%>-<%=rs.getString("date_of_birth")%>)</b> 
+                                            </li>                                        
+                                            <li>
+                                                <bean:message key="demographic.demographiceditdemographic.formSex"/>:<b><%=rs.getString("sex")%></b>
+                                            </li>
+                                            <li>
+                                                Language: <b><%=s(demoExt.get("language"))%></b>
+                                            </li>
+                                        </ul>
+                                        </div>                                
+                                    </div>
+                                    
+                                    <div class="demographicSection">
+                                        <h3>&nbsp;Other Contacts: <b><a href="javascript: function myFunction() {return false; }" onclick="popup(700,960,'AddAlternateContact.jsp?demo=<%=rs.getString("demographic_no")%>','AddRelation')">Add Relation<!--i18n--></a></b></h3>
+                                        <div style="background-color: #EEEEFF;" >                                    
+                                        <ul>                                
+                                        <%DemographicRelationship demoRelation = new DemographicRelationship();
+                                          ArrayList relList = demoRelation.getDemographicRelationshipsWithNamePhone(rs.getString("demographic_no"));
+                                          for (int reCounter = 0; reCounter < relList.size(); reCounter++){
+                                             Hashtable relHash = (Hashtable) relList.get(reCounter);                                             
+                                             String sdb = relHash.get("subDecisionMaker") == null?"":((Boolean) relHash.get("subDecisionMaker")).booleanValue()?"<span title=\"SDM\" >/SDM</span>":"";
+                                             String ec = relHash.get("emergencyContact") == null?"":((Boolean) relHash.get("emergencyContact")).booleanValue()?"<span title=\"Emergency Contact\">/EC</span>":"";
+                                             
+                                          %>
+                                            <li>
+                                            <b><%=relHash.get("relation")%><%=sdb%><%=ec%>: </b><%=relHash.get("lastName")%>, <%=relHash.get("firstName")%> ,<%=relHash.get("phone")%>                                        
+                                            </li>
+                                        <%}%>
+                                        
+                                        </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="demographicSection">
+                                        <h3>&nbsp;Clinic Status</h3>
+                                        <div style="background-color: #EEEEFF;" >
+                                        <ul>
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: <b><%=rs.getString("roster_status")%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.DateJoined"/>: <b><%=rs.getString("hc_renew_date")%></b>
+                                            </li>                                                                                                    
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:<b><%=rs.getString("patient_status")%></b>
+                                            </li>                                                                                                    
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formChartNo"/>:<b><%=rs.getString("chart_no")%></b>
+                                            </li>                                                                                 
+
+                                            <li>
+                                                <bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: <b><%=rs.getString("date_joined")%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.formEndDate"/>: <b><%=rs.getString("end_date")%></b>
+                                            </li>                                        
+                                        </ul>
+                                        </div>                                
+                                    </div>                                                                
+                                    
+                                    <div class="demographicSection">
+                                        <h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.formAlert"/></h3>
+                                        <div style="background-color: #EEEEFF;" >
+                                        <%=alert%> &nbsp;
+                                    </div>                                
+                                </div>
+                                    
+                             </div>
+                             <div style="width:49%;float:left;margin-left:5px;">
+                                <div class="demographicSection" style="margin-top: 2px;">
+                                    <h3>&nbsp;Contact Information</h3>
+                                    <div style="background-color: #EEEEFF;" >
+                                    <ul>
+                                        <li>                                                      
+                                            <bean:message key="demographic.demographiceditdemographic.formPhoneH"/>:<b><%=rs.getString("phone")%> <%=s(demoExt.get("hPhoneExt"))%></b>                                            
+                                            <bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:<b> <%=rs.getString("phone2")%> <%=s(demoExt.get("wPhoneExt"))%></b>                                                                                        
+                                        </li>
+                                        <li>
+                                            <bean:message key="demographic.demographiceditdemographic.formAddr"/>: <b><%=rs.getString("address")%></b>
+                                        </li>
+                                        <li>
+                                            <bean:message key="demographic.demographiceditdemographic.formCity"/>: <b><%=rs.getString("city")%></b>
+                                        </li>
+                                        <li>
+                                            <bean:message key="demographic.demographiceditdemographic.formProcvince"/>: <b> <%=rs.getString("province")%></b>
+                                        </li>
+                                        <li>
+                                            <bean:message key="demographic.demographiceditdemographic.formPostal"/>: <b> <%=rs.getString("postal")%></b>
+                                        </li>                                   
+                                        
+                                        <li>
+                                            <bean:message key="demographic.demographiceditdemographic.formEmail"/>: <b> <%=rs.getString("email")!=null? rs.getString("email") : ""%></b>
+                                        </li>
+                                    </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="demographicSection">
+                                    <h3>&nbsp;Health Insurance</h3>
+                                    <div style="background-color: #EEEEFF;" >
+                                    <ul>                                
+                                        <li>
+                                          <bean:message key="demographic.demographiceditdemographic.formHin"/>: <b><%=rs.getString("hin")%> &nbsp; <%=rs.getString("ver")%></b>
+                                          <bean:message key="demographic.demographiceditdemographic.formHCType"/>:<b><%=rs.getString("hc_type")==null?"":rs.getString("hc_type") %></b>
+                                        </li>                                        
+                                        <li>
+                                          <bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:<b><%=rs.getString("eff_date")%></b>
+                                        </li>                                        
+                                    </ul>
+                                    </div>                                
+                                </div>
+                                
+                                <div class="demographicSection">
+                                        <h3>&nbsp;Patient Clinic Status</h3>
+                                        <div style="background-color: #EEEEFF;" >
+                                        <ul>                                
+                                            <li>
+                                                <bean:message key="demographic.demographiceditdemographic.formDoctor"/>: <b><%=providerBean.getProperty(rs.getString("provider_no"),"")%></b>
+                                            </li>                                                                                                    
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formNurse"/>: <b><%=providerBean.getProperty(resident,"")%></b>
+                                            </li>                                                                                                    
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formMidwife"/>: <b><%=providerBean.getProperty(midwife,"")%></b>
+                                            </li>                                                                                                    
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formResident"/>:<b> <%=providerBean.getProperty(nurse,"")%></b> 
+                                            </li>                                                                                                    
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formRefDoc"/>: <b><%=rd%></b>
+                                            </li>                                                                                                    
+                                            <li>                                                              
+                                                <bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>: <b><%=rdohip%></b>
+                                            </li>                                
+                                        </ul>
+                                        </div>
+                                </div>
+                                
+                                
+                                <div class="demographicSection">
+                                    <h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.formNotes"/></h3>
+                                    <div style="background-color: #EEEEFF;" >
+                                    <%=notes%> &nbsp;
+                                    </div>                                
+                                </div>                                                                                                                                    
+                             </div>
+                            </div>
+                        </div>
+
+                       <!--newEnd-->
+                        
+                        <table width="100%" bgcolor="#EEEEFF" border=0 id="editDemographic" style="display:none;">
                             <tr>
                               <td align="right" title='<%=rs.getString("demographic_no")%>'> <b><bean:message key="demographic.demographiceditdemographic.formLastName"/>: </b></td>
                               <td align="left">
@@ -631,11 +902,15 @@ function newStatus() {
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneH"/>: </b> </td>
                               <td align="left" >
                                 <%-- // <input type="text" name="phone" size="30" value="<%=rs.getString("phone")!=null && rs.getString("phone").length()==10?rs.getString("phone").substring(0,3) + "-" + rs.getString("phone").substring(3,6) +"-"+  rs.getString("phone").substring(6):rs.getString("phone")%>">--%>
-                                <input type="text" name="phone" size="30" onblur="formatPhoneNum();" value="<%=rs.getString("phone")%>">
+                                <input type="text" name="phone"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=rs.getString("phone")%>">
+                                Ext:<input type="text" name="hPhoneExt" value="<%=s(demoExt.get("hPhoneExt"))%>"  size="4" />
+                                <input type="hidden" name="hPhoneExtOrig" value="<%=s(demoExt.get("hPhoneExt"))%>" />    
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:</b> </td>
                               <td  align="left">
-                                <input type="text" name="phone2" size="30" onblur="formatPhoneNum();" value="<%=rs.getString("phone2")%>">
+                                <input type="text" name="phone2"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=rs.getString("phone2")%>">
+                                Ext:<input type="text" name="wPhoneExt" value="<%=s(demoExt.get("wPhoneExt"))%>"  style="display:inline" size="4" />
+                                <input type="hidden" name="wPhoneExtOrig" value="<%=s(demoExt.get("wPhoneExt"))%>" />    
                               </td>
                             </tr>
                             <tr valign="top">
@@ -658,8 +933,11 @@ function newStatus() {
                                 <input type="text" name="age" readonly value="<%=age%>" size="3">
                                 </b> </td>
                               <td  align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formSex"/>:</b> </td>
-                              <td align="left">
+                              <td align="left" valign="top">
                                 <input type="text" name="sex" value="<%=rs.getString("sex")%>" onBlur="upCaseCtrl(this)" size="1" maxlength="1">
+                                <b>Language:</b>
+                                    <input type="text" name="language" value="<%=s(demoExt.get("language"))%>" onBlur="upCaseCtrl(this)" size="19" />
+                                    <input type="hidden" name="languageOrig" value="<%=s(demoExt.get("language"))%>" />
                               </td>
                             </tr>
                             <tr valign="top">
@@ -969,23 +1247,25 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 <input type="text" name="end_date_date" size="2" maxlength="2" value="<%= endDay %>">
                               </td>
                             <tr valign="top">
-                              <td nowrap colspan="4">
-                                    <table width="100%" bgcolor="#EEEEFF">
-                                  <tr>
-                                    <td width="7%" align="right"><font color="#FF0000"><b><bean:message key="demographic.demographiceditdemographic.formAlert"/>: </b></font>
-                                    </td>
-                                    <td>
-                                      <textarea name="alert" style="width:100%" cols="80" rows="2"><%=alert%></textarea>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formNotes"/>: </b></td>
-                                    <td>
-                                      <textarea name="notes" style="width:100%" cols="60"><%=notes%></textarea>
-                                    </td>
-                              </tr>
-                            </table>
-                            </td></tr>
+                               <td nowrap colspan="4">
+                                  <table width="100%" bgcolor="#EEEEFF">
+                                     <tr>
+                                       <td width="7%" align="right"><font color="#FF0000"><b><bean:message key="demographic.demographiceditdemographic.formAlert"/>: </b></font>
+                                       </td>
+                                       <td>
+                                          <textarea name="alert" style="width:100%" cols="80" rows="2"><%=alert%></textarea>
+                                       </td>
+                                     </tr>
+                                     <tr>
+                                        <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formNotes"/>: </b></td>
+                                        <td>
+                                           <textarea name="notes" style="width:100%" cols="60"><%=notes%></textarea>
+                                        </td>
+                                     </tr>
+                                  </table>
+                               </td>
+                            </tr>
+                            
                         </table>
                         </td></tr>
                     <tr bgcolor="#CCCCFF">
@@ -1004,13 +1284,18 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                             <td  width="30%" align='center' valign="top">
                               <input type="hidden" name="displaymode" value="Update Record" >
 <!-- security code block -->
+   <span id="updateButton" style="display:none;">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="w">
                               <input type="submit" value="<bean:message key="demographic.demographiceditdemographic.btnUpdate"/>">
 	</security:oscarSec>
+   <span>
 <!-- security code block -->
                             </td>
                             <td width="40%" align='right' valign="top">
+                              <span id="swipeButton" style="display:none;">
                                <input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="window.open('zdemographicswipe.jsp','', 'scrollbars=yes,resizable=yes,width=600,height=300, top=360, left=0')">
+                              </span>
+                               <!--input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="javascript:window.alert('Health Card Number Already Inuse');"-->
                                <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>" onclick="window.location='printDemoLabelAction.do?demographic_no=<%=rs.getString("demographic_no")%>'">
                                <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'">
                             </td>
@@ -1039,3 +1324,14 @@ document.updatedelete.r_doctor_ohip.value = refNo;
     </table>
 </body>
 </html:html>
+
+<%!
+ String s(Object o){
+     String ret = "";
+     if (null != o){
+         ret = (String) o;
+     }
+     return ret;
+ }
+%>
+
