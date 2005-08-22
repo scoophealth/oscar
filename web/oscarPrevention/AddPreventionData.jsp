@@ -50,7 +50,7 @@
      prevDate = (String) existingPrevention.get("preventionDate"); 
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
-     if ( existingPrevention.get("deleted") != null && ((String)existingPrevention.get("deleted")).equals("1") ){         
+     if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){         
         completed = false;
      }
      if ( existingPrevention.get("never") != null && ((String)existingPrevention.get("never")).equals("1") ){         
@@ -85,7 +85,7 @@
 
 <head>
 <title>
-oscarPrevention I18n
+oscarPrevention <!--I18n-->
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
@@ -269,6 +269,17 @@ clear: left;
         <tr>
             <td class="MainTableLeftColumn" valign="top">
                &nbsp;
+<!--               
+               <%DemographicExt dExt = new DemographicExt();              
+                 String inelig = dExt.getValueForDemoKey(demographic_no,prevention+"Inelig");             
+                 if (inelig == null) inelig = "";
+                 if (inelig.equals("yes")){ %>
+                    Patient Ineligible<br>
+                    <a href="setPatientIneligible.jsp?prev=<%=prevention%>&demo=<%=demographic_no%>&elig=yes">Set Patient Eligible</a>
+                 <%}else{%>
+                    <a href="setPatientIneligible.jsp?prev=<%=prevention%>&demo=<%=demographic_no%>">Set Patient Ineligible</a>
+                 <%}%>
+-->
             </td>
             <td valign="top" class="MainTableRightColumn">               
                <html:form action="/oscarPrevention/AddPrevention" >
