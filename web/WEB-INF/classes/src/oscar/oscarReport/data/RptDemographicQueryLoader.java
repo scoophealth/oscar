@@ -58,8 +58,8 @@ public class RptDemographicQueryLoader {
 
 
 
-                  rs = db.GetSQL("select * from demographicQueryFavourites where favId = '"+qId+"'");
-
+                  rs = db.GetSQL("select * from demographicQueryFavourites where favId = '"+qId+"'");                  
+                  //System.out.println("select * from demographicQueryFavourites where favId = '"+qId+"'");                  
                   if (rs.next()){
                         mSelect         = rs.getString("selects");
                         mAge            = rs.getString("age");
@@ -72,6 +72,7 @@ public class RptDemographicQueryLoader {
                         mProviderNo     = rs.getString("providerNo");
                         mPatientStatus  = rs.getString("patientStatus");
                   }
+                  //System.out.println("selects = "+mSelect);
 
                   if (mSelect != null && mSelect.length() != 0){
                     String[] t = fromXMLtoArray(mSelect);
@@ -125,7 +126,7 @@ public class RptDemographicQueryLoader {
     }
 
      String[] fromXMLtoArray(String xStr){
-        System.out.println("xStr "+xStr);
+        //System.out.println("xStr "+xStr);
         Document doc = MsgCommxml.parseXML(xStr);
 
         Element docRoot = doc.getDocumentElement();
