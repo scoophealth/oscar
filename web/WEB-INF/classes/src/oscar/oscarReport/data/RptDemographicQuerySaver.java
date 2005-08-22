@@ -23,6 +23,26 @@
  *
  */
 
+
+/*
+ CREATE TABLE `demographicQueryFavourites` (
+  `favId` int(9) NOT NULL auto_increment,
+  `selects` text,
+  `age` varchar(255) default NULL,
+  `startYear` varchar(8) default NULL,
+  `endYear` varchar(8) default NULL,
+  `firstName` varchar(255) default NULL,
+  `lastName` varchar(255) default NULL,
+  `rosterStatus` text,
+  `sex` varchar(10) default NULL,
+  `providerNo` text,
+  `patientStatus` text,
+  `queryName` varchar(255) default NULL,
+  `archived` char(1) default NULL,
+  PRIMARY KEY  (`favId`)
+)
+ */
+
 package oscar.oscarReport.data;
 import oscar.oscarReport.pageUtil.*;
 import oscar.oscarDB.DBHandler;
