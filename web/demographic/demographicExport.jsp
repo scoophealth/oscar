@@ -43,8 +43,9 @@
 <html:html locale="true">
 
 <head>
+<!--I18n-->
 <title>
-oscarPrevention I18n
+oscarPrevention 
 </title>
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
@@ -210,7 +211,7 @@ clear: left;
                       <html:option value="<%=s%>"><%=s%></html:option>
                       <%}%>
                   </html:select>                  
-                  <input type="submit" value="Export i18n" />
+                  <input type="submit" value="Export" />
                </div>               
                
                </html:form>

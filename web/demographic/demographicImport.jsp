@@ -36,9 +36,9 @@
 
 <html:html locale="true">
 
-<head>
+<head><!--I18n-->
 <title>
-Import Demographic Information I18n
+Import Demographic Information 
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
@@ -94,7 +94,7 @@ function displayAndDisable(){
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-					Import i18n
+					Import <!--i18n-->
                         </td>
                         <td  >&nbsp;
 							
