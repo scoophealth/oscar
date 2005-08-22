@@ -21,4 +21,7 @@ public class LogConst {
     public static final String CON_ROLE = "role";
     public static final String CON_PRIVILEGE = "privilege";
     public static final String CON_FORM = "form";
+    public static final String CON_PRESCRIPTION = "prescription";
+    public static final String CON_ALLERGY = "allergy";
+    
 }
