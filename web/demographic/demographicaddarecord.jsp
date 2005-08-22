@@ -1,5 +1,6 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.log.*" %>
+<%@ page  import="oscar.oscarDemographic.data.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -210,6 +211,13 @@ String curUser_no = (String)session.getAttribute("user");
 	    System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
 
+       String dem = rs.getString("demographic_no");
+       DemographicExt dExt = new DemographicExt();
+       String proNo = (String) session.getValue("user");
+       dExt.addKey(proNo,dem,"language",request.getParameter("language"),"" );
+       dExt.addKey(proNo,dem,"hPhoneExt",request.getParameter("hPhoneExt"),"");
+       dExt.addKey(proNo,dem,"wPhoneExt",request.getParameter("wPhoneExt"),"");
+        
 		// add log
 		String ip = request.getRemoteAddr();
 		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip);
