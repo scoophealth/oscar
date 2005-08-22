@@ -56,6 +56,11 @@ function setfocus() {
 function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = true;
   
+  if (dob.value.indexOf('%b610054') == 0 && dob.value.length > 18){
+     document.titlesearch.keyword.value = dob.value.substring(8,18);
+     document.titlesearch.search_mode[4].checked = true;                  
+  }
+  
   if(document.titlesearch.search_mode[2].checked) {
     if(dob.value.length==8) {
       dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
