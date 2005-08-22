@@ -61,7 +61,7 @@
 
 <head>
 <title>
-oscarPrevention I18n
+oscarPrevention <!--I18n-->
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
