@@ -27,6 +27,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%   
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 
@@ -115,8 +116,9 @@ function openNewPage(vheight,vwidth,varpage) {
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr bgcolor="#000000"> 
                 <td class="subject" colspan="2">
-                &nbsp;&nbsp;&nbsp;<bean:message key="global.disease"/>
+                &nbsp;&nbsp;&nbsp;<bean:message key="global.disease"/>                
                 </td>
+                <td align="right" valign="bottom" style="color:white;"><oscar:nameage demographicNo="<%=(String) session.getAttribute("demographicNo")%>"/></td>
         </tr>
         </table>
     </td>
