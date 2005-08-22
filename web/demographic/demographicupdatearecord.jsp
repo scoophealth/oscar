@@ -1,4 +1,4 @@
-<%@ page import="java.sql.*, java.util.*, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, java.util.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -80,6 +80,18 @@
 	  param[25]=request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date");
 	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
+
+          
+  //DemographicExt
+     DemographicExt dExt = new DemographicExt();
+     String proNo = (String) session.getValue("user");
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"language",request.getParameter("language"),request.getParameter("languageOrig") );
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"hPhoneExt",request.getParameter("hPhoneExt"),request.getParameter("hPhoneExtOrig") );
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"wPhoneExt",request.getParameter("wPhoneExt"),request.getParameter("wPhoneExtOrig") );
+  //DemographicExt   
+
+
+
      if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5) {
             //oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
             //String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
@@ -96,6 +108,7 @@
             }
         }
     }
+
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, intparam,  request.getParameter("dboperation"));
   if (rowsAffected ==1) {
     //find the democust record for update
