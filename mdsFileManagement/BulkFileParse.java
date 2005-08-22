@@ -127,8 +127,37 @@ public class BulkFileParse {
         }
     }
     
+    public String getProviderNoFromOhipNo(String providerMinistryNo){
+       String ret = null;
+       String sql = "select provider_no from provider where ohip_no='"+providerMinistryNo+"'";
+       System.out.println("\n\n"+sql+"\n\n");
+       boolean hasNext = false;
+       DBHandler db = new DBHandler(DBHandler.MDS_DATA);                   
+       try {
+          ResultSet rsr = db.GetSQL(sql);	               
+          if (!rsr.next()){
+             sql = "select provider_no from provider where ohip_no='0"+providerMinistryNo+"'";
+             System.out.println("\n\n"+sql+"\n\n");
+             rsr = db.GetSQL(sql);	               
+             if (rsr.next()){
+                hasNext = true;
+             }
+          }else{
+             hasNext = true;
+          }
+          if(hasNext){
+             ret = rsr.getString("provider_no");
+          }
+          rsr.close();
+          db.CloseConn();
+       }catch(Exception e){
+          e.printStackTrace();  
+       }
+       return ret;
+    }
     
-    public void providerRouteReport (int segmentID) {                
+    
+    public void providerRouteReportOLD (int segmentID) {                
         try {
             
             
@@ -140,8 +169,9 @@ public class BulkFileParse {
                 String[] subStrings;
                 String[] conDoctors;                                
                 
-                sql ="select conDoctor, admDoctor from mdsPV1 where segmentID='"+segmentID+"'";
-                ResultSet rs = db.GetSQL(sql);
+                sql ="select refDoctor, conDoctor, admDoctor from mdsPV1 where segmentID='"+segmentID+"'";
+                ResultSet rs = db.GetSQL(sql);                
+                boolean addedToProviderLabRouting = false;
                 
                 if ( rs.next() ) {
                     
@@ -153,12 +183,10 @@ public class BulkFileParse {
                     ResultSet rs2 = db.GetSQL(sql);
 	            sql = "foo";
                     if ( rs2.next() ) {  // provider found in database
-                        sql ="insert into providerLabRouting (provider_no, lab_no, status) VALUES ('"+rs2.getString("provider_no")+"', '"+segmentID+"', 'N')";
+                        sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+rs2.getString("provider_no")+"', '"+segmentID+"', 'N','MDS')";
                         db.RunSQL(sql);
-                    } else {  // provider not found
-                        sql ="insert into providerLabRouting (provider_no, lab_no, status) VALUES ('0', '"+segmentID+"', 'N')";
-                        db.RunSQL(sql);                        
-                    }
+                        addedToProviderLabRouting =true;
+                    }  // provider not found                     
                     rs2.close();
                     
                     // next route to consulting doctor(s)
@@ -172,14 +200,117 @@ public class BulkFileParse {
                             ResultSet rs3 = db.GetSQL(sql);
                             if ( rs3.next() ) {  // provider found in database
                                 // ignore duplicates in case admitting doctor == consulting doctor
-                                sql ="insert ignore into providerLabRouting (provider_no, lab_no, status) VALUES ('"+rs3.getString("provider_no")+"', '"+segmentID+"', 'N')";
+                                sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+rs3.getString("provider_no")+"', '"+segmentID+"', 'N','MDS')";
                                 db.RunSQL(sql);
-                            } else {  // provider not found
-                                sql ="insert ignore into providerLabRouting (provider_no, lab_no, status) VALUES ('0', '"+segmentID+"', 'N')";
-                                db.RunSQL(sql);                                
-                            }
+                                addedToProviderLabRouting =true;
+                            }   // provider not found                              
                             rs3.close();
                         }
+                    }
+                    
+                    // next route to referring doctor(s)
+                    if ( ! rs.getString("refDoctor").equals("") ) {
+                       subStrings = rs.getString("refDoctor").split("\\^");
+                       providerMinistryNo = subStrings[0].substring(1, subStrings[0].length());
+                       // check that this is a legal provider
+                       sql = "select provider_no from provider where ohip_no='"+providerMinistryNo+"'";
+                       System.out.println("\n\n"+sql+"\n\n");
+                       ResultSet rsr = db.GetSQL(sql);	               
+                       if (!rsr.next()){
+                          sql = "select provider_no from provider where ohip_no='0"+providerMinistryNo+"'";
+                          System.out.println("\n\n"+sql+"\n\n");
+                          rsr = db.GetSQL(sql);	               
+                       }
+                       if ( rsr.next() ) {  // provider found in database
+                          sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+rsr.getString("provider_no")+"', '"+segmentID+"', 'N','MDS')";
+                          db.RunSQL(sql);
+                          addedToProviderLabRouting =true;
+                       }  // provider not found                        
+                       rsr.close();
+                                              
+                    }
+                    
+                    if(!addedToProviderLabRouting){
+                       sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+segmentID+"', 'N','MDS')";
+                       db.RunSQL(sql);                        
+                    }
+                    
+                } else { // major error
+                    throw new Exception("Corresponding PV1 entry not found!");
+                }                
+                rs.close();                                
+            } catch (Exception e) {
+                System.out.println("Error in providerRouteReport:"+e);
+                
+                sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+segmentID+"', 'N','MDS')";
+                db.RunSQL(sql);
+            }
+            db.CloseConn();            
+        } catch (Exception e) {
+            System.out.println("Database error in providerRouteReport:"+e);
+        }        
+    }    
+/////////
+    public void providerRouteReport (int segmentID) {                
+        try {                        
+            DBHandler db = new DBHandler(DBHandler.MDS_DATA);            
+            String sql;        
+            try {
+                String providerMinistryNo;
+                String[] subStrings;
+                String[] conDoctors;                                
+                String providerNo = null;
+                
+                sql ="select refDoctor, conDoctor, admDoctor from mdsPV1 where segmentID='"+segmentID+"'";
+                ResultSet rs = db.GetSQL(sql);                
+                boolean addedToProviderLabRouting = false;                
+                if ( rs.next() ) {                    
+                    // route lab first to admitting doctor
+                    subStrings = rs.getString("admDoctor").split("\\^");
+                    providerMinistryNo = subStrings[0].substring(1, subStrings[0].length());
+                    // check that this is a legal provider
+                    providerNo = getProviderNoFromOhipNo(providerMinistryNo);                    
+                    if ( providerNo != null) {  // provider found in database
+                        sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
+                        db.RunSQL(sql);
+                        addedToProviderLabRouting =true;
+                    }  // provider not found                                         
+                    
+                    // next route to consulting doctor(s)
+                    if ( ! rs.getString("conDoctor").equals("") ) {
+                        conDoctors = rs.getString("conDoctor").split("~");
+                        for (int i = 1; i <= conDoctors.length; i++) {
+                            subStrings = conDoctors[i-1].split("\\^");
+                            providerMinistryNo = subStrings[0].substring(1, subStrings[0].length());
+                            // check that this is a legal provider
+                            providerNo = getProviderNoFromOhipNo(providerMinistryNo);                                                
+                            if ( providerNo != null) {  // provider found in database
+                                // ignore duplicates in case admitting doctor == consulting doctor
+                                sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
+                                db.RunSQL(sql);
+                                addedToProviderLabRouting =true;
+                            }   // provider not found                                                          
+                        }
+                    }
+                    
+                    // next route to referring doctor(s)
+                    if ( ! rs.getString("refDoctor").equals("") ) {
+                       subStrings = rs.getString("refDoctor").split("\\^");
+                       providerMinistryNo = subStrings[0].substring(1, subStrings[0].length());
+                       // check that this is a legal provider
+                       providerNo = getProviderNoFromOhipNo(providerMinistryNo);                    
+                       if ( providerNo != null) {  // provider found in database
+                          sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
+                          db.RunSQL(sql);
+                          addedToProviderLabRouting =true;
+                       }  // provider not found                        
+                       
+                                              
+                    }
+                    
+                    if(!addedToProviderLabRouting){
+                       sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+segmentID+"', 'N','MDS')";
+                       db.RunSQL(sql);                        
                     }
                     
                 } else { // major error
@@ -189,7 +320,7 @@ public class BulkFileParse {
             } catch (Exception e) {
                 System.out.println("Error in providerRouteReport:"+e);
                 
-                sql ="insert into providerLabRouting (provider_no, lab_no, status) VALUES ('0', '"+segmentID+"', 'N')";
+                sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+segmentID+"', 'N','MDS')";
                 db.RunSQL(sql);
             }
             db.CloseConn();            
@@ -197,7 +328,8 @@ public class BulkFileParse {
             System.out.println("Database error in providerRouteReport:"+e);
         }        
     }    
-    
+
+/////////
     public void patientRouteReport (int segmentID) {                
         try {
             
@@ -215,7 +347,7 @@ public class BulkFileParse {
                     String dobYear = rs.getString("dOB").substring(0,4);
                     String dobMonth = rs.getString("dOB").substring(4,6);
                     String dobDay = rs.getString("dOB").substring(6,8);
-                    
+                    String demoNo = null;
                     if ( rs.getString("healthNumber").toUpperCase().startsWith("X") ) {
                         // patient's health number is known - check initials, DOB match
                         sql = "select demographic_no from demographic where hin='"+rs.getString("healthNumber").substring(1,11)+"' and " +
@@ -224,10 +356,11 @@ public class BulkFileParse {
                               "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+rs.getString("sex").toUpperCase()+"%' and " +
                               "patient_status='AC'";
                         ResultSet rs2 = db.GetSQL(sql);
+                        demoNo = rs2.getString("demographic_no");
                         if ( rs2.next() ) {
-                            sql = "insert into patientLabRouting (demographic_no, lab_no) values ('"+rs2.getString("demographic_no")+"', '"+segmentID+"')";                            
+                            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs2.getString("demographic_no")+"', '"+segmentID+"','MDS')";                            
                         } else {
-                            sql = "insert into patientLabRouting (demographic_no, lab_no) values ('0', '"+segmentID+"')";                            
+                            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','MDS')";                            
                         }
                         db.RunSQL(sql);
                     } else {                        
@@ -237,12 +370,17 @@ public class BulkFileParse {
                               "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+rs.getString("sex").toUpperCase()+"%' and " +
                               "patient_status='AC'";
                         ResultSet rs3 = db.GetSQL(sql);
+                        demoNo = rs3.getString("demographic_no");
                         if ( rs3.next() ) {
-                            sql = "insert into patientLabRouting (demographic_no, lab_no) values ('"+rs3.getString("demographic_no")+"', '"+segmentID+"')";                            
+                            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs3.getString("demographic_no")+"', '"+segmentID+"','MDS')";                            
                         } else {
-                            sql = "insert into patientLabRouting (demographic_no, lab_no) values ('0', '"+segmentID+"')";                            
+                            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','MDS')";                            
                         }
                         db.RunSQL(sql);
+                    }
+                    
+                    if (demoNo != null){
+                       patientProviderRoute(""+segmentID,demoNo);
                     }
                 } else { // major error
                     throw new Exception("Corresponding PID entry not found!");
@@ -251,7 +389,7 @@ public class BulkFileParse {
             } catch (Exception e) {
                 System.out.println("Error in patientRouteReport:"+e);
                                 
-                sql = "insert into patientLabRouting (demographic_no, lab_no) values ('0', '"+segmentID+"')";                            
+                sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','MDS')";                            
                 db.RunSQL(sql);
             }
             db.CloseConn();            
@@ -260,6 +398,31 @@ public class BulkFileParse {
         }        
     }    
     
+    public void patientProviderRoute(String lab_no, String demographic_no){
+       try {                        
+          DBHandler db = new DBHandler(DBHandler.MDS_DATA);            
+          String sql;
+          sql ="select provider_no from demographic where demographic_no = '"+demographic_no+"'";
+          ResultSet rs = db.GetSQL(sql);
+                                                
+          if ( rs.next() ) {
+             String prov_no  = rs.getString("provider_no");                                        
+             if ( prov_no != null ){
+                sql = "select status from providerLabRouting where lab_type = 'MDS' and provider_no = '"+prov_no+"' and lab_no = '"+lab_no+"'";                               
+                ResultSet rs2 = db.GetSQL(sql);
+                if ( !rs2.next() ) {                            
+                   sql = "insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov_no+"', '"+lab_no+"', 'N','MDS')";
+                   db.RunSQL(sql);
+                } 
+                rs2.close();                      
+             }                 
+          }
+          rs.close();                
+          db.CloseConn();            
+       } catch (Exception e) {
+          System.out.println("Database error in patientProviderRoute:"+e);
+       }        
+    }
     
     public int commitFileToDB(String fileName){
         logger.info("Commiting File to Database: "+fileName);
