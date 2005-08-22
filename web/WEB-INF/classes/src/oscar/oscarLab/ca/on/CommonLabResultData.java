@@ -49,12 +49,12 @@ public class CommonLabResultData {
       return new String[] {"MDS","CML"};
    }
    
-   public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+   public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {      
       oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();    
       ArrayList labs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
-      labs.addAll(mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status));
+      ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);      
       
-      
+      labs.addAll(mdsLabs);            
       return labs;
    }
    
@@ -192,5 +192,26 @@ public class CommonLabResultData {
          System.out.println("exception in CommonLabResultData.updateLabRouting():"+e);
          return false;
       }
+   }
+  
+  public String getDemographicNo(String labId,String labType){
+      String demoNo = null;
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         ResultSet rs = db.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = '"+labType+"'");                            
+         if (rs.next()){                                    
+            String d = rs.getString("demographic_no");
+            System.out.println("dd "+d);
+            if ( !"0".equals(d)){
+               demoNo = d;
+            }                        
+         }         
+         rs.close();
+         db.CloseConn();
+         
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+      return demoNo;
    }
 }
