@@ -1,47 +1,47 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
  * Date         Implemented By  Company                 Comments
  * 29-09-2004   Ivy Chan        iConcept Technologies   added link to waiting list
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 /*
  * $RCSfile: AbstractApplication.java,v $ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-*/ 
+*/
 --%>
-<% 
+<%
 String country = request.getLocale() .getCountry();
 
 if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 String curUser_no = (String) session.getAttribute("user");
-String mygroupno = (String) session.getAttribute("groupno");  
+String mygroupno = (String) session.getAttribute("groupno");
 String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billregion");
 %>
 <%@ page import="java.util.*, oscar.*, java.sql.*, java.text.*, java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="reportMainBeanConn.jsp" %>  
-<% } %>  
+<%@ include file="reportMainBeanConn.jsp" %>
+<% } %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -67,7 +67,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var popup=window.open(page, "scheduleholiday", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
-      popup.opener = self; 
+      popup.opener = self;
     }
   }
 }
@@ -106,7 +106,7 @@ function ggo(r) {
   var u = 'reportapptsheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
 	popupPage(600,750,u);
 }
-ONCLICK ="popupPage(600,750,'reportpatientchartlist.jsp')" 
+ONCLICK ="popupPage(600,750,'reportpatientchartlist.jsp')"
 function pcgo() {
   var s = document.report.pcprovider_no.value ;
   var u = 'reportpatientchartlist.jsp?provider_no=' + s;
@@ -124,7 +124,7 @@ function nsgo() {
   var u = 'reportnoshowapptlist.jsp?provider_no=' + s +'&sdate='+ t;
 	popupPage(600,750,u);
 }
-function popUpWaitingList(vheight,vwidth,varpage) {    
+function popUpWaitingList(vheight,vwidth,varpage) {
     var page = varpage + document.report.list_id.options[document.report.list_id.selectedIndex].value;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
     var popup=window.open(page, "Waiting List", windowprops);
@@ -140,12 +140,12 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 %>
 <form name='report' >
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="#486ebd"> 
+  <tr bgcolor="#486ebd">
       <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="report.reportindex.msgTitle"/></font></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="95%">
-    <tr> 
+    <tr>
         <td>&nbsp;</td>
     </tr>
     <%int j = 1; %>
@@ -171,7 +171,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
     </tr>
     <% if (!country.equals("BR")) {  %>
-    <tr>    
+    <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
         <td width="300"><a HREF="#" ONCLICK ="popupPage(600,750,'reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a></td>
@@ -189,15 +189,15 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             <select name="provider_no" >
             <%
                ResultSet rsgroup = reportMainBean.queryResults("search_group");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
             <%
-                     } 
+                     }
             %>
             <%
                  rsgroup = reportMainBean.queryResults("search_provider");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
             <%
@@ -245,7 +245,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         </td>
         <td></td>
         <td></td>
-        <td></td>    
+        <td></td>
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
@@ -254,15 +254,15 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             <select name="pprovider_no" >
             <%
                rsgroup = reportMainBean.queryResults("search_group");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
             <%
-                     } 
+                     }
             %>
             <%
                  rsgroup = reportMainBean.queryResults("search_provider");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
             <%
@@ -295,15 +295,15 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             <select name="pcprovider_no" >
             <%
                rsgroup = reportMainBean.queryResults("search_group");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
             <%
-                     } 
+                     }
             %>
             <%
                  rsgroup = reportMainBean.queryResults("search_provider");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
             <%
@@ -315,7 +315,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
     </tr>
-    <tr>    
+    <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
         <td width="300"><a HREF="#"  ONCLICK ="opcgo()"><bean:message key="report.reportindex.btnOldPatient"/></a></td>
@@ -323,27 +323,27 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             <select name="opcprovider_no" >
             <%
                rsgroup = reportMainBean.queryResults("search_group");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
             <%
-                     } 
+                     }
             %>
             <%
                  rsgroup = reportMainBean.queryResults("search_provider");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
             <%
                      }
             %>
-            </select> 
+            </select>
         </td>
         <td><bean:message key="report.reportindex.btnOldPatientAge" /><input type=text name=age value='65'></td>
         <td></td>
         <td></td>
     </tr>
-    <tr>    
+    <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
         <td width="300"><a HREF="#"  ONCLICK ="nsgo()"><bean:message key="report.reportindex.btnNoShowAppointmentList"/></a></td>
@@ -351,15 +351,15 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             <select name="nsprovider_no" >
             <%
                rsgroup = reportMainBean.queryResults("search_group");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%="GRP: "+rsgroup.getString("mygroup_no")%></option>
             <%
-                     } 
+                     }
             %>
             <%
                  rsgroup = reportMainBean.queryResults("search_provider");
-                     while (rsgroup.next()) { 
+                     while (rsgroup.next()) {
             %>
               <option value="<%=rsgroup.getString("provider_no")%>" <%=curUser_no.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
             <%
@@ -392,7 +392,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
         <td></td>
-    </tr>    
+    </tr>
     <%
        // If country = Brazil, do not show the following links:
        if (!country.equals("BR")) {
@@ -409,7 +409,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
-        <td width="300"><a href="../oscarReport/ReportDemographicReport.jsp" target="_blank"><bean:message key="report.reportindex.btnDemographicReportTool"/></a></td>                
+        <td width="300"><a href="../oscarReport/ReportDemographicReport.jsp" target="_blank"><bean:message key="report.reportindex.btnDemographicReportTool"/></a></td>
         <td></td>
         <td></td>
         <td></td>
@@ -418,19 +418,19 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
-        <td width="300"><a href="../oscarReport/demographicSetEdit.jsp" target="_blank">Demographic Set Edit</a></td>                
+        <td width="300"><a href="../oscarReport/demographicSetEdit.jsp" target="_blank">Demographic Set Edit</a></td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
     </tr>
-    
-    
-    
+
+
+
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
-        <td width="300"><a href="../oscarPrevention/PreventionReporting.jsp" target="_blank">Prevention Report i18n</a></td>                
+        <td width="300"><a href="../oscarPrevention/PreventionReporting.jsp" target="_blank">Prevention Report i18n</a></td>
         <td></td>
         <td></td>
         <td></td>
@@ -445,7 +445,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
     </tr>
-        <% } // end - if country %>	
+        <% } // end - if country %>
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
@@ -463,12 +463,20 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
     </tr>
     <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
+        <td width="300"><a href="reportFormRecord.jsp">Form Report</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
         <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
         <td></td>
         <td></td>
-        <td></td>       
+        <td></td>
     </tr>
 </table>
 </body>
-</form>        
+</form>
 </html:html>
