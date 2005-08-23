@@ -5967,6 +5967,49 @@ CREATE TABLE demographicQueryFavourites (
   PRIMARY KEY  (favId)
 );
 
+CREATE TABLE `reportItem` (
+  `id` int(5) NOT NULL auto_increment,
+  `report_name` varchar(80) NOT NULL default '',
+  `status` int(1) default 1,
+  PRIMARY KEY  (`id`)
+); 
+
+CREATE TABLE `reportConfig` (
+  `id` int(7) NOT NULL auto_increment,
+  `report_id` int(5),
+  `name` varchar(80) NOT NULL default '',
+  `caption` varchar(80) NOT NULL default '',
+  `order_no` int(3),
+  `table_name` varchar(80) NOT NULL default '',
+  `save` varchar(80) NOT NULL default 'default',
+  PRIMARY KEY  (`id`),
+  INDEX `report_id` (`report_id`),
+  INDEX `name` (`name`)
+) ;
+
+CREATE TABLE `reportTableFieldCaption` (
+  `id` int(7) NOT NULL auto_increment,
+  `table_name` varchar(80) NOT NULL default '',
+  `name` varchar(80) NOT NULL default '',
+  `caption` varchar(80) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  key (`table_name`,`name`)
+) ;
+
+CREATE TABLE `reportFilter` (
+  `id` int(7) NOT NULL auto_increment,
+  `report_id` int(5),
+  `description` text,
+  `value` varchar(255) NOT NULL default '',
+  `position` varchar(80) NOT NULL default '',
+  `status`  int(1) default 1,
+  `order_no` int(3),
+  `javascript` text,
+  `date_format` varchar(20) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  unique KEY order_no (`report_id`, `order_no`),
+  INDEX `report_id` (`report_id`)
+) ;
 
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
