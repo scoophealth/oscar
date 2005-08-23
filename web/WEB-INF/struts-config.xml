@@ -850,12 +850,12 @@
       <forward name="success" path="/popup/cid.jsp"/>
     </action>
     <!-- oscarBilling start for BC -->
-    <action path="/billing" type="oscar.oscarBilling.ca.bc.pageUtil.BillingAction" name="BillingForm" scope="request" input="/billing/CA/BC/billing.jsp">
+    <action path="/billing" type="oscar.oscarBilling.ca.bc.pageUtil.BillingAction" name="BillingForm" scope="request" input="/billing/CA/BC/billingBC.jsp">
       <forward name="BC" path="/billing/CA/BC/billingBC.jsp"/>
       <forward name="ON" path="/billing/CA/ON/billingOB.jsp" redirect="true"/>
       <!--<forward name="ON" path="/oscarBilling/billingON.jsp" />-->
     </action>
-    <action path="/billing/CA/BC/CreateBilling" type="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingAction" name="BillingCreateBillingForm" scope="session" input="/billing/billingBC.jsp">
+    <action path="/billing/CA/BC/CreateBilling" type="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingAction" name="BillingCreateBillingForm" scope="session" input="/billing/CA/BC/billingBC.jsp">
       <forward name="success" path="/billing/CA/BC/billingCreated.jsp"/>
       <forward name="WCB" path="/billing/CA/BC/formwcb.jsp"/>
     </action>
