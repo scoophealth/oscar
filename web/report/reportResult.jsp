@@ -1,0 +1,140 @@
+<!--
+/*
+ *
+ * Copyright (c) 2005- www.oscarservice.com . All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * Yi Li
+ */
+-->
+<%
+if (session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Report in CSV")) {
+  if(true) {
+    out.clear();
+    pageContext.forward("reportDownload"); //forward request&response to the target page
+    return;
+  }
+}
+%>
+  <%@ page errorPage="../appointment/errorpage.jsp" import="java.util.*, oscar.oscarReport.data.*" %>
+  <%@ page import="oscar.oscarReport.pageUtil.*" %>
+  <%@ page import="oscar.login.*" %>
+<%
+String VALUE = "value_";
+String DATE_FORMAT = "dateFormat_";
+String SAVE_AS = "default";
+String reportId = request.getParameter("id")!=null ? request.getParameter("id") : "0";
+// get form name
+String reportName = (new RptReportItem()).getReportName(reportId);
+
+RptFormQuery formQuery = new RptFormQuery();
+String reportSql = formQuery.getQueryStr(reportId, request);
+System.out.println("SQL: " + reportSql);
+
+RptReportConfigData formConfig = new RptReportConfigData();
+Vector[] vecField = formConfig.getAllFieldNameValue(SAVE_AS, reportId);
+Vector vecFieldCaption = vecField[1];
+Vector vecFieldName = vecField[0];
+//System.out.println("SQL: 1");
+Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
+//System.out.println("SQL: 2");
+
+%>
+  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+  <html:html locale="true">
+    <head>
+      <title>
+        Report List
+      </title>
+      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+      <meta http-equiv="Cache-Control" content="no-cache">
+      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+      <script language="JavaScript">
+
+		<!--
+		function setfocus() {
+		  this.focus();
+		  //document.forms[0].service_code.focus();
+		}
+	    function onDelete() {
+			ret = confirm("Are you sure you want to delete it?");
+	        return ret;
+	    }
+	    function onRestore() {
+			ret = confirm("Are you sure you want to restore it?");
+	        return ret;
+	    }
+	    function onAdd() {
+			if(document.baseurl.name.value.length < 2) {
+				alert("Please type in a valid name!");
+				return false;
+			} else {
+	        	return true;
+	        }
+	    }
+
+	    function goPage(id) {
+			self.location.href = "reportFilter.jsp?id=" + id;
+	    }
+		//-->
+
+      </script>
+    </head>
+    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+        <tr>
+          <td align="left">
+            &nbsp;
+          </td>
+        </tr>
+      </table>
+
+      <center>
+      <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
+        <tr BGCOLOR="#CCFFFF">
+          <th><%=reportName%></th>
+        </tr>
+      </table>
+      </center>
+      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+        <tr BGCOLOR="#CCCCFF">
+          <td></td>
+          <td width="10%" align="right" nowrap>
+          <a href="reportFilter.jsp?id=<%=reportId%>">Back to Report Filter</a>
+          </td>
+        </tr>
+      </table>
+
+      <hr>
+      <table BORDER="0" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
+        <tr BGCOLOR="#66CCCC">
+<% for(int i=0; i<vecFieldCaption.size(); i++) { %>
+          <th><%=(String) vecFieldCaption.get(i)%></th>
+<% } %>
+        </tr>
+<% for(int i=0; i<vecFieldValue.size(); i++) {
+	String color = i%2==0? "#EEEEFF" : "#DDDDFF";
+	Properties prop = (Properties) vecFieldValue.get(i);
+%>
+        <tr BGCOLOR="<%=color%>">
+	<% for(int j=0; j<vecFieldCaption.size(); j++) { %>
+          <td><%=prop.getProperty((String) vecFieldCaption.get(j), "")%>&nbsp;</td>
+	<% } %>
+        </tr>
+<% } %>
+      </table>
+
+    </body>
+  </html:html>

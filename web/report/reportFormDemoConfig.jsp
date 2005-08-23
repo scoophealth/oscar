@@ -1,0 +1,186 @@
+<!--
+/*
+ *
+ * Copyright (c) 2005- www.oscarservice.com . All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * Yi Li
+ */
+-->
+<%
+  if (session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+%>
+  <%@ page errorPage="../appointment/errorpage.jsp" import="java.util.*, oscar.oscarReport.data.*" %>
+  <%@ page import="oscar.login.*" %>
+  <%@ page import="org.apache.commons.lang.*" %>
+<%
+String reportId = request.getParameter("id")!=null ? request.getParameter("id") : "0";
+String SAVE_AS = "default";
+
+// get form name
+String reportName = (new RptReportItem()).getReportName(reportId);
+
+// get form parameters
+RptReportConfigData confObj = new RptReportConfigData();
+RptTableFieldNameCaption tableObj = new RptTableFieldNameCaption();
+//Vector vecTableName = new Vector();
+//if(confObj.getReportTableNameList(reportId)!=null) vecTableName = confObj.getReportTableNameList(reportId);
+String tableName = request.getParameter("tableName");
+String formTableName = request.getParameter("formTableName");
+String configTableName = request.getParameter("configTableName");
+//if(tableName==null) tableName = vecTableName.size() >= 1? (String)vecTableName.get(0) : "";
+
+// add/delete action //System.out.println(request.getParameter("submit"));
+if (request.getParameter("submit") != null && request.getParameter("submit").equals(" Add ")) {
+	String strCapName = request.getParameter("selField") != null ? request.getParameter("selField") : "";
+	String[] strTemp = strCapName.split("\\|");
+	if(strTemp.length>1) {
+	    String fieldName = strTemp[1];
+	    String fieldCaption = strTemp[0];
+		confObj.setReport_id(Integer.parseInt(reportId));
+		confObj.setTable_name(tableName);
+		confObj.setName(fieldName);
+		confObj.setCaption(fieldCaption);
+		confObj.setSave(SAVE_AS);
+		confObj.insertRecordWithOrder();
+	}
+}
+if (request.getParameter("submit") != null && request.getParameter("submit").equals("Delete")) {
+	String strCapName = request.getParameter("selConfig") != null ? request.getParameter("selConfig") : "";
+	//System.out.println(strCapName);
+	String[] strTemp = strCapName.split("\\|");
+	if(strTemp.length>1) {
+	    String fieldName = strTemp[1];
+	    String fieldCaption = strTemp[0];
+		confObj.setReport_id(Integer.parseInt(reportId));
+		confObj.setTable_name(tableName);
+		confObj.setName(fieldName);
+		confObj.setCaption(fieldCaption);
+		confObj.setSave(SAVE_AS);
+		confObj.deleteRecord();
+	}
+}
+
+// get display data
+Vector vecConfigField = new Vector();
+Vector vecTableField = new Vector();
+Vector vecFormTable = new Vector();
+vecConfigField = confObj.getConfigNameList(SAVE_AS, reportId);
+vecTableField = tableObj.getTableNameCaption(tableName);
+%>
+  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+  <html:html locale="true">
+    <head>
+      <title>
+        Report List
+      </title>
+      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+      <meta http-equiv="Cache-Control" content="no-cache">
+      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+      <script language="JavaScript">
+
+		<!--
+		function setfocus() {
+		  this.focus();
+		  //document.forms[0].service_code.focus();
+		}
+	    function onDelete() {
+			ret = confirm("Are you sure you want to delete it?");
+	        return ret;
+	    }
+	    function onRestore() {
+			ret = confirm("Are you sure you want to restore it?");
+	        return ret;
+	    }
+	    function goCaption() {
+			//self.location.href = "reportFormCaption.jsp?id=<%=reportId%>&tableName=<%=tableName%>";
+	    }
+
+	    function goPage(id) {
+			self.location.href = "reportFilter.jsp?id=" + id;
+	    }
+		//-->
+
+      </script>
+    </head>
+    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+      <center>
+      </center>
+      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+        <tr BGCOLOR="#CCCCFF">
+          <td><%=reportName%> Configuration</td>
+          <td width="10%" align="right" nowrap>
+          <a href="reportFilter.jsp?id=<%=reportId%>">Back to the Report</a>
+          </td>
+        </tr>
+      </table>
+
+      <table width="100%" border="1" cellspacing="0" cellpadding="2">
+        <form method="post" name="baseurl0" action="reportFormDemoConfig.jsp">
+          <tr bgcolor="<%="#EEEEFF"%>">
+            <td align="center" width="45%">
+            <a href="reportFormConfig.jsp?id=<%=reportId%>">Form</a> | Patient Profile <br/>
+			<select size=28 name="selField" ondblclick="javascript:onSelField();">
+<%
+String strMatchConfig = "";
+for(int i=0; i<vecConfigField.size(); i++) {
+	strMatchConfig += StringUtils.replace((String)vecConfigField.get(i), "|", "\\|") + "|";
+}
+for(int i=0; i<vecTableField.size(); i++) {
+	String color = i%2==0? "#EEEEFF" : "";
+	String captionName = (String)vecTableField.get(i);
+	if(captionName.matches(strMatchConfig)) continue;
+	captionName = StringEscapeUtils.escapeHtml(captionName);
+%>
+				<option value="<%=captionName%>"><%=captionName%></option>
+<% } %>
+			</select>
+			<br>
+			<a href="reportFormCaption.jsp?id=<%=reportId%>&tableName=<%=tableName%>&formTableName=<%=formTableName%>&configTableName=<%=configTableName%>">Add Caption</a>
+            </td>
+
+            <td align="center" width="20%" nowrap valign="top">
+            <table width="100%" border="0" cellspacing="0" cellpadding="2">
+            <tr><td colspan="2">
+            Fields | Selected
+            <br><br>
+              ==<input type="submit" name="submit" value=" Add " />=&gt;&gt;
+              <br><br>
+              &lt;&lt;=<input type="submit" name="submit" value="Delete" />==
+            </tr>
+            </table>
+            </td>
+
+            <td width="45%" align="center">
+			<select size=28 name="selConfig" ondblclick="javascript:onSelField();">
+<% for(int i=0; i<vecConfigField.size(); i++) {
+	String captionName = (String)vecConfigField.get(i);
+	captionName = StringEscapeUtils.escapeHtml(captionName);
+%>
+				<option value="<%=captionName%>"><%=captionName%></option>
+<% } %>
+			</select>
+			<br>
+			Change Order
+              <input type="hidden" name="id" value="<%=reportId%>">
+              <input type="hidden" name="tableName" value="<%=tableName%>">
+              <input type="hidden" name="configTableName" value="<%=configTableName%>">
+            </td>
+          </tr>
+        </form>
+      </table>
+
+
+    </body>
+  </html:html>
