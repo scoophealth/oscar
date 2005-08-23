@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -34,12 +34,12 @@
     <filter-name>LoginFilter</filter-name>
     <filter-class>oscar.oscarSecurity.LoginFilter</filter-class>
   </filter>
-  
+
   <filter-mapping>
     <filter-name>LoginFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
+
   <!-- Action Servlet Configuration -->
   <servlet>
     <servlet-name>action</servlet-name>
@@ -68,7 +68,7 @@
     </init-param>
     <load-on-startup>2</load-on-startup>
   </servlet>
-  
+
   <!-- Oscar servlets -->
   <!-- Upload an e-form -->
   <servlet>
@@ -98,24 +98,30 @@
   </servlet>
 
   <servlet>
+	  <servlet-name>reportDownload</servlet-name>
+	  <servlet-class>oscar.oscarReport.pageUtil.RptDownloadCSVServlet</servlet-class>
+	  <load-on-startup>0</load-on-startup>
+  </servlet>
+
+  <servlet>
 	  <servlet-name>OscarDownload</servlet-name>
 	  <servlet-class>OscarDownload</servlet-class>
 	  <load-on-startup>0</load-on-startup>
   </servlet>
-  
+
   <servlet>
 	  <servlet-name>Download</servlet-name>
 	  <servlet-class>oscar.util.GenericDownload</servlet-class>
 	  <load-on-startup>0</load-on-startup>
-  </servlet> 
-  
-  
+  </servlet>
+
+
   <servlet>
 	  <servlet-name>BackupDownload</servlet-name>
 	  <servlet-class>BackupDownload</servlet-class>
 	  <load-on-startup>0</load-on-startup>
   </servlet>
-   			       
+
   <servlet>
 	  <servlet-name>UploadTeleplanServlet</servlet-name>
 	  <servlet-class>oscar.oscarBilling.ca.bc.MSP.DocumentTeleplanReportUploadServlet</servlet-class>
@@ -125,9 +131,9 @@
    <!-- oscar Report -->
   <servlet>
           <servlet-name>ScatterPlotChartServlet</servlet-name>
-          <servlet-class>oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet</servlet-class>          
+          <servlet-class>oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet</servlet-class>
   </servlet>
-  
+
   <servlet>
           <servlet-name>DocumentUploadServlet</servlet-name>
           <servlet-class>oscar.DocumentUploadServlet</servlet-class>
@@ -157,45 +163,50 @@
 	  <servlet-name>UploadDocument</servlet-name>
 	  <url-pattern>/servlet/oscar.DocumentMgtUploadServlet</url-pattern>
   </servlet-mapping>
-  
-<!-- Disabled because it's a security risk and because it's disabled by default 
+
+<!-- Disabled because it's a security risk and because it's disabled by default
      in Tomcat 5.  Better practice to specify each servlet individually.
 	<servlet-mapping>
         <servlet-name>invoker</servlet-name>
         <url-pattern>/servlet/*</url-pattern>
     </servlet-mapping> -->
-    
+
   <servlet-mapping>
           <servlet-name>pdfCreator</servlet-name>
           <url-pattern>/form/createpdf</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
+          <servlet-name>reportDownload</servlet-name>
+          <url-pattern>/report/reportDownload</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
 	  <servlet-name>OscarDownload</servlet-name>
 	  <url-pattern>/servlet/OscarDownload</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
 	  <servlet-name>Download</servlet-name>
 	  <url-pattern>/Download</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
 	  <servlet-name>BackupDownload</servlet-name>
 	  <url-pattern>/servlet/BackupDownload</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
 	  <servlet-name>UploadTeleplanServlet</servlet-name>
 	  <url-pattern>/servlet/oscar.DocumentTeleplanReportUploadServlet</url-pattern>
   </servlet-mapping>
-  
+
   <!--oscar Report -->
   <servlet-mapping>
           <servlet-name>ScatterPlotChartServlet</servlet-name>
           <url-pattern>/servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
           <servlet-name>DocumentUploadServlet</servlet-name>
           <url-pattern>/servlet/oscar.DocumentUploadServlet</url-pattern>
