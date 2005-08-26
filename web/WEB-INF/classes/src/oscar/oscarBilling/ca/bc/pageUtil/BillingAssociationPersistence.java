@@ -214,9 +214,11 @@ public class BillingAssociationPersistence {
   //
   public boolean recordExists(String qry) {
     boolean ret = false;
+    DBHandler db = null;
+    ResultSet rs = null;
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL(qry);
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(qry);
       if (rs.next()) {
         ret = true;
       }
@@ -225,6 +227,16 @@ public class BillingAssociationPersistence {
       ex.printStackTrace();
 
     }
+    finally {
+        try {
+          db.CloseConn();
+          rs.close();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
+      }
+
     return ret;
   }
 
@@ -235,12 +247,14 @@ public class BillingAssociationPersistence {
    */
   public ServiceCodeAssociation getServiceCodeAssocByCode(String svcCode) {
     ServiceCodeAssociation assoc = new ServiceCodeAssociation();
+    DBHandler db = null;
+    ResultSet rs = null;
     try {
       String qry =
           "select * from ctl_servicecodes_dxcodes where service_code = '" +
           svcCode + "'";
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL(qry);
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(qry);
 
       while (rs.next()) {
         String code = rs.getString(2);
@@ -252,6 +266,16 @@ public class BillingAssociationPersistence {
     catch (SQLException ex) {
       ex.printStackTrace();
     }
+    finally {
+        try {
+          db.CloseConn();
+          rs.close();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
+      }
+
     return assoc;
   }
 }
