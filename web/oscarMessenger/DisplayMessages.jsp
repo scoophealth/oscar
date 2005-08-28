@@ -50,10 +50,10 @@ String demographic_no = request.getParameter("demographic_no");
 String demographic_name = "";
 if ( demographic_no != null ) {
     DemographicData demographic_data = new DemographicData();
-    DemographicData.Demographic demographic = demographic_data.getDemographic(demographic_no);
-
-
-    demographic_name = demographic.getLastName() + ", " + demographic.getFirstName();
+    DemographicData.Demographic demographic = demographic_data.getDemographic(demographic_no);    
+    if (demographic != null){
+       demographic_name = demographic.getLastName() + ", " + demographic.getFirstName();
+    }
 }
 
 
