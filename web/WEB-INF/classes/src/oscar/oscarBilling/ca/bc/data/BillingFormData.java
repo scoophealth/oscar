@@ -34,9 +34,11 @@ public class BillingFormData {
   public ArrayList getPaymentTypes() {
     ArrayList types = new ArrayList();
     String sql = "select * from billing_payment_type";
+    DBHandler db = null;
+    ResultSet rs = null;
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL(sql);
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(sql);
 
       while (rs.next()) {
         PaymentType tp = new PaymentType();
@@ -48,6 +50,15 @@ public class BillingFormData {
     catch (SQLException ex) {
       ex.printStackTrace();
     }
+    finally {
+        try {
+          db.CloseConn();
+          rs.close();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
+      }
 
     return types;
   }
