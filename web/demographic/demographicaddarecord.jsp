@@ -170,7 +170,15 @@ String curUser_no = (String)session.getAttribute("user");
     }
 
     // add checking hin duplicated record, if there is a HIN number
-    if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5) {
+    // added check to see if patient has a bc health card and has a version code of 66, in this case you are aloud to have dup hin
+    boolean hinDupCheckException = false;
+     String hcType = request.getParameter("hc_type");
+     String ver  = request.getParameter("ver");
+     if (hcType != null && ver != null && hcType.equals("BC") && ver.equals("66")){
+        hinDupCheckException = true;    
+     }
+    
+    if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5 && !hinDupCheckException) {
   		//oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
 		//String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
 		String paramNameHin =new String();
