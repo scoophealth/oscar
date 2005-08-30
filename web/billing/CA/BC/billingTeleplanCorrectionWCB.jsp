@@ -1,9 +1,11 @@
-
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
-  if (session.getAttribute("user") == null || !((String) session.getAttribute("userprofession")).equalsIgnoreCase("admin")) {
-    response.sendRedirect("../../../logout.jsp");
-  }
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>" >
+<%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
 <!--
   /*
   * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
