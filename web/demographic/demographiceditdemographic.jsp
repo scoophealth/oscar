@@ -945,7 +945,7 @@ div.demographicWrapper {
                               <td align="left" nowrap>
                                 <input type="text" name="hin" value="<%=rs.getString("hin")%>" size="17">
                                 <b><bean:message key="demographic.demographiceditdemographic.formVer"/></b>
-                                <input type="text" name="ver" value="<%=rs.getString("ver")%>" size="3">
+                                <input type="text" name="ver" value="<%=rs.getString("ver")%>" size="3"  onBlur="upCaseCtrl(this)">
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:</b></td>
                               <td align="left">
