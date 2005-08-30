@@ -536,7 +536,7 @@ public class ExtractBean extends Object implements Serializable {
                             + misc.forwardZero(rs2.getString("facility_sub_no"), 5)      //p72   5
                             + misc.space(58)                                             //p80  58
                             + misc.backwardSpace(rs2.getString("oin_insurer_code"),2)    //p100  2
-                            + misc.backwardSpace(rs2.getString("oin_registration_no"),12)//p102 12 
+                            + misc.forwardZero(rs2.getString("oin_registration_no"),12)  //p102 12 
                             + misc.backwardSpace(rs2.getString("oin_birthdate"),8)       //p104  8
                             + misc.backwardSpace(rs2.getString("oin_first_name"),12)     //p106 12
                             + misc.backwardSpace(rs2.getString("oin_second_name"),1)     //p108  1
