@@ -154,6 +154,33 @@ function showHideLayers() { //v3.0
 
 function checkData() {
     var b = true;
+	// toUppercase()
+	document.forms[0].xml_other1.value = document.forms[0].xml_other1.value.toUpperCase();
+	document.forms[0].xml_other2.value = document.forms[0].xml_other2.value.toUpperCase();
+	document.forms[0].xml_other3.value = document.forms[0].xml_other3.value.toUpperCase();
+    
+    // for no dx code
+	for (i=0;i<document.forms[0].length;i++){
+		var cd = document.forms[0].elements[i];
+		if(cd.value=="checked" && cd.checked) {
+			//alert(cd.value);
+			var na = cd.name;
+			na = na.substring(4);
+			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" ) {
+				document.forms[0].xml_diagnostic_detail.value == ":::"
+			}
+		} else if(cd.name=="xml_other1" || cd.name=="xml_other2" || cd.name=="xml_other3" ) {
+			//alert(cd.name + cd.value);
+			var na = cd.value;
+			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" ) {
+				if(document.forms[0].xml_diagnostic_detail.value == ""){
+					document.forms[0].xml_diagnostic_detail.value = ":::"
+				}
+			}
+		}
+	}
+    
+    
     if(document.forms[0].xml_provider.value == "000000"){
     	alert("Please select Billing Physician!");
         b = false;
@@ -191,6 +218,7 @@ function checkData() {
 			}
 		}
 	}<%}%>
+	
     return b;
 }
 
