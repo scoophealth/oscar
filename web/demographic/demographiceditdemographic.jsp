@@ -337,6 +337,16 @@ function newStatus() {
     }
 }
 
+function newStatus1() {
+    newOpt = prompt("Please enter the new status:", "");
+    if (newOpt != "") {
+        document.updatedelete.roster_status.options[document.updatedelete.roster_status.length] = new Option(newOpt, newOpt);
+        document.updatedelete.roster_status.options[document.updatedelete.roster_status.length-1].selected = true;
+    } else {
+        alert("Invalid entry");
+    }
+}
+
 </script>
 <script language="JavaScript">
 function showHideDetail(){
@@ -1126,7 +1136,18 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                      rosterStatus = "";
                                   }
                                   %>
-                                <input type="text" name="roster_status" size="30" value="<%=rosterStatus%>" onBlur="upCaseCtrl(this)">
+                                <!--  input type="text" name="roster_status" size="30" value="<%--=rosterStatus--%>" onBlur="upCaseCtrl(this)" -->
+                                <select name="roster_status" style="width:120">
+                                  <option value="RO"<%=rosterStatus.equals("RO")?" selected":""%>>RO - rostered</option>
+                                  <option value="NR"<%=rosterStatus.equals("NR")?" selected":""%>>NR - not rostered</option>
+                                  <option value="TE"<%=rosterStatus.equals("TE")?" selected":""%>>TE - terminated</option>
+                                  <option value="FS"<%=rosterStatus.equals("FS")?" selected":""%>>FS - fee for service</option>
+                                  <% ResultSet rsstatus1 = apptMainBean.queryResults("search_rsstatus");
+                                     while (rsstatus1.next()) { %>
+                                       <option<%=rosterStatus.equals(rsstatus1.getString("roster_status"))?" selected":""%>><%=rsstatus1.getString("roster_status")%></option>
+                                  <% } // end while %>
+                                </select>
+								<input type="button" onClick="newStatus1();" value="Add New">
                               </td>
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.DateJoined"/>: </b></td>
                               <td align="left">
