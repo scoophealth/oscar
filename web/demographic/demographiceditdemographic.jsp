@@ -1138,6 +1138,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   %>
                                 <!--  input type="text" name="roster_status" size="30" value="<%--=rosterStatus--%>" onBlur="upCaseCtrl(this)" -->
                                 <select name="roster_status" style="width:120">
+                                  <option value="" > </option>
                                   <option value="RO"<%=rosterStatus.equals("RO")?" selected":""%>>RO - rostered</option>
                                   <option value="NR"<%=rosterStatus.equals("NR")?" selected":""%>>NR - not rostered</option>
                                   <option value="TE"<%=rosterStatus.equals("TE")?" selected":""%>>TE - terminated</option>
