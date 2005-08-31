@@ -109,4 +109,26 @@ public class TicklerCreator {
     }return false;
 
   }
+
+  public void resolveTickler(String demoNo,String remString) {
+    String sql = "update tickler set status = 'D' where demographic_no = '" + demoNo + "'"+
+        " and message like '%"+remString+"%'" +
+        " and status = 'A'";
+   DBHandler db = null;
+   try {
+     db = new DBHandler(DBHandler.OSCAR_DATA);
+     db.RunSQL(sql);
+   }
+   catch (SQLException ex) {
+     ex.printStackTrace();
+   }
+   finally {
+     try {
+       db.CloseConn();
+     }
+     catch (SQLException ex1) {
+       ex1.printStackTrace();
+     }
+   }
+  }
 }
