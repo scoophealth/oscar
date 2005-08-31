@@ -211,7 +211,12 @@ public class BillingAssociationPersistence {
     return recordExists(qry);
   }
 
-  //
+
+  /**
+   * Returns true if the specified select query returns a result
+   * @param qry String
+   * @return boolean
+   */
   public boolean recordExists(String qry) {
     boolean ret = false;
     DBHandler db = null;
