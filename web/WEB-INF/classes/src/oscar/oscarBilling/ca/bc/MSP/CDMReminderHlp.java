@@ -42,10 +42,11 @@ public class CDMReminderHlp {
    * has patients that need counselling
    * @param provNo String
    */
-  public void createCDMTicklers(String provNo) {
+  public void manageCDMTicklers(String provNo) {
     //get all demographics with a problem that falls within CDM category
     ArrayList cdms = this.getCDMPatients(provNo);
     TicklerCreator crt = new TicklerCreator();
+    String remString = "SERVICE CODE: 13050 Reminder";
     for (Iterator iter = cdms.iterator(); iter.hasNext(); ) {
       String demoNo = (String) iter.next();
       ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
@@ -64,13 +65,18 @@ public class CDMReminderHlp {
           ex.printStackTrace();
         }
 
-        String message = "SERVICE CODE: 13050 Reminder - Last Billed On: " + newfmt;
+        String message = remString + " - Last Billed On: " + newfmt;
         crt.createTickler(demoNo, provNo, message);
       }
       else if (daysPast < 0) {
         String message =
-            "SERVICE CODE: 13050 Reminder - Never billed for this patient";
+            remString + " - Never billed for this patient";
         crt.createTickler(demoNo, provNo, message);
+      }
+      else{
+        //This code has been billed for this patient within the last year
+        //Resolve unnecessary ticklers
+        crt.resolveTickler(demoNo,remString);
       }
     }
   }
@@ -86,7 +92,9 @@ public class CDMReminderHlp {
     ArrayList lst = new ArrayList();
     String qry = "SELECT de.demographic_no FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no" +
         " and dxresearch_code in(2445,5118)" +
+        " and status = 'A'" +
         " and provider_no = " + String.valueOf(provNo);
+    System.out.println("qry=" + qry);
     DBHandler db = null;
     ResultSet rs = null;
     try {
