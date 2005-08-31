@@ -389,11 +389,11 @@ function checkFormTypeIn() {
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">
-        <input type="text" name="last_name" onBlur="upCaseCtrl(this)">
+        <input type="text" name="last_name" onBlur="upCaseCtrl(this)" size=30 />
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
       <td align="left">
-        <input type="text" name="first_name" onBlur="upCaseCtrl(this)">
+        <input type="text" name="first_name" onBlur="upCaseCtrl(this)"  size=30>
       </td>
     </tr>
     <%
@@ -449,7 +449,7 @@ function checkFormTypeIn() {
     <tr valign="top">
       <td  align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formAddress"/>: </b></td>
       <td align="left" >
-        <input type="text" name="address"><% if (vLocale.getCountry().equals("BR")) { %>
+        <input type="text" name="address" size=40 /><% if (vLocale.getCountry().equals("BR")) { %>
         <b><bean:message key="demographic.demographicaddrecordhtm.formAddressNo"/>:</b>
         <input type="text" name="address_no" size="6">
         <%}%>
