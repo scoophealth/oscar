@@ -176,6 +176,7 @@ public class LoginCheckLoginBean {
             }
             return secBean;
         } catch (SQLException e) {
+          e.printStackTrace();
             return null;
         }
     }
