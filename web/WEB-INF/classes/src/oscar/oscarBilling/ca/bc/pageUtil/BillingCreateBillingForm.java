@@ -677,38 +677,45 @@ public final class BillingCreateBillingForm
   public ServiceCodeAssociation getSvcAssoc() {
     ServiceCodeAssociation svc = new ServiceCodeAssociation();
     svc.setServiceCode(this.xml_other1);
-    if(!this.getXml_diagnostic_detail1().trim().equals("")){
+    if (!this.getXml_diagnostic_detail1().trim().equals("")) {
       svc.addDXCode(this.getXml_diagnostic_detail1().trim());
     }
-    if(!this.getXml_diagnostic_detail2().trim().equals("")){
+    if (!this.getXml_diagnostic_detail2().trim().equals("")) {
       svc.addDXCode(this.getXml_diagnostic_detail2().trim());
     }
 
-    if(!this.getXml_diagnostic_detail3().trim().equals("")){
-       svc.addDXCode(this.getXml_diagnostic_detail3().trim());
-     }
+    if (!this.getXml_diagnostic_detail3().trim().equals("")) {
+      svc.addDXCode(this.getXml_diagnostic_detail3().trim());
+    }
 
     return svc;
   }
+
   public ActionErrors validate(ActionMapping mapping,
-                                 HttpServletRequest request) {
-      ActionErrors errors = new ActionErrors();
-      oscar.util.StringUtils ut = new oscar.util.StringUtils();
+                               HttpServletRequest request) {
+    ActionErrors errors = new ActionErrors();
+    oscar.util.StringUtils ut = new oscar.util.StringUtils();
+    if (this.xml_refer1.equals("") && this.xml_refer2.equals("")) {
       if (this.xml_other1 == null || xml_other1.equals("")) {
-        if(this.service==null ||service.length ==0){
+        if (this.service == null || service.length == 0) {
           errors.add("",
-                     new ActionError(
+                     new ActionMessage(
                          "oscar.billing.CA.BC.billingBC.error.nullservicecode"));
         }
       }
-      if ((this.xml_diagnostic_detail1 == null || xml_diagnostic_detail1.equals(""))&&
-          (this.xml_diagnostic_detail2 == null || xml_diagnostic_detail2.equals("")) &&
-          (this.xml_diagnostic_detail3 == null || xml_diagnostic_detail3.equals(""))) {
+      if ( (this.xml_diagnostic_detail1 == null ||
+            xml_diagnostic_detail1.equals("")) &&
+          (this.xml_diagnostic_detail2 == null ||
+           xml_diagnostic_detail2.equals("")) &&
+          (this.xml_diagnostic_detail3 == null ||
+           xml_diagnostic_detail3.equals(""))) {
         errors.add("",
-                   new ActionError(
+                   new ActionMessage(
                        "oscar.billing.CA.BC.billingBC.error.nulldxcodes"));
       }
-      return errors;
+    }
+
+    return errors;
   }
   /**
    * Validate the properties that have been set from this HTTP request,
