@@ -158,10 +158,12 @@ public class ServiceCodeValidationLogic {
           " and billingstatus != 'D'";
       System.out.println("13050 qry =" + qry);
       rs = db.GetSQL(qry);
-      if (rs.next()) {
+      int index = 0;
+      while (rs.next()) {
         ret = rs.getInt(1);
+        index++;
       }
-      else {
+      if(index==0) {
         ret = -1;
       }
       db.CloseConn();
@@ -217,7 +219,7 @@ public class ServiceCodeValidationLogic {
     boolean ret = false;
     String qry = "SELECT * FROM dxresearch d WHERE d.demographic_no = " +
         demoNo +
-        " and dxresearch_code in(2445,5118)";
+        " and dxresearch_code in(2445,5118) and status = 'A'";
     DBHandler db = null;
     ResultSet rs = null;
     try {
