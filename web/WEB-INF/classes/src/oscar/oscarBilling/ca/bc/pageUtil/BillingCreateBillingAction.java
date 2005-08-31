@@ -51,7 +51,7 @@ public class BillingCreateBillingAction
     /**
      * This service list is not necessary
      */
-    String[] service = new String[0];//frm.getService();
+    String[] service = new String[0]; //frm.getService();
     String other_service1 = frm.getXml_other1();
     String other_service2 = frm.getXml_other2();
     String other_service3 = frm.getXml_other3();
@@ -68,32 +68,8 @@ public class BillingCreateBillingAction
                                            other_service1_unit,
                                            other_service2_unit,
                                            other_service3_unit);
-
-    validateServiceCodeList(billItem, demo, errors);
-    validate00120(errors, demo, billItem);
-    if (!errors.isEmpty()) {
-        //We want this alert to show up regardless
-      verifyLast13050(errors,demo);
-      this.saveErrors(request, errors);
-      return mapping.getInputForward();
-    }
-
-    //We want this alert to show up regardless
-    verifyLast13050(errors,demo);
-    this.saveErrors(request, errors);
     BillingFormData billform = new BillingFormData();
     String payMeth = ( (BillingCreateBillingForm) form).getXml_encounter();
-
-    ArrayList lst = billform.getPaymentTypes();
-    for (int i = 0; i < lst.size(); i++) {
-      PaymentType tp = (PaymentType) lst.get(i);
-      if (tp.getId().equals(payMeth)) {
-        bean.setPaymentTypeName(tp.getPaymentType());
-        break;
-      }
-
-    }
-
     bean.setGrandtotal(bmanager.getGrandTotal(billItem));
     bean.setPatientLastName(demo.getLastName());
     bean.setPatientFirstName(demo.getFirstName());
@@ -136,10 +112,30 @@ public class BillingCreateBillingAction
     bean.setIcbc_claim_no(frm.getIcbc_claim_no());
     bean.setMessageNotes(frm.getMessageNotes());
     bean.setMva_claim_code(frm.getMva_claim_code());
-
     bean.setFacilityNum(frm.getFacilityNum());
     bean.setFacilitySubNum(frm.getFacilitySubNum());
+    ArrayList lst = billform.getPaymentTypes();
+    for (int i = 0; i < lst.size(); i++) {
+      PaymentType tp = (PaymentType) lst.get(i);
+      if (tp.getId().equals(payMeth)) {
+        bean.setPaymentTypeName(tp.getPaymentType());
+        break;
+      }
 
+    }
+
+    validateServiceCodeList(billItem, demo, errors);
+    validate00120(errors, demo, billItem);
+    validateDxCodeList(bean, errors);
+    if (!errors.isEmpty()) {
+      verifyLast13050(errors, demo);
+      this.saveErrors(request, errors);
+      return mapping.getInputForward();
+    }
+    //We want this alert to show up regardless
+    //However we don't necessarily want it to force the user to enter a bill
+    verifyLast13050(errors, demo);
+    this.saveErrors(request, errors);
 
     if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
       WCBForm wcbForm = new WCBForm();
@@ -152,7 +148,32 @@ public class BillingCreateBillingAction
   }
 
   /**
-   * Validates a String array of service codes and adds and ActionError
+   * Validates a String array of diagnostic codes and adds an ActionMessage
+   * to the ActionMessages object, for any of the codes that don't validate
+   * successfully
+   * @param service String[]
+   * @param demo Demographic
+   * @param errors ActionErrors
+   */
+
+  private void validateDxCodeList(BillingSessionBean bean,
+                                  ActionErrors errors) {
+    BillingAssociationPersistence per = new BillingAssociationPersistence();
+    String[] dxcodes = {
+        bean.getDx1(), bean.getDx2(), bean.getDx3()};
+    for (int i = 0; i < dxcodes.length; i++) {
+      String code = dxcodes[i];
+      if (code != null && !code.equals("") && !per.dxcodeExists(code)) {
+        errors.add("",
+                   new ActionMessage(
+                       "oscar.billing.CA.BC.billingBC.error.invaliddxcode",
+                       code));
+      }
+    }
+  }
+
+  /**
+   * Validates a String array of service codes and adds and ActionMessage
    * to the ActionErrors object, for any of the codes that don't validate
    * successfully
    * @param service String[]
@@ -161,24 +182,39 @@ public class BillingCreateBillingAction
    */
   private void validateServiceCodeList(ArrayList billItems, Demographic demo,
                                        ActionErrors errors) {
+    BillingAssociationPersistence per = new BillingAssociationPersistence();
     for (int i = 0; i < billItems.size(); i++) {
       BillingItem item = (BillingItem) billItems.get(i);
-      AgeValidator age = (AgeValidator) vldt.getAgeValidator(item.getServiceCode(), demo);
-      SexValidator sex = (SexValidator) vldt.getSexValidator(item.
-          getServiceCode(), demo);
-      if (!age.isValid()) {
-        errors.add("",
-                   new org.apache.struts.action.ActionError(
-                       "oscar.billing.CA.BC.billingBC.error.invalidAge",
-                       item.getServiceCode(), String.valueOf(demo.getAgeInYears()),
-                       age.getDescription()));
+      if (per.serviceCodeExists(item.
+                                getServiceCode())) {
+        AgeValidator age = (AgeValidator) vldt.getAgeValidator(item.
+            getServiceCode(), demo);
+        SexValidator sex = (SexValidator) vldt.getSexValidator(item.
+            getServiceCode(), demo);
+        if (!age.isValid()) {
+          errors.add("",
+                     new org.apache.struts.action.ActionMessage(
+                         "oscar.billing.CA.BC.billingBC.error.invalidAge",
+                         item.getServiceCode(),
+                         String.valueOf(demo.getAgeInYears()),
+                         age.getDescription()));
+        }
+        if (!sex.isValid()) {
+          errors.add("",
+                     new org.apache.struts.action.ActionMessage(
+                         "oscar.billing.CA.BC.billingBC.error.invalidSex",
+                         item.getServiceCode(), demo.getSex(), sex.getGender()));
+        }
+
       }
-      if (!sex.isValid()) {
+      else {
         errors.add("",
-                   new org.apache.struts.action.ActionError(
-                       "oscar.billing.CA.BC.billingBC.error.invalidSex",
-                       item.getServiceCode(), demo.getSex(), sex.getGender()));
+                   new ActionMessage(
+                       "oscar.billing.CA.BC.billingBC.error.invalidsvccode",
+                       item.getServiceCode()));
+
       }
+
     }
   }
 
@@ -189,7 +225,7 @@ public class BillingCreateBillingAction
       if (item.getServiceCode().equals("00120")) {
         if (!vldt.hasMore00120Codes(demo.getDemographicNo())) {
           errors.add("",
-                     new ActionError(
+                     new ActionMessage(
                          "oscar.billing.CA.BC.billingBC.error.noMore00120"));
         }
         break;
@@ -202,16 +238,15 @@ public class BillingCreateBillingAction
     int last13050 = vldt.daysSinceLast13050(demo.getDemographicNo());
     if (last13050 > 365) {
       errors.add("",
-                 new ActionError(
+                 new ActionMessage(
                      "oscar.billing.CA.BC.billingBC.error.last13050",
                      String.valueOf(last13050)));
     }
-    else if(last13050 == -1){
+    else if (last13050 == -1) {
       errors.add("",
-                 new ActionError(
+                 new ActionMessage(
                      "oscar.billing.CA.BC.billingBC.error.neverBilled13050"));
     }
-
 
   }
 }
