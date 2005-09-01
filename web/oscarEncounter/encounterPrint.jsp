@@ -79,7 +79,7 @@
             <span style="font-weight:bold;"><%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%></span>
         </td>
         <td style="text-align:right;height:34px;border-bottom: 2px solid #A9A9A9;border-right: 2px solid #A9A9A9;border-top:2px solid #A9A9A9;">
-            <span style="font-weight:bold;"><bean:message key="oscarEncounter.encounterPrint.msgDr"/>. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>
+            <span style="font-weight:bold;"><bean:message key="oscarEncounter.encounterPrint.msgDr"/>. <%=providerBean.getProperty(bean.familyDoctorNo, "")%></span>
         </td>
     </tr>
     <tr>
