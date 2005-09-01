@@ -116,6 +116,7 @@ function ClipBoard4() {
 	GregorianCalendar now=new GregorianCalendar();  int curYear = now.get(Calendar.YEAR);  int curMonth = (now.get(Calendar.MONTH)+1);  int curDay = now.get(Calendar.DAY_OF_MONTH);
 	int age=0, dob_year=0, dob_month=0, dob_date=0;
   String first_name="",last_name="",chart_no="",address="",city="",province="",postal="",phone="",phone2="",dob="",sex="",hin="";
+	String refDoc = "";
   int param = Integer.parseInt(request.getParameter("demographic_no"));
 
   // find the family doctor's name System.out.println("from editcpp : "+ param);
@@ -145,9 +146,10 @@ function ClipBoard4() {
       postal = rs.getString("postal");
       phone = rs.getString("phone");
       phone2 = rs.getString("phone2");
-      dob=dob_year+"/"+dob_month+"/"+dob_date;
+      dob=dob_year+"/"+rs.getString("month_of_birth")+"/"+rs.getString("date_of_birth");
       sex = rs.getString("sex");
       hin = "HN "+ rs.getString("hc_type") +" "+rs.getString("hin")+ " " +rs.getString("ver");
+      refDoc = SxmlMisc.getXmlContent(rs.getString("family_doctor"),"rd");
     }
   }
   phone2 = phone2.equals("")?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
@@ -158,7 +160,7 @@ function ClipBoard4() {
 %>
 
   <form method="post" name="labelprint" action="demographicprintdemographic.jsp">
-<table border="0" cellpadding="1" cellspacing="0" width="100%">
+<table border="0" cellpadding="0" cellspacing="3" width="100%">
     <tr bgcolor="gold" align="center">
       <td><bean:message key="demographic.demographiclabelprintsetting.msgLabel"/></td>
       <td><bean:message key="demographic.demographiclabelprintsetting.msgNumeberOfLabel"/>
@@ -179,7 +181,7 @@ function ClipBoard4() {
 	  </td>
     </tr>
     <tr>
-      <td align="center"><br>
+      <td align="center">
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr>
             <%--<td><%=label1%></td>--%>
@@ -195,7 +197,7 @@ function ClipBoard4() {
         <input type="checkbox" name="label1checkbox" value="checked" >
         <input type="text" name="label1no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.1no","1") %>"/>
       </td>
-      <td bgcolor="#999999" rowspan="3" valign="middle" align="right">
+      <td bgcolor="#999999" rowspan="5" valign="middle" align="right">
         <p><bean:message key="demographic.demographiclabelprintsetting.formLeft"/>:
           <input type="text" name="left" size="3" maxlength="3" value="<%= oscarVariables.getProperty("label.left","200") %>"/>
           <bean:message key="demographic.demographiclabelprintsetting.msgPx"/></p>
@@ -211,7 +213,7 @@ function ClipBoard4() {
       </td>
     </tr>
     <tr>
-      <td align="center"><br>
+      <td align="center">
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr>
             <%--<td><%=label2%></td>--%>
@@ -229,7 +231,7 @@ function ClipBoard4() {
       </td>
     </tr>
     <tr>
-      <td align="center"><br>
+      <td align="center">
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr>
 <%--            <td><%=label3%></td>
@@ -240,7 +242,6 @@ function ClipBoard4() {
             </td>
           </tr>
         </table>
-        <br>
       </td>
       <td align="center" bgcolor="#CCCCCC">
 		<input type="button" onClick="ClipBoard1('copytext3');" value="Copy to Clipboard" />
@@ -249,7 +250,7 @@ function ClipBoard4() {
       </td>
     </tr>
     <tr>
-      <td align="center"><br>
+      <td align="center">
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr>
             <td>
@@ -257,7 +258,6 @@ function ClipBoard4() {
             </td>
           </tr>
         </table>
-        <br>
       </td>
       <td align="center" bgcolor="#CCCCCC">
 		<TEXTAREA ID="text1" STYLE="display:none;">
@@ -265,6 +265,26 @@ function ClipBoard4() {
 		<input type="button" onClick="ClipBoard1('copytext4');" value="Copy to Clipboard" />
         <input type="checkbox" name="label3checkbox" value="checked" >
         <input type="text" name="label4no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.4no","1") %>">
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+          <tr>
+            <td>
+            <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext5"> <%=last_name%>, <%=first_name%><br><%=address%>, <%=city%>, <%=province%>, <%=postal%><br>
+            <%=dob%> &nbsp;&nbsp;&nbsp;<%=age%> <%=sex%> &nbsp;<%=hin%><br><%=phone%>&nbsp;&nbsp;&nbsp;<%=phone2%><br>
+            <%=refDoc%></span></font>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td align="center" bgcolor="#CCCCCC">
+		<TEXTAREA ID="text1" STYLE="display:none;">
+		</TEXTAREA>
+		<input type="button" onClick="ClipBoard1('copytext5');" value="Copy to Clipboard" />
+        <input type="checkbox" name="label3checkbox" value="checked" >
+        <input type="text" name="label5no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.5no","1") %>">
       </td>
     </tr>
     <tr bgcolor="#486ebd">
