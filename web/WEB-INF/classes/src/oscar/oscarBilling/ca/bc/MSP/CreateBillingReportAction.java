@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -46,6 +45,7 @@ import org.apache.struts.action.*;
 import oscar.*;
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile.*;
+import oscar.oscarBilling.ca.bc.data.PayRefSummary;
 
 /**
  *
@@ -174,14 +174,14 @@ public class CreateBillingReportAction
       reportParams.put("payeeno", payee);
       String s21id = request.getParameter("rano");
       osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
-                             msp.getMSPRemittanceQuery(payee,s21id));
+                             msp.getMSPRemittanceQuery(payee, s21id));
     }
     else if (repType.equals(msp.REP_MSPREMSUM)) {
       String s21id = request.getParameter("rano");
-
       S21 s21 = msp.getS21Record(s21id);
 
       oscar.entities.Provider payeeProv = msp.getProvider(provider);
+      reportParams.put("mspBean", msp);
       //set parameters for payee of provider
       reportParams.put("provider",
                        payeeProv.equals("all") ? "ALL" : payeeProv.getInitials());
@@ -208,6 +208,24 @@ public class CreateBillingReportAction
       oscar.entities.Provider acctProv = msp.getProvider(account);
       oscar.entities.Provider provProv = msp.getProvider(payee);
 
+      PayRefSummary sumPayed = new PayRefSummary();
+      PayRefSummary sumRefunded = new PayRefSummary();
+      for (Iterator iter = billSearch.list.iterator(); iter.hasNext(); ) {
+        MSPBill item = (MSPBill) iter.next();
+        double dblValue = Double.parseDouble(item.getAmount());
+        if (dblValue > 0) {
+          sumPayed.addIncValue(item.getPaymentMethod(), item.getAmount());
+        }
+        else {
+          sumRefunded.addIncValue(item.getPaymentMethod(), item.getAmount());
+        }
+      }
+
+      reportParams.put("sumPayed",
+                       sumPayed);
+      reportParams.put("sumRefunded",
+                       sumRefunded);
+
       reportParams.put("account",
                        account.equals("all") ? "ALL" :
                        acctProv.getFullName());
@@ -232,7 +250,6 @@ public class CreateBillingReportAction
                                       !showWCB, !showMSP, !showPriv,
                                       !showICBC,
                                       repType);
-
 
       for (Iterator iter = billSearch.list.iterator(); iter.hasNext(); ) {
         MSPBill item = (MSPBill) iter.next();

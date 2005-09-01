@@ -32,6 +32,9 @@ import org.apache.commons.beanutils.*;
 import oscar.*;
 import oscar.entities.*;
 import oscar.oscarDB.*;
+import oscar.util.StringUtils;
+import java.text.NumberFormat;
+import java.math.BigDecimal;
 
 /**
  *
@@ -72,8 +75,21 @@ public class MSPReconcile {
   public static String BILLPATIENT = "P";
   public static String COLLECTION = "T";
   public static String PAIDPRIVATE = "A";
+
+  private static Properties negValues = new Properties();
+
   public MSPReconcile() {
     System.err.println("MSP STARTED");
+    negValues.setProperty("}","0");
+    negValues.setProperty("J","1");
+    negValues.setProperty("K","2");
+    negValues.setProperty("L","3");
+    negValues.setProperty("M","4");
+    negValues.setProperty("N","5");
+    negValues.setProperty("O","6");
+    negValues.setProperty("P","7");
+    negValues.setProperty("Q","8");
+    negValues.setProperty("R","9");
   }
 
   public String getStatusDesc(String stat) {
@@ -201,7 +217,7 @@ public class MSPReconcile {
       e.printStackTrace();
     }
     String hasC12Records = "hasC12Records" + String.valueOf(p.isEmpty());
-    debugC12Records +=hasC12Records ;
+    debugC12Records += hasC12Records;
     System.out.println("debugC12Records=" + debugC12Records);
     return p;
   }
@@ -299,7 +315,8 @@ public class MSPReconcile {
           db.CloseConn();
         }
         catch (Exception e) {
-          System.out.println("Through an error in getCurrentErrorMessages:" + e.getMessage());
+          System.out.println("Through an error in getCurrentErrorMessages:" +
+                             e.getMessage());
           e.printStackTrace();
         }
       }
@@ -1033,7 +1050,7 @@ public class MSPReconcile {
             Vector dets = (Vector) rejDetails.get(b.billMasterNo);
             String[] exps = new String[7];
             for (int i = 0; i < exps.length; i++) {
-              exps[i] = (String)dets.get(i);
+              exps[i] = (String) dets.get(i);
             }
             b.expString = this.createCorrectionsString(exps);
             Hashtable explCodes = new Hashtable();
@@ -1043,7 +1060,7 @@ public class MSPReconcile {
               explCodes.put(code, desc);
             }
             b.explanations = explCodes;
-            b.rejectionDate = (String)dets.get(7);
+            b.rejectionDate = (String) dets.get(7);
           }
 
           ResultSet rsDemo = db.GetSQL(
@@ -1130,7 +1147,7 @@ public class MSPReconcile {
                                               endDate, excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
                                               status);
-    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt*.01 as 't_paidamt',t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod" +
+    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod" +
         " FROM `teleplanS00`,billingmaster as bm,billing as b" +
         " where teleplanS00.t_officeno = bm.billingmaster_no" +
         " and b.billing_no = bm.billing_no "
@@ -1153,7 +1170,7 @@ public class MSPReconcile {
         b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
         b.demoNo = rs.getString("demographic_no");
         b.demoName = rs.getString("demographic_name");
-        b.amount = rs.getString("t_paidamt");
+        b.amount = this.convCurValue(rs.getString("t_paidamt"));
         b.status = b.reason;
         b.serviceDate = rs.getString("service_date");
         b.seqNum = rs.getString("t_dataseq");
@@ -1428,7 +1445,7 @@ public class MSPReconcile {
                        ":MSPReconcile.getProvider(providerNo)");
     System.err.println("PROV: " + providerNo);
 
-    if(!oscar.util.StringUtils.isNumeric(providerNo)){
+    if (!oscar.util.StringUtils.isNumeric(providerNo)) {
       providerNo = "-1";
     }
     DBHandler db = null;
@@ -1507,9 +1524,9 @@ public class MSPReconcile {
         s21.setPaymentDate(rs.getString(1));
         s21.setPayeeNo(rs.getString(2));
         s21.setPayeeName(rs.getString(3));
-        s21.setAmtBilled(rs.getString(4));
-        s21.setAmtPaid(rs.getString(5));
-        s21.setCheque(rs.getString(6));
+        s21.setAmtBilled(this.convCurValue(rs.getString(4)));
+        s21.setAmtPaid(this.convCurValue(rs.getString(5)));
+        s21.setCheque(this.convCurValue(rs.getString(6)));
       }
       db.CloseConn();
       rs.close();
@@ -1552,5 +1569,30 @@ public class MSPReconcile {
       ex.printStackTrace();
     }
     return prov;
+  }
+
+  /**
+   * Returns a properly formed negative numeric value
+   * If the supplied value doesn't represent a negative number it is simply returned
+   * @param value String
+   * @return String
+   * @todo complete documentation
+   *
+   */
+  public static String convCurValue(String value) {
+    String ret = value;
+    String lastDigit = ret.substring(ret.length() - 1,ret.length());
+    String preDigits = ret.substring(0, ret.length() - 1);
+    //If string isn't negative(negative values contain alphabetic last char)
+    if(negValues.containsKey(lastDigit)){
+      lastDigit = negValues.getProperty(lastDigit);
+      preDigits="-"+preDigits;
+      ret = preDigits+lastDigit;
+    }
+    int dblValue = new Integer(ret).intValue();
+    double newDouble = dblValue/100;
+    BigDecimal curValue = new BigDecimal(newDouble).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+    return curValue.toString();
   }
 }
