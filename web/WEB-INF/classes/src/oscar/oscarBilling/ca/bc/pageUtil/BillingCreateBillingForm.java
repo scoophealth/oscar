@@ -37,7 +37,7 @@ public final class BillingCreateBillingForm
   private String xml_visittype, xml_vdate;
   private String xml_other1, xml_other2, xml_other3;
   private String xml_other1_unit, xml_other2_unit, xml_other3_unit;
-  private String xml_refer1, xml_refer2, refertype1, refertype2;
+  private String xml_refer1="", xml_refer2="", refertype1, refertype2;
   private String xml_diagnostic_detail1, xml_diagnostic_detail2,
       xml_diagnostic_detail3;
   private String xml_encounter, notes = "", icbc_claim_no;
