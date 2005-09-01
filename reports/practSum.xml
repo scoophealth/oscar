@@ -21,14 +21,15 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="oscar.oscarBilling.ca.bc.MSP.*" />
 	<parameter name="payeeNo" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="s21id" isForPrompting="false" class="java.lang.String"/>
-	<queryString><![CDATA[select t_payment,t_practitionerno,t_practitionername,t_amtbilled *.01 as 't_amtbilled',t_amtpaid * .01 as 't_amtpaid' from teleplanS22 where s21_id=$P{s21id}  and t_s22type<>'D' order by s22_id]]></queryString>
+	<queryString><![CDATA[select t_payment,t_practitionerno,t_practitionername,t_amtbilled,t_amtpaid from teleplanS22 where s21_id=$P{s21id}  and t_s22type<>'D' order by s22_id]]></queryString>
 	<field name="t_payment" class="java.lang.String"/>
 	<field name="t_practitionerno" class="java.lang.String"/>
 	<field name="t_practitionername" class="java.lang.String"/>
-	<field name="t_amtbilled" class="java.lang.Double"/>
-	<field name="t_amtpaid" class="java.lang.Double"/>
+	<field name="t_amtbilled" class="java.lang.String"/>
+	<field name="t_amtpaid" class="java.lang.String"/>
 	<variable name="test" class="java.lang.String" resetType="None" calculation="Nothing">
 		<variableExpression><![CDATA["test"]]></variableExpression>
 		<initialValueExpression><![CDATA["test"		]]></initialValueExpression>
@@ -132,7 +133,7 @@
 						mode="Transparent"
 						x="0"
 						y="2"
-						width="107"
+						width="82"
 						height="12"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
@@ -152,7 +153,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="108"
+						x="86"
 						y="2"
 						width="107"
 						height="12"
@@ -174,7 +175,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="281"
+						x="250"
 						y="2"
 						width="107"
 						height="12"
@@ -196,7 +197,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="388"
+						x="357"
 						y="2"
 						width="107"
 						height="12"
@@ -220,7 +221,7 @@
 						mode="Transparent"
 						x="0"
 						y="20"
-						width="107"
+						width="82"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -240,7 +241,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="110"
+						x="86"
 						y="20"
 						width="164"
 						height="15"
@@ -262,7 +263,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="281"
+						x="250"
 						y="20"
 						width="107"
 						height="15"
@@ -279,12 +280,12 @@
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_amtbilled})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_amtbilled})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="388"
+						x="357"
 						y="20"
 						width="107"
 						height="15"
@@ -301,7 +302,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_amtpaid})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_amtpaid})]]></textFieldExpression>
 				</textField>
 				<subreport  isUsingCache="true">
 					<reportElement

@@ -21,9 +21,10 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="oscar.oscarBilling.ca.bc.MSP.*" />
 	<parameter name="s21id" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="providerNo" isForPrompting="false" class="java.lang.String"/>
-	<queryString><![CDATA[select t_ajc,teleplan_adj_codes.adj_desc,t_aji, t_calcmethod,t_rpercent,t_opercent,t_gamount *.01 as 't_gamount',t_ramount *.01 as 't_ramount',t_oamount *.01 as 't_oamount',t_balancefwd *.01 as 't_balancefwd',t_adjmade *.01 as 't_adjmade',t_adjoutstanding *.01 as 't_adjoutstanding'
+	<queryString><![CDATA[select t_ajc,teleplan_adj_codes.adj_desc,t_aji, t_calcmethod,t_rpercent,t_opercent,t_gamount,t_ramount,t_oamount,t_balancefwd,t_adjmade,t_adjoutstanding
 FROM teleplanS23 LEFT OUTER JOIN teleplan_adj_codes ON t_ajc = teleplan_adj_codes.adj_code
 where s21_id=$P{s21id}
 and t_s23type ='S23'
@@ -35,32 +36,32 @@ order by s23_id]]></queryString>
 	<field name="t_calcmethod" class="java.lang.String"/>
 	<field name="t_rpercent" class="java.lang.String"/>
 	<field name="t_opercent" class="java.lang.String"/>
-	<field name="t_gamount" class="java.lang.Double"/>
-	<field name="t_ramount" class="java.lang.Double"/>
-	<field name="t_oamount" class="java.lang.Double"/>
-	<field name="t_balancefwd" class="java.lang.Double"/>
-	<field name="t_adjmade" class="java.lang.Double"/>
-	<field name="t_adjoutstanding" class="java.lang.Double"/>
+	<field name="t_gamount" class="java.lang.String"/>
+	<field name="t_ramount" class="java.lang.String"/>
+	<field name="t_oamount" class="java.lang.String"/>
+	<field name="t_balancefwd" class="java.lang.String"/>
+	<field name="t_adjmade" class="java.lang.String"/>
+	<field name="t_adjoutstanding" class="java.lang.String"/>
 	<variable name="test" class="java.lang.String" resetType="None" calculation="Nothing">
 		<variableExpression><![CDATA["test"]]></variableExpression>
 		<initialValueExpression><![CDATA["test"]]></initialValueExpression>
 	</variable>
-	<variable name="grossTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
+	<variable name="grossTotal" class="java.lang.String" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{t_gamount}]]></variableExpression>
 	</variable>
-	<variable name="regTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
+	<variable name="regTotal" class="java.lang.String" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{t_ramount}]]></variableExpression>
 	</variable>
-	<variable name="oneTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
+	<variable name="oneTotal" class="java.lang.String" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{t_oamount}]]></variableExpression>
 	</variable>
-	<variable name="blncTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
+	<variable name="blncTotal" class="java.lang.String" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{t_balancefwd}]]></variableExpression>
 	</variable>
-	<variable name="adjTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
+	<variable name="adjTotal" class="java.lang.String" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{t_adjmade}]]></variableExpression>
 	</variable>
-	<variable name="adjOutTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
+	<variable name="adjOutTotal" class="java.lang.String" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{t_adjoutstanding}]]></variableExpression>
 	</variable>
 		<background>
@@ -308,7 +309,7 @@ order by s23_id]]></queryString>
 						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times New Roman" pdfFontName="Courier" size="12" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+						<font fontName="Times New Roman" pdfFontName="Courier" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Adjustments]]></text>
 				</staticText>
@@ -468,7 +469,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_gamount})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_gamount})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -490,7 +491,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_ramount})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_ramount})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -512,7 +513,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_oamount})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_oamount})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -534,7 +535,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_balancefwd})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_balancefwd})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -556,7 +557,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_adjmade})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_adjmade})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -578,7 +579,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($F{t_adjoutstanding})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_adjoutstanding})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -652,7 +653,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($V{grossTotal})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($V{grossTotal})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -674,7 +675,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($V{regTotal})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($V{regTotal})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -696,7 +697,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($V{oneTotal})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($V{oneTotal})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -718,7 +719,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($V{blncTotal})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($V{blncTotal})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -740,7 +741,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($V{adjTotal})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($V{adjTotal})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -762,7 +763,7 @@ order by s23_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($V{adjOutTotal})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($V{adjOutTotal})]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
