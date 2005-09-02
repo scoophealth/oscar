@@ -395,7 +395,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!-- admin code block -->
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-		 <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp');return false;"><font color='blue'>Admin</font></a>
+		 <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;"><font color='blue'>Admin</font></a>
          </font></td></security:oscarSec>
 <!-- admin code block -->
 
