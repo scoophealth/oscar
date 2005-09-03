@@ -272,7 +272,7 @@ function ClipBoard4() {
         <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
           <tr>
             <td>
-            <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext5"> <%=last_name%>, <%=first_name%><br><%=address%>, <%=city%>, <%=province%>, <%=postal%><br>
+            <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext5"> <%=chart_no%> &nbsp;&nbsp;<%=last_name%>, <%=first_name%><br><%=address%>, <%=city%>, <%=province%>, <%=postal%><br>
             <%=dob%> &nbsp;&nbsp;&nbsp;<%=age%> <%=sex%> &nbsp;<%=hin%><br><%=phone%>&nbsp;&nbsp;&nbsp;<%=phone2%><br>
             <%=refDoc%></span></font>
             </td>
