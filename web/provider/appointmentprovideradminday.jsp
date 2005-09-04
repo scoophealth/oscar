@@ -57,10 +57,10 @@ public boolean isBirthday(String schedDate,String demBday){
     int len = lenLimitedL;
     int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
 	boolean bDispTemplatePeriod = ( oscarVariables.getProperty("receptionist_alt_view") != null && oscarVariables.getProperty("receptionist_alt_view").equals("yes") ); // true - display as schedule template period, false - display as preference
-	
+
 	if(prov.equals("BC")){
         oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp hlp = new oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp();
-        hlp.createCDMTicklers(curUser_no);
+        hlp.manageCDMTicklers(curUser_no);
 		System.out.println("The user:" + curUser_no);
 	}
 %>
