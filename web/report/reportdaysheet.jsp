@@ -26,10 +26,10 @@
         };
     } else {
         dbQueries=new String[][] {
-            {"search_daysheetall",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby },
-            {"search_daysheetsingleall", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
-            {"search_daysheetnew",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
-            {"search_daysheetsinglenew", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
+            {"search_daysheetall",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.start_time>=? and a.end_time<? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby },
+            {"search_daysheetsingleall", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.start_time>=? and a.end_time<? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
+            {"search_daysheetnew",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
+            {"search_daysheetsinglenew", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from appointment a, provider p left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
             {"update_apptstatus",        "update appointment set status='T' where appointment_date=? and status='t' " },
             {"update_apptstatussingle",  "update appointment set status='T' where appointment_date=? and provider_no=? and status='t' " },
@@ -91,6 +91,9 @@ function setfocus() {
 
     String sdate = request.getParameter("sdate")!=null?request.getParameter("sdate"):(curYear+"-"+curMonth+"-"+curDay) ;
     String edate = request.getParameter("edate")!=null?request.getParameter("edate"):"" ;
+    String sTime = request.getParameter("sTime")!=null? (request.getParameter("sTime")+":00:00") : "00:00:00" ;
+    String eTime = request.getParameter("eTime")!=null? (request.getParameter("eTime")+":00:00") : "24:00:00" ;
+    System.out.println(sTime + " " + eTime);
     String provider_no = request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"175" ;
     ResultSet rsdemo = null ;
     boolean bodd = false;
@@ -118,15 +121,17 @@ function setfocus() {
   String [] param = new String[2];
   param[0] = sdate;
   param[1] = provider_no;
-  String [] parama = new String[3];
+  String [] parama = new String[5];
   parama[0] = sdate;
   parama[1] = edate;
-  parama[2] = provider_no;
+  parama[2] = sTime;
+  parama[3] = eTime;
+  parama[4] = provider_no;
   if(request.getParameter("dsmode")!=null && request.getParameter("dsmode").equals("all") ) {
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
 	  rsdemo = daySheetBean.queryResults(parama, "search_daysheetsingleall");
     } else { //select all providers
-	  rsdemo = daySheetBean.queryResults(new String[] {parama[0], parama[1]}, "search_daysheetall");
+	  rsdemo = daySheetBean.queryResults(new String[] {parama[0], parama[1], sTime, eTime}, "search_daysheetall");
     }
   } else { //new appt, need to update status
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
@@ -178,7 +183,7 @@ function setfocus() {
 %>
 <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
       <!--<td align="center" nowrap><%=rsdemo.getString("appointment_date")%></td>-->
-      <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("end_time")%>"><%=rsdemo.getString("start_time")%></td>
+      <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("end_time")%>"><%=rsdemo.getString("start_time").substring(0,5)%></td>
       <td align="left"><%=rsdemo.getString("chart_no")==null?".":""%><%=Misc.toUpperLowerCase(rsdemo.getString("name"))%></td>
       <td align="center">&nbsp;<%=rsdemo.getString("chart_no")==null?"":rsdemo.getString("chart_no")%>&nbsp;</td>
 <% if(!bDob) {%>
@@ -197,6 +202,12 @@ function setfocus() {
           <% if ( rsdemo.getString("doc_no") != null && ! rsdemo.getString("doc_no").equals("") && ! rsdemo.getString("doc_no").equals(rsdemo.getString("provider_no")) ) { %>
               [<%=rsdemo.getString("doc_last_name")%>,
               <%=rsdemo.getString("doc_first_name").charAt(0)%>] &nbsp;
+          <% } %>
+          <% if ( bDob ) {
+              String rd = SxmlMisc.getXmlContent(rsdemo.getString("family_doctor"),"rd");
+              rd = rd !=null ? rd : "" ;
+          %>
+              [<%=rd%>]&nbsp;
           <% } %>
       <%=rsdemo.getString("reason")%>&nbsp;</td>
 </tr>

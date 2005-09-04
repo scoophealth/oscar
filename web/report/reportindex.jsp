@@ -88,8 +88,10 @@ function go(r) {
   var t = document.report.sdate.value ;
   var u = document.report.asdate.value ;
   var v = document.report.aedate.value ;
+  var y = document.report.sTime.value ;
+  var z = document.report.eTime.value ;
   var w = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
-  var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v;
+  var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z ;
 
   if(r=='new') {
     if(confirm("<bean:message key="report.reportindex.msgGoConfirm"/>") ) {
@@ -222,7 +224,24 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
             <a HREF="#" onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.aedate.value")%>')"><bean:message key="report.reportindex.formTo"/> </a>
             <input type='text' name="aedate" VALUE="<%=today%>" size=10>
         </td>
-        <td></td>
+        <td><select name="sTime" >
+            <%
+              for(int i=0; i<24; i++) {
+                String timeString = i<12&&i>=0? (i+" am") : ((i==12?i:i-12)+ " pm") ;
+            %>
+              <option value="<%=""+i%>" <%=i==8?"selected":""%> ><%=timeString%></option>
+            <% } %>
+            </select>
+            -
+			<select name="eTime" >
+            <%
+              for(int i=0; i<24; i++) {
+                String timeString = i<12&&i>=0? (i+" am") : ((i==12?i:i-12)+ " pm") ;
+            %>
+              <option value="<%=""+i%>" <%=i==20?"selected":""%> ><%=timeString%></option>
+            <% } %>
+            </select>
+        </td>
         <td></td>
     </tr>
     <tr>
