@@ -219,7 +219,7 @@ public class ServiceCodeValidationLogic {
     boolean ret = false;
     String qry = "SELECT * FROM dxresearch d WHERE d.demographic_no = " +
         demoNo +
-        " and dxresearch_code in(2445,5118) and status = 'A'";
+        " and dxresearch_code in(250,428) and status = 'A'";
     DBHandler db = null;
     ResultSet rs = null;
     try {

@@ -91,7 +91,7 @@ public class CDMReminderHlp {
   private ArrayList getCDMPatients(String provNo) {
     ArrayList lst = new ArrayList();
     String qry = "SELECT de.demographic_no FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no" +
-        " and dxresearch_code in(2445,5118)" +
+        " and dxresearch_code in(250,428)" +
         " and status = 'A'" +
         " and provider_no = " + String.valueOf(provNo);
     System.out.println("qry=" + qry);
