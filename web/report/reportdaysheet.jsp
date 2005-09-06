@@ -161,7 +161,7 @@ function setfocus() {
     bodd = false ;
 %>
 <table width="480" border="0" cellspacing="1" cellpadding="0" ><tr>
-<td><%=providerBean.getProperty(rsdemo.getString("provider_no")) + " - " +dateTemp%>  </td>
+<td><%=providerBean.getProperty(rsdemo.getString("provider_no")) + " - " +dateTemp + (request.getParameter("sTime")!=null? (" " + sTime + "-" + eTime) : "") %>  </td>
 <td align="right"></td>
 </tr></table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="0" cellpadding="1" >
