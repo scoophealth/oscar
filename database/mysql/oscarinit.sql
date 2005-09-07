@@ -679,6 +679,31 @@ CREATE TABLE eforms_data (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table `eform_values`
+--
+
+CREATE TABLE `eform_values` (
+  `id` int(16) NOT NULL auto_increment,
+  `fdid` int(8) default NULL,
+  `fid` int(8) default NULL,
+  `demographic_no` int(10) default '0',
+  `var_name` varchar(30) NOT NULL default '',
+  `var_value` text,
+  PRIMARY KEY  (`id`)
+);
+
+--
+-- Table structure for table `eform_groups`
+--
+
+CREATE TABLE `eform_values` (
+  `id` int(10) NOT NULL auto_increment,
+  `fid` int(8) NOT NULL default 0,
+  `group_name` varchar(20) NOT NULL default '',
+  PRIMARY KEY (`id`)
+);
+
+--
 -- Table structure for table `encounter`
 --
 
