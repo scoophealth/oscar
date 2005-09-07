@@ -595,10 +595,10 @@ div.demographicWrapper {
                     <a href=# onclick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300');return false;"><bean:message key="demographic.demographiceditdemographic.btnAddDocument"/></a>
                 </td></tr>
                 <tr><td>
-                    <a href="../eform/showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="demographic.demographiceditdemographic.btnEForm"/></a>
+                    <a href="../eform/efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message key="demographic.demographiceditdemographic.btnEForm"/></a>
                 </td></tr>
                 <tr><td>
-                    <a href="../eform/myform.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="demographic.demographiceditdemographic.btnAddEForm"/> </a>
+                    <a href="../eform/efmformslistadd.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="demographic.demographiceditdemographic.btnAddEForm"/> </a>
                 </td></tr>
             </table>
             </td>
