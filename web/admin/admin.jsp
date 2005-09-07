@@ -58,10 +58,6 @@ String userlastname = (String) session.getAttribute("userlastname");
 <title><bean:message key="admin.admin.title"/></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
-<!--
-function setfocus() {
-}
-
 function onsub() {
 	if(document.searchprovider.keyword.value=="") {
 		alert("<bean:message key="global.msgInputKeyword"/>");
@@ -105,8 +101,6 @@ function popUpBillStatus(vheight,vwidth,varpage) {
     popup.focus();
   }
 }
-
-//-->
 </script>
 <style type="text/css">
         a:link{
@@ -355,12 +349,15 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <th><bean:message key="admin.admin.eForms"/></th>
     </tr>
     <tr bgcolor="#EEEEFF">
-      <td> <a href="../eform/uploadhtml.jsp"><bean:message key="admin.admin.btnUploadForm"/></a><br>
+      <td> <a href="../eform/efmformmanager.jsp"><bean:message key="admin.admin.btnUploadForm"/></a><br>
         </td>
     </tr>
     <tr  bgcolor="#EEEEFF">
-      <td> <a href="../eform/uploadimages.jsp"><bean:message key="admin.admin.btnUploadImage"/></a><br>
+      <td> <a href="../eform/efmimagemanager.jsp"><bean:message key="admin.admin.btnUploadImage"/></a><br>
         </td>
+    </tr>
+    <tr bgcolor="#EEEEFF">
+      <td> <a href="../eform/efmmanageformgroups.jsp">Form Groups</a><br></td>
     </tr>
 
 <!--// end e forms block -->
