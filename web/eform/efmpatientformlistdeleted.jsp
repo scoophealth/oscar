@@ -30,21 +30,15 @@
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
 %>  
 
-<%@ page import = "java.sql.ResultSet" %> 
-<jsp:useBean id="myFormBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
-<% 
-  String param = request.getParameter("orderby")!=null?request.getParameter("orderby"):"form_date desc";
-  String [][] dbQueries=new String[][] { 
-{"search_eformdatadefault", "select * from eform_data where status = 1 and demographic_no = ? order by " +
-                            param + ", form_date desc, form_time desc" }, 
-  };
-  myFormBean.doConfigure(dbParams,dbQueries);
+<%@ page import = "java.util.*, oscar.eform.*" %> 
 
-  ResultSet rs = myFormBean.queryResults(demographic_no, "search_eformdatadefault");
-%>
 <%
-	String country = request.getLocale().getCountry();
+String country = request.getLocale().getCountry();
+String orderByRequest = request.getParameter("orderby");
+String orderBy = "";
+if (orderByRequest == null) orderBy = EFormUtil.DATE;
+else if (orderByRequest.equals("form_subject")) orderBy = EFormUtil.SUBJECT;
+else if (orderByRequest.equals("form_name")) orderBy = EFormUtil.NAME;
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -58,48 +52,21 @@
 <bean:message key="eform.showmyform.title"/>
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-
-
-<SCRIPT LANGUAGE="JavaScript">
-<!--
-//if (document.all || document.layers)  window.resizeTo(790,580);
-function newWindow(file,window) {
-  msgWindow=open(file,window,'scrollbars=yes,width=760,height=520,screenX=0,screenY=0,top=0,left=10');
-  if (msgWindow.opener == null) msgWindow.opener = self;
-} 
-//-->
-</SCRIPT>
-
-
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-</style>
+<link rel="stylesheet" type="text/css" href="../share/css/eforms.css">
+<script type="text/javascript" language="javascript">
+function popupPage(varpage, windowname) {
+    var page = "" + varpage;
+    windowprops = "height=700,width=800,location=no,"
+    + "scrollbars=yes,menubars=no,status=yes,toolbars=no,resizable=yes,top=10,left=200";
+    var popup = window.open(page, windowname, windowprops);
+    if (popup != null) {
+       if (popup.opener == null) {
+          popup.opener = self;
+       }
+       popup.focus();
+    }
+}
+</script>
 </head>
 
 <body class="BodyStyle" vlink="#0000FF">
@@ -127,7 +94,7 @@ function newWindow(file,window) {
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
-               <a href="myform.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="eform.showmyform.btnAddEForm"/></a>
+               <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="eform.showmyform.btnAddEForm"/></a>
                 <br>
                 <%  if (country.equals("BR")) { %>
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
@@ -135,36 +102,36 @@ function newWindow(file,window) {
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
                 <%}%>
                 <br>
-                <a href="calldeletedformdata.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.btnDeleted"/> </a>
+                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
+                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>" class="current"><bean:message key="eform.showmyform.btnDeleted"/></a>
             </td>
             <td class="MainTableRightColumn" valign="top">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table class="elements" width="100%">
   <tr bgcolor=<%=deepColor%> >
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>&orderby=subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
-    <th><a href="showmyform.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>    
+    <th><a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&orderby=form_name"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+    <th><a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
+    <th><a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.formDate"/></a></th>    
     <th><bean:message key="eform.showmyform.msgAction"/></th>
   </tr> 
 <%
-  boolean bodd = true ;
-  if(rs.next()) {
-    rs.beforeFirst();
-    while (rs.next()) {
-      bodd = bodd?false:true;
+    ArrayList forms = null;
+    forms = EFormUtil.listPatientEForms(orderBy, EFormUtil.DELETED, demographic_no);
+    for (int i=0; i< forms.size(); i++) {
+        Hashtable curform = (Hashtable) forms.get(i);
 %>
-    <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-        <td><a href="JavaScript:newWindow('showmyformdata.jsp?fdid=<%=rs.getInt("fdid")%>','_blank')"><%=rs.getString("form_name")%></a></td>
-        <td><%=rs.getString("subject")%></td>
-        <td align='center'><%=rs.getString("form_date")%> <%=rs.getString("form_time")%></td>
-        <td align='center'><a href="deleteformdata.jsp?fdid=<%=rs.getInt("fdid")%>&demographic_no=<%=demographic_no%>"><bean:message key="eform.uploadimages.btnDelete"/></a></td>
+    <tr bgcolor="<%= ((i%2) == 1)?"#F2F2F2":"white"%>">
+        <td><a href="#" ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%= curform.get("fdid")%>', '<%="FormPD" + i%>'); return false;" TITLE="View Form" onmouseover="window.status='View This Form'; return true"><%=curform.get("formName")%></a></td>
+        <td><%=curform.get("formSubject")%></td>
+        <td align='center'><%=curform.get("formDate")%></td>
+        <td align='center'><a href="../eform/unRemoveEForm.do?fdid=<%=curform.get("fdid")%>&demographic_no=<%=demographic_no%>"><bean:message key="global.btnRestore"/></a></td>
     </tr>
-<%    }  
-  }else {
+<%
+  }
+ if (forms.size() <= 0) {
 %>
     <tr><td align='center' colspan='5'><bean:message key="eform.showmyform.msgNoData"/></td></tr>
 <%
   }
-  myFormBean.closePstmtConn();
 %>               
 </table>
 			</td>

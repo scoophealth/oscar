@@ -1,0 +1,193 @@
+<%
+//Lists forms available to add to patient
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  String demographic_no = request.getParameter("demographic_no"); 
+  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
+  String country = request.getLocale().getCountry();
+%>  
+
+<%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<%
+String orderByRequest = request.getParameter("orderby");
+String orderBy = "";
+if (orderByRequest == null) orderBy = EFormUtil.NAME;
+else if (orderByRequest.equals("form_subject")) orderBy = EFormUtil.SUBJECT;
+else if (orderByRequest.equals("form_date")) orderBy = EFormUtil.DATE;
+
+String groupView = request.getParameter("group_view");
+if (groupView == null) {
+    groupView = "";
+}
+%>
+
+<html:html locale="true">
+
+<head>
+<title>
+<bean:message key="eform.myform.title"/>
+</title>
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" href="../share/css/eforms.css">
+<script type="text/javascript" language="JavaScript">
+function popupPage(varpage, windowname) {
+    var page = "" + varpage;
+    windowprops = "height=700,width=800,location=no,"
+    + "scrollbars=yes,menubars=no,status=yes,toolbars=no,resizable=yes,top=10,left=200";
+    var popup = window.open(page, windowname, windowprops);
+    if (popup != null) {
+       if (popup.opener == null) {
+          popup.opener = self;
+       }
+       popup.focus();
+    }
+}
+
+function checkSelectBox() {
+    var selectVal = document.forms[0].group_view.value;
+    if (selectVal == "default") {
+        return false;
+    }
+}
+</script>
+</head>
+
+<body class="BodyStyle" vlink="#0000FF">
+<!--  -->
+    <table class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn" width="175">
+                <bean:message key="eform.myform.msgEForm"/>
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+                            <bean:message key="eform.myform.msgFormLib"/>
+                        </td>
+                        <td>&nbsp;
+							
+                        </td>   
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top">
+               <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>" class="current"> <bean:message key="eform.showmyform.btnAddEForm"/></a><br/>
+                <%  if (country.equals("BR")) { %>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
+                <%}else{%>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
+                <%}%>
+                <br>
+                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
+                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.btnDeleted"/></a>
+                
+            </td>
+            <td class="MainTableRightColumn">
+<%   ArrayList groups = EFormUtil.getEFormGroups();
+%>
+     <table>
+       <tr>
+            <form action="../eform/efmformslistadd.jsp" method="get" onsubmit="return checkSelectBox()">
+            <td align="center">
+                <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+                <select name="group_view">
+                      <option value="default"><bean:message key="eform.groups.page.selectDefault"/></option>
+<%                    for (int i=0; i<groups.size(); i++) {        
+                          String selected = "";
+                          Hashtable curhash = (Hashtable) groups.get(i);
+                          String group = (String) curhash.get("groupName");
+                          String size = (String) curhash.get("count");
+                          if (group.equals(groupView)) selected = " selected";
+%>
+                              <option value="<%=group%>"<%=selected%>><%=group%> (<%=size%>)</option>
+                        <% } %>
+                </select>
+            </td><td>
+                <input type="submit" value="<bean:message key="eform.groups.page.view"/>">
+            </td></form><td>
+                <input type="button" value="<bean:message key="eform.groups.page.viewAll"/>" onclick="javascript:window.location='../eform/efmformslistadd.jsp?demographic_no=<%=demographic_no%>'">
+            </td>
+    </tr>
+     </table>
+     
+<table class="elements" style="margin-left: 0px; margin-right: 0px;" width="100%">
+      <tr bgcolor=<%=deepColor%>>
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
+      <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>-->
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_date"><bean:message key="eform.showmyform.formDate"/></a></th>
+      <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>"><bean:message key="eform.showmyform.formTime"/></a></th> -->
+      </tr>      
+      
+<%
+  ArrayList eForms;
+  if (groupView.equals("")) {
+      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT);
+  } else {
+      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);
+  }
+  if (eForms.size() > 0) {
+      for (int i=0; i<eForms.size(); i++) {
+        Hashtable curForm = (Hashtable) eForms.get(i);
+%>
+      <tr bgcolor="<%= ((i%2) == 1)?"#F2F2F2":"white"%>">
+	    <td width="30%" style="padding-left: 7px">
+	    <a HREF="#" ONCLICK ="javascript: popupPage('efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>', '<%="FormA" + i%>'); return true;"  TITLE='Add This eForm' OnMouseOver="window.status='Add This eForm' ; return true">
+            <%=curForm.get("formName")%>
+        </a></td>
+                <td style="padding-left: 7px"><%=curForm.get("formSubject")%></td>
+		<td nowrap align='center'><%=curForm.get("formDate")%></td>
+	  </tr>
+<%
+     }  
+ } else {
+%>
+<tr><td colspan="3" align="center"><bean:message key="eform.showmyform.msgNoData"/></td></tr>
+<%}%>               
+ 
+</table>
+			</td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
+</body>
+</html:html>

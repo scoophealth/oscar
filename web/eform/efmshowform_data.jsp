@@ -23,17 +23,21 @@
  * Ontario, Canada 
  */
 --%>
-<%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  int demographic_no =new Integer(request.getParameter("demographic_no")).intValue(); 
-  int fdid =new Integer(request.getParameter("fdid")).intValue(); 
-%>  
-
-<%@ page import = "java.sql.ResultSet, java.net.*" errorPage="../errorpage.jsp"%> 
-<jsp:useBean id="dataBean" scope="session" class="oscar.eform.EfmDataOpt" />
- 
 <%  
-  dataBean.update_eform_data_status(fdid, 0) ;
-  response.sendRedirect("showmyform.jsp?demographic_no="+demographic_no);
+//This Page handles both viewing uploaded forms (from admin screen) and viewing added forms
+//to the patient.
+  if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
-  
+<%@ page import = "java.sql.*, oscar.eform.data.*"%> 
+<% 
+  String id = request.getParameter("fid");
+  if (id == null) {  //if form exists in patient
+      id = request.getParameter("fdid");
+      EForm eForm = new EForm(id);
+      out.print(eForm.getFormHtml());
+  } else {  //if form is viewed from admin screen
+      EForm eForm = new EForm(id, "1"); //form cannot be submitted, demographic_no "1" doesn't matter
+      eForm.setImagePath();
+      out.print(eForm.getFormHtml());
+  }
+%>
