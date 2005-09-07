@@ -222,8 +222,14 @@
     <form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm"/>
 
     <form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm"/>
-
-
+    
+    <!-- eForms -->
+    <form-bean name="eFormHtmlUpload" type="oscar.eform.upload.HtmlUploadForm"/>
+    <form-bean name="eFormImageUpload" type="oscar.eform.upload.ImageUploadForm"/>
+    <form-bean name="addGroup" type="oscar.eform.data.AddGroupForm"/>
+    <form-bean name="addToGroup" type="oscar.eform.data.AddToGroupForm"/>
+    <!--<form-bean name="deleteEForm" type="oscar.eform.actions.EFormBean"/>-->
+    
   </form-beans>
   <!--
     form-bean      name="AddDemographicKeyValueForm"
@@ -961,8 +967,7 @@
     </action>
     <action path="/form/importUpload" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction" name="ImportDemographicDataForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/demographic/demographicImport.jsp"/>
-    </action>
-
+    </action>                     
     <action path="/demographic/DemographicExport" type="oscar.oscarDemographic.pageUtil.DemographicExportAction" name="DemographicExportForm" scope="request" input="/demographic/demographicExport.jsp">
       <forward name="success" path="/demographic/demographicExport.jsp"/>
     </action>
@@ -976,6 +981,45 @@
     </action>
 
     <!-- Demographic Relations End-->
+
+    <!-- eForms -->
+    <action path="/eform/uploadHtml" type="oscar.eform.upload.HtmlUploadAction" name="eFormHtmlUpload" scope="request" validate="true" input="/eform/efmformmanager.jsp">
+      <forward name="success" path="/eform/efmformmanager.jsp"/>
+    </action>
+    <action path="/eform/imageUpload" type="oscar.eform.upload.ImageUploadAction" name="eFormImageUpload" scope="request" validate="true" input="/eform/efmimagemanager.jsp">
+      <forward name="success" path="/eform/efmimagemanager.jsp"/>
+    </action>
+    <action path="/eform/delEForm" type="oscar.eform.actions.DelEFormAction" name="deleteEform" scope="request" input="/eform/efmformmanager.jsp">
+      <forward name="success" path="/eform/efmformmanager.jsp"/>
+    </action>
+    <action path="/eform/addEForm" type="oscar.eform.actions.AddEFormAction" name="saveEForm" scope="request" input="/eform/efmformadd_data.jsp">
+      <forward name="close" path="/eform/efmclosewindow.jsp"/>
+    </action>
+    <action path="/eform/removeEForm" type="oscar.eform.actions.RemEFormAction" name="removeEForm" scope="request" input="/eform/efmpatientformlist.jsp">
+      <forward name="success" path="/eform/efmpatientformlist.jsp"/>
+    </action>
+    <action path="/eform/unRemoveEForm" type="oscar.eform.actions.UnRemEFormAction" name="unRemoveEForm" scope="request" input="/eform/efmpatientformlistdeleted.jsp">
+      <forward name="success" path="/eform/efmpatientformlistdeleted.jsp"/>
+    </action>
+    <action path="/eform/deleteImage" type="oscar.eform.actions.DelImageAction" name="deleteEFormImage" scope="request" input="/eform/efmimagemanager.jsp">
+      <forward name="success" path="/eform/efmimagemanager.jsp"/>
+    </action>
+    <action path="/eform/restoreEForm" type="oscar.eform.actions.RestoreEFormAction" name="restoreEForm" scope="request" input="/eform/efmformmanagerdeleted.jsp">
+      <forward name="success" path="/eform/efmformmanagerdeleted.jsp"/>
+    </action>
+    <action path="/eform/addGroup" type="oscar.eform.actions.AddGroupAction" name="addGroup" scope="request" input="/eform/efmmanageformgroups.jsp">
+      <forward name="success" path="/eform/efmmanageformgroups.jsp"/>
+    </action>
+    <action path="/eform/addToGroup" type="oscar.eform.actions.AddToGroupAction" name="addToGroup" scope="request" input="/eform/efmmanageformgroups.jsp">
+      <forward name="success" path="/eform/efmmanageformgroups.jsp"/>
+    </action>
+    <action path="/eforms/removeFromGroup" type="oscar.eform.actions.RemoveFromGroupAction" name="remFromGroup" scope="request" input="/eform/efmmanageformgroups.jsp">
+      <forward name="success" path="/eform/efmmanageformgroups.jsp"/>
+    </action>
+    <action path="/eforms/delGroup" type="oscar.eform.actions.DeleteGroupAction" name="delGroup" scope="request" input="/eform/efmmanageformgroups.jsp">
+      <forward name="success" path="/eform/efmmanageformgroups.jsp"/>
+    </action>
+    
 
     <!-- Diagnostic code association -->
       <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/associateCodesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.AssociateCodesAction">
