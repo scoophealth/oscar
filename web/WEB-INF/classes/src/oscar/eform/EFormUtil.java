@@ -1,0 +1,425 @@
+/*
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+
+package oscar.eform;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
+import java.sql.*;
+import java.io.*;
+import java.util.*;
+import oscar.util.UtilMisc;
+import oscar.util.UtilDateUtilities;
+import oscar.OscarProperties;
+import oscar.eform.data.EForm;
+
+public class EFormUtil {
+    //for sorting....
+   public static final String NAME = "form_name";
+   public static final String SUBJECT = "subject";
+   public static final String DATE = "form_date DESC";
+   public static final String FILE_NAME = "file_name";
+   //-----------
+   public static final String DELETED = "deleted";
+   public static final String CURRENT = "current";
+   public static final String ALL = "all";
+   
+   
+   private EFormUtil() {}
+   public static void saveEForm(String formName, String formSubject, String fileName, String htmlStr) {
+       //called by the upload action, puts the uploaded form into DB
+       String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
+       String nowTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
+       htmlStr = "\n" + org.apache.commons.lang.StringEscapeUtils.escapeSql(htmlStr);
+       formName = org.apache.commons.lang.StringEscapeUtils.escapeSql(formName);
+       formSubject = org.apache.commons.lang.StringEscapeUtils.escapeSql(formSubject);
+       fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(fileName);
+       String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, status, form_html) VALUES " +
+             "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', 1, '" + htmlStr + "')";
+       runSQL(sql);
+   }
+   
+   public static ArrayList listEForms(String sortBy, String deleted) {
+       //sends back a list of forms that were uploaded (those that can be added to the patient)
+       String sql = "";
+       if (deleted.equals("deleted")) {
+           sql = "SELECT * FROM eform where status=0 ORDER BY " + sortBy;
+       } else if (deleted.equals("current")) {
+           sql = "SELECT * FROM eform where status=1 ORDER BY " + sortBy;
+       } else if (deleted.equals("all")) {
+           sql = "SELECT * FROM eform ORDER BY " + sortBy;
+       }
+       ResultSet rs = getSQL(sql);
+       ArrayList results = new ArrayList();
+       try {
+           while (rs.next()) {
+               Hashtable curht = new Hashtable();
+               curht.put("fid", rsGetString(rs, "fid"));
+               curht.put("formName", rsGetString(rs, "form_name"));
+               curht.put("formSubject", rsGetString(rs, "subject"));
+               curht.put("formFileName", rsGetString(rs, "file_name"));
+               curht.put("formDate", rsGetString(rs, "form_date"));
+               curht.put("formTime", rsGetString(rs, "form_time"));
+               results.add(curht);
+           }
+           rs.close();
+       } catch (Exception sqe) {
+           sqe.printStackTrace();
+       }
+       return(results);
+   }
+   
+   public static ArrayList listImages() {
+       String imagePath = OscarProperties.getInstance().getProperty("eform_image");
+       File dir = new File(imagePath);
+       ArrayList fileList = new ArrayList(Arrays.asList(dir.list()));
+       return fileList;
+   }
+   
+      public static ArrayList listPatientEForms(String sortBy, String deleted, String demographic_no) {
+       //sends back a list of forms added to the patient
+       String sql = "";
+       if (deleted.equals("deleted")) {
+           sql = "SELECT * FROM eform_data where status=0 AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
+       } else if (deleted.equals("current")) {
+           sql = "SELECT * FROM eform_data where status=1 AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
+       } else if (deleted.equals("all")) {
+           sql = "SELECT * FROM eform_data WHERE demographic_no=" + demographic_no + " ORDER BY " + sortBy;
+       }
+       ResultSet rs = getSQL(sql);
+       ArrayList results = new ArrayList();
+       try {
+           while (rs.next()) {
+               Hashtable curht = new Hashtable();
+               curht.put("fdid", rs.getString("fdid"));
+               curht.put("fid", rsGetString(rs, "fid"));
+               curht.put("formName", rsGetString(rs, "form_name"));
+               curht.put("formSubject", rsGetString(rs, "subject"));
+               curht.put("formDate", rsGetString(rs, "form_date"));
+               results.add(curht);
+           }
+           rs.close();
+       } catch (Exception sqe) {
+           sqe.printStackTrace();
+       }
+       return(results);
+   }
+   
+   public static Hashtable loadEForm(String fid) {
+       //opens an eform that was uploaded (used to fill out patient data)
+       String sql = "SELECT * FROM eform where fid=" + fid + " LIMIT 1";
+       ResultSet rs = getSQL(sql);
+       Hashtable curht = new Hashtable();
+       try {
+           rs.next();
+           //must have FID and form_name otherwise throws null pointer on the hashtable
+           //curht.put("fid", rs.getString("fid"));  
+           curht.put("formName", rs.getString("form_name"));
+           //curht.put("formSubject", rs.getString("subject"));
+           //curht.put("formFileName", rs.getString("file_name"));
+           curht.put("formHtml", rsGetString(rs, "form_html"));
+           rs.close();
+       } catch (SQLException sqe) {
+           curht.put("formName", "");
+           curht.put("formHtml", "No Such Form in Database");
+           sqe.printStackTrace();
+       }
+       return(curht);
+   }
+   
+   public static Hashtable loadPatientEForm(String fdid) {
+       //shows an eform that was added to the patient previously
+       String sql = "SELECT * FROM eform_data where fdid=" + fdid + " LIMIT 1";
+       ResultSet rs = getSQL(sql);
+       Hashtable curht = new Hashtable();
+       try {
+           rs.next();
+           curht.put("fid", rsGetString(rs, "fid"));
+           curht.put("demographic_no", rsGetString(rs, "demographic_no"));
+           curht.put("provider_no", rsGetString(rs, "form_provider"));
+           curht.put("formName", rs.getString("form_name"));
+           curht.put("formSubject", rs.getString("subject"));
+           //curht.put("formTime", rsGetString(rs, "form_time"));
+           //curht.put("formDate", rsGetString(rs, "form_date"));
+           curht.put("formHtml", rsGetString(rs, "form_data"));
+           rs.close();
+       } catch (SQLException sqe) {
+           curht.put("formName", "");
+           curht.put("formSubject", "");
+           curht.put("formHtml", "No Such Form in Database");
+           sqe.printStackTrace();
+       }
+       return(curht);
+   }
+   
+   public static void delEForm(String fid) {
+       //deletes the form so no one can add it to the patient (sets status to deleted)
+      String sql = "UPDATE eform SET status=0 WHERE fid=" + fid;
+      runSQL(sql);
+   }
+   
+   public static void restoreEForm(String fid) {
+      String sql = "UPDATE eform SET status=1 WHERE fid=" + fid;
+      runSQL(sql);
+   }
+   
+   public static void removeEForm(String fdid) {
+       //deletes the form from the patient's records (sets status to deleted)
+       String sql = "UPDATE eform_data SET status=0 WHERE fdid=" + fdid;
+       runSQL(sql);
+   }
+   
+   public static void unRemoveEForm(String fdid) {
+       //undeletes the patient record form
+       String sql = "UPDATE eform_data SET status=1 WHERE fdid=" + fdid;
+       runSQL(sql);
+   }
+   
+   public static ArrayList getValues(ArrayList names, String sql) {
+       //gets the values for each column name in the sql (used by DatabaseAP)
+       ResultSet rs = getSQL(sql);
+       ArrayList values = new ArrayList();
+       try {
+           while (rs.next()) {
+               values = new ArrayList();
+               for (int i=0; i<names.size(); i++) {
+                   try {
+                       values.add(rs.getString((String) names.get(i)));
+                       System.out.println("VALUE ====" + rs.getObject((String) names.get(i)) + "|");
+                   } catch (Exception sqe) {
+                       values.add("<(" + names.get(i) + ")NotFound>");
+                       sqe.printStackTrace();
+                   }
+               }
+           }
+           rs.close();
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return(values);
+   }
+   
+   public static String addEForm(EForm eForm) {
+       //Adds an eform to the patient
+       //open own connection - must be same connection for last_insert_id
+       String sql = "INSERT INTO eform_data (fid, form_name, subject, demographic_no, status, form_date, form_time, form_provider, form_data)" +
+       "VALUES ('" + eForm.getFid() + "', '" + eForm.getFormName() + "', '" + eForm.getFormSubject() +
+               "', '" + eForm.getDemographicNo() + "', 1, '" + eForm.getFormDate() + "', '" + eForm.getFormTime() + "', '" + eForm.getProviderNo() +
+               "', '" + UtilMisc.charEscape(eForm.getFormHtml(), '\'') + "')";
+       try {
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           db.RunSQL(sql);
+           sql = "SELECT LAST_INSERT_ID()";
+           ResultSet rs = db.GetSQL(sql);
+           rs.next();
+           String lastID = rs.getString("LAST_INSERT_ID()");
+           rs.close();
+           return(lastID);
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return "";
+   }
+   
+   public static void addEFormValues(ArrayList names, ArrayList values, String fdid, String fid, 
+                                String demographic_no) {
+        //adds parsed values and names to DB
+        //names.size and values.size must equal!
+        String sql = "";
+        try {  //opens it's own connection - prevents pulling many connections from the pool at once
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            for (int i=0; i<names.size(); i++) {
+                sql = "INSERT INTO eform_values(fdid, fid, demographic_no, var_name, var_value) VALUES " +
+                "(" + fdid + ", " + fid + ", " + demographic_no + ", '" + names.get(i) + "', '" + UtilMisc.charEscape((String) values.get(i), '\'') + "')";
+                System.out.println("SQL ====" + sql);
+                db.RunSQL(sql);
+            }
+            db.CloseConn();
+        } catch (SQLException sqe) { sqe.printStackTrace(); }
+   }
+   
+   public static boolean formExistsInDB(String eFormName) {
+       String sql = "SELECT * FROM eform WHERE status=1 AND form_name='" + eFormName + "'";
+       try {
+           ResultSet rs = getSQL(sql);
+           if (rs.next()) {
+               rs.close();
+               return true;
+           } else {
+               rs.close();
+               return false;
+           }
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return false;
+   }
+   
+   //--------------eform groups---------
+   public static ArrayList getEFormGroups() {
+       String sql;
+       sql = "SELECT DISTINCT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " +
+                    "LEFT JOIN eform ON eform.fid=eform_groups.fid WHERE eform.status=1 OR eform_groups.fid=0 " +
+                    "GROUP BY eform_groups.group_name;";
+       ArrayList al = new ArrayList();
+       try {
+           ResultSet rs = getSQL(sql);
+           while (rs.next()) {
+               Hashtable curhash = new Hashtable();
+               curhash.put("groupName", rs.getString("group_name"));
+               curhash.put("count", rs.getString("count"));
+               al.add(curhash);
+           }
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return al;
+   }
+   
+      public static ArrayList getEFormGroups(String demographic_no) {
+       String sql;
+       sql = "SELECT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " +
+             "LEFT JOIN eform_data ON eform_data.fid=eform_groups.fid " +
+             "WHERE (eform_data.status=1 AND eform_data.demographic_no=" + demographic_no + ") OR eform_groups.fid=0 " +
+             "GROUP BY eform_groups.group_name";
+       ArrayList al = new ArrayList();
+       try {
+           ResultSet rs = getSQL(sql);
+           while (rs.next()) {
+               Hashtable curhash = new Hashtable();
+               curhash.put("groupName", rs.getString("group_name"));
+               curhash.put("count", rs.getString("count"));
+               al.add(curhash);
+           }
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return al;
+   }
+   
+   public static void delEFormGroup(String name) {
+       String sql = "DELETE FROM eform_groups WHERE group_name='" + name + "'";
+       runSQL(sql);
+   }
+   
+   
+   public static void addEFormToGroup(String groupName, String fid) {
+       try {
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           String sql1 = "SELECT eform_groups.fid FROM eform_groups, eform WHERE eform_groups.fid=" + fid + " AND eform_groups.fid=eform.fid " +
+                         "AND eform.status=1 AND eform_groups.group_name='" + groupName +"'";
+           ResultSet rs = db.GetSQL(sql1);
+           if (!rs.next()) {
+               String sql = "INSERT INTO eform_groups (fid, group_name) " +
+                        "VALUES (" + fid + ", '" + groupName + "')";
+               db.RunSQL(sql);
+           }
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+   }
+   
+   public static void remEFormFromGroup(String groupName, String fid) {
+       String sql = "DELETE FROM eform_groups WHERE group_name='" + groupName + "' and fid=" + fid + ";";
+       runSQL(sql);
+   }
+   
+    public static ArrayList listEForms(String sortBy, String deleted, String group) {
+       //sends back a list of forms that were uploaded (those that can be added to the patient)
+       String sql = "";
+       if (deleted.equals("deleted")) {
+           sql = "SELECT * FROM eform, eform_groups where eform.status=0 AND eform.fid=eform_groups.fid AND eform_groups.group_name='" + group + "' ORDER BY " + sortBy;
+       } else if (deleted.equals("current")) {
+           sql = "SELECT * FROM eform, eform_groups where eform.status=1 AND eform.fid=eform_groups.fid AND eform_groups.group_name='" + group + "' ORDER BY " + sortBy;
+       } else if (deleted.equals("all")) {
+           sql = "SELECT * FROM eform AND eform.fid=eform_groups.fid AND eform_groups.group_name='" + group + "' ORDER BY " + sortBy;
+       }
+       ResultSet rs = getSQL(sql);
+       ArrayList results = new ArrayList();
+       try {
+           while (rs.next()) {
+               Hashtable curht = new Hashtable();
+               curht.put("fid", rsGetString(rs, "fid"));
+               curht.put("formName", rsGetString(rs, "form_name"));
+               curht.put("formSubject", rsGetString(rs, "subject"));
+               curht.put("formFileName", rsGetString(rs, "file_name"));
+               curht.put("formDate", rsGetString(rs, "form_date"));
+               curht.put("formTime", rsGetString(rs, "form_time"));
+               results.add(curht);
+           }
+           rs.close();
+       } catch (Exception sqe) {
+           sqe.printStackTrace();
+       }
+       return(results);
+   }
+    
+   public static ArrayList listPatientEForms(String sortBy, String deleted, String demographic_no, String groupName) {
+       //sends back a list of forms added to the patient
+       String sql = "";
+       if (deleted.equals("deleted")) {
+           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=0 AND eform_data.demographic_no=" + demographic_no +
+                 " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
+       } else if (deleted.equals("current")) {
+           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=1 AND eform_data.demographic_no=" + demographic_no +
+                 " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
+       } else if (deleted.equals("all")) {
+           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.demographic_no=" + demographic_no +
+                 " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
+       }
+       System.out.println("SQL ====" + sql);
+       ResultSet rs = getSQL(sql);
+       ArrayList results = new ArrayList();
+       try {
+           while (rs.next()) {
+               Hashtable curht = new Hashtable();
+               curht.put("fdid", rs.getString("fdid"));
+               curht.put("fid", rsGetString(rs, "fid"));
+               curht.put("formName", rsGetString(rs, "form_name"));
+               curht.put("formSubject", rsGetString(rs, "subject"));
+               curht.put("formDate", rsGetString(rs, "form_date"));
+               results.add(curht);
+           }
+           rs.close();
+       } catch (Exception sqe) {
+           sqe.printStackTrace();
+       }
+       return(results);
+   }
+   
+   //------------------private
+   private static void runSQL(String sql) {
+       try {
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           db.RunSQL(sql);
+           db.CloseConn();
+       } catch (SQLException sqe) {
+           sqe.printStackTrace();
+       }
+   }
+   private static ResultSet getSQL(String sql) {
+       ResultSet rs = null;
+       try {
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           rs = db.GetSQL(sql);
+           db.CloseConn();
+       } catch (SQLException sqe) {
+           sqe.printStackTrace();
+       }
+       return(rs);
+   }
+   private static String rsGetString(ResultSet rs, String column) throws SQLException {
+       //protects agianst null values;
+       String thisStr = rs.getString(column);
+       if (thisStr == null) return "";
+       return thisStr;
+   }
+}
