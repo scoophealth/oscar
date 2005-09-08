@@ -31,6 +31,18 @@
 <%@ include file="dbBilling.jsp" %> 
 
 <% 
+boolean bHybridBilling = false;
+Vector vecGrpBillingPro = new Vector();
+if(oscarVariables.getProperty("hybrid_billing", "").equalsIgnoreCase("on")) {
+    bHybridBilling = true;
+	String proList = oscarVariables.getProperty("group_billing_providerNo", "");
+	String[] temp = proList.split("\\,");
+	for(int i = 0; i<temp.length; i++) {
+	    vecGrpBillingPro.add(temp[i].trim());
+	    //System.out.println(vecGrpBillingPro);
+	}
+}
+
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);
 int bCount = 1;
@@ -48,7 +60,9 @@ if (provider.compareTo("all") == 0 ){
 	int fileCount = 0;
 	ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_ohip_dt");
 	while(rslocal.next()){
-		proOHIP = rslocal.getString("ohip_no"); 
+	    if(bHybridBilling && !vecGrpBillingPro.contains(rslocal.getString("provider_no"))) continue;
+
+	    proOHIP = rslocal.getString("ohip_no"); 
 		billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
 		specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
@@ -128,7 +142,9 @@ if (provider.compareTo("all") == 0 ){
 	rslocal = null;
 	rslocal = apptMainBean.queryResults(request.getParameter("provider").substring(0,6), "search_provider_ohip_dt");
 	while(rslocal.next()){
-		proOHIP = rslocal.getString("ohip_no"); 
+	    if(bHybridBilling && !vecGrpBillingPro.contains(rslocal.getString("provider_no"))) continue;
+
+	    proOHIP = rslocal.getString("ohip_no"); 
 		billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
 		specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
