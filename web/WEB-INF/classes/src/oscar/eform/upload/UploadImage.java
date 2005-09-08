@@ -26,16 +26,27 @@
  */
 
 
-package src.oscar.eform.upload;
+package oscar.eform.upload;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.zip.*;
-import org.apache.commons.fileupload.*;
-import oscar.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileUploadException;
+
+import oscar.OscarProperties;
 
 public class UploadImage extends HttpServlet{
     final static int BUFFER = 2048;
