@@ -162,6 +162,14 @@ public class PreventionDisplayConfig {
         prevList.add(a11);
         prevHash.put("MAM", a11);
 
+        Hashtable a14 = new Hashtable();
+        a14.put("desc", "PSA");
+        a14.put("name", "PSA");
+        a14.put("link", "");
+        a14.put("layout", "PAPMAM");
+        prevList.add(a14);
+        prevHash.put("PSA", a14);
+
         Hashtable a12 = new Hashtable();
         a12.put("desc", "Other Layout A");
         a12.put("name", "OtherA");
@@ -217,6 +225,16 @@ public class PreventionDisplayConfig {
         configList.add(a2);
         configHash.put("Women's Preventitive Care", a2); // maybe change this
                                                             // to a seperate id
+        Hashtable a5 = new Hashtable();
+        a5.put("title", "Men's Preventive Care");
+        a5.put("effective", "");
+        a5.put("minAge", "20");
+        a5.put("maxAge", "65");
+        a5.put("sex", "M");
+        a5.put("prevList", new String[] { "Td", "Flu", "PSA" });
+
+        configList.add(a5);
+        configHash.put("Men's Preventitive Care", a5); // maybe change this
 
         Hashtable a3 = new Hashtable();
         a3.put("title", "Over 65 Preventive Care");
@@ -239,7 +257,7 @@ public class PreventionDisplayConfig {
     }
 
     public String getDisplay(Hashtable setHash, String Demographic_no) {
-        String display = "style=\"display:none\"";
+        String display = "style=\"display:none;\"";
         DemographicData dData = new DemographicData();
         System.out.println("demoage " + Demographic_no);
         DemographicData.Demographic demograph = dData.getDemographic(Demographic_no);
@@ -285,7 +303,7 @@ public class PreventionDisplayConfig {
                 if (sex.equals(demoSex)) {
                     display = "";
                 } else {
-                    display = "style=\"display:none\"";
+                    display = "style=\"display:none;\"";
                 }
             }
         } catch (Exception e) {
