@@ -70,6 +70,16 @@ function printIframe(){
    preview.print();
 }
 
+function printPaste2Parent(){
+	confirm("\"Paste\" function is only enable if EMR is opened.");
+	text = "**<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
+	text = text.substring(0, 82) + "\n";
+	text += preview.document.forms[0].rx.value.substring(0, (preview.document.forms[0].rx.value.length-2));
+	text += "**********************************************************************************\n";
+    opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
+    printIframe();
+}
+
 </script>
 </head>
 
@@ -167,6 +177,12 @@ function printIframe(){
                                     <td width=10px></td>
                                     <td>
                                         <span><input type=button value="Print" class="ControlPushButton" style="width:200px" onClick="javascript:printIframe();" /></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width=10px></td>
+                                    <td>
+                                        <span><input type=button value="Print & Paste into EMR" class="ControlPushButton" style="width:200px" onClick="javascript:printPaste2Parent();" /></span>
                                     </td>
                                 </tr>
                                 <tr>
