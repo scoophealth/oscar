@@ -1021,10 +1021,23 @@ border-right: 2px solid #cfcfcf;
                                     <div class="RowTop" ><bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
                                 </td>
                                 <td>
-                                    <div class="RowTop" ><bean:message key="oscarEncounter.Index.otherMed"/>:</div>
+                                    <div class="RowTop" >
+                                    <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) { 
+                                        out.print(oscarVariables.getProperty("otherMedications", ""));
+                                    %>
+                                    <% } else { %>
+                                    <bean:message key="oscarEncounter.Index.otherMed"/>:
+                                    <% } %>
+                                    </div>
                                 </td>
-                                <td>
-                                    <div class="RowTop" ><bean:message key="oscarEncounter.Index.medHist"/>:</div>
+                                <td><div class="RowTop" >
+                                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) { 
+                                        out.print(oscarVariables.getProperty("medicalHistory", ""));
+                                    %>
+                                    <% } else { %>
+                                    <bean:message key="oscarEncounter.Index.medHist"/>:
+                                    <% } %>
+                                    </div>
                                 </td>
                                 <td>
                                     <div style="font-size:8pt;text-align:right;vertical-align:bottom">
@@ -1066,8 +1079,14 @@ border-right: 2px solid #cfcfcf;
                     <td>
                         <table bgcolor="#CCCCFF" id="rowTwo" width="100%">
                             <tr>
-                                <td>
-                                    <div class="RowTop" ><bean:message key="oscarEncounter.Index.msgConcerns"/>:</div><input type="hidden" name="ocInput"/>
+                                <td><div class="RowTop" >
+                                    <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) { 
+                                        out.print(oscarVariables.getProperty("ongoingConcerns", ""));
+                                    %>
+                                    <% } else { %>
+                                    <bean:message key="oscarEncounter.Index.msgConcerns"/>:
+                                    <% } %>
+                                    </div><input type="hidden" name="ocInput"/>
                                 </td>
 
                                 <td>
