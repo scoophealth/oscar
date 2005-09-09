@@ -203,7 +203,7 @@ function setfocus() {
               [<%=rsdemo.getString("doc_last_name")%>,
               <%=rsdemo.getString("doc_first_name").charAt(0)%>] &nbsp;
           <% } %>
-          <% if ( bDob ) {
+          <% if ( bDob && rsdemo.getString("family_doctor") != null) {
               String rd = SxmlMisc.getXmlContent(rsdemo.getString("family_doctor"),"rd");
               rd = rd !=null ? rd : "" ;
           %>
