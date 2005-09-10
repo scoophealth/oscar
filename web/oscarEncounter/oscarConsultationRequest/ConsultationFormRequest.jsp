@@ -438,7 +438,11 @@ function checkForm(submissionVal,formName){
         }else if(request.getAttribute("validateError") == null){
             //  new request
                 thisForm.setAllergies(demographic.RxInfo.getAllergies());
-  		thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
+			if(props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications")) {
+                thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
+			} else {
+				thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
+			}
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
                 thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
