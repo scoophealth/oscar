@@ -90,16 +90,19 @@ public class MsgSessionBean
     
     public void setAppendPDFAttachment ( String binStr, String pdfTitle){
 
-        if ( this.getPDFAttachment() == null ) {
-
-            this.setPDFAttachment( getPDFStartTag() + getContentTag( binStr)  + getPDFTitleTag(pdfTitle) + getPDFEndTag( ));
+        String currentAtt = "";
+        
+        if ( this.getPDFAttachment() != null ) {
+            currentAtt = this.getPDFAttachment();
+        }
             
+        if ( binStr != "" && binStr != null) {
+            this.setPDFAttachment(currentAtt + " " + getPDFStartTag() +  getStatusTag("OK") + getPDFTitleTag(pdfTitle) + getContentTag( binStr) + getPDFEndTag( ));
         }
         else {
-            String currentAtt = this.getPDFAttachment();
-            this.setPDFAttachment(currentAtt + " " + getPDFStartTag() +  getContentTag( binStr)  + getPDFTitleTag(pdfTitle) + getPDFEndTag( ));
+            this.setPDFAttachment(currentAtt + " " + getPDFStartTag() +  getStatusTag("BAD") + getPDFTitleTag(pdfTitle + " (N/A)") + getContentTag( binStr) + getPDFEndTag( ));
         }
-        setCurrentAttachmentCount( getCurrentAttachmentCount()+1 ) ;
+        
     }
 
     public String getPDFStartTag( ) {
@@ -112,7 +115,11 @@ public class MsgSessionBean
     
     public String getContentTag(String binStr ) {
         return "<CONTENT>" + binStr + "</CONTENT>";
-    }    
+    }   
+    
+    public String getStatusTag(String statusStr ) {
+        return "<STATUS>" + statusStr + "</STATUS>";
+    }     
     public String getPDFEndTag( ) {
         return "</PDF>";
     }
