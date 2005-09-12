@@ -72,15 +72,17 @@
 
 <table cellpadding="0" cellspacing="0" style="border-collapse:collapse; width:7in;padding-left:3px;">
     <tr>
-        <td style="text-align:left;height:34px;" >
+        <td style="text-align:left;height:34px;">
             <span style="font-weight:bold;"><%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%></span>
         </td>
         <td style="text-align:right;height:34px;">
             <span style="font-weight:bold;">Dr. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>
         </td>
     </tr>
+</table>
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse; width:7in;padding-left:3px;">
     <tr>
-        <td colspan=2 style="border-left: 2px solid #A9A9A9;border-right: 2px solid #A9A9A9;border-bottom:2px solid #A9A9A9;" valign="top">
+        <td colspan="2" style="border-left: 2px solid #A9A9A9;border-right: 2px solid #A9A9A9;border-bottom:2px solid #A9A9A9;" valign="top" >
             <table width="100%">
                 <tr>
                     <td>
@@ -138,12 +140,12 @@
                     <td>
                         <table width="100%">
                            <tr>
-                                <td>
+                                <td  width=100%>
                                     <div class="RowTop" >Encounter:</div>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="TableWithBorder" valign="top" style="text-align:left">
+                                <td class="TableWithBorder" valign="top" style="text-align:left" width=100%>
                                     <pre name='enTextarea' style="font-size:8pt;"><%=bean.encounter%></pre>
                                 </td>
                             </tr>

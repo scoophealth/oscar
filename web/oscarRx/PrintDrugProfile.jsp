@@ -86,32 +86,26 @@ span { display:none; }
          <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">            
 <!----Start new rows here-->            
             <tr>
- 		         <td align="right" >
+ 		<td align="right" >
                     <span><input type="button" onclick="window.print();" value="Print" class="printCell"></span>
                </td>
             </tr>
             <tr>
- 		         <td>
+ 	       <td>
                     <div class="DivContentSectionHead"><bean:message key="SearchDrug.section1Title"/></div>
                </td>
             </tr>
             <tr>
-                <td>
-                    <table>
-                        <tr>
-                            <td>
-                                <b><bean:message key="SearchDrug.nameText"/></b>
-                                <jsp:getProperty name="patient" property="surname"/>
+                            <td><b><bean:message key="SearchDrug.nameText"/></b>
+                                <jsp:getProperty name="patient" property="surname"/>                   
+                            
                             </td>
-                            <td></td>
+            </tr>
+            <tr>
                             <td>
                                 <b><bean:message key="SearchDrug.ageText"/></b>
                                 <jsp:getProperty name="patient" property="age"/>
                             </td>
-                            <td></td>                            
-                        </tr>                        
-                    </table>
-                </td>
             </tr>
             <tr>
                 <td>
@@ -126,8 +120,8 @@ span { display:none; }
                             <!--<div class="Step1Text" style="width:100%">-->
                             <table width="100%" cellpadding="3">
                                 <tr>
-                                    <th align=left><b>Rx Date</b></th>
-                                    <th align=left><b>Prescription</b></th>                                    
+                                    <th align=left width=20%><b>Rx Date</b></th>
+                                    <th align=left width=100%><b>Prescription</b></th>                                    
                                 </tr>
 
                                 <%
@@ -150,14 +144,14 @@ span { display:none; }
 				                        }
                                     %>
                                 <tr>
-                                   <td>
+                                   <td width=20%>
                                       <a <%= styleColor%>
                                             href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
                                                 <%= drug.getRxDate() %>
                                       </a>
                                    </td>
-                                   <td>
+                                   <td width=100%>
                                       <a <%= styleColor%> 
                                             href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
