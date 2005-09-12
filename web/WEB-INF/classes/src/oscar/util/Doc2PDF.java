@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.io.FileOutputStream;
 import java.io.*;  
 
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXParseException;
@@ -43,7 +44,7 @@ import com.lowagie.text.html.SAXmyHtmlHandler;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Paragraph;
-
+import com.lowagie.text.Rectangle;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -90,13 +91,12 @@ public class Doc2PDF{
           
             BufferedInputStream in = GetInputFromURI( jsessionid, uri);
             ByteArrayOutputStream tidyout = new ByteArrayOutputStream();
-            
                         
             tidy.parse(in, tidyout);
-            
+                        
+            System.out.println(tidyout.toString());
             String documentTxt = AddAbsoluteTag(request, tidyout.toString(), uri);
-                    
-            
+
             PrintPDFFromHTMLString(response, documentTxt);
 
         }
@@ -109,6 +109,84 @@ public class Doc2PDF{
         
     }
     
+    // Convert named file to PDF on stdout...
+    public static int topdf( HttpServletRequest request, HttpServletResponse response, String filename)// I - Name of file to convert
+    {
+    String              command;          // Command string
+        Process             process;          // Process for HTMLDOC
+        Runtime             runtime;          // Local runtime object
+        java.io.InputStream input;            // Output from HTMLDOC
+        byte                buffer [];        // Buffer for output data
+        int                 bytes;            // Number of bytes
+
+
+        // Construct the command string
+        command = "htmldoc --quiet --webpage -t pdf " + filename;
+
+
+        try
+        {
+           
+  
+        
+            // Run the process and wait for it to complete...
+            runtime = Runtime.getRuntime();
+
+             // Create a new HTMLDOC process...
+            process = runtime.exec(command);
+
+            // Get stdout from the process and a buffer for the data...
+            input  = process.getInputStream();
+            
+            
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+            // Compress the data
+            byte[] buf = new byte[1024];
+
+            // Read output from HTMLDOC until we have it all...
+            while ((bytes = input.read(buf)) > 0)
+                bos.write(buf, 0, bytes);            
+            
+            PrintPDFFromBytes( response,  bos.toByteArray() );
+            
+
+            // Return the exit status from HTMLDOC...
+            return (process.waitFor());
+        }
+        catch (Exception e)
+        {
+          // An error occurred - send it to stderr for the web server...
+          System.err.print(e.toString() + " caught while running:\n\n");
+          System.err.print("    " + command + "\n");
+          return (1);
+        }
+    }
+
+    // Main entry for htmldoc class
+    public static void HTMLDOC( HttpServletRequest request, HttpServletResponse response, String url)// I - Command-line args
+    {
+        String server_name,                 // SERVER_NAME env var
+               server_port,                 // SERVER_PORT env var
+               path_info,                   // PATH_INFO env var
+               query_string,                // QUERY_STRING env var
+               filename;                    // File to convert
+
+
+         filename = url;
+
+          if ((query_string = System.getProperty("QUERY_STRING")) != null)
+          {
+            filename = filename + "?" + query_string;
+          }
+  
+        System.err.print("htmldoc.class filename\n");
+        
+        // Convert the file to PDF and send to the web client...
+        topdf(request, response, filename);
+        
+        return;
+    }
     
 
 
@@ -128,7 +206,6 @@ public class Doc2PDF{
             ByteArrayOutputStream tidyout = new ByteArrayOutputStream();          
                         
             tidy.parse(in, tidyout);
-                                
             
             PrintPDFFromHTMLString(response,  AddAbsoluteTag(request, tidyout.toString(), "") );         
 
@@ -200,19 +277,7 @@ public class Doc2PDF{
         
         BufferedInputStream in = null;
         try {
-            
-/*
-            URL urltt = new URL(uri);
-            HttpURLConnection connection = (HttpURLConnection) urltt.openConnection();
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setUseCaches(false);
-            connection.setAllowUserInteraction(true);
-            connection.connect();
-
-            in = new BufferedInputStream( connection.getInputStream() );          
- */
-            
+                
  
             URL url = new URI( uri + ";jsessionid=" + jsessionid ).toURL();
             
@@ -232,9 +297,9 @@ public class Doc2PDF{
     
     public static String GetPDFBin ( HttpServletResponse response, String docText ) {
         // step 1: creation of a document-object
-        Document document = new Document(PageSize.A4, 80, 50, 30, 65);      
+        Document document = new Document(PageSize.A4, 36, 36, 36, 36);    
+        // Document document = new Document(PageSize.A4.rotate());
         
-       
         
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();      
@@ -269,61 +334,10 @@ public class Doc2PDF{
         
         try {
 
-/* 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();      
-            
-            // setting some response headers
-            response.setHeader("Expires", "0");
-            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-            response.setHeader("Pragma", "public");
-
-            // setting the content type
-            response.setContentType("application/pdf");
-            
-            // the content length is needed for MSIE!!!
-            response.setContentLength(100000);
-
-            
-            // write ByteArrayOutputStream to the ServletOutputStream
-            ServletOutputStream out = response.getOutputStream();
-
-            out.println(docBin);
-            out.flush();              
-*/
-  
-
             byte[] binDecodedArray =  new sun.misc.BASE64Decoder().decodeBuffer(docBin);
             
             PrintPDFFromBytes( response, binDecodedArray  );
             return;
-
-            /*
-            // setting some response headers
-            response.setHeader("Expires", "0");
-            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-            response.setHeader("Pragma", "public");
-
-            // setting the content type
-            response.setContentType("application/pdf");
-            
-            OutputStream o = response.getOutputStream();
-            response.setContentLength( docBin.length() );
-
-            InputStream is = new BufferedInputStream(new ByteArrayInputStream(docBin.getBytes()));
-
-            byte[] buf = new byte[ 32 * 1024]; // 32k buffer
-
-            int nRead = 0;
-            while( (nRead=is.read(buf)) != -1 ) {
-                o.write(buf, 0, nRead);
-                
-                
-            }
-            
-            o.flush();            
-            o.close();// *important* to ensure no more jsp output
-            return; 
-            */
                            
         }
 
@@ -373,9 +387,10 @@ public class Doc2PDF{
     public static void PrintPDFFromHTMLString ( HttpServletResponse response, String docText ) {
  
         // step 1: creation of a document-object
-        Document document = new Document(PageSize.A4, 80, 50, 30, 65);      
+        Document document = new Document(PageSize.A4, 36, 36, 36, 36);      
+        //Document document = new Document(PageSize.A4.rotate());
         
-       
+               
         
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();      
@@ -397,32 +412,8 @@ public class Doc2PDF{
             
             byte[] binArray = baos.toByteArray();
             
-            
-            PrintPDFFromBytes( response, binArray  );
-            
-            
-            
-          
-            /*
-            // setting some response headers
-            response.setHeader("Expires", "0");
-            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-            response.setHeader("Pragma", "public");
+            PrintPDFFromBytes( response, binArray  );          
 
-            // setting the content type
-            response.setContentType("application/pdf");
-            
-            // the content length is needed for MSIE!!!
-            response.setContentLength(baos.size());
-
-            
-            // write ByteArrayOutputStream to the ServletOutputStream
-            ServletOutputStream out = response.getOutputStream();
-                                    
-            baos.writeTo(out);
-            out.flush();  
- 
-            */
         }
 
         catch(Exception e) {
