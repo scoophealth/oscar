@@ -1,0 +1,134 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// *
+// *
+// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+// * This software is published under the GPL GNU General Public License. 
+// * This program is free software; you can redistribute it and/or 
+// * modify it under the terms of the GNU General Public License 
+// * as published by the Free Software Foundation; either version 2 
+// * of the License, or (at your option) any later version. * 
+// * This program is distributed in the hope that it will be useful, 
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+// * along with this program; if not, write to the Free Software 
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+// * 
+// * <OSCAR TEAM>
+// * This software was written for the 
+// * Department of Family Medicine 
+// * McMaster University 
+// * Hamilton 
+// * Ontario, Canada 
+// *
+// -----------------------------------------------------------------------------------------------------------------------
+package oscar.oscarMessenger.pageUtil;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarMessenger.util.*;
+import oscar.util.*;
+
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Vector;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionServlet;
+import org.apache.struts.util.MessageResources;
+import oscar.oscarMessenger.pageUtil.MsgSessionBean;
+
+public class MsgAttachPDFAction extends Action {
+
+    public ActionForward execute(ActionMapping mapping,
+				 ActionForm form,
+				 HttpServletRequest request,
+				 HttpServletResponse response)
+	throws IOException, ServletException {
+
+        MsgAttachPDFForm frm = (MsgAttachPDFForm) form;
+        String attachmentCount = frm.getAttachmentCount();
+        oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean) request.getSession().getAttribute("msgSessionBean");
+
+        
+        //Multiple attachment
+
+        if ( frm.getIsPreview()) {
+            
+            // testing for new package, cannot pass session control. ??
+//            Doc2PDF.HTMLDOC(request, response, "http://localhost:8084/oscar_mcmaster/oscarEncounter/echarthistoryprint.jsp?echartid=68");     
+//            Doc2PDF.parseJSP2PDF( request , response, "http://localhost:8084/oscar_mcmaster/", "" );
+            
+            String srcText = frm.getSrcText();
+            Doc2PDF.parseString2PDF( request , response, "<HTML>" + srcText + "</HTML>" );
+            frm.setIsPreview(false);
+        }
+        else {
+        
+            try { 
+                 String[] indexArray = frm.getIndexArray();
+                 frm.setIndexArray(indexArray);
+                 frm.setIsAttaching( frm.getIsAttaching() );
+                 frm.setAttachmentCount( frm.getAttachmentCount() );
+                 String srcText = frm.getSrcText();
+                 String attachmentTitle = frm.getAttachmentTitle();
+                 
+                 if ( bean != null ) {
+
+                    if ( frm.getIsNew() ){
+                        System.out.println("null attachment" );
+                        bean.nullAttachment();
+                    }
+
+                    // check how many total attachment
+                    bean.setTotalAttachmentCount( Integer.parseInt(attachmentCount ) );
+
+
+                    // CHECK how many attachment to do
+                    if ( bean.getCurrentAttachmentCount() < bean.getTotalAttachmentCount() ){
+
+                        
+                        // Attach the document and increment the counter
+                        String resultString = Doc2PDF.parseString2Bin ( request, response, "<HTML>" + srcText + "</HTML>" );
+
+                        bean.setAppendPDFAttachment(resultString, attachmentTitle);
+                        bean.setCurrentAttachmentCount( bean.getCurrentAttachmentCount() + 1);                            
+                        Thread.sleep(500);                                
+                        
+                    }
+
+                    if ( bean.getCurrentAttachmentCount() >= bean.getTotalAttachmentCount() ) {
+                        // reset the counter, and forward to success
+                        bean.setTotalAttachmentCount( 0 );
+                        bean.setCurrentAttachmentCount( 0 );
+                        return ( mapping.findForward("success"));         
+                    }
+                    else {
+                        // keep attaching
+                       return ( mapping.findForward("attaching"));         
+                    }   
+                        
+                 }
+                 else {
+                      System.err.println("Bean is null");     
+                 }
+            }
+            catch (Exception  e){
+                e.printStackTrace();
+                System.err.println("Error: " + e.getMessage()  );
+            }
+            
+        }
+        return null;
+    }
+
+}
