@@ -55,12 +55,9 @@ public final class MsgDoc2PDFAction extends Action {
         String srcText = frm.getSrcText();
         String pdfTitle = frm.getPdfTitle();
 
-
-    //    oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
-    //    bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
-    //    bean.setAttachment(Doc2PDF.parseJSP2String( request, response, "<HTML>" + srcText + "</HTML>" ));
-
+ 
         if ( frm.getIsPreview()) {
+            
             Doc2PDF.parseString2PDF( request , response, "<HTML>" + srcText + "</HTML>" );
             frm.setIsPreview(false);
         }
