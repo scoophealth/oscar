@@ -61,13 +61,13 @@ Document Transfer
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                oscarComm
+                Oscar Messenger
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                        Document Transfer
+                        OSCAR Messenger Attachment
                         </td>
                         <td  >
 
@@ -86,14 +86,9 @@ Document Transfer
             
             <html:form action="/oscarMessenger/ViewPDFFile">
                 <td class="MainTableBottomRowRightColumn">
-                    
                     <% Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "TITLE" ); %>
-                    
                     <% for ( int i = 0 ; i < attVector.size(); i++) { %>
-                            
-
                             <%=(String) attVector.get(i)%> <input type=submit onclick=" document.forms[0].file_id.value = <%=i%>" value="Download" /> <br/>
-                            
                     <% }  %>
                     <html:hidden property="file_id"/> 
                     <html:hidden property="attachment" value="<%=pdfAttch%>" />
