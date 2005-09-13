@@ -814,7 +814,11 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2 class="tite4">
+            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
+                out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
+             } else { %>
             <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems"/>:
+            <% } %>
             </td>
        </tr>
        <tr>
@@ -824,7 +828,11 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2 class="tite4">
+            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+                out.print(props.getProperty("currentMedicationsTitle", ""));
+             } else { %>
             <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
+            <% } %>
             </td>
        </tr>
        <tr>

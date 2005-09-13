@@ -451,7 +451,11 @@
             </tr>
             <tr>
                 <td class="subTitles">
+	            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
+	                out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
+	             } else { %>
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgSigProb"/>:
+				<% } %>
                 </td>
             </tr>
             <tr>
@@ -462,7 +466,11 @@
             </tr>
             <tr>
                 <td class="subTitles">
+		            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+		                out.print(props.getProperty("currentMedicationsTitle", ""));
+		             } else { %>
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCurrMed"/>
+					<% } %>
                 </td>
             </tr>
             <tr>
