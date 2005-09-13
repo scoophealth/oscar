@@ -696,7 +696,7 @@ CREATE TABLE `eform_values` (
 -- Table structure for table `eform_groups`
 --
 
-CREATE TABLE `eform_values` (
+CREATE TABLE `eform_groups` (
   `id` int(10) NOT NULL auto_increment,
   `fid` int(8) NOT NULL default 0,
   `group_name` varchar(20) NOT NULL default '',
