@@ -33,6 +33,7 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <link rel="stylesheet" type="text/css" media="print" href="print.css"/>
 <link rel="stylesheet" type="text/css" href="encounterPrintStyles.css"/>
@@ -93,10 +94,23 @@
                                     <div class="RowTop"><bean:message key="oscarEncounter.Index.socialFamHist"/>:</div>
                                 </td>
                                 <td width="33%">
-                                    <div class="RowTop"><bean:message key="oscarEncounter.Index.otherMed"/>:</div>
+                                    <div class="RowTop">
+                                    <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) { 
+                                        out.print(oscarVariables.getProperty("otherMedications", ""));
+                                    %>
+                                    <% } else { %>
+                                    <bean:message key="oscarEncounter.Index.otherMed"/>:
+                                    <% } %>
+                                    </div>
                                 </td>
                                 <td width="33%">
-                                    <div class="RowTop"><bean:message key="oscarEncounter.Index.medHist"/>:</div>
+                                    <div class="RowTop">
+                                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) { 
+                                        out.print(oscarVariables.getProperty("medicalHistory", ""));
+                                    	} else { %>
+                                    <bean:message key="oscarEncounter.Index.medHist"/>:
+                                    <% } %>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -118,7 +132,12 @@
                         <table width="100%">
                             <tr>
                                 <td width="50%">
-                                    <div class="RowTop"><bean:message key="oscarEncounter.encounterPrint.msgOngCon"/>:</div>
+                                    <div class="RowTop">
+                                    <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) { 
+                                        out.print(oscarVariables.getProperty("ongoingConcerns", ""));
+                                     } else { %>
+                                    <bean:message key="oscarEncounter.encounterPrint.msgOngCon"/>:</div>
+                                    <% } %>
                                 </td>
 
                                 <td width="50%">
