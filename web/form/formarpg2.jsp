@@ -48,6 +48,18 @@
 
     //get project_home
     String project_home = request.getContextPath().substring(1);    
+    
+    // calculate A
+    if(props.getProperty("ar2_etss", "").equals("") && props.getProperty("pg1_ectopicBox", "0").matches("\\d*") 
+            && props.getProperty("pg1_terminationBox", "0").matches("\\d*")   
+            && props.getProperty("pg1_spontaneousBox", "0").matches("\\d*") 
+			&& props.getProperty("pg1_stillbornBox", "0").matches("\\d*")){
+        int nA = Integer.parseInt(props.getProperty("pg1_ectopicBox", "0").equals("")?"0":props.getProperty("pg1_ectopicBox", "0")) 
+        	+ Integer.parseInt(props.getProperty("pg1_terminationBox", "0").equals("")?"0":props.getProperty("pg1_terminationBox", "0"))
+			 + Integer.parseInt(props.getProperty("pg1_spontaneousBox", "0").equals("")?"0":props.getProperty("pg1_spontaneousBox", "0")) 
+			 + Integer.parseInt(props.getProperty("pg1_stillbornBox", "0").equals("")?"0":props.getProperty("pg1_stillbornBox", "0"));
+        props.setProperty("ar2_etss", ""+nA);
+    }
 %>
 <%
   boolean bView = false;
