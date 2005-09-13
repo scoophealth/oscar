@@ -67,9 +67,8 @@ String mode = request.getAttribute("mode")!=null?(String)request.getAttribute("m
 <h2>
 <html:errors />
 </h2>
-  <html:form action="/billing/CA/BC/saveAssocAction" type="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingForm">
-    <html:hidden property="mode">
-    </html:hidden>
+  <html:form action="/billing/CA/BC/saveAssocAction" target="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingForm">
+    <html:hidden property="mode"/>
     <table width="75%" border="1" align="center" cellpadding="3" cellspacing="3" bgcolor="EEEEFF">
       <tr bgcolor="#000000">
         <td width="90%" height="40" align="left">
@@ -139,7 +138,7 @@ String mode = request.getAttribute("mode")!=null?(String)request.getAttribute("m
       <tr>
         -->
         <td>
-         
+
         </td>
       </tr>
       <tr bgcolor="CCCCFF">
