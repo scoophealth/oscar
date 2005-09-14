@@ -166,20 +166,19 @@ function checkData() {
 			//alert(cd.value);
 			var na = cd.name;
 			na = na.substring(4);
-			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" ) {
+			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" || na=="G373A" || na=="G212A" || na=="G539A") {
 				document.forms[0].xml_diagnostic_detail.value == ":::"
 			}
 		} else if(cd.name=="xml_other1" || cd.name=="xml_other2" || cd.name=="xml_other3" ) {
 			//alert(cd.name + cd.value);
 			var na = cd.value;
-			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" ) {
+			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" || na=="G373A" || na=="G212A" || na=="G539A") {
 				if(document.forms[0].xml_diagnostic_detail.value == ""){
 					document.forms[0].xml_diagnostic_detail.value = ":::"
 				}
 			}
 		}
 	}
-    
     
     if(document.forms[0].xml_provider.value == "000000"){
     	alert("Please select Billing Physician!");
