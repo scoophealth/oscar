@@ -43,7 +43,7 @@ public final class ApptStatusData {
 	"oscar.appt.ApptStatusData.msgVerifiedCanceled",
 	"oscar.appt.ApptStatusData.msgVerifiedBilled",
                           };
-    String[] aBgColor =   {"#FDFEC7",      "#FDFEC7",  "#00ee00", "#FFBBFF",     "orange",    "#cccccc",    "#999999",    "#3ea4e1",    "#FDFEC7",     "#FDFEC7", "#00ee00", "#FFBBFF",     "orange", "#cccccc", "#999999", "#3ea4e1",    "#FDFEC7",     "#FDFEC7", "#00ee00", "#FFBBFF",     "orange", "#cccccc", "#999999", "#3ea4e1"};
+    String[] aBgColor =   {"#FDFEC7",      "#FDFEC7",  "#00ee00", "#FFBBFF",     "#FFFF33",    "#cccccc",    "#999999",    "#3ea4e1",    "#FDFEC7",     "#FDFEC7", "#00ee00", "#FFBBFF",     "#FFFF33", "#cccccc", "#999999", "#3ea4e1",    "#FDFEC7",     "#FDFEC7", "#00ee00", "#FFBBFF",     "#FFFF33", "#cccccc", "#999999", "#3ea4e1"};
     //"S",          "V","",          "", "signed.gif", "verified.gif", "Signed", "Verified",   "#FFBBFF", "#FFBBFF",
 
     public void setApptStatus(String status) {
