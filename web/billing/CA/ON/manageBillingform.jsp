@@ -154,6 +154,13 @@ function refresh() {
     history.go(0);
   }
 }
+
+function onUnbilled(url) {
+  if(confirm("<bean:message key="billing.manageBillingform.msgDeleteBillingConfirm"/>")) {
+    popupPage(700,720, url);
+  }
+}
+
 //-->
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
