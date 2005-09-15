@@ -14,6 +14,7 @@
 <%
   String [][] dbQueries=new String[][] {
     {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
+    {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
     {"search_waiting_list", "select * from waitingListName order by name"},
   };
@@ -184,6 +185,15 @@ function newStatus() {
     if (newOpt != "") {
         document.adddemographic.patient_status.options[document.adddemographic.patient_status.length] = new Option(newOpt, newOpt);
         document.adddemographic.patient_status.options[document.adddemographic.patient_status.length-1].selected = true;
+    } else {
+        alert("Invalid entry");
+    }
+}
+function newStatus1() {
+    newOpt = prompt("Please enter the new status:", "");
+    if (newOpt != "") {
+        document.adddemographic.roster_status.options[document.adddemographic.roster_status.length] = new Option(newOpt, newOpt);
+        document.adddemographic.roster_status.options[document.adddemographic.roster_status.length-1].selected = true;
     } else {
         alert("Invalid entry");
     }
@@ -790,7 +800,19 @@ document.forms[1].r_doctor_ohip.value = refNo;
     <tr valign="top">
       <td align="right" nowrap><b><bean:message key="demographic.demographicaddrecordhtm.formPCNRosterStatus"/>: </b></td>
       <td align="left" >
-        <input type="text" name="roster_status" onBlur="upCaseCtrl(this)">
+        <!--input type="text" name="roster_status" onBlur="upCaseCtrl(this)"-->
+        <select name="roster_status" style="width:160">
+          <option value="" > </option>
+          <option value="RO">RO - rostered</option>
+          <option value="NR">NR - not rostered</option>
+          <option value="TE">TE - terminated</option>
+          <option value="FS">FS - fee for service</option>
+          <% ResultSet rsstatus1 = addDemoBean.queryResults("search_rsstatus");
+             while (rsstatus1.next()) { %>
+               <option value="<%=rsstatus1.getString("roster_status")%>"><%=rsstatus1.getString("roster_status")%></option>
+          <% } // end while %>
+		</select>
+		<input type="button" onClick="newStatus1();" value="Add New" />
       </td>
       <td align="right" nowrap><b><bean:message key="demographic.demographicaddrecordhtm.formPCNDateJoined"/>: </b></td>
       <td align="left">
@@ -805,7 +827,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
         <% if (vLocale.getCountry().equals("BR")) { %>
           <input type="text" name="patient_status" value="AC" onBlur="upCaseCtrl(this)">
         <% } else { %>
-        <select name="patient_status">
+        <select name="patient_status" style="width:160">
           <option value="AC">AC - Active</option>
           <option value="IN">IN - Inactive</option>
           <option value="DE">DE - Deceased</option>
@@ -813,7 +835,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
           <option value="FI">FI - Fired</option>
           <% ResultSet rsstatus = addDemoBean.queryResults("search_ptstatus");
              while (rsstatus.next()) { %>
-               <option><%=rsstatus.getString("patient_status")%></option>
+               <option value="<%=rsstatus.getString("patient_status")%>" ><%=rsstatus.getString("patient_status")%></option>
           <% } // end while %>
         </select>
         <input type="button" onClick="newStatus();" value="Add New">
