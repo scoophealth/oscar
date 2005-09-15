@@ -163,18 +163,21 @@ function checkData() {
 	for (i=0;i<document.forms[0].length;i++){
 		var cd = document.forms[0].elements[i];
 		if(cd.value=="checked" && cd.checked) {
-			//alert(cd.value);
 			var na = cd.name;
 			na = na.substring(4);
+			//alert(cd.value + na);
 			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" || na=="G373A" || na=="G212A" || na=="G539A") {
-				document.forms[0].xml_diagnostic_detail.value == ":::"
+				if(document.forms[0].xml_diagnostic_detail.value == ""){
+					document.forms[0].xml_diagnostic_detail.value = ":::";
+				}
+				//alert(document.forms[0].xml_diagnostic_detail.value + " ! :"+ na);
 			}
 		} else if(cd.name=="xml_other1" || cd.name=="xml_other2" || cd.name=="xml_other3" ) {
 			//alert(cd.name + cd.value);
 			var na = cd.value;
 			if(na=="Q100A" || na=="Q110A" || na=="Q120A" || na=="Q200A" || na=="G373A" || na=="G212A" || na=="G539A") {
 				if(document.forms[0].xml_diagnostic_detail.value == ""){
-					document.forms[0].xml_diagnostic_detail.value = ":::"
+					document.forms[0].xml_diagnostic_detail.value = ":::";
 				}
 			}
 		}
