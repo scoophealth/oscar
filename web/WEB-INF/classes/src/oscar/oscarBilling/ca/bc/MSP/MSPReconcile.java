@@ -1286,8 +1286,12 @@ public class MSPReconcile {
     if (exludeICBC) {
       criteriaQry += " and b.billingType != 'ICBC' ";
     }
+
     if (repType.equals(this.REP_REJ)) {
       criteriaQry += " and bm.billingstatus = '" + this.REJECTED + "'";
+    }
+    else if(repType.equals(this.REP_INVOICE)){
+      criteriaQry += " and bm.billingstatus != '" + this.DELETED + "'";
     }
     else if (repType.equals(this.REP_WO)) {
       criteriaQry += " and bm.billingstatus = '" + this.BADDEBT + "'";
