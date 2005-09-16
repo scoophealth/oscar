@@ -6036,6 +6036,20 @@ CREATE TABLE `reportFilter` (
   INDEX `report_id` (`report_id`)
 ) ;
 
+
+
+CREATE TABLE `demographicExt` (
+  `id` int(10) NOT NULL auto_increment,
+  `demographic_no` int(10) default NULL,
+  `provider_no` varchar(6) default NULL,
+  `key_val` varchar(10) default NULL,
+  `value` text,
+  `date_time` datetime default NULL,
+  `hidden` char(1) default '0',
+  PRIMARY KEY  (`id`)
+) ;
+
+
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
 create index preventions_prevention_type on preventions (prevention_type(10));
