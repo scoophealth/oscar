@@ -129,8 +129,8 @@ while(e.hasMoreElements()){
   String key = (String)e.nextElement();
   String value = (String)dxcodeList.get(key);
   out.print("var row" + index + " = new Array(2);\n");
-  out.print("row" + index + "[0]=" + key + "; ");
-  out.print("row" + index + "[1]=" + value + ";\n");
+  out.print("row" + index + "[0]='" + key + "'; ");
+  out.print("row" + index + "[1]='" + value + "';\n");
   out.print("dxcodes[" + index + "]=row" + index + ";\n");
   //out.print("dxcodes[" + index + "][" + index + "]=" + key +"; " +  "dxcodes[" + index + "][" + index+1 + "]=" + value +";");
   index++;
