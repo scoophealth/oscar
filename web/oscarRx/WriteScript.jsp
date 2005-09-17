@@ -1215,7 +1215,7 @@ int i;
                         <br>
                         <!-- peice Went Here -->
                         <%//oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
-                          oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
+                          oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = null; //(oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
                           if (allerg != null && allerg.length > 0){ 
                             for (int i = 0 ; i < allerg.length; i++){  %>                                                           
                                  <div style="background-color:<%=severityOfReactionColor(allerg[i].getAllergy().getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
