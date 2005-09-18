@@ -34,7 +34,7 @@
 
 <%
   //if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("admin")) response.sendRedirect("../logout.jsp");
-  //String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
+  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="updatedpBean" class="oscar.AppointmentMainBean" scope="page" />
