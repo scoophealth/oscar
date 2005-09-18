@@ -8,7 +8,8 @@
 </security:oscarSec>
 
 
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="index.html" %>
+<%@ page import="org.apache.commons.lang.*" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -141,7 +142,7 @@ public boolean isBirthday(String schedDate,String demBday){
 -->
 <html:html locale="true">
 <head>
-<title><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
+<title><%=WordUtils.capitalize(userlastname + ", " + userfirstname.substring(0,1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
 <% response.setHeader("Cache-Control","no-cache");%>
 <meta http-equiv="refresh" content="180;">
