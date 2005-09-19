@@ -3,8 +3,8 @@ pg1_priCare	: left, 126, 50, 0, BaseFont.HELVETICA, 8
 pg1_famPhy	: left, 240, 50, 0, BaseFont.HELVETICA, 8 
 
 pg1_moName	: left, 50, 73, 0, BaseFont.HELVETICA, 8 
-pg1_dateOfBirth	: left, 240, 73, 0, BaseFont.HELVETICA, 8 
-pg1_ageAtEDD	: left, 280, 73, 0, BaseFont.HELVETICA, 8 
+pg1_dateOfBirth	: left, 240, 74, 0, BaseFont.HELVETICA, 8 
+pg1_ageAtEDD	: left, 310, 73, 0, BaseFont.HELVETICA, 8 
 
 pg1_maidenName	: left, 50, 96, 0, BaseFont.HELVETICA, 8 
 pg1_ethOrig	: left, 190, 96, 0, BaseFont.HELVETICA, 8 
