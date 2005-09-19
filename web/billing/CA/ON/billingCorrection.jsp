@@ -107,6 +107,53 @@ function ScriptAttach() {
 	awnd.focus();
 }
 //-->
+
+function validateNum(el){
+   var val = el.value;
+   var tval = ""+val;
+   if (isNaN(val)){   
+      alert("Item value must be numeric.");
+      el.select();
+      el.focus();
+      return false;
+   }
+   if ( val > 999.99 ){
+     alert("Item value must be below $1000");
+     el.select();
+     el.focus();
+     return false;
+   }
+   decLen = tval.indexOf(".");
+   if (decLen != -1  &&   ( tval.length - decLen ) > 3  ){
+      alert("Item value has a maximum of 2 decimal places");
+      el.select();
+      el.focus();
+      return false;
+   }  
+   return true;
+}
+
+function validateAllItems(){   
+   if (!validateNum(document.getElementById("billingamount0")) ){
+      return false;
+   }   
+   if (!validateNum(document.getElementById("billingamount1")) ){
+      return false;
+   }   
+   if (!validateNum(document.getElementById("billingamount2")) ){
+      return false;
+   }   
+   if (!validateNum(document.getElementById("billingamount3")) ){
+      return false;
+   }   
+   if (!validateNum(document.getElementById("billingamount4")) ){
+      return false;
+   }   
+   if (!validateNum(document.getElementById("billingamount5")) ){
+      return false;
+   }   
+   return true;
+}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
@@ -150,7 +197,7 @@ if (billNo.compareTo("") == 0 || billNo == null) {
 </form>
 </table>
 
-<form name="serviceform" method="post" action="billingCorrectionValid.jsp">
+<form name="serviceform" method="post" action="billingCorrectionValid.jsp" onsubmit="return validateAllItems()">
 <input type="hidden" name="xml_billing_no" value="<%=billNo%>">
 <input type="hidden" name="update_date" value="<%=UpdateDate%>">
 
@@ -362,7 +409,7 @@ if (bFlag) {
 	<input type="text" style="width:100%" name="billingunit<%=rowCount-1%>" value="<%=billingunit%>" size="5" maxlength="5"></font>
 	</th><th align="right"> 
 	<input type="hidden" name="xml_billing_amount<%=rowCount%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>">
-	<input type="text" style="width:100%" size="5" maxlength="5" name="billingamount<%=rowCount-1%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>">
+	<input type="text" style="width:100%" size="5" maxlength="6" id="billingamount<%=rowCount-1%>" name="billingamount<%=rowCount-1%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>" onchange="javascript:validateNum(this)">
 	</th>
 </tr>
 <%
@@ -376,7 +423,7 @@ if (bFlag) {
 	<td>&nbsp;</td>
 	<td><input type="text" style="width:100%" name="billingunit<%=i%>" value="" size="5" maxlength="5"></td>
 	<td align="right"> 
-	<input type="text" style="width:100%" name="billingamount<%=i%>" value="" size="5" maxlength="5">
+	<input type="text" style="width:100%" name="billingamount<%=i%>" id="billingamount<%=i%>"  value="" size="5" maxlength="5">
 	</td>
 </tr>
 
@@ -403,7 +450,7 @@ apptMainBean.closePstmtConn();
 	</td>
 </tr><tr> 
 	<td colspan="4">
-	<input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
+	<input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>" ></td>
 </tr>
 </table>
 <form>
