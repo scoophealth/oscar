@@ -46,15 +46,17 @@ public class CommonLabResultData {
    }
    
    public static String[] getLabTypes(){
-      return new String[] {"MDS","CML"};
+      return new String[] {"MDS","CML","BCP"};
    }
    
    public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {      
       oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();    
       ArrayList labs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
       ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);      
+      //ArrayList pathLabs = mDSData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);            
       
       labs.addAll(mdsLabs);            
+      //labs.addAll(pathLabs);
       return labs;
    }
    
@@ -63,15 +65,21 @@ public class CommonLabResultData {
       try {
          DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
          // handles the case where this provider/lab combination is not already in providerLabRouting table
-         String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment,lab_type) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?,'"+labType+"')";
-         if ( db.queryExecuteUpdate(sql, new String[] { comment }) == 0 ) {
-            // handles the case where it is
-            sql = "update providerLabRouting set status='"+status+"', comment=? where provider_no='"+providerNo+"' and lab_no='"+labNo+"' and lab_type = '"+labType+"'";
-             db.queryExecute(sql, new String[] { comment });
-         } else {
+         String sql = "select id from providerLabRouting where lab_type = '"+labType+"' and provider_no = '"+providerNo+"' and lab_no = '"+labNo+"'";
+         
+         ResultSet rs = db.queryResults(sql);
+         
+         if(rs.next()){  //
+            String id = rs.getString("id");
+            sql = "update providerLabRouting set status='"+status+"', comment=? where id = '"+id+"'";
+            db.queryExecute(sql, new String[] { comment });
+         }else{  
+            sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment,lab_type) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?,'"+labType+"')";
+            db.queryExecute(sql, new String[] { comment });
             sql = "delete from providerLabRouting where provider_no='0' and lab_no=? and lab_type = '"+labType+"'";
-            db.queryExecute(sql, new String[] { Integer.toString(labNo) });
+            db.queryExecute(sql, new String[] { Integer.toString(labNo) });   
          }
+                  
          db.closeConn();
          return true;
       }catch(Exception e){
@@ -80,6 +88,8 @@ public class CommonLabResultData {
          return false;
       }
    }
+   
+   
    
    
    public ArrayList getStatusArray(String labId, String labType){
