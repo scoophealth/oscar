@@ -126,6 +126,9 @@
   <copy todir="${classes_web}/oscar/oscarPrevention/">
    <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarPrevention/" includes="*.drl" />
   </copy>
+  <copy todir="${classes_web}/oscar/eform/">
+   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/eform/" includes="*.xml" />
+  </copy>  
  </target>
 
  <target name="testprep" depends="init">
