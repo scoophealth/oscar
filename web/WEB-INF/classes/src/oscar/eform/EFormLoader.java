@@ -124,13 +124,17 @@ public class EFormLoader {
       try {
           Properties op = oscar.OscarProperties.getInstance();
           String configpath = op.getProperty("eform_databaseap_config");
-          if (configpath == null) {
-              String project = op.getProperty("project_home");
-              configpath = "/usr/local/tomcat/webapps/OscarDocument/" + project + "/eform/apconfig.xml";
+          InputStream fs = null;
+          if (configpath == null) {             
+             EFormLoader eLoader = new EFormLoader();
+             ClassLoader loader = eLoader.getClass().getClassLoader();
+             fs = loader.getResourceAsStream("/oscar/eform/apconfig.xml");                                                       
+          }else{
+             fs = new FileInputStream(configpath);          
           }
-          FileInputStream fs = new FileInputStream(configpath);
           digester.parse(fs);
           fs.close();
       } catch (Exception e) { e.printStackTrace(); }
     }
-}
+    
+ }
