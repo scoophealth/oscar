@@ -26,6 +26,7 @@
 
 <%@ page language="java" %>
 <%@ page import="java.util.ResourceBundle" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -159,6 +160,7 @@ function BackToOscar() {
                               </td>
                               <td colspan="5">
                                  <html:textarea name="EctConAddSpecialistForm" property="address" cols="30" rows="3" />
+                                 <%=oscarVariables.getProperty("consultation_comments","") %>
                            </td>
                         </tr>
                         <tr>
