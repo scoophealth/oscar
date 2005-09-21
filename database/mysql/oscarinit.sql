@@ -3003,6 +3003,49 @@ CREATE TABLE formInternetAccess(
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table `formSatisfactionScale`
+--
+
+CREATE TABLE `formSatisfactionScale` (
+  `ID` int(10) NOT NULL auto_increment,
+  `demographic_no` int(10) NOT NULL default '0',
+  `provider_no` int(10) default NULL,
+  `formCreated` date default NULL,
+  `formEdited` timestamp(14) NOT NULL,
+  `studyID` varchar(20) NOT NULL default 'N/A',
+  `believe1Y` tinyint(1) default NULL,
+  `believe1N` tinyint(1) default NULL,
+  `receive2Y` tinyint(1) default NULL,
+  `receive2N` tinyint(1) default NULL,
+  `receiveOT3Y` tinyint(1) default NULL,
+  `receiveP3Y` tinyint(1) default NULL,
+  `receiveB3Y` tinyint(1) default NULL,
+  `otTreats4` char(4) default NULL,
+  `ptTreats4` char(4) default NULL,
+  `explaining1` char(2) default NULL,
+  `everythingNeeded2` char(2) default NULL,
+  `perfect3` char(2) default NULL,
+  `wonder4` char(2) default NULL,
+  `confident5` char(2) default NULL,
+  `careful6` char(2) default NULL,
+  `afford7` char(2) default NULL,
+  `easyaccess8` char(2) default NULL,
+  `toolong9` char(2) default NULL,
+  `businesslike10` char(2) default NULL,
+  `veryfriendly11` char(2) default NULL,
+  `hurrytoomuch12` char(2) default NULL,
+  `ignore13` char(2) default NULL,
+  `doubtability14` char(2) default NULL,
+  `plentyoftime15` char(2) default NULL,
+  `hardtogetanappointment16` char(2) default NULL,
+  `dissatisfied17` char(2) default NULL,
+  `abletogetrehabilitation18` char(2) default NULL,
+  PRIMARY KEY  (`ID`)
+) TYPE=MyISAM 
+
+
+
+--
 -- Table structure for table `formLabReq`
 --
 
