@@ -447,10 +447,10 @@ div.demographicWrapper {
                                 ResultSet rs = null;
                                 rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
                                 while (rs.next()) {
-                                        resident = rs.getString("cust1");
-                                        nurse = rs.getString("cust2");
-                                        alert = rs.getString("cust3");
-                                        midwife = rs.getString("cust4");
+                                        resident = s(rs.getString("cust1"));
+                                        nurse = s(rs.getString("cust2"));
+                                        alert = s(rs.getString("cust3"));
+                                        midwife = s(rs.getString("cust4"));
                                         notes = SxmlMisc.getXmlContent(rs.getString("content"),"unotes") ;
                                         notes = notes==null?"":notes;
                                 }
