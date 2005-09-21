@@ -719,7 +719,7 @@
                     <th colspan="4">F. Health</th>
                 </tr>
                 <tr>                    
-                    <th colspan="4" class="question">Have you had any health problems in the last 9 months?</th>
+                    <th colspan="4" class="question">Have you had any health problems in the last 6 months?</th>
                 </tr>
                 <tr bgcolor="white">
                     <td colspan="4">
@@ -777,7 +777,7 @@
                     </td>                          
                 </tr>                                                
                 <tr>                    
-                    <th colspan="4" class="question">In the past 9 months, have you had a drink of beer, wine, liquor or other alcoholic beverage?</th>
+                    <th colspan="4" class="question">In the past 6 months, have you had a drink of beer, wine, liquor or other alcoholic beverage?</th>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -796,7 +796,7 @@
                     <td></td>                                    
                 </tr>
                 <tr>                    
-                    <th colspan="4" class="question">Have you had more than 12 drinks per week in the last 9 months?</th>
+                    <th colspan="4" class="question">Have you had more than 12 drinks per week in the last 6 months?</th>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
