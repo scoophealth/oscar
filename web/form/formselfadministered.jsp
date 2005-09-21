@@ -190,7 +190,7 @@
                 </tr>    
                 <tr>
                     <td align="right">2. </td>
-                    <td>In the previous 9 months have you stayed overnight as a patient in a hospital?</td>
+                    <td>In the previous 12 months have you stayed overnight as a patient in a hospital?</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -218,7 +218,7 @@
                 </tr>
                 <tr>
                     <td align="right">3. </td>
-                    <td>In the previous 9 months, how many times did you visit a physician or clinic?</td>
+                    <td>In the previous 12 months, how many times did you visit a physician or clinic?</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
@@ -246,7 +246,7 @@
                 </tr>
                 <tr>
                     <td align="right">4. </td>
-                    <td>In the previous 9 months, did you have diabetes?</td>
+                    <td>In the previous 12 months, did you have diabetes?</td>
                 </tr>
                 <tr bgcolor="white">
                     <td width="5%" align="right">
