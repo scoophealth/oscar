@@ -628,7 +628,7 @@ function checkFormTypeIn() {
       <td align="left" nowrap >
         <input type="text" name="hin" size="15">
         <b><bean:message key="demographic.demographicaddrecordhtm.formVer"/>:
-        <input type="text" name="ver" value="" size="3">
+        <input type="text" name="ver" value="" size="3"  onBlur="upCaseCtrl(this)">
         </b></td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formEFFDate"/></b><b>: </b></td>
       <td align="left"><b>
