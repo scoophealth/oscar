@@ -132,6 +132,7 @@ public class IncomingLabManagement {
             inMDS.removeWorkingFile(incomingHL7dir+"/"+workingFile);
             inMDS.setLastModifiedTime(inMDS.getCurrentModifiedTime(incomingHL7dir),moddedTime);
         }        
+        db.CloseConn();
         logger.info("END");        
     }
         
