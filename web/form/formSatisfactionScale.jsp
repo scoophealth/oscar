@@ -369,7 +369,12 @@
                             <tr>
                                 <td valign="top" width="5%">&nbsp;</td>
                                 <td valign="top" width="95%">
-                                    Below are some things people say about rehabilitation. Please read each one carefully, keeping in mind the rehabilitation you have received over the past 18 months. We are interested in your feelings, good and bad, about the rehabilitation you have received. 
+                                    Below are some things people say about rehabilitation. Please read
+                                    each one carefully, keeping in mind the rehabilitation you have
+                                    received over the past 18 months. If you have not received
+                                    rehabilitation, think about what you would expect if you needed it
+                                    today. We are interested in your feelings, good and bad, about the
+                                    rehabilitation you have received.
                                 </td>
                             </tr>    
                         </table>
