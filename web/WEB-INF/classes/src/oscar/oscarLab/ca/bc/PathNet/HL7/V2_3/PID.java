@@ -49,6 +49,16 @@ public class PID extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       this.note = new ArrayList();
    }
    
+   
+   //This checks what the line starts with and then acts accordingly 
+   //IF line starts PID it calls the normal parse method.
+   //IF the line starts with ORC it creates a new instance of PIDContainer and adds it too the containers ArrayList.  
+   //   It also calls the PIDcontainers parse method
+   //If the line starts with OBR it checks to see if the Containers ArrayList is empty or if the last element already has an OBR record attached to it.
+   // if the containers is empty or the last record attached has an OBR attached it creates an new PIDContainer and calls on the PIDContainer to parse that line.
+   // else it just calls Parse on the last element in the containers ArrayList
+   //If the line starts with NTE it creates a new NTE object, calls the NTE parse method, and adds it to the ArrayList 
+   //IF the line equals anything else the it just calls parse  method on the last element in the ArrayList   
    public Node Parse(String line) {
       if(line.startsWith("PID")) {
          return super.Parse(line, 0, 1);
@@ -83,14 +93,17 @@ public class PID extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       }
       return notes;
    }
-   
-   public void ToDatabase(DBHandler db, int parent) throws SQLException {
+   //This inserts a record into the hl7_pid table with a key to the hl7.message_id field 
+   //Then gets the last insert Id from the hl7_pid table
+   //Then for each PIDContainer in containers ArrayList calls the PIDContainer.ToDatabase
+   public int ToDatabase(DBHandler db, int parent) throws SQLException {
       db.RunSQL(this.getInsertSql(parent));
       int lastInsert = super.getLastInsertedId(db);
       int size = this.containers.size();
       for(int i = 0; i < size; ++i) {
          ((PIDContainer)this.containers.get(i)).ToDatabase(db, lastInsert);
       }
+      return lastInsert;
    }
    
    protected String getInsertSql(int parent) {
