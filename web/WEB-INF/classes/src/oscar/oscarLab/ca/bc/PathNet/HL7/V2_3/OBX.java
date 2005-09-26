@@ -45,7 +45,8 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
    public OBX() {
       note = new ArrayList();
    }
-   
+   //If line starts with OBX then its parsed in the normal way
+   //IF line starts with NTE then a new NTE object is created and added to the note ArrayList, parse method is called
    public Node Parse(String line) {
       if(line.startsWith("OBX")) {
          return super.Parse(line, 0, 1);
@@ -58,8 +59,8 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       return null;
    }
    
-   public void ToDatabase(DBHandler db, int parent)throws SQLException {
-      db.RunSQL(this.update? this.getUpdateSql(parent) : this.getInsertSql(parent) );
+   public int ToDatabase(DBHandler db, int parent)throws SQLException {
+      return booleanConvert(db.RunSQL(this.update? this.getUpdateSql(parent) : this.getInsertSql(parent) ));
    }
    
    
