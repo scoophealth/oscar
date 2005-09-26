@@ -8,6 +8,7 @@ package oscar.oscarLab.ca.bc.PathNet.HL7;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import org.apache.log4j.*;
 
 import oscar.oscarDB.DBHandler;
 /*
@@ -37,10 +38,11 @@ import oscar.oscarDB.DBHandler;
  * www.andromedia.ca
  */
 public abstract class Node {
+   Logger _logger = Logger.getLogger(this.getClass());
    protected Hashtable data;
    private static final String last_insert_id = "SELECT LAST_INSERT_ID();";
    protected abstract String[] getProperties();
-   public abstract void ToDatabase(DBHandler db, int parent)
+   public abstract int ToDatabase(DBHandler db, int parent)
    throws SQLException;
    public abstract Node Parse(String line);
    protected abstract String getInsertSql(int parent);
@@ -55,29 +57,34 @@ public abstract class Node {
       return parent;
    }
    
+   public int booleanConvert(boolean b){
+      return b?0:1;
+   }
+   
    public String get(String key, String defaultValue) {
       return this.prepareString(
       this.data.containsKey(key)
       ? (String) this.data.get(key)
       : defaultValue);
    }
+   
+   //Parse splits the line into an String Array 
    protected Node Parse(String line, int propertiesIndex, int fieldsIndex) {
       String[] fields = line.split("\\|");
       this.data = new Hashtable(fields.length);
       String[] properties = this.getProperties();
       int count = fields.length;
       for (int i = 0;(fieldsIndex + i) < count; i++) {
-         this.data.put(
-         properties[propertiesIndex + i],
-         fields[fieldsIndex + i]);
+         //_logger.debug("prop "+properties[propertiesIndex + i]+" : "+fields[fieldsIndex + i]);
+         this.data.put(properties[propertiesIndex + i],fields[fieldsIndex + i]);
       }
       return this;
    }
    private String prepareString(String str) {
       return str
       .replaceAll("\\\\", "\\\\\\\\")
-      .replaceAll("\\\'", "\\\\\'")
-      .replaceAll("\\^", " ");
+      .replaceAll("\\\'", "\\\\\'");
+      //.replaceAll("\\^", " ");
    }
    protected void getInsertFieldsAndValues(String fields, String values) {
       String[] properties = this.getProperties();
