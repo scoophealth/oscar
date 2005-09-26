@@ -18,7 +18,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import oscar.*;
-import oscar.oscarLab.ca.bc.PathNet.Communication.HTTP;
+import oscar.oscarLab.ca.bc.PathNet.Communication.*;
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -107,6 +107,33 @@ public class Connection {
       }
       return messages;
    }
+   
+   public ArrayList Retrieve(InputStream is) {
+      ArrayList messages = null;
+      try {
+         System.err.println("retrieving");
+         Document document = this.CreateDocument(is);
+         
+         if (document.getDocumentElement().getAttribute("MessageFormat").toUpperCase().equals("ORUR01") && document.getDocumentElement().getAttribute("Version").toUpperCase().equals("2.3")) {
+            if (document.getDocumentElement().getAttribute("MessageCount").equals(String.valueOf(document.getDocumentElement().getChildNodes().getLength()))) {
+               messages = new ArrayList(document.getDocumentElement().getChildNodes().getLength());
+               for (int i = 0;i < document.getDocumentElement().getChildNodes().getLength(); i++) {
+                  System.err.println("messages : " + i);
+                  messages.add(document.getDocumentElement().getChildNodes().item(i).getFirstChild().getNodeValue());
+               }
+            }
+            else {
+               this.Acknowledge(false);
+            }
+         }
+      }
+      catch (Exception ex) {
+         System.err.println("Error - oscar.PathNet.Connection.Retrieve - Message: "+ ex.getMessage());
+      }
+      return messages;
+   }
+   
+   
    public void Acknowledge(boolean success) {
       try {
          this.CreateInputStream((success ? PositiveAckQuery : NegativeAckQuery)).close();
@@ -115,7 +142,7 @@ public class Connection {
          System.err.println("Error - oscar.PathNet.Connection.Acknowledge - Message: "+ ex.getMessage());
       }
    }
-   private Document CreateDocument(InputStream input) throws SAXException, IOException, ParserConfigurationException {
+   public Document CreateDocument(InputStream input) throws SAXException, IOException, ParserConfigurationException {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       return builder.parse(input);
