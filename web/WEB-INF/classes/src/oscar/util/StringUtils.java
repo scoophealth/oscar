@@ -183,4 +183,15 @@ public class StringUtils {
         org.apache.commons.lang.StringUtils.isNumeric(str);
   }
 
+  
+  public static String returnStringToFirst(String str,String firstChar){
+     String ret = str;
+     if ( str != null ){
+        int i = str.indexOf(firstChar);
+        if (i != -1){
+           ret = str.substring(0,i);
+        }
+     }
+     return ret;
+  }
 }
