@@ -9,6 +9,7 @@ package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import org.apache.log4j.*;
 
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 import oscar.oscarDB.DBHandler;
@@ -39,7 +40,7 @@ import oscar.oscarDB.DBHandler;
  * www.andromedia.ca
  */
 public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
-   
+   Logger _logger = Logger.getLogger(this.getClass());
    private static final String
    select = "SELECT hl7_obr.obr_id FROM hl7_obr WHERE hl7_obr.filler_order_number='@filler_no'";
    
@@ -52,8 +53,11 @@ public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       this.obxs = new ArrayList();
       this.note = new ArrayList();
    }
-   
+   //If line starts OBR the regular parse method is called
+   //If line starts with OBX a new OBX object is created and added to the obxs ArrayList, the obx parse method is called
+   //IF line starts with NTE a new NTE object is created and addeds to the note ArrayList, the nte parse method is called
    public Node Parse(String line) {
+      _logger.debug("line: "+line);
       if(line.startsWith("OBR")) {
          return super.Parse(line, 0, 1);
       } else if(line.startsWith("OBX")) {
@@ -76,37 +80,83 @@ public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       }
       return notes;
    }
-   
-   public void ToDatabase(DBHandler db, int parent)throws SQLException {
+   //This method is passed in the hl7_pid.pid_id foreign key
+   //The first thing it does is check the result_status of this object, which could be 
+   //F = complete
+   //  Looks for a record with the same filler_order_number field.
+   //   If it can find one it updates the old record
+   //   If it can't find one it inserts a new record
+   //  Then for each object in the obxs ArrayList calls OBX.ToDatabase
+   //I  = pending   
+   //  Inserts into hl7_obr. gets return id 
+   //  Then for each object in the obxs ArrayList calls OBX.ToDatabase
+   //C = corrected
+   //  Updated record with the filler_order_number
+   //  Then for each object in the obxs ArrayList calls OBX.ToDatabase but with the setUpdate(true) method called
+   //X = deleted (currently not in use)
+   //  Nothing is done for this currently
+   public int ToDatabaseOLD(DBHandler db, int parent)throws SQLException {
+      _logger.debug("result_status :"+this.get("result_status","") );
       if(this.get("result_status", "").equalsIgnoreCase("A") || this.get("result_status", "").equalsIgnoreCase("F")) {
-         int index = getLastUpdated(db, this.get("filler_order_number", ""));
+                                                                           _logger.debug("getting Last Updated filler #:"+this.get("filler_order_number", ""));         
+         int index = getLastUpdated(db, this.get("filler_order_number", ""));                  
+                                                                           _logger.debug("getting index of Updated filler #:"+this.get("filler_order_number", "")+" "+index);                           
          if(index != 0) {
+                                                                           _logger.debug("Running Update: "+this.getUpdateSql(this.get("filler_order_number", "")));
             db.RunSQL(this.getUpdateSql(this.get("filler_order_number", "")));
          } else {
+                                                                           _logger.debug("Running Insert: "+this.getInsertSql(parent));
             db.RunSQL(this.getInsertSql(parent));
             index = super.getLastInsertedId(db);
+                                                                           _logger.debug("Index of insert:"+index);
          }
          int size = this.obxs.size();
+                                                                           _logger.debug("OBX size:"+size);
          for(int i = 0; i < size; ++i) {
             ((OBX)obxs.get(i)).ToDatabase(db, index);
          }
       } else if(this.get("result_status", "").equalsIgnoreCase("I")) {
+                                                                           _logger.debug("Running Insert when stat = I:"+this.getInsertSql(parent));
          db.RunSQL(this.getInsertSql(parent));
          int lastInsert = super.getLastInsertedId(db);
+                                                                           _logger.debug("Index of insert:"+lastInsert);
          int size = this.obxs.size();
+                                                                           _logger.debug("OBX size:"+size);
          for(int i = 0; i < size; ++i) {
             ((OBX)obxs.get(i)).ToDatabase(db, lastInsert);
          }
       } else if(this.get("result_status", "").equalsIgnoreCase("C")) {
+                                                                           _logger.debug("Running Update when stat = C :"+this.getUpdateSql(this.get("filler_order_number", "")));
          db.RunSQL(this.getUpdateSql(this.get("filler_order_number", "")));
          int lastUpdate = this.getLastUpdated(db, this.get("filler_order_number", ""));
+                                                                           _logger.debug("Update id of lastUpdate:"+lastUpdate);         
          int size = this.obxs.size();
+                                                                           _logger.debug("OBX size:"+size);
          for(int i = 0; i < size; ++i) {
             ((OBX)obxs.get(i)).setUpdate(true);
             ((OBX)obxs.get(i)).ToDatabase(db, lastUpdate);
          }
       }
+      return 0;
    }
+   
+   //////
+   public int ToDatabase(DBHandler db, int parent)throws SQLException {
+      _logger.debug("result_status :"+this.get("result_status","") );            
+      _logger.debug("Running Insert when "+this.getInsertSql(parent));
+      
+      db.RunSQL(this.getInsertSql(parent));
+      int lastInsert = super.getLastInsertedId(db);
+      _logger.debug("Index of insert:"+lastInsert);
+      int size = this.obxs.size();
+      _logger.debug("OBX size:"+size);
+      for(int i = 0; i < size; ++i) {
+         ((OBX)obxs.get(i)).ToDatabase(db, lastInsert);
+      }      
+      return 0;
+   }
+   //////
+   
    
    protected int getLastUpdated(DBHandler db, String id)throws SQLException {
       ResultSet result = db.GetSQL("SELECT obr_id FROM hl7_obr WHERE filler_order_number='" + id +"'");
