@@ -45,8 +45,10 @@ public class ORC extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       return null;
    }
    
-   public void ToDatabase(DBHandler db, int parent)throws SQLException {
-      db.RunSQL(this.getInsertSql(parent));
+   //Inserts record into hl7_orc table
+   public int ToDatabase(DBHandler db, int parent)throws SQLException {
+      System.out.println(this.getInsertSql(parent));
+      return booleanConvert(db.RunSQL(this.getInsertSql(parent)));
    }
    
    protected String getInsertSql(int parent) {
