@@ -101,29 +101,36 @@
               <div align="left">&nbsp;</div>
             </td>
           </tr>
-          <tr>
-            <td><bean:message key="loginApplication.formUserName"/></td>
-          </tr>
-		  <tr><td align="center">
+	  <tr>
+            <td align="left">
+              <bean:message key="loginApplication.formUserName"/><br/>
               <html:text property="username" size="15" maxlength="15"/>
-            </td></tr>
+            </td>
+	  </tr>
           <tr>
-            <td><bean:message key="loginApplication.formPwd"/></td>
-          </tr>
-          <tr>
-            <td  align="center">
-              <html:password property="password" size="15" maxlength="10"/>
+            <td align="left">
+              <bean:message key="loginApplication.formPwd"/><br/>
+              <html:password property="password" size="15" maxlength="15"/>
             </td>
           </tr>
           <tr>
-            <td  align="center"> <font size="+1">
-              <html:submit value="Sign in" />
+            <td align="left"> <font size="+1">
+              <input type="submit" value="<bean:message key="index.btnSignIn"/>" />
               </font> </td>
           </tr>
           <tr>
-            <td  align="center" nowrap><font size="-1">PIN: </font>
-              <html:password property="pin" size="6" maxlength="6"/>
-              <font size="-2"><bean:message key="loginApplication.formCmt"/> </font> </td>
+            <td align="center">
+              <div align="left">&nbsp;</div>
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <bean:message key="index.formPIN"/>: 
+              <br/>
+              <html:password property="pin" size="15" maxlength="15"/><br/>
+              <font size="-2">
+              <bean:message key="loginApplication.formCmt"/> </font> 
+            </td>
           </tr>
 		  <input type=hidden name='propname' value='<bean:message key="loginApplication.propertyFile"/>' />
         </html:form>
