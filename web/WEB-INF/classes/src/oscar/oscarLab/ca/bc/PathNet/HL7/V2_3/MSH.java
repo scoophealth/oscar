@@ -7,6 +7,7 @@
 package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 
 import java.sql.SQLException;
+import org.apache.log4j.*;
 
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 import oscar.oscarDB.DBHandler;
@@ -37,12 +38,16 @@ import oscar.oscarDB.DBHandler;
  * www.andromedia.ca
  */
 public class MSH extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
+   Logger _logger = Logger.getLogger(this.getClass());
    public Node Parse(String line) {
       return super.Parse(line, 1, 1);
    }
    
-   public void ToDatabase(DBHandler db, int parent) throws SQLException {
-      db.RunSQL(this.getInsertSql(parent));
+   
+   //This inserts a record into the hl7_msh returns a 0 if it worked and 1 if it failed  
+   public int ToDatabase(DBHandler db, int parent) throws SQLException {
+      _logger.debug("Inserting into Database :"+this.getInsertSql(parent));
+      return booleanConvert(db.RunSQL(this.getInsertSql(parent)));      
    }
    
    protected String getInsertSql(int parent) {

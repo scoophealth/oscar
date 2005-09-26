@@ -39,8 +39,8 @@ public class NTE extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       return super.Parse(line, 0, 1);
    }
    
-   public void ToDatabase(DBHandler db, int parent)
-   {}
+   public int ToDatabase(DBHandler db, int parent)
+   {return 0;}
    
    protected String getInsertSql(int parent) {
       return "";
