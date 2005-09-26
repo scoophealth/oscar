@@ -32,6 +32,7 @@ package oscar.oscarLab.ca.on;
 import java.sql.*;
 import java.util.*;
 import oscar.oscarDB.*;
+import oscar.oscarLab.ca.bc.PathNet.*;
 import oscar.oscarMDS.data.*;
 
 /**
@@ -54,9 +55,11 @@ public class CommonLabResultData {
       ArrayList labs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
       ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);      
       //ArrayList pathLabs = mDSData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);            
+      PathnetResultsData pathData = new PathnetResultsData();
+      ArrayList pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);            
       
       labs.addAll(mdsLabs);            
-      //labs.addAll(pathLabs);
+      labs.addAll(pathLabs);
       return labs;
    }
    
