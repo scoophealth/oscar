@@ -141,7 +141,7 @@
   <tr>
     <td><p><font size="-2"><bean:message key="loginApplication.leftRmk"/>
 		<br><br>
-        <a href=# onClick='popupPage(500,700,"gpl.htm")'><bean:message key="loginApplication.gplLink"/></a><br>
+        <a href=# onClick='popupPage(500,700,"<bean:message key="loginApplication.gpltext"/>")'><bean:message key="loginApplication.gplLink"/></a><br>
         </font> </p>
     </td></tr>
 </table>
