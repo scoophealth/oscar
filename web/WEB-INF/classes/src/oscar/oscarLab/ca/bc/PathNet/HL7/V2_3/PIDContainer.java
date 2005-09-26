@@ -44,7 +44,9 @@ public class PIDContainer extends Node {
       this.obr = null;
       this.orc = null;
    }
-   
+   //If line starts with ORC then the ORC parse object is called
+   //If the line starts with OBR then the OBR parse object is called
+   //For any other line as long as this.PIDContainer contains an OBR object will be parsed by the OBR parse method
    public Node Parse(String line) {
       if(line.startsWith("ORC")) {
          this.orc = new ORC();
@@ -59,11 +61,15 @@ public class PIDContainer extends Node {
       return null;
    }
    
-   public void ToDatabase(DBHandler db, int parent)throws SQLException {
+   
+   //This method calls the ORC.ToDatabase if the orc object is not null
+   //Then calls the obr.ToDatabase method
+   public int ToDatabase(DBHandler db, int parent)throws SQLException {
       if(this.orc != null) {
          this.orc.ToDatabase(db, parent);
       }
       this.obr.ToDatabase(db, parent);
+      return 0;
    }
    
    public boolean HasOBR() {
