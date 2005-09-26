@@ -35,6 +35,7 @@ public class LabResultData {
    
    public static String CML = "CML";
    public static String MDS = "MDS";
+   public static String EXCELLERIS = "BCP"; //EXCELLERIS
    public String segmentID;
    public String acknowledgedStatus;
 
@@ -50,6 +51,7 @@ public class LabResultData {
    public boolean abn = false;
    public String labType; // ie CML or MDS
    public boolean finalRes = true;
+   public boolean isMatchedToPatient = true;
    
    public LabResultData() {
    }
@@ -61,6 +63,8 @@ public class LabResultData {
          labType = MDS;
       }
    }
+   
+   public boolean isMatchedToPatient() { return isMatchedToPatient; }
    
    public boolean isAbnormal(){ return abn ; }
    
