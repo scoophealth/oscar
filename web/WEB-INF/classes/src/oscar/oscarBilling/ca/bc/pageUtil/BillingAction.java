@@ -39,6 +39,7 @@ import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import org.apache.struts.action.ActionError;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicData.Demographic;
+import oscar.OscarProperties;
 
 public final class BillingAction
     extends Action {
@@ -94,7 +95,9 @@ public final class BillingAction
    */
   private void verifyLast13050(ActionErrors errors, String demo) {
     ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
-    if (vldt.needsCDMCounselling(demo)) {
+    String[] cnlsCodes = OscarProperties.getInstance().getProperty(
+          "CDM_ALERTS").split(",");
+    if (vldt.needsCDMCounselling(demo,cnlsCodes)) {
       int last13050 = vldt.daysSinceLast13050(demo);
       if (last13050 > 365) {
         errors.add("",

@@ -42,13 +42,15 @@ public class CDMReminderHlp {
    * has patients that need counselling
    * @param provNo String
    */
-  public void manageCDMTicklers(String provNo) {
+  public void manageCDMTicklers(String[] alertCodes) {
     //get all demographics with a problem that falls within CDM category
-    ArrayList cdms = this.getCDMPatients(provNo);
+    Hashtable cdms = (Hashtable)this.getCDMPatients(alertCodes);
+    Enumeration demoNos = cdms.keys();
     TicklerCreator crt = new TicklerCreator();
     String remString = "SERVICE CODE: 13050 Reminder";
-    for (Iterator iter = cdms.iterator(); iter.hasNext(); ) {
-      String demoNo = (String) iter.next();
+    while (demoNos.hasMoreElements()) {
+      String demoNo = (String) demoNos.nextElement();
+      String provNo = (String)cdms.get(demoNo);
       ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
       int daysPast = lgc.daysSinceLast13050(demoNo);
       if (daysPast > 365) {
@@ -57,7 +59,7 @@ public class CDMReminderHlp {
         DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         try {
-         java.util.Date newDate = formatter.parse(oldfmt);
+          java.util.Date newDate = formatter.parse(oldfmt);
           formatter = new SimpleDateFormat("dd-MMM-yy");
           newfmt = formatter.format(newDate);
         }
@@ -66,21 +68,22 @@ public class CDMReminderHlp {
         }
 
         String message = remString + " - Last Billed On: " + newfmt;
+        crt.resolveTickler(demoNo, remString);
         crt.createTickler(demoNo, provNo, message);
       }
       else if (daysPast < 0) {
         String message =
             remString + " - Never billed for this patient";
+        crt.resolveTickler(demoNo, remString);
         crt.createTickler(demoNo, provNo, message);
       }
-      else{
+      else {
         //This code has been billed for this patient within the last year
         //Resolve unnecessary ticklers
-        crt.resolveTickler(demoNo,remString);
+        crt.resolveTickler(demoNo, remString);
       }
     }
   }
-
 
   /**
    * Returns a String list of demographic numbers for patients that are associated with the
@@ -88,20 +91,24 @@ public class CDMReminderHlp {
    * @param provNo String
    * @return ArrayList
    */
-  private ArrayList getCDMPatients(String provNo) {
-    ArrayList lst = new ArrayList();
-    String qry = "SELECT de.demographic_no FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no" +
-        " and dxresearch_code in(250,428)" +
-        " and status = 'A'" +
-        " and provider_no = " + String.valueOf(provNo);
-    System.out.println("qry=" + qry);
+  private Map getCDMPatients(String[] codes) {
+    Hashtable lst = new Hashtable();
+    String qry = "SELECT distinct de.demographic_no,de.provider_no FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no " +
+    " and d.dxresearch_code in(";
+     for (int i = 0; i < codes.length; i++) {
+       qry+=codes[i];
+       if(i<codes.length-1){
+         qry+=",";
+       }
+     }
+    qry += ") and status = 'A'";
     DBHandler db = null;
     ResultSet rs = null;
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       rs = db.GetSQL(qry);
       while (rs.next()) {
-        lst.add(rs.getString(1));
+        lst.put(rs.getString(1),rs.getString(2));
       }
     }
     catch (SQLException ex) {

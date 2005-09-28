@@ -163,7 +163,7 @@ public class ServiceCodeValidationLogic {
         ret = rs.getInt(1);
         index++;
       }
-      if(index==0) {
+      if (index == 0) {
         ret = -1;
       }
       db.CloseConn();
@@ -182,7 +182,7 @@ public class ServiceCodeValidationLogic {
    * @param demoNo String
    * @return boolean
    */
-  public boolean hasMore00120Codes(String demoNo) {
+  public boolean hasMore00120Codes(String demoNo, String cnslCode) {
     boolean ret = false;
     DBHandler db = null;
     ResultSet rs = null;
@@ -191,8 +191,8 @@ public class ServiceCodeValidationLogic {
       String qry = "SELECT COUNT(*) " +
           "FROM billingmaster " +
           "WHERE demographic_no = '" + demoNo + "'" +
-          "AND billing_code = 00120 " +
-          "AND YEAR(service_date) = YEAR(CURDATE())";
+          "AND billing_code = " + cnslCode +
+          " AND YEAR(service_date) = YEAR(CURDATE())";
       System.out.println("qry=" + qry);
       rs = db.GetSQL(qry);
       if (rs.next()) {
@@ -215,11 +215,17 @@ public class ServiceCodeValidationLogic {
    * @param demoNo String
    * @return boolean
    */
-  public boolean needsCDMCounselling(String demoNo) {
+  public boolean needsCDMCounselling(String demoNo, String[] codes) {
     boolean ret = false;
-    String qry = "SELECT * FROM dxresearch d WHERE d.demographic_no = " +
-        demoNo +
-        " and dxresearch_code in(250,428) and status = 'A'";
+    String qry = "SELECT * FROM dxresearch d WHERE d.demographic_no = " + demoNo +" and dxresearch_code in(";
+
+    for (int i = 0; i < codes.length; i++) {
+      qry+=codes[i];
+      if(i<codes.length-1){
+        qry+=",";
+      }
+    }
+    qry += ") and status = 'A'";
     DBHandler db = null;
     ResultSet rs = null;
     try {
