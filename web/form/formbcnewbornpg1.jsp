@@ -22,6 +22,18 @@
 
 	//get project_home
 	String project_home = request.getContextPath().substring(1);
+	boolean bSync = false;
+	if(!props.getProperty("c_surname_cur", "").equals("") && !(props.getProperty("c_surname_cur", "").equals(props.getProperty("c_surname", "")) 
+	        && props.getProperty("c_givenName_cur", "").equals(props.getProperty("c_givenName", ""))
+	        && props.getProperty("c_address_cur", "").equals(props.getProperty("c_address", ""))
+	        && props.getProperty("c_city_cur", "").equals(props.getProperty("c_city", ""))
+	        && props.getProperty("c_province_cur", "").equals(props.getProperty("c_province", ""))
+	        && props.getProperty("c_postal_cur", "").equals(props.getProperty("c_postal", ""))
+	        //&& props.getProperty("c_phn_cur", "").equals(props.getProperty("c_phn", ""))
+	        && props.getProperty("c_phone_cur", "").trim().equals(props.getProperty("c_phone", "").trim())
+	        )) {
+	    bSync = true;
+	}
 %>
 <%
   boolean bView = false;
@@ -141,6 +153,23 @@
        windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
        var popup=window.open(page, "planner", windowprop);
     }
+
+
+function showDef(str, field) { 
+    if(document.getElementById)	{
+        field.value = str;
+    }
+}
+function syncDemo() { 
+    document.forms[0].c_surname.value = "<%=props.getProperty("c_surname_cur", "")%>";
+    document.forms[0].c_givenName.value = "<%=props.getProperty("c_givenName_cur", "")%>";
+    document.forms[0].c_address.value = "<%=props.getProperty("c_address_cur", "")%>";
+    document.forms[0].c_city.value = "<%=props.getProperty("c_city_cur", "")%>";
+    document.forms[0].c_province.value = "<%=props.getProperty("c_province_cur", "")%>";
+    document.forms[0].c_postal.value = "<%=props.getProperty("c_postal_cur", "")%>";
+    //document.forms[0].c_phn.value = "<%=props.getProperty("c_phn_cur", "")%>";
+    document.forms[0].c_phone.value = "<%=props.getProperty("c_phone_cur", "")%>";
+}
 
 /**
  * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
@@ -481,18 +510,29 @@ function onCheckSlave(a, masterName) {
             <option value="<%=optBG1[i]%>" <%=props.getProperty("pg1_bloodGrpRh", "").equals(optBG1[i])?"selected":""%> ><%=optBG1[i]%></option>
           <%}%>
           </select>
+          <select name="pg1_bloodRh" @oscar.formDB>
+            <option value="" <%=props.getProperty("pg1_bloodRh", "").equals("")?"selected":""%> ></option>
+            <option value="pos" <%=props.getProperty("pg1_bloodRh", "").equals("pos")?"selected":""%> >pos</option>
+            <option value="neg" <%=props.getProperty("pg1_bloodRh", "").equals("neg")?"selected":""%> >neg</option>
+          </select>
 	  </td>
 	  <td nowrap>RH ANTIB<br>
       <!--input type="text" name="pg1_RhAntib" style="width:100%" size="10" maxlength="20" value="<%--= props.getProperty("pg1_RhAntib", "") --%>" @oscar.formDB  /-->
           <select name="pg1_RhAntib" @oscar.formDB>
             <option value="" <%=props.getProperty("pg1_RhAntib", "").equals("")?"selected":""%> ></option>
+            <option value="None" <%=props.getProperty("pg1_RhAntib", "").equals("None")?"selected":""%> >None</option>
             <option value="+ve" <%=props.getProperty("pg1_RhAntib", "").equals("+ve")?"selected":""%> >+ve</option>
             <option value="-ve" <%=props.getProperty("pg1_RhAntib", "").equals("-ve")?"selected":""%> >-ve</option>
           </select>
           <font size="-2"><%=props.getProperty("pg1_RhAntib", "")%></font>
 	  </td>
 	  <td nowrap>HBsAg<br>
-      <input type="text" name="pg1_HBsAg" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_HBsAg", "") %>" @oscar.formDB  />
+      <!-- input type="text" name="pg1_HBsAg" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("pg1_HBsAg", "") %>" @oscar.formDB  /-->
+          <select name="pg1_HBsAg" @oscar.formDB>
+            <option value="" <%=props.getProperty("pg1_HBsAg", "").equals("")?"selected":""%> ></option>
+            <option value="NR" <%=props.getProperty("pg1_HBsAg", "").equals("NR")?"selected":""%> >NR</option>
+            <option value="R" <%=props.getProperty("pg1_HBsAg", "").equals("R")?"selected":""%> >R</option>
+          </select>
 	  </td>
     </tr>
   </table>
@@ -511,12 +551,13 @@ function onCheckSlave(a, masterName) {
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
     <tr>
       <td width="55%">HOSPITAL NAME<br>
-      <input type="text" name="c_hospitalName" style="width:100%" size="30" maxlength="80" value="<%= props.getProperty("c_hospitalName", "") %>" @oscar.formDB />
+      <input type="text" name="c_hospitalName" <%=oscarVariables.getProperty("BCAR_hospital")==null? " ": ("class=\"spe\" onDblClick='showDef(\""+oscarVariables.getProperty("BCAR_hospital")+"\", this);'") %> style="width:100%" size="30" maxlength="80" value="<%= props.getProperty("c_hospitalName", "") %>" @oscar.formDB />
       </td>
       <td>DATE
           <img src="../images/cal.gif" id="pg1_formDate_cal">
+          <%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font color='red'>Synchronize</font></a></b>") :"" %>
       <br>
-      <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg1_formDate" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
     </tr><tr>
       <td width="55%">SURNAME<br>
@@ -536,7 +577,8 @@ function onCheckSlave(a, masterName) {
       <input type="text" name="c_phone" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("c_phone", "") %>" @oscar.formDB />
 	  </td>
     </tr><tr>
-	  <td colspan="2"><span class="small9">PHYSICIAN / MIDWIFE NAME</span><br>
+	  <td colspan="2"><span class="small9">
+	  <a href=# onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp?fieldname=c_phyMid'); return false;">PHYSICIAN / MIDWIFE NAME</a></span><br>
       <input type="text" name="c_phyMid" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_phyMid", "") %>" @oscar.formDB />
 	  </td>
     </tr>
@@ -706,6 +748,8 @@ function onCheckSlave(a, masterName) {
 	Breast &nbsp;&nbsp;&nbsp;
 	<input type="checkbox" name="pg1_delRomFormula" <%= props.getProperty("pg1_delRomFormula", "") %> @oscar.formDB  dbType="tinyint(1)"/>
 	Formula
+	<input type="checkbox" name="pg1_delRomDonorMilk" <%= props.getProperty("pg1_delRomDonorMilk", "") %> @oscar.formDB  dbType="tinyint(1)"/>
+	Donor Milk
 	</td>
   </tr>
   </table>

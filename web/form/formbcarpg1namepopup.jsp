@@ -35,6 +35,8 @@ String strLimit2="100";
 String orderBy = request.getParameter("orderby")!=null ? request.getParameter("orderby") : "first_name" ;
 if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
 if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+
+String fieldName = request.getParameter("fieldname")!=null ? request.getParameter("fieldname") : "pg1_priCare" ;
 %>
 
 <%@ page import="java.sql.*" errorPage="../errorpage.jsp" %>
@@ -61,7 +63,11 @@ function setfocus() {
 }
 function typeInData(v) {
   self.close();
+  <% if(fieldName.equals("pg1_priCare") ) {%>
   opener.document.forms[0].pg1_priCare.value = v ; 
+  <% } else {%>
+  opener.document.forms[0].<%=fieldName%>.value = v ; 
+  <% }%>
 }
 //-->
 </SCRIPT>

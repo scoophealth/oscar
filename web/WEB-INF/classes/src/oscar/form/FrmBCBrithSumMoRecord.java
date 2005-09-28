@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -65,6 +66,20 @@ public class FrmBCBrithSumMoRecord extends FrmRecord {
 			FrmRecordHelp frh = new FrmRecordHelp();
 			frh.setDateFormat(_dateFormat);
 			props = (frh).getFormRecord(sql);
+
+            sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
+                    + demographicNo;
+            ResultSet rs = (new DBHelp()).searchDBRecord(sql);
+            if (rs.next()) {
+                props.setProperty("c_surname_cur", rs.getString("last_name"));
+                props.setProperty("c_givenName_cur", rs.getString("first_name"));
+                props.setProperty("c_address_cur", rs.getString("address"));
+                props.setProperty("c_city_cur", rs.getString("city"));
+                props.setProperty("c_province_cur", rs.getString("province"));
+                props.setProperty("c_postal_cur", rs.getString("postal"));
+                props.setProperty("c_phn_cur", rs.getString("hin"));
+                props.setProperty("c_phone_cur", rs.getString("phone") + "  " + rs.getString("phone2"));
+            }
         }
 
         return props;

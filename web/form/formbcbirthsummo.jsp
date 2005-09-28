@@ -23,6 +23,18 @@
 
 	//get project_home
 	String project_home = request.getContextPath().substring(1);
+	boolean bSync = false;
+	if(!props.getProperty("c_surname_cur", "").equals("") && !(props.getProperty("c_surname_cur", "").equals(props.getProperty("c_surname", "")) 
+	        && props.getProperty("c_givenName_cur", "").equals(props.getProperty("c_givenName", ""))
+	        && props.getProperty("c_address_cur", "").equals(props.getProperty("c_address", ""))
+	        && props.getProperty("c_city_cur", "").equals(props.getProperty("c_city", ""))
+	        && props.getProperty("c_province_cur", "").equals(props.getProperty("c_province", ""))
+	        && props.getProperty("c_postal_cur", "").equals(props.getProperty("c_postal", ""))
+	        //&& props.getProperty("c_phn_cur", "").equals(props.getProperty("c_phn", ""))
+	        && props.getProperty("c_phone_cur", "").trim().equals(props.getProperty("c_phone", "").trim())
+	        )) {
+	    bSync = true;
+	}
 %>
 <%
   boolean bView = false;
@@ -190,6 +202,17 @@ function onCheckSlave(a, masterName) {
        windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
        var popup=window.open(page, "planner", windowprop);
     }
+    
+function syncDemo() { 
+    document.forms[0].c_surname.value = "<%=props.getProperty("c_surname_cur", "")%>";
+    document.forms[0].c_givenName.value = "<%=props.getProperty("c_givenName_cur", "")%>";
+    document.forms[0].c_address.value = "<%=props.getProperty("c_address_cur", "")%>";
+    document.forms[0].c_city.value = "<%=props.getProperty("c_city_cur", "")%>";
+    document.forms[0].c_province.value = "<%=props.getProperty("c_province_cur", "")%>";
+    document.forms[0].c_postal.value = "<%=props.getProperty("c_postal_cur", "")%>";
+    document.forms[0].c_phn.value = "<%=props.getProperty("c_phn_cur", "")%>";
+    document.forms[0].c_phone.value = "<%=props.getProperty("c_phone_cur", "")%>";
+}
 
 /**
  * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
@@ -470,6 +493,7 @@ var maxYear=9900;
     <tr>
       <td width="55%" >DATE
 		<img src="../images/cal.gif" id="pg1_formDate_cal">
+          <%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font color='red'>Synchronize</font></a></b>") :"" %>
       <br>
       <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
@@ -497,7 +521,8 @@ var maxYear=9900;
       <td>PERSONAL HEALTH NUMBER<br>
       <input type="text" name="c_phn" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("c_phn", "") %>" @oscar.formDB />
 	  </td>
-	  <td><span class="small9">PHYSICIAN / MIDWIFE NAME</span><br>
+	  <td><span class="small9">
+	  <a href=# onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp?fieldname=c_phyMid'); return false;">PHYSICIAN / MIDWIFE NAME</a></span><br>
       <input type="text" name="c_phyMid" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_phyMid", "") %>" @oscar.formDB />
 	  </td>
     </tr>

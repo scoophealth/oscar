@@ -10,7 +10,8 @@
  c_a              : left, 119, 92, 0, BaseFont.HELVETICA, 8
  c_l              : left, 139, 92, 0, BaseFont.HELVETICA, 8
  pg1_eddByDate    : left, 161, 92, 0, BaseFont.HELVETICA, 8
- pg1_bloodGrpRh   : left, 222, 92, 0, BaseFont.HELVETICA, 8
+ pg1_bloodGrpRh   : left, 225, 92, 0, BaseFont.HELVETICA, 8
+ pg1_bloodRh      : left, 245, 92, 0, BaseFont.HELVETICA, 8
  pg1_RhAntib      : left, 278, 92, 0, BaseFont.HELVETICA, 8
  pg1_HBsAg        : left, 318, 92, 0, BaseFont.HELVETICA, 8
  c_riskFactor     : left, 64, 104, 0, BaseFont.HELVETICA, 8, _, 361, 140, 9
@@ -56,6 +57,13 @@
  pg1_delRomPassY      : left, 204, 410, 0, BaseFont.HELVETICA, 8 , X
  pg1_delRomBreast     : left, 115, 426, 0, BaseFont.HELVETICA, 8 , X
  pg1_delRomFormula    : left, 162, 426, 0, BaseFont.HELVETICA, 8 , X
+ pg1_delRomDonorMilk  : left, 202, 426, 0, BaseFont.HELVETICA, 8 , X
+__milk	 : left, 210, 426, 0, BaseFont.HELVETICA, 7 , Donor Milk
+__$lineL		: 202, 362, 202, 370, 0.5
+__$lineR		: 208, 362, 208, 370, 0.5
+__$lineT		: 202, 362, 208, 362, 0.5
+__$lineB		: 202, 370, 208, 370, 0.5
+ 
  pg1_routProBldRh     : left, 129, 455, 0, BaseFont.HELVETICA, 8 , X
  pg1_routProBldOther  : left, 176, 455, 0, BaseFont.HELVETICA, 8 , X
  pg1_routProEyeEryth  : left, 66,  477, 0, BaseFont.HELVETICA, 8 , X

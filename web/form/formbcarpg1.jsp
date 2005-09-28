@@ -23,6 +23,19 @@
 
 	//get project_home
 	String project_home = request.getContextPath().substring(1);
+	//sync
+	boolean bSync = false;
+	if(!props.getProperty("c_surname_cur", "").equals("") && !(props.getProperty("c_surname_cur", "").equals(props.getProperty("c_surname", "")) 
+	        && props.getProperty("c_givenName_cur", "").equals(props.getProperty("c_givenName", ""))
+	        && props.getProperty("c_address_cur", "").equals(props.getProperty("c_address", ""))
+	        && props.getProperty("c_city_cur", "").equals(props.getProperty("c_city", ""))
+	        && props.getProperty("c_province_cur", "").equals(props.getProperty("c_province", ""))
+	        && props.getProperty("c_postal_cur", "").equals(props.getProperty("c_postal", ""))
+	        && props.getProperty("c_phn_cur", "").equals(props.getProperty("c_phn", ""))
+	        && props.getProperty("c_phone_cur", "").trim().equals(props.getProperty("c_phone", "").trim())
+	        )) {
+	    bSync = true;
+	}
 %>
 <%
   boolean bView = false;
@@ -59,6 +72,18 @@
 <head>
     <title>Antenatal Record 1</title>
     <link rel="stylesheet" type="text/css" href="<%=bView?"bcArStyleView.css" : "bcArStyle.css"%>">
+  <!-- calendar stylesheet -->
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+  <!-- main calendar program -->
+  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+  <!-- language for the calendar -->
+  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+  <!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
     <html:base/>
 <style type="text/css">
 <!--
@@ -70,6 +95,9 @@
         z-index:99;  visibility:hidden;}
 .demo2  {color:#000033; background-color:silver; layer-background-color:#cccccc;
         position:absolute; top:40px; left:320px; width:150px; height:220px;
+        z-index:99;  visibility:hidden;}
+.demo3  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:460px; left:430px; width:180px; height:160px;
         z-index:99;  visibility:hidden;}
 -->
 </style>
@@ -96,11 +124,43 @@ function insertBox(str, field, layerName) { // 1 visible, 0 hidden
     }
     showHideBox(layerName, 0);
 }
+function showDeliBox(layerName, iState, field, e) { // 1 visible, 0 hidden
+    fieldObj = field;
+
+    if(document.layers)	{   //NN4+
+       document.layers[layerName].visibility = iState ? "show" : "hide";
+    } else if(document.getElementById) {	  //gecko(NN6) + IE 5+
+        var obj = document.getElementById(layerName);
+        obj.style.visibility = iState ? "visible" : "hidden";
+    } else if(document.all)	{// IE 4
+        document.all[layerName].style.visibility = iState ? "visible" : "hidden";
+    }
+    fieldObj = field;
+}
+function insertBox1(str, layerName) { // 1 visible, 0 hidden
+    if(document.getElementById)	{
+        //var obj = document.getElementById(field);
+        fieldObj.value = str;
+    }
+    showHideBox(layerName, 0);
+}
+
 function showDef(str, field) { 
     if(document.getElementById)	{
         field.value = str;
     }
 }
+function syncDemo() { 
+    document.forms[0].c_surname.value = "<%=props.getProperty("c_surname_cur", "")%>";
+    document.forms[0].c_givenName.value = "<%=props.getProperty("c_givenName_cur", "")%>";
+    document.forms[0].c_address.value = "<%=props.getProperty("c_address_cur", "")%>";
+    document.forms[0].c_city.value = "<%=props.getProperty("c_city_cur", "")%>";
+    document.forms[0].c_province.value = "<%=props.getProperty("c_province_cur", "")%>";
+    document.forms[0].c_postal.value = "<%=props.getProperty("c_postal_cur", "")%>";
+    document.forms[0].c_phn.value = "<%=props.getProperty("c_phn_cur", "")%>";
+    document.forms[0].c_phone.value = "<%=props.getProperty("c_phone_cur", "")%>";
+}
+
 // -->
 </script>
 
@@ -111,11 +171,21 @@ function showDef(str, field) {
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
 	}
     function onPrint() {
-        document.forms[0].submit.value="print"; //printAR1
+        document.forms[0].submit.value="print"; 
         var ret = checkAllDates();
         if(ret==true)
         {
             document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+Part+1&__cfgfile=bcar1PrintCfgPg1&__template=bcar1";
+            document.forms[0].target="_blank";            
+        }
+        return ret;
+    }
+    function onPrintRisk() {
+        document.forms[0].submit.value="print"; 
+        var ret = checkAllDates();
+        if(ret==true)
+        {
+            document.forms[0].action = "../form/createpdf?__title=British+Columbia+Antenatal+Record+Part+2&__cfgfile=bcar1PrintCfgPg2&__template=bcar22";
             document.forms[0].target="_blank";            
         }
         return ret;
@@ -362,11 +432,42 @@ function calByLMP() {
      <tr><td><a href=# onclick="insertBox('Other','pg1_ethOrig', 'Origdiv'); return false;">Other</a></td></tr>
    </table>
 </div>
+<div ID="Origdiv1" class="demo2">
+   <table bgcolor='silver' width='100%'>
+     <tr><td align='right'><a href=# onclick="showHideBox('Origdiv1',0); return false;">X</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Caucasian','pg1_faEthOrig', 'Origdiv1'); return false;">Caucasian</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Black','pg1_faEthOrig', 'Origdiv1'); return false;">Black</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('South Asian','pg1_faEthOrig', 'Origdiv1'); return false;">South Asian</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Pakistani','pg1_faEthOrig', 'Origdiv1'); return false;">Pakistani</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Sri Lankan','pg1_faEthOrig', 'Origdiv1'); return false;">Sri Lankan</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Japanese','pg1_faEthOrig', 'Origdiv1'); return false;">Japanese</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Filipino','pg1_faEthOrig', 'Origdiv1'); return false;">Filipino</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Chinese','pg1_faEthOrig', 'Origdiv1'); return false;">Chinese</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Vietnamese','pg1_faEthOrig', 'Origdiv1'); return false;">Vietnamese</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Hispanic','pg1_faEthOrig', 'Origdiv1'); return false;">Hispanic</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('First Nations','pg1_faEthOrig', 'Origdiv1'); return false;">First Nations</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Jewish','pg1_faEthOrig', 'Origdiv1'); return false;">Jewish</a></td></tr>
+     <tr><td><a href=# onclick="insertBox('Other','pg1_faEthOrig', 'Origdiv1'); return false;">Other</a></td></tr>
+   </table>
+</div>
 <div ID="Instrdiv" class="demo1">
 	<center>
    <table bgcolor='#007FFF' width='99%'>
      <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
      <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click shaded fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
+   </table>
+   </center>
+</div>
+<div ID="Delidiv" class="demo3">
+	<center>
+   <table bgcolor='silver' width='99%'>
+     <tr><td align='right'><a href=# onclick="showHideBox('Delidiv',0); return false;">X</a></td></tr>
+     <tr><td><a href=# onclick="insertBox1('SVD','Delidiv'); return false;">SVD</a></td></tr>
+     <tr><td><a href=# onclick="insertBox1('C-section','Delidiv'); return false;">C-section</a></td></tr>
+     <tr><td><a href=# onclick="insertBox1('Vacuum','Delidiv'); return false;">Vacuum</a></td></tr>
+     <tr><td><a href=# onclick="insertBox1('Forceps','Delidiv'); return false;">Forceps</a></td></tr>
+     <tr><td><a href=# onclick="insertBox1('Vacuum and Forceps','Delidiv'); return false;">Vacuum and Forceps</a></td></tr>
+     <tr><td><a href=# onclick="insertBox1('Forceps Trial and C-section','Delidiv'); return false;">Forceps Trial and C-section</a></td></tr>
    </table>
    </center>
 </div>
@@ -405,6 +506,7 @@ function calByLMP() {
 %>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="Print Risk" onclick="javascript:return onPrintRisk();"/>
         </td>
 <%
   if (!bView) {
@@ -413,15 +515,14 @@ function calByLMP() {
            <a href=# title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
         </td>
 
-        <td align="right"><b>View:</b> 
-            <a href="javascript: popupPage('formbcarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.1)</font></a> |
-            <a href="javascript: popupPage('formbcarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 <font size=-2>(pg.2)</font></a>
-            &nbsp;
+        <td align="right"><!-- font size=-2><b>View:</b> </font>
+            <a href="javascript: popupPage('formbcarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');"><font size=-2>AR2 (pg.1)</font></a> |
+            <a href="javascript: popupPage('formbcarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');"><font size=-2>AR2 (pg.2)</font></a>
+            &nbsp;</font> -->
         </td>
         <td align="right"><b>Edit:</b>AR1 |
             <a href="formbcarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.1)</font></a> |
-            <a href="formbcarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.2)</font></a> |
-            <!--a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a-->
+            <a href="formbcarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.2)</font></a> 
         </td>
 <%
   }
@@ -442,7 +543,7 @@ function calByLMP() {
   <table width="100%" border="1"  cellspacing="0" cellpadding="0">
     <tr>
       <td width="30%"><b>1.</b> HOSPITAL<br>
-      <input type="text" name="c_hospital" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_hospital", "") %>" @oscar.formDB />
+      <input type="text" name="c_hospital" <%=oscarVariables.getProperty("BCAR_hospital")==null? " ": ("class=\"spe\" onDblClick='showDef(\""+oscarVariables.getProperty("BCAR_hospital")+"\", this);'") %> style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_hospital", "") %>" @oscar.formDB />
       </td>
 	  <td width="33%"><a href=# onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp'); return false;">PRIMARY CARE GIVER</a><br>
       <input type="text" name="pg1_priCare" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_priCare", "") %>" @oscar.formDB />
@@ -486,7 +587,7 @@ function calByLMP() {
       <input type="text" name="pg1_partnerAge" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_partnerAge", "") %>" @oscar.formDB  />
 	  </td>
 	  <td><span class="small9">ETHNIC ORIGIN OF NEWBORN’S FATHER</span>
-      <input type="text" name="pg1_faEthOrig" style="width:100%" size="30" maxlength="50" value="<%= props.getProperty("pg1_faEthOrig", "") %>" @oscar.formDB  />
+      <input type="text" name="pg1_faEthOrig" class="spe" onDblClick="showHideBox('Origdiv1',1);" style="width:100%" size="30" maxlength="50" value="<%= props.getProperty("pg1_faEthOrig", "") %>" @oscar.formDB  />
 	  </td>
     </tr>
   </table>
@@ -496,9 +597,10 @@ function calByLMP() {
 
   <table width="100%" border="0"  cellspacing="0" cellpadding="0">
     <tr>
-      <td colspan="2">DATE<br>
+      <td>DATE<br>
       <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
+      <td align="right"><%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font size='+1' color='red'>Synchronize</font></a></b>") :"" %></td>
     </tr><tr>
       <td width="55%">SURNAME<br>
       <input type="text" name="c_surname" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_surname", "") %>" @oscar.formDB />
@@ -520,7 +622,7 @@ function calByLMP() {
       <td>PERSONAL HEALTH NUMBER<br>
       <input type="text" name="c_phn" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("c_phn", "") %>" @oscar.formDB />
 	  </td>
-	  <td><span class="small9">PHYSICIAN / MIDWIFE NAME</span><br>
+	  <td><span class="small9"><a href=# onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp?fieldname=c_phyMid'); return false;">PHYSICIAN / MIDWIFE NAME</a></span><br>
       <input type="text" name="c_phyMid" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_phyMid", "") %>" @oscar.formDB />
 	  </td>
     </tr>
@@ -563,19 +665,20 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
 	</td>
   <td colspan="3" align="center"><b>CHILDREN</b></td>
 </tr><tr>
-  <th width="8%">DATE</th>
+  <th width="10%">DATE</th>
   <th width="15%">HOSPITAL OF BIRTH<br>OR ABORTION</th>
   <th width="8%">WEEKS AT<br>DELIVERY</th>
-  <th width="8%">HRS.IN<br>ACTIVE<br>LABOUR</th>
+  <th width="6%">HRS.IN<br>ACTIVE<br>LABOUR</th>
   <th width="8%">DELIVERY<br>TYPE</th>
   
   <th width="33%">PERINATAL COMPLICATIONS</th>
   <th width="3%">SEX</th>
-  <th width="8%">BIRTH<br>WEIGHT</th>
+  <th width="6%">BIRTH<br>WEIGHT</th>
   <th width="8%">PRESENT<br>HEALTH</th>
 </tr><tr>
-  <td>
-  <input type="text" name="pg1_obHistDate1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate1", "") %>" @oscar.formDB />
+  <td nowrap>
+  <input type="text" name="pg1_obHistDate1" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate1", "") %>" @oscar.formDB />
+  <img src="../images/cal.gif" id="pg1_obHistDate1_cal">
   </td>
   <td>
   <input type="text" name="pg1_birthOrAbort1" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort1", "") %>" @oscar.formDB />
@@ -587,14 +690,19 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_laboHr1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_laboHr1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_deliType1" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType1", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_deliType1" class="spe" onDblClick="showDeliBox('Delidiv',1, this, event);" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType1", "") %>" @oscar.formDB />
   </td>
   
   <td>
   <input type="text" name="pg1_periComp1" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg1_periComp1", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_obHistSex1" style="width:100%" size="1" maxlength="1" value="<%= props.getProperty("pg1_obHistSex1", "") %>" @oscar.formDB />
+  <!-- input type="text" name="pg1_obHistSex1" style="width:100%" size="1" maxlength="1" value="<%= props.getProperty("pg1_obHistSex1", "") %>" @oscar.formDB / -->
+          <select name="pg1_obHistSex1">
+            <option value="" ></option>
+            <option value="M" <%=props.getProperty("pg1_obHistSex1", "").equalsIgnoreCase("M")?"selected":""%> >M</option>
+            <option value="F" <%=props.getProperty("pg1_obHistSex1", "").equalsIgnoreCase("F")?"selected":""%> >F</option>
+          </select>
   </td>
   <td>
   <input type="text" name="pg1_birthWeit1" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit1", "") %>" @oscar.formDB />
@@ -604,7 +712,8 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate2", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_obHistDate2" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate2", "") %>" @oscar.formDB />
+  <img src="../images/cal.gif" id="pg1_obHistDate2_cal">
   </td>
   <td>
   <input type="text" name="pg1_birthOrAbort2" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort2", "") %>" @oscar.formDB />
@@ -616,14 +725,19 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_laboHr2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_laboHr2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_deliType2" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType2", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_deliType2" class="spe" onDblClick="showDeliBox('Delidiv',1, this, event);" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType2", "") %>" @oscar.formDB />
   </td>
   
   <td>
   <input type="text" name="pg1_periComp2" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg1_periComp2", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_obHistSex2" style="width:100%" size="1" maxlength="1" value="<%= props.getProperty("pg1_obHistSex2", "") %>" @oscar.formDB />
+  <!-- input type="text" name="pg1_obHistSex2" style="width:100%" size="1" maxlength="1" value="<%= props.getProperty("pg1_obHistSex2", "") %>" @oscar.formDB /-->
+          <select name="pg1_obHistSex2">
+            <option value="" ></option>
+            <option value="M" <%=props.getProperty("pg1_obHistSex2", "").equalsIgnoreCase("M")?"selected":""%> >M</option>
+            <option value="F" <%=props.getProperty("pg1_obHistSex2", "").equalsIgnoreCase("F")?"selected":""%> >F</option>
+          </select>
   </td>
   <td>
   <input type="text" name="pg1_birthWeit2" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit2", "") %>" @oscar.formDB />
@@ -633,7 +747,8 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate3", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_obHistDate3" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate3", "") %>" @oscar.formDB />
+  <img src="../images/cal.gif" id="pg1_obHistDate3_cal">
   </td>
   <td>
   <input type="text" name="pg1_birthOrAbort3" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort3", "") %>" @oscar.formDB />
@@ -645,14 +760,18 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_laboHr3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_laboHr3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_deliType3" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType3", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_deliType3" class="spe" onDblClick="showDeliBox('Delidiv',1, this, event);" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType3", "") %>" @oscar.formDB />
   </td>
   
   <td>
   <input type="text" name="pg1_periComp3" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg1_periComp3", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_obHistSex3" style="width:100%" size="1" maxlength="1" value="<%= props.getProperty("pg1_obHistSex3", "") %>" @oscar.formDB />
+          <select name="pg1_obHistSex3">
+            <option value="" ></option>
+            <option value="M" <%=props.getProperty("pg1_obHistSex3", "").equalsIgnoreCase("M")?"selected":""%> >M</option>
+            <option value="F" <%=props.getProperty("pg1_obHistSex3", "").equalsIgnoreCase("F")?"selected":""%> >F</option>
+          </select>
   </td>
   <td>
   <input type="text" name="pg1_birthWeit3" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit3", "") %>" @oscar.formDB />
@@ -662,7 +781,8 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate4", "") %>" @oscar.formDB  />
+  <input type="text" name="pg1_obHistDate4" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate4", "") %>" @oscar.formDB  />
+  <img src="../images/cal.gif" id="pg1_obHistDate4_cal">
   </td>
   <td>
   <input type="text" name="pg1_birthOrAbort4" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort4", "") %>" @oscar.formDB />
@@ -674,14 +794,18 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_laboHr4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_laboHr4", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_deliType4" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType4", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_deliType4" class="spe" onDblClick="showDeliBox('Delidiv',1, this, event);" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType4", "") %>" @oscar.formDB />
   </td>
   
   <td>
   <input type="text" name="pg1_periComp4" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg1_periComp4", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_obHistSex4" style="width:100%" size="1" maxlength="1" value="<%= props.getProperty("pg1_obHistSex4", "") %>" @oscar.formDB />
+          <select name="pg1_obHistSex4">
+            <option value="" ></option>
+            <option value="M" <%=props.getProperty("pg1_obHistSex4", "").equalsIgnoreCase("M")?"selected":""%> >M</option>
+            <option value="F" <%=props.getProperty("pg1_obHistSex4", "").equalsIgnoreCase("F")?"selected":""%> >F</option>
+          </select>
   </td>
   <td>
   <input type="text" name="pg1_birthWeit4" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit4", "") %>" @oscar.formDB />
@@ -691,7 +815,8 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_obHistDate5", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_obHistDate5" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate5", "") %>" @oscar.formDB />
+  <img src="../images/cal.gif" id="pg1_obHistDate5_cal">
   </td>
   <td>
   <input type="text" name="pg1_birthOrAbort5" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_birthOrAbort5", "") %>" @oscar.formDB />
@@ -703,14 +828,18 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <input type="text" name="pg1_laboHr5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_laboHr5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_deliType5" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType5", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_deliType5" class="spe" onDblClick="showDeliBox('Delidiv',1, this, event);" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_deliType5", "") %>" @oscar.formDB />
   </td>
   
   <td>
   <input type="text" name="pg1_periComp5" style="width:100%" size="50" maxlength="80" value="<%= props.getProperty("pg1_periComp5", "") %>" @oscar.formDB />
   </td>
   <td>
-  <input type="text" name="pg1_obHistSex5" style="width:100%" size="1" maxlength="1" value="<%= props.getProperty("pg1_obHistSex5", "") %>" @oscar.formDB />
+          <select name="pg1_obHistSex5">
+            <option value="" ></option>
+            <option value="M" <%=props.getProperty("pg1_obHistSex5", "").equalsIgnoreCase("M")?"selected":""%> >M</option>
+            <option value="F" <%=props.getProperty("pg1_obHistSex5", "").equalsIgnoreCase("F")?"selected":""%> >F</option>
+          </select>
   </td>
   <td>
   <input type="text" name="pg1_birthWeit5" style="width:100%" size="6" maxlength="8" value="<%= props.getProperty("pg1_birthWeit5", "") %>" @oscar.formDB />
@@ -727,7 +856,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
 
   <table width="100%" border="1"  cellspacing="0" cellpadding="0">
   <tr>
-    <td width="30%"><b>4.</b> LMP<br> dd/mm/yyyy<br>
+    <td width="30%"><b>4.</b> LMP <img src="../images/cal.gif" id="pg1_lmp_cal"><br> dd/mm/yyyy<br>
     <input type="text" name="pg1_lmp" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_lmp", "") %>" @oscar.formDB dbType="date"/>
 	</td>
     <td width="30%">MENSES CYCLE<br>
@@ -752,13 +881,13 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
         <%}%>
         </select>
 		</td><td width="30%"><span class="small8">WHEN STOPPED:</font><br>
-		dd/mm/yyyy<br>
+		dd/mm/yyyy <img src="../images/cal.gif" id="pg1_stopDate_cal"><br>
         <input type="text" name="pg1_stopDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_stopDate", "") %>" @oscar.formDB />
 		</td>
 	  </tr>
 	  </table>
 	</td>
-	<td>EDD BY US<br> dd/mm/yyyy<br>
+	<td>EDD BY US <img src="../images/cal.gif" id="pg1_eddByUs_cal"><br> dd/mm/yyyy<br>
     <input type="text" name="pg1_eddByUs" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByUs", "") %>" @oscar.formDB dbType="date"/>
 	</td>
   </tr>
@@ -1201,7 +1330,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
 
   <table class="shrinkMe" width="100%" border="1"  cellspacing="0" cellpadding="0">
   <tr>
-    <td colspan="2"><b>11. EXAMINATION</b> dd/mm/yyyy<br>
+    <td colspan="2"><b>11. EXAMINATION</b> dd/mm/yyyy <img src="../images/cal.gif" id="pg1_examination_cal"><br>
       <input type="text" name="pg1_examination"  style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_examination", "") %>" @oscar.formDB  dbType="date"/>
 	</td>
 	<td colspan="2"><b>BP</b><br>
@@ -1210,38 +1339,38 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </tr><tr>
     <td width="10%"><span class="small9">HEAD &<br>NECK</span></td>
     <td width="40%">
-      <input type="text" name="pg1_headNeck" size="35" maxlength="40" value="<%= props.getProperty("pg1_headNeck", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_headNeck"  class="spe" onDblClick='showDef("NAD", this);' size="35" maxlength="40" value="<%= props.getProperty("pg1_headNeck", "") %>" @oscar.formDB />
 	</td>
     <td width="15%"><span class="small8">MUSCULOSKELETAL<br>&SPINE</span></td>
     <td width="35%">
-      <input type="text" name="pg1_muscSpine" size="30" maxlength="40" value="<%= props.getProperty("pg1_muscSpine", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_muscSpine"  class="spe" onDblClick='showDef("NAD", this);' size="30" maxlength="40" value="<%= props.getProperty("pg1_muscSpine", "") %>" @oscar.formDB />
 	</td>
   </tr><tr>
     <td><span class="small9">BREAST /<br>NIPPLES</span></td>
     <td>
-      <input type="text" name="pg1_breaNipp" size="35" maxlength="40" value="<%= props.getProperty("pg1_breaNipp", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_breaNipp"  class="spe" onDblClick='showDef("NAD", this);' size="35" maxlength="40" value="<%= props.getProperty("pg1_breaNipp", "") %>" @oscar.formDB />
 	</td>
     <td><span class="small9">VARICES &<br>SKIN</span></td>
     <td>
-      <input type="text" name="pg1_variSkin" size="30" maxlength="40" value="<%= props.getProperty("pg1_variSkin", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_variSkin"  class="spe" onDblClick='showDef("NAD", this);' size="30" maxlength="40" value="<%= props.getProperty("pg1_variSkin", "") %>" @oscar.formDB />
 	</td>
   </tr><tr>
     <td><span class="small9">HEART &<br>LUNGS</span></td>
     <td>
-      <input type="text" name="pg1_heartLung" size="35" maxlength="40" value="<%= props.getProperty("pg1_heartLung", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_heartLung"  class="spe" onDblClick='showDef("NAD", this);' size="35" maxlength="40" value="<%= props.getProperty("pg1_heartLung", "") %>" @oscar.formDB />
 	</td>
     <td><span class="small9">PELVIC EXAM</span></td>
     <td>
-      <input type="text" name="pg1_pelvic" size="30" maxlength="40" value="<%= props.getProperty("pg1_pelvic", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_pelvic"  class="spe" onDblClick='showDef("NAD", this);' size="30" maxlength="40" value="<%= props.getProperty("pg1_pelvic", "") %>" @oscar.formDB />
 	</td>
   </tr><tr>
     <td><span class="small9">ABDOMEN</span></td>
     <td>
-      <input type="text" name="pg1_abdomen" size="35" maxlength="40" value="<%= props.getProperty("pg1_abdomen", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_abdomen"  class="spe" onDblClick='showDef("NAD", this);' size="35" maxlength="40" value="<%= props.getProperty("pg1_abdomen", "") %>" @oscar.formDB />
 	</td>
     <td><span class="small8">SWABS /<br>CERVIX CYTOLOGY</span></td>
     <td>
-      <input type="text" name="pg1_swabsCerv" size="30" maxlength="40" value="<%= props.getProperty("pg1_swabsCerv", "") %>" @oscar.formDB />
+      <input type="text" name="pg1_swabsCerv"  class="spe" onDblClick='showDef("NAD", this);' size="30" maxlength="40" value="<%= props.getProperty("pg1_swabsCerv", "") %>" @oscar.formDB />
 	</td>
   </tr>
   </table>
@@ -1719,4 +1848,17 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
 
 </html:form>
 </body>
+<script type="text/javascript">
+Calendar.setup({ inputField : "pg1_lmp", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_lmp_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_stopDate", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_stopDate_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_eddByUs", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_eddByUs_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_examination", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_examination_cal", singleClick : true, step : 1 });
+
+Calendar.setup({ inputField : "pg1_obHistDate1", ifFormat : "%b %Y", showsTime :false, button : "pg1_obHistDate1_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_obHistDate2", ifFormat : "%b %Y", showsTime :false, button : "pg1_obHistDate2_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_obHistDate3", ifFormat : "%b %Y", showsTime :false, button : "pg1_obHistDate3_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_obHistDate4", ifFormat : "%b %Y", showsTime :false, button : "pg1_obHistDate4_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "pg1_obHistDate5", ifFormat : "%b %Y", showsTime :false, button : "pg1_obHistDate5_cal", singleClick : true, step : 1 });
+</script>
+
 </html:html>

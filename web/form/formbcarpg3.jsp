@@ -23,6 +23,19 @@
 
 	//get project_home
 	String project_home = request.getContextPath().substring(1);
+	//sync
+	boolean bSync = false;
+	if(!(props.getProperty("c_surname_cur", "").equals(props.getProperty("c_surname", "")) 
+	        && props.getProperty("c_givenName_cur", "").equals(props.getProperty("c_givenName", ""))
+	        && props.getProperty("c_address_cur", "").equals(props.getProperty("c_address", ""))
+	        && props.getProperty("c_city_cur", "").equals(props.getProperty("c_city", ""))
+	        && props.getProperty("c_province_cur", "").equals(props.getProperty("c_province", ""))
+	        && props.getProperty("c_postal_cur", "").equals(props.getProperty("c_postal", ""))
+	        && props.getProperty("c_phn_cur", "").equals(props.getProperty("c_phn", ""))
+	        && props.getProperty("c_phone_cur", "").trim().equals(props.getProperty("c_phone", "").trim())
+	        )) {
+	    bSync = true;
+	}
 %>
 <%
   boolean bView = false;
@@ -84,6 +97,9 @@
         z-index:99;  visibility:hidden;}
 .demo3  {color:#000033; background-color:silver; layer-background-color:#cccccc;
         position:absolute; top:220px; left:300px; width:80px; height:30px;
+        z-index:99;  visibility:hidden;}
+.demo4  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:50px; left:280px; width:80px; height:30px;
         z-index:99;  visibility:hidden;}
 -->
 </style>
@@ -167,12 +183,31 @@ function insertBox(str, layerName) { // 1 visible, 0 hidden
     }
     showHideBox(layerName, 0);
 }
-function wtEnglish2Metric() {
-	if(isNumber(document.forms[0].c_ppWt) ) {
-		weight = document.forms[0].c_ppWt.value;
+function showDef(str, field) { 
+    if(document.getElementById)	{
+        field.value = str;
+    }
+}
+function syncDemo() { 
+    document.forms[0].c_surname.value = "<%=props.getProperty("c_surname_cur", "")%>";
+    document.forms[0].c_givenName.value = "<%=props.getProperty("c_givenName_cur", "")%>";
+    document.forms[0].c_address.value = "<%=props.getProperty("c_address_cur", "")%>";
+    document.forms[0].c_city.value = "<%=props.getProperty("c_city_cur", "")%>";
+    document.forms[0].c_province.value = "<%=props.getProperty("c_province_cur", "")%>";
+    document.forms[0].c_postal.value = "<%=props.getProperty("c_postal_cur", "")%>";
+    document.forms[0].c_phn.value = "<%=props.getProperty("c_phn_cur", "")%>";
+    document.forms[0].c_phone.value = "<%=props.getProperty("c_phone_cur", "")%>";
+}
+
+function wtEnglish2Metric(obj) {
+	//if(isNumber(document.forms[0].c_ppWt) ) {
+	//	weight = document.forms[0].c_ppWt.value;
+	if(isNumber(obj) ) {
+		weight = obj.value;
 		weightM = Math.round(weight * 10 * 0.4536) / 10 ;
 		if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
-			document.forms[0].c_ppWt.value = weightM;
+			//document.forms[0].c_ppWt.value = weightM;
+			obj.value = weightM;
 		}
 	}
 }
@@ -736,8 +771,15 @@ function calToday(field) {
 <div ID="GBSdiv" class="demo3">
    <table bgcolor='silver' width='100%'>
      <tr><td align='right'><a href=# onclick="showHideBox('GBSdiv',0); return false;">X</a></td></tr>
-     <tr><th><a href=# onclick="insertBox('+', 'GBSdiv'); return false;">&nbsp;&nbsp;+&nbsp;&nbsp;</a></th></tr>
-     <tr><th><a href=# onclick="insertBox('-', 'GBSdiv'); return false;">&nbsp;&nbsp;-&nbsp;&nbsp;</a></th></tr>
+     <tr><th><a href=# onclick="insertBox('pos', 'GBSdiv'); return false;">pos</a></th></tr>
+     <tr><th><a href=# onclick="insertBox('neg', 'GBSdiv'); return false;">neg</a></th></tr>
+   </table>
+</div>
+<div ID="BirthPlacediv" class="demo4">
+   <table bgcolor='silver' width='100%'>
+     <tr><td align='right'><a href=# onclick="showHideBox('BirthPlacediv',0); return false;">X</a></td></tr>
+     <tr><th><a href=# onclick="insertBox('hospital', 'BirthPlacediv'); return false;">hospital</a></th></tr>
+     <tr><th><a href=# onclick="insertBox('home', 'BirthPlacediv'); return false;">home</a></th></tr>
    </table>
 </div>
 <div ID="UrineDiv" class="demo">
@@ -833,10 +875,10 @@ function calToday(field) {
   <table width="100%" border="1"  cellspacing="0" cellpadding="0">
     <tr>
       <td width="50%"><b>14.</b> HOSPITAL<br>
-      <input type="text" name="c_hospital" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_hospital", "") %>" />
+      <input type="text" name="c_hospital" <%=oscarVariables.getProperty("BCAR_hospital")==null? " ": ("class=\"spe\" onDblClick='showDef(\""+oscarVariables.getProperty("BCAR_hospital")+"\", this);'") %> style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_hospital", "") %>" />
       </td>
 	  <td width="50%">INTENDED PLACE OF BIRTH<br>
-      <input type="text" name="ar2_inBirthPlace" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_inBirthPlace", "") %>"  />
+      <input type="text" name="ar2_inBirthPlace" class="spe" onDblClick="showPGBox('BirthPlacediv',1, this, event, 'ar2_inBirthPlace', 300, 80, 26);" style="width:100%" size="40" maxlength="60" value="<%= props.getProperty("ar2_inBirthPlace", "") %>"  />
       </td>
     </tr>
   </table>
@@ -1107,7 +1149,7 @@ function calToday(field) {
           <input type="text" name="ar2_age" style="width:100%" size="3" maxlength="5" value="<%= props.getProperty("ar2_age", "") %>"  />
 		  </td>
 		  <td width="12%" nowrap><span class="small8">PREPREGNANT WEIGHT</span><br>
-          <input type="text" name="c_ppWt" class="spe" style="width:100%;" onDblClick="wtEnglish2Metric();" size="5" maxlength="5" value="<%= props.getProperty("c_ppWt", "") %>"  />
+          <input type="text" name="c_ppWt" class="spe" style="width:100%;" onDblClick="wtEnglish2Metric(this);" size="5" maxlength="5" value="<%= props.getProperty("c_ppWt", "") %>"  />
 		  </td>
 		  <td width="10%">HEIGHT<br>
           <input type="text" name="c_ppHt" onDblClick="htEnglish2Metric();" class="spe" style="width:100%;" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>"  />
@@ -1121,7 +1163,8 @@ function calToday(field) {
           <input type="text" name="ar2_lmpDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_lmpDate", "") %>" />
 		  </td>
 		  <td>EDD <span class="small8">DD/MM/YYYY</span><br>
-          <input type="text" name="c_EDD" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("c_EDD", "") %>" />
+          <input type="text" name="c_EDD" size="10" maxlength="10" value="<%= props.getProperty("c_EDD", "") %>" />
+		  <img src="../images/cal.gif" id="c_EDD_cal"> 
 		  </td>
 		</tr>
       </table>
@@ -1149,7 +1192,7 @@ function calToday(field) {
   <input type="text" name="pg3_date1" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date1", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt1", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt1" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt1", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp1" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp1", "") %>" @oscar.formDB />
@@ -1181,7 +1224,7 @@ function calToday(field) {
   <input type="text" name="pg3_date2" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date2", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt2", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt2" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt2", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp2" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp2", "") %>" @oscar.formDB />
@@ -1213,7 +1256,7 @@ function calToday(field) {
   <input type="text" name="pg3_date3" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date3", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt3", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt3" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt3", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp3" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp3", "") %>" @oscar.formDB />
@@ -1245,7 +1288,7 @@ function calToday(field) {
   <input type="text" name="pg3_date4" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date4", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt4", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt4" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt4", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp4" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp4", "") %>" @oscar.formDB />
@@ -1282,7 +1325,7 @@ function calToday(field) {
   <input type="text" name="pg3_date5" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date5", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt5", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt5" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt5", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp5" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp5", "") %>" @oscar.formDB />
@@ -1314,7 +1357,7 @@ function calToday(field) {
   <input type="text" name="pg3_date6" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date6", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt6" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt6", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt6" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt6", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp6" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp6", "") %>" @oscar.formDB />
@@ -1346,7 +1389,7 @@ function calToday(field) {
   <input type="text" name="pg3_date7" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date7", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt7" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt7", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt7" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt7", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp7" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp7", "") %>" @oscar.formDB />
@@ -1378,7 +1421,7 @@ function calToday(field) {
   <input type="text" name="pg3_date8" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date8", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt8" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt8", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt8" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt8", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp8" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp8", "") %>" @oscar.formDB />
@@ -1410,7 +1453,7 @@ function calToday(field) {
   <input type="text" name="pg3_date9" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date9", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt9" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt9", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt9" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt9", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp9" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp9", "") %>" @oscar.formDB />
@@ -1442,7 +1485,7 @@ function calToday(field) {
   <input type="text" name="pg3_date10" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date10", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt10" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt10", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt10" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt10", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp10" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp10", "") %>" @oscar.formDB />
@@ -1474,7 +1517,7 @@ function calToday(field) {
   <input type="text" name="pg3_date11" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date11", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt11" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt11", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt11" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt11", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp11" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp11", "") %>" @oscar.formDB />
@@ -1506,7 +1549,7 @@ function calToday(field) {
   <input type="text" name="pg3_date12" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date12", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt12" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt12", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt12" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt12", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp12" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp12", "") %>" @oscar.formDB />
@@ -1538,7 +1581,7 @@ function calToday(field) {
   <input type="text" name="pg3_date13" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date13", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt13" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt13", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt13" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt13", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp13" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp13", "") %>" @oscar.formDB />
@@ -1570,7 +1613,7 @@ function calToday(field) {
   <input type="text" name="pg3_date14" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date14", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt14" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt14", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt14" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt14", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp14" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp14", "") %>" @oscar.formDB />
@@ -1602,7 +1645,7 @@ function calToday(field) {
   <input type="text" name="pg3_date15" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date15", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt15" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt15", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt15" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt15", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp15" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp15", "") %>" @oscar.formDB />
@@ -1634,7 +1677,7 @@ function calToday(field) {
   <input type="text" name="pg3_date16" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date16", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt16" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt16", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt16" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt16", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp16" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp16", "") %>" @oscar.formDB />
@@ -1666,7 +1709,7 @@ function calToday(field) {
   <input type="text" name="pg3_date17" class="spe" style="width:100%;" size="10" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg3_date17", "") %>" @oscar.formDB  dbType="date"/>
   </td>
   <td>
-  <input type="text" name="pg3_wt17" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt17", "") %>" @oscar.formDB />
+  <input type="text" name="pg3_wt17" class="spe" onDblClick="wtEnglish2Metric(this);" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("pg3_wt17", "") %>" @oscar.formDB />
   </td>
   <td>
   <input type="text" name="pg3_bp17" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg3_bp17", "") %>" @oscar.formDB />
@@ -1709,7 +1752,8 @@ function calToday(field) {
 		</th>
 		</tr><tr>
         <td width="20%"><span class="small9">1ST ULTRASOUND DATE</span><br>
-        <input type="text" name="ar2_1USoundDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_1USoundDate", "") %>" />
+        <input type="text" name="ar2_1USoundDate" size="10" maxlength="10" value="<%= props.getProperty("ar2_1USoundDate", "") %>" />
+        <img src="../images/cal.gif" id="ar2_1USoundDate_cal">
 		</td>
         <td width="15%" nowrap><span class="small9">GEST. AGE BY US </span><br>
         <input type="text" name="ar2_gestAgeUs" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_gestAgeUs", "") %>"  />
@@ -1781,7 +1825,6 @@ function calToday(field) {
         </td>
         <td align="right"><b>Edit:</b>
             <a href="formbcarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a> |
-			AR2<font size=-2>(pg.1)</font> |
             <a href="formbcarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.1)</font></a> |
 			AR2<font size=-2>(pg.2)</font> |
             <!--a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a-->
@@ -2093,12 +2136,14 @@ function calToday(field) {
         singleClick    :    true,           // double-click mode
         step           :    1                // show all years in drop-down boxes (instead of every other year as default)
     });
+Calendar.setup({ inputField : "c_EDD", ifFormat : "%d/%m/%Y", showsTime :false, button : "c_EDD_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "ar2_labRATDate1", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRATDate1_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "ar2_labRATDate2", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRATDate2_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "ar2_labRATDate3", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRATDate3_cal", singleClick : true, step : 1 });
 
 Calendar.setup({ inputField : "ar2_labRhIgG", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRhIgG_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "ar2_labRhIgG2", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_labRhIgG2_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "ar2_1USoundDate", ifFormat : "%d/%m/%Y", showsTime :false, button : "ar2_1USoundDate_cal", singleClick : true, step : 1 });
 </script>
 </body>
 </html:html>
