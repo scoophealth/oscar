@@ -72,14 +72,14 @@ public class RptDownloadCSVServlet extends HttpServlet {
             //        System.out.println("SQL: 2");
 
             for (int i = 0; i < vecFieldCaption.size(); i++) {
-                in += i == 0 ? "" : DELIMETER + (String) vecFieldCaption.get(i);
+                in += (i == 0 ? "" : DELIMETER) + (String) vecFieldCaption.get(i);
             }
 
             for (int i = 0; i < vecFieldValue.size(); i++) {
                 Properties prop = (Properties) vecFieldValue.get(i);
                 in += "\n";
                 for (int j = 0; j < vecFieldCaption.size(); j++) {
-                    in += j == 0 ? "" : DELIMETER + prop.getProperty((String) vecFieldCaption.get(j), "");
+                    in += (j == 0 ? "" : DELIMETER) + prop.getProperty((String) vecFieldCaption.get(j), "");
                 }
             }
         } catch (Exception e1) {
