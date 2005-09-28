@@ -29,6 +29,7 @@
 package oscar.oscarLab;
 
 import java.io.*;
+import java.net.*;
 import java.sql.*;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -110,7 +111,7 @@ public class FileUploadCheck {
    /**
     *Used to add a new file to the database, checks to see if it already has been added
     */
-   public synchronized boolean addFile(String name, InputStream is,String provider){
+   public synchronized boolean addFile(String name, InputStream is,String provider) throws Exception{
       boolean fileUploaded = false;
       try{
          String md5sum = getMd5Sum(is);
@@ -122,6 +123,9 @@ public class FileUploadCheck {
             db.CloseConn();        
             fileUploaded = true;
          }
+      }catch(SQLException conE){
+         conE.printStackTrace();            
+         throw new Exception("Database Is not Running");
       }catch(Exception e){
          e.printStackTrace();
       }
