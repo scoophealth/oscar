@@ -22,6 +22,18 @@
 
 	//get project_home
 	String project_home = request.getContextPath().substring(1);
+	boolean bSync = false;
+	if(!props.getProperty("c_surname_cur", "").equals("") && !(props.getProperty("c_surname_cur", "").equals(props.getProperty("c_surname", "")) 
+	        && props.getProperty("c_givenName_cur", "").equals(props.getProperty("c_givenName", ""))
+	        && props.getProperty("c_address_cur", "").equals(props.getProperty("c_address", ""))
+	        && props.getProperty("c_city_cur", "").equals(props.getProperty("c_city", ""))
+	        && props.getProperty("c_province_cur", "").equals(props.getProperty("c_province", ""))
+	        && props.getProperty("c_postal_cur", "").equals(props.getProperty("c_postal", ""))
+	        //&& props.getProperty("c_phn_cur", "").equals(props.getProperty("c_phn", ""))
+	        && props.getProperty("c_phone_cur", "").trim().equals(props.getProperty("c_phone", "").trim())
+	        )) {
+	    bSync = true;
+	}
 %>
 <%
   boolean bView = false;
@@ -141,6 +153,22 @@
        windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
        var popup=window.open(page, "planner", windowprop);
     }
+
+function showDef(str, field) { 
+    if(document.getElementById)	{
+        field.value = str;
+    }
+}
+function syncDemo() { 
+    document.forms[0].c_surname.value = "<%=props.getProperty("c_surname_cur", "")%>";
+    document.forms[0].c_givenName.value = "<%=props.getProperty("c_givenName_cur", "")%>";
+    document.forms[0].c_address.value = "<%=props.getProperty("c_address_cur", "")%>";
+    document.forms[0].c_city.value = "<%=props.getProperty("c_city_cur", "")%>";
+    document.forms[0].c_province.value = "<%=props.getProperty("c_province_cur", "")%>";
+    document.forms[0].c_postal.value = "<%=props.getProperty("c_postal_cur", "")%>";
+    //document.forms[0].c_phn.value = "<%=props.getProperty("c_phn_cur", "")%>";
+    document.forms[0].c_phone.value = "<%=props.getProperty("c_phone_cur", "")%>";
+}
 
 /**
  * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
@@ -532,6 +560,7 @@ function onCheckSlave(a, masterName) {
       </td>
       <td>DATE
           <img src="../images/cal.gif" id="pg3_formDate_cal">
+          <%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font color='red'>Synchronize</font></a></b>") :"" %>
       <br>
       <input type="text" name="pg3_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
