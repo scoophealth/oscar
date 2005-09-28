@@ -77,7 +77,7 @@ public class TicklerCreator {
   }
 
   /**
-   * Returns true if a tickler with teh specified parameters is exists
+   * Returns true if a tickler with the specified parameters exists
    *
    * @param demoNo String
    * @param provNo String

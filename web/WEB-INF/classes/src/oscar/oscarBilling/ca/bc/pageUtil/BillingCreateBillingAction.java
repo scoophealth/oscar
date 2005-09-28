@@ -35,6 +35,7 @@ import oscar.oscarDemographic.data.*;
 import oscar.oscarDemographic.data.DemographicData.*;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 import oscar.oscarBilling.ca.bc.data.BillingFormData;
+import oscar.OscarProperties;
 
 public class BillingCreateBillingAction
     extends Action {
@@ -123,20 +124,22 @@ public class BillingCreateBillingAction
       }
 
     }
-
     validateServiceCodeList(billItem, demo, errors);
-    validate00120(errors, demo, billItem);
     validateDxCodeList(bean, errors);
+
     if (!errors.isEmpty()) {
-      verifyLast13050(errors, demo);
-      this.saveErrors(request, errors);
+      checkCDMStatus(request, errors, demo);
+      return mapping.getInputForward();
+    }
+
+    validate00120(errors, demo, billItem);
+    if (!errors.isEmpty()) {
+      checkCDMStatus(request, errors, demo);
       return mapping.getInputForward();
     }
     //We want this alert to show up regardless
     //However we don't necessarily want it to force the user to enter a bill
-    verifyLast13050(errors, demo);
-    this.saveErrors(request, errors);
-
+    checkCDMStatus(request, errors, demo);
     if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
       WCBForm wcbForm = new WCBForm();
       wcbForm.Set(bean);
@@ -145,6 +148,16 @@ public class BillingCreateBillingAction
     }
     //      System.out.println("Service count : "+ billItem.size());
     return mapping.findForward("success");
+  }
+
+  private void checkCDMStatus(HttpServletRequest request, ActionErrors errors,
+                              Demographic demo) {
+    String[] cnlsCodes = OscarProperties.getInstance().getProperty(
+        "COUNSELING_CODES").split(",");
+    if (vldt.needsCDMCounselling(demo.getDemographicNo(), cnlsCodes)) {
+      verifyLast13050(errors, demo);
+    }
+    this.saveErrors(request, errors);
   }
 
   /**
@@ -222,8 +235,12 @@ public class BillingCreateBillingAction
                              ArrayList billItem) {
     for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
       BillingItem item = (BillingItem) iter.next();
-      if (item.getServiceCode().equals("00120")) {
-        if (!vldt.hasMore00120Codes(demo.getDemographicNo())) {
+      String[] cnlsCodes = OscarProperties.getInstance().getProperty(
+          "COUNSELING_CODES").split(",");
+      Vector vCodes = new Vector(Arrays.asList(cnlsCodes));
+      if (vCodes.contains(item.getServiceCode())) {
+        if (!vldt.hasMore00120Codes(demo.getDemographicNo(),
+                                    item.getServiceCode())) {
           errors.add("",
                      new ActionMessage(
                          "oscar.billing.CA.BC.billingBC.error.noMore00120"));
