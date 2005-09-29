@@ -502,6 +502,7 @@ function onCheckSlave(a, masterName) {
       </td>
 	  <td width="20%" nowrap align="center">BLOOD GROUP/Rh<br>
       <!--input type="text" name="pg1_bloodGrpRh" style="width:100%" size="10" maxlength="20" value="<%--= props.getProperty("pg1_bloodGrpRh", "") --%>" @oscar.formDB  /-->
+          <font size="-2"><%=props.getProperty("pg1_bloodGrpRh", "")%></font>
           <select name="pg1_bloodGrpRh">
           <%
           String[] optBG1 = {"", "O", "A", "B", "AB"};
@@ -533,6 +534,7 @@ function onCheckSlave(a, masterName) {
             <option value="NR" <%=props.getProperty("pg1_HBsAg", "").equals("NR")?"selected":""%> >NR</option>
             <option value="R" <%=props.getProperty("pg1_HBsAg", "").equals("R")?"selected":""%> >R</option>
           </select>
+          <font size="-2"><%=props.getProperty("pg1_HBsAg", "")%></font>
 	  </td>
     </tr>
   </table>
