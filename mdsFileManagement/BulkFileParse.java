@@ -261,6 +261,8 @@ public class BulkFileParse {
                 String[] conDoctors;                                
                 String providerNo = null;
                 
+                ArrayList listOfProviderNo = new ArrayList();
+                
                 sql ="select refDoctor, conDoctor, admDoctor from mdsPV1 where segmentID='"+segmentID+"'";
                 ResultSet rs = db.GetSQL(sql);                
                 boolean addedToProviderLabRouting = false;                
@@ -271,8 +273,9 @@ public class BulkFileParse {
                     // check that this is a legal provider
                     providerNo = getProviderNoFromOhipNo(providerMinistryNo);                    
                     if ( providerNo != null) {  // provider found in database
-                        sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
-                        db.RunSQL(sql);
+                        ///sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
+                        ///db.RunSQL(sql);                        
+                        listOfProviderNo.add(providerNo);                                                
                         addedToProviderLabRouting =true;
                     }  // provider not found                                         
                     
@@ -286,8 +289,11 @@ public class BulkFileParse {
                             providerNo = getProviderNoFromOhipNo(providerMinistryNo);                                                
                             if ( providerNo != null) {  // provider found in database
                                 // ignore duplicates in case admitting doctor == consulting doctor
-                                sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
-                                db.RunSQL(sql);
+                                ///sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
+                                ///db.RunSQL(sql);                                                               
+                                if (!listOfProviderNo.contains(providerNo)){
+                                   listOfProviderNo.add(providerNo);
+                                }                           
                                 addedToProviderLabRouting =true;
                             }   // provider not found                                                          
                         }
@@ -300,13 +306,26 @@ public class BulkFileParse {
                        // check that this is a legal provider
                        providerNo = getProviderNoFromOhipNo(providerMinistryNo);                    
                        if ( providerNo != null) {  // provider found in database
-                          sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
-                          db.RunSQL(sql);
+                          if (!listOfProviderNo.contains(providerNo)){
+                             listOfProviderNo.add(providerNo);
+                          }                           
+                          //sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+segmentID+"', 'N','MDS')";
+                          //db.RunSQL(sql);
                           addedToProviderLabRouting =true;
                        }  // provider not found                        
                        
                                               
                     }
+                    
+                    if (listOfProviderNo.size() > 0) {  // provider found in database
+                       for(int p = 0; p < listOfProviderNo.size(); p++){
+                          String prov = (String) listOfProviderNo.get(p);
+                          sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov+"', '"+segmentID+"', 'N','MDS')";
+                          System.out.println(" size "+listOfProviderNo.size()+" "+sql);
+                          db.RunSQL(sql);
+                       }
+                       addedToProviderLabRouting =true;
+                    }   // provider not found                                                          
                     
                     if(!addedToProviderLabRouting){
                        sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+segmentID+"', 'N','MDS')";
