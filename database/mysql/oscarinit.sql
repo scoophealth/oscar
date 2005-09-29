@@ -3041,7 +3041,7 @@ CREATE TABLE `formSatisfactionScale` (
   `dissatisfied17` char(2) default NULL,
   `abletogetrehabilitation18` char(2) default NULL,
   PRIMARY KEY  (`ID`)
-) TYPE=MyISAM 
+) TYPE=MyISAM ;
 
 
 
