@@ -202,5 +202,11 @@ c_newBornID     : left, 41, 88, 0, BaseFont.HELVETICA, 8
  conLos			 : left, 283, 763, 0, BaseFont.HELVETICA, 8
  __conLosTxtPre	 : left, 260, 763, 0, BaseFont.HELVETICA, 6 , L.O.S.:
  __conLosTxtPos	 : left, 302, 763, 0, BaseFont.HELVETICA, 6 , hr
- 
- 
+ __date    : left, 332, 50, 0, BaseFont.HELVETICA, 6 , DATE
+ __motherId    : left, 473, 50, 0, BaseFont.HELVETICA, 6 , MOTHER'S I.D. NUMBER
+ __surname    : left, 332, 73, 0, BaseFont.HELVETICA, 6 , SURNAME  
+ __givenName    : left, 473, 73, 0, BaseFont.HELVETICA, 6 , GIVEN NAME 
+ __address    : left, 332, 98, 0, BaseFont.HELVETICA, 6 , ADDRESS
+ __phoneNumber    : left, 473, 98, 0, BaseFont.HELVETICA, 6 , PHONE NUMBER
+ __hin    : left, 332, 122, 0, BaseFont.HELVETICA, 6 , PERSONAL HEALTH NUMBER
+ __physicianName    : left, 473, 122, 0, BaseFont.HELVETICA, 6 , PHYSICIAN / MIDWIFE NAME 

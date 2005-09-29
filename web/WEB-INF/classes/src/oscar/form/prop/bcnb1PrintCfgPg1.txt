@@ -204,3 +204,10 @@ __$lineB		: 202, 370, 208, 370, 0.5
  pg1_Date          : left, 271, 762, 0, BaseFont.HELVETICA, 8
  pg1_Time          : left, 334, 762, 0, BaseFont.HELVETICA, 8
  pg1_Signature     : left, 408, 762, 0, BaseFont.HELVETICA, 8
+ __hospitalName    : left, 358, 33, 0, BaseFont.HELVETICA, 6 , HOSPITAL NAME
+ __date    : left, 499, 33, 0, BaseFont.HELVETICA, 6 , DATE
+ __surname    : left, 358, 57, 0, BaseFont.HELVETICA, 6 , SURNAME  
+ __givenName    : left, 499, 57, 0, BaseFont.HELVETICA, 6 , GIVEN NAME 
+ __address    : left, 358, 81, 0, BaseFont.HELVETICA, 6 , ADDRESS
+ __phoneNumber    : left, 499, 81, 0, BaseFont.HELVETICA, 6 , PHONE NUMBER
+ __physicianName    : left, 358, 122, 0, BaseFont.HELVETICA, 6 , PHYSICIAN / MIDWIFE NAME

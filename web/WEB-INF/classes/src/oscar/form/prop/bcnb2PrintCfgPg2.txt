@@ -127,4 +127,10 @@
  pg2_Signature : left, 200, 758, 0, BaseFont.HELVETICA, 8 
  ar2_NeoDeath : left, 362, 753, 0, BaseFont.HELVETICA, 8 , X
  ar2_Autopsy : left, 475, 753, 0, BaseFont.HELVETICA, 8 , X
-
+ __hospitalName    : left, 353, 33, 0, BaseFont.HELVETICA, 6 , HOSPITAL NAME
+ __date    : left, 493, 33, 0, BaseFont.HELVETICA, 6 , DATE
+ __surname    : left, 353, 57, 0, BaseFont.HELVETICA, 6 , SURNAME  
+ __givenName    : left, 493, 57, 0, BaseFont.HELVETICA, 6 , GIVEN NAME 
+ __address    : left, 353, 81, 0, BaseFont.HELVETICA, 6 , ADDRESS
+ __phoneNumber    : left, 493, 81, 0, BaseFont.HELVETICA, 6 , PHONE NUMBER
+ __physicianName    : left, 353, 129, 0, BaseFont.HELVETICA, 6 , PHYSICIAN / MIDWIFE NAME
