@@ -219,6 +219,9 @@
 
 
     <form-bean name="ImportDemographicDataForm" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataForm"/>
+    <form-bean name="LabUploadForm" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm"/>        
+    <form-bean name="CMLLabUploadForm" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadForm"/>        
+        
     <form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm"/>
 
     <form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm"/>
@@ -777,6 +780,11 @@
     <action path="/EnterSignature" type="oscar.oscarProvider.pageUtil.ProEditSignatureAction" name="ProEditSignatureForm" scope="request" input="/provider/editSignature.jsp">
       <forward name="success" path="/provider/providerSignature.jsp"/>
     </action>
+  <!--  <action path="/ProviderProperties" type="oscar.oscarProvider.pageUtil.ProPropertiesEditAction" name="FrmForm" scope="request" input="/provider/providerProperties.jsp">
+      <forward name="success" path="/provider/providerProperties.jsp"/>
+    </action>
+    -->
+    
     <!-- oscarProvider end   -->
     <!-- OscarDxResearch Start-->
     <action path="/oscarResearch/oscarDxResearch/setupDxResearch" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction" name="" scope="request" input="/oscarEncounter/Index.jsp">
@@ -959,8 +967,17 @@
 
     <action    path="/oscarPrevention/PreventionReport" type="oscar.oscarPrevention.pageUtil.PreventionReportAction" name="PreventionReportForm" scope="request" input="/oscarPrevention/PreventionReporting.jsp">
        <forward name="success" path="/oscarPrevention/PreventionReporting.jsp"/>
-    </action>
-    <!--Preventions- End-->
+
+    </action>                       
+ <!--   
+    <action    path="/oscarPrevention/PreventionCallBack" type="oscar.oscarPrevention.pageUtil.PreventionCallBackAction" name="PreventionReportForm" scope="request" input="/oscarPrevention/PreventionCallBackup.jsp">  
+       <forward name="success" path="/oscarPrevention/PreventionCallBackup.jsp"/>  
+    </action>                       
+    -->
+    <!--Preventions- End-->   
+    
+
+
 
     <!-- Demographic Relations -->
     <action    path="/demographic/AddRelation" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction" name="FrmForm" scope="request" input="/demographic/AddAlternateContact.jsp">
@@ -971,16 +988,38 @@
     </action>                     
     <action path="/demographic/DemographicExport" type="oscar.oscarDemographic.pageUtil.DemographicExportAction" name="DemographicExportForm" scope="request" input="/demographic/demographicExport.jsp">
       <forward name="success" path="/demographic/demographicExport.jsp"/>
-    </action>
-
-    <action path="/report/DemographicSetEdit" type="oscar.oscarReport.pageUtil.DemographicSetEditAction" name="DemographicSetEditForm" scope="request" input="/report/demographicSetEdit.jsp">
-      <forward name="success" path="/report/demographicSetEdit.jsp"/>
-    </action>
-
-    <action path="/report/SetEligibility" type="oscar.oscarReport.pageUtil.DemographicSetEligibilityAction" name="FrmForm" scope="request" input="/report/demographicSetEdit.jsp">
-      <forward name="success" path="/report/demographicSetEdit.jsp"/>
-    </action>
-
+    </action>                           
+    
+    <action path="/report/DemographicSetEdit" type="oscar.oscarReport.pageUtil.DemographicSetEditAction" name="DemographicSetEditForm" scope="request" input="/oscarReport/demographicSetEdit.jsp">
+      <forward name="success" path="/oscarReport/demographicSetEdit.jsp"/>
+    </action>                           
+    
+    <action path="/report/SetEligibility" type="oscar.oscarReport.pageUtil.DemographicSetEligibilityAction" name="FrmForm" scope="request" input="/oscarReport/demographicSetEdit.jsp">
+      <forward name="success" path="/oscarReport/demographicSetEdit.jsp"/>
+    </action>                           
+    <!--
+    <action path="/oscarEncounter/SaveCPPAction" type="oscar.oscarEncounter.pageUtil.SaveCPPAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
+      <forward name="success" path="/oscarEncounter/encounterCPP.jsp"/>
+    </action>        
+    
+    <action path="/oscarEncounter/SaveCPPUserPrefAction" type="oscar.oscarEncounter.pageUtil.SaveCPPUserPrefAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
+      <forward name="success" path="/oscarEncounter/encounterCPP.jsp"/>
+    </action>        
+    
+    
+    <action path="/tickler/AddTickler" type="oscar.oscarTickler.pageUtil.AddTicklerAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
+      <forward name="close" path="/close.html"/>
+    </action>        
+    
+    <action path="/oscarNote/AddNote" type="oscar.oscarNote.pageUtil.AddNoteAction" name="FrmForm" scope="request" input="/oscarNote/AddNote.jsp">
+      <forward name="close" path="/close.html"/>
+    </action>        
+    
+    <action path="/report/PrescriptionReport" type="oscar.oscarReport.pageUtil.PrescriptionReportAction" name="FrmForm" scope="request" input="/oscarReport/PrescriptionReport.jsp">
+      <forward name="success" path="/oscarReport/PrescriptionReport.jsp"/>
+    </action>                           
+    -->
+    
     <!-- Demographic Relations End-->
 
     <!-- eForms -->
@@ -1037,8 +1076,21 @@
         </action>
         <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/saveAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SaveAssocAction">
           <forward name="success" path="/billing/CA/BC/showServiceCodeAssocs.do" />
-    </action>
+    </action>        
     <!-- Diagnostic code association ends -->
+    
+    <action path="/lab/labUpload" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadAction" name="LabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
+      <forward name="success" path="/lab/CA/BC/LabUpload.jsp"/>
+    </action>
+    
+    <action path="/lab/CMLlabUpload" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadAction" name="CMLLabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
+      <forward name="success" path="/lab/CA/ON/uploadComplete.jsp"/>
+    </action>
+        
+ <!--   <action path="/lab/benefitScheduleUpload" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUploadAction" name="LabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
+      <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>
+    </action>
+    -->
   </action-mappings>
   <message-resources parameter="oscarResources"/>
 </struts-config>
