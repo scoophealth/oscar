@@ -374,10 +374,10 @@ public class BulkFileParse {
                               "first_name like '"+firstName.substring(0,1)+"%' and year_of_birth='"+dobYear+"' and " +
                               "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+rs.getString("sex").toUpperCase()+"%' and " +
                               "patient_status='AC'";
-                        ResultSet rs2 = db.GetSQL(sql);
-                        demoNo = rs2.getString("demographic_no");
+                        ResultSet rs2 = db.GetSQL(sql);                        
                         if ( rs2.next() ) {
                             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs2.getString("demographic_no")+"', '"+segmentID+"','MDS')";                            
+                            demoNo = rs2.getString("demographic_no");
                         } else {
                             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','MDS')";                            
                         }
@@ -389,9 +389,9 @@ public class BulkFileParse {
                               "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+rs.getString("sex").toUpperCase()+"%' and " +
                               "patient_status='AC'";
                         ResultSet rs3 = db.GetSQL(sql);
-                        demoNo = rs3.getString("demographic_no");
                         if ( rs3.next() ) {
                             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs3.getString("demographic_no")+"', '"+segmentID+"','MDS')";                            
+                            demoNo = rs3.getString("demographic_no");
                         } else {
                             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','MDS')";                            
                         }
