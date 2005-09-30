@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
+long loadPage = System.currentTimeMillis();
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
@@ -59,12 +60,7 @@ public boolean isBirthday(String schedDate,String demBday){
     int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
 	boolean bDispTemplatePeriod = ( oscarVariables.getProperty("receptionist_alt_view") != null && oscarVariables.getProperty("receptionist_alt_view").equals("yes") ); // true - display as schedule template period, false - display as preference
 
-	if(prov.equals("BC")){
 
-          String alertCodes[] = oscarVariables.getProperty("CDM_ALERTS").split(",");
-        oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp hlp = new oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp();
-        hlp.manageCDMTicklers(alertCodes);
-	}
 %>
 <%
     ResultSet rsTickler = null;
@@ -837,4 +833,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.su
 </table>
 </body>
 </html:html>
-
+<%
+long finLoad = System.currentTimeMillis();
+System.out.println("TOTAL LOAD TIME FOR DAY SHEET:" + (finLoad-loadPage)*.001);
+%>
