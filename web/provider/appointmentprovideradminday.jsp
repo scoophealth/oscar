@@ -9,8 +9,12 @@ long loadPage = System.currentTimeMillis();
 </security:oscarSec>
 
 
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="index.html" %>
+
+
+<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
+
 <%@ page import="org.apache.commons.lang.*" %>
+
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -132,7 +136,7 @@ public boolean isBirthday(String schedDate,String demBday){
  *
  * This software was written for the
  * Department of Family Medicine
- * McMaster Unviersity
+ * McMaster University
  * Hamilton
  * Ontario, Canada
  */
@@ -361,13 +365,14 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!-- doctor code block -->
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <!--MARK-->
-         <% if (prov.equals("BC")){%>
-         <a HREF="#" ONCLICK ="popupPage2('../lab/CA/BC/index.jsp');return false;" TITLE='View lab reports'><%=(new oscar.oscarLab.ca.bc.PathNet.PathNetInfo()).getLabTab(curUser_no)%></a>
-         <%}else{%>
+         <!--MARK-->         
          <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
          <oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
-         </a></font></td>
+         </a>         
+         <oscar:newUnclaimedLab>
+         <a style="color: red;" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
+         </oscar:newUnclaimedLab>
+        </font></td>
          <%}%>
 		</security:oscarSec>
 <!-- doctor code block -->
@@ -384,12 +389,14 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!--/oscarEcounter code block -->
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href=# onClick ="popupPage(200,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a></font></td>
+         <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a></font>
+         <!--a href="toggleReason.jsp" target="_blank">R</a-->
+        </td>
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a></font></td>
    <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp');return false;" TITLE='<bean:message key="global.tickler"/>'><bean:message key="global.tickler"/></a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp');return false;" TITLE='<bean:message key="global.tickler"/>'><oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler></a></font></td>
 <!-- admin code block -->
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -458,11 +465,11 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday","UTF-8")%>')"><bean:message key="global.calendar"/></a></td>
         <td ALIGN="center"  BGCOLOR="ivory" width="33%">
 	<% if(view==1) {%>
-	<a href='providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="provider.appointmentProviderAdminDay.grpView"/></a>
+	<!--a href='providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="provider.appointmentProviderAdminDay.grpView"/></a-->
 	<% } else { %>
-	<!-- B><bean:message key="global.hello"/>
+	<B><bean:message key="global.hello"/>
 	<% out.println( userfirstname+" "+userlastname); %>
-	</b --></TD>
+	</b></TD>
 	<% } %>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
   <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
@@ -693,7 +700,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         <%
         			if(demographic_no==0) {
         %>
-        		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+        		<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>" ><font color="red">!</font></a><%} %>
 <a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
 <bean:message key="provider.appointmentProviderAdminDay.reason"/>: <%=UtilMisc.htmlEscape(reason)%>
@@ -702,7 +709,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         <%
         			} else {
         			  //System.out.println(name+" / " +demographic_no);
-				%>	<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a><%} %>
+				%>	<% if (tickler_no.compareTo("") != 0) {%>	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" <oscar:oscarPropertiesCheck property="SHOW_TICKLER_TOOLTIP" value="yes" defaultVal="true">title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"</oscar:oscarPropertiesCheck>  ><font color="red">!</font></a><%} %>
 
 <!-- doctor code block -->
 <% if(bShowDocLink) { %>
@@ -714,9 +721,9 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 <% } %>
 <!-- doctor code block -->
 
-<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;" title="<%=name%>
+<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
 reason: <%=UtilMisc.htmlEscape(reason)%>
-notes: <%=UtilMisc.htmlEscape(notes)%>" ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
+notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 <!-- doctor code block -->
 <% if(bShowEncounterLink) { %>
