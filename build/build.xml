@@ -337,10 +337,10 @@
          destdir="${cmlfiledir}"
 	 deprecation="on"
 	 debug="on">
-   <!-- <classpath>
+   <classpath>
       <pathelement path="${classes_web}/"/>
       <path refid="classpath.path"/>
-   </classpath> -->
+   </classpath> 
   </javac>  
  </target>
  
